@@ -27,7 +27,7 @@ export type RangeChange = (params: {
   endDate: CalendarDate
 }) => any
 
-export type SingleChange = (params: { date: Date | null | undefined }) => any
+export type SingleChange = (params: { date: CalendarDate }) => any
 
 export interface CalendarRangeProps extends BaseCalendarProps {
   mode: 'range'
