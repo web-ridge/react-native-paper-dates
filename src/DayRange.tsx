@@ -21,9 +21,11 @@ function DayRange({
         style={[
           StyleSheet.absoluteFill,
           styles.rangeRoot,
-          {
-            backgroundColor: inRange && !isCrop ? selectColor : 'transparent',
-          },
+          inRange && !isCrop
+            ? {
+                backgroundColor: selectColor,
+              }
+            : null,
         ]}
       >
         {isCrop && (
@@ -31,9 +33,11 @@ function DayRange({
             <View
               style={[
                 styles.flex1,
-                {
-                  backgroundColor: rightCrop ? selectColor : 'transparent',
-                },
+                rightCrop
+                  ? {
+                      backgroundColor: selectColor,
+                    }
+                  : null,
               ]}
             />
             <View
@@ -50,9 +54,11 @@ function DayRange({
             <View
               style={[
                 styles.flex1,
-                {
-                  backgroundColor: leftCrop ? selectColor : 'transparent',
-                },
+                leftCrop
+                  ? {
+                      backgroundColor: selectColor,
+                    }
+                  : null,
               ]}
             />
           </>

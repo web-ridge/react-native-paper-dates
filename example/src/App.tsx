@@ -1,19 +1,22 @@
-import * as React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import PaperDates from 'react-native-paper-dates';
+import * as React from 'react'
+import { StyleSheet, View } from 'react-native'
+import { DatePickerModal } from 'react-native-paper-dates'
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
-
-  React.useEffect(() => {
-    PaperDates.multiply(3, 7).then(setResult);
-  }, []);
+  const [open, setOpen] = React.useState<boolean>(false)
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <DatePickerModal
+        mode="range"
+        startDate={undefined}
+        endDate={undefined}
+        visible={open}
+        onConfirm={() => {}}
+        onDismiss={() => setOpen(false)}
+      />
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -22,4 +25,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-});
+})

@@ -1,17 +1,17 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
-import { Text } from 'react-native-paper'
-import fonts from '../fonts'
+import { Text, useTheme } from 'react-native-paper'
 
 function DayName({ label }: { label: string }) {
+  const theme = useTheme()
   return (
     <View style={styles.dayName}>
-      <Text style={styles.dayNameLabel}>{label}</Text>
+      <Text style={[styles.dayNameLabel, theme.fonts.medium]}>{label}</Text>
     </View>
   )
 }
 const styles = StyleSheet.create({
   dayName: { flex: 1, alignItems: 'center' },
-  dayNameLabel: { fontSize: 14, ...fonts.medium, opacity: 0.7 },
+  dayNameLabel: { fontSize: 14, opacity: 0.7 },
 })
 export default React.memo(DayName)

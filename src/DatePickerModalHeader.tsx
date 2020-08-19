@@ -99,11 +99,7 @@ export function HeaderContentRange({
       <Text
         style={[
           styles.rangeHeaderText,
-          {
-            color: state.startDate
-              ? 'rgba(255,255,255,1)'
-              : 'rgba(255,255,255,0.5)',
-          },
+          state.startDate ? styles.headerTextFilled : styles.headerTextEmpty,
         ]}
       >
         {state.startDate ? formatter.format(state.startDate) : startLabel}
@@ -112,11 +108,7 @@ export function HeaderContentRange({
       <Text
         style={[
           styles.rangeHeaderText,
-          {
-            color: state.endDate
-              ? 'rgba(255,255,255,1)'
-              : 'rgba(255,255,255,0.5)',
-          },
+          state.endDate ? styles.headerTextFilled : styles.headerTextEmpty,
         ]}
       >
         {state.endDate ? formatter.format(state.endDate) : endLabel}
@@ -140,6 +132,8 @@ const styles = StyleSheet.create({
   label: { color: '#fff', letterSpacing: 1, fontSize: 13 },
   singleHeaderText: { color: '#fff', fontSize: 25 },
   rangeHeaderText: { color: '#fff', fontSize: 25 },
+  headerTextFilled: { color: 'rgba(255,255,255,1)' },
+  headerTextEmpty: { color: 'rgba(255,255,255,0.5)' },
   headerSeparator: {
     color: 'rgba(255,255,255,1)',
     fontSize: 25,

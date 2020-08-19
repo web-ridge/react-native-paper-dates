@@ -65,14 +65,14 @@ function Swiper({
     return itemLayout
   }
   const getItemCount = (data: any[]) => data.length
-  const keyExtractor = (item: any, index: number) => `${index}`
+  const keyExtractor = (_: any, index: number) => `${index}`
   const getItem = (_: any[], index: number) => ({ index })
   const renderPage = ({ index }: { index: number }) => {
     if (index < 0) {
       return null
     }
     return (
-      <View style={isHorizontal ? { width, height } : {}} key={index}>
+      <View style={isHorizontal ? { width, height } : null} key={index}>
         {renderItem({ index, onPrev, onNext })}
       </View>
     )

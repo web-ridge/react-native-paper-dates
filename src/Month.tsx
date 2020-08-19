@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { I18nManager, StyleSheet, View } from 'react-native'
-import { IconButton, Text } from 'react-native-paper'
+import { IconButton, Text, useTheme, TouchableRipple } from 'react-native-paper'
 import Day, { EmptyDay } from './Day'
-import fonts from '../fonts'
+
 import {
   addMonths,
   areDatesOnSameDay,
@@ -13,7 +13,6 @@ import {
   gridCounts,
   isDateBetween,
 } from './utils'
-import TouchableRipple from '../TouchableRipple'
 import { getCalendarHeaderHeight } from './CalendarHeader'
 
 interface BaseMonthProps {
@@ -96,6 +95,7 @@ function Month({
   selectColor,
   roundness,
 }: MonthSingleProps | MonthRangeProps) {
+  const theme = useTheme()
   const realIndex = getRealIndex(index)
   const isHorizontal = scrollMode === 'horizontal'
 
@@ -182,7 +182,7 @@ function Month({
                 marginTop: monthHeaderSingleMarginTop,
                 marginBottom: monthHeaderSingleMarginBottom,
               }
-            : {},
+            : null,
         ]}
       >
         <TouchableRipple
@@ -203,7 +203,7 @@ function Month({
               },
             ]}
           >
-            <Text style={styles.monthLabel}>
+            <Text style={[styles.monthLabel, theme.fonts.medium]}>
               {monthName} {year}
             </Text>
             <View style={isHorizontal ? styles.opacity1 : styles.opacity0}>
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     overflow: 'hidden',
   },
-  monthLabel: { fontSize: 14, ...fonts.medium, opacity: 0.7 },
+  monthLabel: { fontSize: 14, opacity: 0.7 },
   yearButton: { alignSelf: 'flex-start', marginLeft: 6 },
   yearButtonInner: {
     paddingLeft: 16,

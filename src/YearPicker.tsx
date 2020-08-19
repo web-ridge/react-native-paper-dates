@@ -34,22 +34,20 @@ export default function YearPicker({
 
   return (
     <View
-      style={[styles.root, selectingYear ? { opacity: 1 } : { opacity: 0 }]}
+      style={[styles.root, selectingYear ? styles.opacity1 : styles.opacity0]}
       pointerEvents={selectingYear ? 'auto' : 'none'}
     >
       <FlatList<number>
         ref={flatList}
         style={styles.list}
         data={years}
-        renderItem={({ item }) => {
-          return (
-            <Year
-              year={item}
-              selected={selectedYear === item}
-              onPressYear={onPressYear}
-            />
-          )
-        }}
+        renderItem={({ item }) => (
+          <Year
+            year={item}
+            selected={selectedYear === item}
+            onPressYear={onPressYear}
+          />
+        )}
         numColumns={3}
       />
     </View>
@@ -75,10 +73,12 @@ export function Year({
         <View
           style={[
             styles.yearInner,
-            selected ? { backgroundColor: theme.colors.primary } : {},
+            selected ? { backgroundColor: theme.colors.primary } : null,
           ]}
         >
-          <Text style={[styles.yearLabel, selected ? { color: '#fff' } : {}]}>
+          <Text
+            style={[styles.yearLabel, selected ? styles.selectedYear : null]}
+          >
             {year}
           </Text>
         </View>
@@ -96,6 +96,7 @@ const styles = StyleSheet.create({
     top: 56,
     zIndex: 100,
   },
+
   list: {
     flex: 1,
   },
@@ -106,6 +107,7 @@ const styles = StyleSheet.create({
     height: 62,
     justifyContent: 'center',
   },
+  selectedYear: { color: '#fff' },
   yearButton: {
     borderRadius: 46 / 2,
   },
@@ -117,6 +119,12 @@ const styles = StyleSheet.create({
   },
   yearLabel: {
     fontSize: 16,
+  },
+  opacity0: {
+    opacity: 0,
+  },
+  opacity1: {
+    opacity: 0,
   },
 })
 
