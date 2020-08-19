@@ -60,9 +60,9 @@ export default function RangeDatePage() {
     setVisible(false)
   }, [setVisible])
 
-  const onChange = React.useCallback(({ date }) => {
+  const onChange = React.useCallback(({ startDate, endDate }) => {
     setVisible(false)
-    console.log({ date })
+    console.log({ startDate, endDate })
   }, [])
 
 
