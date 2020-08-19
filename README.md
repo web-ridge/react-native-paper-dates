@@ -8,6 +8,8 @@
 - Endless scrolling
 - Performant
 
+<img src="https://user-images.githubusercontent.com/6492229/90681177-4970f280-e263-11ea-8257-6810c5166f92.gif"/>
+
 ## Getting started
 
 Yarn
