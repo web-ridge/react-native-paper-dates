@@ -1,15 +1,42 @@
-## react-native-paper-dates (WIP, no offical release yet)
+## react-native-paper-dates
 
-Demo: (https://twitter.com/RichardLindhout/status/1294636692540985344)
-
+- Smooth and fast cross platform date picker for React Native Paper
+- Tested on Android, iOS and the web platform!
 - Uses the native Date.Intl API's which work out of the box on the web / iOS
 - Simple API
-- Endless scrolling on both web (with react-window) / and VirtualizedList on other platforms
+- Typesafe
+- Endless scrolling
 - Performant
+
+<img src="https://user-images.githubusercontent.com/6492229/90681177-4970f280-e263-11ea-8257-6810c5166f92.gif"/>
+
+## Getting started
+
+Yarn
+```
+yarn add react-native-paper-dates
+```
+
+npm
+```
+npm install react-native-paper-dates --save
+```
+
+### Web
+If you use react-native-web and want to use this library you'll need to install react-window.
+Yarn
+```
+yarn add react-window
+```
+
+npm
+```
+npm install react-window --save
+```
 
 ## Usage
 
-### Single date
+### Date Picker
 
 ```tsx
 import * as React from 'react'
@@ -31,24 +58,24 @@ function SingleDatePage() {
 
   return (
     <>
-        <DatePickerModal
-          mode="single"
-          visible={visible}
-          onDismiss={onDismiss}
-          date={date}
-          onConfirm={onChange}
-          saveLabel={'Save'} // optional
-          label={'Select period'} // optional
-        />
-        <Button onPress={()=> setVisible(true)}>
-          Pick date
-        </Button>
+      <DatePickerModal
+        mode="single"
+        visible={visible}
+        onDismiss={onDismiss}
+        date={date}
+        onConfirm={onChange}
+        saveLabel={'Save'} // optional
+        label={'Select period'} // optional
+      />
+      <Button onPress={()=> setVisible(true)}>
+        Pick date
+      </Button>
     </>
   )
 }
 ```
 
-### Start / end
+### Range picker
 ```tsx
 import * as React from 'react'
 import { Button } from 'react-native-paper'
@@ -68,21 +95,21 @@ export default function RangeDatePage() {
 
   return (
     <>
-        <DatePickerModal
-            mode="range"
-            visible={visible}
-            onDismiss={onDismiss}
-            startDate={undefined}
-            endDate={undefined}
-            onConfirm={onChange}
-            saveLabel={'Save'} // optional
-            label={'Select period'} // optional
-            startLabel={'From'} // optional
-            endLabel={'To'} // optional
-        />
-        <Button onPress={()=> setVisible(true)}>
-          Pick range
-        </Button>
+      <DatePickerModal
+          mode="range"
+          visible={visible}
+          onDismiss={onDismiss}
+          startDate={undefined}
+          endDate={undefined}
+          onConfirm={onChange}
+          saveLabel={'Save'} // optional
+          label={'Select period'} // optional
+          startLabel={'From'} // optional
+          endLabel={'To'} // optional
+      />
+      <Button onPress={()=> setVisible(true)}>
+        Pick range
+      </Button>
     </>
   )
 }
@@ -91,17 +118,10 @@ export default function RangeDatePage() {
 
 
 ## Roadmap
+Things on our roadmap are labeled with enhancement.
+https://github.com/web-ridge/react-native-paper-dates/issues
 
-- Follow all things in spec (https://material.io/components/date-pickers#mobile-pickers)
-- TimePicker component
-- Selecting year in single input
-- Optional locale overriding (date formatting)
-- Optional timezone overriding
-- Option to start day of week on monday (or read this from timezone/locale)
-- Direct input with modal suffix
-- Mobile input picker
-
-### Android Caveats
+## Android Caveats
 
 You will need to add a polyfill for the Intl API on Android if:
 
