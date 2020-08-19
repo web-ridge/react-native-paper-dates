@@ -17,7 +17,6 @@ export type ModeType = 'single' | 'range'
 export type ScrollModeType = 'horizontal' | 'vertical'
 
 export type BaseCalendarProps = {
-  mode: ModeType
   scrollMode?: ScrollModeType
 }
 
