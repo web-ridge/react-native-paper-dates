@@ -9,7 +9,86 @@ Demo: (https://twitter.com/RichardLindhout/status/1294636692540985344)
 
 ## Usage
 
-import from '...'
+### Single date
+
+```tsx
+import * as React from 'react'
+import { Button } from 'react-native-paper'
+import { DatePickerModal } from 'react-native-paper-dates'
+
+function SingleDatePage() {
+  const [visible, setVisible] = React.useState(false)
+  const onDismiss = React.useCallback(() => {
+    setVisible(false)
+  }, [setVisible])
+
+  const onChange = React.useCallback(({ date }) => {
+    setVisible(false)
+    console.log({ date })
+  }, [])
+
+  const date = new Date()
+
+  return (
+    <>
+        <DatePickerModal
+          mode="single"
+          visible={visible}
+          onDismiss={onDismiss}
+          date={date}
+          onConfirm={onChange}
+          saveLabel={'Save'} // optional
+          label={'Select period'} // optional
+        />
+        <Button onPress={()=> setVisible(true)}>
+          Pick date
+        </Button>
+    </>
+  )
+}
+```
+
+### Start / end
+```tsx
+import * as React from 'react'
+import { Button } from 'react-native-paper'
+import { DatePickerModal } from 'react-native-paper-dates'
+
+export default function RangeDatePage() {
+  const [visible, setVisible] = React.useState(false)
+  const onDismiss = React.useCallback(() => {
+    setVisible(false)
+  }, [setVisible])
+
+  const onChange = React.useCallback(({ date }) => {
+    setVisible(false)
+    console.log({ date })
+  }, [])
+
+
+  return (
+    <>
+        <DatePickerModal
+            mode="range"
+            visible={visible}
+            onDismiss={onDismiss}
+            startDate={undefined}
+            endDate={undefined}
+            onConfirm={onChange}
+            saveLabel={'Save'} // optional
+            label={'Select period'} // optional
+            startLabel={'From'} // optional
+            endLabel={'To'} // optional
+        />
+        <Button onPress={()=> setVisible(true)}>
+          Pick range
+        </Button>
+    </>
+  )
+}
+```
+
+
 
 ## Roadmap
 
