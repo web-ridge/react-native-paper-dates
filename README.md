@@ -1,6 +1,6 @@
 ## react-native-paper-dates
 
-- Smooth and fast cross platform date picker
+- Smooth and fast cross platform date picker for React Native Paper
 - Tested on Android, iOS and the web platform!
 - Uses the native Date.Intl API's which work out of the box on the web / iOS
 - Simple API
