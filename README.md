@@ -188,3 +188,16 @@ See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the 
 ## License
 
 MIT
+
+
+## About us
+We want developers to be able to build software faster using modern tools like GraphQL, Golang, React Native.
+
+Follow us on Twitter:
+- https://twitter.com/RichardLindhout
+- https://twitter.com/web_ridge
+
+### You probably like these
+- Simple translations in React (Native): https://github.com/web-ridge/react-ridge-translations
+- Simple global state management in React (Native): https://github.com/web-ridge/react-ridge-state
+- 1 command utility for React Native (Web) project: https://github.com/web-ridge/create-react-native-web-application
