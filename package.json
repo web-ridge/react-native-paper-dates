@@ -25,9 +25,9 @@
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "prepare": "bob build",
     "release": "release-it",
-    "example": "yarn --cwd example",
-    "pods": "cd example && pod-install --quiet",
-    "bootstrap": "yarn example && yarn && yarn pods"
+    "example": "yarn --cwd old-example",
+    "pods": "cd old-example && pod-install --quiet",
+    "bootstrap": "yarn old-example && yarn && yarn pods"
   },
   "keywords": [
     "react-native",
@@ -61,9 +61,9 @@
     "jest": "^26.0.1",
     "pod-install": "^0.1.0",
     "prettier": "^2.0.5",
-    "react": "16.11.0",
+    "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-native": "0.62.2",
+    "react-native": "0.63.2",
     "react-native-paper": "^4.0.1",
     "react-window": "^1.8.5",
     "release-it": "^13.5.8",
@@ -72,6 +72,7 @@
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
+    "react-native-vector-icons": "*",
     "react-paper": "*",
     "react-window": "*"
   },
@@ -84,7 +85,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn lint && yarn typescript"
+
     }
   },
   "commitlint": {
@@ -148,5 +149,8 @@
       "module",
       "typescript"
     ]
+  },
+  "dependencies": {
+    "react-native-web-hover": "^0.2.7"
   }
 }

@@ -3,6 +3,7 @@ import { Text, TouchableRipple } from 'react-native-paper'
 import { StyleSheet, View } from 'react-native'
 import DayRange from './DayRange'
 import { daySize } from './utils'
+import { Hoverable } from 'react-native-web-hover'
 
 function EmptyDayPure() {
   return <View style={styles.empty} />
@@ -48,21 +49,29 @@ function Day(props: {
         rightCrop={rightCrop}
         selectColor={selectColor}
       />
-      <TouchableRipple
-        borderless={true}
-        onPress={onPress}
-        style={styles.button}
-      >
-        <View
-          style={[
-            styles.day,
-            isToday ? styles.today : null,
-            selected ? { backgroundColor: primaryColor } : null,
-          ]}
-        >
-          <Text style={selected ? styles.selectedText : null}>{day}</Text>
-        </View>
-      </TouchableRipple>
+      <Hoverable>
+        {({ hovered }) => (
+          <TouchableRipple
+            borderless={true}
+            onPress={onPress}
+            style={[
+              styles.button,
+              { backgroundColor: inRange ? selectColor : '#fff' },
+              hovered && styles.buttonHovered,
+            ]}
+          >
+            <View
+              style={[
+                styles.day,
+                isToday ? styles.today : null,
+                selected ? { backgroundColor: primaryColor } : null,
+              ]}
+            >
+              <Text style={selected ? styles.selectedText : null}>{day}</Text>
+            </View>
+          </TouchableRipple>
+        )}
+      </Hoverable>
     </View>
   )
 }
@@ -82,6 +91,9 @@ const styles = StyleSheet.create({
     height: daySize,
     overflow: 'hidden',
     borderRadius: daySize / 2,
+  },
+  buttonHovered: {
+    backgroundColor: 'rgba(0,0,0,0.1)',
   },
   day: {
     borderRadius: daySize / 2,
