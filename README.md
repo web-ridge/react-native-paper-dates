@@ -24,7 +24,8 @@ npm install react-native-paper-dates --save
 ```
 
 ### Web
-If you use react-native-web and want to use this library you'll need to install react-window.
+If you use react-native-web and want to use this library you'll need to install react-window. 
+
 Yarn
 ```
 yarn add react-window
