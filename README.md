@@ -8,17 +8,17 @@
 - Endless scrolling
 - Performant
 
-Older demo of this library
+Older demo of this library.   
 <img src="https://user-images.githubusercontent.com/6492229/90681177-4970f280-e263-11ea-8257-6810c5166f92.gif"/>
 
 ## Getting started
 
-Yarn
+Yarn   
 ```
 yarn add react-native-paper-dates
 ```
 
-npm
+npm   
 ```
 npm install react-native-paper-dates --save
 ```
