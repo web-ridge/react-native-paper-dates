@@ -4,13 +4,14 @@ import { StyleSheet, View } from 'react-native'
 import Swiper from './Swiper'
 
 import Month from './Month'
-import { dateToUnix, useLatest } from './utils'
+import { dateToUnix } from './dateUtils'
 
 import CalendarHeader from './CalendarHeader'
 import { useCallback, useMemo } from 'react'
 import YearPicker from './YearPicker'
 import Color from 'color'
 import { useTheme } from 'react-native-paper'
+import { useLatest } from '../utils'
 
 export type ModeType = 'single' | 'range'
 

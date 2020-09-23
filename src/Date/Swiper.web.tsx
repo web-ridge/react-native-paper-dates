@@ -5,7 +5,7 @@ import { VariableSizeList as List } from 'react-window'
 import { useCallback, useState } from 'react'
 import { getMonthHeight, getMonthsOffset } from './Month'
 import { dayNamesHeight } from './DayNames'
-import { allMonthsArray, startAtIndex } from './utils'
+import { allMonthsArray, startAtIndex } from './dateUtils'
 
 type RenderProps = {
   index: number

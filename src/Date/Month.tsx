@@ -12,7 +12,7 @@ import {
   getRealIndex,
   gridCounts,
   isDateBetween,
-} from './utils'
+} from './dateUtils'
 import { getCalendarHeaderHeight } from './CalendarHeader'
 
 interface BaseMonthProps {
@@ -203,7 +203,10 @@ function Month({
               },
             ]}
           >
-            <Text style={[styles.monthLabel, theme.fonts.medium]}>
+            <Text
+              style={[styles.monthLabel, theme.fonts.medium]}
+              selectable={false}
+            >
               {monthName} {year}
             </Text>
             <View style={isHorizontal ? styles.opacity1 : styles.opacity0}>

@@ -6,7 +6,12 @@ function DayName({ label }: { label: string }) {
   const theme = useTheme()
   return (
     <View style={styles.dayName}>
-      <Text style={[styles.dayNameLabel, theme.fonts.medium]}>{label}</Text>
+      <Text
+        style={[styles.dayNameLabel, theme.fonts.medium]}
+        selectable={false}
+      >
+        {label}
+      </Text>
     </View>
   )
 }

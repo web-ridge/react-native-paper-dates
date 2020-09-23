@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
-import { daySize } from './utils'
+import { daySize } from './dateUtils'
 
 function DayRange({
   leftCrop,

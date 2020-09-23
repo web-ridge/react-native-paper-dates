@@ -4,12 +4,11 @@ import {
   StyleSheet,
   TextInput as TextInputNative,
   Keyboard,
-  Platform,
 } from 'react-native'
 
 import { CalendarDate, ModeType } from './Calendar'
 import { LocalState } from './DatePickerModal'
-import TextInputWithMask from './TextInputMask'
+import TextInputWithMask from '../TextInputMask'
 
 function CalendarEdit({
   mode,
@@ -115,7 +114,6 @@ function CalendarInputPure(
   const inputFormat = React.useMemo(() => {
     // TODO: something cleaner and more universal?
     const inputDate = formatter.format(new Date(Date.UTC(2020, 10 - 1, 1)))
-
     return inputDate
       .replace('2020', 'YYYY')
       .replace('10', 'MM')
@@ -143,8 +141,7 @@ function CalendarInputPure(
       value={formattedValue}
       style={styles.input}
       label={`${label} (${inputFormat})`}
-      // https://github.com/necolas/react-native-web/issues/1705
-      keyboardType={Platform.OS === 'web' ? undefined : 'numeric'}
+      keyboardType={'numeric'}
       placeholder={inputFormat}
       mask={inputFormat}
       onChangeText={onChangeText}

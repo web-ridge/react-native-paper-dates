@@ -78,6 +78,7 @@ export function Year({
         >
           <Text
             style={[styles.yearLabel, selected ? styles.selectedYear : null]}
+            selectable={false}
           >
             {year}
           </Text>

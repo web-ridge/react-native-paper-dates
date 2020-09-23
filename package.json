@@ -83,11 +83,7 @@
       "<rootDir>/lib/"
     ]
   },
-  "husky": {
-    "hooks": {
 
-    }
-  },
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"

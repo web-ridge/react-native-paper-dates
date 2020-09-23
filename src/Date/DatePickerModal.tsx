@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { Platform, StyleSheet, useWindowDimensions, View } from 'react-native'
-import Modal from './Modal'
+import { Modal, StyleSheet, useWindowDimensions, View } from 'react-native'
 
 import Calendar, {
   BaseCalendarProps,
@@ -10,7 +9,7 @@ import Calendar, {
   SingleChange,
 } from './Calendar'
 
-import AnimatedCrossView from './AnimatedCrossView'
+import AnimatedCrossView from '../AnimatedCrossView'
 
 import DatePickerModalHeader, { HeaderPickProps } from './DatePickerModalHeader'
 import CalendarEdit from './CalendarEdit'
@@ -156,8 +155,8 @@ export function DatePickerModal(
 
 const styles = StyleSheet.create({
   modalRoot: {
-    justifyContent: Platform.OS === 'web' ? 'center' : 'flex-start',
-    alignItems: Platform.OS === 'web' ? 'center' : 'stretch',
+    justifyContent: 'flex-start',
+    alignItems: 'stretch',
     flex: 1,
   },
   modalBackground: {

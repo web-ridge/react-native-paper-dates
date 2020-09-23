@@ -2,8 +2,7 @@ import * as React from 'react'
 import { Text, TouchableRipple } from 'react-native-paper'
 import { StyleSheet, View } from 'react-native'
 import DayRange from './DayRange'
-import { daySize } from './utils'
-import { Hoverable } from 'react-native-web-hover'
+import { daySize } from './dateUtils'
 
 function EmptyDayPure() {
   return <View style={styles.empty} />
@@ -49,29 +48,31 @@ function Day(props: {
         rightCrop={rightCrop}
         selectColor={selectColor}
       />
-      <Hoverable>
-        {({ hovered }) => (
-          <TouchableRipple
-            borderless={true}
-            onPress={onPress}
-            style={[
-              styles.button,
-              { backgroundColor: inRange ? selectColor : '#fff' },
-              hovered && styles.buttonHovered,
-            ]}
+
+      <TouchableRipple
+        borderless={true}
+        onPress={onPress}
+        style={[
+          styles.button,
+          { backgroundColor: inRange ? selectColor : '#fff' },
+          // hovered && styles.buttonHovered,
+        ]}
+      >
+        <View
+          style={[
+            styles.day,
+            isToday ? styles.today : null,
+            selected ? { backgroundColor: primaryColor } : null,
+          ]}
+        >
+          <Text
+            style={selected ? styles.selectedText : null}
+            selectable={false}
           >
-            <View
-              style={[
-                styles.day,
-                isToday ? styles.today : null,
-                selected ? { backgroundColor: primaryColor } : null,
-              ]}
-            >
-              <Text style={selected ? styles.selectedText : null}>{day}</Text>
-            </View>
-          </TouchableRipple>
-        )}
-      </Hoverable>
+            {day}
+          </Text>
+        </View>
+      </TouchableRipple>
     </View>
   )
 }
@@ -79,8 +80,10 @@ function Day(props: {
 const styles = StyleSheet.create({
   empty: {
     flex: 1,
+    flexBasis: 0,
   },
   root: {
+    flexBasis: 0,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -96,6 +99,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.1)',
   },
   day: {
+    flexBasis: 0,
+    flex: 1,
     borderRadius: daySize / 2,
     width: daySize,
     height: daySize,

@@ -94,14 +94,6 @@ export function isDateBetween(
   return false
 }
 
-export function useLatest<T>(value: T) {
-  const valueRef = React.useRef<T>(value)
-  React.useEffect(() => {
-    valueRef.current = value
-  }, [value])
-  return valueRef
-}
-
 export function isLeapYear({ year }: { year: number }) {
   return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0
 }

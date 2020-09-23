@@ -1251,6 +1251,69 @@
   resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-10.1.0.tgz#f0950bba18819512d42f7197e56c518aa491cf18"
   integrity sha512-ij4wRiunFfaJxjB0BdrYHIH8FxBJpOwNPhhAcunlmPdXudL1WQV1qoP9un6JsEBAgQH+7UXyyjh0g7jTxXK6tg==
 
+"@formatjs/ecma402-abstract@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@formatjs/ecma402-abstract/-/ecma402-abstract-1.2.1.tgz#ad966998d7f0e96fca4bdc5de0ca28d02f371279"
+  integrity sha512-LvbwgHxprafjceDfOC7yMl4sP5al71rAWahXk3qug5bV020aCq64WjqAo+zNnkIJk8hqK2pFKnNdDsT58HZJQw==
+
+"@formatjs/intl-datetimeformat@^2.6.6":
+  version "2.6.6"
+  resolved "https://registry.yarnpkg.com/@formatjs/intl-datetimeformat/-/intl-datetimeformat-2.6.6.tgz#1a155b59cd827fe77f96e8254eba4cd6cdc6507c"
+  integrity sha512-o+RUjJfIIeWkjc9XmMp6YCQbvm3Y/1H51eyu8tkHqFeerpwZNiOEJFOennF68AtwyOLw3XbDIL1EP5McgiI/iQ==
+  dependencies:
+    "@formatjs/ecma402-abstract" "^1.2.1"
+
+"@formatjs/intl-displaynames@^3.3.7":
+  version "3.3.7"
+  resolved "https://registry.yarnpkg.com/@formatjs/intl-displaynames/-/intl-displaynames-3.3.7.tgz#7d8cc73d0a67a7c51b182233121eaa2c85f9f751"
+  integrity sha512-sMdV3QaFy2RMOZ6YaRYInDzThEEIiD8vZjue20/CYvxgNKw3ZIZROvpEaKHvHr197Si3RFaxhAGUWk/lI7NAeA==
+  dependencies:
+    "@formatjs/ecma402-abstract" "^1.2.1"
+
+"@formatjs/intl-getcanonicallocales@^1.4.4":
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/@formatjs/intl-getcanonicallocales/-/intl-getcanonicallocales-1.4.4.tgz#92c04e5c4ba6ac0ca22ce0c52dd57ec6eb2ee573"
+  integrity sha512-ub69FA8kgc0FakEo0A2zW2LkH2pCR2gbotOOF3d0Lu+uRrMEqWkEVdz5/p3b/mNLJRvC9XtHIG9HV+86vTO4tg==
+  dependencies:
+    cldr-core "36.0.0"
+
+"@formatjs/intl-listformat@^4.2.6":
+  version "4.2.6"
+  resolved "https://registry.yarnpkg.com/@formatjs/intl-listformat/-/intl-listformat-4.2.6.tgz#31638a6cb3e33047d81161b139c1d68fb377d3c2"
+  integrity sha512-4JGDYVwZyEMGpwhUKXIcSXjRVuSrz5ox1rQCQVzj0CzgEoojrQoaUkcuW+Vj89JlpCtRS8NS46d3CWLUSDC+2g==
+  dependencies:
+    "@formatjs/ecma402-abstract" "^1.2.1"
+
+"@formatjs/intl-locale@^2.3.6":
+  version "2.3.6"
+  resolved "https://registry.yarnpkg.com/@formatjs/intl-locale/-/intl-locale-2.3.6.tgz#1d6bab0494b8cc6623123c1241abcfbfe5a1a22d"
+  integrity sha512-U/XE6z5vqxSCsaKQ0HKfl1/UPL3iX2KlAbKjB3ep3m/c2vQbiCKLbpLR9FmBRFX11Biz/JfMZ54M1XoKSUHKzQ==
+  dependencies:
+    "@formatjs/ecma402-abstract" "^1.2.1"
+    "@formatjs/intl-getcanonicallocales" "^1.4.4"
+    cldr-core "^36.0.0"
+
+"@formatjs/intl-numberformat@^5.6.1":
+  version "5.6.1"
+  resolved "https://registry.yarnpkg.com/@formatjs/intl-numberformat/-/intl-numberformat-5.6.1.tgz#eaa16b68be6a8c7dddbb2495a9271046c51293c5"
+  integrity sha512-ENtX07hT/GJD/GZIvk1jf/nYHg8Hq3twZ4fOGAZIVhwd6ZqlAm6dgqqRxpNXw3ul8UCwx9tOeptF1gT42HwjKA==
+  dependencies:
+    "@formatjs/ecma402-abstract" "^1.2.1"
+
+"@formatjs/intl-pluralrules@^3.4.6":
+  version "3.4.6"
+  resolved "https://registry.yarnpkg.com/@formatjs/intl-pluralrules/-/intl-pluralrules-3.4.6.tgz#3047b1fc5c6f5d097588214a35650b8047d82c2f"
+  integrity sha512-6/K0Lqlej2bYM1K3HfSNsEURHlsmWJhrE95k/hZdE4wo7k5S7Fc/QUfHlieLQvCXF77n/zVgzp/9bpgxMDxL0A==
+  dependencies:
+    "@formatjs/ecma402-abstract" "^1.2.1"
+
+"@formatjs/intl-relativetimeformat@^7.2.6":
+  version "7.2.6"
+  resolved "https://registry.yarnpkg.com/@formatjs/intl-relativetimeformat/-/intl-relativetimeformat-7.2.6.tgz#7452e0feaa433f341b306e308166058e8126e934"
+  integrity sha512-SHwrzk9HuAUwl3/qfupU3ZnW4ZgVOpI2+3gwGmvoPOmAlKFlo7liSCszA5hcRpsnhjS66BqUzfx6BWOwzYvmKQ==
+  dependencies:
+    "@formatjs/ecma402-abstract" "^1.2.1"
+
 "@hapi/address@2.x.x":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@hapi/address/-/address-2.1.4.tgz#5d67ed43f3fd41a69d4b9ff7b56e7c0d1d0a81e5"
@@ -3763,6 +3826,11 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
+cldr-core@36.0.0, cldr-core@^36.0.0:
+  version "36.0.0"
+  resolved "https://registry.yarnpkg.com/cldr-core/-/cldr-core-36.0.0.tgz#1d2148ed6802411845baeeb21432d7bbfde7d4f7"
+  integrity sha512-QLnAjt20rZe38c8h8OJ9jPND+O4o5O8Nw0TK/P3KpNn1cmOhMu0rk6Kc3ap96c5OStQ9gAngs9+Be2sum26NOw==
+
 clean-css@^4.2.3:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/clean-css/-/clean-css-4.2.3.tgz#507b5de7d97b48ee53d84adb0160ff6216380f78"
@@ -4551,11 +4619,6 @@ dayjs@^1.8.15:
   version "1.8.34"
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.8.34.tgz#d3ad33cc43d6b0f24cb8686b90aad2c653708069"
   integrity sha512-Olb+E6EoMvdPmAMq2QoucuyZycKHjTlBXmRx8Ada+wGtq4SIXuDCdtoaX4KkK0yjf1fJLnwXQURr8gQKWKaybw==
-
-debounce@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/debounce/-/debounce-1.2.0.tgz#44a540abc0ea9943018dc0eaa95cce87f65cd131"
-  integrity sha512-mYtLl1xfZLi1m4RtQYlZgJUNQjl4ZxVnHzIR8nLLgi4q1YT8o/WM+MK/f8yfcc9s5Ir5zRaPZyZU6xs1Syoocg==
 
 debug@2.6.9, debug@^2.2.0, debug@^2.3.3, debug@^2.6.0, debug@^2.6.9:
   version "2.6.9"
@@ -11177,6 +11240,11 @@ react-is@^16.12.0, react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.4, react-i
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
+react-native-localize@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/react-native-localize/-/react-native-localize-1.4.1.tgz#031bd2089f09cc16ee7daee03019684dda60c275"
+  integrity sha512-g1L1au6GtCd0Ci6lQ8JVPYgl7uvEtKY2jeVghJcV6qQEN9+qACyqjOIR8pskUyI+qcSj1z4/nZh3IFxDVu1drw==
+
 react-native-paper@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-4.0.1.tgz#13d2272757fb738113582e900787f365cfa77c74"
@@ -11201,14 +11269,13 @@ react-native-safe-area-view@^0.14.9:
     prop-types "^15.7.2"
     yargs "^15.0.2"
 
-react-native-web@^0.13.8:
-  version "0.13.8"
-  resolved "https://registry.yarnpkg.com/react-native-web/-/react-native-web-0.13.8.tgz#2c62425c88d56d7061e847ec27b81d54365ab4d8"
-  integrity sha512-xTJUFN9N+hFzdRrCwucMi+kBldKXmGGbsgjKLsbhyWUeXxZypXDUy7r3D6t2EUoFq/U3OJzSx/QY4RdudsRt7Q==
+react-native-web@^0.0.0-80dae21e2:
+  version "0.0.0-80dae21e2"
+  resolved "https://registry.yarnpkg.com/react-native-web/-/react-native-web-0.0.0-80dae21e2.tgz#7698ce52e2eff53c94839bade6de4fc79a1dbfb1"
+  integrity sha512-zuVPxHBe/3kswUAoIsF0ktW+Db2IQ/xcZZCBKRA2majlGE/xV2BjRAYv0MJUvbmB4Mx4mtjVkB/osKi1Eb9QYw==
   dependencies:
     array-find-index "^1.0.2"
     create-react-class "^15.6.2"
-    debounce "^1.2.0"
     deep-assign "^3.0.0"
     fbjs "^1.0.0"
     hyphenate-style-name "^1.0.3"
