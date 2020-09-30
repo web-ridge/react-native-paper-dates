@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import { useWindowDimensions } from 'react-native'
 import { getMonthHeight, getMonthsOffset } from './Month'
-import { allMonthsArray, daySize, startAtIndex } from './utils'
+import { allMonthsArray, daySize, startAtIndex } from './dateUtils'
 
 const styles = StyleSheet.create({
   viewPager: {

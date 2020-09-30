@@ -1,8 +1,9 @@
 import * as React from 'react'
-import { TextInput, TextInputProps, StyleSheet } from 'react-native'
-import { useTheme } from 'react-native-paper'
+import { View, TextInput, TextInputProps, StyleSheet } from 'react-native'
+import { useTheme, TouchableRipple } from 'react-native-paper'
 
-import { PossibleTypes } from './TimePicker'
+import { inputTypes, PossibleInputTypes, PossibleTypes } from './TimePicker'
+import Color from 'color'
 
 interface TimeInputProps
   extends Omit<Omit<TextInputProps, 'value'>, 'onFocus'> {
@@ -11,6 +12,7 @@ interface TimeInputProps
   onFocus: (type: PossibleTypes) => any
   focused: boolean
   focusedColor: string
+  inputType: PossibleInputTypes
 }
 
 export default function TimeInput({
@@ -19,6 +21,7 @@ export default function TimeInput({
   focused,
   onFocus,
   focusedColor,
+  inputType,
   ...rest
 }: TimeInputProps) {
   const theme = useTheme()
@@ -36,19 +39,40 @@ export default function TimeInput({
     onFocus(type)
   }
   return (
-    <TextInput
-      style={[
-        styles.root,
-        {
-          color: focused ? theme.colors.primary : '#000',
-          backgroundColor: focused ? focusedColor : '#E4E4E4',
-          borderRadius: theme.roundness,
-        },
-      ]}
-      value={formattedValue}
-      onFocus={onInnerFocus}
-      {...rest}
-    />
+    <View style={{ flex: 1, position: 'relative', height: 65 }}>
+      <TextInput
+        style={[
+          styles.root,
+          {
+            // color: focused ? theme.colors.primary : '#000',
+            // backgroundColor: focused ? focusedColor : '#E4E4E4',
+            color: theme.dark ? '#fff' : '#000',
+            backgroundColor: theme.dark
+              ? Color(theme.colors.surface).lighten(1.2).hex()
+              : Color(theme.colors.surface).darken(0.1).hex(),
+            borderRadius: theme.roundness,
+          },
+        ]}
+        value={formattedValue}
+        onFocus={onInnerFocus}
+        {...rest}
+      />
+      {inputType === inputTypes.picker ? (
+        <TouchableRipple
+          style={[
+            StyleSheet.absoluteFill,
+            {
+              // backgroundColor: 'blue',
+              borderRadius: theme.roundness,
+              overflow: 'hidden',
+            },
+          ]}
+          onPress={() => onFocus(type)}
+        >
+          <View />
+        </TouchableRipple>
+      ) : null}
+    </View>
   )
 }
 
@@ -58,7 +82,7 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     paddingBottom: 12,
     textAlign: 'center',
-    width: 70,
+    flex: 1,
     height: 65,
   },
 })

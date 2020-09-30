@@ -23,11 +23,11 @@
     "test": "jest",
     "typescript": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "prepare": "bob build",
+    "build": "bob build",
     "release": "release-it",
-    "example": "yarn --cwd old-example",
-    "pods": "cd old-example && pod-install --quiet",
-    "bootstrap": "yarn old-example && yarn && yarn pods"
+    "example": "yarn --cwd example",
+    "pods": "cd example && pod-install --quiet",
+    "bootstrap": "yarn example && yarn && yarn pods"
   },
   "keywords": [
     "react-native",
@@ -83,7 +83,6 @@
       "<rootDir>/lib/"
     ]
   },
-
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"

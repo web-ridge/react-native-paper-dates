@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
-import { IconButton } from 'react-native-paper'
+import { IconButton, useTheme } from 'react-native-paper'
 import DayNames, { dayNamesHeight } from './DayNames'
 
 const buttonContainerHeight = 56
@@ -28,17 +28,28 @@ function CalendarHeader({
   onPrev: () => any
   onNext: () => any
 }) {
+  const theme = useTheme()
   const isHorizontal = scrollMode === 'horizontal'
   return (
     <View style={styles.datePickerHeader} pointerEvents={'box-none'}>
       {isHorizontal ? (
         <View style={styles.buttonContainer} pointerEvents={'box-none'}>
           <View style={styles.spacer} pointerEvents={'box-none'} />
-          <View style={styles.buttonWrapper}>
+          <View
+            style={[
+              styles.buttonWrapper,
+              { backgroundColor: theme.colors.surface },
+            ]}
+          >
             <IconButton icon="chevron-left" onPress={onPrev} />
           </View>
 
-          <View style={styles.buttonWrapper}>
+          <View
+            style={[
+              styles.buttonWrapper,
+              { backgroundColor: theme.colors.surface },
+            ]}
+          >
             <IconButton icon="chevron-right" onPress={onNext} />
           </View>
         </View>
@@ -63,7 +74,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  buttonWrapper: { backgroundColor: '#fff' },
+  buttonWrapper: {},
   spacer: { flex: 1 },
 })
 

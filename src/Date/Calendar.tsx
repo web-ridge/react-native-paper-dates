@@ -154,7 +154,7 @@ function Calendar(props: CalendarSingleProps | CalendarRangeProps) {
 }
 
 const styles = StyleSheet.create({
-  root: { backgroundColor: '#fff', flex: 1 },
+  root: { flex: 1 },
   viewPager: { flex: 1 },
 })
 

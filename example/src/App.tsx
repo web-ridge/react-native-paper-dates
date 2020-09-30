@@ -1,11 +1,27 @@
 import * as React from 'react';
-import { View } from 'react-native';
-import { Title, Button, Provider as PaperProvider } from 'react-native-paper';
+import { ScrollView, View } from 'react-native';
+import {
+  Title,
+  Button,
+  Text,
+  Provider as PaperProvider,
+  Switch,
+  DefaultTheme,
+  DarkTheme,
+  useTheme,
+} from 'react-native-paper';
 import { DatePickerModal } from '../../src';
 import { Platform } from 'react-native';
 import TimePicker from '../../src/Time/TimePicker';
 
-function App() {
+function App({
+  onToggleDarkMode,
+  dark,
+}: {
+  onToggleDarkMode: () => any;
+  dark: boolean;
+}) {
+  const theme = useTheme();
   const [rangeOpen, setRangeOpen] = React.useState(false);
   const [singleOpen, setSingleOpen] = React.useState(false);
   const onDismissRange = React.useCallback(() => {
@@ -25,12 +41,18 @@ function App() {
   }, []);
 
   return (
-    <View style={{ alignItems: 'center', backgroundColor: '#FCFCFC', flex: 1 }}>
+    <ScrollView
+      style={{
+        backgroundColor: theme.colors.background,
+        flex: 1,
+      }}
+      contentInsetAdjustmentBehavior="always"
+    >
       <View
         style={{
           width: '100%',
-          maxWidth: 350,
-          backgroundColor: '#fff',
+          maxWidth: 450,
+          backgroundColor: theme.colors.surface,
           shadowColor: '#000',
           shadowOffset: {
             width: 0,
@@ -40,9 +62,44 @@ function App() {
           shadowRadius: 3.84,
           elevation: 5,
           padding: 24,
+          alignSelf: 'center',
+          flex: 1,
         }}
       >
         <Title>Examples</Title>
+        <View style={{ flexDirection: 'row', marginTop: 24 }}>
+          <Text>Dark mode</Text>
+          <View style={{ flex: 1 }} />
+          <Switch value={dark} onValueChange={onToggleDarkMode} />
+        </View>
+        <View
+          style={{
+            backgroundColor: theme.colors.primary,
+            width: 50,
+            height: 50,
+          }}
+        />
+        <View
+          style={{
+            backgroundColor: theme.colors.accent,
+            width: 50,
+            height: 50,
+          }}
+        />
+        <View
+          style={{
+            backgroundColor: theme.colors.background,
+            width: 50,
+            height: 50,
+          }}
+        />
+        <View
+          style={{
+            backgroundColor: theme.colors.surface,
+            width: 50,
+            height: 50,
+          }}
+        />
 
         <View style={{ flexDirection: 'row', marginTop: 24 }}>
           <Button
@@ -84,23 +141,22 @@ function App() {
           label={'Select date'} // optional
         />
 
-        <TimePicker />
-        {Platform.OS === 'web' ? (
-          <style type="text/css">{`
-        @font-face {
-          font-family: 'MaterialCommunityIcons';
-          src: url(${require('react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf')}) format('truetype');
-        }
-      `}</style>
-        ) : null}
+        <View style={{ alignItems: 'center', marginTop: 24 }}>
+          <TimePicker />
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 export default function AppWithProviders() {
+  const [dark, setDark] = React.useState(false);
+  const onToggleDarkMode = () => {
+    setDark((prev) => !prev);
+  };
+
   return (
-    <PaperProvider>
+    <PaperProvider theme={dark ? DarkTheme : DefaultTheme}>
       <React.Fragment>
         {Platform.OS === 'web' ? (
           <style type="text/css">{`
@@ -110,7 +166,7 @@ export default function AppWithProviders() {
           }
         `}</style>
         ) : null}
-        <App />
+        <App onToggleDarkMode={onToggleDarkMode} dark={dark} />
       </React.Fragment>
     </PaperProvider>
   );

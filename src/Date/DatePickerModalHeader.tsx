@@ -1,8 +1,10 @@
 import * as React from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, StatusBar } from 'react-native'
 import { Appbar, Button, IconButton, Text, useTheme } from 'react-native-paper'
 import { ModeType } from './Calendar'
 import { LocalState } from './DatePickerModal'
+import { useMemo } from 'react'
+import Color from 'color'
 
 export interface HeaderPickProps {
   label?: string
@@ -31,15 +33,31 @@ export default function DatePickerModalHeader(props: HeaderProps) {
     ? 'Select period'
     : 'Select date'
 
+  const statusBarColor = useMemo<string>(
+    () => Color(theme.colors.primary).darken(0.2).hex(),
+    [theme]
+  )
+
+  // TODO: fix statusbar height
   return (
     <>
-      <Appbar.Header style={styles.appbarHeader}>
+      <StatusBar transparent={true} barStyle={'light-content'} />
+      <View
+        style={[
+          styles.statusbar,
+          {
+            height: StatusBar.currentHeight,
+            backgroundColor: statusBarColor,
+          },
+        ]}
+      />
+      <Appbar style={styles.appbarHeader}>
         <Appbar.Action icon="close" onPress={props.onDismiss} />
         <Appbar.Content title={''} />
         <Button color={'#fff'} onPress={props.onSave}>
           {saveLabel}
         </Button>
-      </Appbar.Header>
+      </Appbar>
       <View
         style={[
           styles.header,

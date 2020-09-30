@@ -8,13 +8,10 @@
 import * as React from 'react'
 import {
   PanResponder,
-  TextInput,
   View,
   StyleSheet,
   LayoutChangeEvent,
-  TextInputProps,
   GestureResponderEvent,
-  PanResponderGestureState,
 } from 'react-native'
 import { Text, TouchableRipple, useTheme } from 'react-native-paper'
 import { useCallback, useMemo } from 'react'
@@ -25,9 +22,18 @@ import TimeInput from './TimeInput'
 import Color from 'color'
 const circleSize = 215
 
+export type PossibleInputTypes = 'keyboard' | 'picker'
+type InputTypeMap = {
+  [inputType: string]: PossibleInputTypes
+}
+export const inputTypes: InputTypeMap = {
+  keyboard: 'keyboard',
+  picker: 'picker',
+}
+
 export type PossibleTypes = 'hours' | 'minutes'
 type TypeMap = {
-  [key: string]: PossibleTypes
+  [type: string]: PossibleTypes
 }
 const types: TypeMap = {
   minutes: 'minutes',
@@ -71,6 +77,9 @@ export default function TimePicker() {
     [theme]
   )
 
+  const [inputType, setInputType] = React.useState<PossibleInputTypes>(
+    inputTypes.picker
+  )
   const [focused, setFocused] = React.useState<PossibleTypes>(types.hours)
   const [hours, setHours] = React.useState<number>(date.getHours())
   const [minutes, setMinutes] = React.useState<number>(date.getMinutes())
@@ -118,7 +127,7 @@ export default function TimePicker() {
   ).current
 
   return (
-    <View style={{ padding: 24 }}>
+    <View style={{ width: circleSize }}>
       <View
         style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 35 }}
       >
@@ -129,6 +138,7 @@ export default function TimePicker() {
           focused={focused === types.hours}
           onFocus={onFocusInput}
           focusedColor={focusedColor}
+          inputType={inputType}
         />
         <Text
           selectable={false}
@@ -143,47 +153,59 @@ export default function TimePicker() {
           focused={focused === types.minutes}
           onFocus={onFocusInput}
           focusedColor={focusedColor}
+          inputType={inputType}
         />
-        <View style={{ width: 12 }} />
-        <View
-          style={{
-            width: 41,
-            height: 65,
-            borderWidth: 1,
-            borderColor: '#ccc',
-            borderRadius: theme.roundness,
-          }}
-        >
-          <TouchableRipple
-            onPress={() => {}}
-            style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-          >
-            <Text selectable={false} style={{ ...theme.fonts.medium }}>
-              AM
-            </Text>
-          </TouchableRipple>
-          <View style={{ height: 1, width: 41, backgroundColor: '#ccc' }} />
-          <TouchableRipple
-            onPress={() => {}}
-            style={{
-              flex: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Text selectable={false} style={{ ...theme.fonts.medium }}>
-              PM
-            </Text>
-          </TouchableRipple>
-        </View>
+        {!is24Hour && (
+          <>
+            <View style={{ width: 12 }} />
+            <View
+              style={{
+                width: 41,
+                height: 65,
+                borderWidth: 1,
+                borderColor: theme.colors.backdrop,
+                borderRadius: theme.roundness,
+              }}
+            >
+              <TouchableRipple
+                onPress={() => {}}
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Text selectable={false} style={{ ...theme.fonts.medium }}>
+                  AM
+                </Text>
+              </TouchableRipple>
+              <View style={{ height: 1, width: 41, backgroundColor: '#ccc' }} />
+              <TouchableRipple
+                onPress={() => {}}
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Text selectable={false} style={{ ...theme.fonts.medium }}>
+                  PM
+                </Text>
+              </TouchableRipple>
+            </View>
+          </>
+        )}
       </View>
+
       <View
         ref={clockRef}
         onLayout={onLayout}
         {...panResponder.panHandlers}
         style={{
           borderRadius: circleSize / 2,
-          backgroundColor: '#EFEFEF',
+          backgroundColor: theme.dark
+            ? Color(theme.colors.surface).lighten(1.2).hex()
+            : Color(theme.colors.surface).darken(0.1).hex(),
           height: circleSize,
           width: circleSize,
           position: 'relative',
@@ -261,14 +283,14 @@ export default function TimePicker() {
         <View
           style={{
             position: 'absolute',
-            width: circleSize / 2 - 4 - (hours > 12 ? 30 : 0),
+            width: circleSize / 2 - 4 - (hours > 12 ? 33 : 0),
             marginBottom: -1,
             height: 2,
             borderRadius: 4,
             backgroundColor: theme.colors.primary,
             transform: [
               { rotate: -90 + pointerNumber * 30 + 'deg' },
-              { translateX: circleSize / 4 - 4 - (hours > 12 ? 30 / 2 : 0) },
+              { translateX: circleSize / 4 - 4 - (hours > 12 ? 33 / 2 : 0) },
             ],
           }}
           pointerEvents="none"
@@ -281,7 +303,7 @@ export default function TimePicker() {
               position: 'absolute',
               backgroundColor: theme.colors.primary,
               right: 0,
-              bottom: -15,
+              bottom: -14,
             }}
           />
         </View>

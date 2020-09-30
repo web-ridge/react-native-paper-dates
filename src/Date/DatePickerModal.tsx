@@ -97,6 +97,8 @@ export function DatePickerModal(
       transparent={true}
       visible={visible}
       onRequestClose={onDismiss}
+      presentationStyle="overFullScreen"
+      statusBarTranslucent
     >
       <>
         <View style={[StyleSheet.absoluteFill, styles.modalBackground]} />
