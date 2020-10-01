@@ -1,6 +1,26 @@
+export type PossibleInputTypes = 'keyboard' | 'picker'
+export type InputTypeMap = {
+  [inputType: string]: PossibleInputTypes
+}
+export const inputTypes: InputTypeMap = {
+  keyboard: 'keyboard',
+  picker: 'picker',
+}
+
+export type PossibleClockTypes = 'hours' | 'minutes'
+export type ClockTypeMap = {
+  [clockType: string]: PossibleClockTypes
+}
+export const clockTypes: ClockTypeMap = {
+  minutes: 'minutes',
+  hours: 'hours',
+}
+
+// Code inspiration: https://github.com/ShaneGH/analogue-time-picker/blob/master/src/utils/angle.ts
+
 const outerHeight = 34
 const _30 = Math.PI / 6
-const _12 = Math.PI / 30
+// const _12 = Math.PI / 30
 const _360 = Math.PI * 2
 const _90 = Math.PI / 2
 

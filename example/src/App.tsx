@@ -42,6 +42,7 @@ function App({
 
   return (
     <ScrollView
+      scrollEnabled={false}
       style={{
         backgroundColor: theme.colors.background,
         flex: 1,

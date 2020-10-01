@@ -1,65 +1,26 @@
 // @typescript-eslint/no-unused-vars
 // WORK IN PROGRESS
-// NO CLEAN CODE AT THE MOMENT
-
-// Clean code inspiration: https://github.com/ShaneGH/analogue-time-picker/blob/master/src/utils/angle.ts
-// TODO: how to handle copyright?
 
 import * as React from 'react'
-import {
-  PanResponder,
-  View,
-  StyleSheet,
-  LayoutChangeEvent,
-  GestureResponderEvent,
-} from 'react-native'
-import { Text, TouchableRipple, useTheme } from 'react-native-paper'
-import { useCallback, useMemo } from 'react'
+import { View, StyleSheet } from 'react-native'
+import { Text, useTheme } from 'react-native-paper'
+import { useMemo } from 'react'
 
-import { getAngle, getHours, getNumbers, isPM } from './timeUtils'
-import { useLatest } from '../utils'
+import {
+  clockTypes,
+  inputTypes,
+  PossibleClockTypes,
+  PossibleInputTypes,
+} from './timeUtils'
+
 import TimeInput from './TimeInput'
 import Color from 'color'
-const circleSize = 215
-
-export type PossibleInputTypes = 'keyboard' | 'picker'
-type InputTypeMap = {
-  [inputType: string]: PossibleInputTypes
-}
-export const inputTypes: InputTypeMap = {
-  keyboard: 'keyboard',
-  picker: 'picker',
-}
-
-export type PossibleTypes = 'hours' | 'minutes'
-type TypeMap = {
-  [type: string]: PossibleTypes
-}
-const types: TypeMap = {
-  minutes: 'minutes',
-  hours: 'hours',
-}
+import AmPmSwitcher from './AmPmSwitcher'
+import AnalogClock, { circleSize } from './AnalogClock'
 
 export default function TimePicker() {
-  const clockRef = React.useRef<View | null>(null)
-  const elementX = React.useRef<number>(0)
-  const elementY = React.useRef<number>(0)
-  const numbers = React.useMemo(() => getNumbers(false, circleSize, 12), [])
-
   const theme = useTheme()
-  const onLayout = useCallback(
-    (_: LayoutChangeEvent) => {
-      console.log('onLayout')
-      if (!clockRef.current) {
-        return
-      }
-      clockRef.current.measureInWindow((x, y) => {
-        elementX.current = x
-        elementY.current = y
-      })
-    },
-    [elementX, elementY]
-  )
+
   // method to check whether we have 24 hours in clock or 12
   const is24Hour = React.useMemo(() => {
     const formatter = new Intl.DateTimeFormat(undefined, {
@@ -80,260 +41,61 @@ export default function TimePicker() {
   const [inputType, setInputType] = React.useState<PossibleInputTypes>(
     inputTypes.picker
   )
-  const [focused, setFocused] = React.useState<PossibleTypes>(types.hours)
+  const [focused, setFocused] = React.useState<PossibleClockTypes>(
+    clockTypes.hours
+  )
   const [hours, setHours] = React.useState<number>(date.getHours())
   const [minutes, setMinutes] = React.useState<number>(date.getMinutes())
 
-  const pointerNumber = focused === types.hours ? hours : minutes
-  const onFocusInput = (type: PossibleTypes) => setFocused(type)
-
-  // We need the latest values
-  const hoursRef = useLatest(hours)
-  const focusedRef = useLatest(focused)
-  const is24HourRef = useLatest(is24Hour)
-  const onPointerMove = React.useCallback(
-    (e: GestureResponderEvent) => {
-      let x = e.nativeEvent.pageX - elementX.current
-      let y = e.nativeEvent.pageY - elementY.current
-
-      let angle = getAngle(x, y, circleSize)
-      if (focusedRef.current === types.hours) {
-        let pickedHours = getHours(angle)
-
-        if (is24HourRef.current && isPM(x, y, circleSize)) {
-          pickedHours += 12
-        }
-        if (hoursRef.current !== pickedHours) {
-          setHours(pickedHours)
-        }
-      }
-    },
-    [hoursRef, focusedRef, is24HourRef]
-  )
-
-  const panResponder = React.useRef(
-    PanResponder.create({
-      onPanResponderGrant: onPointerMove,
-      onPanResponderMove: onPointerMove,
-      onPanResponderRelease: onPointerMove,
-
-      onStartShouldSetPanResponder: returnTrue,
-      onStartShouldSetPanResponderCapture: returnTrue,
-      onMoveShouldSetPanResponder: returnTrue,
-      onMoveShouldSetPanResponderCapture: returnTrue,
-      onPanResponderTerminationRequest: returnTrue,
-      onShouldBlockNativeResponder: returnTrue,
-    })
-  ).current
+  const onFocusInput = (type: PossibleClockTypes) => setFocused(type)
 
   return (
     <View style={{ width: circleSize }}>
-      <View
-        style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 35 }}
-      >
+      <View style={styles.inputContainer}>
         <TimeInput
           placeholder={'11'}
           value={hours}
-          type={types.hours}
-          focused={focused === types.hours}
+          clockType={clockTypes.hours}
+          focused={focused === clockTypes.hours}
           onFocus={onFocusInput}
           focusedColor={focusedColor}
           inputType={inputType}
         />
-        <Text
-          selectable={false}
-          style={{ fontSize: 40, marginLeft: 6, marginRight: 6 }}
-        >
+        <Text selectable={false} style={styles.hoursAndMinutesSeparator}>
           :
         </Text>
         <TimeInput
           placeholder={'10'}
           value={minutes}
-          type={types.minutes}
-          focused={focused === types.minutes}
+          clockType={clockTypes.minutes}
+          focused={focused === clockTypes.minutes}
           onFocus={onFocusInput}
           focusedColor={focusedColor}
           inputType={inputType}
         />
         {!is24Hour && (
           <>
-            <View style={{ width: 12 }} />
-            <View
-              style={{
-                width: 41,
-                height: 65,
-                borderWidth: 1,
-                borderColor: theme.colors.backdrop,
-                borderRadius: theme.roundness,
-              }}
-            >
-              <TouchableRipple
-                onPress={() => {}}
-                style={{
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Text selectable={false} style={{ ...theme.fonts.medium }}>
-                  AM
-                </Text>
-              </TouchableRipple>
-              <View style={{ height: 1, width: 41, backgroundColor: '#ccc' }} />
-              <TouchableRipple
-                onPress={() => {}}
-                style={{
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Text selectable={false} style={{ ...theme.fonts.medium }}>
-                  PM
-                </Text>
-              </TouchableRipple>
-            </View>
+            <View style={styles.spaceBetweenInputsAndSwitcher} />
+            <AmPmSwitcher />
           </>
         )}
       </View>
-
-      <View
-        ref={clockRef}
-        onLayout={onLayout}
-        {...panResponder.panHandlers}
-        style={{
-          borderRadius: circleSize / 2,
-          backgroundColor: theme.dark
-            ? Color(theme.colors.surface).lighten(1.2).hex()
-            : Color(theme.colors.surface).darken(0.1).hex(),
-          height: circleSize,
-          width: circleSize,
-          position: 'relative',
-          justifyContent: 'center',
-          alignItems: 'center',
-          //@ts-ignore
-          cursor: 'pointer', // TODO web only
-        }}
-      >
-        {numbers.map((a, i) => (
-          <View
-            key={i}
-            pointerEvents="none"
-            style={{
-              position: 'absolute',
-              justifyContent: 'center',
-              alignItems: 'center',
-              zIndex: 20,
-              width: 50,
-              height: 50,
-              marginLeft: -25,
-              marginTop: -25,
-              top: a[1],
-              left: a[0],
-              borderRadius: 25,
-            }}
-          >
-            <View style={{ borderRadius: 25 }}>
-              <Text
-                style={hours === i + 1 ? { color: '#fff' } : {}}
-                selectable={false}
-              >
-                {i + 1}
-              </Text>
-            </View>
-          </View>
-        ))}
-        {is24Hour
-          ? getNumbers(true, circleSize, 12).map((a, i) => (
-              <View
-                key={i}
-                pointerEvents="none"
-                style={{
-                  position: 'absolute',
-                  zIndex: 20,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-
-                  width: 40,
-                  height: 40,
-                  marginLeft: -20,
-                  marginTop: -20,
-                  top: a[1],
-                  left: a[0],
-                  borderRadius: 20,
-                }}
-                // onPress={() => setHours(i + 13)}
-                // borderless={true}
-              >
-                <View style={{ borderRadius: 20 }}>
-                  <Text
-                    selectable={false}
-                    style={[
-                      { fontSize: 13 },
-                      i + 13 === hours ? { color: '#fff' } : {},
-                    ]}
-                  >
-                    {i + 13 === 24 ? '00' : i + 13}
-                  </Text>
-                </View>
-              </View>
-            ))
-          : null}
-
-        <View
-          style={{
-            position: 'absolute',
-            width: circleSize / 2 - 4 - (hours > 12 ? 33 : 0),
-            marginBottom: -1,
-            height: 2,
-            borderRadius: 4,
-            backgroundColor: theme.colors.primary,
-            transform: [
-              { rotate: -90 + pointerNumber * 30 + 'deg' },
-              { translateX: circleSize / 4 - 4 - (hours > 12 ? 33 / 2 : 0) },
-            ],
-          }}
-          pointerEvents="none"
-        >
-          <View
-            style={{
-              borderRadius: 15,
-              height: 30,
-              width: 30,
-              position: 'absolute',
-              backgroundColor: theme.colors.primary,
-              right: 0,
-              bottom: -14,
-            }}
-          />
-        </View>
-        <View
-          style={[StyleSheet.absoluteFill, styles.center]}
-          pointerEvents="none"
-        >
-          <View
-            style={[
-              styles.middlePoint,
-              {
-                backgroundColor: theme.colors.primary,
-              },
-            ]}
-          />
-        </View>
-      </View>
+      <AnalogClock
+        hours={hours}
+        minutes={minutes}
+        focused={focused}
+        is24Hour={is24Hour}
+      />
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  center: { justifyContent: 'center', alignItems: 'center' },
-  middlePoint: {
-    borderRadius: 4,
-    height: 8,
-    width: 8,
+  spaceBetweenInputsAndSwitcher: { width: 12 },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 35,
   },
+  hoursAndMinutesSeparator: { fontSize: 40, marginLeft: 6, marginRight: 6 },
 })
-
-function returnTrue() {
-  return true
-}

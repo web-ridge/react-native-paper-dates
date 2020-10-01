@@ -2,14 +2,14 @@ import * as React from 'react'
 import { View, TextInput, TextInputProps, StyleSheet } from 'react-native'
 import { useTheme, TouchableRipple } from 'react-native-paper'
 
-import { inputTypes, PossibleInputTypes, PossibleTypes } from './TimePicker'
 import Color from 'color'
+import { inputTypes, PossibleClockTypes, PossibleInputTypes } from './timeUtils'
 
 interface TimeInputProps
   extends Omit<Omit<TextInputProps, 'value'>, 'onFocus'> {
   value: number
-  type: PossibleTypes
-  onFocus: (type: PossibleTypes) => any
+  clockType: PossibleClockTypes
+  onFocus: (type: PossibleClockTypes) => any
   focused: boolean
   focusedColor: string
   inputType: PossibleInputTypes
@@ -17,7 +17,7 @@ interface TimeInputProps
 
 export default function TimeInput({
   value,
-  type,
+  clockType,
   focused,
   onFocus,
   focusedColor,
@@ -26,7 +26,7 @@ export default function TimeInput({
 }: TimeInputProps) {
   const theme = useTheme()
   let dateAndTime, formatter
-  if (type === 'hours') {
+  if (clockType === 'hours') {
     dateAndTime = new Date().setHours(value)
     formatter = new Intl.DateTimeFormat(undefined, { hour: '2-digit' })
   } else {
@@ -36,7 +36,7 @@ export default function TimeInput({
 
   const formattedValue = formatter!.format(dateAndTime)
   const onInnerFocus = () => {
-    onFocus(type)
+    onFocus(clockType)
   }
   return (
     <View style={{ flex: 1, position: 'relative', height: 65 }}>
@@ -67,7 +67,7 @@ export default function TimeInput({
               overflow: 'hidden',
             },
           ]}
-          onPress={() => onFocus(type)}
+          onPress={() => onFocus(clockType)}
         >
           <View />
         </TouchableRipple>
