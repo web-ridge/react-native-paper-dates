@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Text, TouchableRipple } from 'react-native-paper'
+import { Text, TouchableRipple, useTheme } from 'react-native-paper'
 import { StyleSheet, View } from 'react-native'
 import DayRange from './DayRange'
 import { daySize } from './dateUtils'
@@ -36,6 +36,8 @@ function Day(props: {
     isToday,
   } = props
 
+  const theme = useTheme()
+
   const onPress = React.useCallback(() => {
     onPressDate(new Date(year, month, day))
   }, [onPressDate, year, month, day])
@@ -54,7 +56,7 @@ function Day(props: {
         onPress={onPress}
         style={[
           styles.button,
-          { backgroundColor: inRange ? selectColor : '#fff' },
+          { backgroundColor: inRange ? selectColor : theme.colors.surface },
           // hovered && styles.buttonHovered,
         ]}
       >

@@ -46,7 +46,7 @@ export default function TimePicker() {
   const onFocusInput = (type: PossibleClockTypes) => setFocused(type)
   const onChange = React.useCallback(
     (params: {
-      focused: PossibleClockTypes | undefined
+      focused?: PossibleClockTypes | undefined
       hours: number
       minutes: number
     }) => {

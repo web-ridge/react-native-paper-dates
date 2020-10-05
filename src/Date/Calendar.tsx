@@ -57,10 +57,12 @@ function Calendar(props: CalendarSingleProps | CalendarRangeProps) {
 
   const theme = useTheme()
 
-  const selectColor = useMemo<string>(
-    () => Color(theme.colors.primary).lighten(0.9).hex(),
-    [theme]
-  )
+  const selectColor = useMemo<string>(() => {
+    if (theme.dark) {
+      return Color(theme.colors.primary).hex()
+    }
+    return Color(theme.colors.primary).lighten(0.9).hex()
+  }, [theme])
 
   const detectedScrollMode = mode === 'range' ? 'vertical' : 'horizontal'
   const scrollMode = props.scrollMode ? props.scrollMode : detectedScrollMode

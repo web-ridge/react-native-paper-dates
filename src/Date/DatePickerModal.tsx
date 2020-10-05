@@ -13,6 +13,7 @@ import AnimatedCrossView from './AnimatedCrossView'
 
 import DatePickerModalHeader, { HeaderPickProps } from './DatePickerModalHeader'
 import CalendarEdit from './CalendarEdit'
+import { useTheme } from 'react-native-paper'
 
 interface DatePickerModalProps extends HeaderPickProps, BaseCalendarProps {
   mode: ModeType
@@ -48,6 +49,7 @@ interface DatePickerModalSingleProps
 export function DatePickerModal(
   props: DatePickerModalRangeProps | DatePickerModalSingleProps
 ) {
+  const theme = useTheme()
   const dimensions = useWindowDimensions()
   const { visible, onDismiss, mode, onChange, onConfirm } = props
   const anyProps = props as any
@@ -98,7 +100,6 @@ export function DatePickerModal(
       visible={visible}
       onRequestClose={onDismiss}
       presentationStyle="overFullScreen"
-      statusBarTranslucent
     >
       <>
         <View style={[StyleSheet.absoluteFill, styles.modalBackground]} />
@@ -106,6 +107,7 @@ export function DatePickerModal(
           <View
             style={[
               styles.modalContent,
+              { backgroundColor: theme.colors.surface },
               dimensions.width > 650 ? styles.modalContentBig : null,
             ]}
           >
@@ -167,7 +169,6 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   modalContentBig: {
     maxWidth: 600,

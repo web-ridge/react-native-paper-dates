@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View, StyleSheet, StatusBar } from 'react-native'
+import { View, StyleSheet, StatusBar, SafeAreaView } from 'react-native'
 import { Appbar, Button, IconButton, Text, useTheme } from 'react-native-paper'
 import { ModeType } from './Calendar'
 import { LocalState } from './DatePickerModal'
@@ -38,31 +38,41 @@ export default function DatePickerModalHeader(props: HeaderProps) {
     [theme]
   )
 
-  // TODO: fix statusbar height
+  const backgroundColor =
+    theme.dark && theme.mode === 'adaptive'
+      ? theme.colors.surface
+      : theme.colors.primary
+
   return (
     <>
-      <StatusBar transparent={true} barStyle={'light-content'} />
+      <StatusBar translucent={true} barStyle={'light-content'} />
       <View
         style={[
-          styles.statusbar,
           {
             height: StatusBar.currentHeight,
             backgroundColor: statusBarColor,
           },
         ]}
       />
-      <Appbar style={styles.appbarHeader}>
-        <Appbar.Action icon="close" onPress={props.onDismiss} />
-        <Appbar.Content title={''} />
-        <Button color={'#fff'} onPress={props.onSave}>
-          {saveLabel}
-        </Button>
-      </Appbar>
+      <SafeAreaView
+        style={{
+          backgroundColor,
+          paddingBottom: 0,
+        }}
+      >
+        <Appbar style={[styles.appbarHeader, { backgroundColor }]}>
+          <Appbar.Action icon="close" onPress={props.onDismiss} />
+          <Appbar.Content title={''} />
+          <Button color={'#fff'} onPress={props.onSave}>
+            {saveLabel}
+          </Button>
+        </Appbar>
+      </SafeAreaView>
       <View
         style={[
           styles.header,
           {
-            backgroundColor: theme.colors.primary,
+            backgroundColor,
           },
         ]}
       >
@@ -160,5 +170,6 @@ const styles = StyleSheet.create({
   },
   appbarHeader: {
     elevation: 0,
+    // alignItems:'center'
   },
 })
