@@ -20,26 +20,9 @@ export const clockTypes: ClockTypeMap = {
 
 const outerHeight = 34
 const _30 = Math.PI / 6
-// const _12 = Math.PI / 30
+const _12 = Math.PI / 30
 const _360 = Math.PI * 2
 const _90 = Math.PI / 2
-
-export function getNumbers(is24Hour: boolean, size: number, count: number) {
-  let angle = 0
-  let step = (2 * Math.PI) / count
-  let radius = size / (is24Hour ? 4 : 2.5)
-
-  angle = angle = (-90 * Math.PI) / 180 + Math.PI / 6
-
-  return Array(12)
-    .fill(true)
-    .map(() => {
-      let x = Math.round(size / 2 + radius * Math.cos(angle))
-      let y = Math.round(size / 2 + radius * Math.sin(angle))
-      angle += step
-      return [x, y]
-    })
-}
 
 /** Snap an angle to a given step. E.g. if angle = 22° and step = 10°, round down to 20° */
 export function snap(angle: number, step: number) {
@@ -67,7 +50,24 @@ export function isPM(left: number, top: number, size: number): boolean {
   return !(distance > maxPm)
 }
 
-/** Calculate the hour from the hand angle */
+// Calculate the minute from the hand angle
+export function getMinutes(handAngle: number) {
+  handAngle = snap(handAngle, _12)
+
+  let minute = parseInt((((handAngle - _90) % _360) / _12).toFixed())
+  while (minute < 0) minute += 60
+  while (minute >= 60) minute -= 60
+  // TODO: maybe something simpler?
+  // Like Math.min(minute, 0) is this needed??
+  // if (minute < 0) minute += 12
+  // if (minute >= 12) minute -= 12
+  // if (minute < 0) {
+  //   return Math.max(minute,60)
+  // }
+  return minute
+}
+
+// Calculate the hour from the hand angle
 export function getHours(handAngle: number) {
   handAngle = snap(handAngle, _30)
 

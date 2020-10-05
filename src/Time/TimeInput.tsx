@@ -3,7 +3,13 @@ import { View, TextInput, TextInputProps, StyleSheet } from 'react-native'
 import { useTheme, TouchableRipple } from 'react-native-paper'
 
 import Color from 'color'
-import { inputTypes, PossibleClockTypes, PossibleInputTypes } from './timeUtils'
+import {
+  clockTypes,
+  inputTypes,
+  PossibleClockTypes,
+  PossibleInputTypes,
+} from './timeUtils'
+import { useMemo } from 'react'
 
 interface TimeInputProps
   extends Omit<Omit<TextInputProps, 'value'>, 'onFocus'> {
@@ -11,7 +17,7 @@ interface TimeInputProps
   clockType: PossibleClockTypes
   onFocus: (type: PossibleClockTypes) => any
   focused: boolean
-  focusedColor: string
+
   inputType: PossibleInputTypes
 }
 
@@ -20,36 +26,58 @@ export default function TimeInput({
   clockType,
   focused,
   onFocus,
-  focusedColor,
+
   inputType,
   ...rest
 }: TimeInputProps) {
   const theme = useTheme()
   let dateAndTime, formatter
-  if (clockType === 'hours') {
+  if (clockType === clockTypes.hours) {
     dateAndTime = new Date().setHours(value)
     formatter = new Intl.DateTimeFormat(undefined, { hour: '2-digit' })
   } else {
     dateAndTime = new Date().setMinutes(value)
-    formatter = new Intl.DateTimeFormat(undefined, { minute: '2-digit' })
+    formatter = new Intl.DateTimeFormat(undefined, {
+      minute: '2-digit',
+    })
   }
 
-  const formattedValue = formatter!.format(dateAndTime)
+  // 2-digit does not work on all devices..
+  const bug = formatter!.format(dateAndTime)
+  const formattedValue = bug.length === 1 ? `0${bug}` : bug
   const onInnerFocus = () => {
     onFocus(clockType)
   }
+
+  const backgroundColor = useMemo<string>(() => {
+    if (theme.dark) {
+      if (focused) {
+        return Color(theme.colors.primary).hex()
+      }
+      return Color(theme.colors.surface).lighten(1.2).hex()
+    }
+
+    if (focused) {
+      return Color(theme.colors.primary).lighten(1).hex()
+    }
+    return Color(theme.colors.surface).darken(0.1).hex()
+  }, [focused, theme])
+
+  const color = useMemo<string>(() => {
+    if (focused && !theme.dark) {
+      return theme.colors.primary
+    }
+    return theme.colors.text
+  }, [focused, theme])
+
   return (
     <View style={{ flex: 1, position: 'relative', height: 65 }}>
       <TextInput
         style={[
           styles.root,
           {
-            // color: focused ? theme.colors.primary : '#000',
-            // backgroundColor: focused ? focusedColor : '#E4E4E4',
-            color: theme.dark ? '#fff' : '#000',
-            backgroundColor: theme.dark
-              ? Color(theme.colors.surface).lighten(1.2).hex()
-              : Color(theme.colors.surface).darken(0.1).hex(),
+            color,
+            backgroundColor,
             borderRadius: theme.roundness,
           },
         ]}

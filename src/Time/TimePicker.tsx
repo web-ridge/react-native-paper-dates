@@ -33,10 +33,6 @@ export default function TimePicker() {
   }, [])
 
   let date = new Date()
-  const focusedColor = useMemo<string>(
-    () => Color(theme.colors.primary).lighten(1.02).hex(),
-    [theme]
-  )
 
   const [inputType, setInputType] = React.useState<PossibleInputTypes>(
     inputTypes.picker
@@ -48,7 +44,21 @@ export default function TimePicker() {
   const [minutes, setMinutes] = React.useState<number>(date.getMinutes())
 
   const onFocusInput = (type: PossibleClockTypes) => setFocused(type)
+  const onChange = React.useCallback(
+    (params: {
+      focused: PossibleClockTypes | undefined
+      hours: number
+      minutes: number
+    }) => {
+      if (params.focused) {
+        setFocused(params.focused)
+      }
 
+      setHours(params.hours)
+      setMinutes(params.minutes)
+    },
+    [setFocused, setHours, setMinutes]
+  )
   return (
     <View style={{ width: circleSize }}>
       <View style={styles.inputContainer}>
@@ -58,7 +68,6 @@ export default function TimePicker() {
           clockType={clockTypes.hours}
           focused={focused === clockTypes.hours}
           onFocus={onFocusInput}
-          focusedColor={focusedColor}
           inputType={inputType}
         />
         <Text selectable={false} style={styles.hoursAndMinutesSeparator}>
@@ -70,7 +79,6 @@ export default function TimePicker() {
           clockType={clockTypes.minutes}
           focused={focused === clockTypes.minutes}
           onFocus={onFocusInput}
-          focusedColor={focusedColor}
           inputType={inputType}
         />
         {!is24Hour && (
@@ -85,6 +93,7 @@ export default function TimePicker() {
         minutes={minutes}
         focused={focused}
         is24Hour={is24Hour}
+        onChange={onChange}
       />
     </View>
   )

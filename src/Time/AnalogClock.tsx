@@ -11,6 +11,7 @@ import {
   clockTypes,
   getAngle,
   getHours,
+  getMinutes,
   isPM,
   PossibleClockTypes,
 } from './timeUtils'
@@ -19,55 +20,82 @@ import { useCallback } from 'react'
 import { useLatest } from '../utils'
 import AnalogClockHours from './AnalogClockHours'
 
+import AnimatedClockSwitcher from './AnimatedClockSwitcher'
+import AnalogClockMinutes from './AnalogClockMinutes'
+
 export const circleSize = 215
 
-export default function AnalogClock({
+function AnalogClock({
   hours,
   minutes,
   focused,
   is24Hour,
+  onChange,
 }: {
   hours: number
   minutes: number
   focused: PossibleClockTypes
   is24Hour: boolean
+  onChange: ({
+    hours,
+    minutes,
+    focused,
+  }: {
+    hours: number
+    minutes: number
+    focused?: undefined | PossibleClockTypes
+  }) => any
 }) {
   const theme = useTheme()
-  const pointerNumber = focused === clockTypes.hours ? hours : minutes
+
   const clockRef = React.useRef<View | null>(null)
   const elementX = React.useRef<number>(0)
   const elementY = React.useRef<number>(0)
 
-  // We need the latest values
+  // Hooks are nice, sometimes :-)..
+  // We need the latest values, since the onPointerMove uses a closure to the function
   const hoursRef = useLatest(hours)
+  const onChangeRef = useLatest(onChange)
+  const minutesRef = useLatest(minutes)
   const focusedRef = useLatest(focused)
   const is24HourRef = useLatest(is24Hour)
+
   const onPointerMove = React.useCallback(
-    (e: GestureResponderEvent) => {
+    (e: GestureResponderEvent, final: boolean) => {
       let x = e.nativeEvent.pageX - elementX.current
       let y = e.nativeEvent.pageY - elementY.current
 
       let angle = getAngle(x, y, circleSize)
       if (focusedRef.current === clockTypes.hours) {
         let pickedHours = getHours(angle)
-
         if (is24HourRef.current && isPM(x, y, circleSize)) {
           pickedHours += 12
         }
-        if (hoursRef.current !== pickedHours) {
-          // TODO: add onChange
-          // setHours(pickedHours)
+        if (hoursRef.current !== pickedHours || final) {
+          onChangeRef.current({
+            hours: pickedHours,
+            minutes: minutesRef.current,
+            focused: final ? clockTypes.minutes : undefined,
+          })
+        }
+      } else if (focusedRef.current === clockTypes.minutes) {
+        let pickedMinutes = getMinutes(angle)
+        if (minutesRef.current !== pickedMinutes) {
+          onChangeRef.current({
+            hours: hoursRef.current,
+            minutes: pickedMinutes,
+          })
         }
       }
     },
-    [hoursRef, focusedRef, is24HourRef]
+    [focusedRef, is24HourRef, hoursRef, onChangeRef, minutesRef]
   )
 
   const panResponder = React.useRef(
     PanResponder.create({
-      onPanResponderGrant: onPointerMove,
-      onPanResponderMove: onPointerMove,
-      onPanResponderRelease: onPointerMove,
+      onPanResponderGrant: (e) => onPointerMove(e, false),
+      onPanResponderMove: (e) => onPointerMove(e, false),
+      onPanResponderRelease: (e) => onPointerMove(e, true),
 
       onStartShouldSetPanResponder: returnTrue,
       onStartShouldSetPanResponderCapture: returnTrue,
@@ -91,6 +119,11 @@ export default function AnalogClock({
     },
     [elementX, elementY]
   )
+
+  // used to make pointer shorter if hours are selected and above 12
+  const dynamicSize = focused === clockTypes.hours && hours > 12 ? 33 : 0
+  const pointerNumber = focused === clockTypes.hours ? hours : minutes
+  const degreesPerNumber = focused === clockTypes.hours ? 30 : 6
   return (
     <View
       ref={clockRef}
@@ -108,30 +141,23 @@ export default function AnalogClock({
       cursor={'pointer'}
     >
       <View
-        style={{
-          position: 'absolute',
-          width: circleSize / 2 - 4 - (hours > 12 ? 33 : 0),
-          marginBottom: -1,
-          height: 2,
-          borderRadius: 4,
-          backgroundColor: theme.colors.primary,
-          transform: [
-            { rotate: -90 + pointerNumber * 30 + 'deg' },
-            { translateX: circleSize / 4 - 4 - (hours > 12 ? 33 / 2 : 0) },
-          ],
-        }}
+        style={[
+          styles.line,
+          {
+            backgroundColor: theme.colors.primary,
+            transform: [
+              { rotate: -90 + pointerNumber * degreesPerNumber + 'deg' },
+              {
+                translateX: circleSize / 4 - 4 - dynamicSize / 2,
+              },
+            ],
+            width: circleSize / 2 - 4 - dynamicSize,
+          },
+        ]}
         pointerEvents="none"
       >
         <View
-          style={{
-            borderRadius: 15,
-            height: 30,
-            width: 30,
-            position: 'absolute',
-            backgroundColor: theme.colors.primary,
-            right: 0,
-            bottom: -14,
-          }}
+          style={[styles.endPoint, { backgroundColor: theme.colors.primary }]}
         />
       </View>
       <View
@@ -147,7 +173,11 @@ export default function AnalogClock({
           ]}
         />
       </View>
-      <AnalogClockHours is24Hour={is24Hour} hours={hours} />
+      <AnimatedClockSwitcher
+        focused={focused}
+        hours={<AnalogClockHours is24Hour={is24Hour} hours={hours} />}
+        minutes={<AnalogClockMinutes minutes={minutes} />}
+      />
     </View>
   )
 }
@@ -167,8 +197,25 @@ const styles = StyleSheet.create({
     width: 8,
   },
   center: { justifyContent: 'center', alignItems: 'center' },
+  endPoint: {
+    borderRadius: 15,
+    height: 30,
+    width: 30,
+    position: 'absolute',
+    right: 0,
+    bottom: -14,
+  },
+  line: {
+    position: 'absolute',
+
+    marginBottom: -1,
+    height: 2,
+    borderRadius: 4,
+  },
 })
 
 function returnTrue() {
   return true
 }
+
+export default React.memo(AnalogClock)

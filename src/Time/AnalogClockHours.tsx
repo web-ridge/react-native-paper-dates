@@ -1,19 +1,19 @@
 import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Text } from 'react-native-paper'
-import { getNumbers } from './timeUtils'
 import { circleSize } from './AnalogClock'
 
-const outerRange = getNumbers(false, circleSize, 12)
-const innerRange = getNumbers(true, circleSize, 12)
-
-export default function AnalogClockHours({
+function AnalogClockHours({
   is24Hour,
   hours,
-}: {
+}: // onChange,
+{
   is24Hour: boolean
   hours: number
+  // onChange: (hour: number) => any
 }) {
+  const outerRange = getHourNumbers(false, circleSize, 12)
+  const innerRange = getHourNumbers(true, circleSize, 12)
   return (
     <>
       {outerRange.map((a, i) => (
@@ -23,14 +23,14 @@ export default function AnalogClockHours({
           style={[
             styles.outerHourRoot,
             {
-              top: a[1],
-              left: a[0],
+              top: a[1] || 0,
+              left: a[0] || 0,
             },
           ]}
         >
           <View style={styles.outerHourInner}>
             <Text
-              style={hours === i + 1 ? { color: '#fff' } : null}
+              style={hours === i + 1 ? styles.textWhite : null}
               selectable={false}
             >
               {i + 1}
@@ -46,8 +46,8 @@ export default function AnalogClockHours({
               style={[
                 styles.innerHourRoot,
                 {
-                  top: a[1],
-                  left: a[0],
+                  top: a[1] || 0,
+                  left: a[0] || 0,
                 },
               ]}
             >
@@ -55,8 +55,8 @@ export default function AnalogClockHours({
                 <Text
                   selectable={false}
                   style={[
-                    { fontSize: 13 },
-                    i + 13 === hours ? { color: '#fff' } : null,
+                    styles.innerHourText,
+                    i + 13 === hours ? styles.textWhite : null,
                   ]}
                 >
                   {i + 13 === 24 ? '00' : i + 13}
@@ -95,4 +95,25 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   innerHourInner: { borderRadius: 20 },
+  innerHourText: { fontSize: 13 },
+  textWhite: { color: '#fff' },
 })
+
+function getHourNumbers(is24Hour: boolean, size: number, count: number) {
+  let angle = 0
+  let step = (2 * Math.PI) / count
+  let radius = size / (is24Hour ? 4 : 2.5)
+
+  angle = (-90 * Math.PI) / 180 + Math.PI / 6
+
+  return Array(12)
+    .fill(true)
+    .map(() => {
+      let x = Math.round(size / 2 + radius * Math.cos(angle))
+      let y = Math.round(size / 2 + radius * Math.sin(angle))
+      angle += step
+      return [x, y]
+    })
+}
+
+export default React.memo(AnalogClockHours)

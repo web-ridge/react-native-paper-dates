@@ -9,7 +9,7 @@ import Calendar, {
   SingleChange,
 } from './Calendar'
 
-import AnimatedCrossView from '../AnimatedCrossView'
+import AnimatedCrossView from './AnimatedCrossView'
 
 import DatePickerModalHeader, { HeaderPickProps } from './DatePickerModalHeader'
 import CalendarEdit from './CalendarEdit'
