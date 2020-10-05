@@ -1,6 +1,19 @@
 import * as React from 'react'
-import { View, StyleSheet, StatusBar, SafeAreaView } from 'react-native'
-import { Appbar, Button, IconButton, Text, useTheme } from 'react-native-paper'
+import {
+  View,
+  StyleSheet,
+  StatusBar,
+  Animated,
+  SafeAreaView,
+} from 'react-native'
+import {
+  Appbar,
+  Button,
+  IconButton,
+  overlay,
+  Text,
+  useTheme,
+} from 'react-native-paper'
 import { ModeType } from './Calendar'
 import { LocalState } from './DatePickerModal'
 import { useMemo } from 'react'
@@ -40,7 +53,7 @@ export default function DatePickerModalHeader(props: HeaderProps) {
 
   const backgroundColor =
     theme.dark && theme.mode === 'adaptive'
-      ? theme.colors.surface
+      ? overlay(4, theme.colors.surface)
       : theme.colors.primary
 
   return (
@@ -54,43 +67,50 @@ export default function DatePickerModalHeader(props: HeaderProps) {
           },
         ]}
       />
-      <SafeAreaView
+
+      <Animated.View
         style={{
           backgroundColor,
           paddingBottom: 0,
+          elevation: 4,
         }}
       >
-        <Appbar style={[styles.appbarHeader, { backgroundColor }]}>
-          <Appbar.Action icon="close" onPress={props.onDismiss} />
-          <Appbar.Content title={''} />
-          <Button color={'#fff'} onPress={props.onSave}>
-            {saveLabel}
-          </Button>
-        </Appbar>
-      </SafeAreaView>
-      <View
-        style={[
-          styles.header,
-          {
-            backgroundColor,
-          },
-        ]}
-      >
-        <View>
-          <Text style={styles.label}>{label.toUpperCase()}</Text>
+        <SafeAreaView
+          style={{
+            paddingBottom: 0,
+          }}
+        >
+          <Appbar
+            style={[
+              styles.appbarHeader,
+              { backgroundColor: backgroundColor.toString() },
+            ]}
+          >
+            <Appbar.Action icon="close" onPress={props.onDismiss} />
+            <Appbar.Content title={''} />
+            <Button color={'#fff'} onPress={props.onSave}>
+              {saveLabel}
+            </Button>
+          </Appbar>
 
-          <View style={styles.headerContentContainer}>
-            {mode === 'range' ? <HeaderContentRange {...props} /> : null}
-            {mode === 'single' ? <HeaderContentSingle {...props} /> : null}
+          <View style={[styles.header]}>
+            <View>
+              <Text style={styles.label}>{label.toUpperCase()}</Text>
+
+              <View style={styles.headerContentContainer}>
+                {mode === 'range' ? <HeaderContentRange {...props} /> : null}
+                {mode === 'single' ? <HeaderContentSingle {...props} /> : null}
+              </View>
+            </View>
+            <View style={styles.fill} />
+            <IconButton
+              icon={collapsed ? 'pencil' : 'calendar'}
+              color={'#fff'}
+              onPress={onToggle}
+            />
           </View>
-        </View>
-        <View style={styles.fill} />
-        <IconButton
-          icon={collapsed ? 'pencil' : 'calendar'}
-          color={'#fff'}
-          onPress={onToggle}
-        />
-      </View>
+        </SafeAreaView>
+      </Animated.View>
     </>
   )
 }
