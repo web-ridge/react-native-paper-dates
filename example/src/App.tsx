@@ -61,7 +61,7 @@ function App({
       <View style={[styles.content, { backgroundColor: theme.colors.surface }]}>
         <Title>Examples</Title>
         <View style={styles.switchContainer}>
-          <Text>Dark mode</Text>
+          <Text style={styles.switchLabel}>Dark mode</Text>
           <View style={styles.switchSpace} />
           <Switch value={dark} onValueChange={onToggleDarkMode} />
         </View>
@@ -165,8 +165,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     flex: 1,
   },
-  switchContainer: { flexDirection: 'row', marginTop: 24 },
+  switchContainer: {
+    flexDirection: 'row',
+    marginTop: 24,
+    alignItems: 'center',
+  },
   switchSpace: { flex: 1 },
+  switchLabel: { fontSize: 16 },
   buttons: { flexDirection: 'row', marginTop: 24 },
   buttonSeparator: { width: 6 },
 });
