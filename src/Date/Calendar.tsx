@@ -115,6 +115,7 @@ function Calendar(props: CalendarSingleProps | CalendarRangeProps) {
   return (
     <View style={styles.root}>
       <Swiper
+        selectedYear={selectedYear}
         scrollMode={scrollMode}
         renderItem={({ index }) => {
           return (

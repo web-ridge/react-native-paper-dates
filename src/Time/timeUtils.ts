@@ -1,15 +1,27 @@
 export type PossibleInputTypes = 'keyboard' | 'picker'
 export type InputTypeMap = {
-  [inputType: string]: PossibleInputTypes
+  [inputType in PossibleInputTypes]: PossibleInputTypes
 }
 export const inputTypes: InputTypeMap = {
   keyboard: 'keyboard',
   picker: 'picker',
 }
 
+export const reverseInputTypes: InputTypeMap = {
+  keyboard: 'picker',
+  picker: 'keyboard',
+}
+type InputIconMap = {
+  [inputType in PossibleInputTypes]: string
+}
+export const inputTypeIcons: InputIconMap = {
+  keyboard: 'keyboard-outline',
+  picker: 'clock-outline',
+}
+
 export type PossibleClockTypes = 'hours' | 'minutes'
 export type ClockTypeMap = {
-  [clockType: string]: PossibleClockTypes
+  [clockType in PossibleClockTypes]: PossibleClockTypes
 }
 export const clockTypes: ClockTypeMap = {
   minutes: 'minutes',
@@ -54,16 +66,12 @@ export function isPM(left: number, top: number, size: number): boolean {
 export function getMinutes(handAngle: number) {
   handAngle = snap(handAngle, _12)
 
-  let minute = parseInt((((handAngle - _90) % _360) / _12).toFixed())
+  // eslint-disable-next-line no-bitwise
+  let minute = (((handAngle - _90) % _360) / _12) | 0
+  // TODO: maybe something simpler?
   while (minute < 0) minute += 60
   while (minute >= 60) minute -= 60
-  // TODO: maybe something simpler?
-  // Like Math.min(minute, 0) is this needed??
-  // if (minute < 0) minute += 12
-  // if (minute >= 12) minute -= 12
-  // if (minute < 0) {
-  //   return Math.max(minute,60)
-  // }
+
   return minute
 }
 
@@ -71,17 +79,10 @@ export function getMinutes(handAngle: number) {
 export function getHours(handAngle: number) {
   handAngle = snap(handAngle, _30)
 
-  // TODO: parseInt?
-  let hour = parseInt((((handAngle - _90) % _360) / _30).toFixed())
+  // eslint-disable-next-line no-bitwise
+  let hour = (((handAngle - _90) % _360) / _30) | 0
   if (hour < 0) hour += 12
   if (hour >= 12) hour -= 12
-
-  // TODO:
-  // if (!hour) {
-  //   if (amPm === AmPm.am) hour = 12
-  // } else {
-  //   if (amPm !== AmPm.am) hour += 12
-  // }
 
   return hour
 }

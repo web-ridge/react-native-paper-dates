@@ -2,9 +2,8 @@
 // WORK IN PROGRESS
 
 import * as React from 'react'
-import { View, StyleSheet } from 'react-native'
-import { Text, useTheme } from 'react-native-paper'
-import { useMemo } from 'react'
+import { View, StyleSheet, useWindowDimensions } from 'react-native'
+import { useTheme } from 'react-native-paper'
 
 import {
   clockTypes,
@@ -12,15 +11,37 @@ import {
   PossibleClockTypes,
   PossibleInputTypes,
 } from './timeUtils'
-
 import TimeInput from './TimeInput'
-import Color from 'color'
 import AmPmSwitcher from './AmPmSwitcher'
 import AnalogClock, { circleSize } from './AnalogClock'
 
-export default function TimePicker() {
+function TimePicker({
+  hours,
+  minutes,
+  onFocusInput,
+  focused,
+  inputType,
+  onChange,
+}: {
+  inputType: PossibleInputTypes
+  focused: PossibleClockTypes
+  hours: number
+  minutes: number
+  onFocusInput: (type: PossibleClockTypes) => any
+  onChange: ({
+    hours,
+    minutes,
+    focused,
+  }: {
+    hours: number
+    minutes: number
+    focused?: undefined | PossibleClockTypes
+  }) => any
+}) {
+  const dimensions = useWindowDimensions()
+  const isLandscape = dimensions.width > dimensions.height
+  console.log({ isLandscape })
   const theme = useTheme()
-
   // method to check whether we have 24 hours in clock or 12
   const is24Hour = React.useMemo(() => {
     const formatter = new Intl.DateTimeFormat(undefined, {
@@ -32,36 +53,14 @@ export default function TimePicker() {
     return formatted.includes('23')
   }, [])
 
-  let date = new Date()
-
-  const [inputType, setInputType] = React.useState<PossibleInputTypes>(
-    inputTypes.picker
-  )
-  const [focused, setFocused] = React.useState<PossibleClockTypes>(
-    clockTypes.hours
-  )
-  const [hours, setHours] = React.useState<number>(date.getHours())
-  const [minutes, setMinutes] = React.useState<number>(date.getMinutes())
-
-  const onFocusInput = (type: PossibleClockTypes) => setFocused(type)
-  const onChange = React.useCallback(
-    (params: {
-      focused?: PossibleClockTypes | undefined
-      hours: number
-      minutes: number
-    }) => {
-      if (params.focused) {
-        setFocused(params.focused)
-      }
-
-      setHours(params.hours)
-      setMinutes(params.minutes)
-    },
-    [setFocused, setHours, setMinutes]
-  )
   return (
-    <View style={{ width: circleSize }}>
-      <View style={styles.inputContainer}>
+    <View style={isLandscape ? styles.rootLandscape : styles.rootPortrait}>
+      <View
+        style={[
+          styles.inputContainer,
+          isLandscape && styles.inputContainerLandscape,
+        ]}
+      >
         <TimeInput
           placeholder={'11'}
           value={hours}
@@ -70,9 +69,13 @@ export default function TimePicker() {
           onFocus={onFocusInput}
           inputType={inputType}
         />
-        <Text selectable={false} style={styles.hoursAndMinutesSeparator}>
-          :
-        </Text>
+        <View style={styles.hoursAndMinutesSeparator}>
+          <View style={styles.spaceDot} />
+          <View style={[styles.dot, { backgroundColor: theme.colors.text }]} />
+          <View style={styles.betweenDot} />
+          <View style={[styles.dot, { backgroundColor: theme.colors.text }]} />
+          <View style={styles.spaceDot} />
+        </View>
         <TimeInput
           placeholder={'10'}
           value={minutes}
@@ -88,23 +91,54 @@ export default function TimePicker() {
           </>
         )}
       </View>
-      <AnalogClock
-        hours={hours}
-        minutes={minutes}
-        focused={focused}
-        is24Hour={is24Hour}
-        onChange={onChange}
-      />
+      {inputType === inputTypes.picker ? (
+        <View style={styles.clockContainer}>
+          <AnalogClock
+            hours={hours}
+            minutes={minutes}
+            focused={focused}
+            is24Hour={is24Hour}
+            onChange={onChange}
+          />
+        </View>
+      ) : null}
     </View>
   )
 }
 
 const styles = StyleSheet.create({
+  rootLandscape: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 24 * 3 + 96 * 2 + 52 + circleSize,
+  },
+  rootPortrait: {},
   spaceBetweenInputsAndSwitcher: { width: 12 },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 35,
   },
-  hoursAndMinutesSeparator: { fontSize: 40, marginLeft: 6, marginRight: 6 },
+  inputContainerLandscape: {
+    flex: 1,
+  },
+  hoursAndMinutesSeparator: {
+    fontSize: 65,
+    width: 24,
+    alignItems: 'center',
+  },
+  spaceDot: {
+    flex: 1,
+  },
+  dot: {
+    width: 7,
+    height: 7,
+    borderRadius: 7 / 2,
+  },
+  betweenDot: {
+    height: 12,
+  },
+  clockContainer: { paddingTop: 36, paddingLeft: 12, paddingRight: 12 },
 })
+
+export default React.memo(TimePicker)

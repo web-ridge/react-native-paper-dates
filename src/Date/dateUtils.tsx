@@ -1,21 +1,10 @@
-import * as React from 'react'
-
 export function dateToUnix(d: Date): number {
   return Math.round(d.getTime() / 1000)
 }
 
-// https://stackoverflow.com/questions/2706125/javascript-function-to-add-x-months-to-a-date/2706169
 export function addMonths(date: Date, count: number) {
-  if (date && count) {
-    let m,
-      d = (date = new Date(+date)).getUTCDate()
-
-    date.setUTCMonth(date.getUTCMonth() + count, 1)
-    m = date.getUTCMonth()
-    date.setUTCDate(d)
-    if (date.getUTCMonth() !== m) date.setUTCDate(0)
-  }
-  return date
+  const dt = new Date(date.getFullYear(), date.getMonth(), 0)
+  return new Date(dt.setMonth(dt.getMonth() + count))
 }
 
 // https://stackoverflow.com/a/1185068/2508481
@@ -103,14 +92,18 @@ export const daySize = 46
 export const startAtIndex = 1000
 export const totalMonths = startAtIndex * 2
 export const allMonthsArray = new Array(totalMonths)
-export const gridCounts = allMonthsArray.fill(undefined).map((_, index) => {
-  const monthDate = addMonths(new Date(), index)
-  const year = monthDate.getFullYear()
-  const month = monthDate.getMonth()
+export const gridCounts = allMonthsArray.fill(null).map((_, index) => {
+  const monthDate = addMonths(new Date(), getRealIndex(index))
+  return getGridCountForDate(monthDate)
+})
+
+export function getGridCountForDate(date: Date) {
+  const year = date.getFullYear()
+  const month = date.getMonth()
   const daysInMonth = getDaysInMonth({ year, month })
   const dayOfWeek = getFirstDayOfMonth({ year, month })
   return Math.ceil((daysInMonth + dayOfWeek) / 7)
-})
+}
 
 export function getRealIndex(index: number) {
   return index - startAtIndex

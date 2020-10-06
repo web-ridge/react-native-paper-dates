@@ -69,17 +69,14 @@ export default function DatePickerModalHeader(props: HeaderProps) {
       />
 
       <Animated.View
-        style={{
-          backgroundColor,
-          paddingBottom: 0,
-          elevation: 4,
-        }}
+        style={[
+          styles.animated,
+          {
+            backgroundColor,
+          },
+        ]}
       >
-        <SafeAreaView
-          style={{
-            paddingBottom: 0,
-          }}
-        >
+        <SafeAreaView style={styles.safeContent}>
           <Appbar
             style={[
               styles.appbarHeader,
@@ -168,6 +165,13 @@ export function HeaderContentRange({
 const styles = StyleSheet.create({
   fill: {
     flex: 1,
+  },
+  animated: {
+    paddingBottom: 0,
+    elevation: 4,
+  },
+  safeContent: {
+    paddingBottom: 0,
   },
   header: {
     height: 75,

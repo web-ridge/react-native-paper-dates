@@ -15,7 +15,12 @@ export default function AmPmSwitcher() {
       ]}
     >
       <SwitchButton label="AM" onPress={() => {}} />
-      <View style={styles.switchSeparator} />
+      <View
+        style={[
+          styles.switchSeparator,
+          { backgroundColor: theme.colors.backdrop },
+        ]}
+      />
       <SwitchButton label="PM" onPress={() => {}} />
     </View>
   )
@@ -40,14 +45,13 @@ function SwitchButton({
 
 const styles = StyleSheet.create({
   root: {
-    width: 41,
-    height: 65,
+    width: 50,
+    height: 96,
     borderWidth: 1,
   },
   switchSeparator: {
     height: 1,
     width: 41,
-    backgroundColor: '#ccc',
   },
   switchButton: {
     flex: 1,

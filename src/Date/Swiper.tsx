@@ -27,11 +27,13 @@ function Swiper({
   renderItem,
   renderHeader,
   renderFooter,
+  selectedYear,
 }: {
   scrollMode: 'horizontal' | 'vertical'
   renderItem: (renderProps: RenderProps) => any
   renderHeader?: (renderProps: RenderProps) => any
   renderFooter?: (renderProps: RenderProps) => any
+  selectedYear: number | undefined
 }) {
   const isHorizontal = scrollMode === 'horizontal'
   const { width, height } = useWindowDimensions()
@@ -106,6 +108,41 @@ function Swiper({
     onPrev,
     onNext,
   }
+
+  React.useEffect(() => {
+    if (selectedYear && swiper.current) {
+      // // every month is index
+      // // so calculate months between startIndex === currentYear
+      const currentIndex = lazyIndex.current || startAtIndex
+      //
+      // // | 0 = bitwise rule, remove decimals always go down
+      // // eslint-disable-next-line no-bitwise
+      const differenceWithStartIndex = ((currentIndex - startAtIndex) / 12) | 0
+      console.log({
+        selectedYear,
+        before: (currentIndex - startAtIndex) / 12,
+        downed: differenceWithStartIndex,
+      })
+      // // calculate which index to go
+      const year = new Date().getFullYear() + differenceWithStartIndex
+      const difference = selectedYear - year
+      const differenceInMonths = difference * 12
+      //
+      const newIndex = currentIndex + differenceInMonths
+      console.log({
+        differenceInMonths,
+        was: currentIndex,
+        becomes: newIndex,
+      })
+      if (currentIndex !== newIndex) {
+        lazyIndex.current = newIndex
+        swiper.current.scrollToIndex({
+          index: newIndex,
+          animated: false,
+        })
+      }
+    }
+  }, [lazyIndex, swiper, selectedYear])
 
   React.useEffect(() => {
     if (swiper.current) {

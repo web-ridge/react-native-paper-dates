@@ -3,12 +3,7 @@ import { View, TextInput, TextInputProps, StyleSheet } from 'react-native'
 import { useTheme, TouchableRipple } from 'react-native-paper'
 
 import Color from 'color'
-import {
-  clockTypes,
-  inputTypes,
-  PossibleClockTypes,
-  PossibleInputTypes,
-} from './timeUtils'
+import { inputTypes, PossibleClockTypes, PossibleInputTypes } from './timeUtils'
 import { useMemo } from 'react'
 
 interface TimeInputProps
@@ -31,20 +26,10 @@ export default function TimeInput({
   ...rest
 }: TimeInputProps) {
   const theme = useTheme()
-  let dateAndTime, formatter
-  if (clockType === clockTypes.hours) {
-    dateAndTime = new Date().setHours(value)
-    formatter = new Intl.DateTimeFormat(undefined, { hour: '2-digit' })
-  } else {
-    dateAndTime = new Date().setMinutes(value)
-    formatter = new Intl.DateTimeFormat(undefined, {
-      minute: '2-digit',
-    })
-  }
 
   // 2-digit does not work on all devices..
-  const bug = formatter!.format(dateAndTime)
-  const formattedValue = bug.length === 1 ? `0${bug}` : bug
+
+  const formattedValue = `${value}`.length === 1 ? `0${value}` : `${value}`
   const onInnerFocus = () => {
     onFocus(clockType)
   }
@@ -71,10 +56,10 @@ export default function TimeInput({
   }, [focused, theme])
 
   return (
-    <View style={{ flex: 1, position: 'relative', height: 65 }}>
+    <View style={styles.root}>
       <TextInput
         style={[
-          styles.root,
+          styles.input,
           {
             color,
             backgroundColor,
@@ -82,19 +67,23 @@ export default function TimeInput({
           },
         ]}
         value={formattedValue}
+        maxLength={2}
         onFocus={onInnerFocus}
+        keyboardAppearance={theme.dark ? 'dark' : 'default'}
+        keyboardType="number-pad"
         {...rest}
       />
       {inputType === inputTypes.picker ? (
         <TouchableRipple
           style={[
             StyleSheet.absoluteFill,
+            styles.buttonOverlay,
             {
               // backgroundColor: 'blue',
               borderRadius: theme.roundness,
-              overflow: 'hidden',
             },
           ]}
+          rippleColor={Color(theme.colors.primary).fade(0.7).hex()}
           onPress={() => onFocus(clockType)}
         >
           <View />
@@ -105,12 +94,13 @@ export default function TimeInput({
 }
 
 const styles = StyleSheet.create({
-  root: {
-    fontSize: 40,
-    paddingTop: 12,
-    paddingBottom: 12,
+  root: { position: 'relative', height: 80, width: 96 },
+  input: {
+    fontSize: 50,
     textAlign: 'center',
-    flex: 1,
-    height: 65,
+    textAlignVertical: 'center',
+    width: 96,
+    height: 80,
   },
+  buttonOverlay: { overflow: 'hidden' },
 })

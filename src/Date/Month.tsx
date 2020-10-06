@@ -44,7 +44,7 @@ interface MonthSingleProps extends BaseMonthProps {
 }
 
 const monthGrid = (index: number) => {
-  console.log('', index, gridCounts[index])
+  console.log('monthGrid', index, gridCounts[index])
   return Array(gridCounts[index])
     .fill(null)
     .map((_, weekGrid) => {
@@ -73,7 +73,9 @@ export function getMonthHeight(
   index: number
 ): number {
   const calendarHeight = getCalendarHeaderHeight(scrollMode)
-  const currentMonthHeight = weekSize * gridCounts[index]
+  const gridCount = gridCounts[index]
+
+  const currentMonthHeight = weekSize * gridCount
   const extraHeight =
     scrollMode === 'horizontal' ? monthHeaderSingleHeight : montHeaderHeight
   const c = calendarHeight + currentMonthHeight + extraHeight
@@ -172,6 +174,11 @@ function Month({
     })
   }, [mode, index, startDate, endDate, date, month, year])
 
+  console.log(year, monthName)
+  grid.forEach(({ weekIndex, generatedDays }) => {
+    console.log({ weekIndex, days: generatedDays.length })
+  })
+
   return (
     <View style={[styles.month, { height: getMonthHeight(scrollMode, index) }]}>
       <View
@@ -267,6 +274,7 @@ const styles = StyleSheet.create({
     // flexDirection: 'row-reverse',
   },
   month: {},
+
   monthHeader: {
     height: montHeaderHeight,
     justifyContent: 'center',

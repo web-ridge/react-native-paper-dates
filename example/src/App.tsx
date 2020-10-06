@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ScrollView, View } from 'react-native';
+import { StyleSheet, ScrollView, View } from 'react-native';
 import {
   Title,
   Button,
@@ -12,7 +12,10 @@ import {
 } from 'react-native-paper';
 import { DatePickerModal } from '../../src';
 import { Platform } from 'react-native';
-import TimePicker from '../../src/Time/TimePicker';
+
+import TimePickerModal from '../../src/Time/TimePickerModal';
+import DatePickerInput from '../../src/Date/DatePickerInput';
+import DateRangeInput from '../../src/Date/DateRangeInput';
 
 function App({
   onToggleDarkMode,
@@ -22,8 +25,12 @@ function App({
   dark: boolean;
 }) {
   const theme = useTheme();
+  const [timeOpen, setTimeOpen] = React.useState(false);
   const [rangeOpen, setRangeOpen] = React.useState(false);
   const [singleOpen, setSingleOpen] = React.useState(false);
+  const onDismissTime = React.useCallback(() => {
+    setTimeOpen(false);
+  }, [setTimeOpen]);
   const onDismissRange = React.useCallback(() => {
     setRangeOpen(false);
   }, [setRangeOpen]);
@@ -43,66 +50,23 @@ function App({
   return (
     <ScrollView
       scrollEnabled={false}
-      style={{
-        backgroundColor: theme.colors.background,
-        flex: 1,
-      }}
+      style={[
+        styles.root,
+        {
+          backgroundColor: theme.colors.background,
+        },
+      ]}
       contentInsetAdjustmentBehavior="always"
     >
-      <View
-        style={{
-          width: '100%',
-          maxWidth: 450,
-          backgroundColor: theme.colors.surface,
-          shadowColor: '#000',
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-          elevation: 5,
-          padding: 24,
-          alignSelf: 'center',
-          flex: 1,
-        }}
-      >
+      <View style={[styles.content, { backgroundColor: theme.colors.surface }]}>
         <Title>Examples</Title>
-        <View style={{ flexDirection: 'row', marginTop: 24 }}>
+        <View style={styles.switchContainer}>
           <Text>Dark mode</Text>
-          <View style={{ flex: 1 }} />
+          <View style={styles.switchSpace} />
           <Switch value={dark} onValueChange={onToggleDarkMode} />
         </View>
-        <View
-          style={{
-            backgroundColor: theme.colors.primary,
-            width: 50,
-            height: 50,
-          }}
-        />
-        <View
-          style={{
-            backgroundColor: theme.colors.accent,
-            width: 50,
-            height: 50,
-          }}
-        />
-        <View
-          style={{
-            backgroundColor: theme.colors.background,
-            width: 50,
-            height: 50,
-          }}
-        />
-        <View
-          style={{
-            backgroundColor: theme.colors.surface,
-            width: 50,
-            height: 50,
-          }}
-        />
 
-        <View style={{ flexDirection: 'row', marginTop: 24 }}>
+        <View style={styles.buttons}>
           <Button
             onPress={() => setRangeOpen(true)}
             uppercase={false}
@@ -110,7 +74,7 @@ function App({
           >
             Pick range
           </Button>
-          <View style={{ width: 6 }} />
+          <View style={styles.buttonSeparator} />
           <Button
             onPress={() => setSingleOpen(true)}
             uppercase={false}
@@ -118,7 +82,19 @@ function App({
           >
             Pick single date
           </Button>
+          <View style={styles.buttonSeparator} />
+          <Button
+            onPress={() => setTimeOpen(true)}
+            uppercase={false}
+            mode="outlined"
+          >
+            Pick time
+          </Button>
         </View>
+        <View style={{ height: 12 }} />
+        <DatePickerInput />
+        <View style={{ height: 12 }} />
+        <DateRangeInput />
 
         <DatePickerModal
           mode="range"
@@ -142,9 +118,7 @@ function App({
           label={'Select date'} // optional
         />
 
-        <View style={{ alignItems: 'center', marginTop: 24 }}>
-          <TimePicker />
-        </View>
+        <TimePickerModal visible={timeOpen} onDismiss={onDismissTime} />
       </View>
     </ScrollView>
   );
@@ -172,3 +146,27 @@ export default function AppWithProviders() {
     </PaperProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  root: { flex: 1 },
+  content: {
+    width: '100%',
+    maxWidth: 450,
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    padding: 24,
+    alignSelf: 'center',
+    flex: 1,
+  },
+  switchContainer: { flexDirection: 'row', marginTop: 24 },
+  switchSpace: { flex: 1 },
+  buttons: { flexDirection: 'row', marginTop: 24 },
+  buttonSeparator: { width: 6 },
+});

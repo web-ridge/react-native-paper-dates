@@ -1,5 +1,11 @@
 import * as React from 'react'
-import { Modal, StyleSheet, useWindowDimensions, View } from 'react-native'
+import {
+  Modal,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 
 import Calendar, {
   BaseCalendarProps,
@@ -100,10 +106,23 @@ export function DatePickerModal(
       visible={visible}
       onRequestClose={onDismiss}
       presentationStyle="overFullScreen"
+      //@ts-ignore
+      statusBarTranslucent={true}
     >
       <>
-        <View style={[StyleSheet.absoluteFill, styles.modalBackground]} />
-        <View style={[StyleSheet.absoluteFill, styles.modalRoot]}>
+        <TouchableWithoutFeedback onPress={onDismiss}>
+          <View
+            style={[
+              StyleSheet.absoluteFill,
+              styles.modalBackground,
+              { backgroundColor: theme.colors.backdrop },
+            ]}
+          />
+        </TouchableWithoutFeedback>
+        <View
+          style={[StyleSheet.absoluteFill, styles.modalRoot]}
+          pointerEvents="box-none"
+        >
           <View
             style={[
               styles.modalContent,
@@ -164,7 +183,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   modalBackground: {
-    backgroundColor: 'rgba(0,0,0,0.2)',
     flex: 1,
   },
   modalContent: {

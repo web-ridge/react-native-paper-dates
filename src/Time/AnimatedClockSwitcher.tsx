@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { Animated, StyleSheet, View } from 'react-native'
 import { clockTypes, PossibleClockTypes } from './timeUtils'
-import { circleSize } from './AnalogClock'
 
 export default function AnimatedClockSwitcher({
   focused,

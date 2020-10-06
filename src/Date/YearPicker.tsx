@@ -1,9 +1,12 @@
 import * as React from 'react'
 import { FlatList, StyleSheet, View } from 'react-native'
 import { Text, TouchableRipple, useTheme } from 'react-native-paper'
+import { range } from '../utils'
 
-const startYear = 1900
-const endYear = 4000
+const ITEM_HEIGHT = 62
+
+const startYear = 1800
+const endYear = 2200
 const years = range(startYear, endYear)
 
 export default function YearPicker({
@@ -15,26 +18,28 @@ export default function YearPicker({
   selectingYear: boolean
   onPressYear: (year: number) => any
 }) {
+  const theme = useTheme()
   const flatList = React.useRef<FlatList<number> | null>(null)
-  const wasSelectingYear = usePrevious(selectingYear)
 
   // scroll to selected year
   React.useEffect(() => {
-    // if user tries to select a year
-    if (!wasSelectingYear && selectingYear && selectedYear) {
-      if (flatList.current) {
-        const indexToGo = selectedYear - startYear
-        flatList.current.scrollToOffset({
-          offset: (indexToGo / 3) * 62,
-          animated: false,
-        })
-      }
+    if (flatList.current && selectedYear) {
+      const indexToGo = selectedYear - startYear
+      flatList.current.scrollToOffset({
+        offset: (indexToGo / 3) * ITEM_HEIGHT - ITEM_HEIGHT,
+        animated: false,
+      })
     }
-  }, [flatList, wasSelectingYear, selectedYear, selectingYear])
+  }, [flatList, selectedYear])
 
   return (
     <View
-      style={[styles.root, selectingYear ? styles.opacity1 : styles.opacity0]}
+      style={[
+        StyleSheet.absoluteFill,
+        styles.root,
+        { backgroundColor: theme.colors.surface },
+        selectingYear ? styles.opacity1 : styles.opacity0,
+      ]}
       pointerEvents={selectingYear ? 'auto' : 'none'}
     >
       <FlatList<number>
@@ -48,13 +53,14 @@ export default function YearPicker({
             onPressYear={onPressYear}
           />
         )}
+        keyExtractor={(item) => `${item}`}
         numColumns={3}
       />
     </View>
   )
 }
 
-export function Year({
+function YearPure({
   year,
   selected,
   onPressYear,
@@ -87,12 +93,10 @@ export function Year({
     </View>
   )
 }
+const Year = React.memo(YearPure)
 
 const styles = StyleSheet.create({
   root: {
-    // @ts-ignore
-    ...StyleSheet.absoluteFill,
-    backgroundColor: '#fff',
     flex: 1,
     top: 56,
     zIndex: 100,
@@ -105,12 +109,13 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 16,
     marginRight: 16,
-    height: 62,
+    height: ITEM_HEIGHT,
     justifyContent: 'center',
   },
   selectedYear: { color: '#fff' },
   yearButton: {
     borderRadius: 46 / 2,
+    overflow: 'hidden',
   },
   yearInner: {
     borderRadius: 46 / 2,
@@ -125,27 +130,6 @@ const styles = StyleSheet.create({
     opacity: 0,
   },
   opacity1: {
-    opacity: 0,
+    opacity: 1,
   },
 })
-
-function range(start: number, end: number) {
-  return Array(end - start + 1)
-    .fill(null)
-    .map((_, i) => start + i)
-}
-
-// Hook
-function usePrevious<T>(value: T) {
-  // The ref object is a generic container whose current property is mutable ...
-  // ... and can hold any value, similar to an instance property on a class
-  const ref = React.useRef<T>()
-
-  // Store current value in ref
-  React.useEffect(() => {
-    ref.current = value
-  }, [value]) // Only re-run if value changes
-
-  // Return previous value (happens before update in useEffect above)
-  return ref.current
-}
