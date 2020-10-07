@@ -6,6 +6,8 @@ import {
   Text,
   Animated,
   TouchableWithoutFeedback,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native'
 
 import { Button, IconButton, overlay, useTheme } from 'react-native-paper'
@@ -76,58 +78,63 @@ export function TimePickerModal({
       statusBarTranslucent={true}
     >
       <>
-        <TouchableWithoutFeedback onPress={onDismiss}>
-          <View
-            style={[
-              StyleSheet.absoluteFill,
-              styles.modalBackground,
-              { backgroundColor: theme.colors.backdrop },
-            ]}
-          />
-        </TouchableWithoutFeedback>
-        <View
-          style={[StyleSheet.absoluteFill, styles.modalRoot]}
-          pointerEvents="box-none"
+        <KeyboardAvoidingView
+          style={styles.keyboardView}
+          behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
         >
-          <Animated.View
-            style={[
-              styles.modalContent,
-              {
-                backgroundColor: theme.dark
-                  ? overlay(10, theme.colors.surface)
-                  : theme.colors.surface,
-                borderRadius: theme.roundness,
-              },
-            ]}
+          <TouchableWithoutFeedback onPress={onDismiss}>
+            <View
+              style={[
+                StyleSheet.absoluteFill,
+                styles.modalBackground,
+                { backgroundColor: theme.colors.backdrop },
+              ]}
+            />
+          </TouchableWithoutFeedback>
+          <View
+            style={[StyleSheet.absoluteFill, styles.modalRoot]}
+            pointerEvents="box-none"
           >
-            <View style={styles.labelContainer}>
-              <Text style={[styles.label, { color: theme.colors.text }]}>
-                {`Select time`.toUpperCase()}
-              </Text>
-            </View>
-            <View style={styles.timePickerContainer}>
-              <TimePicker
-                inputType={inputType}
-                focused={focused}
-                hours={hours}
-                minutes={minutes}
-                onChange={onChange}
-                onFocusInput={onFocusInput}
-              />
-            </View>
-            <View style={styles.bottom}>
-              <IconButton
-                icon={inputTypeIcons[reverseInputTypes[inputType]]}
-                onPress={() => setInputType(reverseInputTypes[inputType])}
-                size={24}
-                style={styles.inputTypeToggle}
-              />
-              <View style={styles.fill} />
-              <Button onPress={onDismiss}>Cancel</Button>
-              <Button onPress={() => {}}>Ok</Button>
-            </View>
-          </Animated.View>
-        </View>
+            <Animated.View
+              style={[
+                styles.modalContent,
+                {
+                  backgroundColor: theme.dark
+                    ? overlay(10, theme.colors.surface)
+                    : theme.colors.surface,
+                  borderRadius: theme.roundness,
+                },
+              ]}
+            >
+              <View style={styles.labelContainer}>
+                <Text style={[styles.label, { color: theme.colors.text }]}>
+                  {`Select time`.toUpperCase()}
+                </Text>
+              </View>
+              <View style={styles.timePickerContainer}>
+                <TimePicker
+                  inputType={inputType}
+                  focused={focused}
+                  hours={hours}
+                  minutes={minutes}
+                  onChange={onChange}
+                  onFocusInput={onFocusInput}
+                />
+              </View>
+              <View style={styles.bottom}>
+                <IconButton
+                  icon={inputTypeIcons[reverseInputTypes[inputType]]}
+                  onPress={() => setInputType(reverseInputTypes[inputType])}
+                  size={24}
+                  style={styles.inputTypeToggle}
+                />
+                <View style={styles.fill} />
+                <Button onPress={onDismiss}>Cancel</Button>
+                <Button onPress={() => {}}>Ok</Button>
+              </View>
+            </Animated.View>
+          </View>
+        </KeyboardAvoidingView>
       </>
     </Modal>
   )
@@ -137,6 +144,9 @@ const styles = StyleSheet.create({
   modalRoot: {
     justifyContent: 'center',
     alignItems: 'center',
+    flex: 1,
+  },
+  keyboardView: {
     flex: 1,
   },
   modalBackground: {

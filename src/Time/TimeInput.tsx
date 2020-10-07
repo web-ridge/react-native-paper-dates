@@ -10,54 +10,76 @@ interface TimeInputProps
   extends Omit<Omit<TextInputProps, 'value'>, 'onFocus'> {
   value: number
   clockType: PossibleClockTypes
-  onFocus: (type: PossibleClockTypes) => any
-  focused: boolean
-
+  onPress?: (type: PossibleClockTypes) => any
+  pressed?: boolean
+  onChanged: (n: number) => any
   inputType: PossibleInputTypes
 }
 
-export default function TimeInput({
-  value,
-  clockType,
-  focused,
-  onFocus,
+function TimeInput(
+  {
+    value,
+    clockType,
+    pressed,
+    onPress,
+    onChanged,
+    inputType,
+    ...rest
+  }: TimeInputProps,
+  ref: any
+) {
+  const [controlledValue, setControlledValue] = React.useState<string>(
+    `${value}`
+  )
 
-  inputType,
-  ...rest
-}: TimeInputProps) {
-  const theme = useTheme()
-
-  // 2-digit does not work on all devices..
-
-  const formattedValue = `${value}`.length === 1 ? `0${value}` : `${value}`
-  const onInnerFocus = () => {
-    onFocus(clockType)
+  const onInnerChange = (text: string) => {
+    setControlledValue(text)
+    if (text !== '' && text !== '0') {
+      onChanged(Number(text))
+    }
   }
 
+  React.useEffect(() => {
+    setControlledValue(`${value}`)
+  }, [value])
+
+  const theme = useTheme()
+  const [inputFocused, setInputFocused] = React.useState<boolean>(false)
+
+  const highlighted = inputType === inputTypes.picker ? pressed : inputFocused
   const backgroundColor = useMemo<string>(() => {
     if (theme.dark) {
-      if (focused) {
+      if (highlighted) {
         return Color(theme.colors.primary).hex()
       }
       return Color(theme.colors.surface).lighten(1.2).hex()
     }
 
-    if (focused) {
+    if (highlighted) {
       return Color(theme.colors.primary).lighten(1).hex()
     }
     return Color(theme.colors.surface).darken(0.1).hex()
-  }, [focused, theme])
+  }, [highlighted, theme])
 
   const color = useMemo<string>(() => {
-    if (focused && !theme.dark) {
+    if (highlighted && !theme.dark) {
       return theme.colors.primary
     }
     return theme.colors.text
-  }, [focused, theme])
+  }, [highlighted, theme])
+
+  let formattedValue = controlledValue
+  if (!inputFocused) {
+    formattedValue =
+      controlledValue.length === 1
+        ? `0${controlledValue}`
+        : `${controlledValue}`
+  }
 
   return (
     <View style={styles.root}>
       <TextInput
+        ref={ref}
         style={[
           styles.input,
           {
@@ -68,12 +90,14 @@ export default function TimeInput({
         ]}
         value={formattedValue}
         maxLength={2}
-        onFocus={onInnerFocus}
+        onFocus={() => setInputFocused(true)}
+        onBlur={() => setInputFocused(false)}
         keyboardAppearance={theme.dark ? 'dark' : 'default'}
         keyboardType="number-pad"
+        onChangeText={onInnerChange}
         {...rest}
       />
-      {inputType === inputTypes.picker ? (
+      {onPress && inputType === inputTypes.picker ? (
         <TouchableRipple
           style={[
             StyleSheet.absoluteFill,
@@ -84,7 +108,7 @@ export default function TimeInput({
             },
           ]}
           rippleColor={Color(theme.colors.primary).fade(0.7).hex()}
-          onPress={() => onFocus(clockType)}
+          onPress={() => onPress(clockType)}
         >
           <View />
         </TouchableRipple>
@@ -104,3 +128,5 @@ const styles = StyleSheet.create({
   },
   buttonOverlay: { overflow: 'hidden' },
 })
+
+export default React.forwardRef(TimeInput)

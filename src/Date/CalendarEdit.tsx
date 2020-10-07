@@ -9,6 +9,7 @@ import {
 import { CalendarDate, ModeType } from './Calendar'
 import { LocalState } from './DatePickerModal'
 import TextInputWithMask from '../TextInputMask'
+import { useTheme } from 'react-native-paper'
 
 function CalendarEdit({
   mode,
@@ -55,6 +56,20 @@ function CalendarEdit({
     }
   }, [mode, startInput, endInput, dateInput, collapsed])
 
+  const onSubmitStartInput = React.useCallback(() => {
+    if (endInput.current) {
+      endInput.current.focus()
+    }
+  }, [endInput])
+
+  const onSubmitEndInput = React.useCallback(() => {
+    // TODO: close modal and persist range
+  }, [])
+
+  const onSubmitInput = React.useCallback(() => {
+    // TODO: close modal and persist range
+  }, [])
+
   return (
     <View style={styles.root}>
       <View style={styles.inner}>
@@ -64,6 +79,7 @@ function CalendarEdit({
             label={label}
             value={state.date}
             onChange={(date) => onChange({ ...state, date })}
+            onSubmitEditing={onSubmitInput}
           />
         ) : null}
         {mode === 'range' ? (
@@ -73,6 +89,8 @@ function CalendarEdit({
               label={startLabel}
               value={state.startDate}
               onChange={(startDate) => onChange({ ...state, startDate })}
+              returnKeyType={'next'}
+              onSubmitEditing={onSubmitStartInput}
             />
             <View style={styles.separator} />
             <CalendarInput
@@ -81,6 +99,7 @@ function CalendarEdit({
               value={state.endDate}
               onChange={(endDate) => onChange({ ...state, endDate })}
               isEndDate
+              onSubmitEditing={onSubmitEndInput}
             />
           </>
         ) : null}
@@ -95,14 +114,19 @@ function CalendarInputPure(
     value,
     onChange,
     isEndDate,
+    returnKeyType,
+    onSubmitEditing,
   }: {
     label: string
     value: CalendarDate
     onChange: (d: Date | undefined) => any
     isEndDate?: boolean
+    returnKeyType?: string
+    onSubmitEditing?: () => any
   },
   ref: any
 ) {
+  const theme = useTheme()
   const formatter = React.useMemo(() => {
     return new Intl.DateTimeFormat(undefined, {
       month: '2-digit',
@@ -141,10 +165,13 @@ function CalendarInputPure(
       value={formattedValue}
       style={styles.input}
       label={`${label} (${inputFormat})`}
-      keyboardType={'numeric'}
+      keyboardType={'number-pad'}
       placeholder={inputFormat}
       mask={inputFormat}
       onChangeText={onChangeText}
+      returnKeyType={returnKeyType}
+      onSubmitEditing={onSubmitEditing}
+      keyboardAppearance={theme.dark ? 'dark' : 'default'}
     />
   )
 }
