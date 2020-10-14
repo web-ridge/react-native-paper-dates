@@ -29,7 +29,14 @@ export default function DateRangeInput() {
         />
         <Text>Van</Text>
       </View>
-      <Text style={{ fontSize: 24, marginLeft: 6, marginRight: 6 }}>-</Text>
+      <View>
+        <Text style={{ fontSize: 16, marginLeft: 12, marginRight: 12 }}>
+          to
+        </Text>
+        <Text style={{ opacity: 0 }} accessible={false}>
+          tot
+        </Text>
+      </View>
       <View style={{ flex: 1 }}>
         <TextInputWithMask
           value={''}

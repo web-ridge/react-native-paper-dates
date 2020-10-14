@@ -11,8 +11,10 @@ import {
   clockTypes,
   getAngle,
   getHours,
+  getHourType,
+  getHourTypeFromOffset,
   getMinutes,
-  isPM,
+  hourTypes,
   PossibleClockTypes,
 } from './timeUtils'
 import * as React from 'react'
@@ -23,6 +25,7 @@ import AnalogClockHours from './AnalogClockHours'
 import AnimatedClockSwitcher from './AnimatedClockSwitcher'
 import AnalogClockMinutes from './AnalogClockMinutes'
 
+// 250? when bigger?
 export const circleSize = 215
 
 function AnalogClock({
@@ -48,11 +51,14 @@ function AnalogClock({
 }) {
   const theme = useTheme()
 
+  // used to make pointer shorter if hours are selected and above 12
+  const shortPointer = hours > 12 && is24Hour
+
   const clockRef = React.useRef<View | null>(null)
   const elementX = React.useRef<number>(0)
   const elementY = React.useRef<number>(0)
 
-  // Hooks are nice, sometimes :-)..
+  // Hooks are nice, sometimes... :-)..
   // We need the latest values, since the onPointerMove uses a closure to the function
   const hoursRef = useLatest(hours)
   const onChangeRef = useLatest(onChange)
@@ -67,8 +73,15 @@ function AnalogClock({
 
       let angle = getAngle(x, y, circleSize)
       if (focusedRef.current === clockTypes.hours) {
-        let pickedHours = getHours(angle)
-        if (is24HourRef.current && isPM(x, y, circleSize)) {
+        let previousHourType = getHourType(hoursRef.current)
+        let pickedHours = getHours(angle, previousHourType)
+
+        // TODO: check which mode is switched on am/pm
+        if (
+          (is24HourRef.current &&
+            getHourTypeFromOffset(x, y, circleSize) === hourTypes.pm) ||
+          (!is24HourRef.current && previousHourType === hourTypes.pm)
+        ) {
           pickedHours += 12
         }
         if (hoursRef.current !== pickedHours || final) {
@@ -120,8 +133,7 @@ function AnalogClock({
     [elementX, elementY]
   )
 
-  // used to make pointer shorter if hours are selected and above 12
-  const dynamicSize = focused === clockTypes.hours && hours > 12 ? 33 : 0
+  const dynamicSize = focused === clockTypes.hours && shortPointer ? 33 : 0
   const pointerNumber = focused === clockTypes.hours ? hours : minutes
   const degreesPerNumber = focused === clockTypes.hours ? 30 : 6
   return (

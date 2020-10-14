@@ -19,6 +19,7 @@ import {
 import TimeInput from './TimeInput'
 import AmPmSwitcher from './AmPmSwitcher'
 import AnalogClock, { circleSize } from './AnalogClock'
+import { useLatest } from '../utils'
 
 function TimeInputs({
   hours,
@@ -60,6 +61,18 @@ function TimeInputs({
   const onSubmitEndInput = React.useCallback(() => {
     // TODO: close modal and persist time
   }, [])
+
+  const minutesRef = useLatest(minutes)
+  const onChangeHours = React.useCallback(
+    (newHours: number) => {
+      onChange({
+        hours: newHours,
+        minutes: minutesRef.current,
+        focused: clockTypes.hours,
+      })
+    },
+    [onChange, minutesRef]
+  )
 
   return (
     <View
@@ -113,7 +126,7 @@ function TimeInputs({
       {!is24Hour && (
         <>
           <View style={styles.spaceBetweenInputsAndSwitcher} />
-          <AmPmSwitcher />
+          <AmPmSwitcher hours={hours} onChange={onChangeHours} />
         </>
       )}
     </View>

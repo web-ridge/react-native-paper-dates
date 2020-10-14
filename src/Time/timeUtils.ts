@@ -1,3 +1,26 @@
+import * as React from 'react'
+import Color from 'color'
+import { useTheme } from 'react-native-paper'
+
+export type PossibleHourTypes = 'am' | 'pm'
+export type HourTypeMap = {
+  [hourType in PossibleHourTypes]: PossibleHourTypes
+}
+export const hourTypes: HourTypeMap = {
+  am: 'am',
+  pm: 'pm',
+}
+
+export function getHourType(hours: number): PossibleHourTypes | undefined {
+  if (hours >= 0 && hours <= 12) {
+    return hourTypes.am
+  }
+  if (hours > 12 && hours <= 24) {
+    return hourTypes.pm
+  }
+  return undefined
+}
+
 export type PossibleInputTypes = 'keyboard' | 'picker'
 export type InputTypeMap = {
   [inputType in PossibleInputTypes]: PossibleInputTypes
@@ -49,9 +72,12 @@ export function snap(angle: number, step: number) {
   return angle - diff + step
 }
 
-/** With a 24 hour clock box (width/height) and a mouse position (left/top),
- * determine whether the use is pointing at an AM hour or a PM hour */
-export function isPM(left: number, top: number, size: number): boolean {
+// detect am / pm based on offset
+export function getHourTypeFromOffset(
+  left: number,
+  top: number,
+  size: number
+): PossibleHourTypes {
   const w = size / 2
   const x = w - left
   const y = size / 2 - top
@@ -59,7 +85,7 @@ export function isPM(left: number, top: number, size: number): boolean {
   const distance = Math.sqrt(x * x + y * y)
   const maxPm = w - outerHeight
 
-  return !(distance > maxPm)
+  return distance > maxPm ? hourTypes.am : hourTypes.pm
 }
 
 // Calculate the minute from the hand angle
@@ -76,13 +102,23 @@ export function getMinutes(handAngle: number) {
 }
 
 // Calculate the hour from the hand angle
-export function getHours(handAngle: number) {
+export function getHours(
+  handAngle: number,
+  hourType: PossibleHourTypes | undefined
+) {
   handAngle = snap(handAngle, _30)
 
   // eslint-disable-next-line no-bitwise
   let hour = (((handAngle - _90) % _360) / _30) | 0
-  if (hour < 0) hour += 12
-  if (hour >= 12) hour -= 12
+
+  if (hourType === hourTypes.am) {
+    if (hour < 0) hour += 12
+    if (hour >= 12) hour -= 12
+  }
+  if (hourType === hourTypes.pm) {
+    if (hour <= 0) hour += 12
+    if (hour > 12) hour -= 12
+  }
 
   return hour
 }
@@ -100,4 +136,56 @@ export function getAngle(left: number, top: number, size: number) {
   }
 
   return angle
+}
+
+export function useSwitchColors(highlighted: boolean) {
+  const theme = useTheme()
+  const backgroundColor = React.useMemo<string>(() => {
+    if (theme.dark) {
+      if (highlighted) {
+        return Color(theme.colors.primary).hex()
+      }
+      return theme.colors.backdrop
+    }
+
+    if (highlighted) {
+      return Color(theme.colors.primary).lighten(1).hex()
+    }
+    return theme.colors.surface
+  }, [highlighted, theme])
+
+  const color = React.useMemo<string>(() => {
+    if (highlighted && !theme.dark) {
+      return theme.colors.primary
+    }
+    return theme.colors.placeholder
+  }, [highlighted, theme])
+
+  return { backgroundColor, color }
+}
+
+export function useInputColors(highlighted: boolean) {
+  const theme = useTheme()
+  const backgroundColor = React.useMemo<string>(() => {
+    if (theme.dark) {
+      if (highlighted) {
+        return Color(theme.colors.primary).hex()
+      }
+      return Color(theme.colors.surface).lighten(1.2).hex()
+    }
+
+    if (highlighted) {
+      return Color(theme.colors.primary).lighten(1).hex()
+    }
+    return Color(theme.colors.surface).darken(0.1).hex()
+  }, [highlighted, theme])
+
+  const color = React.useMemo<string>(() => {
+    if (highlighted && !theme.dark) {
+      return theme.colors.primary
+    }
+    return theme.colors.text
+  }, [highlighted, theme])
+
+  return { backgroundColor, color }
 }

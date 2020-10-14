@@ -3,15 +3,19 @@ import { View, TextInput, TextInputProps, StyleSheet } from 'react-native'
 import { useTheme, TouchableRipple } from 'react-native-paper'
 
 import Color from 'color'
-import { inputTypes, PossibleClockTypes, PossibleInputTypes } from './timeUtils'
-import { useMemo } from 'react'
+import {
+  inputTypes,
+  PossibleClockTypes,
+  PossibleInputTypes,
+  useInputColors,
+} from './timeUtils'
 
 interface TimeInputProps
   extends Omit<Omit<TextInputProps, 'value'>, 'onFocus'> {
   value: number
   clockType: PossibleClockTypes
   onPress?: (type: PossibleClockTypes) => any
-  pressed?: boolean
+  pressed: boolean
   onChanged: (n: number) => any
   inputType: PossibleInputTypes
 }
@@ -47,26 +51,8 @@ function TimeInput(
   const [inputFocused, setInputFocused] = React.useState<boolean>(false)
 
   const highlighted = inputType === inputTypes.picker ? pressed : inputFocused
-  const backgroundColor = useMemo<string>(() => {
-    if (theme.dark) {
-      if (highlighted) {
-        return Color(theme.colors.primary).hex()
-      }
-      return Color(theme.colors.surface).lighten(1.2).hex()
-    }
 
-    if (highlighted) {
-      return Color(theme.colors.primary).lighten(1).hex()
-    }
-    return Color(theme.colors.surface).darken(0.1).hex()
-  }, [highlighted, theme])
-
-  const color = useMemo<string>(() => {
-    if (highlighted && !theme.dark) {
-      return theme.colors.primary
-    }
-    return theme.colors.text
-  }, [highlighted, theme])
+  const { color, backgroundColor } = useInputColors(highlighted)
 
   let formattedValue = controlledValue
   if (!inputFocused) {

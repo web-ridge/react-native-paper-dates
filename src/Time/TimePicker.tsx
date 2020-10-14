@@ -41,6 +41,7 @@ function TimePicker({
     })
     const formatted = formatter.format(new Date(Date.UTC(2020, 1, 1, 23)))
     return formatted.includes('23')
+    // return false
   }, [])
 
   return (

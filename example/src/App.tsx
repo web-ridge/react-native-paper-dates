@@ -10,10 +10,9 @@ import {
   DarkTheme,
   useTheme,
 } from 'react-native-paper';
-import { DatePickerModal } from '../../src';
+import { DatePickerModal, TimePickerModal } from '../../src';
 import { Platform } from 'react-native';
 
-import TimePickerModal from '../../src/Time/TimePickerModal';
 import DatePickerInput from '../../src/Date/DatePickerInput';
 import DateRangeInput from '../../src/Date/DateRangeInput';
 
@@ -118,7 +117,14 @@ function App({
           label={'Select date'} // optional
         />
 
-        <TimePickerModal visible={timeOpen} onDismiss={onDismissTime} />
+        <TimePickerModal
+          visible={timeOpen}
+          onDismiss={onDismissTime}
+          onConfirm={({ hours, minutes }) => {
+            setTimeOpen(false);
+            console.log({ hours, minutes });
+          }}
+        />
       </View>
     </ScrollView>
   );
@@ -131,7 +137,13 @@ export default function AppWithProviders() {
   };
 
   return (
-    <PaperProvider theme={dark ? DarkTheme : DefaultTheme}>
+    <PaperProvider
+      theme={
+        dark
+          ? { ...DarkTheme, roundness: 10 }
+          : { ...DefaultTheme, roundness: 10 }
+      }
+    >
       <React.Fragment>
         {Platform.OS === 'web' ? (
           <style type="text/css">{`

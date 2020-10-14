@@ -1,27 +1,57 @@
 import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Text, TouchableRipple, useTheme } from 'react-native-paper'
+import { useMemo } from 'react'
+import Color from 'color'
+import {
+  getHourType,
+  hourTypes,
+  useInputColors,
+  useSwitchColors,
+} from './timeUtils'
 
-export default function AmPmSwitcher() {
+export default function AmPmSwitcher({
+  hours,
+  onChange,
+}: {
+  hours: number
+  onChange: (hours: number) => any
+}) {
   const theme = useTheme()
+  const backgroundColor = useMemo<string>(() => {
+    if (theme.dark) {
+      return Color(theme.colors.surface).lighten(1.2).hex()
+    }
+    return Color(theme.colors.surface).darken(0.1).hex()
+  }, [theme])
+
+  const hourType = getHourType(hours)
+  const isAM = hourType === hourTypes.am
+  const isPM = hourType === hourTypes.pm
+
   return (
     <View
       style={[
         styles.root,
         {
-          borderColor: theme.colors.backdrop,
+          borderColor: backgroundColor,
           borderRadius: theme.roundness,
         },
       ]}
     >
-      <SwitchButton label="AM" onPress={() => {}} />
-      <View
-        style={[
-          styles.switchSeparator,
-          { backgroundColor: theme.colors.backdrop },
-        ]}
+      <SwitchButton
+        label="AM"
+        onPress={isAM ? undefined : () => onChange(hours - 12)}
+        selected={isAM}
+        disabled={isAM}
       />
-      <SwitchButton label="PM" onPress={() => {}} />
+      <View style={[styles.switchSeparator, { backgroundColor }]} />
+      <SwitchButton
+        label="PM"
+        onPress={isPM ? undefined : () => onChange(hours + 12)}
+        selected={isPM}
+        disabled={isPM}
+      />
     </View>
   )
 }
@@ -29,16 +59,41 @@ export default function AmPmSwitcher() {
 function SwitchButton({
   label,
   onPress,
+  selected,
+  disabled,
 }: {
   label: string
-  onPress: () => any
+  onPress: (() => any) | undefined
+  selected: boolean
+  disabled: boolean
 }) {
   const theme = useTheme()
+  const { backgroundColor, color } = useSwitchColors(selected)
+  console.log({ backgroundColor, color })
   return (
-    <TouchableRipple onPress={onPress} style={styles.switchButton}>
-      <Text selectable={false} style={{ ...theme.fonts.medium }}>
-        {label}
-      </Text>
+    <TouchableRipple
+      onPress={onPress}
+      style={styles.switchButton}
+      accessibilityLabel={label}
+      accessibilityTraits={disabled ? ['button', 'disabled'] : 'button'}
+      accessibilityComponentType="button"
+      accessibilityRole="button"
+      accessibilityState={{ disabled }}
+      disabled={disabled}
+    >
+      <View style={[styles.switchButtonInner, { backgroundColor }]}>
+        <Text
+          selectable={false}
+          style={[
+            {
+              ...theme.fonts.medium,
+              color: color,
+            },
+          ]}
+        >
+          {label}
+        </Text>
+      </View>
     </TouchableRipple>
   )
 }
@@ -46,14 +101,18 @@ function SwitchButton({
 const styles = StyleSheet.create({
   root: {
     width: 50,
-    height: 96,
+    height: 80,
     borderWidth: 1,
+    overflow: 'hidden',
   },
   switchSeparator: {
     height: 1,
-    width: 41,
+    width: 48,
   },
   switchButton: {
+    flex: 1,
+  },
+  switchButtonInner: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',

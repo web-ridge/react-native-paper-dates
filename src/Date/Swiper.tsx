@@ -167,7 +167,7 @@ function Swiper({
         initialScrollIndex={startAtIndex}
         keyExtractor={keyExtractor}
         getItemLayout={getItemLayout}
-        windowSize={3}
+        windowSize={scrollMode === 'horizontal' ? 1 : 3}
         getItem={getItem}
         renderItem={renderPage}
         style={styles.viewPager}

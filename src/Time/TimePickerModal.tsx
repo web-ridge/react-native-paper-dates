@@ -32,9 +32,11 @@ const supportedOrientations: any[] = [
 export function TimePickerModal({
   visible,
   onDismiss,
+  onConfirm,
 }: {
   visible: boolean
   onDismiss: () => any
+  onConfirm: ({ hours, minutes }: { hours: number; minutes: number }) => any
 }) {
   const theme = useTheme()
   let date = new Date()
@@ -80,7 +82,7 @@ export function TimePickerModal({
       <>
         <KeyboardAvoidingView
           style={styles.keyboardView}
-          behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
           <TouchableWithoutFeedback onPress={onDismiss}>
             <View
@@ -130,7 +132,9 @@ export function TimePickerModal({
                 />
                 <View style={styles.fill} />
                 <Button onPress={onDismiss}>Cancel</Button>
-                <Button onPress={() => {}}>Ok</Button>
+                <Button onPress={() => onConfirm({ hours, minutes })}>
+                  Ok
+                </Button>
               </View>
             </Animated.View>
           </View>
