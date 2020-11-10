@@ -106,6 +106,10 @@ function App({
           label={'Select period'} // optional
           startLabel={'From'} // optional
           endLabel={'To'} // optional
+          animationType={Platform.select({
+            web: 'none',
+            default: 'slide',
+          })} // optional
         />
         <DatePickerModal
           mode="single"
@@ -115,6 +119,10 @@ function App({
           onConfirm={onChangeSingle}
           saveLabel={'Save'} // optional
           label={'Select date'} // optional
+          animationType={Platform.select({
+            web: 'none',
+            default: 'slide',
+          })} // optional
         />
 
         <TimePickerModal
