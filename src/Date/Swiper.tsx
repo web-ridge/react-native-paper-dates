@@ -3,10 +3,10 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   StyleSheet,
+  useWindowDimensions,
   View,
   VirtualizedList,
 } from 'react-native'
-import { useWindowDimensions } from 'react-native'
 import { getMonthHeight, getMonthsOffset } from './Month'
 import { allMonthsArray, daySize, startAtIndex } from './dateUtils'
 
@@ -52,7 +52,7 @@ function Swiper({
     const length = getMonthHeight(scrollMode, index)
     const offset = getMonthsOffset(scrollMode, index)
 
-    const itemLayout = isHorizontal
+    return isHorizontal
       ? {
           length: width,
           offset: width * index,
@@ -63,8 +63,6 @@ function Swiper({
           offset: offset,
           index,
         }
-
-    return itemLayout
   }
   const getItemCount = (data: any[]) => data.length
   const keyExtractor = (_: any, index: number) => `${index}`
@@ -114,26 +112,18 @@ function Swiper({
       // // every month is index
       // // so calculate months between startIndex === currentYear
       const currentIndex = lazyIndex.current || startAtIndex
-      //
-      // // | 0 = bitwise rule, remove decimals always go down
-      // // eslint-disable-next-line no-bitwise
+
+      // | 0 = bitwise rule, remove decimals always go down
+      // eslint-disable-next-line no-bitwise
       const differenceWithStartIndex = ((currentIndex - startAtIndex) / 12) | 0
-      console.log({
-        selectedYear,
-        before: (currentIndex - startAtIndex) / 12,
-        downed: differenceWithStartIndex,
-      })
+
       // // calculate which index to go
       const year = new Date().getFullYear() + differenceWithStartIndex
       const difference = selectedYear - year
       const differenceInMonths = difference * 12
       //
       const newIndex = currentIndex + differenceInMonths
-      console.log({
-        differenceInMonths,
-        was: currentIndex,
-        becomes: newIndex,
-      })
+
       if (currentIndex !== newIndex) {
         lazyIndex.current = newIndex
         swiper.current.scrollToIndex({

@@ -178,8 +178,8 @@ export function DatePickerModal(
 
 const styles = StyleSheet.create({
   modalRoot: {
-    justifyContent: 'flex-start',
-    alignItems: 'stretch',
+    justifyContent: 'center',
+    alignItems: 'center',
     flex: 1,
   },
   modalBackground: {

@@ -33,13 +33,22 @@ export function TimePickerModal({
   visible,
   onDismiss,
   onConfirm,
+  hours,
+  minutes,
+  label = 'Select time',
+  cancelLabel = 'Cancel',
+  confirmLabel = 'Ok',
 }: {
-  visible: boolean
+  label?: string
+  cancelLabel?: string
+  confirmLabel?: string
+  hours?: number | undefined
+  minutes?: number | undefined
+  visible: boolean | undefined
   onDismiss: () => any
   onConfirm: ({ hours, minutes }: { hours: number; minutes: number }) => any
 }) {
   const theme = useTheme()
-  let date = new Date()
 
   const [inputType, setInputType] = React.useState<PossibleInputTypes>(
     inputTypes.picker
@@ -47,8 +56,19 @@ export function TimePickerModal({
   const [focused, setFocused] = React.useState<PossibleClockTypes>(
     clockTypes.hours
   )
-  const [hours, setHours] = React.useState<number>(date.getHours())
-  const [minutes, setMinutes] = React.useState<number>(date.getMinutes())
+  const [localHours, setLocalHours] = React.useState<number>(getHours(hours))
+  const [localMinutes, setLocalMinutes] = React.useState<number>(
+    getMinutes(minutes)
+  )
+
+  React.useEffect(() => {
+    setLocalHours(getHours(hours))
+  }, [setLocalHours, hours])
+
+  React.useEffect(() => {
+    setLocalMinutes(getMinutes(minutes))
+  }, [setLocalMinutes, minutes])
+
   const onFocusInput = React.useCallback(
     (type: PossibleClockTypes) => setFocused(type),
     []
@@ -63,10 +83,10 @@ export function TimePickerModal({
         setFocused(params.focused)
       }
 
-      setHours(params.hours)
-      setMinutes(params.minutes)
+      setLocalHours(params.hours)
+      setLocalMinutes(params.minutes)
     },
-    [setFocused, setHours, setMinutes]
+    [setFocused, setLocalHours, setLocalMinutes]
   )
   return (
     <Modal
@@ -110,15 +130,15 @@ export function TimePickerModal({
             >
               <View style={styles.labelContainer}>
                 <Text style={[styles.label, { color: theme.colors.text }]}>
-                  {`Select time`.toUpperCase()}
+                  {label.toUpperCase()}
                 </Text>
               </View>
               <View style={styles.timePickerContainer}>
                 <TimePicker
                   inputType={inputType}
                   focused={focused}
-                  hours={hours}
-                  minutes={minutes}
+                  hours={localHours}
+                  minutes={localMinutes}
                   onChange={onChange}
                   onFocusInput={onFocusInput}
                 />
@@ -131,9 +151,13 @@ export function TimePickerModal({
                   style={styles.inputTypeToggle}
                 />
                 <View style={styles.fill} />
-                <Button onPress={onDismiss}>Cancel</Button>
-                <Button onPress={() => onConfirm({ hours, minutes })}>
-                  Ok
+                <Button onPress={onDismiss}>{cancelLabel}</Button>
+                <Button
+                  onPress={() =>
+                    onConfirm({ hours: localHours, minutes: localMinutes })
+                  }
+                >
+                  {confirmLabel}
                 </Button>
               </View>
             </Animated.View>
@@ -142,6 +166,15 @@ export function TimePickerModal({
       </>
     </Modal>
   )
+}
+
+function getMinutes(minutes: number | undefined | null): number {
+  return minutes === undefined || minutes === null
+    ? new Date().getMinutes()
+    : minutes
+}
+function getHours(hours: number | undefined | null): number {
+  return hours === undefined || hours === null ? new Date().getHours() : hours
 }
 
 const styles = StyleSheet.create({

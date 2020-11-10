@@ -112,12 +112,18 @@ export function getHours(
   let hour = (((handAngle - _90) % _360) / _30) | 0
 
   if (hourType === hourTypes.am) {
-    if (hour < 0) hour += 12
-    if (hour >= 12) hour -= 12
+    if (hour <= 0) {
+      hour += 12
+    } else if (hour >= 12) {
+      hour -= 12
+    }
   }
   if (hourType === hourTypes.pm) {
-    if (hour <= 0) hour += 12
-    if (hour > 12) hour -= 12
+    if (hour <= 0) {
+      hour += 12
+    } else if (hour > 12) {
+      hour -= 12
+    }
   }
 
   return hour

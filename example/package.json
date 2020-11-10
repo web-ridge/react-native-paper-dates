@@ -29,8 +29,8 @@
     "react-dom": "^16.13.1",
     "react-native": "0.63.2",
     "react-native-localize": "^1.4.1",
-    "react-native-vector-icons": "^7.1.0",
-    "react-native-web": "^0.0.0-80dae21e2",
+    "react-native-vector-icons": "https://github.com/RichardLindhout/react-native-vector-icons",
+    "react-native-web": "^0.14.8",
     "react-scripts": "3.4.3"
   },
   "devDependencies": {

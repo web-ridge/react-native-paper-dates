@@ -52,7 +52,7 @@ function AnalogClock({
   const theme = useTheme()
 
   // used to make pointer shorter if hours are selected and above 12
-  const shortPointer = hours > 12 && is24Hour
+  const shortPointer = (hours === 0 || hours > 12) && is24Hour
 
   const clockRef = React.useRef<View | null>(null)
   const elementX = React.useRef<number>(0)
@@ -73,17 +73,23 @@ function AnalogClock({
 
       let angle = getAngle(x, y, circleSize)
       if (focusedRef.current === clockTypes.hours) {
+        let hours24 = is24HourRef.current
         let previousHourType = getHourType(hoursRef.current)
         let pickedHours = getHours(angle, previousHourType)
 
+        let hourTypeFromOffset = getHourTypeFromOffset(x, y, circleSize)
+        let hours24AndPM = hours24 && hourTypeFromOffset === hourTypes.pm
+        let hours12AndPm = !hours24 && previousHourType === hourTypes.pm
+
         // TODO: check which mode is switched on am/pm
-        if (
-          (is24HourRef.current &&
-            getHourTypeFromOffset(x, y, circleSize) === hourTypes.pm) ||
-          (!is24HourRef.current && previousHourType === hourTypes.pm)
-        ) {
+        if (hours12AndPm || hours24AndPM) {
           pickedHours += 12
         }
+
+        if (pickedHours === 24) {
+          pickedHours = 0
+        }
+
         if (hoursRef.current !== pickedHours || final) {
           onChangeRef.current({
             hours: pickedHours,
@@ -111,7 +117,7 @@ function AnalogClock({
       onPanResponderRelease: (e) => onPointerMove(e, true),
 
       onStartShouldSetPanResponder: returnTrue,
-      onStartShouldSetPanResponderCapture: returnTrue,
+      onStartShouldSetPanResponderCapture: () => false,
       onMoveShouldSetPanResponder: returnTrue,
       onMoveShouldSetPanResponderCapture: returnTrue,
       onPanResponderTerminationRequest: returnTrue,
@@ -121,7 +127,6 @@ function AnalogClock({
 
   const onLayout = useCallback(
     (_: LayoutChangeEvent) => {
-      console.log('onLayout')
       if (!clockRef.current) {
         return
       }
@@ -149,7 +154,7 @@ function AnalogClock({
             : Color(theme.colors.surface).darken(0.1).hex(),
         },
       ]}
-      //@ts-ignore -> https://github.com/necolas/react-native-web/issues/506
+      // @ts-ignore -> https://github.com/necolas/react-native-web/issues/506
       cursor={'pointer'}
     >
       <View

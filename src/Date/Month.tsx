@@ -44,7 +44,6 @@ interface MonthSingleProps extends BaseMonthProps {
 }
 
 const monthGrid = (index: number) => {
-  console.log('monthGrid', index, gridCounts[index])
   return Array(gridCounts[index])
     .fill(null)
     .map((_, weekGrid) => {
@@ -173,11 +172,6 @@ function Month({
       }
     })
   }, [mode, index, startDate, endDate, date, month, year])
-
-  console.log(year, monthName)
-  grid.forEach(({ weekIndex, generatedDays }) => {
-    console.log({ weekIndex, days: generatedDays.length })
-  })
 
   return (
     <View style={[styles.month, { height: getMonthHeight(scrollMode, index) }]}>

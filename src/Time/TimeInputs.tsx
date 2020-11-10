@@ -10,15 +10,9 @@ import {
 } from 'react-native'
 import { useTheme } from 'react-native-paper'
 
-import {
-  clockTypes,
-  inputTypes,
-  PossibleClockTypes,
-  PossibleInputTypes,
-} from './timeUtils'
+import { clockTypes, PossibleClockTypes, PossibleInputTypes } from './timeUtils'
 import TimeInput from './TimeInput'
 import AmPmSwitcher from './AmPmSwitcher'
-import AnalogClock, { circleSize } from './AnalogClock'
 import { useLatest } from '../utils'
 
 function TimeInputs({

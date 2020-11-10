@@ -56,7 +56,9 @@ function AnalogClockHours({
                   selectable={false}
                   style={[
                     styles.innerHourText,
-                    i + 13 === hours ? styles.textWhite : null,
+                    i + 13 === hours || (i + 13 === 24 && hours === 0)
+                      ? styles.textWhite
+                      : null,
                   ]}
                 >
                   {i + 13 === 24 ? '00' : i + 13}

@@ -3,12 +3,7 @@ import { View, StyleSheet } from 'react-native'
 import { Text, TouchableRipple, useTheme } from 'react-native-paper'
 import { useMemo } from 'react'
 import Color from 'color'
-import {
-  getHourType,
-  hourTypes,
-  useInputColors,
-  useSwitchColors,
-} from './timeUtils'
+import { getHourType, hourTypes, useSwitchColors } from './timeUtils'
 
 export default function AmPmSwitcher({
   hours,
