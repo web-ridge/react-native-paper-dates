@@ -66,8 +66,9 @@ function SingleDatePage() {
         onDismiss={onDismiss}
         date={date}
         onConfirm={onChange}
-        saveLabel={'Save'} // optional
-        label={'Select period'} // optional
+        saveLabel="Save" // optional
+        label="Select date" // optional
+        animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
       />
       <Button onPress={()=> setVisible(true)}>
         Pick date
@@ -98,16 +99,17 @@ export default function RangeDatePage() {
   return (
     <>
       <DatePickerModal
-          mode="range"
-          visible={visible}
-          onDismiss={onDismiss}
-          startDate={undefined}
-          endDate={undefined}
-          onConfirm={onChange}
-          saveLabel={'Save'} // optional
-          label={'Select period'} // optional
-          startLabel={'From'} // optional
-          endLabel={'To'} // optional
+        mode="range"
+        visible={visible}
+        onDismiss={onDismiss}
+        startDate={undefined}
+        endDate={undefined}
+        onConfirm={onChange}
+        saveLabel="Save" // optional
+        label="Select period" // optional
+        startLabel="From" // optional
+        endLabel="To" // optional
+        animationType="slide" // optional, default is slide on ios/android and none on web
       />
       <Button onPress={()=> setVisible(true)}>
         Pick range
@@ -124,7 +126,7 @@ import * as React from 'react'
 import { Button } from 'react-native-paper'
 import { TimePickerModal } from 'react-native-paper-dates'
 
-export default function RangeDatePage() {
+export default function TimePickerPage() {
   const [visible, setVisible] = React.useState(false)
   const onDismiss = React.useCallback(() => {
     setVisible(false)
@@ -145,11 +147,12 @@ export default function RangeDatePage() {
         visible={visible}
         onDismiss={onDismiss}
         onConfirm={onConfirm}
-        label={'Select time'} // optional, default 'Select time'
+        hours={12} // default: current hours
+        minutes={14} // default: current minutes
+        label="Select time" // optional, default 'Select time'
         cancelLabel="Cancel" // optional, default: 'Cancel'
         confirmLabel="Ok" // optional, default: 'Ok'
-        hours={12} // optional, default: current hours
-        minutes={14} // optional, default: current minutes
+        animationType="fade" // optional, default is 'none'
       />
       <Button onPress={()=> setVisible(true)}>
         Pick time
@@ -169,7 +172,7 @@ Things on our roadmap have labels with `enhancement`.
 https://github.com/web-ridge/react-native-paper-dates/issues
 
 ## Tips & Tricks
-- Use 0.14+ version of React-Native-Web
+- Use 0.14+ version of React-Native-Web (Modal and better number input)
 - Try to avoid putting the pickers inside of a scrollView
 If that is **not possible** use the following props on the surrounding ScrollViews/Flatlists
 

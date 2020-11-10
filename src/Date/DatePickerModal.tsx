@@ -5,6 +5,7 @@ import {
   TouchableWithoutFeedback,
   useWindowDimensions,
   View,
+  Platform,
 } from 'react-native'
 
 import Calendar, {
@@ -26,6 +27,7 @@ interface DatePickerModalProps extends HeaderPickProps, BaseCalendarProps {
   visible: boolean
   onDismiss: () => any
   inputFormat?: string
+  animationType?: 'slide' | 'fade' | 'none'
 }
 
 export type LocalState = {
@@ -58,6 +60,12 @@ export function DatePickerModal(
   const theme = useTheme()
   const dimensions = useWindowDimensions()
   const { visible, onDismiss, mode, onChange, onConfirm } = props
+  const animationType =
+    props.animationType ||
+    Platform.select({
+      web: 'none',
+      default: 'slide',
+    })
   const anyProps = props as any
 
   // use local state to add only onConfirm state changes
@@ -101,7 +109,7 @@ export function DatePickerModal(
 
   return (
     <Modal
-      animationType="slide"
+      animationType={animationType}
       transparent={true}
       visible={visible}
       onRequestClose={onDismiss}

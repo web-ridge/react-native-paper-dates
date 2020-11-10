@@ -179,10 +179,11 @@ function App({
         startDate={undefined}
         endDate={undefined}
         onConfirm={onChangeRange}
-        saveLabel={'Save'} // optional
-        label={'Select period'} // optional
-        startLabel={'From'} // optional
-        endLabel={'To'} // optional
+        saveLabel="Save" // optional
+        label="Select period" // optional
+        startLabel="From" // optional
+        endLabel="To" // optional
+        animationType="slide" // optional, default is slide on ios/android and none on web
       />
       <DatePickerModal
         mode="single"
@@ -190,19 +191,21 @@ function App({
         onDismiss={onDismissSingle}
         date={undefined}
         onConfirm={onChangeSingle}
-        saveLabel={'Save'} // optional
-        label={'Select date'} // optional
+        saveLabel="Save" // optional
+        label="Select date" // optional
+        animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
       />
 
       <TimePickerModal
-        label={'Select time'} // optional, default 'Select time'
-        cancelLabel="Cancel" // optional, default: 'Cancel'
-        confirmLabel="Ok" // optional, default: 'Ok'
-        hours={time.hours} // optional, default: current hours
-        minutes={time.minutes} // optional, default: current minutes
         visible={timeOpen}
         onDismiss={onDismissTime}
         onConfirm={onConfirmTime}
+        hours={time.hours} // optional, default: current hours
+        minutes={time.minutes} // optional, default: current minutes
+        label="Select time" // optional, default 'Select time'
+        cancelLabel="Cancel" // optional, default: 'Cancel'
+        confirmLabel="Ok" // optional, default: 'Ok'
+        animationType="fade" // optional, default is 'none'
       />
     </>
   );

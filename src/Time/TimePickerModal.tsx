@@ -38,6 +38,7 @@ export function TimePickerModal({
   label = 'Select time',
   cancelLabel = 'Cancel',
   confirmLabel = 'Ok',
+  animationType = 'none',
 }: {
   label?: string
   cancelLabel?: string
@@ -47,6 +48,7 @@ export function TimePickerModal({
   visible: boolean | undefined
   onDismiss: () => any
   onConfirm: ({ hours, minutes }: { hours: number; minutes: number }) => any
+  animationType?: 'slide' | 'fade' | 'none'
 }) {
   const theme = useTheme()
 
@@ -90,7 +92,7 @@ export function TimePickerModal({
   )
   return (
     <Modal
-      animationType="none"
+      animationType={animationType}
       transparent={true}
       visible={visible}
       onRequestClose={onDismiss}
