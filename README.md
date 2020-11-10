@@ -67,6 +67,7 @@ function SingleDatePage() {
         onConfirm={onChange}
         saveLabel={'Save'} // optional
         label={'Select period'} // optional
+        animationType={'slide'} // optional
       />
       <Button onPress={()=> setVisible(true)}>
         Pick date
@@ -107,6 +108,7 @@ export default function RangeDatePage() {
           label={'Select period'} // optional
           startLabel={'From'} // optional
           endLabel={'To'} // optional
+          animationType={'slide'} // optional
       />
       <Button onPress={()=> setVisible(true)}>
         Pick range
