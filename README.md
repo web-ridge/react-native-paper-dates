@@ -1,12 +1,13 @@
 ## react-native-paper-dates
 
-- Smooth and fast cross platform Material Design date picker for React Native Paper
+- Smooth and fast cross platform Material Design **date** picker and **time** picker for React Native Paper
 - Tested on Android, iOS and the web platform!
 - Uses the native Date.Intl API's which work out of the box on the web / iOS
 - Simple API
 - Typesafe
 - Endless scrolling
 - Performant
+- Great react-native-web support
 
 Older demo of this library.   
 <img src="https://user-images.githubusercontent.com/6492229/90681177-4970f280-e263-11ea-8257-6810c5166f92.gif"/>
@@ -66,8 +67,9 @@ function SingleDatePage() {
         onDismiss={onDismiss}
         date={date}
         onConfirm={onChange}
-        saveLabel={'Save'} // optional
-        label={'Select period'} // optional
+        saveLabel="Save" // optional
+        label="Select date" // optional
+        animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
       />
       <Button onPress={()=> setVisible(true)}>
         Pick date
@@ -98,16 +100,17 @@ export default function RangeDatePage() {
   return (
     <>
       <DatePickerModal
-          mode="range"
-          visible={visible}
-          onDismiss={onDismiss}
-          startDate={undefined}
-          endDate={undefined}
-          onConfirm={onChange}
-          saveLabel={'Save'} // optional
-          label={'Select period'} // optional
-          startLabel={'From'} // optional
-          endLabel={'To'} // optional
+        mode="range"
+        visible={visible}
+        onDismiss={onDismiss}
+        startDate={undefined}
+        endDate={undefined}
+        onConfirm={onChange}
+        saveLabel="Save" // optional
+        label="Select period" // optional
+        startLabel="From" // optional
+        endLabel="To" // optional
+        animationType="slide" // optional, default is slide on ios/android and none on web
       />
       <Button onPress={()=> setVisible(true)}>
         Pick range
@@ -118,10 +121,69 @@ export default function RangeDatePage() {
 ```
 
 
+### Time picker
+```tsx
+import * as React from 'react'
+import { Button } from 'react-native-paper'
+import { TimePickerModal } from 'react-native-paper-dates'
+
+export default function TimePickerPage() {
+  const [visible, setVisible] = React.useState(false)
+  const onDismiss = React.useCallback(() => {
+    setVisible(false)
+  }, [setVisible])
+
+  const onConfirm = React.useCallback(
+    ({ hours, minutes }) => {
+      setVisible(false);
+      console.log({ hours, minutes });
+    },
+    [setVisible]
+  );
+
+
+  return (
+    <>
+      <TimePickerModal
+        visible={visible}
+        onDismiss={onDismiss}
+        onConfirm={onConfirm}
+        hours={12} // default: current hours
+        minutes={14} // default: current minutes
+        label="Select time" // optional, default 'Select time'
+        cancelLabel="Cancel" // optional, default: 'Cancel'
+        confirmLabel="Ok" // optional, default: 'Ok'
+        animationType="fade" // optional, default is 'none'
+      />
+      <Button onPress={()=> setVisible(true)}>
+        Pick time
+      </Button>
+    </>
+  )
+}
+```
+
+
+
+
+
 
 ## Roadmap
-Things on our roadmap are labeled with enhancement.
+Things on our roadmap have labels with `enhancement`.
 https://github.com/web-ridge/react-native-paper-dates/issues
+
+## Tips & Tricks
+- Use 0.14+ version of React-Native-Web (Modal and better number input)
+- Try to avoid putting the pickers inside of a scrollView
+If that is **not possible** use the following props on the surrounding ScrollViews/Flatlists
+
+```javascript
+    keyboardDismissMode="on-drag"
+    keyboardShouldPersistTaps="handled"
+    contentInsetAdjustmentBehavior="always"
+```
+This is to prevent the need to press 2 times before save works (1 press for closing keyboard, 1 press for confirm/close)
+(https://github.com/facebook/react-native/issues/10138)
 
 ## Android Caveats
 

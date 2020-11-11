@@ -23,7 +23,7 @@
     "test": "jest",
     "typescript": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "prepare": "bob build",
+    "build": "bob build",
     "release": "release-it",
     "example": "yarn --cwd example",
     "pods": "cd example && pod-install --quiet",
@@ -51,6 +51,7 @@
     "@types/react": "^16.9.19",
     "@types/react-dom": "^16.9.8",
     "@types/react-native": "0.62.13",
+    "@types/react-native-vector-icons": "^6.4.6",
     "@types/react-window": "^1.8.2",
     "color": "^3.1.2",
     "commitlint": "^8.3.5",
@@ -61,9 +62,9 @@
     "jest": "^26.0.1",
     "pod-install": "^0.1.0",
     "prettier": "^2.0.5",
-    "react": "16.11.0",
+    "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-native": "0.62.2",
+    "react-native": "0.63.2",
     "react-native-paper": "^4.0.1",
     "react-window": "^1.8.5",
     "release-it": "^13.5.8",
@@ -72,6 +73,7 @@
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
+    "react-native-vector-icons": "*",
     "react-paper": "*",
     "react-window": "*"
   },
@@ -81,11 +83,6 @@
       "<rootDir>/example/node_modules",
       "<rootDir>/lib/"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn lint && yarn typescript"
-    }
   },
   "commitlint": {
     "extends": [
@@ -148,5 +145,8 @@
       "module",
       "typescript"
     ]
+  },
+  "dependencies": {
+    "react-native-web-hover": "^0.2.7"
   }
 }

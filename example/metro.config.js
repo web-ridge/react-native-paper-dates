@@ -1,14 +1,15 @@
-const path = require('path')
-const blacklist = require('metro-config/src/defaults/blacklist')
-const escape = require('escape-string-regexp')
-const pak = require('../package.json')
+const path = require('path');
+const blacklist = require('metro-config/src/defaults/blacklist');
+const escape = require('escape-string-regexp');
+const pak = require('../package.json');
 
-const root = path.resolve(__dirname, '..')
+const root = path.resolve(__dirname, '..');
 
 const modules = Object.keys({
   ...pak.peerDependencies,
-})
+});
 
+console.log(pak.peerDependencies);
 module.exports = {
   projectRoot: __dirname,
   watchFolders: [root],
@@ -24,8 +25,8 @@ module.exports = {
     ),
 
     extraNodeModules: modules.reduce((acc, name) => {
-      acc[name] = path.join(__dirname, 'node_modules', name)
-      return acc
+      acc[name] = path.join(__dirname, 'node_modules', name);
+      return acc;
     }, {}),
   },
 
@@ -37,4 +38,4 @@ module.exports = {
       },
     }),
   },
-}
+};
