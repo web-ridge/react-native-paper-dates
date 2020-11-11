@@ -7,7 +7,6 @@ import {
   Animated,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
-  Platform,
 } from 'react-native'
 
 import { Button, IconButton, overlay, useTheme } from 'react-native-paper'
