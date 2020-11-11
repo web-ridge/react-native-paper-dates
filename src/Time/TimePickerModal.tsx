@@ -102,22 +102,23 @@ export function TimePickerModal({
       statusBarTranslucent={true}
     >
       <>
-        <KeyboardAvoidingView
-          style={styles.keyboardView}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        >
-          <TouchableWithoutFeedback onPress={onDismiss}>
-            <View
-              style={[
-                StyleSheet.absoluteFill,
-                styles.modalBackground,
-                { backgroundColor: theme.colors.backdrop },
-              ]}
-            />
-          </TouchableWithoutFeedback>
+        <TouchableWithoutFeedback onPress={onDismiss}>
           <View
-            style={[StyleSheet.absoluteFill, styles.modalRoot]}
-            pointerEvents="box-none"
+            style={[
+              StyleSheet.absoluteFill,
+              styles.modalBackground,
+              { backgroundColor: theme.colors.backdrop },
+            ]}
+          />
+        </TouchableWithoutFeedback>
+
+        <View
+          style={[StyleSheet.absoluteFill, styles.modalRoot]}
+          pointerEvents="box-none"
+        >
+          <KeyboardAvoidingView
+            style={styles.keyboardView}
+            behavior={'padding'}
           >
             <Animated.View
               style={[
@@ -163,8 +164,8 @@ export function TimePickerModal({
                 </Button>
               </View>
             </Animated.View>
-          </View>
-        </KeyboardAvoidingView>
+          </KeyboardAvoidingView>
+        </View>
       </>
     </Modal>
   )
@@ -186,6 +187,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   keyboardView: {
+    justifyContent: 'center',
+    alignItems: 'center',
     flex: 1,
   },
   modalBackground: {

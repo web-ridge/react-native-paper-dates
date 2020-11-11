@@ -78,7 +78,7 @@ function TimeInputs({
       <TimeInput
         ref={startInput}
         placeholder={'00'}
-        value={hours}
+        value={toInputFormat(hours, is24Hour)}
         clockType={clockTypes.hours}
         pressed={focused === clockTypes.hours}
         onPress={onFocusInput}
@@ -86,12 +86,16 @@ function TimeInputs({
         returnKeyType={'next'}
         onSubmitEditing={onSubmitStartInput}
         blurOnSubmit={false}
-        onChanged={(newHours) =>
+        onChanged={(newHoursFromInput) => {
+          let newHours = toOutputFormat(newHoursFromInput, hours, is24Hour)
+          if (newHoursFromInput > 24) {
+            newHours = 24
+          }
           onChange({
             hours: newHours,
             minutes,
           })
-        }
+        }}
         // onChangeText={onChangeStartInput}
       />
       <View style={styles.hoursAndMinutesSeparator}>
@@ -110,12 +114,16 @@ function TimeInputs({
         onPress={onFocusInput}
         inputType={inputType}
         onSubmitEditing={onSubmitEndInput}
-        onChanged={(newMinutes) =>
+        onChanged={(newMinutesFromInput) => {
+          let newMinutes = newMinutesFromInput
+          if (newMinutesFromInput > 60) {
+            newMinutes = 60
+          }
           onChange({
             hours,
             minutes: newMinutes,
           })
-        }
+        }}
       />
       {!is24Hour && (
         <>
@@ -125,6 +133,29 @@ function TimeInputs({
       )}
     </View>
   )
+}
+
+function toInputFormat(hours: number, is24Hour: boolean): number {
+  if (is24Hour) {
+    return hours
+  }
+  if (hours > 12) {
+    return hours - 12
+  }
+  return hours
+}
+function toOutputFormat(
+  newHours: number,
+  previousHours: number,
+  is24Hour: boolean
+): number {
+  if (is24Hour) {
+    return newHours
+  }
+  if (previousHours > 12 && newHours <= 12) {
+    return newHours + 12
+  }
+  return newHours
 }
 
 const styles = StyleSheet.create({

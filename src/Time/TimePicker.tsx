@@ -34,6 +34,7 @@ function TimePicker({
 
   // method to check whether we have 24 hours in clock or 12
   const is24Hour = React.useMemo(() => {
+    return false
     const formatter = new Intl.DateTimeFormat(undefined, {
       hour: '2-digit',
       minute: '2-digit',

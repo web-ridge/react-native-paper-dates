@@ -195,6 +195,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     flex: 1,
+    width: '100%',
   },
   modalContentBig: {
     maxWidth: 600,
