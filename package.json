@@ -24,6 +24,7 @@
     "typescript": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "build": "bob build",
+    "prepare": "bob build",
     "release": "dotenv release-it --",
     "example": "yarn --cwd example",
     "pods": "cd example && pod-install --quiet",

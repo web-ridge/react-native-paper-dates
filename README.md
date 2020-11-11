@@ -7,25 +7,25 @@
 - Typesafe
 - Endless scrolling
 - Performant
-- Great react-native-web support
+- Great React Native Web support
 
-Older demo of this library.   
-<img src="https://user-images.githubusercontent.com/6492229/90681177-4970f280-e263-11ea-8257-6810c5166f92.gif"/>
-
+Older demo of this library.
+[![IMAGE ALT TEXT HERE](https://user-images.githubusercontent.com/6492229/98866767-bd3f2780-246d-11eb-890e-3491b47c95c5.gif)](https://www.youtube.com/watch?v=SHhQU2doTug)
+GIF above is sluggish, click on the image to view video in better frame rate. (https://www.youtube.com/watch?v=SHhQU2doTug)
 ## Getting started
 
-Yarn   
+Yarn
 ```
 yarn add react-native-paper-dates
 ```
 
-npm   
+npm
 ```
 npm install react-native-paper-dates --save
 ```
 
 ### Web
-If you use react-native-web and want to use this library you'll need to install react-window. 
+If you use react-native-web and want to use this library you'll need to install react-window.
 
 Yarn
 ```
