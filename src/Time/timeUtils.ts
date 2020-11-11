@@ -195,3 +195,27 @@ export function useInputColors(highlighted: boolean) {
 
   return { backgroundColor, color }
 }
+
+export function toHourInputFormat(hours: number, is24Hour: boolean): number {
+  if (is24Hour) {
+    return hours
+  }
+  if (hours > 12) {
+    return hours - 12
+  }
+  return hours
+}
+
+export function toHourOutputFormat(
+  newHours: number,
+  previousHours: number,
+  is24Hour: boolean
+): number {
+  if (is24Hour) {
+    return newHours
+  }
+  if (previousHours > 12 && newHours <= 12) {
+    return newHours + 12
+  }
+  return newHours
+}

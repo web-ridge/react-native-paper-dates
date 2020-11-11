@@ -1,10 +1,26 @@
 import * as React from 'react'
 import { View, StyleSheet, useWindowDimensions } from 'react-native'
 
-import { inputTypes, PossibleClockTypes, PossibleInputTypes } from './timeUtils'
+import {
+  inputTypes,
+  PossibleClockTypes,
+  PossibleInputTypes,
+  toHourInputFormat,
+  toHourOutputFormat,
+} from './timeUtils'
 
 import AnalogClock, { circleSize } from './AnalogClock'
 import TimeInputs from './TimeInputs'
+
+type onChangeFunc = ({
+  hours,
+  minutes,
+  focused,
+}: {
+  hours: number
+  minutes: number
+  focused?: undefined | PossibleClockTypes
+}) => any
 
 function TimePicker({
   hours,
@@ -19,22 +35,13 @@ function TimePicker({
   hours: number
   minutes: number
   onFocusInput: (type: PossibleClockTypes) => any
-  onChange: ({
-    hours,
-    minutes,
-    focused,
-  }: {
-    hours: number
-    minutes: number
-    focused?: undefined | PossibleClockTypes
-  }) => any
+  onChange: onChangeFunc
 }) {
   const dimensions = useWindowDimensions()
   const isLandscape = dimensions.width > dimensions.height
 
   // method to check whether we have 24 hours in clock or 12
   const is24Hour = React.useMemo(() => {
-    return false
     const formatter = new Intl.DateTimeFormat(undefined, {
       hour: '2-digit',
       minute: '2-digit',
@@ -42,8 +49,15 @@ function TimePicker({
     })
     const formatted = formatter.format(new Date(Date.UTC(2020, 1, 1, 23)))
     return formatted.includes('23')
-    // return false
   }, [])
+
+  const onInnerChange = React.useCallback<onChangeFunc>(
+    (params) => {
+      params.hours = toHourOutputFormat(params.hours, hours, is24Hour)
+      onChange(params)
+    },
+    [onChange, hours, is24Hour]
+  )
 
   return (
     <View style={isLandscape ? styles.rootLandscape : styles.rootPortrait}>
@@ -59,11 +73,11 @@ function TimePicker({
       {inputType === inputTypes.picker ? (
         <View style={styles.clockContainer}>
           <AnalogClock
-            hours={hours}
+            hours={toHourInputFormat(hours, is24Hour)}
             minutes={minutes}
             focused={focused}
             is24Hour={is24Hour}
-            onChange={onChange}
+            onChange={onInnerChange}
           />
         </View>
       ) : null}

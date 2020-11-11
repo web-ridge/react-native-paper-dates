@@ -10,7 +10,13 @@ import {
 } from 'react-native'
 import { useTheme } from 'react-native-paper'
 
-import { clockTypes, PossibleClockTypes, PossibleInputTypes } from './timeUtils'
+import {
+  clockTypes,
+  PossibleClockTypes,
+  PossibleInputTypes,
+  toHourInputFormat,
+  toHourOutputFormat,
+} from './timeUtils'
 import TimeInput from './TimeInput'
 import AmPmSwitcher from './AmPmSwitcher'
 import { useLatest } from '../utils'
@@ -78,7 +84,7 @@ function TimeInputs({
       <TimeInput
         ref={startInput}
         placeholder={'00'}
-        value={toInputFormat(hours, is24Hour)}
+        value={toHourInputFormat(hours, is24Hour)}
         clockType={clockTypes.hours}
         pressed={focused === clockTypes.hours}
         onPress={onFocusInput}
@@ -87,7 +93,7 @@ function TimeInputs({
         onSubmitEditing={onSubmitStartInput}
         blurOnSubmit={false}
         onChanged={(newHoursFromInput) => {
-          let newHours = toOutputFormat(newHoursFromInput, hours, is24Hour)
+          let newHours = toHourOutputFormat(newHoursFromInput, hours, is24Hour)
           if (newHoursFromInput > 24) {
             newHours = 24
           }
@@ -133,29 +139,6 @@ function TimeInputs({
       )}
     </View>
   )
-}
-
-function toInputFormat(hours: number, is24Hour: boolean): number {
-  if (is24Hour) {
-    return hours
-  }
-  if (hours > 12) {
-    return hours - 12
-  }
-  return hours
-}
-function toOutputFormat(
-  newHours: number,
-  previousHours: number,
-  is24Hour: boolean
-): number {
-  if (is24Hour) {
-    return newHours
-  }
-  if (previousHours > 12 && newHours <= 12) {
-    return newHours + 12
-  }
-  return newHours
 }
 
 const styles = StyleSheet.create({
