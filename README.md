@@ -3,7 +3,7 @@
 ---
 \
 \
-\
+
    
 - Smooth and fast cross platform Material Design **date** picker and **time** picker for React Native Paper
 - Tested on Android, iOS and the web platform!
