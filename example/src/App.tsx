@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { Platform, StyleSheet, ScrollView, View } from 'react-native';
+import {
+  Platform,
+  StyleSheet,
+  ScrollView,
+  View,
+  Linking,
+  Image,
+} from 'react-native';
 import {
   Title,
   Button,
@@ -10,6 +17,7 @@ import {
   DarkTheme,
   useTheme,
   overlay,
+  Paragraph,
 } from 'react-native-paper';
 import { DatePickerModal, TimePickerModal } from '../../src';
 
@@ -95,9 +103,27 @@ function App({
           },
         ]}
       >
+        <View style={styles.content}>
+          <View style={styles.titleContainer}>
+            <Image source={require('./schedule.png')} style={styles.logo} />
+            <Title>react-native-paper-dates</Title>
+          </View>
+
+          <Paragraph>
+            Smooth and fast cross platform Material Design date picker for React
+            Native Paper brought to you by{' '}
+            <Text
+              onPress={() => Linking.openURL('https://webridge.nl')}
+              style={styles.underline}
+            >
+              webRidge
+            </Text>
+          </Paragraph>
+        </View>
         <View
           style={[
             styles.content,
+            styles.contentShadow,
             {
               backgroundColor:
                 theme.dark && theme.mode === 'adaptive'
@@ -106,9 +132,10 @@ function App({
             },
           ]}
         >
-          <Title>Examples</Title>
           <View style={styles.switchContainer}>
-            <Text style={styles.switchLabel}>Dark mode</Text>
+            <Text style={[styles.switchLabel, { ...theme.fonts.medium }]}>
+              Dark mode
+            </Text>
             <View style={styles.switchSpace} />
             <Switch value={dark} onValueChange={onToggleDarkMode} />
           </View>
@@ -167,9 +194,27 @@ function App({
             </Button>
           </View>
           <Enter />
+
           {/*<DatePickerInput />*/}
           {/*<Enter />*/}
           {/*<DateRangeInput />*/}
+        </View>
+        <View style={styles.content}>
+          <Button
+            uppercase={false}
+            mode="contained"
+            icon="github"
+            style={styles.twitterButton}
+            onPress={() =>
+              Linking.openURL(
+                'https://github.com/web-ridge/react-native-paper-dates'
+              )
+            }
+          >
+            GitHub
+          </Button>
+          <TwitterFollowButton userName={'RichardLindhout'} />
+          <TwitterFollowButton userName={'web_ridge'} />
         </View>
       </ScrollView>
       <DatePickerModal
@@ -183,7 +228,7 @@ function App({
         label="Select period" // optional
         startLabel="From" // optional
         endLabel="To" // optional
-        animationType="slide" // optional, default is slide on ios/android and none on web
+        // animationType="slide" // optional, default is slide on ios/android and none on web
       />
       <DatePickerModal
         mode="single"
@@ -193,7 +238,7 @@ function App({
         onConfirm={onChangeSingle}
         saveLabel="Save" // optional
         label="Select date" // optional
-        animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
+        // animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
       />
 
       <TimePickerModal
@@ -205,7 +250,7 @@ function App({
         label="Select time" // optional, default 'Select time'
         cancelLabel="Cancel" // optional, default: 'Cancel'
         confirmLabel="Ok" // optional, default: 'Ok'
-        animationType="fade" // optional, default is 'none'
+        // animationType="fade" // optional, default is 'none'
       />
     </>
   );
@@ -255,12 +300,39 @@ export default function AppWithProviders() {
   );
 }
 
+function TwitterFollowButton({ userName }: { userName: string }) {
+  return (
+    <Button
+      uppercase={false}
+      mode="outlined"
+      icon="twitter"
+      style={styles.twitterButton}
+      onPress={() => Linking.openURL(`https://twitter.com/${userName}`)}
+    >
+      @{userName}
+    </Button>
+  );
+}
+
 const styles = StyleSheet.create({
+  underline: { textDecorationLine: 'underline' },
+  logo: { width: 56, height: 56, marginRight: 24 },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  twitterButton: { marginBottom: 16 },
   root: { flex: 1 },
   content: {
     width: '100%',
     maxWidth: 450,
-    marginTop: 56,
+    marginTop: 24,
+    padding: 24,
+    alignSelf: 'center',
+    flex: 1,
+  },
+  contentShadow: {
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -269,9 +341,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 3.84,
     elevation: 3,
-    padding: 24,
-    alignSelf: 'center',
-    flex: 1,
   },
   switchContainer: {
     flexDirection: 'row',
