@@ -3,8 +3,18 @@ export function dateToUnix(d: Date): number {
 }
 
 export function addMonths(date: Date, count: number) {
-  const dt = new Date(date.getFullYear(), date.getMonth(), 0)
-  return new Date(dt.setMonth(dt.getMonth() + count))
+  let n = date.getDate()
+  let n2 = new Date(date.getTime())
+  n2.setDate(1)
+  n2.setMonth(n2.getMonth() + count)
+  n2.setDate(
+    Math.min(
+      n,
+      getDaysInMonth({ year: n2.getFullYear(), month: n2.getMonth() })
+    )
+  )
+
+  return n2
 }
 
 // https://stackoverflow.com/a/1185068/2508481

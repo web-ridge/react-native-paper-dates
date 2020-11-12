@@ -143,8 +143,9 @@ function Month({
                 })
               : false
 
-          let leftCrop: boolean = selectedStartDay || dayOfMonth === 1
-          let rightCrop: boolean = selectedEndDay || dayOfMonth === daysInMonth
+          let leftCrop: boolean = selectedStartDay || dayOfMonth === 0
+          let rightCrop: boolean =
+            selectedEndDay || dayOfMonth - 1 === daysInMonth
 
           if (dayIndex === 0 && !selectedStartDay) {
             leftCrop = false

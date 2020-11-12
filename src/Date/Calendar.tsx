@@ -117,26 +117,24 @@ function Calendar(props: CalendarSingleProps | CalendarRangeProps) {
       <Swiper
         selectedYear={selectedYear}
         scrollMode={scrollMode}
-        renderItem={({ index }) => {
-          return (
-            <Month
-              mode={mode}
-              key={index}
-              index={index}
-              startDate={startDate}
-              endDate={endDate}
-              date={date}
-              onPressYear={onPressYear}
-              selectedYear={selectedYear}
-              selectingYear={selectingYear}
-              onPressDate={onPressDate}
-              scrollMode={scrollMode}
-              primaryColor={theme.colors.primary}
-              selectColor={selectColor}
-              roundness={theme.roundness}
-            />
-          )
-        }}
+        renderItem={({ index }) => (
+          <Month
+            mode={mode}
+            key={index}
+            index={index}
+            startDate={startDate}
+            endDate={endDate}
+            date={date}
+            onPressYear={onPressYear}
+            selectedYear={selectedYear}
+            selectingYear={selectingYear}
+            onPressDate={onPressDate}
+            scrollMode={scrollMode}
+            primaryColor={theme.colors.primary}
+            selectColor={selectColor}
+            roundness={theme.roundness}
+          />
+        )}
         renderHeader={({ onPrev, onNext }) => (
           <CalendarHeader
             onPrev={onPrev}
