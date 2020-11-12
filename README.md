@@ -14,7 +14,7 @@
 - Great React Native Web support
 
 
-[![Demo of react-native-paper-dates](https://user-images.githubusercontent.com/6492229/98866767-bd3f2780-246d-11eb-890e-3491b47c95c5.gif)](https://www.youtube.com/watch?v=SHhQU2doTug)
+[![Demo of react-native-paper-dates](https://user-images.githubusercontent.com/6492229/98866767-bd3f2780-246d-11eb-890e-3491b47c95c5.gif)](https://www.youtube.com/watch?v=SHhQU2doTug)   
 GIF above is sluggish, click on the image to view video in better frame rate. (https://www.youtube.com/watch?v=SHhQU2doTug)
 ## Getting started
 
