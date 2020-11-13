@@ -5,5 +5,5 @@ test('gridCounts contains the right data for October 2021', () => {
     addMonths(new Date(2018, 10 - 1, 1), 12 * 3)
   )
 
-  expect(gridCount).toBe(5)
+  expect(gridCount).toBe(6)
 })
