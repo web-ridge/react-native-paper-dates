@@ -178,7 +178,7 @@ https://github.com/web-ridge/react-native-paper-dates/issues
 
 ## Tips & Tricks
 - Use 0.14+ version of React-Native-Web (Modal and better number input)
-- Try to avoid putting the pickers inside of a scrollView
+- Try to avoid putting the Picker Modals inside of a scrollView
 If that is **not possible** use the following props on the surrounding ScrollViews/Flatlists
 
 ```javascript
