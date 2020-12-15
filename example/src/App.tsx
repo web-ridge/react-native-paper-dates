@@ -315,8 +315,8 @@ export default function AppWithProviders() {
               roundness: 10,
               colors: {
                 ...DarkTheme.colors,
-                primary: '#F59E00',
-                accent: '#FBBE5E',
+                // primary: '#F59E00',
+                // accent: '#FBBE5E',
               },
             }
           : {
@@ -324,8 +324,8 @@ export default function AppWithProviders() {
               roundness: 10,
               colors: {
                 ...DefaultTheme.colors,
-                primary: '#F59E00',
-                accent: '#FBBE5E',
+                // primary: '#F59E00',
+                // accent: '#FBBE5E',
               },
             }
       }

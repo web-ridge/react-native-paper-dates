@@ -1,8 +1,9 @@
 import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
-import { IconButton, Text, useTheme } from 'react-native-paper'
+import { IconButton, Text } from 'react-native-paper'
 import { ModeType } from './Calendar'
 import { LocalState } from './DatePickerModalContent'
+import { useHeaderTextColor } from '../utils'
 
 export interface HeaderPickProps {
   label?: string
@@ -20,8 +21,6 @@ export interface HeaderContentProps extends HeaderPickProps {
 }
 
 export default function DatePickerModalHeader(props: HeaderContentProps) {
-  const theme = useTheme()
-
   const { onToggle, collapsed, mode } = props
 
   const label = props.label
@@ -30,7 +29,7 @@ export default function DatePickerModalHeader(props: HeaderContentProps) {
     ? 'Select period'
     : 'Select date'
 
-  const color = theme.dark ? '#fff' : '#000'
+  const color = useHeaderTextColor()
 
   return (
     <View style={[styles.header]}>

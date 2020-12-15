@@ -107,7 +107,15 @@ function AnalogClock({
         }
       }
     },
-    [focusedRef, is24HourRef, hoursRef, onChangeRef, minutesRef]
+    [
+      focusedRef,
+      is24HourRef,
+      hoursRef,
+      onChangeRef,
+      minutesRef,
+      elementX,
+      elementY,
+    ]
   )
 
   const panResponder = React.useRef(
@@ -130,6 +138,7 @@ function AnalogClock({
       if (!clockRef.current) {
         return
       }
+
       clockRef.current.measureInWindow((x, y) => {
         elementX.current = x
         elementY.current = y

@@ -3,7 +3,7 @@ import { Text, TouchableRipple, useTheme } from 'react-native-paper'
 import { StyleSheet, View } from 'react-native'
 import DayRange from './DayRange'
 import { daySize } from './dateUtils'
-import { useColorOnPrimaryBackground } from '../utils'
+import { useTextColorOnPrimary } from '../utils'
 
 function EmptyDayPure() {
   return <View style={styles.empty} />
@@ -40,8 +40,12 @@ function Day(props: {
   const onPress = React.useCallback(() => {
     onPressDate(new Date(year, month, day))
   }, [onPressDate, year, month, day])
-  const color = useColorOnPrimaryBackground()
-  const todayColor = theme.dark ? '#fff' : '#000'
+  const color = useTextColorOnPrimary()
+
+  const borderColor =
+    selected || (inRange && theme.dark) ? color : theme.dark ? '#fff' : '#000'
+  const textColor = selected || (inRange && theme.dark) ? color : undefined
+
   return (
     <View style={[styles.root]}>
       <DayRange
@@ -62,16 +66,11 @@ function Day(props: {
         <View
           style={[
             styles.day,
-            isToday
-              ? { borderColor: selected || inRange ? color : todayColor }
-              : null,
+            isToday ? { borderColor: borderColor } : null,
             selected ? { backgroundColor: primaryColor } : null,
           ]}
         >
-          <Text
-            style={selected || inRange ? { color } : null}
-            selectable={false}
-          >
+          <Text style={textColor && { color: textColor }} selectable={false}>
             {day}
           </Text>
         </View>

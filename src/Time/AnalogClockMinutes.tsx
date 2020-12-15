@@ -2,11 +2,11 @@ import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Text } from 'react-native-paper'
 import { circleSize } from './AnalogClock'
-import { useColorOnPrimaryBackground } from '../utils'
+import { useTextColorOnPrimary } from '../utils'
 
 function AnalogClockMinutes({ minutes }: { minutes: number }) {
   const range = getMinuteNumbers(circleSize, 12)
-  const color = useColorOnPrimaryBackground()
+  const color = useTextColorOnPrimary()
   return (
     <>
       {range.map((a, i) => {

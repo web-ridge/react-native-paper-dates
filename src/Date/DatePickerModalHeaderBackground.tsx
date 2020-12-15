@@ -1,17 +1,13 @@
-import { overlay, useTheme } from 'react-native-paper'
 import { Animated, SafeAreaView, StyleSheet } from 'react-native'
 import * as React from 'react'
+import { useHeaderBackgroundColor } from '../utils'
 
 export default function DatePickerModalHeaderBackground({
   children,
 }: {
   children: any
 }) {
-  const theme = useTheme()
-  const backgroundColor =
-    theme.dark && theme.mode === 'adaptive'
-      ? overlay(4, theme.colors.surface)
-      : theme.colors.primary
+  const backgroundColor = useHeaderBackgroundColor()
 
   return (
     <Animated.View

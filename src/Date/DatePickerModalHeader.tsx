@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { Animated, StyleSheet, SafeAreaView } from 'react-native'
-import { Appbar, Button, overlay, useTheme } from 'react-native-paper'
+import { Appbar, Button } from 'react-native-paper'
 
-import { useColorOnPrimaryBackground } from '../utils'
+import { useHeaderTextColor } from '../utils'
 
 export interface DatePickerModalHeaderProps {
   disableSafeTop?: boolean
@@ -14,39 +14,18 @@ export interface DatePickerModalHeaderProps {
 export default function DatePickerModalHeader(
   props: DatePickerModalHeaderProps
 ) {
-  const theme = useTheme()
-
   const { saveLabel = 'Save', disableSafeTop } = props
-
-  const backgroundColor =
-    theme.dark && theme.mode === 'adaptive'
-      ? overlay(4, theme.colors.surface)
-      : theme.colors.primary
-
-  const color = useColorOnPrimaryBackground(backgroundColor)
-
+  const color = useHeaderTextColor()
   return (
     <>
-      <Animated.View
-        style={[
-          styles.animated,
-          {
-            backgroundColor,
-          },
-        ]}
-      >
+      <Animated.View style={styles.animated}>
         <SafeAreaView
           style={[
             styles.safeContent,
             disableSafeTop && styles.safeContentNoTop,
           ]}
         >
-          <Appbar
-            style={[
-              styles.appbarHeader,
-              { backgroundColor: backgroundColor.toString() },
-            ]}
-          >
+          <Appbar style={styles.appbarHeader}>
             <Appbar.Action
               icon="close"
               onPress={props.onDismiss}
@@ -98,6 +77,7 @@ const styles = StyleSheet.create({
   },
   appbarHeader: {
     elevation: 0,
+    backgroundColor: 'transparent',
     // alignItems:'center'
   },
 })
