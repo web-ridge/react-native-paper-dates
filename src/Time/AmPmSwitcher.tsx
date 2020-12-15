@@ -64,7 +64,7 @@ function SwitchButton({
 }) {
   const theme = useTheme()
   const { backgroundColor, color } = useSwitchColors(selected)
-  console.log({ backgroundColor, color })
+
   return (
     <TouchableRipple
       onPress={onPress}
