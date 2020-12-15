@@ -237,7 +237,7 @@ if (isHermesEnabled || isAndroid) {
   require('@formatjs/intl-datetimeformat/polyfill');
   require('@formatjs/intl-datetimeformat/locale-data/nl.js'); // use your language files
 
-  require('@formatjs/intl-datetimeformat/add-all-tz.js');
+  require('@formatjs/intl-datetimeformat/add-golden-tz.js');
 
   require('@formatjs/intl-locale/polyfill');
 
