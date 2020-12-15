@@ -301,6 +301,8 @@ function App({
         onConfirm={onChangeExcludeRange}
         // sunday, saturday
         disableWeekDays={disabledWeekDays}
+        // emptyLabel="Altijd"
+        // label="Ik kan niet op"
         // animationType="slide" // optional, default is slide on ios/android and none on web
       />
       <DatePickerModal

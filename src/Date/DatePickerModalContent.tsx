@@ -150,6 +150,7 @@ export function DatePickerModalContent(
           collapsed={collapsed}
           onToggle={onToggleCollapse}
           headerSeparator={props.headerSeparator}
+          emptyLabel={props.emptyLabel}
           label={props.label}
           startLabel={props.startLabel}
           endLabel={props.endLabel}

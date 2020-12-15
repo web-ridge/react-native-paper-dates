@@ -8,7 +8,7 @@ import Color from 'color'
 
 export interface HeaderPickProps {
   label?: string
-  excludeLabel?: string
+  emptyLabel?: string
   saveLabel?: string
   headerSeparator?: string
   startLabel?: string
@@ -33,7 +33,7 @@ function getLabel(mode: ModeType, configuredLabel?: string) {
     return 'Select date'
   }
   if (mode === 'excludeInRange') {
-    return 'Select exclude dates'
+    return 'Select excluded dates'
   }
   return '...?'
 }
@@ -76,6 +76,7 @@ export default function DatePickerModalHeader(props: HeaderContentProps) {
 
 export function HeaderContentSingle({
   state,
+  emptyLabel = ' ',
   color,
 }: HeaderContentProps & { color: string }) {
   const lighterColor = Color(color).fade(0.5).rgb().toString()
@@ -90,44 +91,57 @@ export function HeaderContentSingle({
 
   return (
     <Text style={[styles.singleHeaderText, { color: dateColor }]}>
-      {state.date ? formatter.format(state.date) : ' '}
+      {state.date ? formatter.format(state.date) : emptyLabel}
     </Text>
   )
 }
 
 export function HeaderContentExcludeInRange({
   state,
-  headerSeparator = '-',
-  excludeLabel = 'Without',
+  emptyLabel = ' ',
   color,
 }: HeaderContentProps & { color: string }) {
-  const lighterColor = Color(color).fade(0.3).rgb().toString()
+  const lighterColor = Color(color).fade(0.5).rgb().toString()
 
-  const formatter = React.useMemo(() => {
+  const dayFormatter = React.useMemo(() => {
     return new Intl.DateTimeFormat(undefined, {
-      month: 'short',
       day: 'numeric',
     })
   }, [])
+  const monthFormatter = React.useMemo(() => {
+    return new Intl.DateTimeFormat(undefined, {
+      month: 'short',
+    })
+  }, [])
+
+  const excludedDaysPerMonth = React.useMemo(() => {
+    // TODO: fix years :O
+    let months: { [monthIndex: number]: Date[] } = {}
+    state.excludedDates.forEach((ed) => {
+      const existing = months[ed.getMonth()]
+      months[ed.getMonth()] = existing ? [...existing, ed] : [ed]
+    })
+    return months
+  }, [state.excludedDates])
+  const dateColor =
+    state.excludedDates && state.excludedDates.length > 0 ? color : lighterColor
 
   return (
     <View style={styles.column}>
       <View style={styles.row}>
-        <Text style={[styles.excludeInRangeHeaderText, { color }]}>
-          {state.startDate ? formatter.format(state.startDate) : ''}
-        </Text>
-        <Text style={[styles.headerSeparator, { color }]}>
-          {headerSeparator}
-        </Text>
-        <Text style={[styles.excludeInRangeHeaderText, { color }]}>
-          {state.endDate ? formatter.format(state.endDate) : ''}
+        <Text style={[styles.excludeInRangeHeaderText, { color: dateColor }]}>
+          {Object.keys(excludedDaysPerMonth)
+            .map(
+              (monthIndex: any) =>
+                excludedDaysPerMonth[monthIndex]
+                  .map((date) => dayFormatter.format(date))
+                  .join(', ') +
+                ' ' +
+                monthFormatter.format(excludedDaysPerMonth[monthIndex][0]!)
+            )
+            .join(', ') || emptyLabel}
         </Text>
       </View>
-      <Text
-        style={[styles.excludeInRangeHeaderTextSmall, { color: lighterColor }]}
-      >
-        {excludeLabel} 16 dec, 17 dec
-      </Text>
     </View>
   )
 }
