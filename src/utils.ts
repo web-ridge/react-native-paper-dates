@@ -1,4 +1,6 @@
 import * as React from 'react'
+import { useTheme } from 'react-native-paper'
+import Color from 'color'
 
 export function useLatest<T>(value: T) {
   const valueRef = React.useRef<T>(value)
@@ -6,6 +8,12 @@ export function useLatest<T>(value: T) {
     valueRef.current = value
   }, [value])
   return valueRef
+}
+
+export function useColorOnPrimaryBackground(background?: any) {
+  const theme = useTheme()
+  const isDark = !Color(background || theme.colors.primary).isLight()
+  return isDark ? '#fff' : '#000'
 }
 
 // Hook

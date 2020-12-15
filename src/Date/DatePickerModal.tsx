@@ -6,119 +6,68 @@ import {
   useWindowDimensions,
   View,
   Platform,
+  StatusBar,
 } from 'react-native'
 
-import Calendar, {
-  BaseCalendarProps,
-  CalendarDate,
-  ModeType,
-  RangeChange,
-  SingleChange,
-} from './Calendar'
-
-import AnimatedCrossView from './AnimatedCrossView'
-
-import DatePickerModalHeader, { HeaderPickProps } from './DatePickerModalHeader'
-import CalendarEdit from './CalendarEdit'
 import { useTheme } from 'react-native-paper'
+import DatePickerModalContent, {
+  DatePickerModalContentRangeProps,
+  DatePickerModalContentSingleProps,
+} from './DatePickerModalContent'
+import { useMemo } from 'react'
+import Color from 'color'
 
-interface DatePickerModalProps extends HeaderPickProps, BaseCalendarProps {
-  mode: ModeType
+interface DatePickerModalProps {
   visible: boolean
-  onDismiss: () => any
-  inputFormat?: string
   animationType?: 'slide' | 'fade' | 'none'
+  disableStatusBar?: boolean
+  disableStatusBarPadding?: boolean
 }
 
-export type LocalState = {
-  startDate: CalendarDate
-  endDate: CalendarDate
-  date: CalendarDate
-}
+interface DatePickerModalSingleProps
+  extends DatePickerModalContentRangeProps,
+    DatePickerModalProps {}
 
 interface DatePickerModalRangeProps
-  extends BaseCalendarProps,
-    DatePickerModalProps {
-  mode: 'range'
-  startDate: Date | null | undefined
-  endDate: Date | null | undefined
-  onChange?: RangeChange
-  onConfirm: RangeChange
-}
-interface DatePickerModalSingleProps
-  extends BaseCalendarProps,
-    DatePickerModalProps {
-  mode: 'single'
-  date?: Date | null | undefined
-  onChange?: SingleChange
-  onConfirm: SingleChange
-}
+  extends DatePickerModalContentSingleProps,
+    DatePickerModalProps {}
 
 export function DatePickerModal(
   props: DatePickerModalRangeProps | DatePickerModalSingleProps
 ) {
   const theme = useTheme()
   const dimensions = useWindowDimensions()
-  const { visible, onDismiss, mode, onChange, onConfirm } = props
-  const animationType =
-    props.animationType ||
+  const {
+    visible,
+    animationType,
+    disableStatusBar,
+    disableStatusBarPadding,
+    ...rest
+  } = props
+  const animationTypeCalculated =
+    animationType ||
     Platform.select({
       web: 'none',
       default: 'slide',
     })
-  const anyProps = props as any
 
-  // use local state to add only onConfirm state changes
-  const [state, setState] = React.useState<LocalState>({
-    date: anyProps.date,
-    startDate: anyProps.startDate,
-    endDate: anyProps.endDate,
-  })
-
-  // update local state if changed from outside or if modal is opened
-  React.useEffect(() => {
-    setState({
-      date: anyProps.date,
-      startDate: anyProps.startDate,
-      endDate: anyProps.endDate,
-    })
-  }, [anyProps.date, anyProps.startDate, anyProps.endDate])
-
-  const [collapsed, setCollapsed] = React.useState<boolean>(true)
-
-  const onInnerChange = React.useCallback(
-    (params) => {
-      onChange && onChange(params)
-      setState(params)
-    },
-    [onChange, setState]
+  const statusBarColor = useMemo<string>(
+    () => Color(theme.colors.primary).darken(0.2).hex(),
+    [theme]
   )
-
-  const onInnerConfirm = React.useCallback(() => {
-    if (mode === 'single') {
-      onConfirm({ date: state.date } as any)
-    }
-    if (mode === 'range') {
-      onConfirm({ startDate: state.startDate, endDate: state.endDate } as any)
-    }
-  }, [state, mode, onConfirm])
-
-  const onToggleCollapse = React.useCallback(() => {
-    setCollapsed((prev) => !prev)
-  }, [setCollapsed])
 
   return (
     <Modal
-      animationType={animationType}
+      animationType={animationTypeCalculated}
       transparent={true}
       visible={visible}
-      onRequestClose={onDismiss}
+      onRequestClose={rest.onDismiss}
       presentationStyle="overFullScreen"
       //@ts-ignore
       statusBarTranslucent={true}
     >
       <>
-        <TouchableWithoutFeedback onPress={onDismiss}>
+        <TouchableWithoutFeedback onPress={rest.onDismiss}>
           <View
             style={[
               StyleSheet.absoluteFill,
@@ -138,44 +87,22 @@ export function DatePickerModal(
               dimensions.width > 650 ? styles.modalContentBig : null,
             ]}
           >
-            <DatePickerModalHeader
-              state={state}
-              mode={mode}
-              onSave={onInnerConfirm}
-              onDismiss={onDismiss}
-              collapsed={collapsed}
-              onToggle={onToggleCollapse}
-              saveLabel={props.saveLabel}
-              headerSeparator={props.headerSeparator}
-              label={props.label}
-              startLabel={props.startLabel}
-              endLabel={props.endLabel}
-            />
-
-            <AnimatedCrossView
-              visible={visible}
-              collapsed={collapsed}
-              calendar={
-                <Calendar
-                  mode={mode}
-                  startDate={state.startDate}
-                  endDate={state.endDate}
-                  date={state.date}
-                  onChange={onInnerChange}
-                  scrollMode={props.scrollMode}
-                />
-              }
-              calendarEdit={
-                <CalendarEdit
-                  mode={mode}
-                  state={state}
-                  label={props.label}
-                  startLabel={props.startLabel}
-                  endLabel={props.endLabel}
-                  collapsed={collapsed}
-                  onChange={onInnerChange}
-                />
-              }
+            {disableStatusBar ? null : (
+              <StatusBar translucent={true} barStyle={'light-content'} />
+            )}
+            {disableStatusBarPadding ? null : (
+              <View
+                style={[
+                  {
+                    height: StatusBar.currentHeight,
+                    backgroundColor: statusBarColor,
+                  },
+                ]}
+              />
+            )}
+            <DatePickerModalContent
+              {...rest}
+              disableSafeTop={disableStatusBar}
             />
           </View>
         </View>

@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 
 import { CalendarDate, ModeType } from './Calendar'
-import { LocalState } from './DatePickerModal'
+import { LocalState } from './DatePickerModalContent'
 import TextInputWithMask from '../TextInputMask'
 import { useTheme } from 'react-native-paper'
 

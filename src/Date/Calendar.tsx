@@ -17,10 +17,6 @@ export type ModeType = 'single' | 'range'
 
 export type ScrollModeType = 'horizontal' | 'vertical'
 
-export type BaseCalendarProps = {
-  scrollMode?: ScrollModeType
-}
-
 export type CalendarDate = Date | undefined
 
 export type RangeChange = (params: {
@@ -30,14 +26,14 @@ export type RangeChange = (params: {
 
 export type SingleChange = (params: { date: CalendarDate }) => any
 
-export interface CalendarRangeProps extends BaseCalendarProps {
+export interface CalendarRangeProps {
   mode: 'range'
   startDate: CalendarDate
   endDate: CalendarDate
   onChange: RangeChange
 }
 
-export interface CalendarSingleProps extends BaseCalendarProps {
+export interface CalendarSingleProps {
   mode: 'single'
   date?: CalendarDate
   onChange: SingleChange
@@ -64,8 +60,7 @@ function Calendar(props: CalendarSingleProps | CalendarRangeProps) {
     return Color(theme.colors.primary).lighten(0.9).hex()
   }, [theme])
 
-  const detectedScrollMode = mode === 'range' ? 'vertical' : 'horizontal'
-  const scrollMode = props.scrollMode ? props.scrollMode : detectedScrollMode
+  const scrollMode = mode === 'range' ? 'vertical' : 'horizontal'
 
   const [selectedYear, setSelectedYear] = React.useState<number | undefined>(
     undefined

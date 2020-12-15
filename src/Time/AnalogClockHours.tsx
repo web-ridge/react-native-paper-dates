@@ -2,18 +2,18 @@ import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Text } from 'react-native-paper'
 import { circleSize } from './AnalogClock'
+import { useColorOnPrimaryBackground } from '../utils'
 
 function AnalogClockHours({
   is24Hour,
   hours,
-}: // onChange,
-{
+}: {
   is24Hour: boolean
   hours: number
-  // onChange: (hour: number) => any
 }) {
   const outerRange = getHourNumbers(false, circleSize, 12)
   const innerRange = getHourNumbers(true, circleSize, 12)
+  const color = useColorOnPrimaryBackground()
   return (
     <>
       {outerRange.map((a, i) => (
@@ -29,10 +29,7 @@ function AnalogClockHours({
           ]}
         >
           <View style={styles.outerHourInner}>
-            <Text
-              style={hours === i + 1 ? styles.textWhite : null}
-              selectable={false}
-            >
+            <Text style={hours === i + 1 ? { color } : null} selectable={false}>
               {i + 1}
             </Text>
           </View>
@@ -57,7 +54,7 @@ function AnalogClockHours({
                   style={[
                     styles.innerHourText,
                     i + 13 === hours || (i + 13 === 24 && hours === 0)
-                      ? styles.textWhite
+                      ? { color }
                       : null,
                   ]}
                 >
@@ -98,7 +95,6 @@ const styles = StyleSheet.create({
   },
   innerHourInner: { borderRadius: 20 },
   innerHourText: { fontSize: 13 },
-  textWhite: { color: '#fff' },
 })
 
 function getHourNumbers(is24Hour: boolean, size: number, count: number) {

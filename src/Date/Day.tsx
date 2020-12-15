@@ -3,6 +3,7 @@ import { Text, TouchableRipple, useTheme } from 'react-native-paper'
 import { StyleSheet, View } from 'react-native'
 import DayRange from './DayRange'
 import { daySize } from './dateUtils'
+import { useColorOnPrimaryBackground } from '../utils'
 
 function EmptyDayPure() {
   return <View style={styles.empty} />
@@ -35,13 +36,12 @@ function Day(props: {
     selectColor,
     isToday,
   } = props
-
   const theme = useTheme()
-
   const onPress = React.useCallback(() => {
     onPressDate(new Date(year, month, day))
   }, [onPressDate, year, month, day])
-
+  const color = useColorOnPrimaryBackground()
+  const todayColor = theme.dark ? '#fff' : '#000'
   return (
     <View style={[styles.root]}>
       <DayRange
@@ -56,19 +56,20 @@ function Day(props: {
         onPress={onPress}
         style={[
           styles.button,
-          { backgroundColor: inRange ? selectColor : theme.colors.surface },
-          // hovered && styles.buttonHovered,
+          { backgroundColor: inRange ? selectColor : undefined },
         ]}
       >
         <View
           style={[
             styles.day,
-            isToday ? styles.today : null,
+            isToday
+              ? { borderColor: selected || inRange ? color : todayColor }
+              : null,
             selected ? { backgroundColor: primaryColor } : null,
           ]}
         >
           <Text
-            style={selected ? styles.selectedText : null}
+            style={selected || inRange ? { color } : null}
             selectable={false}
           >
             {day}
@@ -97,9 +98,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderRadius: daySize / 2,
   },
-  buttonHovered: {
-    backgroundColor: 'rgba(0,0,0,0.1)',
-  },
   day: {
     flexBasis: 0,
     flex: 1,
@@ -111,13 +109,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'transparent',
   },
-  today: {
-    borderColor: '#000',
-  },
-  selectedText: {
-    color: '#fff',
-  },
-
   flex1: {
     flex: 1,
   },

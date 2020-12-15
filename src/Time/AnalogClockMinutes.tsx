@@ -2,25 +2,20 @@ import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Text } from 'react-native-paper'
 import { circleSize } from './AnalogClock'
+import { useColorOnPrimaryBackground } from '../utils'
 
-function AnalogClockMinutes({
-  minutes,
-}: // onChange,
-{
-  minutes: number
-  // onChange: (hour: number) => any
-}) {
+function AnalogClockMinutes({ minutes }: { minutes: number }) {
   const range = getMinuteNumbers(circleSize, 12)
-
+  const color = useColorOnPrimaryBackground()
   return (
     <>
       {range.map((a, i) => {
         const currentMinutes = i * 5
         const isZero = currentMinutes === 0
-        let textColorWhite =
+        let isCurrent =
           currentMinutes - 1 <= minutes && currentMinutes + 1 >= minutes
         if (isZero) {
-          textColorWhite = minutes >= 59 || currentMinutes + 1 >= minutes
+          isCurrent = minutes >= 59 || currentMinutes + 1 >= minutes
         }
         return (
           <View
@@ -35,10 +30,7 @@ function AnalogClockMinutes({
             ]}
           >
             <View style={styles.outerHourInner}>
-              <Text
-                style={textColorWhite ? styles.textWhite : null}
-                selectable={false}
-              >
+              <Text style={isCurrent ? { color } : null} selectable={false}>
                 {isZero ? '00' : currentMinutes}
               </Text>
             </View>

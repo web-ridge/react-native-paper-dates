@@ -6,6 +6,7 @@ import {
   View,
   Linking,
   Image,
+  Animated,
 } from 'react-native';
 import {
   Title,
@@ -19,7 +20,11 @@ import {
   overlay,
   Paragraph,
 } from 'react-native-paper';
-import { DatePickerModal, TimePickerModal } from '../../src';
+import {
+  DatePickerModal,
+  DatePickerModalContent,
+  TimePickerModal,
+} from '../../src';
 
 function App({
   onToggleDarkMode,
@@ -93,6 +98,11 @@ function App({
   time.hours !== undefined && timeDate.setHours(time.hours);
   time.minutes !== undefined && timeDate.setMinutes(time.minutes);
 
+  const backgroundColor =
+    theme.dark && theme.mode === 'adaptive'
+      ? overlay(3, theme.colors.surface)
+      : (theme.colors.surface as any);
+
   return (
     <>
       <ScrollView
@@ -120,15 +130,29 @@ function App({
             </Text>
           </Paragraph>
         </View>
-        <View
+        <View style={styles.content}>
+          <Button
+            uppercase={false}
+            mode="contained"
+            icon="github"
+            style={styles.twitterButton}
+            onPress={() =>
+              Linking.openURL(
+                'https://github.com/web-ridge/react-native-paper-dates'
+              )
+            }
+          >
+            GitHub
+          </Button>
+          <TwitterFollowButton userName={'RichardLindhout'} />
+          <TwitterFollowButton userName={'web_ridge'} />
+        </View>
+        <Animated.View
           style={[
             styles.content,
             styles.contentShadow,
             {
-              backgroundColor:
-                theme.dark && theme.mode === 'adaptive'
-                  ? overlay(3, theme.colors.surface)
-                  : (theme.colors.surface as any),
+              backgroundColor,
             },
           ]}
         >
@@ -198,24 +222,29 @@ function App({
           {/*<DatePickerInput />*/}
           {/*<Enter />*/}
           {/*<DateRangeInput />*/}
-        </View>
+        </Animated.View>
         <View style={styles.content}>
-          <Button
-            uppercase={false}
-            mode="contained"
-            icon="github"
-            style={styles.twitterButton}
-            onPress={() =>
-              Linking.openURL(
-                'https://github.com/web-ridge/react-native-paper-dates'
-              )
-            }
-          >
-            GitHub
-          </Button>
-          <TwitterFollowButton userName={'RichardLindhout'} />
-          <TwitterFollowButton userName={'web_ridge'} />
+          <Title>Inside page</Title>
         </View>
+        <Animated.View
+          style={[
+            styles.content,
+            styles.contentShadow,
+            styles.contentInline,
+            { backgroundColor },
+          ]}
+        >
+          <DatePickerModalContent
+            mode="range"
+            onDismiss={onDismissRange}
+            startDate={undefined}
+            endDate={undefined}
+            onConfirm={onChangeRange}
+          />
+        </Animated.View>
+        <Enter />
+        <Enter />
+        <Enter />
       </ScrollView>
       <DatePickerModal
         mode="range"
@@ -224,10 +253,10 @@ function App({
         startDate={undefined}
         endDate={undefined}
         onConfirm={onChangeRange}
-        saveLabel="Save" // optional
-        label="Select period" // optional
-        startLabel="From" // optional
-        endLabel="To" // optional
+        saveLabel="Opslaan" // optional
+        label="Selecteer periode" // optional
+        startLabel="Van" // optional
+        endLabel="Tot" // optional
         // animationType="slide" // optional, default is slide on ios/android and none on web
       />
       <DatePickerModal
@@ -281,8 +310,24 @@ export default function AppWithProviders() {
     <PaperProvider
       theme={
         dark
-          ? { ...DarkTheme, roundness: 10 }
-          : { ...DefaultTheme, roundness: 10 }
+          ? {
+              ...DarkTheme,
+              roundness: 10,
+              colors: {
+                ...DarkTheme.colors,
+                primary: '#F59E00',
+                accent: '#FBBE5E',
+              },
+            }
+          : {
+              ...DefaultTheme,
+              roundness: 10,
+              colors: {
+                ...DefaultTheme.colors,
+                primary: '#F59E00',
+                accent: '#FBBE5E',
+              },
+            }
       }
     >
       <React.Fragment>
@@ -326,11 +371,15 @@ const styles = StyleSheet.create({
   root: { flex: 1 },
   content: {
     width: '100%',
-    maxWidth: 450,
+    maxWidth: 500,
     marginTop: 24,
     padding: 24,
     alignSelf: 'center',
     flex: 1,
+  },
+  contentInline: {
+    padding: 0,
+    height: 600,
   },
   contentShadow: {
     shadowColor: '#000',

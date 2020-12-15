@@ -67,7 +67,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-native": "0.63.2",
-    "react-native-paper": "^4.0.1",
+    "react-native-paper": "^4.5.0",
     "react-window": "^1.8.5",
     "release-it": "^13.5.8",
     "typescript": "^3.8.3"
