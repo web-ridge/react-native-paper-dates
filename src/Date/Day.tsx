@@ -21,6 +21,8 @@ function Day(props: {
   primaryColor: string
   selectColor: string
   isToday: boolean
+  disabled: boolean
+  excluded: boolean
   onPressDate: (date: Date) => any
 }) {
   const {
@@ -35,6 +37,8 @@ function Day(props: {
     primaryColor,
     selectColor,
     isToday,
+    disabled,
+    excluded,
   } = props
   const theme = useTheme()
   const onPress = React.useCallback(() => {
@@ -47,7 +51,7 @@ function Day(props: {
   const textColor = selected || (inRange && theme.dark) ? color : undefined
 
   return (
-    <View style={[styles.root]}>
+    <View style={[styles.root, disabled && styles.disabled]}>
       <DayRange
         inRange={inRange}
         leftCrop={leftCrop}
@@ -56,6 +60,7 @@ function Day(props: {
       />
 
       <TouchableRipple
+        disabled={disabled}
         borderless={true}
         onPress={onPress}
         style={[
@@ -70,7 +75,13 @@ function Day(props: {
             selected ? { backgroundColor: primaryColor } : null,
           ]}
         >
-          <Text style={textColor && { color: textColor }} selectable={false}>
+          <Text
+            style={[
+              excluded && styles.excludedText,
+              textColor && { color: textColor },
+            ]}
+            selectable={false}
+          >
             {day}
           </Text>
         </View>
@@ -83,6 +94,9 @@ const styles = StyleSheet.create({
   empty: {
     flex: 1,
     flexBasis: 0,
+  },
+  disabled: {
+    opacity: 0.3,
   },
   root: {
     flexBasis: 0,
@@ -110,6 +124,9 @@ const styles = StyleSheet.create({
   },
   flex1: {
     flex: 1,
+  },
+  excludedText: {
+    textDecorationLine: 'line-through',
   },
 })
 

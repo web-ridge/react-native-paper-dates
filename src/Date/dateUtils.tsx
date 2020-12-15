@@ -1,3 +1,15 @@
+export type DisableWeekDaysType = number[]
+
+export function showWeekDay(
+  dayIndex: number,
+  disableWeekDays?: DisableWeekDaysType
+): boolean {
+  if (disableWeekDays && disableWeekDays.some((di) => di === dayIndex)) {
+    return false
+  }
+  return true
+}
+
 export function dateToUnix(d: Date): number {
   return Math.round(d.getTime() / 1000)
 }

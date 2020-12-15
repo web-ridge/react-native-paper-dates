@@ -1,6 +1,12 @@
 import * as React from 'react'
 
-import Calendar, { CalendarDate, RangeChange, SingleChange } from './Calendar'
+import Calendar, {
+  BaseCalendarProps,
+  CalendarDate,
+  ExcludeInRangeChange,
+  RangeChange,
+  SingleChange,
+} from './Calendar'
 
 import AnimatedCrossView from './AnimatedCrossView'
 
@@ -15,32 +21,62 @@ export type LocalState = {
   startDate: CalendarDate
   endDate: CalendarDate
   date: CalendarDate
+  excludedDates: Date[]
 }
 
-export interface DatePickerModalContentRangeProps extends HeaderPickProps {
+interface DatePickerModalContentBaseProps {
   inputFormat?: string
   onDismiss: () => any
+  disableSafeTop?: boolean
+}
+
+export interface DatePickerModalContentRangeProps
+  extends HeaderPickProps,
+    BaseCalendarProps,
+    DatePickerModalContentBaseProps {
   mode: 'range'
   startDate: Date | null | undefined
   endDate: Date | null | undefined
   onChange?: RangeChange
   onConfirm: RangeChange
-  disableSafeTop?: boolean
 }
-export interface DatePickerModalContentSingleProps extends HeaderPickProps {
-  inputFormat?: string
-  onDismiss: () => any
+
+export interface DatePickerModalContentSingleProps
+  extends HeaderPickProps,
+    BaseCalendarProps,
+    DatePickerModalContentBaseProps {
   mode: 'single'
   date?: Date | null | undefined
   onChange?: SingleChange
   onConfirm: SingleChange
-  disableSafeTop?: boolean
+}
+
+export interface DatePickerModalContentExcludeInRangeProps
+  extends HeaderPickProps,
+    BaseCalendarProps,
+    DatePickerModalContentBaseProps {
+  mode: 'excludeInRange'
+  startDate: Date
+  endDate: Date
+  excludedDates: Date[] | undefined
+  onChange?: ExcludeInRangeChange
+  onConfirm: ExcludeInRangeChange
 }
 
 export function DatePickerModalContent(
-  props: DatePickerModalContentRangeProps | DatePickerModalContentSingleProps
+  props:
+    | DatePickerModalContentRangeProps
+    | DatePickerModalContentSingleProps
+    | DatePickerModalContentExcludeInRangeProps
 ) {
-  const { mode, onChange, onConfirm, onDismiss, disableSafeTop } = props
+  const {
+    mode,
+    onChange,
+    onConfirm,
+    onDismiss,
+    disableSafeTop,
+    disableWeekDays,
+  } = props
 
   const anyProps = props as any
 
@@ -49,6 +85,7 @@ export function DatePickerModalContent(
     date: anyProps.date,
     startDate: anyProps.startDate,
     endDate: anyProps.endDate,
+    excludedDates: anyProps.excludedDates,
   })
 
   // update local state if changed from outside or if modal is opened
@@ -57,25 +94,40 @@ export function DatePickerModalContent(
       date: anyProps.date,
       startDate: anyProps.startDate,
       endDate: anyProps.endDate,
+      excludedDates: anyProps.excludedDates,
     })
-  }, [anyProps.date, anyProps.startDate, anyProps.endDate])
+  }, [
+    anyProps.date,
+    anyProps.startDate,
+    anyProps.endDate,
+    anyProps.excludedDates,
+  ])
 
   const [collapsed, setCollapsed] = React.useState<boolean>(true)
 
   const onInnerChange = React.useCallback(
     (params) => {
       onChange && onChange(params)
-      setState(params)
+
+      setState((prev) => ({ ...prev, ...params }))
     },
     [onChange, setState]
   )
 
   const onInnerConfirm = React.useCallback(() => {
     if (mode === 'single') {
-      onConfirm({ date: state.date } as any)
-    }
-    if (mode === 'range') {
-      onConfirm({ startDate: state.startDate, endDate: state.endDate } as any)
+      ;(onConfirm as DatePickerModalContentSingleProps['onConfirm'])({
+        date: state.date,
+      })
+    } else if (mode === 'range') {
+      ;(onConfirm as DatePickerModalContentRangeProps['onConfirm'])({
+        startDate: state.startDate,
+        endDate: state.endDate,
+      })
+    } else if (mode === 'excludeInRange') {
+      ;(onConfirm as DatePickerModalContentExcludeInRangeProps['onConfirm'])({
+        excludedDates: state.excludedDates,
+      })
     }
   }, [state, mode, onConfirm])
 
@@ -112,7 +164,9 @@ export function DatePickerModalContent(
             startDate={state.startDate}
             endDate={state.endDate}
             date={state.date}
+            excludedDates={state.excludedDates}
             onChange={onInnerChange}
+            disableWeekDays={disableWeekDays}
           />
         }
         calendarEdit={

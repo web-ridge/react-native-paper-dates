@@ -13,7 +13,9 @@ function DayRange({
   inRange: boolean
   selectColor: string
 }) {
-  const isCrop = inRange && (leftCrop || rightCrop)
+  const bothWays = inRange && leftCrop && rightCrop
+  const isCrop = inRange && (leftCrop || rightCrop) && !(leftCrop && rightCrop)
+
   if (inRange || isCrop) {
     return (
       <View
@@ -21,6 +23,7 @@ function DayRange({
         style={[
           StyleSheet.absoluteFill,
           styles.rangeRoot,
+          bothWays && styles.rangeRootBoth,
           inRange && !isCrop
             ? {
                 backgroundColor: selectColor,
@@ -77,6 +80,9 @@ const styles = StyleSheet.create({
   rightRadius: {
     borderBottomRightRadius: daySize / 2,
     borderTopRightRadius: daySize / 2,
+  },
+  rangeRootBoth: {
+    borderRadius: daySize / 2,
   },
   flex1: {
     flex: 1,

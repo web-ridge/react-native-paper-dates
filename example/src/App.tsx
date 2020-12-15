@@ -25,6 +25,15 @@ import {
   DatePickerModalContent,
   TimePickerModal,
 } from '../../src';
+import { addMonths } from '../../src/Date/dateUtils';
+
+const baseDate = new Date();
+const rangeExcludeDateStart = new Date(
+  baseDate.getFullYear(),
+  baseDate.getMonth(),
+  baseDate.getDate()
+);
+const rangeExcludeDateEnd = addMonths(new Date(), 3);
 
 function App({
   onToggleDarkMode,
@@ -49,12 +58,15 @@ function App({
     startDate: Date | undefined;
     endDate: Date | undefined;
   }>({ startDate: undefined, endDate: undefined });
+  const [excludedDates, setExcludedDates] = React.useState<Date[]>([]);
   const [time, setTime] = React.useState<{
     hours: number | undefined;
     minutes: number | undefined;
   }>({ hours: undefined, minutes: undefined });
   const [timeOpen, setTimeOpen] = React.useState(false);
   const [rangeOpen, setRangeOpen] = React.useState(false);
+  const [rangeExcludeOpen, setRangeExcludeOpen] = React.useState(false);
+
   const [singleOpen, setSingleOpen] = React.useState(false);
 
   const onDismissTime = React.useCallback(() => {
@@ -64,6 +76,10 @@ function App({
   const onDismissRange = React.useCallback(() => {
     setRangeOpen(false);
   }, [setRangeOpen]);
+
+  const onDismissExcludeRange = React.useCallback(() => {
+    setRangeExcludeOpen(false);
+  }, [setRangeExcludeOpen]);
 
   const onDismissSingle = React.useCallback(() => {
     setSingleOpen(false);
@@ -75,6 +91,14 @@ function App({
       setRange({ startDate, endDate });
     },
     [setRangeOpen, setRange]
+  );
+
+  const onChangeExcludeRange = React.useCallback(
+    ({ excludedDates }: { excludedDates: Date[] }) => {
+      setRangeExcludeOpen(false);
+      setExcludedDates(excludedDates);
+    },
+    [setRangeExcludeOpen, setExcludedDates]
   );
 
   const onChangeSingle = React.useCallback(
@@ -102,7 +126,7 @@ function App({
     theme.dark && theme.mode === 'adaptive'
       ? overlay(3, theme.colors.surface)
       : (theme.colors.surface as any);
-
+  console.log({ excludedDates });
   return (
     <>
       <ScrollView
@@ -197,6 +221,7 @@ function App({
               onPress={() => setSingleOpen(true)}
               uppercase={false}
               mode="outlined"
+              style={styles.pickButton}
             >
               Pick single date
             </Button>
@@ -205,23 +230,30 @@ function App({
               onPress={() => setRangeOpen(true)}
               uppercase={false}
               mode="outlined"
+              style={styles.pickButton}
             >
               Pick range
+            </Button>
+            <View style={styles.buttonSeparator} />
+            <Button
+              onPress={() => setRangeExcludeOpen(true)}
+              uppercase={false}
+              mode="outlined"
+              style={styles.pickButton}
+            >
+              Exclude dates in range
             </Button>
             <View style={styles.buttonSeparator} />
             <Button
               onPress={() => setTimeOpen(true)}
               uppercase={false}
               mode="outlined"
+              style={styles.pickButton}
             >
               Pick time
             </Button>
           </View>
           <Enter />
-
-          {/*<DatePickerInput />*/}
-          {/*<Enter />*/}
-          {/*<DateRangeInput />*/}
         </Animated.View>
         <View style={styles.content}>
           <Title>Inside page</Title>
@@ -237,8 +269,8 @@ function App({
           <DatePickerModalContent
             mode="range"
             onDismiss={onDismissRange}
-            startDate={undefined}
-            endDate={undefined}
+            startDate={range.startDate}
+            endDate={range.endDate}
             onConfirm={onChangeRange}
           />
         </Animated.View>
@@ -250,13 +282,25 @@ function App({
         mode="range"
         visible={rangeOpen}
         onDismiss={onDismissRange}
-        startDate={undefined}
-        endDate={undefined}
+        startDate={range.startDate}
+        endDate={range.endDate}
         onConfirm={onChangeRange}
-        saveLabel="Opslaan" // optional
-        label="Selecteer periode" // optional
-        startLabel="Van" // optional
-        endLabel="Tot" // optional
+        // saveLabel="Save" // optional
+        // label="Select period" // optional
+        // startLabel="From" // optional
+        // endLabel="To" // optional
+        // animationType="slide" // optional, default is slide on ios/android and none on web
+      />
+      <DatePickerModal
+        mode="excludeInRange"
+        visible={rangeExcludeOpen}
+        onDismiss={onDismissExcludeRange}
+        startDate={rangeExcludeDateStart}
+        endDate={rangeExcludeDateEnd}
+        excludedDates={excludedDates}
+        onConfirm={onChangeExcludeRange}
+        // sunday, saturday
+        disableWeekDays={disabledWeekDays}
         // animationType="slide" // optional, default is slide on ios/android and none on web
       />
       <DatePickerModal
@@ -265,8 +309,8 @@ function App({
         onDismiss={onDismissSingle}
         date={undefined}
         onConfirm={onChangeSingle}
-        saveLabel="Save" // optional
-        label="Select date" // optional
+        // saveLabel="Save" // optional
+        // label="Select date" // optional
         // animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
       />
 
@@ -276,14 +320,16 @@ function App({
         onConfirm={onConfirmTime}
         hours={time.hours} // optional, default: current hours
         minutes={time.minutes} // optional, default: current minutes
-        label="Select time" // optional, default 'Select time'
-        cancelLabel="Cancel" // optional, default: 'Cancel'
-        confirmLabel="Ok" // optional, default: 'Ok'
+        // label="Select time" // optional, default 'Select time'
+        // cancelLabel="Cancel" // optional, default: 'Cancel'
+        // confirmLabel="Ok" // optional, default: 'Ok'
         // animationType="fade" // optional, default is 'none'
       />
     </>
   );
 }
+
+const disabledWeekDays = [0, 6];
 
 function Enter() {
   return <View style={styles.enter} />;
@@ -398,7 +444,8 @@ const styles = StyleSheet.create({
   },
   switchSpace: { flex: 1 },
   switchLabel: { fontSize: 16 },
-  buttons: { flexDirection: 'row', marginTop: 24 },
+  buttons: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 24 },
+  pickButton: { marginTop: 6 },
   buttonSeparator: { width: 6 },
   enter: { height: 12 },
   label: { width: 100, fontSize: 16 },

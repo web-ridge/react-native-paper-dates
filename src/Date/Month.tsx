@@ -7,21 +7,25 @@ import {
   addMonths,
   areDatesOnSameDay,
   daySize,
+  DisableWeekDaysType,
   getDaysInMonth,
   getFirstDayOfMonth,
   getRealIndex,
   gridCounts,
   isDateBetween,
+  showWeekDay,
 } from './dateUtils'
 import { getCalendarHeaderHeight } from './CalendarHeader'
+import { ModeType } from './Calendar'
 
 interface BaseMonthProps {
   scrollMode: 'horizontal' | 'vertical'
-
-  mode: 'single' | 'range'
+  disableWeekDays?: DisableWeekDaysType
+  mode: ModeType
   date?: Date | null | undefined
   startDate?: Date | null | undefined
   endDate?: Date | null | undefined
+  excludedDates?: Date[]
   index: number
   onPressYear: (year: number) => any
   selectedYear: number | undefined
@@ -41,6 +45,12 @@ interface MonthRangeProps extends BaseMonthProps {
 interface MonthSingleProps extends BaseMonthProps {
   mode: 'single'
   date?: Date | null | undefined
+}
+
+interface MonthExcludeInRangeProps extends BaseMonthProps {
+  mode: 'excludeInRange'
+  startDate: Date
+  endDate: Date
 }
 
 const monthGrid = (index: number) => {
@@ -95,7 +105,9 @@ function Month({
   primaryColor,
   selectColor,
   roundness,
-}: MonthSingleProps | MonthRangeProps) {
+  disableWeekDays,
+  excludedDates,
+}: MonthSingleProps | MonthRangeProps | MonthExcludeInRangeProps) {
   const theme = useTheme()
   const realIndex = getRealIndex(index)
   const isHorizontal = scrollMode === 'horizontal'
@@ -133,18 +145,45 @@ function Month({
           const selectedEndDay = areDatesOnSameDay(day, endDate)
           const selectedDay = areDatesOnSameDay(day, date)
 
-          const selected =
-            mode === 'range' ? selectedStartDay || selectedEndDay : selectedDay
+          let disabled = mode === 'excludeInRange'
+          let selected =
+            mode === 'range' || mode === 'excludeInRange'
+              ? selectedStartDay || selectedEndDay
+              : selectedDay
           let inRange =
-            mode === 'range'
+            mode === 'range' || mode === 'excludeInRange'
               ? isDateBetween(day, {
                   startDate,
                   endDate,
                 })
               : false
 
+          if (inRange) {
+            disabled = false
+          }
+
           let leftCrop: boolean = selectedStartDay || dayOfMonth === 1
           let rightCrop: boolean = selectedEndDay || dayOfMonth === daysInMonth
+
+          let excluded = false
+          if (excludedDates) {
+            if (excludedDates.some((ed) => areDatesOnSameDay(day, ed))) {
+              excluded = true
+              inRange = false
+              selected = false
+            } else {
+              const yesterday = new Date(year, month, dayOfMonth - 1)
+              const tomorrow = new Date(year, month, dayOfMonth + 1)
+              if (
+                excludedDates.some((ed) => areDatesOnSameDay(yesterday, ed))
+              ) {
+                leftCrop = true
+              }
+              if (excludedDates.some((ed) => areDatesOnSameDay(tomorrow, ed))) {
+                rightCrop = true
+              }
+            }
+          }
 
           if (dayIndex === 0 && !selectedStartDay) {
             leftCrop = false
@@ -174,11 +213,13 @@ function Month({
             leftCrop,
             rightCrop,
             isToday,
+            disabled,
+            excluded,
           }
         }),
       }
     })
-  }, [mode, index, startDate, endDate, date, month, year])
+  }, [mode, index, startDate, endDate, date, month, year, excludedDates])
 
   return (
     <View style={[styles.month, { height: getMonthHeight(scrollMode, index) }]}>
@@ -219,6 +260,7 @@ function Month({
             </Text>
             <View style={isHorizontal ? styles.opacity1 : styles.opacity0}>
               <IconButton
+                onPress={isHorizontal ? () => onPressYear(year) : undefined}
                 icon={selectingYear ? 'chevron-up' : 'chevron-down'}
               />
             </View>
@@ -231,26 +273,30 @@ function Month({
           style={[styles.week, I18nManager.isRTL ? styles.weekRtl : null]}
           key={weekIndex}
         >
-          {generatedDays.map((gd) =>
-            gd.beforeWeekDay || gd.afterWeekDay ? (
-              <EmptyDay key={gd.dayIndex} />
-            ) : (
-              <Day
-                key={gd.dayIndex}
-                day={gd.dayOfMonth}
-                month={gd.month}
-                year={gd.year}
-                selected={gd.selected}
-                inRange={gd.inRange}
-                leftCrop={gd.leftCrop}
-                rightCrop={gd.rightCrop}
-                onPressDate={onPressDate}
-                isToday={gd.isToday}
-                selectColor={selectColor}
-                primaryColor={primaryColor}
-              />
-            )
-          )}
+          {generatedDays
+            .filter((gd) => showWeekDay(gd.dayIndex, disableWeekDays))
+            .map((gd) =>
+              gd.beforeWeekDay || gd.afterWeekDay ? (
+                <EmptyDay key={gd.dayIndex} />
+              ) : (
+                <Day
+                  key={gd.dayIndex}
+                  day={gd.dayOfMonth}
+                  month={gd.month}
+                  year={gd.year}
+                  selected={gd.selected}
+                  inRange={gd.inRange}
+                  leftCrop={gd.leftCrop}
+                  rightCrop={gd.rightCrop}
+                  onPressDate={onPressDate}
+                  isToday={gd.isToday}
+                  selectColor={selectColor}
+                  primaryColor={primaryColor}
+                  disabled={gd.disabled}
+                  excluded={gd.excluded}
+                />
+              )
+            )}
         </View>
       ))}
     </View>

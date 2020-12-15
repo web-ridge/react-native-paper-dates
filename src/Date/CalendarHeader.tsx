@@ -2,6 +2,7 @@ import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { IconButton, useTheme } from 'react-native-paper'
 import DayNames, { dayNamesHeight } from './DayNames'
+import { DisableWeekDaysType } from './dateUtils'
 
 const buttonContainerHeight = 56
 const buttonContainerMarginTop = 4
@@ -23,10 +24,12 @@ function CalendarHeader({
   scrollMode,
   onPrev,
   onNext,
+  disableWeekDays,
 }: {
   scrollMode: 'horizontal' | 'vertical'
   onPrev: () => any
   onNext: () => any
+  disableWeekDays?: DisableWeekDaysType
 }) {
   const theme = useTheme()
   const isHorizontal = scrollMode === 'horizontal'
@@ -54,7 +57,7 @@ function CalendarHeader({
           </View>
         </View>
       ) : null}
-      <DayNames />
+      <DayNames disableWeekDays={disableWeekDays} />
     </View>
   )
 }
