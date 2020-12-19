@@ -51,7 +51,7 @@ export const clockTypes: ClockTypeMap = {
   hours: 'hours',
 }
 
-// Code inspiration: https://github.com/ShaneGH/analogue-time-picker/blob/master/src/utils/angle.ts
+// Code inspiration and copied from: https://github.com/ShaneGH/analogue-time-picker/blob/master/src/utils/angle.ts
 
 const outerHeight = 34
 const _30 = Math.PI / 6
@@ -92,9 +92,7 @@ export function getHourTypeFromOffset(
 export function getMinutes(handAngle: number) {
   handAngle = snap(handAngle, _12)
 
-  // eslint-disable-next-line no-bitwise
-  let minute = (((handAngle - _90) % _360) / _12) | 0
-  // TODO: maybe something simpler?
+  let minute = parseInt((((handAngle - _90) % _360) / _12).toFixed(), 10)
   while (minute < 0) minute += 60
   while (minute >= 60) minute -= 60
 
@@ -108,8 +106,9 @@ export function getHours(
 ) {
   handAngle = snap(handAngle, _30)
 
-  // eslint-disable-next-line no-bitwise
-  let hour = (((handAngle - _90) % _360) / _30) | 0
+  let hour = parseInt((((handAngle - _90) % _360) / _30).toFixed(), 10)
+  if (hour < 0) hour += 12
+  if (hour >= 12) hour -= 12
 
   if (hourType === hourTypes.am) {
     if (hour <= 0) {

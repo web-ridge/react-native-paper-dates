@@ -126,7 +126,7 @@ function App({
     theme.dark && theme.mode === 'adaptive'
       ? overlay(3, theme.colors.surface)
       : (theme.colors.surface as any);
-  console.log({ excludedDates });
+
   return (
     <>
       <ScrollView
@@ -267,6 +267,7 @@ function App({
           ]}
         >
           <DatePickerModalContent
+            // locale={'en'} optional, default: automatic
             mode="range"
             onDismiss={onDismissRange}
             startDate={range.startDate}
@@ -279,12 +280,14 @@ function App({
         <Enter />
       </ScrollView>
       <DatePickerModal
+        // locale={'en'} optional, default: automatic
         mode="range"
         visible={rangeOpen}
         onDismiss={onDismissRange}
         startDate={range.startDate}
         endDate={range.endDate}
         onConfirm={onChangeRange}
+        // locale={'nl'} // optional
         // saveLabel="Save" // optional
         // label="Select period" // optional
         // startLabel="From" // optional
@@ -292,6 +295,7 @@ function App({
         // animationType="slide" // optional, default is slide on ios/android and none on web
       />
       <DatePickerModal
+        // locale={'en'} optional, default: automatic
         mode="excludeInRange"
         visible={rangeExcludeOpen}
         onDismiss={onDismissExcludeRange}
@@ -306,6 +310,7 @@ function App({
         // animationType="slide" // optional, default is slide on ios/android and none on web
       />
       <DatePickerModal
+        // locale={'en'} optional, default: automatic
         mode="single"
         visible={singleOpen}
         onDismiss={onDismissSingle}
@@ -317,6 +322,7 @@ function App({
       />
 
       <TimePickerModal
+        // locale={'en'} optional, default: automatic
         visible={timeOpen}
         onDismiss={onDismissTime}
         onConfirm={onConfirmTime}

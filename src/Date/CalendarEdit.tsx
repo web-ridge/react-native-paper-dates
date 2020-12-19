@@ -116,7 +116,9 @@ function CalendarInputPure(
     isEndDate,
     returnKeyType,
     onSubmitEditing,
+    locale,
   }: {
+    locale?: undefined | string
     label: string
     value: CalendarDate
     onChange: (d: Date | undefined) => any
@@ -128,7 +130,7 @@ function CalendarInputPure(
 ) {
   const theme = useTheme()
   const formatter = React.useMemo(() => {
-    return new Intl.DateTimeFormat(undefined, {
+    return new Intl.DateTimeFormat(locale, {
       month: '2-digit',
       day: '2-digit',
       year: 'numeric',

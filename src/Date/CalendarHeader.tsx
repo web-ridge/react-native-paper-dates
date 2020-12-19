@@ -25,7 +25,9 @@ function CalendarHeader({
   onPrev,
   onNext,
   disableWeekDays,
+  locale,
 }: {
+  locale: undefined | string
   scrollMode: 'horizontal' | 'vertical'
   onPrev: () => any
   onNext: () => any
@@ -57,7 +59,7 @@ function CalendarHeader({
           </View>
         </View>
       ) : null}
-      <DayNames disableWeekDays={disableWeekDays} />
+      <DayNames disableWeekDays={disableWeekDays} locale={locale} />
     </View>
   )
 }

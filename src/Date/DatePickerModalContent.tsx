@@ -76,6 +76,7 @@ export function DatePickerModalContent(
     onDismiss,
     disableSafeTop,
     disableWeekDays,
+    locale,
   } = props
 
   const anyProps = props as any
@@ -108,7 +109,6 @@ export function DatePickerModalContent(
   const onInnerChange = React.useCallback(
     (params) => {
       onChange && onChange(params)
-
       setState((prev) => ({ ...prev, ...params }))
     },
     [onChange, setState]
@@ -154,6 +154,7 @@ export function DatePickerModalContent(
           label={props.label}
           startLabel={props.startLabel}
           endLabel={props.endLabel}
+          locale={locale}
         />
       </DatePickerModalHeaderBackground>
 
@@ -161,6 +162,7 @@ export function DatePickerModalContent(
         collapsed={collapsed}
         calendar={
           <Calendar
+            locale={locale}
             mode={mode}
             startDate={state.startDate}
             endDate={state.endDate}

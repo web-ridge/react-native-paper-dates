@@ -38,7 +38,9 @@ export function TimePickerModal({
   cancelLabel = 'Cancel',
   confirmLabel = 'Ok',
   animationType = 'none',
+  locale,
 }: {
+  locale?: undefined | string
   label?: string
   cancelLabel?: string
   confirmLabel?: string
@@ -137,6 +139,7 @@ export function TimePickerModal({
               </View>
               <View style={styles.timePickerContainer}>
                 <TimePicker
+                  locale={locale}
                   inputType={inputType}
                   focused={focused}
                   hours={localHours}

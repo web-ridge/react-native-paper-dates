@@ -19,6 +19,7 @@ import { getCalendarHeaderHeight } from './CalendarHeader'
 import { ModeType } from './Calendar'
 
 interface BaseMonthProps {
+  locale: undefined | string
   scrollMode: 'horizontal' | 'vertical'
   disableWeekDays?: DisableWeekDaysType
   mode: ModeType
@@ -107,6 +108,7 @@ function Month({
   roundness,
   disableWeekDays,
   excludedDates,
+  locale,
 }: MonthSingleProps | MonthRangeProps | MonthExcludeInRangeProps) {
   const theme = useTheme()
   const realIndex = getRealIndex(index)
@@ -116,7 +118,7 @@ function Month({
   const year = monthDate.getFullYear()
   const month = monthDate.getMonth()
 
-  const monthFormatter = new Intl.DateTimeFormat(undefined, {
+  const monthFormatter = new Intl.DateTimeFormat(locale, {
     month: 'long',
   })
 

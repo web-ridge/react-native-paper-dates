@@ -18,6 +18,7 @@ export type ModeType = 'single' | 'range' | 'excludeInRange'
 export type ScrollModeType = 'horizontal' | 'vertical'
 
 export type BaseCalendarProps = {
+  locale?: undefined | string
   disableWeekDays?: DisableWeekDaysType
 }
 
@@ -57,6 +58,7 @@ function Calendar(
   props: CalendarSingleProps | CalendarRangeProps | CalendarExcludeInRangeProps
 ) {
   const {
+    locale,
     mode,
     onChange,
     // @ts-ignore
@@ -126,14 +128,15 @@ function Calendar(
         const exists = excludedDatesRef.current.some((ed) =>
           areDatesOnSameDay(ed, d)
         )
-
+        const newExcludedDates = exists
+          ? excludedDatesRef.current.filter((ed) => !areDatesOnSameDay(ed, d))
+          : [
+              ...excludedDatesRef.current,
+              new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0),
+            ]
+        newExcludedDates.sort((a, b) => a.getTime() - b.getTime())
         ;(onChangeRef.current as ExcludeInRangeChange)({
-          excludedDates: exists
-            ? excludedDatesRef.current.filter((ed) => !areDatesOnSameDay(ed, d))
-            : [
-                ...excludedDatesRef.current,
-                new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0),
-              ],
+          excludedDates: newExcludedDates,
         })
       }
     },
@@ -147,6 +150,7 @@ function Calendar(
         scrollMode={scrollMode}
         renderItem={({ index }) => (
           <Month
+            locale={locale}
             mode={mode}
             key={index}
             index={index}
@@ -167,6 +171,7 @@ function Calendar(
         )}
         renderHeader={({ onPrev, onNext }) => (
           <CalendarHeader
+            locale={locale}
             onPrev={onPrev}
             onNext={onNext}
             scrollMode={scrollMode}

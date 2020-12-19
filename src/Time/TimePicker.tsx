@@ -29,7 +29,9 @@ function TimePicker({
   focused,
   inputType,
   onChange,
+  locale,
 }: {
+  locale?: undefined | string
   inputType: PossibleInputTypes
   focused: PossibleClockTypes
   hours: number
@@ -42,14 +44,14 @@ function TimePicker({
 
   // method to check whether we have 24 hours in clock or 12
   const is24Hour = React.useMemo(() => {
-    const formatter = new Intl.DateTimeFormat(undefined, {
+    const formatter = new Intl.DateTimeFormat(locale, {
       hour: '2-digit',
       minute: '2-digit',
       timeZone: 'UTC',
     })
     const formatted = formatter.format(new Date(Date.UTC(2020, 1, 1, 23)))
     return formatted.includes('23')
-  }, [])
+  }, [locale])
 
   const onInnerChange = React.useCallback<onChangeFunc>(
     (params) => {

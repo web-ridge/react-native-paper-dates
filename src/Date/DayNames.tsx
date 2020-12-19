@@ -19,12 +19,14 @@ const weekdays = [
 
 function DayNames({
   disableWeekDays,
+  locale,
 }: {
+  locale: undefined | string
   disableWeekDays?: DisableWeekDaysType
 }) {
   const theme = useTheme()
   const shortDayNames = React.useMemo<string[]>(() => {
-    const formatter = new Intl.DateTimeFormat(undefined, {
+    const formatter = new Intl.DateTimeFormat(locale, {
       weekday: 'narrow',
     })
     return weekdays.map((date) => formatter.format(date))

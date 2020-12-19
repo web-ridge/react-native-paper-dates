@@ -20,6 +20,7 @@ export interface HeaderContentProps extends HeaderPickProps {
   mode: ModeType
   collapsed: boolean
   onToggle: () => any
+  locale: undefined | string
 }
 
 function getLabel(mode: ModeType, configuredLabel?: string) {
@@ -78,12 +79,13 @@ export function HeaderContentSingle({
   state,
   emptyLabel = ' ',
   color,
+  locale,
 }: HeaderContentProps & { color: string }) {
   const lighterColor = Color(color).fade(0.5).rgb().toString()
   const dateColor = state.date ? color : lighterColor
 
   const formatter = React.useMemo(() => {
-    return new Intl.DateTimeFormat(undefined, {
+    return new Intl.DateTimeFormat(locale, {
       month: 'short',
       day: 'numeric',
     })
@@ -100,19 +102,20 @@ export function HeaderContentExcludeInRange({
   state,
   emptyLabel = ' ',
   color,
+  locale,
 }: HeaderContentProps & { color: string }) {
   const lighterColor = Color(color).fade(0.5).rgb().toString()
 
   const dayFormatter = React.useMemo(() => {
-    return new Intl.DateTimeFormat(undefined, {
+    return new Intl.DateTimeFormat(locale, {
       day: 'numeric',
     })
-  }, [])
+  }, [locale])
   const monthFormatter = React.useMemo(() => {
-    return new Intl.DateTimeFormat(undefined, {
+    return new Intl.DateTimeFormat(locale, {
       month: 'short',
     })
-  }, [])
+  }, [locale])
 
   const excludedDaysPerMonth = React.useMemo(() => {
     // TODO: fix years :O
@@ -147,6 +150,7 @@ export function HeaderContentExcludeInRange({
 }
 
 export function HeaderContentRange({
+  locale,
   state,
   headerSeparator = '-',
   startLabel = 'Start',
@@ -154,11 +158,11 @@ export function HeaderContentRange({
   color,
 }: HeaderContentProps & { color: string }) {
   const formatter = React.useMemo(() => {
-    return new Intl.DateTimeFormat(undefined, {
+    return new Intl.DateTimeFormat(locale, {
       month: 'short',
       day: 'numeric',
     })
-  }, [])
+  }, [locale])
 
   const lighterColor = Color(color).fade(0.5).rgb().toString()
   const startColor = state.startDate ? color : lighterColor
