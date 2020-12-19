@@ -3,13 +3,10 @@
 ---
 <br>
 
-![bundle size](https://badgen.net/bundlephobia/minzip/react-native-paper-dates)
-
-![downloads](https://badgen.net/npm/dy/react-native-paper-dates)
-
-![types](https://badgen.net/npm/types/react-native-paper-dates)
-
-![license](https://badgen.net/npm/license/react-native-paper-dates)
+<img src="https://badgen.net/bundlephobia/minzip/react-native-paper-dates" />
+<img src="https://badgen.net/npm/dy/react-native-paper-dates" />
+<img src="https://badgen.net/npm/types/react-native-paper-dates" />
+<img src="https://badgen.net/npm/license/react-native-paper-dates" />
 
    
 - Smooth and fast cross platform Material Design **date** picker and **time** picker for React Native Paper
