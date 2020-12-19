@@ -6,7 +6,7 @@
    
 - Smooth and fast cross platform Material Design **date** picker and **time** picker for React Native Paper
 - Tested on Android, iOS and the web platform!
-- Uses the native Date.Intl API's which work out of the box on the web / iOS
+- Uses the native Date.Intl API's which work out of the box on the web / iOS (automatic day name, month translations without bundle size increase)
 - Simple API
 - Typesafe
 - Endless scrolling
@@ -74,6 +74,7 @@ function SingleDatePage() {
         saveLabel="Save" // optional
         label="Select date" // optional
         animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
+        locale={'en'} // optional, default is automically detected by your system
       />
       <Button onPress={()=> setVisible(true)}>
         Pick date
@@ -115,6 +116,7 @@ export default function RangeDatePage() {
         startLabel="From" // optional
         endLabel="To" // optional
         animationType="slide" // optional, default is slide on ios/android and none on web
+        locale={'en'} // optional, default is automically detected by your system
       />
       <Button onPress={()=> setVisible(true)}>
         Pick range
@@ -158,6 +160,7 @@ export default function TimePickerPage() {
         cancelLabel="Cancel" // optional, default: 'Cancel'
         confirmLabel="Ok" // optional, default: 'Ok'
         animationType="fade" // optional, default is 'none'
+        locale={'en'} // optional, default is automically detected by your system
       />
       <Button onPress={()=> setVisible(true)}>
         Pick time
