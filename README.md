@@ -3,9 +3,9 @@
 ---
 <br>
 
-   
+
 - Smooth and fast cross platform Material Design **date** picker and **time** picker for React Native Paper
-- Tested on Android, iOS and the web platform!
+- Tested on Android, iOS and the web
 - Uses the native Date.Intl API's which work out of the box on the web / iOS (automatic day name, month translations without bundle size increase)
 - Simple API
 - Typesafe
@@ -14,8 +14,24 @@
 - Great React Native Web support
 
 
-[![Demo of react-native-paper-dates](https://user-images.githubusercontent.com/6492229/98866767-bd3f2780-246d-11eb-890e-3491b47c95c5.gif)](https://www.youtube.com/watch?v=SHhQU2doTug)   
-GIF above is sluggish, click on the image to view video in better frame rate. (https://www.youtube.com/watch?v=SHhQU2doTug)
+[![Demo of react-native-paper-dates](https://user-images.githubusercontent.com/6492229/98866767-bd3f2780-246d-11eb-890e-3491b47c95c5.gif)](https://www.youtube.com/watch?v=SHhQU2doTug)
+
+View video in better frame [on YouTube](https://www.youtube.com/watch?v=SHhQU2doTug)
+
+
+## About us
+We want developers to be able to build software faster using modern tools like GraphQL, Golang and React Native.
+
+Give us a follow on Twitter:
+[RichardLindhout](https://twitter.com/RichardLindhout),
+[web_ridge](https://twitter.com/web_ridge)
+
+## Donate
+Instead of spending all your money on a M1 Mac, give some to us so we can buy one.
+
+[Donate with PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7B9KKQLXTEW9Q&source=url)
+
+
 ## Getting started
 
 Yarn
@@ -189,15 +205,15 @@ If that is **not possible** use the following props on the surrounding ScrollVie
     keyboardShouldPersistTaps="handled"
     contentInsetAdjustmentBehavior="always"
 ```
-This is to prevent the need to press 2 times before save works (1 press for closing keyboard, 1 press for confirm/close)
-(https://github.com/facebook/react-native/issues/10138)
+This is to prevent the need to press 2 times before save or close button in modal works (1 press for closing keyboard, 1 press for confirm/close)
+[React Native Issue: #10138](https://github.com/facebook/react-native/issues/10138)
 
 ## Android Caveats
 
 You will need to add a polyfill for the Intl API on Android if:
 
-- You have Hermes enabled (https://github.com/facebook/hermes/issues/23)
-- You have Hermes disabled and you want to support locales outside of en-US and you don't have the org.webkit:android-jsc-intl:+ variant enabled in your app/build.gradle
+- You have [Hermes](https://github.com/facebook/hermes/issues/23) enabled
+- You have [Hermes](https://github.com/facebook/hermes/issues/23) disabled and you want to support locales outside of en-US and you don't have the org.webkit:android-jsc-intl:+ variant enabled in your app/build.gradle
 
 Install polyfills with Yarn
 
@@ -211,7 +227,7 @@ or npm
 npm install react-native-localize @formatjs/intl-pluralrules @formatjs/intl-getcanonicallocales @formatjs/intl-listformat @formatjs/intl-displaynames @formatjs/intl-locale @formatjs/intl-datetimeformat @formatjs/intl-numberformat @formatjs/intl-relativetimeformat --save
 ```
 
-`./index.js`
+In your app starting entrypoint e.g. `./index.js`
 
 ```javascript
 // on top of your index.js file
@@ -261,14 +277,8 @@ See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the 
 MIT
 
 
-## About us
-We want developers to be able to build software faster using modern tools like GraphQL, Golang, React Native.
-
-Follow us on Twitter:
-- https://twitter.com/RichardLindhout
-- https://twitter.com/web_ridge
-
-### You probably like these
-- Simple translations in React (Native): https://github.com/web-ridge/react-ridge-translations
-- Simple global state management in React (Native): https://github.com/web-ridge/react-ridge-state
-- 1 command utility for React Native (Web) project: https://github.com/web-ridge/create-react-native-web-application
+### Checkout our other libraries
+- Smooth and fast cross platform Material Design Tabs for React Native Paper: [react-native-paper-tabs](https://github.com/web-ridge/react-native-paper-tabs)
+- Simple translations in React (Native): [react-ridge-translations](https://github.com/web-ridge/react-ridge-translations)
+- Simple global state management in React (Native): [react-ridge-state](https://github.com/web-ridge/react-ridge-state)
+- 1 command utility for React Native (Web) project: [create-react-native-web-application](https://github.com/web-ridge/create-react-native-web-application)
