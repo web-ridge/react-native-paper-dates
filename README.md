@@ -3,6 +3,12 @@
 ---
 <br>
 
+<p float="left">
+<img src="https://badgen.net/bundlephobia/minzip/react-native-paper-dates" />
+<img src="https://badgen.net/npm/dy/react-native-paper-dates" />
+<img src="https://badgen.net/npm/types/react-native-paper-dates" />
+<img src="https://badgen.net/npm/license/react-native-paper-dates" />
+</p>
 
 - Smooth and fast cross platform Material Design **date** picker and **time** picker for React Native Paper
 - Tested on Android, iOS and the web
