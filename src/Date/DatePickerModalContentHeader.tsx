@@ -89,7 +89,7 @@ export function HeaderContentSingle({
       month: 'short',
       day: 'numeric',
     })
-  }, [])
+  }, [locale])
 
   return (
     <Text style={[styles.singleHeaderText, { color: dateColor }]}>

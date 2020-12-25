@@ -135,7 +135,7 @@ function CalendarInputPure(
       day: '2-digit',
       year: 'numeric',
     })
-  }, [])
+  }, [locale])
 
   const inputFormat = React.useMemo(() => {
     // TODO: something cleaner and more universal?

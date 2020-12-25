@@ -86,6 +86,12 @@
       "<rootDir>/lib/"
     ]
   },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "yarn lint && yarn typescript"
+    }
+  },
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
@@ -129,7 +135,8 @@
   },
   "eslintIgnore": [
     "node_modules/",
-    "lib/"
+    "lib/",
+    "example/"
   ],
   "prettier": {
     "quoteProps": "consistent",

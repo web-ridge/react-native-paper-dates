@@ -30,7 +30,7 @@ function DayNames({
       weekday: 'narrow',
     })
     return weekdays.map((date) => formatter.format(date))
-  }, [])
+  }, [locale])
 
   return (
     <View
