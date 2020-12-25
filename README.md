@@ -10,12 +10,12 @@
 <img src="https://badgen.net/npm/license/react-native-paper-dates" />
 </p>
 
-- Smooth and fast cross platform Material Design **date** picker and **time** picker for React Native Paper
+- Smooth and fast cross platform Material Design **date** picker and **time** picker for ([react-native-paper](https://callstack.github.io/react-native-paper/))
 - Tested on Android, iOS and the web
 - Uses the native Date.Intl API's which work out of the box on the web / iOS (automatic day name, month translations without bundle size increase)
 - Simple API
 - Typesafe
-- Endless scrolling
+- Endless (virtual) scrolling
 - Performant
 - Great React Native Web support
 
@@ -24,6 +24,7 @@
 
 View video in better frame [on YouTube](https://www.youtube.com/watch?v=SHhQU2doTug)
 
+Web demo: [reactnativepaperdates.com](http://reactnativepaperdates.com/)
 
 ## About us
 We want developers to be able to build software faster using modern tools like GraphQL, Golang and React Native.
@@ -33,7 +34,7 @@ Give us a follow on Twitter:
 [web_ridge](https://twitter.com/web_ridge)
 
 ## Donate
-Instead of spending all your money on a M1 Mac, give some to us so we can buy one.
+Instead of spending all your money on a M1 Mac, give it to us so we can buy one.
 
 [Donate with PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7B9KKQLXTEW9Q&source=url)
 
