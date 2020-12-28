@@ -18,7 +18,7 @@
 - Endless (virtual) scrolling
 - Performant
 - Great React Native Web support
-
+- No dependencies outside of ([react-native-paper](https://callstack.github.io/react-native-paper/))
 
 [![Demo of react-native-paper-dates](https://user-images.githubusercontent.com/6492229/98866767-bd3f2780-246d-11eb-890e-3491b47c95c5.gif)](https://www.youtube.com/watch?v=SHhQU2doTug)
 
@@ -51,18 +51,6 @@ npm
 npm install react-native-paper-dates --save
 ```
 
-### Web
-If you use react-native-web and want to use this library you'll need to install react-window.
-
-Yarn
-```
-yarn add react-window
-```
-
-npm
-```
-npm install react-window --save
-```
 
 ## Usage
 

@@ -93,14 +93,11 @@ function weeksOffset(index: number): number {
       off -= gridCounts[cIndex] || getGridCount(cIndex)
     }
   }
-  console.log('offsetBefore', getRealIndex(index), off)
   return off
 }
 
 export function getIndexFromOffset(offset: number): number {
-  // 0 = 1
   let estimatedIndex = startAtIndex + Math.floor(offset / estimatedMonthHeight)
-  console.log({ estimatedIndex })
 
   const realOffset = getMonthsOffset('vertical', estimatedIndex)
 
@@ -109,7 +106,6 @@ export function getIndexFromOffset(offset: number): number {
   if (difference >= 1 || difference <= -1) {
     estimatedIndex -= Math.floor(difference)
   }
-
   return estimatedIndex
 }
 

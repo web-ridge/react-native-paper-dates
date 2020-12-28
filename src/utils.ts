@@ -16,14 +16,19 @@ export function useHeaderBackgroundColor() {
     ? overlay(4, theme.colors.surface)
     : theme.colors.primary
 }
-export function useHeaderTextColor() {
+
+export function useHeaderColorIsLight() {
   const theme = useTheme()
   const background =
     theme.dark && theme.mode === 'adaptive'
       ? theme.colors.surface
       : theme.colors.primary
-  const isDark = !Color(background).isLight()
-  return isDark ? '#fff' : '#000'
+  return Color(background).isLight()
+}
+
+export function useHeaderTextColor() {
+  const isLight = useHeaderColorIsLight()
+  return !isLight ? '#fff' : '#000'
 }
 
 export function useTextColorOnPrimary() {

@@ -296,7 +296,7 @@ PODS:
     - React-Core (= 0.63.2)
     - React-cxxreact (= 0.63.2)
     - React-jsi (= 0.63.2)
-  - RNLocalize (1.4.2):
+  - RNLocalize (2.0.1):
     - React-Core
   - RNVectorIcons (7.0.0):
     - React
@@ -465,11 +465,11 @@ SPEC CHECKSUMS:
   React-RCTText: 1b6773e776e4b33f90468c20fe3b16ca3e224bb8
   React-RCTVibration: 4d2e726957f4087449739b595f107c0d4b6c2d2d
   ReactCommon: a0a1edbebcac5e91338371b72ffc66aa822792ce
-  RNLocalize: 452d4118e338dee1e5ca3fac4d5a11a4ab26a46a
+  RNLocalize: 41026b7c14878f1a1b381bc79f668f1fbf841adb
   RNVectorIcons: da6fe858f5a65d7bbc3379540a889b0b12aa5976
   Yoga: 7740b94929bbacbddda59bf115b5317e9a161598
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
 PODFILE CHECKSUM: 53e4f48bb461ee5c681e56f9585d69e13b985966
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.10.0

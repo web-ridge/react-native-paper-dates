@@ -51,7 +51,7 @@
     "@types/jest": "^26.0.0",
     "@types/react": "^16.9.19",
     "@types/react-dom": "^16.9.8",
-    "@types/react-native": "0.62.13",
+    "@types/react-native": "0.63.40",
     "@types/react-native-vector-icons": "^6.4.6",
     "color": "^3.1.2",
     "commitlint": "^8.3.5",
@@ -68,13 +68,13 @@
     "react-native": "0.63.2",
     "react-native-paper": "^4.5.0",
     "release-it": "^14.2.2",
-    "typescript": "^3.8.3"
+    "typescript": "^4.1.0"
   },
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
-    "react-native-vector-icons": "*",
-    "react-native-paper": "*"
+    "react-native-paper": "*",
+    "react-native-vector-icons": "*"
   },
   "jest": {
     "preset": "react-native",

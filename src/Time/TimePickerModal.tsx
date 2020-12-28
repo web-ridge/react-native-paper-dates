@@ -154,6 +154,7 @@ export function TimePickerModal({
                   onPress={() => setInputType(reverseInputTypes[inputType])}
                   size={24}
                   style={styles.inputTypeToggle}
+                  accessibilityLabel="toggle keyboard"
                 />
                 <View style={styles.fill} />
                 <Button onPress={onDismiss}>{cancelLabel}</Button>

@@ -17,6 +17,7 @@ import DatePickerModalContent, {
 } from './DatePickerModalContent'
 import { useMemo } from 'react'
 import Color from 'color'
+import { useHeaderColorIsLight } from '../utils'
 
 interface DatePickerModalProps {
   visible: boolean
@@ -59,6 +60,7 @@ export function DatePickerModal(
       default: 'slide',
     })
 
+  const isLight = useHeaderColorIsLight()
   const statusBarColor = useMemo<string>(
     () => Color(theme.colors.primary).darken(0.2).hex(),
     [theme]
@@ -96,7 +98,10 @@ export function DatePickerModal(
             ]}
           >
             {disableStatusBar ? null : (
-              <StatusBar translucent={true} barStyle={'light-content'} />
+              <StatusBar
+                translucent={true}
+                barStyle={isLight ? 'dark-content' : 'light-content'}
+              />
             )}
             {disableStatusBarPadding ? null : (
               <View

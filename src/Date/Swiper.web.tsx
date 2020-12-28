@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
-// import { VariableSizeList as List } from 'react-window'
 
 import { UIEvent, useCallback, useState } from 'react'
 import { getIndexFromOffset, getMonthHeight, getMonthsOffset } from './Month'
