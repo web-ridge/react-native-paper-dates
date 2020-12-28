@@ -1,16 +1,22 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
-import { VariableSizeList as List } from 'react-window'
+// import { VariableSizeList as List } from 'react-window'
 
-import { useCallback, useState } from 'react'
-import { getMonthHeight, getMonthsOffset } from './Month'
-import { dayNamesHeight } from './DayNames'
-import { allMonthsArray, startAtIndex } from './dateUtils'
+import { UIEvent, useCallback, useState } from 'react'
+import { getIndexFromOffset, getMonthHeight, getMonthsOffset } from './Month'
+
+import {
+  beginOffset,
+  estimatedMonthHeight,
+  startAtIndex,
+  totalMonths,
+} from './dateUtils'
+import { useLatest } from '../utils'
 
 type RenderProps = {
   index: number
-  onNext: () => any
-  onPrev: () => any
+  onNext?: () => any
+  onPrev?: () => any
 }
 
 function Swiper({
@@ -25,7 +31,6 @@ function Swiper({
   renderFooter?: (renderProps: RenderProps) => any
 }) {
   const isHorizontal = scrollMode === 'horizontal'
-  const swiper = React.useRef<List | null>(null)
 
   const [index, setIndex] = useState(startAtIndex)
 
@@ -43,14 +48,6 @@ function Swiper({
     onNext,
   }
 
-  const Row = (rowProps: any) => (
-    <View style={rowProps.style}>
-      {renderItem({ index: rowProps.index, onPrev, onNext })}
-    </View>
-  )
-
-  const getItemSize = (idx: number): number => getMonthHeight(scrollMode, idx)
-
   return (
     <>
       {renderHeader && renderHeader(renderProps)}
@@ -60,27 +57,108 @@ function Swiper({
         </View>
       ) : (
         <AutoSizer>
-          {({ height, width }) => (
-            <List
-              ref={swiper}
-              height={height}
-              itemCount={allMonthsArray.length}
-              //@ts-ignore
-              itemSize={getItemSize}
-              layout={scrollMode}
+          {({ width, height }) => (
+            <VerticalScroller
               width={width}
-              initialScrollOffset={
-                getMonthsOffset(scrollMode, index) - dayNamesHeight
-              }
-            >
-              {Row}
-            </List>
+              height={height}
+              initialIndex={startAtIndex}
+              estimatedHeight={estimatedMonthHeight}
+              renderItem={renderItem}
+            />
           )}
         </AutoSizer>
       )}
-
       {renderFooter && renderFooter(renderProps)}
     </>
+  )
+}
+
+const visibleArray = (i: number) => [i - 2, i - 1, i, i + 1, i + 2]
+
+function VerticalScroller({
+  width,
+  height,
+  initialIndex,
+  estimatedHeight,
+  renderItem,
+}: {
+  renderItem: (renderProps: RenderProps) => any
+  width: number
+  height: number
+  initialIndex: number
+  estimatedHeight: number
+}) {
+  const idx = React.useRef<number>(initialIndex)
+  const [visibleIndexes, setVisibleIndexes] = React.useState<number[]>(
+    visibleArray(initialIndex)
+  )
+  const parentRef = React.useRef<HTMLDivElement | null>(null)
+
+  useIsomorphicLayoutEffect(() => {
+    const element = parentRef.current
+    if (!element) {
+      return
+    }
+    element.scrollTo({ top: beginOffset })
+  }, [parentRef, beginOffset])
+
+  const setVisibleIndexesThrottled = useDebouncedCallback(setVisibleIndexes, 10)
+
+  const onScroll = React.useCallback(
+    (e: UIEvent) => {
+      const top = e.currentTarget.scrollTop
+
+      if (top === 0) {
+        return
+      }
+
+      const offset = top - beginOffset
+      const index = getIndexFromOffset(offset)
+
+      if (idx.current !== index) {
+        idx.current = index
+        setVisibleIndexesThrottled(visibleArray(index))
+      }
+    },
+    [setVisibleIndexesThrottled]
+  )
+
+  return (
+    <div
+      ref={parentRef}
+      style={{
+        height,
+        width,
+        overflow: 'auto',
+      }}
+      onScroll={onScroll}
+    >
+      <div
+        style={{
+          height: estimatedHeight * totalMonths,
+          position: 'relative',
+        }}
+      >
+        {[0, 1, 2, 3, 4].map((vi) => (
+          <div
+            key={vi}
+            style={{
+              transform: `translateY(${getMonthsOffset(
+                'vertical',
+                visibleIndexes[vi]
+              )}px)`,
+              left: 0,
+              right: 0,
+              position: 'absolute',
+              height: getMonthHeight('vertical', visibleIndexes[vi]),
+              // transform: `translateY(${getMonthsOffset('vertical', vi)}px)`,
+            }}
+          >
+            {renderItem({ index: visibleIndexes[vi] })}
+          </div>
+        ))}
+      </div>
+    </div>
   )
 }
 
@@ -121,5 +199,35 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 })
+
+export function useDebouncedCallback(callback: any, ms: number): any {
+  const mounted = React.useRef<boolean>(true)
+  const latest = useLatest(callback)
+  const timerId = React.useRef<NodeJS.Timeout | null>(null)
+
+  React.useEffect(() => {
+    return () => {
+      mounted.current = false
+    }
+  }, [mounted])
+
+  return React.useCallback(
+    (args: any) => {
+      if (timerId.current) {
+        clearTimeout(timerId.current)
+      }
+      timerId.current = setTimeout(() => {
+        if (mounted.current) {
+          latest.current(args)
+        }
+      }, ms)
+    },
+    [ms, mounted, timerId, latest]
+  )
+}
+
+const useIsomorphicLayoutEffect =
+  // @ts-ignore
+  window !== 'undefined' ? React.useLayoutEffect : React.useEffect
 
 export default React.memo(Swiper)

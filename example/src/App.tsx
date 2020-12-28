@@ -20,11 +20,13 @@ import {
   overlay,
   Paragraph,
 } from 'react-native-paper';
+
 import {
   DatePickerModal,
   DatePickerModalContent,
   TimePickerModal,
-} from '../../src';
+  // @ts-ignore
+} from 'react-native-paper-dates';
 import { addMonths } from '../../src/Date/dateUtils';
 
 const baseDate = new Date();
@@ -94,9 +96,9 @@ function App({
   );
 
   const onChangeExcludeRange = React.useCallback(
-    ({ excludedDates }: { excludedDates: Date[] }) => {
+    (args: { excludedDates: Date[] }) => {
       setRangeExcludeOpen(false);
-      setExcludedDates(excludedDates);
+      setExcludedDates(args.excludedDates);
     },
     [setRangeExcludeOpen, setExcludedDates]
   );

@@ -4,10 +4,7 @@ export function showWeekDay(
   dayIndex: number,
   disableWeekDays?: DisableWeekDaysType
 ): boolean {
-  if (disableWeekDays && disableWeekDays.some((di) => di === dayIndex)) {
-    return false
-  }
-  return true
+  return !(disableWeekDays && disableWeekDays.some((di) => di === dayIndex))
 }
 
 export function dateToUnix(d: Date): number {
@@ -64,15 +61,15 @@ export function getFirstDayOfMonth({
   return new Date(year, month, 1).getDay()
 }
 
-export function getLastDayOfMonth({
-  year,
-  month,
-}: {
-  year: number
-  month: number
-}): number {
-  return new Date(year, month, getDaysInMonth({ year, month })).getDay()
-}
+// export function getLastDayOfMonth({
+//   year,
+//   month,
+// }: {
+//   year: number
+//   month: number
+// }): number {
+//   return new Date(year, month, getDaysInMonth({ year, month })).getDay()
+// }
 
 export function areDatesOnSameDay(a: Date, b?: Date | null | undefined) {
   if (!b) {
@@ -110,14 +107,22 @@ export function isLeapYear({ year }: { year: number }) {
 }
 
 export const daySize = 46
-
-export const startAtIndex = 1000
+export const estimatedMonthHeight = 360
+export const startAtIndex = 2000
 export const totalMonths = startAtIndex * 2
-export const allMonthsArray = new Array(totalMonths)
-export const gridCounts = allMonthsArray.fill(null).map((_, index) => {
+export const beginOffset = estimatedMonthHeight * startAtIndex
+export const gridCounts = new Array<number | undefined>(totalMonths)
+
+export function getGridCount(index: number) {
+  const cHeight = gridCounts[index]
+  if (cHeight) {
+    return cHeight
+  }
   const monthDate = addMonths(new Date(), getRealIndex(index))
-  return getGridCountForDate(monthDate)
-})
+  const h = getGridCountForDate(monthDate)
+  gridCounts[index] = h
+  return h
+}
 
 export function getGridCountForDate(date: Date) {
   const year = date.getFullYear()

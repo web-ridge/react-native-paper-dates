@@ -8,7 +8,7 @@ import {
   VirtualizedList,
 } from 'react-native'
 import { getMonthHeight, getMonthsOffset } from './Month'
-import { allMonthsArray, daySize, startAtIndex } from './dateUtils'
+import { gridCounts, startAtIndex } from './dateUtils'
 
 const styles = StyleSheet.create({
   viewPager: {
@@ -49,9 +49,6 @@ function Swiper({
       }
     }
 
-    const length = getMonthHeight(scrollMode, index)
-    const offset = getMonthsOffset(scrollMode, index)
-
     return isHorizontal
       ? {
           length: width,
@@ -59,8 +56,8 @@ function Swiper({
           index,
         }
       : {
-          length: length,
-          offset: offset,
+          length: getMonthHeight(scrollMode, index),
+          offset: getMonthsOffset(scrollMode, index),
           index,
         }
   }
@@ -136,8 +133,8 @@ function Swiper({
 
   React.useEffect(() => {
     if (swiper.current) {
-      swiper.current.scrollToOffset({
-        offset: getMonthsOffset(scrollMode, startAtIndex) - daySize,
+      swiper.current.scrollToIndex({
+        index: startAtIndex,
         animated: false,
       })
     }
@@ -153,7 +150,7 @@ function Swiper({
         initialNumToRender={3}
         maxToRenderPerBatch={2}
         getItemCount={getItemCount}
-        data={allMonthsArray}
+        data={gridCounts}
         initialScrollIndex={startAtIndex}
         keyExtractor={keyExtractor}
         getItemLayout={getItemLayout}

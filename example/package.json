@@ -11,7 +11,7 @@
     "web:build": "react-app-rewired build",
     "web:test": "react-app-rewired test",
     "web:eject": "react-app-rewired eject",
-    "web": "npm link ../node_modules/react && react-app-rewired start"
+    "web": "npm link ../node_modules/react --legacy-peer-deps --force && react-app-rewired start"
   },
   "dependencies": {
     "@formatjs/intl-datetimeformat": "^2.6.6",
@@ -22,13 +22,10 @@
     "@formatjs/intl-numberformat": "^5.6.1",
     "@formatjs/intl-pluralrules": "^3.4.6",
     "@formatjs/intl-relativetimeformat": "^7.2.6",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
     "react-native": "0.63.2",
-    "react-native-localize": "^1.4.1",
+    "react-native-localize": "^2.0.1",
     "react-native-vector-icons": "https://github.com/RichardLindhout/react-native-vector-icons",
     "react-native-web": "^0.14.8",
     "react-scripts": "3.4.3"

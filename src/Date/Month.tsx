@@ -11,9 +11,13 @@ import {
   getDaysInMonth,
   getFirstDayOfMonth,
   getRealIndex,
-  gridCounts,
+  getGridCount,
   isDateBetween,
+  gridCounts,
   showWeekDay,
+  startAtIndex,
+  beginOffset,
+  estimatedMonthHeight,
 } from './dateUtils'
 import { getCalendarHeaderHeight } from './CalendarHeader'
 import { ModeType } from './Calendar'
@@ -55,7 +59,7 @@ interface MonthExcludeInRangeProps extends BaseMonthProps {
 }
 
 const monthGrid = (index: number) => {
-  return Array(gridCounts[index])
+  return Array(getGridCount(index))
     .fill(null)
     .map((_, weekGrid) => {
       const days = Array(7).fill(null)
@@ -63,19 +67,70 @@ const monthGrid = (index: number) => {
     })
 }
 
+function getIndexCount(index: number): number {
+  if (index > startAtIndex) {
+    return index - startAtIndex
+  }
+
+  return -(startAtIndex - index)
+}
+
+function weeksOffset(index: number): number {
+  if (index === startAtIndex) {
+    return 0
+  }
+  let off = 0
+  if (index > startAtIndex) {
+    for (let i = 0; i < index - startAtIndex; i++) {
+      const cIndex = startAtIndex + i
+
+      off += gridCounts[cIndex] || getGridCount(cIndex)
+    }
+  } else {
+    for (let i = 0; i < startAtIndex - index; i++) {
+      const cIndex = startAtIndex - i
+
+      off -= gridCounts[cIndex] || getGridCount(cIndex)
+    }
+  }
+  console.log('offsetBefore', getRealIndex(index), off)
+  return off
+}
+
+export function getIndexFromOffset(offset: number): number {
+  // 0 = 1
+  let estimatedIndex = startAtIndex + Math.floor(offset / estimatedMonthHeight)
+  console.log({ estimatedIndex })
+
+  const realOffset = getMonthsOffset('vertical', estimatedIndex)
+
+  const difference = (realOffset - beginOffset - offset) / estimatedMonthHeight
+
+  if (difference >= 1 || difference <= -1) {
+    estimatedIndex -= Math.floor(difference)
+  }
+
+  return estimatedIndex
+}
+
 export function getMonthsOffset(
   scrollMode: 'horizontal' | 'vertical',
   index: number
 ) {
+  const count = getIndexCount(index)
+
+  const ob = weeksOffset(index)
+
   const calendarHeight = getCalendarHeaderHeight(scrollMode)
-  const monthsHeight =
-    weekSize * gridCounts.slice(0, index).reduce((a, b) => a + b, 0)
+  const monthsHeight = weekSize * ob
+
   const extraHeight =
     scrollMode === 'horizontal' ? monthHeaderSingleHeight : montHeaderHeight
 
-  const c = index * calendarHeight + monthsHeight + index * extraHeight
+  const c = monthsHeight + count * (calendarHeight + extraHeight)
+  const off = (c || 0) + beginOffset
 
-  return c || 0
+  return off
 }
 
 export function getMonthHeight(
@@ -83,9 +138,9 @@ export function getMonthHeight(
   index: number
 ): number {
   const calendarHeight = getCalendarHeaderHeight(scrollMode)
-  const gridCount = gridCounts[index]
+  const gc = getGridCount(index)
 
-  const currentMonthHeight = weekSize * gridCount
+  const currentMonthHeight = weekSize * gc
   const extraHeight =
     scrollMode === 'horizontal' ? monthHeaderSingleHeight : montHeaderHeight
   const c = calendarHeight + currentMonthHeight + extraHeight
@@ -114,15 +169,15 @@ function Month({
   const realIndex = getRealIndex(index)
   const isHorizontal = scrollMode === 'horizontal'
 
-  const monthDate = addMonths(new Date(), realIndex)
-  const year = monthDate.getFullYear()
-  const month = monthDate.getMonth()
-
-  const monthFormatter = new Intl.DateTimeFormat(locale, {
-    month: 'long',
-  })
-
-  const monthName = monthFormatter.format(monthDate)
+  const { monthName, month, year } = React.useMemo(() => {
+    const md = addMonths(new Date(), realIndex)
+    const y = md.getFullYear()
+    const m = md.getMonth()
+    const formatter = new Intl.DateTimeFormat(locale, {
+      month: 'long',
+    })
+    return { monthName: formatter.format(md), month: m, year: y }
+  }, [realIndex, locale])
 
   const grid = React.useMemo(() => {
     const today = new Date()

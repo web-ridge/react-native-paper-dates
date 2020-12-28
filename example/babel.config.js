@@ -1,6 +1,7 @@
 const path = require('path');
 const pak = require('../package.json');
 
+console.log({ pak });
 module.exports = {
   presets: ['module:metro-react-native-babel-preset'],
   plugins: [
