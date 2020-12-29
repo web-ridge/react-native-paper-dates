@@ -330,7 +330,7 @@ function App({
       />
 
       <TimePickerModal
-        // locale={'en'} optional, default: automatic
+        locale={'nl'} //optional, default: automatic
         visible={timeOpen}
         onDismiss={onDismissTime}
         onConfirm={onConfirmTime}

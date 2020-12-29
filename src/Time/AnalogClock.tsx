@@ -1,7 +1,6 @@
 import Color from 'color'
 import {
   GestureResponderEvent,
-  LayoutChangeEvent,
   PanResponder,
   StyleSheet,
   View,
@@ -18,7 +17,7 @@ import {
   PossibleClockTypes,
 } from './timeUtils'
 import * as React from 'react'
-import { useCallback } from 'react'
+
 import { useLatest } from '../utils'
 import AnalogClockHours from './AnalogClockHours'
 
@@ -55,8 +54,6 @@ function AnalogClock({
   const shortPointer = (hours === 0 || hours > 12) && is24Hour
 
   const clockRef = React.useRef<View | null>(null)
-  const elementX = React.useRef<number>(0)
-  const elementY = React.useRef<number>(0)
 
   // Hooks are nice, sometimes... :-)..
   // We need the latest values, since the onPointerMove uses a closure to the function
@@ -68,10 +65,11 @@ function AnalogClock({
 
   const onPointerMove = React.useCallback(
     (e: GestureResponderEvent, final: boolean) => {
-      let x = e.nativeEvent.pageX - elementX.current
-      let y = e.nativeEvent.pageY - elementY.current
+      let x = e.nativeEvent.locationX
+      let y = e.nativeEvent.locationY
 
       let angle = getAngle(x, y, circleSize)
+
       if (focusedRef.current === clockTypes.hours) {
         let hours24 = is24HourRef.current
         let previousHourType = getHourType(hoursRef.current)
@@ -107,15 +105,7 @@ function AnalogClock({
         }
       }
     },
-    [
-      focusedRef,
-      is24HourRef,
-      hoursRef,
-      onChangeRef,
-      minutesRef,
-      elementX,
-      elementY,
-    ]
+    [focusedRef, is24HourRef, hoursRef, onChangeRef, minutesRef]
   )
 
   const panResponder = React.useRef(
@@ -133,27 +123,12 @@ function AnalogClock({
     })
   ).current
 
-  const onLayout = useCallback(
-    (_: LayoutChangeEvent) => {
-      if (!clockRef.current) {
-        return
-      }
-
-      clockRef.current.measureInWindow((x, y) => {
-        elementX.current = x
-        elementY.current = y
-      })
-    },
-    [elementX, elementY]
-  )
-
   const dynamicSize = focused === clockTypes.hours && shortPointer ? 33 : 0
   const pointerNumber = focused === clockTypes.hours ? hours : minutes
   const degreesPerNumber = focused === clockTypes.hours ? 30 : 6
   return (
     <View
       ref={clockRef}
-      onLayout={onLayout}
       {...panResponder.panHandlers}
       style={[
         styles.clock,
