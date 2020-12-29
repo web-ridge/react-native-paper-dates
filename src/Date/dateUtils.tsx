@@ -96,10 +96,7 @@ export function isDateBetween(
   if (!startDate || !endDate) {
     return false
   }
-  if (date <= endDate && date >= startDate) {
-    return true
-  }
-  return false
+  return date <= endDate && date >= startDate
 }
 
 export function isLeapYear({ year }: { year: number }) {
@@ -108,7 +105,7 @@ export function isLeapYear({ year }: { year: number }) {
 
 export const daySize = 46
 export const estimatedMonthHeight = 360
-export const startAtIndex = 2000
+export const startAtIndex = 1200
 export const totalMonths = startAtIndex * 2
 export const beginOffset = estimatedMonthHeight * startAtIndex
 export const gridCounts = new Array<number | undefined>(totalMonths)
@@ -134,4 +131,22 @@ export function getGridCountForDate(date: Date) {
 
 export function getRealIndex(index: number) {
   return index - startAtIndex
+}
+
+export function getInitialIndex(date: Date) {
+  if (!date) {
+    return startAtIndex
+  }
+
+  const today = new Date()
+  const months = differenceInMonths(today, date)
+
+  return startAtIndex + months
+}
+
+export function differenceInMonths(firstDate: Date, secondDate: Date) {
+  let diffMonths = (secondDate.getFullYear() - firstDate.getFullYear()) * 12
+  diffMonths -= firstDate.getMonth()
+  diffMonths += secondDate.getMonth()
+  return diffMonths
 }

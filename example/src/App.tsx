@@ -7,6 +7,7 @@ import {
   Linking,
   Image,
   Animated,
+  // I18nManager,
 } from 'react-native';
 import {
   Title,
@@ -44,6 +45,7 @@ function App({
   onToggleDarkMode: () => any;
   dark: boolean;
 }) {
+  // I18nManager.forceRTL(true);
   const theme = useTheme();
   const dateFormatter = new Intl.DateTimeFormat(undefined, {
     day: 'numeric',
@@ -257,26 +259,30 @@ function App({
           </View>
           <Enter />
         </Animated.View>
-        <View style={styles.content}>
-          <Title>Inside page</Title>
-        </View>
-        <Animated.View
-          style={[
-            styles.content,
-            styles.contentShadow,
-            styles.contentInline,
-            { backgroundColor },
-          ]}
-        >
-          <DatePickerModalContent
-            // locale={'en'} optional, default: automatic
-            mode="range"
-            onDismiss={onDismissRange}
-            startDate={range.startDate}
-            endDate={range.endDate}
-            onConfirm={onChangeRange}
-          />
-        </Animated.View>
+        {Platform.OS === 'web' ? (
+          <>
+            <View style={styles.content}>
+              <Title>Inside page</Title>
+            </View>
+            <Animated.View
+              style={[
+                styles.content,
+                styles.contentShadow,
+                styles.contentInline,
+                { backgroundColor },
+              ]}
+            >
+              <DatePickerModalContent
+                // locale={'en'} optional, default: automatic
+                mode="range"
+                onDismiss={onDismissRange}
+                startDate={range.startDate}
+                endDate={range.endDate}
+                onConfirm={onChangeRange}
+              />
+            </Animated.View>
+          </>
+        ) : null}
         <Enter />
         <Enter />
         <Enter />
@@ -316,7 +322,7 @@ function App({
         mode="single"
         visible={singleOpen}
         onDismiss={onDismissSingle}
-        date={undefined}
+        date={date}
         onConfirm={onChangeSingle}
         // saveLabel="Save" // optional
         // label="Select date" // optional

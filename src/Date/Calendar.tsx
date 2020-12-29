@@ -4,7 +4,12 @@ import { StyleSheet, View } from 'react-native'
 import Swiper from './Swiper'
 
 import Month from './Month'
-import { areDatesOnSameDay, dateToUnix, DisableWeekDaysType } from './dateUtils'
+import {
+  areDatesOnSameDay,
+  dateToUnix,
+  DisableWeekDaysType,
+  getInitialIndex,
+} from './dateUtils'
 
 import CalendarHeader from './CalendarHeader'
 import { useCallback, useMemo } from 'react'
@@ -146,6 +151,7 @@ function Calendar(
   return (
     <View style={styles.root}>
       <Swiper
+        initialIndex={getInitialIndex(startDate || date)}
         selectedYear={selectedYear}
         scrollMode={scrollMode}
         renderItem={({ index }) => (
@@ -158,7 +164,6 @@ function Calendar(
             endDate={endDate}
             date={date}
             onPressYear={onPressYear}
-            selectedYear={selectedYear}
             selectingYear={selectingYear}
             onPressDate={onPressDate}
             scrollMode={scrollMode}
