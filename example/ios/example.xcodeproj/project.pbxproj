@@ -194,7 +194,6 @@
 				088111A2EFDE239408F24072 /* Pods-example-tvOSTests.debug.xcconfig */,
 				A4D9A97DF7C10CCBDCC91C0A /* Pods-example-tvOSTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};

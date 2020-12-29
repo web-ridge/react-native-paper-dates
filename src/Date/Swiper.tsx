@@ -11,6 +11,7 @@ import {
 import { beginOffset, estimatedMonthHeight, totalMonths } from './dateUtils'
 import { useLatest } from '../utils'
 import { RenderProps, SwiperProps, useYearChange } from './SwiperUtils'
+import AutoSizer from './AutoSizer'
 
 function Swiper({
   scrollMode,
@@ -107,12 +108,11 @@ function VerticalScroller({
     })
   }, [parentRef, idx])
 
-  const setVisibleIndexesThrottled = useDebouncedCallback(setVisibleIndexes, 10)
+  const setVisibleIndexesThrottled = useDebouncedCallback(setVisibleIndexes)
 
   const onScroll = React.useCallback(
     (e: React.UIEvent) => {
       const top = e.currentTarget.scrollTop
-
       if (top === 0) {
         return
       }
@@ -148,6 +148,7 @@ function VerticalScroller({
           <div
             key={vi}
             style={{
+              willChange: 'transform',
               transform: `translateY(${getVerticalMonthsOffset(
                 visibleIndexes[vi]
               )}px)`,
@@ -172,67 +173,38 @@ function VerticalScroller({
 
 const empty = () => null
 
-type WidthAndHeight = {
-  width: number
-  height: number
-}
-
-function AutoSizer({
-  children,
-}: {
-  children: ({ width, height }: WidthAndHeight) => any
-}) {
-  const [layout, setLayout] = React.useState<WidthAndHeight | null>(null)
-  const onLayout = React.useCallback(
-    (event: any) => {
-      const nl = event.nativeEvent.layout
-
-      // https://github.com/necolas/react-native-web/issues/1704
-      if (!layout || layout.width !== nl.width || layout.height !== nl.height) {
-        setLayout({ width: nl.width, height: nl.height })
-      }
-    },
-    [layout, setLayout]
-  )
-  return (
-    <View style={styles.autoSizer} onLayout={onLayout}>
-      {layout ? children(layout) : null}
-    </View>
-  )
-}
-
 const styles = StyleSheet.create({
   flex1: {
     flex: 1,
   },
-  autoSizer: {
-    flex: 1,
-  },
 })
 
-export function useDebouncedCallback(callback: any, ms: number): any {
+export function useDebouncedCallback(callback: any): any {
   const mounted = React.useRef<boolean>(true)
   const latest = useLatest(callback)
-  const timerId = React.useRef<NodeJS.Timeout | null>(null)
+  const timerId = React.useRef<any>(null)
 
   React.useEffect(() => {
     return () => {
       mounted.current = false
+      if (timerId.current) {
+        window.cancelAnimationFrame(timerId.current)
+      }
     }
-  }, [mounted])
+  }, [mounted, timerId])
 
   return React.useCallback(
     (args: any) => {
       if (timerId.current) {
-        clearTimeout(timerId.current)
+        window.cancelAnimationFrame(timerId.current)
       }
-      timerId.current = setTimeout(() => {
+      timerId.current = window.requestAnimationFrame(function () {
         if (mounted.current) {
           latest.current(args)
         }
-      }, ms)
+      })
     },
-    [ms, mounted, timerId, latest]
+    [mounted, timerId, latest]
   )
 }
 

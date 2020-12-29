@@ -67,62 +67,72 @@ export function DatePickerModal(
   )
 
   return (
-    <Modal
-      animationType={animationTypeCalculated}
-      transparent={true}
-      visible={visible}
-      onRequestClose={rest.onDismiss}
-      presentationStyle="overFullScreen"
-      //@ts-ignore
-      statusBarTranslucent={true}
-    >
-      <>
-        <TouchableWithoutFeedback onPress={rest.onDismiss}>
-          <View
-            style={[
-              StyleSheet.absoluteFill,
-              styles.modalBackground,
-              { backgroundColor: theme.colors.backdrop },
-            ]}
-          />
-        </TouchableWithoutFeedback>
-        <View
-          style={[StyleSheet.absoluteFill, styles.modalRoot]}
-          pointerEvents="box-none"
-        >
-          <View
-            style={[
-              styles.modalContent,
-              { backgroundColor: theme.colors.surface },
-              dimensions.width > 650 ? styles.modalContentBig : null,
-            ]}
-          >
-            {disableStatusBar ? null : (
-              <StatusBar
-                translucent={true}
-                barStyle={isLight ? 'dark-content' : 'light-content'}
-              />
-            )}
-            {disableStatusBarPadding ? null : (
-              <View
-                style={[
-                  {
-                    height: StatusBar.currentHeight,
-                    backgroundColor: statusBarColor,
-                  },
-                ]}
-              />
-            )}
-            <DatePickerModalContent
-              {...rest}
-              disableSafeTop={disableStatusBar}
+    <View style={[StyleSheet.absoluteFill]} pointerEvents="box-none">
+      <Modal
+        animationType={animationTypeCalculated}
+        transparent={true}
+        visible={visible}
+        onRequestClose={rest.onDismiss}
+        presentationStyle="overFullScreen"
+        supportedOrientations={supportedOrientations}
+        //@ts-ignore
+        statusBarTranslucent={true}
+      >
+        <>
+          <TouchableWithoutFeedback onPress={rest.onDismiss}>
+            <View
+              style={[
+                StyleSheet.absoluteFill,
+                styles.modalBackground,
+                { backgroundColor: theme.colors.backdrop },
+              ]}
             />
+          </TouchableWithoutFeedback>
+          <View
+            style={[StyleSheet.absoluteFill, styles.modalRoot]}
+            pointerEvents="box-none"
+          >
+            <View
+              style={[
+                styles.modalContent,
+                { backgroundColor: theme.colors.surface },
+                dimensions.width > 650 ? styles.modalContentBig : null,
+              ]}
+            >
+              {disableStatusBar ? null : (
+                <StatusBar
+                  translucent={true}
+                  barStyle={isLight ? 'dark-content' : 'light-content'}
+                />
+              )}
+              {disableStatusBarPadding ? null : (
+                <View
+                  style={[
+                    {
+                      height: StatusBar.currentHeight,
+                      backgroundColor: statusBarColor,
+                    },
+                  ]}
+                />
+              )}
+              <DatePickerModalContent
+                {...rest}
+                disableSafeTop={disableStatusBar}
+              />
+            </View>
           </View>
-        </View>
-      </>
-    </Modal>
+        </>
+      </Modal>
+    </View>
   )
 }
+const supportedOrientations: any = [
+  'portrait',
+  'portrait-upside-down',
+  'landscape',
+  'landscape-left',
+  'landscape-right',
+]
 
 const styles = StyleSheet.create({
   modalRoot: {

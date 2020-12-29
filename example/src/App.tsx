@@ -7,6 +7,7 @@ import {
   Linking,
   Image,
   Animated,
+  StatusBar,
   // I18nManager,
 } from 'react-native';
 import {
@@ -20,6 +21,7 @@ import {
   useTheme,
   overlay,
   Paragraph,
+  Portal,
 } from 'react-native-paper';
 
 import {
@@ -72,7 +74,7 @@ function App({
   const [rangeExcludeOpen, setRangeExcludeOpen] = React.useState(false);
 
   const [singleOpen, setSingleOpen] = React.useState(false);
-
+  const [customOpen, setCustomOpen] = React.useState(false);
   const onDismissTime = React.useCallback(() => {
     setTimeOpen(false);
   }, [setTimeOpen]);
@@ -88,6 +90,10 @@ function App({
   const onDismissSingle = React.useCallback(() => {
     setSingleOpen(false);
   }, [setSingleOpen]);
+
+  const onDismissCustom = React.useCallback(() => {
+    setCustomOpen(false);
+  }, [setCustomOpen]);
 
   const onChangeRange = React.useCallback(
     ({ startDate, endDate }) => {
@@ -133,6 +139,10 @@ function App({
 
   return (
     <>
+      <StatusBar
+        translucent={true}
+        barStyle={dark ? 'dark-content' : 'light-content'}
+      />
       <ScrollView
         style={[
           styles.root,
@@ -256,37 +266,38 @@ function App({
             >
               Pick time
             </Button>
+            <View style={styles.buttonSeparator} />
+            <Button
+              onPress={() => setCustomOpen(true)}
+              uppercase={false}
+              mode="outlined"
+              style={styles.pickButton}
+            >
+              Custom modal
+            </Button>
           </View>
           <Enter />
         </Animated.View>
-        {Platform.OS === 'web' ? (
-          <>
-            <View style={styles.content}>
-              <Title>Inside page</Title>
-            </View>
-            <Animated.View
-              style={[
-                styles.content,
-                styles.contentShadow,
-                styles.contentInline,
-                { backgroundColor },
-              ]}
-            >
-              <DatePickerModalContent
-                // locale={'en'} optional, default: automatic
-                mode="range"
-                onDismiss={onDismissRange}
-                startDate={range.startDate}
-                endDate={range.endDate}
-                onConfirm={onChangeRange}
-              />
-            </Animated.View>
-          </>
-        ) : null}
+
         <Enter />
         <Enter />
         <Enter />
       </ScrollView>
+      <Portal>
+        {customOpen ? (
+          <View style={[StyleSheet.absoluteFill, styles.customModal]}>
+            <DatePickerModalContent
+              // locale={'en'} optional, default: automatic
+              mode="range"
+              onDismiss={onDismissCustom}
+              startDate={range.startDate}
+              endDate={range.endDate}
+              onConfirm={onChangeRange}
+            />
+          </View>
+        ) : null}
+      </Portal>
+
       <DatePickerModal
         // locale={'en'} optional, default: automatic
         mode="range"
@@ -466,4 +477,23 @@ const styles = StyleSheet.create({
   enter: { height: 12 },
   label: { width: 100, fontSize: 16 },
   row: { paddingTop: 12, paddingBottom: 12, flexDirection: 'row' },
+  customModal: {
+    top: 12,
+    left: 12,
+    right: 12,
+    bottom: 12,
+    // borderTopRightRadius: 20,
+    // borderBottomRightRadius: 20,
+    backgroundColor: '#fff',
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+  },
 });

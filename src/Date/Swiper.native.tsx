@@ -4,7 +4,6 @@ import {
   NativeSyntheticEvent,
   ScrollView,
   StyleSheet,
-  useWindowDimensions,
   View,
 } from 'react-native'
 import {
@@ -17,6 +16,7 @@ import {
 
 import { SwiperProps, useYearChange } from './SwiperUtils'
 import { beginOffset, estimatedMonthHeight, totalMonths } from './dateUtils'
+import AutoSizer from './AutoSizer'
 
 const styles = StyleSheet.create({
   viewPager: {
@@ -25,19 +25,31 @@ const styles = StyleSheet.create({
 })
 const visibleArray = (i: number) => [i - 2, i - 1, i, i + 1, i + 2]
 
-function Swiper({
+function Swiper(props: SwiperProps) {
+  return (
+    <AutoSizer>
+      {({ width, height }) => (
+        <SwiperInner {...props} width={width} height={height} />
+      )}
+    </AutoSizer>
+  )
+}
+
+function SwiperInner({
   scrollMode,
   renderItem,
   renderHeader,
   renderFooter,
   selectedYear,
   initialIndex,
-}: SwiperProps) {
-  const [visibleIndexes, setVisibleIndexes] = React.useState<number[]>(
-    visibleArray(initialIndex)
-  )
+  width,
+  height,
+}: SwiperProps & { width: number; height: number }) {
+  const [visibleIndexes, setVisibleIndexes] = React.useState<
+    number[] | undefined
+  >()
   const isHorizontal = scrollMode === 'horizontal'
-  const { width, height } = useWindowDimensions()
+
   const idx = React.useRef<number>(initialIndex)
   const parentRef = React.useRef<ScrollView | null>(null)
 
@@ -143,32 +155,34 @@ function Swiper({
             position: 'relative',
           }}
         >
-          {[0, 1, 2, 3, 4].map((vi) => (
-            <View
-              key={vi}
-              style={{
-                top: isHorizontal
-                  ? 0
-                  : getVerticalMonthsOffset(visibleIndexes[vi]),
-                left: isHorizontal
-                  ? getHorizontalMonthOffset(visibleIndexes[vi], width)
-                  : 0,
-                right: isHorizontal ? undefined : 0,
-                bottom: isHorizontal ? 0 : undefined,
-                position: 'absolute',
-                width: isHorizontal ? width : undefined,
-                height: isHorizontal
-                  ? undefined
-                  : getMonthHeight(scrollMode, visibleIndexes[vi]),
-              }}
-            >
-              {renderItem({
-                index: visibleIndexes[vi],
-                onPrev: onPrev,
-                onNext: onNext,
-              })}
-            </View>
-          ))}
+          {visibleIndexes
+            ? [0, 1, 2, 3, 4].map((vi) => (
+                <View
+                  key={vi}
+                  style={{
+                    top: isHorizontal
+                      ? 0
+                      : getVerticalMonthsOffset(visibleIndexes[vi]),
+                    left: isHorizontal
+                      ? getHorizontalMonthOffset(visibleIndexes[vi], width)
+                      : 0,
+                    right: isHorizontal ? undefined : 0,
+                    bottom: isHorizontal ? 0 : undefined,
+                    position: 'absolute',
+                    width: isHorizontal ? width : undefined,
+                    height: isHorizontal
+                      ? undefined
+                      : getMonthHeight(scrollMode, visibleIndexes[vi]),
+                  }}
+                >
+                  {renderItem({
+                    index: visibleIndexes[vi],
+                    onPrev: onPrev,
+                    onNext: onNext,
+                  })}
+                </View>
+              ))
+            : null}
         </View>
       </ScrollView>
       {renderFooter && renderFooter(renderProps)}
