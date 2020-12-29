@@ -14,7 +14,6 @@ export default function AutoSizer({
   const [layout, setLayout] = React.useState<WidthAndHeight | null>(null)
   const onLayout = React.useCallback(
     (event: any) => {
-      console.log('onLayout')
       const nl = event.nativeEvent.layout
 
       // https://github.com/necolas/react-native-web/issues/1704
