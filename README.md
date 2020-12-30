@@ -8,6 +8,7 @@
 <img src="https://badgen.net/npm/dy/react-native-paper-dates" />
 <img src="https://badgen.net/npm/types/react-native-paper-dates" />
 <img src="https://badgen.net/npm/license/react-native-paper-dates" />
+<img src="https://img.shields.io/badge/Runs%20with%20Expo-4630EB.svg?style=flat-square&logo=EXPO&labelColor=f3f3f3&logoColor=000" />
 </p>
 
 - Smooth and fast cross platform Material Design **date** picker and **time** picker for ([react-native-paper](https://callstack.github.io/react-native-paper/))
