@@ -209,7 +209,6 @@ export function useDebouncedCallback(callback: any): any {
 }
 
 const useIsomorphicLayoutEffect =
-  // @ts-ignore
-  window !== 'undefined' ? React.useLayoutEffect : React.useEffect
+  typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect
 
 export default React.memo(Swiper)

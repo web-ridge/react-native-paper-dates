@@ -45,12 +45,12 @@ function SwiperInner({
   width,
   height,
 }: SwiperProps & { width: number; height: number }) {
-  const [visibleIndexes, setVisibleIndexes] = React.useState<
-    number[] | undefined
-  >()
+  const idx = React.useRef<number>(initialIndex)
+  const [visibleIndexes, setVisibleIndexes] = React.useState<number[]>(
+    visibleArray(initialIndex)
+  )
   const isHorizontal = scrollMode === 'horizontal'
 
-  const idx = React.useRef<number>(initialIndex)
   const parentRef = React.useRef<ScrollView | null>(null)
 
   const scrollTo = React.useCallback(
