@@ -251,13 +251,14 @@ function App({
             >
               Pick single date
             </Button>
+            <View style={styles.buttonSeparator} />
             <Button
               onPress={() => setMultiOpen(true)}
               uppercase={false}
               mode="outlined"
               style={styles.pickButton}
             >
-              Pick Multi date
+              Pick multiple dates
             </Button>
             <View style={styles.buttonSeparator} />
             <Button
