@@ -18,7 +18,7 @@ import Color from 'color'
 import { useTheme } from 'react-native-paper'
 import { useLatest } from '../utils'
 
-export type ModeType = 'single' | 'range' | 'excludeInRange'
+export type ModeType = 'single' | 'range' | 'excludeInRange' | 'multi'
 
 export type ScrollModeType = 'horizontal' | 'vertical'
 
@@ -37,6 +37,8 @@ export type RangeChange = (params: {
 }) => any
 
 export type SingleChange = (params: { date: CalendarDate }) => any
+
+export type MultiChange = (params: { dates: CalendarDate[] }) => any
 
 export interface CalendarSingleProps extends BaseCalendarProps {
   mode: 'single'
@@ -59,8 +61,18 @@ export interface CalendarExcludeInRangeProps extends BaseCalendarProps {
   onChange: ExcludeInRangeChange
 }
 
+export interface CalendarMultiProps extends BaseCalendarProps {
+  mode: 'multi'
+  dates?: CalendarDate[]
+  onChange: MultiChange
+}
+
 function Calendar(
-  props: CalendarSingleProps | CalendarRangeProps | CalendarExcludeInRangeProps
+  props:
+    | CalendarSingleProps
+    | CalendarRangeProps
+    | CalendarExcludeInRangeProps
+    | CalendarMultiProps
 ) {
   const {
     locale,
@@ -75,6 +87,8 @@ function Calendar(
     // @ts-ignore
     excludedDates,
     disableWeekDays,
+    // @ts-ignore
+    dates,
   } = props
 
   const theme = useTheme()
@@ -107,8 +121,9 @@ function Calendar(
   const excludedDatesRef = useLatest<Date[]>(excludedDates)
   const endDateRef = useLatest<CalendarDate>(endDate)
   const onChangeRef = useLatest<
-    RangeChange | SingleChange | ExcludeInRangeChange
+    RangeChange | SingleChange | ExcludeInRangeChange | MultiChange
   >(onChange)
+  const datesRef = useLatest<Date[]>(dates)
 
   const onPressDate = useCallback(
     (d: Date) => {
@@ -143,9 +158,21 @@ function Calendar(
         ;(onChangeRef.current as ExcludeInRangeChange)({
           excludedDates: newExcludedDates,
         })
+      } else if (mode === 'multi') {
+        datesRef.current = datesRef.current || []
+        const exists = datesRef.current?.some((ed) => areDatesOnSameDay(ed, d))
+
+        const newDates = exists
+          ? datesRef.current.filter((ed) => !areDatesOnSameDay(ed, d))
+          : [...datesRef.current, d]
+
+        newDates.sort((a, b) => a.getTime() - b.getTime())
+        ;(onChangeRef.current as MultiChange)({
+          dates: newDates,
+        })
       }
     },
-    [mode, onChangeRef, startDateRef, endDateRef, excludedDatesRef]
+    [mode, onChangeRef, startDateRef, endDateRef, excludedDatesRef, datesRef]
   )
 
   return (
