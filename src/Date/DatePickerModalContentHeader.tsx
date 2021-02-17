@@ -36,6 +36,9 @@ function getLabel(mode: ModeType, configuredLabel?: string) {
   if (mode === 'excludeInRange') {
     return 'Select excluded dates'
   }
+  if (mode === 'multi') {
+    return 'Select dates'
+  }
   return '...?'
 }
 
@@ -60,6 +63,9 @@ export default function DatePickerModalHeader(props: HeaderContentProps) {
           ) : null}
           {mode === 'excludeInRange' ? (
             <HeaderContentExcludeInRange {...props} color={color} />
+          ) : null}
+          {mode === 'multi' ? (
+            <HeaderContentMulti {...props} color={color} />
           ) : null}
         </View>
       </View>
@@ -95,6 +101,37 @@ export function HeaderContentSingle({
     <Text style={[styles.singleHeaderText, { color: dateColor }]}>
       {state.date ? formatter.format(state.date) : emptyLabel}
     </Text>
+  )
+}
+
+export function HeaderContentMulti({
+  state,
+  emptyLabel = ' ',
+  color,
+  locale,
+}: HeaderContentProps & { color: string }) {
+  const dateCount = state.dates?.length || 0
+  const lighterColor = Color(color).fade(0.5).rgb().toString()
+  const dateColor = dateCount ? color : lighterColor
+
+  const formatter = React.useMemo(() => {
+    return new Intl.DateTimeFormat(locale, {
+      month: 'short',
+      day: 'numeric',
+    })
+  }, [locale])
+
+  let label = emptyLabel
+  if (dateCount) {
+    if (dateCount <= 2) {
+      label = state.dates.map((date) => formatter.format(date)).join(', ')
+    } else {
+      label = formatter.format(state.dates[0]) + ` (+ ${dateCount - 1} more)`
+    }
+  }
+
+  return (
+    <Text style={[styles.singleHeaderText, { color: dateColor }]}>{label}</Text>
   )
 }
 
