@@ -28,7 +28,6 @@ import {
   DatePickerModal,
   DatePickerModalContent,
   TimePickerModal,
-  // @ts-ignore
 } from 'react-native-paper-dates';
 import { addMonths } from '../../src/Date/dateUtils';
 
