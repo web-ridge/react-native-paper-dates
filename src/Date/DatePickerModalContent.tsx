@@ -4,6 +4,7 @@ import Calendar, {
   BaseCalendarProps,
   CalendarDate,
   ExcludeInRangeChange,
+  MultiChange,
   RangeChange,
   SingleChange,
 } from './Calendar'
@@ -22,6 +23,7 @@ export type LocalState = {
   endDate: CalendarDate
   date: CalendarDate
   excludedDates: Date[]
+  dates: CalendarDate[]
 }
 
 interface DatePickerModalContentBaseProps {
@@ -51,6 +53,16 @@ export interface DatePickerModalContentSingleProps
   onConfirm: SingleChange
 }
 
+export interface DatePickerModalContentMultiProps
+  extends HeaderPickProps,
+    BaseCalendarProps,
+    DatePickerModalContentBaseProps {
+  mode: 'multi'
+  dates?: Date[] | null | undefined
+  onChange?: MultiChange
+  onConfirm: MultiChange
+}
+
 export interface DatePickerModalContentExcludeInRangeProps
   extends HeaderPickProps,
     BaseCalendarProps,
@@ -68,6 +80,7 @@ export function DatePickerModalContent(
     | DatePickerModalContentRangeProps
     | DatePickerModalContentSingleProps
     | DatePickerModalContentExcludeInRangeProps
+    | DatePickerModalContentMultiProps
 ) {
   const {
     mode,
@@ -87,6 +100,7 @@ export function DatePickerModalContent(
     startDate: anyProps.startDate,
     endDate: anyProps.endDate,
     excludedDates: anyProps.excludedDates,
+    dates: anyProps.dates,
   })
 
   // update local state if changed from outside or if modal is opened
@@ -96,12 +110,14 @@ export function DatePickerModalContent(
       startDate: anyProps.startDate,
       endDate: anyProps.endDate,
       excludedDates: anyProps.excludedDates,
+      dates: anyProps.dates,
     })
   }, [
     anyProps.date,
     anyProps.startDate,
     anyProps.endDate,
     anyProps.excludedDates,
+    anyProps.dates,
   ])
 
   const [collapsed, setCollapsed] = React.useState<boolean>(true)
@@ -127,6 +143,10 @@ export function DatePickerModalContent(
     } else if (mode === 'excludeInRange') {
       ;(onConfirm as DatePickerModalContentExcludeInRangeProps['onConfirm'])({
         excludedDates: state.excludedDates,
+      })
+    } else if (mode === 'multi') {
+      ;(onConfirm as DatePickerModalContentMultiProps['onConfirm'])({
+        dates: state.dates || [],
       })
     }
   }, [state, mode, onConfirm])
@@ -170,6 +190,7 @@ export function DatePickerModalContent(
             excludedDates={state.excludedDates}
             onChange={onInnerChange}
             disableWeekDays={disableWeekDays}
+            dates={state.dates}
           />
         }
         calendarEdit={
