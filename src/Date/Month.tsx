@@ -53,6 +53,11 @@ interface MonthSingleProps extends BaseMonthProps {
   date?: Date | null | undefined
 }
 
+interface MonthMultiProps extends BaseMonthProps {
+  mode: 'multi'
+  dates?: Date[] | null | undefined
+}
+
 interface MonthExcludeInRangeProps extends BaseMonthProps {
   mode: 'excludeInRange'
   startDate: Date
@@ -75,7 +80,13 @@ function Month({
   disableWeekDays,
   excludedDates,
   locale,
-}: MonthSingleProps | MonthRangeProps | MonthExcludeInRangeProps) {
+  // @ts-ignore
+  dates,
+}:
+  | MonthSingleProps
+  | MonthRangeProps
+  | MonthExcludeInRangeProps
+  | MonthMultiProps) {
   const theme = useTheme()
   const textColorOnPrimary = useTextColorOnPrimary()
   const realIndex = getRealIndex(index)
@@ -114,11 +125,20 @@ function Month({
           const selectedEndDay = areDatesOnSameDay(day, endDate)
           const selectedDay = areDatesOnSameDay(day, date)
 
+          const multiDates = dates as Date[] | undefined
+
+          const selectedMultiDay = !!multiDates?.some((d) =>
+            areDatesOnSameDay(day, d)
+          )
+
           let disabled = mode === 'excludeInRange'
           let selected =
             mode === 'range' || mode === 'excludeInRange'
               ? selectedStartDay || selectedEndDay
               : selectedDay
+          if (mode === 'multi') {
+            selected = selectedMultiDay
+          }
           let inRange =
             mode === 'range' || mode === 'excludeInRange'
               ? isDateBetween(day, {
@@ -188,7 +208,7 @@ function Month({
         }),
       }
     })
-  }, [mode, index, startDate, endDate, date, month, year, excludedDates])
+  }, [year, month, index, startDate, endDate, date, dates, mode, excludedDates])
 
   return (
     <View style={[styles.month, { height: getMonthHeight(scrollMode, index) }]}>
