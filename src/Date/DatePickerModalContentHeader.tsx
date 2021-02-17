@@ -64,7 +64,7 @@ export default function DatePickerModalHeader(props: HeaderContentProps) {
         </View>
       </View>
       <View style={styles.fill} />
-      {mode !== 'excludeInRange' ? (
+      {mode !== 'excludeInRange' && mode !== 'multi' ? (
         <IconButton
           icon={collapsed ? 'pencil' : 'calendar'}
           color={color}
