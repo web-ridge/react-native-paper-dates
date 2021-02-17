@@ -190,6 +190,7 @@ function Calendar(
             startDate={startDate}
             endDate={endDate}
             date={date}
+            dates={dates}
             onPressYear={onPressYear}
             selectingYear={selectingYear}
             onPressDate={onPressDate}
