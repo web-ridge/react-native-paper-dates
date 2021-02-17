@@ -239,6 +239,15 @@ function App({
                   : '-'}
               </Text>
             </Row>
+            <Row>
+              <Label>Dates</Label>
+              <Text>
+                {dates
+                  ?.map((date) => date && dateFormatter.format(date))
+                  .filter(Boolean)
+                  .join(', ')}
+              </Text>
+            </Row>
           </View>
           <Enter />
           <Enter />
