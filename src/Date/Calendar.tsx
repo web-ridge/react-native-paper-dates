@@ -38,7 +38,13 @@ export type RangeChange = (params: {
 
 export type SingleChange = (params: { date: CalendarDate }) => any
 
-export type MultiChange = (params: { dates: CalendarDate[] }) => any
+export type MultiChange = (params: {
+  dates: CalendarDate[]
+  datePressed: CalendarDate
+  change: 'added' | 'removed'
+}) => any
+
+export type MultiConfirm = (params: { dates: CalendarDate[] }) => any
 
 export interface CalendarSingleProps extends BaseCalendarProps {
   mode: 'single'
@@ -160,7 +166,7 @@ function Calendar(
         })
       } else if (mode === 'multi') {
         datesRef.current = datesRef.current || []
-        const exists = datesRef.current?.some((ed) => areDatesOnSameDay(ed, d))
+        const exists = datesRef.current.some((ed) => areDatesOnSameDay(ed, d))
 
         const newDates = exists
           ? datesRef.current.filter((ed) => !areDatesOnSameDay(ed, d))
@@ -169,6 +175,8 @@ function Calendar(
         newDates.sort((a, b) => a.getTime() - b.getTime())
         ;(onChangeRef.current as MultiChange)({
           dates: newDates,
+          datePressed: d,
+          change: exists ? 'removed' : 'added',
         })
       }
     },

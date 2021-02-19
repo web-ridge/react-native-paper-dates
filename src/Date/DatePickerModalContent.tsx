@@ -5,6 +5,7 @@ import Calendar, {
   CalendarDate,
   ExcludeInRangeChange,
   MultiChange,
+  MultiConfirm,
   RangeChange,
   SingleChange,
 } from './Calendar'
@@ -60,7 +61,7 @@ export interface DatePickerModalContentMultiProps
   mode: 'multi'
   dates?: Date[] | null | undefined
   onChange?: MultiChange
-  onConfirm: MultiChange
+  onConfirm: MultiConfirm
 }
 
 export interface DatePickerModalContentExcludeInRangeProps
