@@ -7,6 +7,7 @@ import { useHeaderTextColor } from '../utils'
 import Color from 'color'
 
 export interface HeaderPickProps {
+  moreLabel?: string
   label?: string
   emptyLabel?: string
   saveLabel?: string
@@ -36,19 +37,19 @@ function getLabel(mode: ModeType, configuredLabel?: string) {
   if (mode === 'excludeInRange') {
     return 'Select excluded dates'
   }
-  if (mode === 'multi') {
+  if (mode === 'multiple') {
     return 'Select dates'
   }
   return '...?'
 }
 
 export default function DatePickerModalHeader(props: HeaderContentProps) {
-  const { onToggle, collapsed, mode } = props
+  const { onToggle, collapsed, mode, moreLabel } = props
 
   const label = getLabel(props.mode, props.label)
 
   const color = useHeaderTextColor()
-
+  const allowEditing = mode !== 'excludeInRange' && mode !== 'multiple'
   return (
     <View style={[styles.header]}>
       <View>
@@ -64,13 +65,17 @@ export default function DatePickerModalHeader(props: HeaderContentProps) {
           {mode === 'excludeInRange' ? (
             <HeaderContentExcludeInRange {...props} color={color} />
           ) : null}
-          {mode === 'multi' ? (
-            <HeaderContentMulti {...props} color={color} />
+          {mode === 'multiple' ? (
+            <HeaderContentMulti
+              {...props}
+              color={color}
+              moreLabel={moreLabel}
+            />
           ) : null}
         </View>
       </View>
       <View style={styles.fill} />
-      {mode !== 'excludeInRange' && mode !== 'multi' ? (
+      {allowEditing ? (
         <IconButton
           icon={collapsed ? 'pencil' : 'calendar'}
           color={color}
@@ -107,9 +112,10 @@ export function HeaderContentSingle({
 export function HeaderContentMulti({
   state,
   emptyLabel = ' ',
+  moreLabel = 'more',
   color,
   locale,
-}: HeaderContentProps & { color: string }) {
+}: HeaderContentProps & { color: string; moreLabel: string | undefined }) {
   const dateCount = state.dates?.length || 0
   const lighterColor = Color(color).fade(0.5).rgb().toString()
   const dateColor = dateCount ? color : lighterColor
@@ -126,7 +132,8 @@ export function HeaderContentMulti({
     if (dateCount <= 2) {
       label = state.dates.map((date) => formatter.format(date)).join(', ')
     } else {
-      label = formatter.format(state.dates[0]) + ` (+ ${dateCount - 1} more)`
+      label =
+        formatter.format(state.dates[0]) + ` (+ ${dateCount - 1} ${moreLabel})`
     }
   }
 
@@ -255,7 +262,6 @@ const styles = StyleSheet.create({
   },
   appbarHeader: {
     elevation: 0,
-    // alignItems:'center'
   },
   column: { flexDirection: 'column' },
   row: { flexDirection: 'row' },

@@ -372,11 +372,12 @@ function App({
 
       <DatePickerModal
         // locale={'en'} optional, default: automatic
-        mode="multi"
+        mode="multiple"
         visible={multiOpen}
         onDismiss={onDismissMulti}
         dates={dates}
         onConfirm={onChangeMulti}
+        // moreLabel="more" // optional, if multiple are selected this will show if we can't show all dates
         // onChange={onChangeMulti}
         // saveLabel="Save" // optional
         // label="Select date" // optional

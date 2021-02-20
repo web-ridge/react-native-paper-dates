@@ -18,7 +18,7 @@ import Color from 'color'
 import { useTheme } from 'react-native-paper'
 import { useLatest } from '../utils'
 
-export type ModeType = 'single' | 'range' | 'excludeInRange' | 'multi'
+export type ModeType = 'single' | 'range' | 'excludeInRange' | 'multiple'
 
 export type ScrollModeType = 'horizontal' | 'vertical'
 
@@ -68,7 +68,7 @@ export interface CalendarExcludeInRangeProps extends BaseCalendarProps {
 }
 
 export interface CalendarMultiProps extends BaseCalendarProps {
-  mode: 'multi'
+  mode: 'multiple'
   dates?: CalendarDate[]
   onChange: MultiChange
 }
@@ -164,7 +164,7 @@ function Calendar(
         ;(onChangeRef.current as ExcludeInRangeChange)({
           excludedDates: newExcludedDates,
         })
-      } else if (mode === 'multi') {
+      } else if (mode === 'multiple') {
         datesRef.current = datesRef.current || []
         const exists = datesRef.current.some((ed) => areDatesOnSameDay(ed, d))
 

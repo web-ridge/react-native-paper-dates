@@ -54,7 +54,7 @@ interface MonthSingleProps extends BaseMonthProps {
 }
 
 interface MonthMultiProps extends BaseMonthProps {
-  mode: 'multi'
+  mode: 'multiple'
   dates?: Date[] | null | undefined
 }
 
@@ -136,7 +136,7 @@ function Month({
             mode === 'range' || mode === 'excludeInRange'
               ? selectedStartDay || selectedEndDay
               : selectedDay
-          if (mode === 'multi') {
+          if (mode === 'multiple') {
             selected = selectedMultiDay
           }
           let inRange =

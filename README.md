@@ -55,89 +55,151 @@ npm install react-native-paper-dates --save
 
 ## Usage
 
-### Date Picker
+### Single date Picker
 
 ```tsx
-import * as React from 'react'
-import { Button } from 'react-native-paper'
-import { DatePickerModal } from 'react-native-paper-dates'
+import * as React from 'react';
+import { Button } from 'react-native-paper';
+import { DatePickerModal } from 'react-native-paper-dates';
 
-function SingleDatePage() {
-  const [visible, setVisible] = React.useState(false)
-  const onDismiss = React.useCallback(() => {
-    setVisible(false)
-  }, [setVisible])
+export default function ReadMeExampleSingle() {
+  const [date, setDate] = React.useState<Date | undefined>(undefined);
+  const [open, setOpen] = React.useState(false);
 
-  const onChange = React.useCallback(({ date }) => {
-    setVisible(false)
-    console.log({ date })
-  }, [])
+  const onDismissSingle = React.useCallback(() => {
+    setOpen(false);
+  }, [setOpen]);
 
-  const date = new Date()
+  const onConfirmSingle = React.useCallback(
+    (params) => {
+      setOpen(false);
+      setDate(params.date);
+    },
+    [setOpen, setDate]
+  );
 
   return (
     <>
-      <DatePickerModal
-        mode="single"
-        visible={visible}
-        onDismiss={onDismiss}
-        date={date}
-        onConfirm={onChange}
-        saveLabel="Save" // optional
-        label="Select date" // optional
-        animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
-        locale={'en'} // optional, default is automically detected by your system
-      />
-      <Button onPress={()=> setVisible(true)}>
-        Pick date
+      <Button onPress={() => setOpen(true)} uppercase={false} mode="outlined">
+        Pick single date
       </Button>
+      <DatePickerModal
+        // locale={'en'} optional, default: automatic
+        mode="single"
+        visible={open}
+        onDismiss={onDismissSingle}
+        date={date}
+        onConfirm={onConfirmSingle}
+        // onChange={} // same props as onConfirm but triggered without confirmed by user
+        // saveLabel="Save" // optional
+        // label="Select date" // optional
+        // animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
+      />
     </>
-  )
+  );
 }
 ```
 
 ### Range picker
 ```tsx
-import * as React from 'react'
-import { Button } from 'react-native-paper'
-import { DatePickerModal } from 'react-native-paper-dates'
+import * as React from 'react';
+import { Button } from 'react-native-paper';
 
-export default function RangeDatePage() {
-  const [visible, setVisible] = React.useState(false)
+import { DatePickerModal } from 'react-native-paper-dates';
+
+export default function ReadMeExampleRange() {
+  const [range, setRange] = React.useState<{
+    startDate: Date | undefined;
+    endDate: Date | undefined;
+  }>({ startDate: undefined, endDate: undefined });
+
+  const [open, setOpen] = React.useState(false);
+
   const onDismiss = React.useCallback(() => {
-    setVisible(false)
-  }, [setVisible])
+    setOpen(false);
+  }, [setOpen]);
 
-  const onChange = React.useCallback(({ startDate, endDate }) => {
-    setVisible(false)
-    console.log({ startDate, endDate })
-  }, [])
-
+  const onConfirm = React.useCallback(
+    ({ startDate, endDate }) => {
+      setOpen(false);
+      setRange({ startDate, endDate });
+    },
+    [setOpen, setRange]
+  );
 
   return (
     <>
-      <DatePickerModal
-        mode="range"
-        visible={visible}
-        onDismiss={onDismiss}
-        startDate={undefined}
-        endDate={undefined}
-        onConfirm={onChange}
-        saveLabel="Save" // optional
-        label="Select period" // optional
-        startLabel="From" // optional
-        endLabel="To" // optional
-        animationType="slide" // optional, default is slide on ios/android and none on web
-        locale={'en'} // optional, default is automically detected by your system
-      />
-      <Button onPress={()=> setVisible(true)}>
+      <Button onPress={() => setOpen(true)} uppercase={false} mode="outlined">
         Pick range
       </Button>
+      <DatePickerModal
+        // locale={'en'} optional, default: automatic
+        mode="range"
+        visible={open}
+        onDismiss={onDismiss}
+        startDate={range.startDate}
+        endDate={range.endDate}
+        onConfirm={onConfirm}
+        // onChange={} // same props as onConfirm but triggered without confirmed by user
+        // locale={'nl'} // optional
+        // saveLabel="Save" // optional
+        // label="Select period" // optional
+        // startLabel="From" // optional
+        // endLabel="To" // optional
+        // animationType="slide" // optional, default is slide on ios/android and none on web
+      />
     </>
-  )
+  );
 }
+
 ```
 
+
+### Multiple dates picker
+```tsx
+import * as React from 'react';
+import { Button } from 'react-native-paper';
+
+import { DatePickerModal } from 'react-native-paper-dates';
+
+export default function ReadMeExampleMultiple() {
+  const [dates, setDates] = React.useState<Date[] | undefined>();
+  const [open, setOpen] = React.useState(false);
+
+  const onDismiss = React.useCallback(() => {
+    setOpen(false);
+  }, [setOpen]);
+
+  const onConfirm = React.useCallback((params) => {
+    setOpen(false);
+    setDates(params.dates);
+    console.log('[on-change-multi]', params);
+  }, []);
+
+  return (
+    <>
+      <Button onPress={() => setOpen(true)} uppercase={false} mode="outlined">
+        Pick multiple dates
+      </Button>
+
+      <DatePickerModal
+        // locale={'en'} optional, default: automatic
+        mode="multiple"
+        visible={open}
+        onDismiss={onDismiss}
+        dates={dates}
+        onConfirm={onConfirm}
+        // locale={'nl'} // optional
+        // saveLabel="Save" // optional
+        // label="Select period" // optional
+        // startLabel="From" // optional
+        // endLabel="To" // optional
+        // animationType="slide" // optional, default is slide on ios/android and none on web
+      />
+    </>
+  );
+}
+```
 
 ### Time picker
 ```tsx
@@ -242,13 +304,13 @@ if (isHermesEnabled || isAndroid) {
 
   require('@formatjs/intl-displaynames/polyfill');
   require('@formatjs/intl-displaynames/locale-data/en.js'); // USE YOUR OWN LANGUAGE OR MULTIPLE IMPORTS YOU WANT TO SUPPORT
-  
+
   require('@formatjs/intl-listformat/polyfill');
   require('@formatjs/intl-listformat/locale-data/en.js'); // USE YOUR OWN LANGUAGE OR MULTIPLE IMPORTS YOU WANT TO SUPPORT
-  
+
   require('@formatjs/intl-numberformat/polyfill');
   require('@formatjs/intl-numberformat/locale-data/en.js'); // USE YOUR OWN LANGUAGE OR MULTIPLE IMPORTS YOU WANT TO SUPPORT
-  
+
   require('@formatjs/intl-relativetimeformat/polyfill');
   require('@formatjs/intl-relativetimeformat/locale-data/en.js'); // USE YOUR OWN LANGUAGE OR MULTIPLE IMPORTS YOU WANT TO SUPPORT
 

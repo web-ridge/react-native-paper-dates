@@ -58,7 +58,7 @@ export interface DatePickerModalContentMultiProps
   extends HeaderPickProps,
     BaseCalendarProps,
     DatePickerModalContentBaseProps {
-  mode: 'multi'
+  mode: 'multiple'
   dates?: Date[] | null | undefined
   onChange?: MultiChange
   onConfirm: MultiConfirm
@@ -145,7 +145,7 @@ export function DatePickerModalContent(
       ;(onConfirm as DatePickerModalContentExcludeInRangeProps['onConfirm'])({
         excludedDates: state.excludedDates,
       })
-    } else if (mode === 'multi') {
+    } else if (mode === 'multiple') {
       ;(onConfirm as DatePickerModalContentMultiProps['onConfirm'])({
         dates: state.dates || [],
       })
@@ -173,6 +173,7 @@ export function DatePickerModalContent(
           headerSeparator={props.headerSeparator}
           emptyLabel={props.emptyLabel}
           label={props.label}
+          moreLabel={props.moreLabel}
           startLabel={props.startLabel}
           endLabel={props.endLabel}
           locale={locale}
