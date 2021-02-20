@@ -60,6 +60,7 @@ function App({
     hour12: false,
   });
   const [date, setDate] = React.useState<Date | undefined>(undefined);
+  const [dates, setDates] = React.useState<Date[] | undefined>();
   const [range, setRange] = React.useState<{
     startDate: Date | undefined;
     endDate: Date | undefined;
@@ -78,6 +79,7 @@ function App({
   const onDismissTime = React.useCallback(() => {
     setTimeOpen(false);
   }, [setTimeOpen]);
+  const [multiOpen, setMultiOpen] = React.useState(false);
 
   const onDismissRange = React.useCallback(() => {
     setRangeOpen(false);
@@ -90,6 +92,10 @@ function App({
   const onDismissSingle = React.useCallback(() => {
     setSingleOpen(false);
   }, [setSingleOpen]);
+
+  const onDismissMulti = React.useCallback(() => {
+    setMultiOpen(false);
+  }, []);
 
   const onDismissCustom = React.useCallback(() => {
     setCustomOpen(false);
@@ -118,6 +124,12 @@ function App({
     },
     [setSingleOpen, setDate]
   );
+
+  const onChangeMulti = React.useCallback((params) => {
+    setMultiOpen(false);
+    setDates(params.dates);
+    console.log('[on-change-multi]', params);
+  }, []);
 
   const onConfirmTime = React.useCallback(
     ({ hours, minutes }) => {
@@ -227,6 +239,15 @@ function App({
                   : '-'}
               </Text>
             </Row>
+            <Row>
+              <Label>Dates</Label>
+              <Text>
+                {dates
+                  ?.map((date) => date && dateFormatter.format(date))
+                  .filter(Boolean)
+                  .join(', ')}
+              </Text>
+            </Row>
           </View>
           <Enter />
           <Enter />
@@ -238,6 +259,15 @@ function App({
               style={styles.pickButton}
             >
               Pick single date
+            </Button>
+            <View style={styles.buttonSeparator} />
+            <Button
+              onPress={() => setMultiOpen(true)}
+              uppercase={false}
+              mode="outlined"
+              style={styles.pickButton}
+            >
+              Pick multiple dates
             </Button>
             <View style={styles.buttonSeparator} />
             <Button
@@ -335,6 +365,19 @@ function App({
         onDismiss={onDismissSingle}
         date={date}
         onConfirm={onChangeSingle}
+        // saveLabel="Save" // optional
+        // label="Select date" // optional
+        // animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
+      />
+
+      <DatePickerModal
+        // locale={'en'} optional, default: automatic
+        mode="multi"
+        visible={multiOpen}
+        onDismiss={onDismissMulti}
+        dates={dates}
+        onConfirm={onChangeMulti}
+        // onChange={onChangeMulti}
         // saveLabel="Save" // optional
         // label="Select date" // optional
         // animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
