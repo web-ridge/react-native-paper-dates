@@ -91,6 +91,7 @@ export function DatePickerModalContent(
     disableSafeTop,
     disableWeekDays,
     locale,
+    validRange,
   } = props
 
   const anyProps = props as any
@@ -193,6 +194,7 @@ export function DatePickerModalContent(
             onChange={onInnerChange}
             disableWeekDays={disableWeekDays}
             dates={state.dates}
+            validRange={validRange}
           />
         }
         calendarEdit={
