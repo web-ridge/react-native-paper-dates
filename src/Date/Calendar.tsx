@@ -138,22 +138,14 @@ function Calendar(
     RangeChange | SingleChange | ExcludeInRangeChange | MultiChange
   >(onChange)
   const datesRef = useLatest<Date[]>(dates)
-
-  // Dates => primitives (memoized & trigger re-renders as needed)
-  const validRangeStart =
-    validRange?.startDate instanceof Date
-      ? validRange?.startDate?.toISOString()
-      : null
-  const validRangeEnd =
-    validRange?.endDate instanceof Date
-      ? validRange?.endDate?.toISOString()
-      : null
+  const validRangeStart = useLatest(validRange?.startDate)
+  const validRangeEnd = useLatest(validRange?.endDate)
 
   const onPressDate = useCallback(
     (d: Date) => {
       const isWithinValidRange = isDateWithinOptionalRange(d, {
-        startDate: validRangeStart ? new Date(validRangeStart) : undefined,
-        endDate: validRangeEnd ? new Date(validRangeEnd) : undefined,
+        startDate: validRangeStart.current,
+        endDate: validRangeEnd.current,
       })
 
       if (!isWithinValidRange) {
