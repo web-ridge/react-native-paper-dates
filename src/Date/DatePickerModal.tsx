@@ -27,19 +27,19 @@ interface DatePickerModalProps {
   disableStatusBarPadding?: boolean
 }
 
-interface DatePickerModalSingleProps
+export interface DatePickerModalSingleProps
   extends DatePickerModalContentSingleProps,
     DatePickerModalProps {}
 
-interface DatePickerModalMultiProps
+export interface DatePickerModalMultiProps
   extends DatePickerModalContentMultiProps,
     DatePickerModalProps {}
 
-interface DatePickerModalRangeProps
+export interface DatePickerModalRangeProps
   extends DatePickerModalContentRangeProps,
     DatePickerModalProps {}
 
-interface DatePickerModalExcludeInRangeProps
+export interface DatePickerModalExcludeInRangeProps
   extends DatePickerModalContentExcludeInRangeProps,
     DatePickerModalProps {}
 
