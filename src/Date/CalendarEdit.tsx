@@ -9,7 +9,7 @@ import {
 import { CalendarDate, ModeType } from './Calendar'
 import { LocalState } from './DatePickerModalContent'
 import TextInputWithMask from '../TextInputMask'
-import { useTheme } from 'react-native-paper'
+import { Text, useTheme } from 'react-native-paper'
 
 function CalendarEdit({
   mode,
@@ -129,6 +129,7 @@ function CalendarInputPure(
   ref: any
 ) {
   const theme = useTheme()
+  const [error, setError] = React.useState(false)
   const formatter = React.useMemo(() => {
     return new Intl.DateTimeFormat(locale, {
       month: '2-digit',
@@ -155,26 +156,46 @@ function CalendarInputPure(
     const day = Number(date.slice(dayIndex, dayIndex + 2))
     const year = Number(date.slice(yearIndex, yearIndex + 4))
     const month = Number(date.slice(monthIndex, monthIndex + 2))
-    if (isEndDate) {
-      onChange(new Date(year, month - 1, day, 23, 59, 59))
+    if (!Number.isNaN(day) && !Number.isNaN(year) && !Number.isNaN(month)) {
+      setError(false)
+      if (isEndDate) {
+        onChange(new Date(year, month - 1, day, 23, 59, 59))
+      } else {
+        onChange(new Date(year, month - 1, day))
+      }
     } else {
-      onChange(new Date(year, month - 1, day))
+      setError(true)
     }
   }
   return (
-    <TextInputWithMask
-      ref={ref}
-      value={formattedValue}
-      style={styles.input}
-      label={`${label} (${inputFormat})`}
-      keyboardType={'number-pad'}
-      placeholder={inputFormat}
-      mask={inputFormat}
-      onChangeText={onChangeText}
-      returnKeyType={returnKeyType}
-      onSubmitEditing={onSubmitEditing}
-      keyboardAppearance={theme.dark ? 'dark' : 'default'}
-    />
+    <View style={styles.inputContainer}>
+      <TextInputWithMask
+        ref={ref}
+        value={formattedValue}
+        style={styles.input}
+        label={`${label} (${inputFormat})`}
+        keyboardType={'number-pad'}
+        placeholder={inputFormat}
+        mask={inputFormat}
+        onChangeText={onChangeText}
+        returnKeyType={returnKeyType}
+        onSubmitEditing={onSubmitEditing}
+        keyboardAppearance={theme.dark ? 'dark' : 'default'}
+      />
+      {error && (
+        <Text
+          style={[
+            {
+              color: theme.colors.error,
+            },
+            theme.fonts.medium,
+            styles.errorText,
+          ]}
+        >
+          {inputFormat}
+        </Text>
+      )}
+    </View>
   )
 }
 
@@ -183,8 +204,13 @@ const CalendarInput = React.forwardRef(CalendarInputPure)
 const styles = StyleSheet.create({
   root: { padding: 12 },
   inner: { flexDirection: 'row' },
+  inputContainer: { flex: 1 },
   input: { flex: 1 },
   separator: { width: 12 },
+  errorText: {
+    textAlign: 'right',
+    marginTop: 12,
+  },
 })
 
 export default React.memo(CalendarEdit)
