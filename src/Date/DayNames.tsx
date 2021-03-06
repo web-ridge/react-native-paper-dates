@@ -8,13 +8,13 @@ export const dayNamesHeight = 44
 
 // TODO: wait for a better Intl api ;-)
 const weekdays = [
-  new Date('2020-08-02'),
-  new Date('2020-08-03'),
-  new Date('2020-08-04'),
-  new Date('2020-08-05'),
-  new Date('2020-08-06'),
-  new Date('2020-08-07'),
-  new Date('2020-08-08'),
+  new Date(2020, 7, 2),
+  new Date(2020, 7, 3),
+  new Date(2020, 7, 4),
+  new Date(2020, 7, 5),
+  new Date(2020, 7, 6),
+  new Date(2020, 7, 7),
+  new Date(2020, 7, 8),
 ]
 
 function DayNames({
