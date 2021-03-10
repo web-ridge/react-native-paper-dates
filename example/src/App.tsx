@@ -179,6 +179,7 @@ function App({
               webRidge
             </Text>
           </Paragraph>
+          <Paragraph>Example version: 0.3.2</Paragraph>
         </View>
         <View style={styles.content}>
           <Button
