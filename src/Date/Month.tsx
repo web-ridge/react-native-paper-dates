@@ -21,7 +21,12 @@ import {
   isDateWithinOptionalRange,
 } from './dateUtils'
 import { getCalendarHeaderHeight } from './CalendarHeader'
-import type { ModeType, ValidRangeType } from './Calendar'
+import type {
+  CalendarDate,
+  CalendarDates,
+  ModeType,
+  ValidRangeType,
+} from './Calendar'
 import { dayNamesHeight } from './DayNames'
 import { useTextColorOnPrimary } from '../utils'
 
@@ -30,10 +35,6 @@ interface BaseMonthProps {
   scrollMode: 'horizontal' | 'vertical'
   disableWeekDays?: DisableWeekDaysType
   mode: ModeType
-  date?: Date | null | undefined
-  startDate?: Date | null | undefined
-  endDate?: Date | null | undefined
-  excludedDates?: Date[]
   index: number
   onPressYear: (year: number) => any
   selectingYear: boolean
@@ -42,54 +43,49 @@ interface BaseMonthProps {
   selectColor: string
   roundness: number
   validRange?: ValidRangeType
+
+  // some of these should be required in final implementation
+  startDate?: CalendarDate
+  endDate?: CalendarDate
+  date?: CalendarDate
+  dates?: CalendarDates
 }
 
 interface MonthRangeProps extends BaseMonthProps {
   mode: 'range'
-  startDate: Date | null | undefined
-  endDate: Date | null | undefined
+  startDate: CalendarDate
+  endDate: CalendarDate
 }
 
 interface MonthSingleProps extends BaseMonthProps {
   mode: 'single'
-  date?: Date | null | undefined
+  date: CalendarDate
 }
 
 interface MonthMultiProps extends BaseMonthProps {
   mode: 'multiple'
-  dates?: Date[] | null | undefined
+  dates: CalendarDates
 }
 
-interface MonthExcludeInRangeProps extends BaseMonthProps {
-  mode: 'excludeInRange'
-  startDate: Date
-  endDate: Date
-}
-
-function Month({
-  index,
-  mode,
-  date,
-  startDate,
-  endDate,
-  onPressYear,
-  selectingYear,
-  onPressDate,
-  scrollMode,
-  primaryColor,
-  selectColor,
-  roundness,
-  disableWeekDays,
-  excludedDates,
-  locale,
-  // @ts-ignore
-  dates,
-  validRange,
-}:
-  | MonthSingleProps
-  | MonthRangeProps
-  | MonthExcludeInRangeProps
-  | MonthMultiProps) {
+function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
+  const {
+    index,
+    mode,
+    date,
+    dates,
+    startDate,
+    endDate,
+    onPressYear,
+    selectingYear,
+    onPressDate,
+    scrollMode,
+    primaryColor,
+    selectColor,
+    roundness,
+    disableWeekDays,
+    locale,
+    validRange,
+  } = props
   const theme = useTheme()
   const textColorOnPrimary = useTextColorOnPrimary()
   const realIndex = getRealIndex(index)
@@ -134,36 +130,51 @@ function Month({
 
           const day = new Date(year, month, dayOfMonth)
           const isToday = areDatesOnSameDay(day, today)
-          const selectedStartDay = areDatesOnSameDay(day, startDate)
-          const selectedEndDay = areDatesOnSameDay(day, endDate)
-          const selectedDay = areDatesOnSameDay(day, date)
+
+          let inRange = false
+          let disabled = false
+          let selected = false
+          let leftCrop = dayOfMonth === 1
+          let rightCrop = dayOfMonth === daysInMonth
+
+          if (mode === 'range') {
+            const selectedStartDay = areDatesOnSameDay(day, startDate)
+            const selectedEndDay = areDatesOnSameDay(day, endDate)
+            selected = selectedStartDay || selectedEndDay
+            inRange = isDateBetween(day, {
+              startDate,
+              endDate,
+            })
+            if (selectedStartDay) {
+              leftCrop = true
+            }
+            if (selectedEndDay) {
+              rightCrop = true
+            }
+            if (dayIndex === 0 && !selectedStartDay) {
+              leftCrop = false
+            }
+
+            if (dayIndex === 6 && !selectedEndDay) {
+              rightCrop = false
+            }
+
+            if (
+              (dayOfMonth === 1 && selectedEndDay) ||
+              (dayOfMonth === daysInMonth && selectedStartDay)
+            ) {
+              inRange = false
+            }
+          } else if (mode === 'multiple') {
+            selected = !!dates?.some((d) => areDatesOnSameDay(day, d))
+          } else if (mode === 'single') {
+            selected = areDatesOnSameDay(day, date)
+          }
 
           const isWithinOptionalValidRange = isDateWithinOptionalRange(day, {
             startDate: validRangeStart ? new Date(validRangeStart) : undefined,
             endDate: validRangeEnd ? new Date(validRangeEnd) : undefined,
           })
-
-          const multiDates = dates as Date[] | undefined
-
-          const selectedMultiDay = !!multiDates?.some((d) =>
-            areDatesOnSameDay(day, d)
-          )
-
-          let disabled = mode === 'excludeInRange'
-          let selected =
-            mode === 'range' || mode === 'excludeInRange'
-              ? selectedStartDay || selectedEndDay
-              : selectedDay
-          if (mode === 'multiple') {
-            selected = selectedMultiDay
-          }
-          let inRange =
-            mode === 'range' || mode === 'excludeInRange'
-              ? isDateBetween(day, {
-                  startDate,
-                  endDate,
-                })
-              : false
 
           if (inRange) {
             disabled = false
@@ -171,44 +182,6 @@ function Month({
 
           if (!isWithinOptionalValidRange) {
             disabled = true
-          }
-
-          let leftCrop: boolean = selectedStartDay || dayOfMonth === 1
-          let rightCrop: boolean = selectedEndDay || dayOfMonth === daysInMonth
-
-          let excluded = false
-          if (excludedDates) {
-            if (excludedDates.some((ed) => areDatesOnSameDay(day, ed))) {
-              excluded = true
-              inRange = false
-              selected = false
-            } else {
-              const yesterday = new Date(year, month, dayOfMonth - 1)
-              const tomorrow = new Date(year, month, dayOfMonth + 1)
-              if (
-                excludedDates.some((ed) => areDatesOnSameDay(yesterday, ed))
-              ) {
-                leftCrop = true
-              }
-              if (excludedDates.some((ed) => areDatesOnSameDay(tomorrow, ed))) {
-                rightCrop = true
-              }
-            }
-          }
-
-          if (dayIndex === 0 && !selectedStartDay) {
-            leftCrop = false
-          }
-
-          if (dayIndex === 6 && !selectedEndDay) {
-            rightCrop = false
-          }
-
-          if (
-            (dayOfMonth === 1 && selectedEndDay) ||
-            (dayOfMonth === daysInMonth && selectedStartDay)
-          ) {
-            inRange = false
           }
 
           return {
@@ -225,7 +198,6 @@ function Month({
             rightCrop,
             isToday,
             disabled,
-            excluded,
           }
         }),
       }
@@ -237,11 +209,10 @@ function Month({
     startDate,
     endDate,
     date,
+    dates,
     validRangeStart,
     validRangeEnd,
-    dates,
     mode,
-    excludedDates,
   ])
 
   return (
@@ -313,7 +284,6 @@ function Month({
                   selectColor={selectColor}
                   primaryColor={primaryColor}
                   disabled={gd.disabled}
-                  excluded={gd.excluded}
                   textColorOnPrimary={textColorOnPrimary}
                 />
               )

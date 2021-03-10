@@ -70,7 +70,9 @@ function SwitchButton({
       onPress={onPress}
       style={styles.switchButton}
       accessibilityLabel={label}
+      // @ts-ignore old React Native versions
       accessibilityTraits={disabled ? ['button', 'disabled'] : 'button'}
+      // @ts-ignore old React Native versions
       accessibilityComponentType="button"
       accessibilityRole="button"
       accessibilityState={{ disabled }}

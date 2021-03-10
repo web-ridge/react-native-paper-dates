@@ -3,7 +3,7 @@ import * as React from 'react'
 import Calendar, {
   BaseCalendarProps,
   CalendarDate,
-  ExcludeInRangeChange,
+  CalendarDates,
   MultiChange,
   MultiConfirm,
   RangeChange,
@@ -23,8 +23,7 @@ export type LocalState = {
   startDate: CalendarDate
   endDate: CalendarDate
   date: CalendarDate
-  excludedDates: Date[]
-  dates: CalendarDate[]
+  dates: CalendarDates
 }
 
 interface DatePickerModalContentBaseProps {
@@ -38,8 +37,8 @@ export interface DatePickerModalContentRangeProps
     BaseCalendarProps,
     DatePickerModalContentBaseProps {
   mode: 'range'
-  startDate: Date | null | undefined
-  endDate: Date | null | undefined
+  startDate: CalendarDate
+  endDate: CalendarDate
   onChange?: RangeChange
   onConfirm: RangeChange
 }
@@ -49,7 +48,7 @@ export interface DatePickerModalContentSingleProps
     BaseCalendarProps,
     DatePickerModalContentBaseProps {
   mode: 'single'
-  date?: Date | null | undefined
+  date?: CalendarDate
   onChange?: SingleChange
   onConfirm: SingleChange
 }
@@ -59,28 +58,15 @@ export interface DatePickerModalContentMultiProps
     BaseCalendarProps,
     DatePickerModalContentBaseProps {
   mode: 'multiple'
-  dates?: Date[] | null | undefined
+  dates?: CalendarDates
   onChange?: MultiChange
   onConfirm: MultiConfirm
-}
-
-export interface DatePickerModalContentExcludeInRangeProps
-  extends HeaderPickProps,
-    BaseCalendarProps,
-    DatePickerModalContentBaseProps {
-  mode: 'excludeInRange'
-  startDate: Date
-  endDate: Date
-  excludedDates: Date[] | undefined
-  onChange?: ExcludeInRangeChange
-  onConfirm: ExcludeInRangeChange
 }
 
 export function DatePickerModalContent(
   props:
     | DatePickerModalContentRangeProps
     | DatePickerModalContentSingleProps
-    | DatePickerModalContentExcludeInRangeProps
     | DatePickerModalContentMultiProps
 ) {
   const {
@@ -101,7 +87,6 @@ export function DatePickerModalContent(
     date: anyProps.date,
     startDate: anyProps.startDate,
     endDate: anyProps.endDate,
-    excludedDates: anyProps.excludedDates,
     dates: anyProps.dates,
   })
 
@@ -111,16 +96,9 @@ export function DatePickerModalContent(
       date: anyProps.date,
       startDate: anyProps.startDate,
       endDate: anyProps.endDate,
-      excludedDates: anyProps.excludedDates,
       dates: anyProps.dates,
     })
-  }, [
-    anyProps.date,
-    anyProps.startDate,
-    anyProps.endDate,
-    anyProps.excludedDates,
-    anyProps.dates,
-  ])
+  }, [anyProps.date, anyProps.startDate, anyProps.endDate, anyProps.dates])
 
   const [collapsed, setCollapsed] = React.useState<boolean>(true)
 
@@ -141,10 +119,6 @@ export function DatePickerModalContent(
       ;(onConfirm as DatePickerModalContentRangeProps['onConfirm'])({
         startDate: state.startDate,
         endDate: state.endDate,
-      })
-    } else if (mode === 'excludeInRange') {
-      ;(onConfirm as DatePickerModalContentExcludeInRangeProps['onConfirm'])({
-        excludedDates: state.excludedDates,
       })
     } else if (mode === 'multiple') {
       ;(onConfirm as DatePickerModalContentMultiProps['onConfirm'])({
@@ -190,7 +164,6 @@ export function DatePickerModalContent(
             startDate={state.startDate}
             endDate={state.endDate}
             date={state.date}
-            excludedDates={state.excludedDates}
             onChange={onInnerChange}
             disableWeekDays={disableWeekDays}
             dates={state.dates}

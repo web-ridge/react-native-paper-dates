@@ -19,7 +19,7 @@ import Color from 'color'
 import { useTheme } from 'react-native-paper'
 import { useLatest } from '../utils'
 
-export type ModeType = 'single' | 'range' | 'excludeInRange' | 'multiple'
+export type ModeType = 'single' | 'range' | 'multiple'
 
 export type ScrollModeType = 'horizontal' | 'vertical'
 
@@ -32,11 +32,16 @@ export type BaseCalendarProps = {
   locale?: undefined | string
   disableWeekDays?: DisableWeekDaysType
   validRange?: ValidRangeType
+
+  // here they are optional but in final implemenation they are required
+  date?: CalendarDate
+  dates?: CalendarDates
+  startDate?: CalendarDate
+  endDate?: CalendarDate
 }
 
 export type CalendarDate = Date | undefined
-
-export type ExcludeInRangeChange = (params: { excludedDates: Date[] }) => any
+export type CalendarDates = Date[] | undefined | null
 
 export type RangeChange = (params: {
   startDate: CalendarDate
@@ -46,16 +51,16 @@ export type RangeChange = (params: {
 export type SingleChange = (params: { date: CalendarDate }) => any
 
 export type MultiChange = (params: {
-  dates: CalendarDate[]
-  datePressed: CalendarDate
+  dates: CalendarDates
+  datePressed: Date
   change: 'added' | 'removed'
 }) => any
 
-export type MultiConfirm = (params: { dates: CalendarDate[] }) => any
+export type MultiConfirm = (params: { dates: Date[] }) => any
 
 export interface CalendarSingleProps extends BaseCalendarProps {
   mode: 'single'
-  date?: CalendarDate
+  date: CalendarDate
   onChange: SingleChange
 }
 
@@ -66,41 +71,23 @@ export interface CalendarRangeProps extends BaseCalendarProps {
   onChange: RangeChange
 }
 
-export interface CalendarExcludeInRangeProps extends BaseCalendarProps {
-  mode: 'excludeInRange'
-  excludedDates: Date[]
-  startDate: CalendarDate
-  endDate: CalendarDate
-  onChange: ExcludeInRangeChange
-}
-
 export interface CalendarMultiProps extends BaseCalendarProps {
   mode: 'multiple'
-  dates?: CalendarDate[]
+  dates: CalendarDates
   onChange: MultiChange
 }
 
 function Calendar(
-  props:
-    | CalendarSingleProps
-    | CalendarRangeProps
-    | CalendarExcludeInRangeProps
-    | CalendarMultiProps
+  props: CalendarSingleProps | CalendarRangeProps | CalendarMultiProps
 ) {
   const {
     locale,
     mode,
     onChange,
-    // @ts-ignore
     startDate,
-    // @ts-ignore
     endDate,
-    // @ts-ignore
     date,
-    // @ts-ignore
-    excludedDates,
     disableWeekDays,
-    // @ts-ignore
     dates,
     validRange,
   } = props
@@ -115,7 +102,7 @@ function Calendar(
   }, [theme])
 
   const scrollMode =
-    mode === 'range' || mode === 'excludeInRange' ? 'vertical' : 'horizontal'
+    mode === 'range' || mode === 'multiple' ? 'vertical' : 'horizontal'
 
   const [selectedYear, setSelectedYear] = React.useState<number | undefined>(
     undefined
@@ -132,12 +119,11 @@ function Calendar(
   // prevent re-rendering all months when something changed we only need the
   // latest version of the props and we don't want the useCallback to change
   const startDateRef = useLatest<CalendarDate>(startDate)
-  const excludedDatesRef = useLatest<Date[]>(excludedDates)
   const endDateRef = useLatest<CalendarDate>(endDate)
-  const onChangeRef = useLatest<
-    RangeChange | SingleChange | ExcludeInRangeChange | MultiChange
-  >(onChange)
-  const datesRef = useLatest<Date[]>(dates)
+  const onChangeRef = useLatest<RangeChange | SingleChange | MultiChange>(
+    onChange
+  )
+  const datesRef = useLatest<CalendarDates>(dates)
   const validRangeStart = useLatest(validRange?.startDate)
   const validRangeEnd = useLatest(validRange?.endDate)
 
@@ -169,20 +155,6 @@ function Calendar(
             ? new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59)
             : undefined,
         })
-      } else if (mode === 'excludeInRange') {
-        const exists = excludedDatesRef.current.some((ed) =>
-          areDatesOnSameDay(ed, d)
-        )
-        const newExcludedDates = exists
-          ? excludedDatesRef.current.filter((ed) => !areDatesOnSameDay(ed, d))
-          : [
-              ...excludedDatesRef.current,
-              new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0),
-            ]
-        newExcludedDates.sort((a, b) => a.getTime() - b.getTime())
-        ;(onChangeRef.current as ExcludeInRangeChange)({
-          excludedDates: newExcludedDates,
-        })
       } else if (mode === 'multiple') {
         datesRef.current = datesRef.current || []
         const exists = datesRef.current.some((ed) => areDatesOnSameDay(ed, d))
@@ -206,15 +178,15 @@ function Calendar(
       onChangeRef,
       startDateRef,
       endDateRef,
-      excludedDatesRef,
       datesRef,
     ]
   )
 
+  const firstDate = startDate || date || dates?.[0]
   return (
     <View style={styles.root}>
       <Swiper
-        initialIndex={getInitialIndex(startDate || date)}
+        initialIndex={getInitialIndex(firstDate)}
         selectedYear={selectedYear}
         scrollMode={scrollMode}
         renderItem={({ index }) => (
@@ -236,7 +208,6 @@ function Calendar(
             selectColor={selectColor}
             roundness={theme.roundness}
             disableWeekDays={disableWeekDays}
-            excludedDates={excludedDates}
           />
         )}
         renderHeader={({ onPrev, onNext }) => (

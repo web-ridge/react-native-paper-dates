@@ -11,7 +11,6 @@ import {
 
 import { useTheme } from 'react-native-paper'
 import DatePickerModalContent, {
-  DatePickerModalContentExcludeInRangeProps,
   DatePickerModalContentMultiProps,
   DatePickerModalContentRangeProps,
   DatePickerModalContentSingleProps,
@@ -39,15 +38,10 @@ export interface DatePickerModalRangeProps
   extends DatePickerModalContentRangeProps,
     DatePickerModalProps {}
 
-export interface DatePickerModalExcludeInRangeProps
-  extends DatePickerModalContentExcludeInRangeProps,
-    DatePickerModalProps {}
-
 export function DatePickerModal(
   props:
     | DatePickerModalRangeProps
     | DatePickerModalSingleProps
-    | DatePickerModalExcludeInRangeProps
     | DatePickerModalMultiProps
 ) {
   const theme = useTheme()

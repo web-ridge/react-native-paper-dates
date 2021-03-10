@@ -22,7 +22,6 @@ function Day(props: {
   selectColor: string
   isToday: boolean
   disabled: boolean
-  excluded: boolean
   onPressDate: (date: Date) => any
 }) {
   const {
@@ -38,7 +37,6 @@ function Day(props: {
     selectColor,
     isToday,
     disabled,
-    excluded,
     textColorOnPrimary,
   } = props
   const theme = useTheme()
@@ -67,7 +65,7 @@ function Day(props: {
       <TouchableRipple
         disabled={disabled}
         borderless={true}
-        onPress={onPress}
+        onPress={disabled ? undefined : onPress}
         style={[
           styles.button,
           { backgroundColor: inRange ? selectColor : undefined },
@@ -81,11 +79,7 @@ function Day(props: {
           ]}
         >
           <Text
-            style={[
-              excluded && styles.excludedText,
-              // @ts-ignore
-              textColor && { color: textColor },
-            ]}
+            style={textColor ? { color: textColor } : undefined}
             selectable={false}
           >
             {day}
@@ -130,9 +124,6 @@ const styles = StyleSheet.create({
   },
   flex1: {
     flex: 1,
-  },
-  excludedText: {
-    textDecorationLine: 'line-through',
   },
 })
 

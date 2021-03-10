@@ -169,7 +169,7 @@ export function getRealIndex(index: number) {
   return index - startAtIndex
 }
 
-export function getInitialIndex(date: Date) {
+export function getInitialIndex(date: Date | undefined) {
   if (!date) {
     return startAtIndex
   }

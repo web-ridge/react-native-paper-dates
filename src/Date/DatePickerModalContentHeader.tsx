@@ -34,9 +34,7 @@ function getLabel(mode: ModeType, configuredLabel?: string) {
   if (mode === 'single') {
     return 'Select date'
   }
-  if (mode === 'excludeInRange') {
-    return 'Select excluded dates'
-  }
+
   if (mode === 'multiple') {
     return 'Select dates'
   }
@@ -49,7 +47,7 @@ export default function DatePickerModalHeader(props: HeaderContentProps) {
   const label = getLabel(props.mode, props.label)
 
   const color = useHeaderTextColor()
-  const allowEditing = mode !== 'excludeInRange' && mode !== 'multiple'
+  const allowEditing = mode !== 'multiple'
   return (
     <View style={[styles.header]}>
       <View>
@@ -61,9 +59,6 @@ export default function DatePickerModalHeader(props: HeaderContentProps) {
           ) : null}
           {mode === 'single' ? (
             <HeaderContentSingle {...props} color={color} />
-          ) : null}
-          {mode === 'excludeInRange' ? (
-            <HeaderContentExcludeInRange {...props} color={color} />
           ) : null}
           {mode === 'multiple' ? (
             <HeaderContentMulti
@@ -130,66 +125,15 @@ export function HeaderContentMulti({
   let label = emptyLabel
   if (dateCount) {
     if (dateCount <= 2) {
-      label = state.dates.map((date) => formatter.format(date)).join(', ')
+      label = state.dates!.map((date) => formatter.format(date)).join(', ')
     } else {
       label =
-        formatter.format(state.dates[0]) + ` (+ ${dateCount - 1} ${moreLabel})`
+        formatter.format(state.dates![0]) + ` (+ ${dateCount - 1} ${moreLabel})`
     }
   }
 
   return (
     <Text style={[styles.singleHeaderText, { color: dateColor }]}>{label}</Text>
-  )
-}
-
-export function HeaderContentExcludeInRange({
-  state,
-  emptyLabel = ' ',
-  color,
-  locale,
-}: HeaderContentProps & { color: string }) {
-  const lighterColor = Color(color).fade(0.5).rgb().toString()
-
-  const dayFormatter = React.useMemo(() => {
-    return new Intl.DateTimeFormat(locale, {
-      day: 'numeric',
-    })
-  }, [locale])
-  const monthFormatter = React.useMemo(() => {
-    return new Intl.DateTimeFormat(locale, {
-      month: 'short',
-    })
-  }, [locale])
-
-  const excludedDaysPerMonth = React.useMemo(() => {
-    // TODO: fix years :O
-    let months: { [monthIndex: number]: Date[] } = {}
-    state.excludedDates.forEach((ed) => {
-      const existing = months[ed.getMonth()]
-      months[ed.getMonth()] = existing ? [...existing, ed] : [ed]
-    })
-    return months
-  }, [state.excludedDates])
-  const dateColor =
-    state.excludedDates && state.excludedDates.length > 0 ? color : lighterColor
-
-  return (
-    <View style={styles.column}>
-      <View style={styles.row}>
-        <Text style={[styles.excludeInRangeHeaderText, { color: dateColor }]}>
-          {Object.keys(excludedDaysPerMonth)
-            .map(
-              (monthIndex: any) =>
-                excludedDaysPerMonth[monthIndex]
-                  .map((date) => dayFormatter.format(date))
-                  .join(', ') +
-                ' ' +
-                monthFormatter.format(excludedDaysPerMonth[monthIndex][0]!)
-            )
-            .join(', ') || emptyLabel}
-        </Text>
-      </View>
-    </View>
   )
 }
 
