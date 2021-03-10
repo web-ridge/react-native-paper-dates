@@ -30,6 +30,10 @@ export default function ReadMeExampleMultiple() {
         onDismiss={onDismiss}
         dates={dates}
         onConfirm={onConfirm}
+        // validRange={{
+        //   startDate: new Date(2021, 1, 2),  // optional
+        //   endDate: new Date(), // optional
+        // }}
         // locale={'nl'} // optional
         // saveLabel="Save" // optional
         // label="Select period" // optional

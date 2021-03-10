@@ -179,6 +179,7 @@ export function DatePickerModalContent(
             endLabel={props.endLabel}
             collapsed={collapsed}
             onChange={onInnerChange}
+            validRange={validRange}
           />
         }
       />

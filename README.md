@@ -90,6 +90,10 @@ export default function ReadMeExampleSingle() {
         onDismiss={onDismissSingle}
         date={date}
         onConfirm={onConfirmSingle}
+        // validRange={{
+        //   startDate: new Date(2021, 1, 2),  // optional
+        //   endDate: new Date(), // optional
+        // }}
         // onChange={} // same props as onConfirm but triggered without confirmed by user
         // saveLabel="Save" // optional
         // label="Select date" // optional
@@ -140,6 +144,10 @@ export default function ReadMeExampleRange() {
         startDate={range.startDate}
         endDate={range.endDate}
         onConfirm={onConfirm}
+        // validRange={{
+        //   startDate: new Date(2021, 1, 2),  // optional
+        //   endDate: new Date(), // optional
+        // }}
         // onChange={} // same props as onConfirm but triggered without confirmed by user
         // locale={'nl'} // optional
         // saveLabel="Save" // optional
@@ -189,6 +197,10 @@ export default function ReadMeExampleMultiple() {
         onDismiss={onDismiss}
         dates={dates}
         onConfirm={onConfirm}
+        // validRange={{
+        //   startDate: new Date(2021, 1, 2),  // optional
+        //   endDate: new Date(), // optional
+        // }}
         // locale={'nl'} // optional
         // saveLabel="Save" // optional
         // label="Select period" // optional

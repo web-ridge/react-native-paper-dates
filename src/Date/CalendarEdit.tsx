@@ -6,10 +6,11 @@ import {
   Keyboard,
 } from 'react-native'
 
-import { CalendarDate, ModeType } from './Calendar'
+import { CalendarDate, ModeType, ValidRangeType } from './Calendar'
 import { LocalState } from './DatePickerModalContent'
 import TextInputWithMask from '../TextInputMask'
-import { Text, useTheme } from 'react-native-paper'
+import { HelperText, useTheme } from 'react-native-paper'
+import { dateToUnix, isDateWithinOptionalRange } from './dateUtils'
 
 function CalendarEdit({
   mode,
@@ -19,6 +20,7 @@ function CalendarEdit({
   endLabel = 'End',
   collapsed,
   onChange,
+  validRange,
 }: {
   mode: ModeType
   label?: string
@@ -27,6 +29,7 @@ function CalendarEdit({
   state: LocalState
   collapsed: boolean
   onChange: (s: LocalState) => any
+  validRange: ValidRangeType | undefined
 }) {
   const dateInput = React.useRef<TextInputNative | null>(null)
   const startInput = React.useRef<TextInputNative | null>(null)
@@ -80,6 +83,7 @@ function CalendarEdit({
             value={state.date}
             onChange={(date) => onChange({ ...state, date })}
             onSubmitEditing={onSubmitInput}
+            validRange={validRange}
           />
         ) : null}
         {mode === 'range' ? (
@@ -91,6 +95,7 @@ function CalendarEdit({
               onChange={(startDate) => onChange({ ...state, startDate })}
               returnKeyType={'next'}
               onSubmitEditing={onSubmitStartInput}
+              validRange={validRange}
             />
             <View style={styles.separator} />
             <CalendarInput
@@ -100,6 +105,7 @@ function CalendarEdit({
               onChange={(endDate) => onChange({ ...state, endDate })}
               isEndDate
               onSubmitEditing={onSubmitEndInput}
+              validRange={validRange}
             />
           </>
         ) : null}
@@ -117,6 +123,7 @@ function CalendarInputPure(
     returnKeyType,
     onSubmitEditing,
     locale,
+    validRange,
   }: {
     locale?: undefined | string
     label: string
@@ -125,11 +132,12 @@ function CalendarInputPure(
     isEndDate?: boolean
     returnKeyType?: string
     onSubmitEditing?: () => any
+    validRange: ValidRangeType | undefined
   },
   ref: any
 ) {
   const theme = useTheme()
-  const [error, setError] = React.useState(false)
+  const [error, setError] = React.useState<null | string>(null)
   const formatter = React.useMemo(() => {
     return new Intl.DateTimeFormat(locale, {
       month: '2-digit',
@@ -156,15 +164,40 @@ function CalendarInputPure(
     const day = Number(date.slice(dayIndex, dayIndex + 2))
     const year = Number(date.slice(yearIndex, yearIndex + 4))
     const month = Number(date.slice(monthIndex, monthIndex + 2))
-    if (!Number.isNaN(day) && !Number.isNaN(year) && !Number.isNaN(month)) {
-      setError(false)
-      if (isEndDate) {
-        onChange(new Date(year, month - 1, day, 23, 59, 59))
-      } else {
-        onChange(new Date(year, month - 1, day))
-      }
+
+    if (Number.isNaN(day) || Number.isNaN(year) || Number.isNaN(month)) {
+      setError(inputFormat)
+      return
+    }
+
+    const finalDate = isEndDate
+      ? new Date(year, month - 1, day, 23, 59, 59)
+      : new Date(year, month - 1, day)
+
+    const validStart = validRange?.startDate
+    const validEnd = validRange?.endDate
+    if (
+      !isDateWithinOptionalRange(finalDate, {
+        startUnix: validStart ? dateToUnix(validStart) : undefined,
+        endUnix: validEnd ? dateToUnix(validEnd) : undefined,
+      })
+    ) {
+      let errors =
+        validStart && validEnd
+          ? [`${formatter.format(validStart)} - ${formatter.format(validEnd)}`]
+          : [
+              validStart ? `> ${formatter.format(validStart)}` : '',
+              validEnd ? `< ${formatter.format(validEnd)}` : '',
+            ]
+      setError(errors.filter((n) => n).join(' '))
+      return
+    }
+
+    setError(null)
+    if (isEndDate) {
+      onChange(finalDate)
     } else {
-      setError(true)
+      onChange(finalDate)
     }
   }
   return (
@@ -181,20 +214,11 @@ function CalendarInputPure(
         returnKeyType={returnKeyType}
         onSubmitEditing={onSubmitEditing}
         keyboardAppearance={theme.dark ? 'dark' : 'default'}
+        error={!!error}
       />
-      {error && (
-        <Text
-          style={[
-            {
-              color: theme.colors.error,
-            },
-            theme.fonts.medium,
-            styles.errorText,
-          ]}
-        >
-          {inputFormat}
-        </Text>
-      )}
+      <HelperText type="error" visible={!!error}>
+        {error}
+      </HelperText>
     </View>
   )
 }
@@ -207,10 +231,6 @@ const styles = StyleSheet.create({
   inputContainer: { flex: 1 },
   input: { flex: 1 },
   separator: { width: 12 },
-  errorText: {
-    textAlign: 'right',
-    marginTop: 12,
-  },
 })
 
 export default React.memo(CalendarEdit)

@@ -19,6 +19,7 @@ import {
   beginOffset,
   estimatedMonthHeight,
   isDateWithinOptionalRange,
+  dateToUnix,
 } from './dateUtils'
 import { getCalendarHeaderHeight } from './CalendarHeader'
 import type {
@@ -93,13 +94,31 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
 
   const validRangeStart =
     validRange?.startDate instanceof Date
-      ? validRange?.startDate?.toISOString()
-      : null
+      ? dateToUnix(
+          new Date(
+            validRange?.startDate.getFullYear(),
+            validRange?.startDate.getMonth(),
+            validRange?.startDate.getDate(),
+            0,
+            0,
+            0
+          )
+        )
+      : undefined
 
   const validRangeEnd =
     validRange?.endDate instanceof Date
-      ? validRange?.endDate?.toISOString()
-      : null
+      ? dateToUnix(
+          new Date(
+            validRange?.endDate.getFullYear(),
+            validRange?.endDate.getMonth(),
+            validRange?.endDate.getDate(),
+            23,
+            59,
+            59
+          )
+        )
+      : undefined
 
   const { monthName, month, year } = React.useMemo(() => {
     const md = addMonths(new Date(), realIndex)
@@ -137,6 +156,8 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
           let leftCrop = dayOfMonth === 1
           let rightCrop = dayOfMonth === daysInMonth
 
+          const isFirstDayOfMonth = dayOfMonth === 1
+          const isLastDayOfMonth = dayOfMonth === daysInMonth
           if (mode === 'range') {
             const selectedStartDay = areDatesOnSameDay(day, startDate)
             const selectedEndDay = areDatesOnSameDay(day, endDate)
@@ -160,20 +181,60 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
             }
 
             if (
-              (dayOfMonth === 1 && selectedEndDay) ||
-              (dayOfMonth === daysInMonth && selectedStartDay)
+              (isFirstDayOfMonth && selectedEndDay) ||
+              (isLastDayOfMonth && selectedStartDay)
             ) {
               inRange = false
             }
           } else if (mode === 'multiple') {
-            selected = !!dates?.some((d) => areDatesOnSameDay(day, d))
+            const safeDates = dates || []
+            selected = safeDates.some((d) => areDatesOnSameDay(day, d))
+
+            const yesterday = new Date(year, month, dayOfMonth - 1)
+            const tomorrow = new Date(year, month, dayOfMonth + 1)
+
+            const yesterdaySelected = safeDates.some((d) =>
+              areDatesOnSameDay(d, yesterday)
+            )
+            const tomorrowSelected = safeDates.some((d) =>
+              areDatesOnSameDay(d, tomorrow)
+            )
+
+            if (selected) {
+              if (tomorrowSelected && yesterdaySelected) {
+                inRange = true
+              }
+              if (tomorrowSelected && !yesterdaySelected) {
+                inRange = true
+                leftCrop = true
+              }
+
+              if (yesterdaySelected && !tomorrowSelected) {
+                inRange = true
+                rightCrop = true
+              }
+
+              if (isFirstDayOfMonth && !tomorrowSelected) {
+                inRange = false
+              }
+
+              if (isLastDayOfMonth && !yesterdaySelected) {
+                inRange = false
+              }
+
+              if (inRange && !leftCrop && !rightCrop) {
+                selected = false
+              }
+            }
+
+            //
           } else if (mode === 'single') {
             selected = areDatesOnSameDay(day, date)
           }
-
+          //
           const isWithinOptionalValidRange = isDateWithinOptionalRange(day, {
-            startDate: validRangeStart ? new Date(validRangeStart) : undefined,
-            endDate: validRangeEnd ? new Date(validRangeEnd) : undefined,
+            startUnix: validRangeStart,
+            endUnix: validRangeEnd,
           })
 
           if (inRange) {

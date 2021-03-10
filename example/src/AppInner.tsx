@@ -321,6 +321,10 @@ function AppInner({
         onDismiss={onDismissSingle}
         date={date}
         onConfirm={onChangeSingle}
+        validRange={{
+          startDate: new Date(2021, 1, 2),
+          // endDate: new Date(),
+        }}
         // saveLabel="Save" // optional
         // label="Select date" // optional
         // animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web

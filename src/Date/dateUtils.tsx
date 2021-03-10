@@ -107,29 +107,19 @@ export function isDateBetween(
 export function isDateWithinOptionalRange(
   date: Date,
   {
-    startDate,
-    endDate,
-  }: { startDate?: Date | null | undefined; endDate?: Date | null | undefined }
+    startUnix,
+    endUnix,
+  }: { startUnix: number | undefined; endUnix: number | undefined }
 ) {
-  if (startDate) {
-    // if we're on the same day, we're within the valid range (inclusive)
-    const isSameDay = areDatesOnSameDay(startDate, date)
-    const isBeforeMinDate = date < startDate
-
-    if (!isSameDay && isBeforeMinDate) {
-      // disable the selection
-      return false
-    }
+  const dateUnix = dateToUnix(date)
+  // if startUnix is provided and date is before start
+  if (startUnix && dateUnix < startUnix) {
+    return false
   }
 
-  if (endDate) {
-    // if we're on the same day, we're within the valid range (inclusive)
-    const isSameDay = areDatesOnSameDay(endDate, date)
-    const isAfterMaxDate = date > endDate
-
-    if (!isSameDay && isAfterMaxDate) {
-      return false
-    }
+  // if startUnix is provided and date is after end
+  if (endUnix && dateUnix > endUnix) {
+    return false
   }
 
   return true

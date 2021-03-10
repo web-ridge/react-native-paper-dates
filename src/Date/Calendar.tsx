@@ -9,7 +9,6 @@ import {
   dateToUnix,
   DisableWeekDaysType,
   getInitialIndex,
-  isDateWithinOptionalRange,
 } from './dateUtils'
 
 import CalendarHeader from './CalendarHeader'
@@ -124,20 +123,9 @@ function Calendar(
     onChange
   )
   const datesRef = useLatest<CalendarDates>(dates)
-  const validRangeStart = useLatest(validRange?.startDate)
-  const validRangeEnd = useLatest(validRange?.endDate)
 
   const onPressDate = useCallback(
     (d: Date) => {
-      const isWithinValidRange = isDateWithinOptionalRange(d, {
-        startDate: validRangeStart.current,
-        endDate: validRangeEnd.current,
-      })
-
-      if (!isWithinValidRange) {
-        return
-      }
-
       if (mode === 'single') {
         ;(onChangeRef.current as SingleChange)({
           date: d,
@@ -171,15 +159,7 @@ function Calendar(
         })
       }
     },
-    [
-      validRangeStart,
-      validRangeEnd,
-      mode,
-      onChangeRef,
-      startDateRef,
-      endDateRef,
-      datesRef,
-    ]
+    [mode, onChangeRef, startDateRef, endDateRef, datesRef]
   )
 
   const firstDate = startDate || date || dates?.[0]

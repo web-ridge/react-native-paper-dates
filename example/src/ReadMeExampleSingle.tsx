@@ -30,6 +30,10 @@ export default function ReadMeExampleSingle() {
         onDismiss={onDismissSingle}
         date={date}
         onConfirm={onConfirmSingle}
+        // validRange={{
+        //   startDate: new Date(2021, 1, 2),  // optional
+        //   endDate: new Date(), // optional
+        // }}
         // onChange={} // same props as onConfirm but triggered without confirmed by user
         // saveLabel="Save" // optional
         // label="Select date" // optional
