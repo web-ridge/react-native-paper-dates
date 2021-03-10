@@ -9,6 +9,7 @@ import {
   dateToUnix,
   DisableWeekDaysType,
   getInitialIndex,
+  isDateWithinOptionalRange,
 } from './dateUtils'
 
 import CalendarHeader from './CalendarHeader'
@@ -22,9 +23,15 @@ export type ModeType = 'single' | 'range' | 'excludeInRange' | 'multiple'
 
 export type ScrollModeType = 'horizontal' | 'vertical'
 
+export type ValidRangeType = {
+  startDate?: Date
+  endDate?: Date
+}
+
 export type BaseCalendarProps = {
   locale?: undefined | string
   disableWeekDays?: DisableWeekDaysType
+  validRange?: ValidRangeType
 }
 
 export type CalendarDate = Date | undefined
@@ -95,6 +102,7 @@ function Calendar(
     disableWeekDays,
     // @ts-ignore
     dates,
+    validRange,
   } = props
 
   const theme = useTheme()
@@ -130,9 +138,20 @@ function Calendar(
     RangeChange | SingleChange | ExcludeInRangeChange | MultiChange
   >(onChange)
   const datesRef = useLatest<Date[]>(dates)
+  const validRangeStart = useLatest(validRange?.startDate)
+  const validRangeEnd = useLatest(validRange?.endDate)
 
   const onPressDate = useCallback(
     (d: Date) => {
+      const isWithinValidRange = isDateWithinOptionalRange(d, {
+        startDate: validRangeStart.current,
+        endDate: validRangeEnd.current,
+      })
+
+      if (!isWithinValidRange) {
+        return
+      }
+
       if (mode === 'single') {
         ;(onChangeRef.current as SingleChange)({
           date: d,
@@ -180,7 +199,16 @@ function Calendar(
         })
       }
     },
-    [mode, onChangeRef, startDateRef, endDateRef, excludedDatesRef, datesRef]
+    [
+      validRangeStart,
+      validRangeEnd,
+      mode,
+      onChangeRef,
+      startDateRef,
+      endDateRef,
+      excludedDatesRef,
+      datesRef,
+    ]
   )
 
   return (
@@ -194,6 +222,7 @@ function Calendar(
             locale={locale}
             mode={mode}
             key={index}
+            validRange={validRange}
             index={index}
             startDate={startDate}
             endDate={endDate}

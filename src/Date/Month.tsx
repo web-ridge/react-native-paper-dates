@@ -18,9 +18,10 @@ import {
   startAtIndex,
   beginOffset,
   estimatedMonthHeight,
+  isDateWithinOptionalRange,
 } from './dateUtils'
 import { getCalendarHeaderHeight } from './CalendarHeader'
-import { ModeType } from './Calendar'
+import type { ModeType, ValidRangeType } from './Calendar'
 import { dayNamesHeight } from './DayNames'
 import { useTextColorOnPrimary } from '../utils'
 
@@ -40,6 +41,7 @@ interface BaseMonthProps {
   primaryColor: string
   selectColor: string
   roundness: number
+  validRange?: ValidRangeType
 }
 
 interface MonthRangeProps extends BaseMonthProps {
@@ -82,6 +84,7 @@ function Month({
   locale,
   // @ts-ignore
   dates,
+  validRange,
 }:
   | MonthSingleProps
   | MonthRangeProps
@@ -91,6 +94,16 @@ function Month({
   const textColorOnPrimary = useTextColorOnPrimary()
   const realIndex = getRealIndex(index)
   const isHorizontal = scrollMode === 'horizontal'
+
+  const validRangeStart =
+    validRange?.startDate instanceof Date
+      ? validRange?.startDate?.toISOString()
+      : null
+
+  const validRangeEnd =
+    validRange?.endDate instanceof Date
+      ? validRange?.endDate?.toISOString()
+      : null
 
   const { monthName, month, year } = React.useMemo(() => {
     const md = addMonths(new Date(), realIndex)
@@ -125,6 +138,11 @@ function Month({
           const selectedEndDay = areDatesOnSameDay(day, endDate)
           const selectedDay = areDatesOnSameDay(day, date)
 
+          const isWithinOptionalValidRange = isDateWithinOptionalRange(day, {
+            startDate: validRangeStart ? new Date(validRangeStart) : undefined,
+            endDate: validRangeEnd ? new Date(validRangeEnd) : undefined,
+          })
+
           const multiDates = dates as Date[] | undefined
 
           const selectedMultiDay = !!multiDates?.some((d) =>
@@ -149,6 +167,10 @@ function Month({
 
           if (inRange) {
             disabled = false
+          }
+
+          if (!isWithinOptionalValidRange) {
+            disabled = true
           }
 
           let leftCrop: boolean = selectedStartDay || dayOfMonth === 1
@@ -208,7 +230,19 @@ function Month({
         }),
       }
     })
-  }, [year, month, index, startDate, endDate, date, dates, mode, excludedDates])
+  }, [
+    year,
+    month,
+    index,
+    startDate,
+    endDate,
+    date,
+    validRangeStart,
+    validRangeEnd,
+    dates,
+    mode,
+    excludedDates,
+  ])
 
   return (
     <View style={[styles.month, { height: getMonthHeight(scrollMode, index) }]}>

@@ -99,6 +99,42 @@ export function isDateBetween(
   return date <= endDate && date >= startDate
 }
 
+/**
+ * Check if a date is within an optional range.
+ *
+ * If the range doesn't exist, it defaults to `true`.
+ */
+export function isDateWithinOptionalRange(
+  date: Date,
+  {
+    startDate,
+    endDate,
+  }: { startDate?: Date | null | undefined; endDate?: Date | null | undefined }
+) {
+  if (startDate) {
+    // if we're on the same day, we're within the valid range (inclusive)
+    const isSameDay = areDatesOnSameDay(startDate, date)
+    const isBeforeMinDate = date < startDate
+
+    if (!isSameDay && isBeforeMinDate) {
+      // disable the selection
+      return false
+    }
+  }
+
+  if (endDate) {
+    // if we're on the same day, we're within the valid range (inclusive)
+    const isSameDay = areDatesOnSameDay(endDate, date)
+    const isAfterMaxDate = date > endDate
+
+    if (!isSameDay && isAfterMaxDate) {
+      return false
+    }
+  }
+
+  return true
+}
+
 export function isLeapYear({ year }: { year: number }) {
   return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0
 }

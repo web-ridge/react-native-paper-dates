@@ -246,7 +246,7 @@ function App({
                 {dates
                   ?.map((date) => date && dateFormatter.format(date))
                   .filter(Boolean)
-                  .join(', ')}
+                  .join(', ') ?? '-'}
               </Text>
             </Row>
           </View>
@@ -377,6 +377,9 @@ function App({
         visible={multiOpen}
         onDismiss={onDismissMulti}
         dates={dates}
+        validRange={{
+          startDate: new Date(),
+        }}
         onConfirm={onChangeMulti}
         // moreLabel="more" // optional, if multiple are selected this will show if we can't show all dates
         // onChange={onChangeMulti}
