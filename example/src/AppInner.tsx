@@ -15,7 +15,7 @@ import {
   Button,
   Text,
   Provider as PaperProvider,
-  Switch,
+  // Switch,
   DefaultTheme,
   DarkTheme,
   useTheme,
@@ -32,7 +32,7 @@ import {
 } from 'react-native-paper-dates';
 
 function AppInner({
-  onToggleDarkMode,
+  // onToggleDarkMode,
   dark,
 }: {
   onToggleDarkMode: () => any;
@@ -142,7 +142,10 @@ function AppInner({
       >
         <View style={styles.content}>
           <View style={styles.titleContainer}>
-            <Image source={require('./schedule.png')} style={styles.logo} />
+            <Image
+              source={require('./schedule.png').default}
+              style={styles.logo}
+            />
             <Title>react-native-paper-dates</Title>
           </View>
 
@@ -156,7 +159,7 @@ function AppInner({
               webRidge
             </Text>
           </Paragraph>
-          <Paragraph>Example version: 0.4.0</Paragraph>
+          <Paragraph>Example version: 0.4.1</Paragraph>
         </View>
         <View style={styles.content}>
           <Button
@@ -184,17 +187,17 @@ function AppInner({
             },
           ]}
         >
-          <View style={styles.switchContainer}>
-            <Text style={[styles.switchLabel, { ...theme.fonts.medium }]}>
-              Dark mode
-            </Text>
-            <View style={styles.switchSpace} />
-            <Switch value={dark} onValueChange={onToggleDarkMode} />
-          </View>
-          <Enter />
-          <Enter />
-          <Enter />
-          <Enter />
+          {/*<View style={styles.switchContainer}>*/}
+          {/*  <Text style={[styles.switchLabel, { ...theme.fonts.medium }]}>*/}
+          {/*    Dark mode (does not wo*/}
+          {/*  </Text>*/}
+          {/*  <View style={styles.switchSpace} />*/}
+          {/*  <Switch value={dark} onValueChange={onToggleDarkMode} />*/}
+          {/*</View>*/}
+          {/*<Enter />*/}
+          {/*<Enter />*/}
+          {/*<Enter />*/}
+          {/*<Enter />*/}
           <View>
             <Row>
               <Label>Date</Label>
@@ -221,9 +224,9 @@ function AppInner({
               <Label>Dates</Label>
               <Text>
                 {dates
-                  ?.map((date) => date && dateFormatter.format(date))
+                  ?.map((d) => dateFormatter.format(d))
                   .filter(Boolean)
-                  .join(', ') ?? '-'}
+                  .join(', ') || '-'}
               </Text>
             </Row>
           </View>
@@ -413,7 +416,10 @@ export default function AppWithProviders() {
           <style type="text/css">{`
           @font-face {
             font-family: 'MaterialCommunityIcons';
-            src: url(${require('react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf')}) format('truetype');
+            src: url(${
+              require('react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf')
+                .default
+            }) format('truetype');
           }
         `}</style>
         ) : null}
