@@ -36,7 +36,7 @@ Give us a follow on Twitter:
 [web_ridge](https://twitter.com/web_ridge)
 
 ## Donate
-Instead of spending all your money on a M1 Mac, give it to us so we can buy one.
+Please contribute or donate so we can spend more time on this library
 
 [Donate with PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7B9KKQLXTEW9Q&source=url)
 
@@ -335,9 +335,17 @@ if (isHermesEnabled || isAndroid) {
 
 
   // https://formatjs.io/docs/polyfills/intl-datetimeformat/#default-timezone
-  let RNLocalize = require('react-native-localize');
+
   if ('__setDefaultTimeZone' in Intl.DateTimeFormat) {
+  
+    // If you are using react-native-cli
+    let RNLocalize = require('react-native-localize');
     Intl.DateTimeFormat.__setDefaultTimeZone(RNLocalize.getTimeZone());
+    
+    //  Are you using Expo, use this instead of previous 2 lines
+    //  Intl.DateTimeFormat.__setDefaultTimeZone(
+    //    require("expo-localization").timezone
+    //  );
   }
 }
 ```
