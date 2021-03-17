@@ -148,7 +148,7 @@ function CalendarInputPure(
 
   const inputFormat = React.useMemo(() => {
     // TODO: something cleaner and more universal?
-    const inputDate = formatter.format(new Date(Date.UTC(2020, 10 - 1, 1)))
+    const inputDate = formatter.format(new Date(2020, 10 - 1, 1))
     return inputDate
       .replace('2020', 'YYYY')
       .replace('10', 'MM')
