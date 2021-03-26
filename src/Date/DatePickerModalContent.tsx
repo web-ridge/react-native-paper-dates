@@ -27,6 +27,7 @@ export type LocalState = {
 }
 
 interface DatePickerModalContentBaseProps {
+  inputEnabled?:boolean
   inputFormat?: string
   onDismiss: () => any
   disableSafeTop?: boolean
@@ -172,6 +173,7 @@ export function DatePickerModalContent(
         }
         calendarEdit={
           <CalendarEdit
+            inputEnabled={props.inputEnabled}
             mode={mode}
             state={state}
             label={props.label}

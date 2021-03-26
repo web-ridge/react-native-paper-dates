@@ -24,6 +24,7 @@ interface DatePickerModalProps {
   animationType?: 'slide' | 'fade' | 'none'
   disableStatusBar?: boolean
   disableStatusBarPadding?: boolean
+  dateInput?: boolean
 }
 
 export interface DatePickerModalSingleProps
@@ -51,6 +52,7 @@ export function DatePickerModal(
     animationType,
     disableStatusBar,
     disableStatusBarPadding,
+    dateInput,
     ...rest
   } = props
   const animationTypeCalculated =
@@ -117,6 +119,7 @@ export function DatePickerModal(
               )}
               <DatePickerModalContent
                 {...rest}
+                inputEnabled={dateInput}
                 disableSafeTop={disableStatusBar}
               />
             </View>
