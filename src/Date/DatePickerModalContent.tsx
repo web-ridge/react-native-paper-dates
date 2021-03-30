@@ -137,13 +137,13 @@ export function DatePickerModalContent(
     <>
       <DatePickerModalHeaderBackground>
         <DatePickerModalHeader
-          inputDate={inputEnabled}
           onSave={onInnerConfirm}
           onDismiss={onDismiss}
           saveLabel={props.saveLabel}
           disableSafeTop={disableSafeTop}
         />
         <DatePickerModalContentHeader
+          inputDate={inputEnabled}
           state={state}
           mode={mode}
           collapsed={collapsed}
