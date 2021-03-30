@@ -47,8 +47,12 @@ export default function DatePickerModalHeader(props: HeaderContentProps) {
 
   const label = getLabel(props.mode, props.label)
 
+  console.log('inputDate',inputDate)
   const color = useHeaderTextColor()
-  const allowEditing = mode !== 'multiple'
+  let allowEditing = mode !== 'multiple'
+  if (inputDate !== undefined) {
+    allowEditing = inputDate
+  }
   return (
     <View style={[styles.header]}>
       <View>
@@ -71,7 +75,13 @@ export default function DatePickerModalHeader(props: HeaderContentProps) {
         </View>
       </View>
       <View style={styles.fill} />
-      {null}
+      {allowEditing ? (
+        <IconButton
+          icon={collapsed ? 'pencil' : 'calendar'}
+          color={color}
+          onPress={onToggle}
+        />
+      ) : null}
     </View>
   )
 }
