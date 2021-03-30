@@ -79,6 +79,7 @@ export function DatePickerModalContent(
     disableWeekDays,
     locale,
     validRange,
+    inputEnabled
   } = props
 
   const anyProps = props as any
@@ -136,6 +137,7 @@ export function DatePickerModalContent(
     <>
       <DatePickerModalHeaderBackground>
         <DatePickerModalHeader
+          inputDate={inputEnabled}
           onSave={onInnerConfirm}
           onDismiss={onDismiss}
           saveLabel={props.saveLabel}
