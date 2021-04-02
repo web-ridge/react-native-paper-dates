@@ -133,7 +133,7 @@ function SwiperInner({
   )
 
   return (
-    <View style={{ flex: 1 }}>
+    <>
       <ScrollView
         ref={parentRef}
         horizontal={isHorizontal}
@@ -186,7 +186,7 @@ function SwiperInner({
       </ScrollView>
       {renderHeader && renderHeader(renderProps)}
       {renderFooter && renderFooter(renderProps)}
-    </View>
+    </>
   )
 }
 
