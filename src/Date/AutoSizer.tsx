@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { LayoutChangeEvent, StyleSheet, View } from 'react-native'
 
 type WidthAndHeight = {
   width: number
@@ -13,7 +13,7 @@ export default function AutoSizer({
 }) {
   const [layout, setLayout] = React.useState<WidthAndHeight | null>(null)
   const onLayout = React.useCallback(
-    (event: any) => {
+    (event: LayoutChangeEvent) => {
       const nl = event.nativeEvent.layout
 
       // https://github.com/necolas/react-native-web/issues/1704
@@ -24,7 +24,7 @@ export default function AutoSizer({
     [layout, setLayout]
   )
   return (
-    <View style={styles.autoSizer} onLayout={onLayout}>
+    <View style={[styles.autoSizer, layout && layout]} onLayout={onLayout}>
       {layout ? children(layout) : null}
     </View>
   )

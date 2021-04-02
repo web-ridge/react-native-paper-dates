@@ -82,7 +82,7 @@ export default function AnimatedCrossView({
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, minHeight: 300 },
+  root: { flex: 1 },
   calendarEdit: {
     position: 'absolute',
 

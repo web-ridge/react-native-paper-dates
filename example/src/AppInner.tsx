@@ -7,9 +7,9 @@ import {
   Linking,
   Image,
   Animated,
-  StatusBar,
-  // I18nManager,
+  useColorScheme,
 } from 'react-native';
+
 import {
   Title,
   Button,
@@ -31,13 +31,7 @@ import {
   // @ts-ignore
 } from 'react-native-paper-dates';
 
-function AppInner({
-  // onToggleDarkMode,
-  dark,
-}: {
-  onToggleDarkMode: () => any;
-  dark: boolean;
-}) {
+function AppInner() {
   // I18nManager.forceRTL(true);
   const theme = useTheme();
   const dateFormatter = new Intl.DateTimeFormat(undefined, {
@@ -128,10 +122,6 @@ function AppInner({
 
   return (
     <>
-      <StatusBar
-        translucent={true}
-        barStyle={dark ? 'dark-content' : 'light-content'}
-      />
       <ScrollView
         style={[
           styles.root,
@@ -382,10 +372,7 @@ function Label({ children }: { children: string }) {
 }
 
 export default function AppWithProviders() {
-  const [dark, setDark] = React.useState(false);
-  const onToggleDarkMode = () => {
-    setDark((prev) => !prev);
-  };
+  const dark = useColorScheme() === 'dark';
 
   return (
     <PaperProvider
@@ -423,7 +410,7 @@ export default function AppWithProviders() {
           }
         `}</style>
         ) : null}
-        <AppInner onToggleDarkMode={onToggleDarkMode} dark={dark} />
+        <AppInner />
       </React.Fragment>
     </PaperProvider>
   );
