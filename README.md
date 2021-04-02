@@ -199,6 +199,7 @@ export default function ReadMeExampleMultiple() {
         onDismiss={onDismiss}
         dates={dates}
         onConfirm={onConfirm}
+        // moreLabel="More"
         // validRange={{
         //   startDate: new Date(2021, 1, 2),  // optional
         //   endDate: new Date(), // optional
