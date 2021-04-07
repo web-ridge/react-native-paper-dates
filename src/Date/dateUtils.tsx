@@ -117,7 +117,7 @@ export function isDateWithinOptionalRange(
     return false
   }
 
-  // if startUnix is provided and date is after end
+  // if endUnix is provided and date is after end
   if (endUnix && dateUnix > endUnix) {
     return false
   }
