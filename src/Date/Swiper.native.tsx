@@ -22,6 +22,9 @@ const styles = StyleSheet.create({
   viewPager: {
     flex: 1,
   },
+  inner: {
+    position: 'relative',
+  },
 })
 const visibleArray = (i: number) => [i - 2, i - 1, i, i + 1, i + 2]
 
@@ -148,11 +151,15 @@ function SwiperInner({
         scrollEventThrottle={10}
       >
         <View
-          style={{
-            height: isHorizontal ? height : estimatedMonthHeight * totalMonths,
-            width: isHorizontal ? width * totalMonths : width,
-            position: 'relative',
-          }}
+          style={[
+            styles.inner,
+            {
+              height: isHorizontal
+                ? height
+                : estimatedMonthHeight * totalMonths,
+              width: isHorizontal ? width * totalMonths : width,
+            },
+          ]}
         >
           {visibleIndexes
             ? [0, 1, 2, 3, 4].map((vi) => (

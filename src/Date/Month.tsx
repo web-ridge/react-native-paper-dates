@@ -333,6 +333,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
               ) : (
                 <Day
                   key={gd.dayIndex}
+                  theme={theme}
                   day={gd.dayOfMonth}
                   month={gd.month}
                   year={gd.year}
@@ -417,7 +418,7 @@ function weeksOffset(index: number): number {
     }
   } else {
     for (let i = 0; i < startAtIndex - index; i++) {
-      const cIndex = startAtIndex - i
+      const cIndex = startAtIndex - i - 1
       off -= gridCounts[cIndex] || getGridCount(cIndex)
     }
   }
@@ -454,6 +455,7 @@ export function getVerticalMonthsOffset(index: number) {
   const ob = weeksOffset(index)
   const monthsHeight = weekSize * ob
   const c = monthsHeight + count * (dayNamesHeight + montHeaderHeight)
+
   return (c || 0) + beginOffset
 }
 
