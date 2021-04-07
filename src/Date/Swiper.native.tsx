@@ -26,7 +26,16 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
 })
-const visibleArray = (i: number) => [i - 2, i - 1, i, i + 1, i + 2]
+
+function getVisibleArray(
+  i: number,
+  { isHorizontal, height }: { isHorizontal: boolean; height: number }
+) {
+  if (isHorizontal || height < 700) {
+    return [i - 1, i, i + 1]
+  }
+  return [i - 2, i - 1, i, i + 1, i + 2]
+}
 
 function Swiper(props: SwiperProps) {
   return (
@@ -49,17 +58,17 @@ function SwiperInner({
   height,
 }: SwiperProps & { width: number; height: number }) {
   const idx = React.useRef<number>(initialIndex)
-  const [visibleIndexes, setVisibleIndexes] = React.useState<number[]>(
-    visibleArray(initialIndex)
-  )
   const isHorizontal = scrollMode === 'horizontal'
+  const [visibleIndexes, setVisibleIndexes] = React.useState<number[]>(
+    getVisibleArray(initialIndex, { isHorizontal, height })
+  )
 
   const parentRef = React.useRef<ScrollView | null>(null)
 
   const scrollTo = React.useCallback(
     (index: number, animated: boolean) => {
       idx.current = index
-      setVisibleIndexes(visibleArray(index))
+      setVisibleIndexes(getVisibleArray(index, { isHorizontal, height }))
 
       if (!parentRef.current) {
         return
@@ -82,7 +91,7 @@ function SwiperInner({
         })
       }
     },
-    [parentRef, isHorizontal, width]
+    [parentRef, isHorizontal, width, height]
   )
 
   const onPrev = React.useCallback(() => {
@@ -111,10 +120,10 @@ function SwiperInner({
 
       if (idx.current !== newIndex) {
         idx.current = newIndex
-        setVisibleIndexes(visibleArray(newIndex))
+        setVisibleIndexes(getVisibleArray(newIndex, { isHorizontal, height }))
       }
     },
-    [idx, isHorizontal]
+    [idx, height, isHorizontal]
   )
 
   const renderProps = {
@@ -162,7 +171,7 @@ function SwiperInner({
           ]}
         >
           {visibleIndexes
-            ? [0, 1, 2, 3, 4].map((vi) => (
+            ? new Array(visibleIndexes.length).fill(undefined).map((_, vi) => (
                 <View
                   key={vi}
                   style={{
