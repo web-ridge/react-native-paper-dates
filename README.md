@@ -283,10 +283,17 @@ This is to prevent the need to press 2 times before save or close button in moda
 
 ## Android Caveats
 
+
+
 You will need to add a polyfill for the Intl API on Android if:
 
 - You have [Hermes](https://github.com/facebook/hermes/issues/23) enabled
 - You have [Hermes](https://github.com/facebook/hermes/issues/23) disabled and you want to support locales outside of en-US and you don't have the org.webkit:android-jsc-intl:+ variant enabled in your app/build.gradle
+
+
+*update*: [Hermes is planning on native Intl support in version 0.65!](https://github.com/facebook/hermes/issues/23#issuecomment-816126715) when that's released we won't need any polyfills anymore!   
+
+But for now.   
 
 Install polyfills with Yarn
 
