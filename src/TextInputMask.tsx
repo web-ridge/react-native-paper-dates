@@ -67,7 +67,7 @@ function enhanceTextWithMask(
 }
 
 function TextInputWithMask(
-  { onChangeText, value, mask, ...rest }: any,
+  { onChangeText, enabled, value, mask, ...rest }: any,
   ref: any
 ) {
   const [controlledValue, setControlledValue] = React.useState<string>(value)
@@ -87,6 +87,7 @@ function TextInputWithMask(
 
   return (
     <TextInput
+      enabled={enabled}
       ref={ref}
       {...rest}
       value={controlledValue}

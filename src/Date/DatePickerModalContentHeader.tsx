@@ -22,6 +22,7 @@ export interface HeaderContentProps extends HeaderPickProps {
   collapsed: boolean
   onToggle: () => any
   locale: undefined | string
+  inputDate?:boolean
 }
 
 function getLabel(mode: ModeType, configuredLabel?: string) {
@@ -42,12 +43,16 @@ function getLabel(mode: ModeType, configuredLabel?: string) {
 }
 
 export default function DatePickerModalHeader(props: HeaderContentProps) {
-  const { onToggle, collapsed, mode, moreLabel } = props
+  const { onToggle, collapsed, mode, moreLabel, inputDate } = props
 
   const label = getLabel(props.mode, props.label)
 
+  console.log('inputDate',inputDate)
   const color = useHeaderTextColor()
-  const allowEditing = mode !== 'multiple'
+  let allowEditing = mode !== 'multiple'
+  if (inputDate !== undefined) {
+    allowEditing = inputDate
+  }
   return (
     <View style={[styles.header]}>
       <View>

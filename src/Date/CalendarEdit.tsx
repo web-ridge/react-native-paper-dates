@@ -21,7 +21,9 @@ function CalendarEdit({
   collapsed,
   onChange,
   validRange,
+  inputEnabled
 }: {
+  inputEnabled?:boolean
   mode: ModeType
   label?: string
   startLabel?: string
@@ -124,7 +126,9 @@ function CalendarInputPure(
     onSubmitEditing,
     locale,
     validRange,
+    inputEnabled
   }: {
+    inputEnabled?:boolean
     locale?: undefined | string
     label: string
     value: CalendarDate
@@ -203,6 +207,7 @@ function CalendarInputPure(
   return (
     <View style={styles.inputContainer}>
       <TextInputWithMask
+        enabled={inputEnabled} 
         ref={ref}
         value={formattedValue}
         style={styles.input}
