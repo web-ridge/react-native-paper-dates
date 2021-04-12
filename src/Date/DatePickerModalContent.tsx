@@ -135,6 +135,7 @@ export function DatePickerModalContent(
     <>
       <DatePickerModalHeaderBackground>
         <DatePickerModalHeader
+          state={state}
           onSave={onInnerConfirm}
           onDismiss={onDismiss}
           saveLabel={props.saveLabel}

@@ -154,8 +154,19 @@ function CalendarInputPure(
       .replace('10', 'MM')
       .replace('01', 'DD')
   }, [formatter])
+  const [formattedValue, setFormattedValue] = React.useState(null)
+  const monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
-  const formattedValue = formatter.format(value)
+  React.useEffect(() => {
+    setFormattedValue(formatter.format(value))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  React.useEffect(() => {
+    if (formattedValue) onChangeText(formattedValue)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formattedValue])
+
   const onChangeText = (date: string) => {
     const dayIndex = inputFormat.indexOf('DD')
     const monthIndex = inputFormat.indexOf('MM')
@@ -165,8 +176,23 @@ function CalendarInputPure(
     const year = Number(date.slice(yearIndex, yearIndex + 4))
     const month = Number(date.slice(monthIndex, monthIndex + 2))
 
+    if (year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0))
+      monthLength[1] = 29
+
     if (Number.isNaN(day) || Number.isNaN(year) || Number.isNaN(month)) {
       setError(inputFormat)
+      return
+    }
+
+    if (month === 0 || month > 12) {
+      setError('MM should be in range of 1-12')
+      onChange(undefined)
+      return
+    }
+
+    if (day === 0 || day > monthLength[month - 1]) {
+      setError('DD should be in range of 1-' + monthLength[month - 1])
+      onChange(undefined)
       return
     }
 

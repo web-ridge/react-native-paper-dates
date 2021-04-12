@@ -1,10 +1,11 @@
 import * as React from 'react'
 import { Animated, StyleSheet, SafeAreaView } from 'react-native'
 import { Appbar, Button } from 'react-native-paper'
-
+import { LocalState } from './DatePickerModalContent'
 import { useHeaderTextColor } from '../utils'
 
 export interface DatePickerModalHeaderProps {
+  state: LocalState
   disableSafeTop?: boolean
   saveLabel?: string
   onDismiss: () => void
@@ -32,7 +33,11 @@ export default function DatePickerModalHeader(
               color={color}
             />
             <Appbar.Content title={''} />
-            <Button color={color} onPress={props.onSave}>
+            <Button
+              color={color}
+              onPress={props.onSave}
+              disabled={!props.state.date}
+            >
               {saveLabel}
             </Button>
           </Appbar>
