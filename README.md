@@ -20,7 +20,7 @@
 - Endless (virtual) scrolling
 - Performant
 - Great React Native Web support
-- No dependencies outside of ([react-native-paper](https://callstack.github.io/react-native-paper/))
+- Dependencies are [react-native-paper](https://callstack.github.io/react-native-paper/)
 
 [![Demo of react-native-paper-dates](https://user-images.githubusercontent.com/6492229/98866767-bd3f2780-246d-11eb-890e-3491b47c95c5.gif)](https://www.youtube.com/watch?v=SHhQU2doTug)
 
@@ -42,6 +42,7 @@ Please contribute or donate so we can spend more time on this library
 
 
 ## Getting started
+First install and follow the guides at [react-native-paper](https://callstack.github.io/react-native-paper/)
 
 Yarn
 ```
@@ -198,6 +199,7 @@ export default function ReadMeExampleMultiple() {
         onDismiss={onDismiss}
         dates={dates}
         onConfirm={onConfirm}
+        // moreLabel="More"
         // validRange={{
         //   startDate: new Date(2021, 1, 2),  // optional
         //   endDate: new Date(), // optional
@@ -281,10 +283,17 @@ This is to prevent the need to press 2 times before save or close button in moda
 
 ## Android Caveats
 
+
+
 You will need to add a polyfill for the Intl API on Android if:
 
 - You have [Hermes](https://github.com/facebook/hermes/issues/23) enabled
 - You have [Hermes](https://github.com/facebook/hermes/issues/23) disabled and you want to support locales outside of en-US and you don't have the org.webkit:android-jsc-intl:+ variant enabled in your app/build.gradle
+
+
+*update*: [Hermes is planning on native Intl support in version 0.65!](https://github.com/facebook/hermes/issues/23#issuecomment-816126715) when that's released we won't need any polyfills anymore!   
+
+But for now.   
 
 Install polyfills with Yarn
 
@@ -337,11 +346,11 @@ if (isHermesEnabled || isAndroid) {
   // https://formatjs.io/docs/polyfills/intl-datetimeformat/#default-timezone
 
   if ('__setDefaultTimeZone' in Intl.DateTimeFormat) {
-  
+
     // If you are using react-native-cli
     let RNLocalize = require('react-native-localize');
     Intl.DateTimeFormat.__setDefaultTimeZone(RNLocalize.getTimeZone());
-    
+
     //  Are you using Expo, use this instead of previous 2 lines
     //  Intl.DateTimeFormat.__setDefaultTimeZone(
     //    require("expo-localization").timezone

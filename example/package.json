@@ -29,7 +29,7 @@
     "react-native-localize": "^2.0.1",
     "react-native-paper": "^4.7.2",
     "react-native-vector-icons": "https://github.com/RichardLindhout/react-native-vector-icons",
-    "react-native-web": "^0.15.0",
+    "react-native-web": "^0.15.5",
     "react-scripts": "^4.0.3"
   },
   "devDependencies": {
