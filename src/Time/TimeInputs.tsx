@@ -3,12 +3,11 @@
 
 import * as React from 'react'
 import {
-  View,
   StyleSheet,
-  useWindowDimensions,
   TextInput as TextInputNative,
+  useWindowDimensions,
+  View,
 } from 'react-native'
-import { useTheme } from 'react-native-paper'
 
 import {
   clockTypes,
@@ -29,6 +28,7 @@ function TimeInputs({
   inputType,
   onChange,
   is24Hour,
+  theme,
 }: {
   inputType: PossibleInputTypes
   focused: PossibleClockTypes
@@ -45,12 +45,12 @@ function TimeInputs({
     focused?: undefined | PossibleClockTypes
   }) => any
   is24Hour: boolean
+  theme: ReactNativePaper.Theme
 }) {
   const startInput = React.useRef<TextInputNative | null>(null)
   const endInput = React.useRef<TextInputNative | null>(null)
   const dimensions = useWindowDimensions()
   const isLandscape = dimensions.width > dimensions.height
-  const theme = useTheme()
 
   const onSubmitStartInput = React.useCallback(() => {
     if (endInput.current) {
@@ -102,6 +102,7 @@ function TimeInputs({
             minutes,
           })
         }}
+        theme={theme}
         // onChangeText={onChangeStartInput}
       />
       <View style={styles.hoursAndMinutesSeparator}>
@@ -130,11 +131,12 @@ function TimeInputs({
             minutes: newMinutes,
           })
         }}
+        theme={theme}
       />
       {!is24Hour && (
         <>
           <View style={styles.spaceBetweenInputsAndSwitcher} />
-          <AmPmSwitcher hours={hours} onChange={onChangeHours} />
+          <AmPmSwitcher hours={hours} onChange={onChangeHours} theme={theme} />
         </>
       )}
     </View>

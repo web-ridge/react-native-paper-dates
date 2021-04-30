@@ -5,7 +5,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
-import { useTheme } from 'react-native-paper'
+import { useTheme, withTheme } from 'react-native-paper'
 import {
   clockTypes,
   getAngle,
@@ -33,6 +33,7 @@ function AnalogClock({
   focused,
   is24Hour,
   onChange,
+  theme,
 }: {
   hours: number
   minutes: number
@@ -47,9 +48,8 @@ function AnalogClock({
     minutes: number
     focused?: undefined | PossibleClockTypes
   }) => any
+  theme: ReactNativePaper.Theme
 }) {
-  const theme = useTheme()
-
   // used to make pointer shorter if hours are selected and above 12
   const shortPointer = (hours === 0 || hours > 12) && is24Hour
 
@@ -176,8 +176,10 @@ function AnalogClock({
       </View>
       <AnimatedClockSwitcher
         focused={focused}
-        hours={<AnalogClockHours is24Hour={is24Hour} hours={hours} />}
-        minutes={<AnalogClockMinutes minutes={minutes} />}
+        hours={
+          <AnalogClockHours is24Hour={is24Hour} hours={hours} theme={theme} />
+        }
+        minutes={<AnalogClockMinutes minutes={minutes} theme={theme} />}
       />
     </View>
   )

@@ -26,14 +26,15 @@ function CalendarHeader({
   onNext,
   disableWeekDays,
   locale,
+  theme,
 }: {
   locale: undefined | string
   scrollMode: 'horizontal' | 'vertical'
   onPrev: () => any
   onNext: () => any
   disableWeekDays?: DisableWeekDaysType
+  theme: ReactNativePaper.Theme
 }) {
-  const theme = useTheme()
   const isHorizontal = scrollMode === 'horizontal'
   return (
     <View style={styles.datePickerHeader} pointerEvents={'box-none'}>
@@ -46,7 +47,7 @@ function CalendarHeader({
               { backgroundColor: theme.colors.surface },
             ]}
           >
-            <IconButton icon="chevron-left" onPress={onPrev} />
+            <IconButton icon="chevron-left" onPress={onPrev} theme={theme} />
           </View>
 
           <View
@@ -55,11 +56,11 @@ function CalendarHeader({
               { backgroundColor: theme.colors.surface },
             ]}
           >
-            <IconButton icon="chevron-right" onPress={onNext} />
+            <IconButton icon="chevron-right" onPress={onNext} theme={theme} />
           </View>
         </View>
       ) : null}
-      <DayNames disableWeekDays={disableWeekDays} locale={locale} />
+      <DayNames disableWeekDays={disableWeekDays} locale={locale} theme={theme} />
     </View>
   )
 }

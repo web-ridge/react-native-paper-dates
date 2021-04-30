@@ -4,9 +4,15 @@ import { Text } from 'react-native-paper'
 import { circleSize } from './AnalogClock'
 import { useTextColorOnPrimary } from '../utils'
 
-function AnalogClockMinutes({ minutes }: { minutes: number }) {
+function AnalogClockMinutes({
+  minutes,
+  theme,
+}: {
+  minutes: number
+  theme: ReactNativePaper.Theme
+}) {
   const range = getMinuteNumbers(circleSize, 12)
-  const color = useTextColorOnPrimary()
+  const color = useTextColorOnPrimary(theme)
   return (
     <>
       {range.map((a, i) => {
@@ -30,7 +36,11 @@ function AnalogClockMinutes({ minutes }: { minutes: number }) {
             ]}
           >
             <View style={styles.outerHourInner}>
-              <Text style={isCurrent ? { color } : null} selectable={false}>
+              <Text
+                style={isCurrent ? { color } : null}
+                selectable={false}
+                theme={theme}
+              >
                 {isZero ? '00' : currentMinutes}
               </Text>
             </View>

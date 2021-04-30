@@ -9,13 +9,14 @@ export interface DatePickerModalHeaderProps {
   saveLabel?: string
   onDismiss: () => void
   onSave: () => void
+  theme: ReactNativePaper.Theme
 }
 
 export default function DatePickerModalHeader(
   props: DatePickerModalHeaderProps
 ) {
-  const { saveLabel = 'Save', disableSafeTop } = props
-  const color = useHeaderTextColor()
+  const { saveLabel = 'Save', disableSafeTop, theme } = props
+  const color = useHeaderTextColor(theme)
   return (
     <>
       <Animated.View style={styles.animated}>

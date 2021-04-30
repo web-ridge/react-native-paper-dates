@@ -4,10 +4,12 @@ import { useHeaderBackgroundColor } from '../utils'
 
 export default function DatePickerModalHeaderBackground({
   children,
+  theme,
 }: {
   children: any
+  theme: ReactNativePaper.Theme
 }) {
-  const backgroundColor = useHeaderBackgroundColor()
+  const backgroundColor = useHeaderBackgroundColor(theme)
 
   return (
     <Animated.View
