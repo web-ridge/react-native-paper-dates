@@ -1,15 +1,15 @@
 import * as React from 'react'
 import {
+  Animated,
+  KeyboardAvoidingView,
   Modal,
   StyleSheet,
-  View,
   Text,
-  Animated,
   TouchableWithoutFeedback,
-  KeyboardAvoidingView,
+  View,
 } from 'react-native'
 
-import { Button, IconButton, overlay, useTheme, withTheme } from 'react-native-paper'
+import { Button, IconButton, overlay, withTheme } from 'react-native-paper'
 import TimePicker from './TimePicker'
 import {
   clockTypes,
@@ -39,7 +39,7 @@ export function TimePickerModal({
   confirmLabel = 'Ok',
   animationType = 'none',
   locale,
-  theme
+  theme,
 }: {
   locale?: undefined | string
   label?: string
@@ -159,7 +159,9 @@ export function TimePickerModal({
                   theme={theme}
                 />
                 <View style={styles.fill} />
-                <Button onPress={onDismiss} theme={theme}>{cancelLabel}</Button>
+                <Button onPress={onDismiss} theme={theme}>
+                  {cancelLabel}
+                </Button>
                 <Button
                   onPress={() =>
                     onConfirm({ hours: localHours, minutes: localMinutes })

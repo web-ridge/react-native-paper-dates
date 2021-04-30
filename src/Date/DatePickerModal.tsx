@@ -1,21 +1,21 @@
 import * as React from 'react'
+import { useMemo } from 'react'
 import {
   Modal,
+  Platform,
+  StatusBar,
   StyleSheet,
   TouchableWithoutFeedback,
   useWindowDimensions,
   View,
-  Platform,
-  StatusBar,
 } from 'react-native'
 
-import { useTheme, withTheme } from 'react-native-paper'
+import { withTheme } from 'react-native-paper'
 import DatePickerModalContent, {
   DatePickerModalContentMultiProps,
   DatePickerModalContentRangeProps,
   DatePickerModalContentSingleProps,
 } from './DatePickerModalContent'
-import { useMemo } from 'react'
 import Color from 'color'
 import { useHeaderColorIsLight } from '../utils'
 

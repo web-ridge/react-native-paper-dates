@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { FlatList, StyleSheet, View } from 'react-native'
-import { Text, TouchableRipple, useTheme } from 'react-native-paper'
+import { Text, TouchableRipple } from 'react-native-paper'
 import { range } from '../utils'
 
 const ITEM_HEIGHT = 62

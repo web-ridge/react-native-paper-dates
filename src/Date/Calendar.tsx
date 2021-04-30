@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useCallback, useMemo } from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import Swiper from './Swiper'
@@ -12,10 +13,9 @@ import {
 } from './dateUtils'
 
 import CalendarHeader from './CalendarHeader'
-import { useCallback, useMemo } from 'react'
 import YearPicker from './YearPicker'
 import Color from 'color'
-import { useTheme, withTheme } from 'react-native-paper'
+import { withTheme } from 'react-native-paper'
 import { useLatest } from '../utils'
 
 export type ModeType = 'single' | 'range' | 'multiple'

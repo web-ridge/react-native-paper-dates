@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
-import { IconButton, useTheme } from 'react-native-paper'
+import { IconButton } from 'react-native-paper'
 import DayNames, { dayNamesHeight } from './DayNames'
 import { DisableWeekDaysType } from './dateUtils'
 
@@ -60,7 +60,11 @@ function CalendarHeader({
           </View>
         </View>
       ) : null}
-      <DayNames disableWeekDays={disableWeekDays} locale={locale} theme={theme} />
+      <DayNames
+        disableWeekDays={disableWeekDays}
+        locale={locale}
+        theme={theme}
+      />
     </View>
   )
 }

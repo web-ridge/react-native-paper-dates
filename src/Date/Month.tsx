@@ -1,25 +1,25 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
-import { IconButton, Text, useTheme, TouchableRipple } from 'react-native-paper'
+import { IconButton, Text, TouchableRipple } from 'react-native-paper'
 import Day, { EmptyDay } from './Day'
 
 import {
   addMonths,
   areDatesOnSameDay,
+  beginOffset,
+  dateToUnix,
   daySize,
   DisableWeekDaysType,
+  estimatedMonthHeight,
   getDaysInMonth,
   getFirstDayOfMonth,
-  getRealIndex,
   getGridCount,
-  isDateBetween,
+  getRealIndex,
   gridCounts,
+  isDateBetween,
+  isDateWithinOptionalRange,
   showWeekDay,
   startAtIndex,
-  beginOffset,
-  estimatedMonthHeight,
-  isDateWithinOptionalRange,
-  dateToUnix,
 } from './dateUtils'
 import { getCalendarHeaderHeight } from './CalendarHeader'
 import type {

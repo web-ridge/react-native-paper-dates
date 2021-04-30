@@ -1,5 +1,10 @@
 import * as React from 'react'
-import { Keyboard, StyleSheet, TextInput as TextInputNative, View } from 'react-native'
+import {
+  Keyboard,
+  StyleSheet,
+  TextInput as TextInputNative,
+  View,
+} from 'react-native'
 
 import { CalendarDate, ModeType, ValidRangeType } from './Calendar'
 import { LocalState } from './DatePickerModalContent'

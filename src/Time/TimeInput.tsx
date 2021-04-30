@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { View, TextInput, TextInputProps, StyleSheet } from 'react-native'
-import { useTheme, TouchableRipple, withTheme } from 'react-native-paper'
+import { StyleSheet, TextInput, TextInputProps, View } from 'react-native'
+import { TouchableRipple } from 'react-native-paper'
 
 import Color from 'color'
 import {

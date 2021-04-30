@@ -5,7 +5,6 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
-import { useTheme, withTheme } from 'react-native-paper'
 import {
   clockTypes,
   getAngle,

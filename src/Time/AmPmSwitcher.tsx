@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { View, StyleSheet } from 'react-native'
-import { Text, TouchableRipple, useTheme } from 'react-native-paper'
 import { useMemo } from 'react'
+import { StyleSheet, View } from 'react-native'
+import { Text, TouchableRipple } from 'react-native-paper'
 import Color from 'color'
 import { getHourType, hourTypes, useSwitchColors } from './timeUtils'
 
