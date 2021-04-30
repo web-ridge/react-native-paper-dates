@@ -2,6 +2,9 @@ import * as React from 'react'
 import Color from 'color'
 import { useTheme } from 'react-native-paper'
 
+// 250? when bigger?
+export const circleSize = 215
+
 export type PossibleHourTypes = 'am' | 'pm'
 export type HourTypeMap = {
   [hourType in PossibleHourTypes]: PossibleHourTypes
