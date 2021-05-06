@@ -21,6 +21,7 @@ function CalendarEdit({
   collapsed,
   onChange,
   validRange,
+  locale,
 }: {
   mode: ModeType
   label?: string
@@ -30,6 +31,7 @@ function CalendarEdit({
   collapsed: boolean
   onChange: (s: LocalState) => any
   validRange: ValidRangeType | undefined
+  locale?: undefined | string
 }) {
   const dateInput = React.useRef<TextInputNative | null>(null)
   const startInput = React.useRef<TextInputNative | null>(null)
@@ -84,6 +86,7 @@ function CalendarEdit({
             onChange={(date) => onChange({ ...state, date })}
             onSubmitEditing={onSubmitInput}
             validRange={validRange}
+            locale={locale}
           />
         ) : null}
         {mode === 'range' ? (
@@ -96,6 +99,7 @@ function CalendarEdit({
               returnKeyType={'next'}
               onSubmitEditing={onSubmitStartInput}
               validRange={validRange}
+              locale={locale}
             />
             <View style={styles.separator} />
             <CalendarInput
@@ -106,6 +110,7 @@ function CalendarEdit({
               isEndDate
               onSubmitEditing={onSubmitEndInput}
               validRange={validRange}
+              locale={locale}
             />
           </>
         ) : null}

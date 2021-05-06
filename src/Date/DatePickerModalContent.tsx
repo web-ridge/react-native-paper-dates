@@ -28,6 +28,7 @@ export type LocalState = {
 
 interface DatePickerModalContentBaseProps {
   inputFormat?: string
+  locale?: undefined | string
   onDismiss: () => any
   disableSafeTop?: boolean
 }
@@ -180,6 +181,7 @@ export function DatePickerModalContent(
             collapsed={collapsed}
             onChange={onInnerChange}
             validRange={validRange}
+            locale={locale}
           />
         }
       />
