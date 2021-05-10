@@ -1,18 +1,19 @@
 import * as React from 'react'
-import { View, StyleSheet } from 'react-native'
-import { Text, TouchableRipple, useTheme } from 'react-native-paper'
 import { useMemo } from 'react'
+import { StyleSheet, View } from 'react-native'
+import { Text, TouchableRipple } from 'react-native-paper'
 import Color from 'color'
 import { getHourType, hourTypes, useSwitchColors } from './timeUtils'
 
 export default function AmPmSwitcher({
   hours,
   onChange,
+  theme,
 }: {
   hours: number
   onChange: (hours: number) => any
+  theme: ReactNativePaper.Theme
 }) {
-  const theme = useTheme()
   const backgroundColor = useMemo<string>(() => {
     if (theme.dark) {
       return Color(theme.colors.surface).lighten(1.2).hex()
@@ -39,6 +40,7 @@ export default function AmPmSwitcher({
         onPress={isAM ? undefined : () => onChange(hours - 12)}
         selected={isAM}
         disabled={isAM}
+        theme={theme}
       />
       <View style={[styles.switchSeparator, { backgroundColor }]} />
       <SwitchButton
@@ -46,6 +48,7 @@ export default function AmPmSwitcher({
         onPress={isPM ? undefined : () => onChange(hours + 12)}
         selected={isPM}
         disabled={isPM}
+        theme={theme}
       />
     </View>
   )
@@ -56,14 +59,15 @@ function SwitchButton({
   onPress,
   selected,
   disabled,
+  theme,
 }: {
   label: string
   onPress: (() => any) | undefined
   selected: boolean
   disabled: boolean
+  theme: ReactNativePaper.Theme
 }) {
-  const theme = useTheme()
-  const { backgroundColor, color } = useSwitchColors(selected)
+  const { backgroundColor, color } = useSwitchColors(theme, selected)
 
   return (
     <TouchableRipple

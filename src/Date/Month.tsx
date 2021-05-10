@@ -1,25 +1,25 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
-import { IconButton, Text, useTheme, TouchableRipple } from 'react-native-paper'
+import { IconButton, Text, TouchableRipple } from 'react-native-paper'
 import Day, { EmptyDay } from './Day'
 
 import {
   addMonths,
   areDatesOnSameDay,
+  beginOffset,
+  dateToUnix,
   daySize,
   DisableWeekDaysType,
+  estimatedMonthHeight,
   getDaysInMonth,
   getFirstDayOfMonth,
-  getRealIndex,
   getGridCount,
-  isDateBetween,
+  getRealIndex,
   gridCounts,
+  isDateBetween,
+  isDateWithinOptionalRange,
   showWeekDay,
   startAtIndex,
-  beginOffset,
-  estimatedMonthHeight,
-  isDateWithinOptionalRange,
-  dateToUnix,
 } from './dateUtils'
 import { getCalendarHeaderHeight } from './CalendarHeader'
 import type {
@@ -44,6 +44,7 @@ interface BaseMonthProps {
   selectColor: string
   roundness: number
   validRange?: ValidRangeType
+  theme: ReactNativePaper.Theme
 
   // some of these should be required in final implementation
   startDate?: CalendarDate
@@ -86,9 +87,9 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
     disableWeekDays,
     locale,
     validRange,
+    theme,
   } = props
-  const theme = useTheme()
-  const textColorOnPrimary = useTextColorOnPrimary()
+  const textColorOnPrimary = useTextColorOnPrimary(theme)
   const realIndex = getRealIndex(index)
   const isHorizontal = scrollMode === 'horizontal'
 
@@ -298,6 +299,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
               borderRadius: roundness,
             },
           ]}
+          theme={theme}
         >
           <View
             style={[
@@ -310,6 +312,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
             <Text
               style={[styles.monthLabel, theme.fonts.medium]}
               selectable={false}
+              theme={theme}
             >
               {monthName} {year}
             </Text>
@@ -317,6 +320,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
               <IconButton
                 onPress={isHorizontal ? () => onPressYear(year) : undefined}
                 icon={selectingYear ? 'chevron-up' : 'chevron-down'}
+                theme={theme}
               />
             </View>
           </View>

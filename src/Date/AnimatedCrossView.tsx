@@ -1,19 +1,19 @@
 import * as React from 'react'
 import { Animated, StyleSheet, View } from 'react-native'
-import { useTheme } from 'react-native-paper'
 
 export default function AnimatedCrossView({
   // visible,
   collapsed,
   calendar,
   calendarEdit,
+  theme,
 }: {
   calendar: any
   calendarEdit: any
   // visible: boolean
   collapsed: boolean
+  theme: ReactNativePaper.Theme
 }) {
-  const theme = useTheme()
   const calendarOpacity = React.useRef<Animated.Value>(
     new Animated.Value(collapsed ? 1 : 0)
   )

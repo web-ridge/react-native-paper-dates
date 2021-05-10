@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { View, TextInput, TextInputProps, StyleSheet } from 'react-native'
-import { useTheme, TouchableRipple } from 'react-native-paper'
+import { StyleSheet, TextInput, TextInputProps, View } from 'react-native'
+import { TouchableRipple } from 'react-native-paper'
 
 import Color from 'color'
 import {
@@ -18,6 +18,7 @@ interface TimeInputProps
   pressed: boolean
   onChanged: (n: number) => any
   inputType: PossibleInputTypes
+  theme: ReactNativePaper.Theme
 }
 
 function TimeInput(
@@ -28,6 +29,7 @@ function TimeInput(
     onPress,
     onChanged,
     inputType,
+    theme,
     ...rest
   }: TimeInputProps,
   ref: any
@@ -47,12 +49,11 @@ function TimeInput(
     setControlledValue(`${value}`)
   }, [value])
 
-  const theme = useTheme()
   const [inputFocused, setInputFocused] = React.useState<boolean>(false)
 
   const highlighted = inputType === inputTypes.picker ? pressed : inputFocused
 
-  const { color, backgroundColor } = useInputColors(highlighted)
+  const { color, backgroundColor } = useInputColors(theme, highlighted)
 
   let formattedValue = controlledValue
   if (!inputFocused) {

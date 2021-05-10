@@ -7,13 +7,15 @@ import { useTextColorOnPrimary } from '../utils'
 function AnalogClockHours({
   is24Hour,
   hours,
+  theme,
 }: {
   is24Hour: boolean
   hours: number
+  theme: ReactNativePaper.Theme
 }) {
   const outerRange = getHourNumbers(false, circleSize, 12)
   const innerRange = getHourNumbers(true, circleSize, 12)
-  const color = useTextColorOnPrimary()
+  const color = useTextColorOnPrimary(theme)
   return (
     <>
       {outerRange.map((a, i) => (
@@ -29,7 +31,11 @@ function AnalogClockHours({
           ]}
         >
           <View style={styles.outerHourInner}>
-            <Text style={hours === i + 1 ? { color } : null} selectable={false}>
+            <Text
+              style={hours === i + 1 ? { color } : null}
+              selectable={false}
+              theme={theme}
+            >
               {i + 1}
             </Text>
           </View>
@@ -57,6 +63,7 @@ function AnalogClockHours({
                       ? { color }
                       : null,
                   ]}
+                  theme={theme}
                 >
                   {i + 13 === 24 ? '00' : i + 13}
                 </Text>

@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import DayName from './DayName'
-import { useTheme } from 'react-native-paper'
 import { DisableWeekDaysType, showWeekDay } from './dateUtils'
 
 export const dayNamesHeight = 44
@@ -20,11 +19,12 @@ const weekdays = [
 function DayNames({
   disableWeekDays,
   locale,
+  theme,
 }: {
   locale: undefined | string
   disableWeekDays?: DisableWeekDaysType
+  theme: ReactNativePaper.Theme
 }) {
-  const theme = useTheme()
   const shortDayNames = React.useMemo<string[]>(() => {
     const formatter = new Intl.DateTimeFormat(locale, {
       weekday: 'narrow',
@@ -40,7 +40,7 @@ function DayNames({
       {shortDayNames
         .filter((_, dayIndex) => showWeekDay(dayIndex, disableWeekDays))
         .map((dayName, i) => (
-          <DayName key={`${dayName}_${i}`} label={dayName} />
+          <DayName key={`${dayName}_${i}`} label={dayName} theme={theme} />
         ))}
     </View>
   )

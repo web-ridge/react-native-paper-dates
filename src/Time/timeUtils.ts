@@ -1,6 +1,5 @@
 import * as React from 'react'
 import Color from 'color'
-import { useTheme } from 'react-native-paper'
 
 export type PossibleHourTypes = 'am' | 'pm'
 export type HourTypeMap = {
@@ -143,8 +142,10 @@ export function getAngle(left: number, top: number, size: number) {
   return angle
 }
 
-export function useSwitchColors(highlighted: boolean) {
-  const theme = useTheme()
+export function useSwitchColors(
+  theme: ReactNativePaper.Theme,
+  highlighted: boolean
+) {
   const backgroundColor = React.useMemo<string>(() => {
     if (theme.dark) {
       if (highlighted) {
@@ -169,8 +170,10 @@ export function useSwitchColors(highlighted: boolean) {
   return { backgroundColor, color }
 }
 
-export function useInputColors(highlighted: boolean) {
-  const theme = useTheme()
+export function useInputColors(
+  theme: ReactNativePaper.Theme,
+  highlighted: boolean
+) {
   const backgroundColor = React.useMemo<string>(() => {
     if (theme.dark) {
       if (highlighted) {

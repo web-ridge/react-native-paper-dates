@@ -1,14 +1,20 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
-import { Text, useTheme } from 'react-native-paper'
+import { Text } from 'react-native-paper'
 
-function DayName({ label }: { label: string }) {
-  const theme = useTheme()
+function DayName({
+  label,
+  theme,
+}: {
+  label: string
+  theme: ReactNativePaper.Theme
+}) {
   return (
     <View style={styles.dayName}>
       <Text
         style={[styles.dayNameLabel, theme.fonts.medium]}
         selectable={false}
+        theme={theme}
       >
         {label}
       </Text>

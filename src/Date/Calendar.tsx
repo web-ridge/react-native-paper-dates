@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useCallback, useMemo } from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import Swiper from './Swiper'
@@ -12,10 +13,9 @@ import {
 } from './dateUtils'
 
 import CalendarHeader from './CalendarHeader'
-import { useCallback, useMemo } from 'react'
 import YearPicker from './YearPicker'
 import Color from 'color'
-import { useTheme } from 'react-native-paper'
+import { withTheme } from 'react-native-paper'
 import { useLatest } from '../utils'
 
 export type ModeType = 'single' | 'range' | 'multiple'
@@ -31,6 +31,7 @@ export type BaseCalendarProps = {
   locale?: undefined | string
   disableWeekDays?: DisableWeekDaysType
   validRange?: ValidRangeType
+  theme: ReactNativePaper.Theme
 
   // here they are optional but in final implemenation they are required
   date?: CalendarDate
@@ -89,9 +90,8 @@ function Calendar(
     disableWeekDays,
     dates,
     validRange,
+    theme,
   } = props
-
-  const theme = useTheme()
 
   const selectColor = useMemo<string>(() => {
     if (theme.dark) {
@@ -188,6 +188,7 @@ function Calendar(
             selectColor={selectColor}
             roundness={theme.roundness}
             disableWeekDays={disableWeekDays}
+            theme={theme}
           />
         )}
         renderHeader={({ onPrev, onNext }) => (
@@ -197,6 +198,7 @@ function Calendar(
             onNext={onNext}
             scrollMode={scrollMode}
             disableWeekDays={disableWeekDays}
+            theme={theme}
           />
         )}
       />
@@ -205,6 +207,7 @@ function Calendar(
           selectedYear={selectedYear}
           selectingYear={selectingYear}
           onPressYear={onPressYear}
+          theme={theme}
         />
       ) : null}
     </View>
@@ -216,4 +219,4 @@ const styles = StyleSheet.create({
   viewPager: { flex: 1 },
 })
 
-export default React.memo(Calendar)
+export default withTheme(React.memo(Calendar))

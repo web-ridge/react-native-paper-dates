@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { DarkTheme, Text, TouchableRipple } from 'react-native-paper'
+import { Text, TouchableRipple } from 'react-native-paper'
 import { StyleSheet, View } from 'react-native'
 import DayRange from './DayRange'
 import { daySize } from './dateUtils'
@@ -10,7 +10,7 @@ function EmptyDayPure() {
 export const EmptyDay = React.memo(EmptyDayPure)
 
 function Day(props: {
-  theme: typeof DarkTheme
+  theme: ReactNativePaper.Theme
   textColorOnPrimary: string
   day: number
   month: number
@@ -72,6 +72,7 @@ function Day(props: {
           styles.button,
           { backgroundColor: inRange ? selectColor : undefined },
         ]}
+        theme={theme}
       >
         <View
           style={[
@@ -83,6 +84,7 @@ function Day(props: {
           <Text
             style={textColor ? { color: textColor } : undefined}
             selectable={false}
+            theme={theme}
           >
             {day}
           </Text>

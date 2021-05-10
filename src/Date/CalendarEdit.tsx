@@ -1,15 +1,15 @@
 import * as React from 'react'
 import {
-  View,
+  Keyboard,
   StyleSheet,
   TextInput as TextInputNative,
-  Keyboard,
+  View,
 } from 'react-native'
 
 import { CalendarDate, ModeType, ValidRangeType } from './Calendar'
 import { LocalState } from './DatePickerModalContent'
 import TextInputWithMask from '../TextInputMask'
-import { HelperText, useTheme } from 'react-native-paper'
+import { HelperText } from 'react-native-paper'
 import { dateToUnix, isDateWithinOptionalRange } from './dateUtils'
 
 function CalendarEdit({
@@ -22,6 +22,7 @@ function CalendarEdit({
   onChange,
   validRange,
   locale,
+  theme,
 }: {
   mode: ModeType
   label?: string
@@ -32,6 +33,7 @@ function CalendarEdit({
   onChange: (s: LocalState) => any
   validRange: ValidRangeType | undefined
   locale?: undefined | string
+  theme: ReactNativePaper.Theme
 }) {
   const dateInput = React.useRef<TextInputNative | null>(null)
   const startInput = React.useRef<TextInputNative | null>(null)
@@ -87,6 +89,7 @@ function CalendarEdit({
             onSubmitEditing={onSubmitInput}
             validRange={validRange}
             locale={locale}
+            theme={theme}
           />
         ) : null}
         {mode === 'range' ? (
@@ -100,6 +103,7 @@ function CalendarEdit({
               onSubmitEditing={onSubmitStartInput}
               validRange={validRange}
               locale={locale}
+              theme={theme}
             />
             <View style={styles.separator} />
             <CalendarInput
@@ -111,6 +115,7 @@ function CalendarEdit({
               onSubmitEditing={onSubmitEndInput}
               validRange={validRange}
               locale={locale}
+              theme={theme}
             />
           </>
         ) : null}
@@ -129,6 +134,7 @@ function CalendarInputPure(
     onSubmitEditing,
     locale,
     validRange,
+    theme,
   }: {
     locale?: undefined | string
     label: string
@@ -138,10 +144,10 @@ function CalendarInputPure(
     returnKeyType?: string
     onSubmitEditing?: () => any
     validRange: ValidRangeType | undefined
+    theme: ReactNativePaper.Theme
   },
   ref: any
 ) {
-  const theme = useTheme()
   const [error, setError] = React.useState<null | string>(null)
   const formatter = React.useMemo(() => {
     return new Intl.DateTimeFormat(locale, {
@@ -220,8 +226,9 @@ function CalendarInputPure(
         onSubmitEditing={onSubmitEditing}
         keyboardAppearance={theme.dark ? 'dark' : 'default'}
         error={!!error}
+        theme={theme}
       />
-      <HelperText type="error" visible={!!error}>
+      <HelperText type="error" visible={!!error} theme={theme}>
         {error}
       </HelperText>
     </View>

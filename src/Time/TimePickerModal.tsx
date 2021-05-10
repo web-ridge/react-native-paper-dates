@@ -1,15 +1,15 @@
 import * as React from 'react'
 import {
+  Animated,
+  KeyboardAvoidingView,
   Modal,
   StyleSheet,
-  View,
   Text,
-  Animated,
   TouchableWithoutFeedback,
-  KeyboardAvoidingView,
+  View,
 } from 'react-native'
 
-import { Button, IconButton, overlay, useTheme } from 'react-native-paper'
+import { Button, IconButton, overlay, withTheme } from 'react-native-paper'
 import TimePicker from './TimePicker'
 import {
   clockTypes,
@@ -39,6 +39,7 @@ export function TimePickerModal({
   confirmLabel = 'Ok',
   animationType = 'none',
   locale,
+  theme,
 }: {
   locale?: undefined | string
   label?: string
@@ -50,9 +51,8 @@ export function TimePickerModal({
   onDismiss: () => any
   onConfirm: ({ hours, minutes }: { hours: number; minutes: number }) => any
   animationType?: 'slide' | 'fade' | 'none'
+  theme: ReactNativePaper.Theme
 }) {
-  const theme = useTheme()
-
   const [inputType, setInputType] = React.useState<PossibleInputTypes>(
     inputTypes.picker
   )
@@ -146,6 +146,7 @@ export function TimePickerModal({
                   minutes={localMinutes}
                   onChange={onChange}
                   onFocusInput={onFocusInput}
+                  theme={theme}
                 />
               </View>
               <View style={styles.bottom}>
@@ -155,13 +156,17 @@ export function TimePickerModal({
                   size={24}
                   style={styles.inputTypeToggle}
                   accessibilityLabel="toggle keyboard"
+                  theme={theme}
                 />
                 <View style={styles.fill} />
-                <Button onPress={onDismiss}>{cancelLabel}</Button>
+                <Button onPress={onDismiss} theme={theme}>
+                  {cancelLabel}
+                </Button>
                 <Button
                   onPress={() =>
                     onConfirm({ hours: localHours, minutes: localMinutes })
                   }
+                  theme={theme}
                 >
                   {confirmLabel}
                 </Button>
@@ -228,4 +233,4 @@ const styles = StyleSheet.create({
   fill: { flex: 1 },
 })
 
-export default React.memo(TimePickerModal)
+export default withTheme(React.memo(TimePickerModal))

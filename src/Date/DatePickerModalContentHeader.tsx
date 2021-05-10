@@ -22,6 +22,7 @@ export interface HeaderContentProps extends HeaderPickProps {
   collapsed: boolean
   onToggle: () => any
   locale: undefined | string
+  theme: ReactNativePaper.Theme
 }
 
 function getLabel(mode: ModeType, configuredLabel?: string) {
@@ -42,11 +43,11 @@ function getLabel(mode: ModeType, configuredLabel?: string) {
 }
 
 export default function DatePickerModalHeader(props: HeaderContentProps) {
-  const { onToggle, collapsed, mode, moreLabel } = props
+  const { onToggle, collapsed, mode, moreLabel, theme } = props
 
   const label = getLabel(props.mode, props.label)
 
-  const color = useHeaderTextColor()
+  const color = useHeaderTextColor(theme)
   const allowEditing = mode !== 'multiple'
   return (
     <View style={[styles.header]}>

@@ -1,21 +1,21 @@
 import * as React from 'react'
+import { useMemo } from 'react'
 import {
   Modal,
+  Platform,
+  StatusBar,
   StyleSheet,
   TouchableWithoutFeedback,
   useWindowDimensions,
   View,
-  Platform,
-  StatusBar,
 } from 'react-native'
 
-import { useTheme } from 'react-native-paper'
+import { withTheme } from 'react-native-paper'
 import DatePickerModalContent, {
   DatePickerModalContentMultiProps,
   DatePickerModalContentRangeProps,
   DatePickerModalContentSingleProps,
 } from './DatePickerModalContent'
-import { useMemo } from 'react'
 import Color from 'color'
 import { useHeaderColorIsLight } from '../utils'
 
@@ -24,6 +24,7 @@ interface DatePickerModalProps {
   animationType?: 'slide' | 'fade' | 'none'
   disableStatusBar?: boolean
   disableStatusBarPadding?: boolean
+  theme: ReactNativePaper.Theme
 }
 
 export interface DatePickerModalSingleProps
@@ -44,13 +45,13 @@ export function DatePickerModal(
     | DatePickerModalSingleProps
     | DatePickerModalMultiProps
 ) {
-  const theme = useTheme()
   const dimensions = useWindowDimensions()
   const {
     visible,
     animationType,
     disableStatusBar,
     disableStatusBarPadding,
+    theme,
     ...rest
   } = props
   const animationTypeCalculated =
@@ -60,7 +61,7 @@ export function DatePickerModal(
       default: 'slide',
     })
 
-  const isLight = useHeaderColorIsLight()
+  const isLight = useHeaderColorIsLight(theme)
   const statusBarColor = useMemo<string>(
     () => Color(theme.colors.primary).darken(0.2).hex(),
     [theme]
@@ -118,6 +119,7 @@ export function DatePickerModal(
               <DatePickerModalContent
                 {...rest}
                 disableSafeTop={disableStatusBar}
+                theme={theme}
               />
             </View>
           </View>
@@ -156,4 +158,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default React.memo(DatePickerModal)
+export default withTheme(React.memo(DatePickerModal))

@@ -286,6 +286,7 @@ function AppInner() {
               startDate={range.startDate}
               endDate={range.endDate}
               onConfirm={onChangeRange}
+              theme={dateTimeTheme}
             />
           </View>
         ) : null}
@@ -299,6 +300,7 @@ function AppInner() {
         startDate={range.startDate}
         endDate={range.endDate}
         onConfirm={onChangeRange}
+        theme={dateTimeTheme}
         // locale={'nl'} // optional
         // saveLabel="Save" // optional
         // label="Select period" // optional
@@ -314,6 +316,7 @@ function AppInner() {
         onDismiss={onDismissSingle}
         date={date}
         onConfirm={onChangeSingle}
+        theme={dateTimeTheme}
         // validRange={{
         //   startDate: new Date(2021, 1, 2), // optional
         //   endDate: new Date(), // optional
@@ -333,6 +336,7 @@ function AppInner() {
           startDate: new Date(),
         }}
         onConfirm={onChangeMulti}
+        theme={dateTimeTheme}
         // moreLabel="more" // optional, if multiple are selected this will show if we can't show all dates
         // onChange={onChangeMulti}
         // saveLabel="Save" // optional
@@ -347,6 +351,7 @@ function AppInner() {
         onConfirm={onConfirmTime}
         hours={time.hours} // optional, default: current hours
         minutes={time.minutes} // optional, default: current minutes
+        theme={dateTimeTheme}
         // label="Select time" // optional, default 'Select time'
         // cancelLabel="Cancel" // optional, default: 'Cancel'
         // confirmLabel="Ok" // optional, default: 'Ok'
@@ -370,6 +375,18 @@ function Label({ children }: { children: string }) {
     <Text style={[styles.label, { ...theme.fonts.medium }]}>{children}</Text>
   );
 }
+
+export const dateTimeTheme: ReactNativePaper.Theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#E91E63',
+    surface: '#FFAB91',
+    background: '#FFAB91',
+    onSurface: '#000',
+    text: '#E64A19',
+  },
+};
 
 export default function AppWithProviders() {
   const dark = useColorScheme() === 'dark';

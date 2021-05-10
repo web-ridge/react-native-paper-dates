@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { FlatList, StyleSheet, View } from 'react-native'
-import { Text, TouchableRipple, useTheme } from 'react-native-paper'
+import { Text, TouchableRipple } from 'react-native-paper'
 import { range } from '../utils'
 
 const ITEM_HEIGHT = 62
@@ -13,12 +13,13 @@ export default function YearPicker({
   selectedYear,
   selectingYear,
   onPressYear,
+  theme,
 }: {
   selectedYear: number | undefined
   selectingYear: boolean
   onPressYear: (year: number) => any
+  theme: ReactNativePaper.Theme
 }) {
-  const theme = useTheme()
   const flatList = React.useRef<FlatList<number> | null>(null)
 
   // scroll to selected year
@@ -51,6 +52,7 @@ export default function YearPicker({
             year={item}
             selected={selectedYear === item}
             onPressYear={onPressYear}
+            theme={theme}
           />
         )}
         keyExtractor={(item) => `${item}`}
@@ -64,17 +66,19 @@ function YearPure({
   year,
   selected,
   onPressYear,
+  theme,
 }: {
   year: number
   selected: boolean
   onPressYear: (year: number) => any
+  theme: ReactNativePaper.Theme
 }) {
-  const theme = useTheme()
   return (
     <View style={styles.year}>
       <TouchableRipple
         onPress={() => onPressYear(year)}
         style={styles.yearButton}
+        theme={theme}
       >
         <View
           style={[
@@ -85,6 +89,7 @@ function YearPure({
           <Text
             style={[styles.yearLabel, selected ? styles.selectedYear : null]}
             selectable={false}
+            theme={theme}
           >
             {year}
           </Text>
