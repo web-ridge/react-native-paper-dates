@@ -7,6 +7,7 @@ import {
 } from 'react-native'
 import { useTheme } from 'react-native-paper'
 import {
+  circleSize,
   clockTypes,
   getAngle,
   getHours,
@@ -23,9 +24,6 @@ import AnalogClockHours from './AnalogClockHours'
 
 import AnimatedClockSwitcher from './AnimatedClockSwitcher'
 import AnalogClockMinutes from './AnalogClockMinutes'
-
-// 250? when bigger?
-export const circleSize = 215
 
 function AnalogClock({
   hours,

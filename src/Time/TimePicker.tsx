@@ -9,7 +9,8 @@ import {
   toHourOutputFormat,
 } from './timeUtils'
 
-import AnalogClock, { circleSize } from './AnalogClock'
+import AnalogClock from './AnalogClock'
+import { circleSize } from './timeUtils'
 import TimeInputs from './TimeInputs'
 
 type onChangeFunc = ({

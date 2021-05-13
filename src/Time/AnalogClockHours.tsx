@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Text } from 'react-native-paper'
-import { circleSize } from './AnalogClock'
+import { circleSize } from './timeUtils'
 import { useTextColorOnPrimary } from '../utils'
 
 function AnalogClockHours({
