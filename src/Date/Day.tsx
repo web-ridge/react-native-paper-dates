@@ -65,6 +65,7 @@ function Day(props: {
       />
 
       <TouchableRipple
+        testID={`react-native-paper-dates-day-${year}-${month}-${day}`}
         disabled={disabled}
         borderless={true}
         onPress={disabled ? undefined : onPress}

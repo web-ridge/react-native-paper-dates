@@ -15,9 +15,7 @@ import DatePickerModalContent, {
   DatePickerModalContentRangeProps,
   DatePickerModalContentSingleProps,
 } from './DatePickerModalContent'
-import { useMemo } from 'react'
-import Color from 'color'
-import { useHeaderColorIsLight } from '../utils'
+import { useHeaderBackgroundColor, useHeaderColorIsLight } from '../utils'
 
 interface DatePickerModalProps {
   visible: boolean
@@ -61,10 +59,7 @@ export function DatePickerModal(
     })
 
   const isLight = useHeaderColorIsLight()
-  const statusBarColor = useMemo<string>(
-    () => Color(theme.colors.primary).darken(0.2).hex(),
-    [theme]
-  )
+  const headerBackgroundColor = useHeaderBackgroundColor()
 
   return (
     <View style={[StyleSheet.absoluteFill]} pointerEvents="box-none">
@@ -110,7 +105,7 @@ export function DatePickerModal(
                   style={[
                     {
                       height: StatusBar.currentHeight,
-                      backgroundColor: statusBarColor,
+                      backgroundColor: headerBackgroundColor,
                     },
                   ]}
                 />

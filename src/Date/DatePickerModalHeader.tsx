@@ -30,9 +30,14 @@ export default function DatePickerModalHeader(
               icon="close"
               onPress={props.onDismiss}
               color={color}
+              testID="react-native-paper-dates-close"
             />
             <Appbar.Content title={''} />
-            <Button color={color} onPress={props.onSave}>
+            <Button
+              color={color}
+              onPress={props.onSave}
+              testID="react-native-paper-dates-save"
+            >
               {saveLabel}
             </Button>
           </Appbar>
