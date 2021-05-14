@@ -25,6 +25,7 @@ interface DatePickerModalProps {
   disableStatusBar?: boolean
   disableStatusBarPadding?: boolean
   theme: ReactNativePaper.Theme
+  inputTheme?: ReactNativePaper.Theme
 }
 
 export interface DatePickerModalSingleProps
@@ -52,6 +53,7 @@ export function DatePickerModal(
     disableStatusBar,
     disableStatusBarPadding,
     theme,
+    inputTheme,
     ...rest
   } = props
   const animationTypeCalculated =
@@ -120,6 +122,7 @@ export function DatePickerModal(
                 {...rest}
                 disableSafeTop={disableStatusBar}
                 theme={theme}
+                inputTheme={inputTheme}
               />
             </View>
           </View>

@@ -287,6 +287,7 @@ function AppInner() {
               endDate={range.endDate}
               onConfirm={onChangeRange}
               theme={dateTimeTheme}
+              inputTheme={dateTimeInputTheme}
             />
           </View>
         ) : null}
@@ -301,6 +302,7 @@ function AppInner() {
         endDate={range.endDate}
         onConfirm={onChangeRange}
         theme={dateTimeTheme}
+        inputTheme={dateTimeInputTheme}
         // locale={'nl'} // optional
         // saveLabel="Save" // optional
         // label="Select period" // optional
@@ -317,6 +319,7 @@ function AppInner() {
         date={date}
         onConfirm={onChangeSingle}
         theme={dateTimeTheme}
+        inputTheme={dateTimeInputTheme}
         // validRange={{
         //   startDate: new Date(2021, 1, 2), // optional
         //   endDate: new Date(), // optional
@@ -337,6 +340,7 @@ function AppInner() {
         }}
         onConfirm={onChangeMulti}
         theme={dateTimeTheme}
+        inputTheme={dateTimeInputTheme}
         // moreLabel="more" // optional, if multiple are selected this will show if we can't show all dates
         // onChange={onChangeMulti}
         // saveLabel="Save" // optional
@@ -385,6 +389,16 @@ export const dateTimeTheme: ReactNativePaper.Theme = {
     background: '#FFAB91',
     onSurface: '#000',
     text: '#E64A19',
+  },
+};
+
+export const dateTimeInputTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...dateTimeTheme.colors,
+    primary: '#2E7D32',
+    background: '#4CAF50',
+    text: '#795548',
   },
 };
 

@@ -33,6 +33,7 @@ interface DatePickerModalContentBaseProps {
   onDismiss: () => any
   disableSafeTop?: boolean
   theme: ReactNativePaper.Theme
+  inputTheme?: ReactNativePaper.Theme
 }
 
 export interface DatePickerModalContentRangeProps
@@ -82,6 +83,7 @@ export function DatePickerModalContent(
     locale,
     validRange,
     theme,
+    inputTheme,
   } = props
 
   const anyProps = props as any
@@ -189,7 +191,7 @@ export function DatePickerModalContent(
             onChange={onInnerChange}
             validRange={validRange}
             locale={locale}
-            theme={theme}
+            theme={inputTheme ?? theme}
           />
         }
       />
