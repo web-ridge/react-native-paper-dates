@@ -4,13 +4,19 @@ import {
   StyleSheet,
   TextInput as TextInputNative,
   Keyboard,
+  ReturnKeyTypeOptions,
 } from 'react-native'
 
-import { CalendarDate, ModeType, ValidRangeType } from './Calendar'
-import { LocalState } from './DatePickerModalContent'
+import type { CalendarDate, ModeType, ValidRangeType } from './Calendar'
+import type { LocalState } from './DatePickerModalContent'
 import TextInputWithMask from '../TextInputMask'
 import { HelperText, useTheme } from 'react-native-paper'
-import { dateToUnix, isDateWithinOptionalRange } from './dateUtils'
+import {
+  dateToUnix,
+  isDateWithinOptionalRange,
+  useInputFormat,
+  useInputFormatter,
+} from './dateUtils'
 
 function CalendarEdit({
   mode,
@@ -135,7 +141,7 @@ function CalendarInputPure(
     value: CalendarDate
     onChange: (d: Date | undefined) => any
     isEndDate?: boolean
-    returnKeyType?: string
+    returnKeyType?: ReturnKeyTypeOptions
     onSubmitEditing?: () => any
     validRange: ValidRangeType | undefined
   },
@@ -143,23 +149,8 @@ function CalendarInputPure(
 ) {
   const theme = useTheme()
   const [error, setError] = React.useState<null | string>(null)
-  const formatter = React.useMemo(() => {
-    return new Intl.DateTimeFormat(locale, {
-      month: '2-digit',
-      day: '2-digit',
-      year: 'numeric',
-    })
-  }, [locale])
-
-  const inputFormat = React.useMemo(() => {
-    // TODO: something cleaner and more universal?
-    const inputDate = formatter.format(new Date(2020, 10 - 1, 1))
-    return inputDate
-      .replace('2020', 'YYYY')
-      .replace('10', 'MM')
-      .replace('01', 'DD')
-  }, [formatter])
-
+  const formatter = useInputFormatter({ locale })
+  const inputFormat = useInputFormat({ formatter })
   const formattedValue = formatter.format(value)
   const onChangeText = (date: string) => {
     const dayIndex = inputFormat.indexOf('DD')
@@ -205,6 +196,7 @@ function CalendarInputPure(
       onChange(finalDate)
     }
   }
+
   return (
     <View style={styles.inputContainer}>
       <TextInputWithMask

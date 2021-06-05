@@ -2,7 +2,7 @@ import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { IconButton, useTheme } from 'react-native-paper'
 import DayNames, { dayNamesHeight } from './DayNames'
-import { DisableWeekDaysType } from './dateUtils'
+import type { DisableWeekDaysType } from './dateUtils'
 
 const buttonContainerHeight = 56
 const buttonContainerMarginTop = 4

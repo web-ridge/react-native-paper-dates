@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { IconButton, Text } from 'react-native-paper'
-import { ModeType } from './Calendar'
-import { LocalState } from './DatePickerModalContent'
+import type { ModeType } from './Calendar'
+import type { LocalState } from './DatePickerModalContent'
 import { useHeaderTextColor } from '../utils'
 import Color from 'color'
 

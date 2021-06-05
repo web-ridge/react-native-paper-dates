@@ -67,10 +67,17 @@ function enhanceTextWithMask(
 }
 
 function TextInputWithMask(
-  { onChangeText, value, mask, ...rest }: any,
+  {
+    onChangeText,
+    value,
+    mask,
+    ...rest
+  }: React.ComponentProps<typeof TextInput> & { mask: string },
   ref: any
 ) {
-  const [controlledValue, setControlledValue] = React.useState<string>(value)
+  const [controlledValue, setControlledValue] = React.useState<string>(
+    value || ''
+  )
 
   const onInnerChange = (text: string) => {
     const enhancedText = enhanceTextWithMask(text, mask, controlledValue)
@@ -82,7 +89,7 @@ function TextInputWithMask(
   }
 
   React.useEffect(() => {
-    setControlledValue(value)
+    setControlledValue(value || '')
   }, [value])
 
   return (

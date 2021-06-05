@@ -1,21 +1,21 @@
-import * as React from 'react';
-import { Button } from 'react-native-paper';
+import * as React from 'react'
+import { Button } from 'react-native-paper'
 
-import { DatePickerModal } from '../../src/index';
+import { DatePickerModal } from '../../src/index'
 
 export default function ReadMeExampleMultiple() {
-  const [dates, setDates] = React.useState<Date[] | undefined>();
-  const [open, setOpen] = React.useState(false);
+  const [dates, setDates] = React.useState<Date[] | undefined>()
+  const [open, setOpen] = React.useState(false)
 
   const onDismiss = React.useCallback(() => {
-    setOpen(false);
-  }, [setOpen]);
+    setOpen(false)
+  }, [setOpen])
 
   const onConfirm = React.useCallback((params) => {
-    setOpen(false);
-    setDates(params.dates);
-    console.log('[on-change-multi]', params);
-  }, []);
+    setOpen(false)
+    setDates(params.dates)
+    console.log('[on-change-multi]', params)
+  }, [])
 
   return (
     <>
@@ -42,5 +42,5 @@ export default function ReadMeExampleMultiple() {
         // animationType="slide" // optional, default is slide on ios/android and none on web
       />
     </>
-  );
+  )
 }

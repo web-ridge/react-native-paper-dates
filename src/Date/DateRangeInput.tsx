@@ -14,9 +14,11 @@ export default function DateRangeInput() {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     ({ startDate, endDate }: { startDate: any; endDate: any }) => {
       setVisible(false)
+      console.log({ startDate, endDate })
     },
     [setVisible]
   )
+
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
       <View style={{ flex: 1 }}>

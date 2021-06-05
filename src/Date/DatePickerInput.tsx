@@ -1,16 +1,30 @@
 import * as React from 'react'
 
 import TextInputWithMask from '../TextInputMask'
-import { IconButton } from 'react-native-paper'
+import { IconButton, TextInput } from 'react-native-paper'
 import { View, StyleSheet } from 'react-native'
 import DatePickerModal from './DatePickerModal'
+import { useInputFormat, useInputFormatter } from './dateUtils'
+import type { SingleChange } from './Calendar'
 
-export default function DatePickerInput() {
+export default function DatePickerInput({
+  // value,
+  // onConfirm,
+  style,
+  locale,
+  ...rest
+}: React.ComponentProps<typeof TextInput> & {
+  locale?: undefined | string
+  onChange?: SingleChange
+  // onConfirm: any // TODO: fix
+}) {
+  const formatter = useInputFormatter({ locale })
+  const inputFormat = useInputFormat({ formatter })
   const [visible, setVisible] = React.useState<boolean>(false)
   const onDismiss = React.useCallback(() => {
     setVisible(false)
   }, [setVisible])
-  const onConfirm = React.useCallback(() => {
+  const onInnerConfirm = React.useCallback(() => {
     setVisible(false)
   }, [setVisible])
 
@@ -18,12 +32,12 @@ export default function DatePickerInput() {
     <>
       <View style={styles.root}>
         <TextInputWithMask
-          value={''}
           keyboardType={'numeric'}
-          placeholder={'DD-MM-YYY'}
-          mask={'DD-MM-YYY'}
+          placeholder={inputFormat}
+          mask={inputFormat}
           onChangeText={() => {}}
-          style={styles.input}
+          style={[styles.input, style]}
+          {...rest}
         />
         <IconButton
           size={24}
@@ -36,7 +50,8 @@ export default function DatePickerInput() {
         mode="single"
         visible={visible}
         onDismiss={onDismiss}
-        onConfirm={onConfirm}
+        onConfirm={onInnerConfirm}
+        locale={locale}
       />
     </>
   )

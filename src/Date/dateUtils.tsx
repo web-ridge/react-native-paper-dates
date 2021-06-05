@@ -1,3 +1,5 @@
+import * as React from 'react'
+
 export type DisableWeekDaysType = number[]
 
 export function showWeekDay(
@@ -168,6 +170,31 @@ export function getInitialIndex(date: Date | undefined) {
   const months = differenceInMonths(today, date)
 
   return startAtIndex + months
+}
+
+export function useInputFormatter({ locale }: { locale: string | undefined }) {
+  return React.useMemo(() => {
+    return new Intl.DateTimeFormat(locale, {
+      month: '2-digit',
+      day: '2-digit',
+      year: 'numeric',
+    })
+  }, [locale])
+}
+
+export function useInputFormat({
+  formatter,
+}: {
+  formatter: Intl.DateTimeFormat
+}) {
+  return React.useMemo(() => {
+    // TODO: something cleaner and more universal?
+    const inputDate = formatter.format(new Date(2020, 10 - 1, 1))
+    return inputDate
+      .replace('2020', 'YYYY')
+      .replace('10', 'MM')
+      .replace('01', 'DD')
+  }, [formatter])
 }
 
 export function differenceInMonths(firstDate: Date, secondDate: Date) {

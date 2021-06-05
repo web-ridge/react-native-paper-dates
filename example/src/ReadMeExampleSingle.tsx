@@ -1,22 +1,22 @@
-import * as React from 'react';
-import { Button } from 'react-native-paper';
-import { DatePickerModal } from '../../src/index';
+import * as React from 'react'
+import { Button } from 'react-native-paper'
+import { DatePickerModal } from '../../src/index'
 
 export default function ReadMeExampleSingle() {
-  const [date, setDate] = React.useState<Date | undefined>(undefined);
-  const [open, setOpen] = React.useState(false);
+  const [date, setDate] = React.useState<Date | undefined>(undefined)
+  const [open, setOpen] = React.useState(false)
 
   const onDismissSingle = React.useCallback(() => {
-    setOpen(false);
-  }, [setOpen]);
+    setOpen(false)
+  }, [setOpen])
 
   const onConfirmSingle = React.useCallback(
     (params) => {
-      setOpen(false);
-      setDate(params.date);
+      setOpen(false)
+      setDate(params.date)
     },
     [setOpen, setDate]
-  );
+  )
 
   return (
     <>
@@ -40,5 +40,5 @@ export default function ReadMeExampleSingle() {
         // animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
       />
     </>
-  );
+  )
 }

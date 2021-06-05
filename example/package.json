@@ -1,71 +1,31 @@
 {
-  "name": "example",
-  "version": "0.1.0",
+  "name": "react-native-paper-dates-example",
+  "description": "Example app for react-native-paper-dates",
+  "version": "0.0.1",
   "private": true,
+  "main": "index",
   "scripts": {
-    "android": "react-native run-android",
-    "ios": "react-native run-ios",
-    "start": "react-native start",
-    "test": "jest",
-    "lint": "eslint .",
-    "web:build": "react-app-rewired build",
-    "web:test": "react-app-rewired test",
-    "web:eject": "react-app-rewired eject",
-    "bugfix": "npm link ../node_modules/react --legacy-peer-deps --force",
-    "web": "react-app-rewired start"
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "start": "expo start",
+    "test": "jest"
   },
   "dependencies": {
-    "@formatjs/intl-datetimeformat": "^2.6.6",
-    "@formatjs/intl-displaynames": "^3.3.7",
-    "@formatjs/intl-getcanonicallocales": "^1.4.4",
-    "@formatjs/intl-listformat": "^4.2.6",
-    "@formatjs/intl-locale": "^2.3.6",
-    "@formatjs/intl-numberformat": "^5.6.1",
-    "@formatjs/intl-pluralrules": "^3.4.6",
-    "@formatjs/intl-relativetimeformat": "^7.2.6",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
+    "expo": "^40.0.0",
+    "expo-splash-screen": "~0.8.1",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
     "react-native": "0.63.4",
-    "react-native-localize": "^2.0.1",
-    "react-native-paper": "^4.7.2",
-    "react-native-vector-icons": "https://github.com/RichardLindhout/react-native-vector-icons",
-    "react-native-web": "^0.15.5",
-    "react-scripts": "^4.0.3"
+    "react-native-paper": "^4.9.1",
+    "react-native-unimodules": "~0.12.0",
+    "react-native-web": "~0.14.9"
   },
   "devDependencies": {
-    "@babel/core": "^7.11.4",
-    "@babel/runtime": "^7.11.2",
-    "@react-native-community/eslint-config": "^2.0.0",
-    "@types/react": "^16.9.46",
-    "@types/react-native": "0.63.40",
-    "babel-jest": "^26.3.0",
-    "babel-plugin-import": "^1.13.0",
+    "@babel/core": "~7.12.10",
+    "@babel/runtime": "^7.9.6",
     "babel-plugin-module-resolver": "^4.0.0",
-    "customize-cra": "^1.0.0",
-    "customize-cra-react-refresh": "^1.1.0",
-    "eslint": "^7.7.0",
-    "jest": "^26.4.2",
-    "metro-react-native-babel-preset": "^0.63.0",
-    "react-app-rewired": "^2.1.6",
-    "react-test-renderer": "16.13.1",
-    "typescript": "^4.2.3"
-  },
-  "jest": {
-    "preset": "react-native"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "babel-preset-expo": "8.3.0",
+    "expo-cli": "^4.0.13"
   }
 }
