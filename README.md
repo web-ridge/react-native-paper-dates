@@ -22,9 +22,9 @@
 - Great React Native Web support
 - Dependencies are [react-native-paper](https://callstack.github.io/react-native-paper/)
 
-[![Demo of react-native-paper-dates](https://mathiasbynens.be/demo/animated-webp-supported.webp)
+[![Demo of react-native-paper-dates](https://user-images.githubusercontent.com/6492229/98866767-bd3f2780-246d-11eb-890e-3491b47c95c5.gif)](https://www.youtube.com/watch?v=SHhQU2doTug)
 
-View video in better frame [on YouTube](https://www.youtube.com/watch?v=)
+View video in better frame [on YouTube](https://www.youtube.com/watch?v=SHhQU2doTug)
 
 Web demo: [reactnativepaperdates.com](http://reactnativepaperdates.com/)
 
