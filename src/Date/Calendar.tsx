@@ -16,7 +16,7 @@ import { useCallback, useMemo } from 'react'
 import YearPicker from './YearPicker'
 import Color from 'color'
 import { useTheme } from 'react-native-paper'
-import { useLatest } from '../utils'
+import { useLatest, lightenBy, darkenBy } from '../utils'
 
 export type ModeType = 'single' | 'range' | 'multiple'
 
@@ -95,9 +95,9 @@ function Calendar(
 
   const selectColor = useMemo<string>(() => {
     if (theme.dark) {
-      return Color(theme.colors.primary).hex()
+      return darkenBy(Color(theme.colors.primary), 0.9).hex()
     }
-    return Color(theme.colors.primary).lighten(0.9).hex()
+    return lightenBy(Color(theme.colors.primary), 0.9).hex()
   }, [theme])
 
   const scrollMode =
