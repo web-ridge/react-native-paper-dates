@@ -42,6 +42,7 @@ export interface DatePickerModalContentRangeProps
   endDate: CalendarDate
   onChange?: RangeChange
   onConfirm: RangeChange
+  rangeOpacity?: number
 }
 
 export interface DatePickerModalContentSingleProps
@@ -62,6 +63,7 @@ export interface DatePickerModalContentMultiProps
   dates?: CalendarDates
   onChange?: MultiChange
   onConfirm: MultiConfirm
+  rangeOpacity?: number
 }
 
 export function DatePickerModalContent(
@@ -79,6 +81,7 @@ export function DatePickerModalContent(
     disableWeekDays,
     locale,
     validRange,
+    rangeOpacity,
   } = props
 
   const anyProps = props as any
@@ -169,6 +172,7 @@ export function DatePickerModalContent(
             disableWeekDays={disableWeekDays}
             dates={state.dates}
             validRange={validRange}
+            rangeOpacity={rangeOpacity}
           />
         }
         calendarEdit={

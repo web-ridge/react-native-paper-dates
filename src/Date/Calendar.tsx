@@ -37,6 +37,7 @@ export type BaseCalendarProps = {
   dates?: CalendarDates
   startDate?: CalendarDate
   endDate?: CalendarDate
+  rangeOpacity?: number
 }
 
 export type CalendarDate = Date | undefined
@@ -68,12 +69,14 @@ export interface CalendarRangeProps extends BaseCalendarProps {
   startDate: CalendarDate
   endDate: CalendarDate
   onChange: RangeChange
+  rangeOpacity: number
 }
 
 export interface CalendarMultiProps extends BaseCalendarProps {
   mode: 'multiple'
   dates: CalendarDates
   onChange: MultiChange
+  rangeOpacity: number
 }
 
 function Calendar(
@@ -89,6 +92,7 @@ function Calendar(
     disableWeekDays,
     dates,
     validRange,
+    rangeOpacity,
   } = props
 
   const theme = useTheme()
@@ -97,7 +101,7 @@ function Calendar(
     if (theme.dark) {
       return darkenBy(Color(theme.colors.primary), 0.9).hex()
     }
-    return lightenBy(Color(theme.colors.primary), 0.9).hex()
+    return lightenBy(Color(theme.colors.primary), rangeOpacity ? rangeOpacity : 0.9).hex()
   }, [theme])
 
   const scrollMode =
