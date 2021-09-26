@@ -120,6 +120,10 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
         )
       : undefined
 
+  const validDisabledDates = validRange?.disabledDates
+    ? validRange?.disabledDates
+    : undefined
+
   const { monthName, month, year } = React.useMemo(() => {
     const md = addMonths(new Date(), realIndex)
     const y = md.getFullYear()
@@ -159,8 +163,12 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
 
           const isFirstDayOfMonth = dayOfMonth === 1
           const isLastDayOfMonth = dayOfMonth === daysInMonth
-          
-          inDisabledDates = validRange?.disabledDates ? validRange.disabledDates.some(disabledDate => areDatesOnSameDay(disabledDate, day)) : false
+
+          inDisabledDates = validDisabledDates
+            ? validDisabledDates.some((disabledDate) =>
+                areDatesOnSameDay(disabledDate, day)
+              )
+            : false
           if (inDisabledDates) {
             disabled = true
           }
@@ -280,6 +288,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
     dates,
     validRangeStart,
     validRangeEnd,
+    validDisabledDates,
     mode,
   ])
 
