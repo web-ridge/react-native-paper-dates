@@ -25,6 +25,7 @@ export type ScrollModeType = 'horizontal' | 'vertical'
 export type ValidRangeType = {
   startDate?: Date
   endDate?: Date
+  disabledDates?: Date[]
 }
 
 export type BaseCalendarProps = {

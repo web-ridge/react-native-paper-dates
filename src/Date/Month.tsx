@@ -153,11 +153,18 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
           let inRange = false
           let disabled = false
           let selected = false
+          let inDisabledDates = false
           let leftCrop = dayOfMonth === 1
           let rightCrop = dayOfMonth === daysInMonth
 
           const isFirstDayOfMonth = dayOfMonth === 1
           const isLastDayOfMonth = dayOfMonth === daysInMonth
+          
+          inDisabledDates = validRange?.disabledDates ? validRange.disabledDates.some(disabledDate => areDatesOnSameDay(disabledDate, day)) : false
+          if (inDisabledDates) {
+            disabled = true
+          }
+
           if (mode === 'range') {
             const selectedStartDay = areDatesOnSameDay(day, startDate)
             const selectedEndDay = areDatesOnSameDay(day, endDate)
@@ -237,7 +244,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
             endUnix: validRangeEnd,
           })
 
-          if (inRange) {
+          if (inRange && !inDisabledDates) {
             disabled = false
           }
 
