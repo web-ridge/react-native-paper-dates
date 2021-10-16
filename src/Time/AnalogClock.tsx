@@ -12,9 +12,7 @@ import {
   getAngle,
   getHours,
   getHourType,
-  getHourTypeFromOffset,
   getMinutes,
-  hourTypes,
   PossibleClockTypes,
 } from './timeUtils'
 import * as React from 'react'
@@ -24,6 +22,7 @@ import AnalogClockHours from './AnalogClockHours'
 
 import AnimatedClockSwitcher from './AnimatedClockSwitcher'
 import AnalogClockMinutes from './AnalogClockMinutes'
+import { DisplayModeContext } from './TimePicker'
 
 function AnalogClock({
   hours,
@@ -47,7 +46,7 @@ function AnalogClock({
   }) => any
 }) {
   const theme = useTheme()
-
+  const { mode } = React.useContext(DisplayModeContext)
   // used to make pointer shorter if hours are selected and above 12
   const shortPointer = (hours === 0 || hours > 12) && is24Hour
 
@@ -60,6 +59,7 @@ function AnalogClock({
   const minutesRef = useLatest(minutes)
   const focusedRef = useLatest(focused)
   const is24HourRef = useLatest(is24Hour)
+  const modeRef = useLatest(mode)
 
   const onPointerMove = React.useCallback(
     (e: GestureResponderEvent, final: boolean) => {
@@ -73,12 +73,10 @@ function AnalogClock({
         let previousHourType = getHourType(hoursRef.current)
         let pickedHours = getHours(angle, previousHourType)
 
-        let hourTypeFromOffset = getHourTypeFromOffset(x, y, circleSize)
-        let hours24AndPM = hours24 && hourTypeFromOffset === hourTypes.pm
-        let hours12AndPm = !hours24 && previousHourType === hourTypes.pm
-
-        // TODO: check which mode is switched on am/pm
-        if (hours12AndPm || hours24AndPM) {
+        let hours12AndPm = !hours24 && modeRef.current === 'PM'
+        // Avoiding the "24h"
+        // Should be 12h for 12 hours and PM mode
+        if ((hours12AndPm || hours24) && pickedHours + 12 < 24) {
           pickedHours += 12
         }
 
@@ -103,7 +101,7 @@ function AnalogClock({
         }
       }
     },
-    [focusedRef, is24HourRef, hoursRef, onChangeRef, minutesRef]
+    [focusedRef, is24HourRef, hoursRef, onChangeRef, minutesRef, modeRef]
   )
 
   const panResponder = React.useRef(

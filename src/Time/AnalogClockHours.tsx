@@ -3,6 +3,7 @@ import { View, StyleSheet } from 'react-native'
 import { Text } from 'react-native-paper'
 import { circleSize } from './timeUtils'
 import { useTextColorOnPrimary } from '../utils'
+import { DisplayModeContext } from './TimePicker'
 
 function AnalogClockHours({
   is24Hour,
@@ -11,9 +12,11 @@ function AnalogClockHours({
   is24Hour: boolean
   hours: number
 }) {
-  const outerRange = getHourNumbers(false, circleSize, 12)
-  const innerRange = getHourNumbers(true, circleSize, 12)
+  const { mode } = React.useContext(DisplayModeContext)
+  const outerRange = getHourNumbers(false, circleSize, 12, 12)
+  const innerRange = getHourNumbers(true, circleSize, 12, 12)
   const color = useTextColorOnPrimary()
+
   return (
     <>
       {outerRange.map((a, i) => (
@@ -29,8 +32,9 @@ function AnalogClockHours({
           ]}
         >
           <View style={styles.outerHourInner}>
+            {/* Display 00 instead of 12 for AM hours */}
             <Text style={hours === i + 1 ? { color } : null} selectable={false}>
-              {i + 1}
+              {mode === 'AM' && i + 1 === 12 ? '00' : i + 1}
             </Text>
           </View>
         </View>
@@ -97,14 +101,19 @@ const styles = StyleSheet.create({
   innerHourText: { fontSize: 13 },
 })
 
-function getHourNumbers(is24Hour: boolean, size: number, count: number) {
+function getHourNumbers(
+  is24Hour: boolean,
+  size: number,
+  count: number,
+  arrayLength: number
+) {
   let angle = 0
   let step = (2 * Math.PI) / count
   let radius = size / (is24Hour ? 4 : 2.5)
 
   angle = (-90 * Math.PI) / 180 + Math.PI / 6
 
-  return Array(12)
+  return Array(arrayLength)
     .fill(true)
     .map(() => {
       let x = Math.round(size / 2 + radius * Math.cos(angle))
