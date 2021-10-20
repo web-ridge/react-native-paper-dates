@@ -120,7 +120,7 @@ export default function ReadMeExampleSingle() {
         Pick single date
       </Button>
       <DatePickerModal
-        // locale={'en'} optional, default: automatic
+        locale="en"
         mode="single"
         visible={open}
         onDismiss={onDismissSingle}
