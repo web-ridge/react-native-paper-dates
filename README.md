@@ -55,6 +55,40 @@ npm install react-native-paper-dates --save
 ```
 
 
+## Import some localized strings
+Ideally you do this somewhere in your `index.js` before `react-native-paper-dates` is used.
+Currently we only have made en/nl translations but it's really easy to add one extra since it are only some labels and error messages
+```tsx
+// e.g in your index.js
+import {
+  en,
+  // nl,
+  registerTranslation,
+} from 'react-native-paper-dates'
+registerTranslation('en', en)
+// registerTranslation('nl', nl)
+```
+
+### or register your own
+Please send a PR with your language to make sure all locales are there next time
+```tsx
+import {
+  registerTranslation,
+} from 'react-native-paper-dates'
+registerTranslation("pl", {
+  save: 'Save',
+  selectSingle: 'Select date',
+  selectMultiple: 'Select dates',
+  selectRange: 'Select period',
+  notAccordingToDateFormat: (inputFormat: string) =>
+    `Date format must be ${inputFormat}`,
+  mustBeHigherThan: 'Must be later then',
+  mustBeLowerThan: 'Must be earlier then',
+  mustBeBetween: 'Must be between',
+  dateIsDisabled: 'Day is not allowed',
+})
+```
+
 ## Usage
 
 ### Single date Picker (modal)
