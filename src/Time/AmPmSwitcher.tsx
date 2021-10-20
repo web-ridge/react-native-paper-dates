@@ -3,15 +3,17 @@ import { View, StyleSheet } from 'react-native'
 import { Text, TouchableRipple, useTheme } from 'react-native-paper'
 import { useMemo } from 'react'
 import Color from 'color'
-import { getHourType, hourTypes, useSwitchColors } from './timeUtils'
+import { useSwitchColors } from './timeUtils'
+import { DisplayModeContext } from './TimePicker'
 
 export default function AmPmSwitcher({
-  hours,
   onChange,
+  hours,
 }: {
   hours: number
   onChange: (hours: number) => any
 }) {
+  const { setMode, mode } = React.useContext(DisplayModeContext)
   const theme = useTheme()
   const backgroundColor = useMemo<string>(() => {
     if (theme.dark) {
@@ -20,10 +22,7 @@ export default function AmPmSwitcher({
     return Color(theme.colors.surface).darken(0.1).hex()
   }, [theme])
 
-  const hourType = getHourType(hours)
-  const isAM = hourType === hourTypes.am
-  const isPM = hourType === hourTypes.pm
-
+  const isAM = mode === 'AM'
   return (
     <View
       style={[
@@ -36,16 +35,26 @@ export default function AmPmSwitcher({
     >
       <SwitchButton
         label="AM"
-        onPress={isAM ? undefined : () => onChange(hours - 12)}
+        onPress={() => {
+          setMode('AM')
+          if (hours - 12 >= 0) {
+            onChange(hours - 12)
+          }
+        }}
         selected={isAM}
         disabled={isAM}
       />
       <View style={[styles.switchSeparator, { backgroundColor }]} />
       <SwitchButton
         label="PM"
-        onPress={isPM ? undefined : () => onChange(hours + 12)}
-        selected={isPM}
-        disabled={isPM}
+        onPress={() => {
+          setMode('PM')
+          if (hours + 12 <= 24) {
+            onChange(hours + 12)
+          }
+        }}
+        selected={!isAM}
+        disabled={!isAM}
       />
     </View>
   )
