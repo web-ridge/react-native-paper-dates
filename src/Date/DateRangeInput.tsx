@@ -2,10 +2,10 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { Text, IconButton } from 'react-native-paper'
 
-import TextInputWithMask from '../TextInputMask'
 import DatePickerModal from './DatePickerModal'
 
-export default function DateRangeInput() {
+// WORK IN PROGRESS
+export default function DateRangeInput({ locale }: { locale: string }) {
   const [visible, setVisible] = React.useState<boolean>(false)
   const onDismiss = React.useCallback(() => {
     setVisible(false)
@@ -22,13 +22,13 @@ export default function DateRangeInput() {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
       <View style={{ flex: 1 }}>
-        <TextInputWithMask
-          value={''}
-          keyboardType={'numeric'}
-          placeholder={'DD-MM-YYY'}
-          mask={'DD-MM-YYY'}
-          onChangeText={() => {}}
-        />
+        {/*<DatePickerInput*/}
+        {/*  value={''}*/}
+        {/*  keyboardType={'numeric'}*/}
+        {/*  placeholder={'DD-MM-YYY'}*/}
+        {/*  mask={'DD-MM-YYY'}*/}
+        {/*  onChangeText={() => {}}*/}
+        {/*/>*/}
         <Text>Van</Text>
       </View>
       <View>
@@ -40,13 +40,13 @@ export default function DateRangeInput() {
         </Text>
       </View>
       <View style={{ flex: 1 }}>
-        <TextInputWithMask
-          value={''}
-          keyboardType={'numeric'}
-          placeholder={'DD-MM-YYY'}
-          mask={'DD-MM-YYY'}
-          onChangeText={() => {}}
-        />
+        {/*<DatePickerInput*/}
+        {/*  // value={''}*/}
+        {/*  // keyboardType={'numeric'}*/}
+        {/*  // placeholder={'DD-MM-YYY'}*/}
+        {/*  // mask={'DD-MM-YYY'}*/}
+        {/*  // onChangeText={() => {}}*/}
+        {/*/>*/}
         <Text>Tot</Text>
       </View>
       <View>
@@ -56,6 +56,7 @@ export default function DateRangeInput() {
         </Text>
       </View>
       <DatePickerModal
+        locale={locale}
         mode="range"
         visible={visible}
         onDismiss={onDismiss}

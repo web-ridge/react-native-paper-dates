@@ -30,7 +30,7 @@ function CalendarEdit({
   collapsed: boolean
   onChange: (s: LocalState) => any
   validRange: ValidRangeType | undefined
-  locale?: undefined | string
+  locale: string
 }) {
   const dateInput = React.useRef<TextInputNative | null>(null)
   const startInput = React.useRef<TextInputNative | null>(null)

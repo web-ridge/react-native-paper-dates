@@ -28,7 +28,7 @@ export type ValidRangeType = {
 }
 
 export type BaseCalendarProps = {
-  locale?: undefined | string
+  locale: string
   disableWeekDays?: DisableWeekDaysType
   validRange?: ValidRangeType
 

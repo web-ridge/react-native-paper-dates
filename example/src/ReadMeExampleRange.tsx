@@ -29,7 +29,7 @@ export default function ReadMeExampleRange() {
         Pick range
       </Button>
       <DatePickerModal
-        // locale={'en'} optional, default: automatic
+        locale="en"
         mode="range"
         visible={open}
         onDismiss={onDismiss}

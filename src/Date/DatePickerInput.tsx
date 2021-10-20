@@ -22,7 +22,7 @@ function DatePickerInput(
     ...rest
   }: Omit<React.ComponentProps<typeof TextInput>, 'value' | 'onChange'> & {
     inputMode: 'start' | 'end'
-    locale?: string
+    locale: string
     onChange: (date: Date | undefined) => void
     value: Date | undefined
     validRange?: ValidRangeType | undefined

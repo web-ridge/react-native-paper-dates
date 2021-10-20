@@ -24,7 +24,7 @@ export default function ReadMeExampleMultiple() {
       </Button>
 
       <DatePickerModal
-        // locale={'en'} optional, default: automatic
+        locale="en"
         mode="multiple"
         visible={open}
         onDismiss={onDismiss}
