@@ -3,11 +3,9 @@ import { overlay, useTheme } from 'react-native-paper'
 import Color from 'color'
 
 export function useLatest<T>(value: T) {
-  const valueRef = React.useRef<T>(value)
-  React.useEffect(() => {
-    valueRef.current = value
-  }, [value])
-  return valueRef
+  const ref = React.useRef(value)
+  ref.current = value
+  return ref
 }
 
 export function useHeaderBackgroundColor() {
