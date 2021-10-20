@@ -54,7 +54,7 @@ function DatePickerInput(
   )
 
   return (
-    <View>
+    <>
       <View style={styles.root}>
         <TextInputWithMask
           {...rest}
@@ -93,7 +93,7 @@ function DatePickerInput(
           dateMode={inputMode}
         />
       ) : null}
-    </View>
+    </>
   )
 }
 
@@ -114,12 +114,16 @@ function getLabel({
 
 const styles = StyleSheet.create({
   root: {
+    minWidth: 150,
     flexDirection: 'row',
     position: 'relative',
     alignItems: 'center',
-    flex: 1,
+    flexGrow: 1,
+    alignSelf: 'flex-start',
   },
-  input: { flex: 1 },
+  input: {
+    flexGrow: 1,
+  },
   calendarButton: { position: 'absolute', right: 0 },
 })
 export default React.forwardRef(DatePickerInput)

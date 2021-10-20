@@ -192,14 +192,13 @@ function App() {
           <View>
             <Row>
               <Label>Input</Label>
-              <Text>
-                <DatePickerInput
-                  locale={locale}
-                  value={inputDate}
-                  onChange={setInputDate}
-                  inputMode="start"
-                />
-              </Text>
+
+              <DatePickerInput
+                locale={locale}
+                value={inputDate}
+                onChange={setInputDate}
+                inputMode="start"
+              />
             </Row>
             <Row>
               <Label>Date</Label>
