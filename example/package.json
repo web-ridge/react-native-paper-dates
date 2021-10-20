@@ -1,7 +1,7 @@
 {
   "name": "react-native-paper-dates-example",
   "description": "Example app for react-native-paper-dates",
-  "version": "0.4.6",
+  "version": "0.0.1",
   "private": true,
   "main": "index",
   "scripts": {
