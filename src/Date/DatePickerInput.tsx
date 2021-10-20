@@ -1,58 +1,101 @@
 import * as React from 'react'
 
 import TextInputWithMask from '../TextInputMask'
-import { IconButton, TextInput } from 'react-native-paper'
+import { HelperText, IconButton, TextInput, useTheme } from 'react-native-paper'
 import { View, StyleSheet } from 'react-native'
 import DatePickerModal from './DatePickerModal'
-import { useInputFormat, useInputFormatter } from './dateUtils'
-import type { SingleChange } from './Calendar'
+import useDateInput from './inputUtils'
+import type { ValidRangeType } from './Calendar'
+import { useLatest } from '../utils'
 
-export default function DatePickerInput({
-  // value,
-  // onConfirm,
-  style,
-  locale,
-  ...rest
-}: React.ComponentProps<typeof TextInput> & {
-  locale?: undefined | string
-  onChange?: SingleChange
-  // onConfirm: any // TODO: fix
-}) {
-  const formatter = useInputFormatter({ locale })
-  const inputFormat = useInputFormat({ formatter })
+function DatePickerInput(
+  {
+    label,
+    value,
+    onChange,
+    style,
+    locale,
+    validRange,
+    inputMode,
+    withModal = true,
+    withDateFormatInLabel = true,
+    ...rest
+  }: Omit<React.ComponentProps<typeof TextInput>, 'value' | 'onChange'> & {
+    inputMode: 'start' | 'end'
+    locale?: string
+    onChange: (date: Date | undefined) => void
+    value: Date | undefined
+    validRange?: ValidRangeType | undefined
+    withModal?: boolean
+    withDateFormatInLabel?: boolean
+  },
+  ref: any
+) {
+  const theme = useTheme()
+  const { formattedValue, inputFormat, onChangeText, error } = useDateInput({
+    locale,
+    value,
+    validRange,
+    inputMode,
+    onChange,
+  })
+
   const [visible, setVisible] = React.useState<boolean>(false)
   const onDismiss = React.useCallback(() => {
     setVisible(false)
   }, [setVisible])
-  const onInnerConfirm = React.useCallback(() => {
-    setVisible(false)
-  }, [setVisible])
+  const onChangeRef = useLatest(onChange)
+  const onInnerConfirm = React.useCallback(
+    ({ date }) => {
+      setVisible(false)
+      if (date) {
+        onChangeRef.current(date)
+      }
+    },
+    [setVisible, onChangeRef]
+  )
 
   return (
     <>
       <View style={styles.root}>
         <TextInputWithMask
-          keyboardType={'numeric'}
+          {...rest}
+          ref={ref}
+          label={
+            withDateFormatInLabel ? `${label || ''} (${inputFormat})` : label
+          }
+          value={formattedValue}
+          keyboardType={'number-pad'}
           placeholder={inputFormat}
           mask={inputFormat}
-          onChangeText={() => {}}
+          onChangeText={onChangeText}
+          keyboardAppearance={theme.dark ? 'dark' : 'default'}
+          error={!!error}
           style={[styles.input, style]}
-          {...rest}
         />
-        <IconButton
-          size={24}
-          style={styles.calendarButton}
-          icon="calendar"
-          onPress={() => setVisible(true)}
-        />
+        {withModal ? (
+          <IconButton
+            size={24}
+            style={styles.calendarButton}
+            icon="calendar"
+            onPress={() => setVisible(true)}
+          />
+        ) : null}
       </View>
-      <DatePickerModal
-        mode="single"
-        visible={visible}
-        onDismiss={onDismiss}
-        onConfirm={onInnerConfirm}
-        locale={locale}
-      />
+      <HelperText type="error" visible={!!error}>
+        {error}
+      </HelperText>
+      {withModal ? (
+        <DatePickerModal
+          date={value}
+          mode="single"
+          visible={visible}
+          onDismiss={onDismiss}
+          onConfirm={onInnerConfirm}
+          locale={locale}
+          dateMode={inputMode}
+        />
+      ) : null}
     </>
   )
 }
@@ -67,3 +110,4 @@ const styles = StyleSheet.create({
   input: { flex: 1 },
   calendarButton: { position: 'absolute', right: 0 },
 })
+export default React.forwardRef(DatePickerInput)

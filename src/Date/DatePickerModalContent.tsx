@@ -52,6 +52,7 @@ export interface DatePickerModalContentSingleProps
   date?: CalendarDate
   onChange?: SingleChange
   onConfirm: SingleChange
+  dateMode?: 'start' | 'end'
 }
 
 export interface DatePickerModalContentMultiProps
@@ -79,6 +80,7 @@ export function DatePickerModalContent(
     disableWeekDays,
     locale,
     validRange,
+    dateMode,
   } = props
 
   const anyProps = props as any
@@ -136,6 +138,7 @@ export function DatePickerModalContent(
     <>
       <DatePickerModalHeaderBackground>
         <DatePickerModalHeader
+          locale={locale}
           onSave={onInnerConfirm}
           onDismiss={onDismiss}
           saveLabel={props.saveLabel}
@@ -169,6 +172,7 @@ export function DatePickerModalContent(
             disableWeekDays={disableWeekDays}
             dates={state.dates}
             validRange={validRange}
+            dateMode={dateMode}
           />
         }
         calendarEdit={

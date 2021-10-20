@@ -4,19 +4,12 @@ import {
   StyleSheet,
   TextInput as TextInputNative,
   Keyboard,
-  ReturnKeyTypeOptions,
 } from 'react-native'
 
-import type { CalendarDate, ModeType, ValidRangeType } from './Calendar'
+import type { ModeType, ValidRangeType } from './Calendar'
 import type { LocalState } from './DatePickerModalContent'
-import TextInputWithMask from '../TextInputMask'
-import { HelperText, useTheme } from 'react-native-paper'
-import {
-  dateToUnix,
-  isDateWithinOptionalRange,
-  useInputFormat,
-  useInputFormatter,
-} from './dateUtils'
+
+import DatePickerInput from './DatePickerInput'
 
 function CalendarEdit({
   mode,
@@ -85,7 +78,8 @@ function CalendarEdit({
     <View style={styles.root}>
       <View style={styles.inner}>
         {mode === 'single' ? (
-          <CalendarInput
+          <DatePickerInput
+            inputMode="start"
             ref={dateInput}
             label={label}
             value={state.date}
@@ -93,11 +87,13 @@ function CalendarEdit({
             onSubmitEditing={onSubmitInput}
             validRange={validRange}
             locale={locale}
+            withModal={false}
           />
         ) : null}
         {mode === 'range' ? (
           <>
-            <CalendarInput
+            <DatePickerInput
+              inputMode="start"
               ref={startInput}
               label={startLabel}
               value={state.startDate}
@@ -106,17 +102,19 @@ function CalendarEdit({
               onSubmitEditing={onSubmitStartInput}
               validRange={validRange}
               locale={locale}
+              withModal={false}
             />
             <View style={styles.separator} />
-            <CalendarInput
+            <DatePickerInput
+              inputMode="end"
               ref={endInput}
               label={endLabel}
               value={state.endDate}
               onChange={(endDate) => onChange({ ...state, endDate })}
-              isEndDate
               onSubmitEditing={onSubmitEndInput}
               validRange={validRange}
               locale={locale}
+              withModal={false}
             />
           </>
         ) : null}
@@ -124,103 +122,6 @@ function CalendarEdit({
     </View>
   )
 }
-
-function CalendarInputPure(
-  {
-    label,
-    value,
-    onChange,
-    isEndDate,
-    returnKeyType,
-    onSubmitEditing,
-    locale,
-    validRange,
-  }: {
-    locale?: undefined | string
-    label: string
-    value: CalendarDate
-    onChange: (d: Date | undefined) => any
-    isEndDate?: boolean
-    returnKeyType?: ReturnKeyTypeOptions
-    onSubmitEditing?: () => any
-    validRange: ValidRangeType | undefined
-  },
-  ref: any
-) {
-  const theme = useTheme()
-  const [error, setError] = React.useState<null | string>(null)
-  const formatter = useInputFormatter({ locale })
-  const inputFormat = useInputFormat({ formatter })
-  const formattedValue = formatter.format(value)
-  const onChangeText = (date: string) => {
-    const dayIndex = inputFormat.indexOf('DD')
-    const monthIndex = inputFormat.indexOf('MM')
-    const yearIndex = inputFormat.indexOf('YYYY')
-
-    const day = Number(date.slice(dayIndex, dayIndex + 2))
-    const year = Number(date.slice(yearIndex, yearIndex + 4))
-    const month = Number(date.slice(monthIndex, monthIndex + 2))
-
-    if (Number.isNaN(day) || Number.isNaN(year) || Number.isNaN(month)) {
-      setError(inputFormat)
-      return
-    }
-
-    const finalDate = isEndDate
-      ? new Date(year, month - 1, day, 23, 59, 59)
-      : new Date(year, month - 1, day)
-
-    const validStart = validRange?.startDate
-    const validEnd = validRange?.endDate
-    if (
-      !isDateWithinOptionalRange(finalDate, {
-        startUnix: validStart ? dateToUnix(validStart) : undefined,
-        endUnix: validEnd ? dateToUnix(validEnd) : undefined,
-      })
-    ) {
-      let errors =
-        validStart && validEnd
-          ? [`${formatter.format(validStart)} - ${formatter.format(validEnd)}`]
-          : [
-              validStart ? `> ${formatter.format(validStart)}` : '',
-              validEnd ? `< ${formatter.format(validEnd)}` : '',
-            ]
-      setError(errors.filter((n) => n).join(' '))
-      return
-    }
-
-    setError(null)
-    if (isEndDate) {
-      onChange(finalDate)
-    } else {
-      onChange(finalDate)
-    }
-  }
-
-  return (
-    <View style={styles.inputContainer}>
-      <TextInputWithMask
-        ref={ref}
-        value={formattedValue}
-        style={styles.input}
-        label={`${label} (${inputFormat})`}
-        keyboardType={'number-pad'}
-        placeholder={inputFormat}
-        mask={inputFormat}
-        onChangeText={onChangeText}
-        returnKeyType={returnKeyType}
-        onSubmitEditing={onSubmitEditing}
-        keyboardAppearance={theme.dark ? 'dark' : 'default'}
-        error={!!error}
-      />
-      <HelperText type="error" visible={!!error}>
-        {error}
-      </HelperText>
-    </View>
-  )
-}
-
-const CalendarInput = React.forwardRef(CalendarInputPure)
 
 const styles = StyleSheet.create({
   root: { padding: 12 },

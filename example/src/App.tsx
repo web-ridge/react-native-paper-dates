@@ -26,12 +26,11 @@ import {
   DatePickerModal,
   DatePickerModalContent,
   TimePickerModal,
-  // @ts-ignore
+  DatePickerInput,
+  // @ts-ignore TODO: try to fix expo to work with local library
 } from 'react-native-paper-dates'
-import DatePickerInput from '../../src/Date/DatePickerInput'
 
 function App() {
-  // I18nManager.forceRTL(true);
   const theme = useTheme()
   const dateFormatter = new Intl.DateTimeFormat(undefined, {
     day: 'numeric',
@@ -43,6 +42,8 @@ function App() {
     minute: '2-digit',
     hour12: false,
   })
+  const [inputDate, setInputDate] = React.useState<Date | undefined>(undefined)
+
   const [date, setDate] = React.useState<Date | undefined>(undefined)
   const [dates, setDates] = React.useState<Date[] | undefined>()
   const [range, setRange] = React.useState<{
@@ -119,6 +120,7 @@ function App() {
       ? overlay(3, theme.colors.surface)
       : (theme.colors.surface as any)
 
+  const locale = 'nl'
   return (
     <>
       <ScrollView
@@ -188,7 +190,12 @@ function App() {
             <Row>
               <Label>Input</Label>
               <Text>
-                <DatePickerInput />
+                <DatePickerInput
+                  locale={locale}
+                  value={inputDate}
+                  onChange={setInputDate}
+                  inputMode="start"
+                />
               </Text>
             </Row>
             <Row>
@@ -282,7 +289,7 @@ function App() {
         {customOpen ? (
           <View style={[StyleSheet.absoluteFill, styles.customModal]}>
             <DatePickerModalContent
-              // locale={'en'} optional, default: automatic
+              locale={locale}
               mode="range"
               onDismiss={onDismissCustom}
               startDate={range.startDate}
@@ -294,7 +301,7 @@ function App() {
       </Portal>
 
       <DatePickerModal
-        // locale={'en'} optional, default: automatic
+        locale={locale}
         mode="range"
         visible={rangeOpen}
         onDismiss={onDismissRange}
@@ -310,7 +317,7 @@ function App() {
       />
 
       <DatePickerModal
-        // locale={'en'} optional, default: automatic
+        locale={locale}
         mode="single"
         visible={singleOpen}
         onDismiss={onDismissSingle}
@@ -326,7 +333,7 @@ function App() {
       />
 
       <DatePickerModal
-        // locale={'en'} optional, default: automatic
+        locale={locale}
         mode="multiple"
         visible={multiOpen}
         onDismiss={onDismissMulti}
@@ -343,7 +350,7 @@ function App() {
       />
 
       <TimePickerModal
-        locale={'nl'} //optional, default: automatic
+        locale={locale}
         visible={timeOpen}
         onDismiss={onDismissTime}
         onConfirm={onConfirmTime}
@@ -435,7 +442,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
     padding: 24,
     alignSelf: 'center',
-    flex: 1,
+    // flex: 1,
   },
   contentInline: {
     padding: 0,

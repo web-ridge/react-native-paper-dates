@@ -5,6 +5,7 @@ import type { ModeType } from './Calendar'
 import type { LocalState } from './DatePickerModalContent'
 import { useHeaderTextColor } from '../utils'
 import Color from 'color'
+import { getTranslation } from '../translations/utils'
 
 export interface HeaderPickProps {
   moreLabel?: string
@@ -21,30 +22,35 @@ export interface HeaderContentProps extends HeaderPickProps {
   mode: ModeType
   collapsed: boolean
   onToggle: () => any
-  locale: undefined | string
+  locale: string | undefined
 }
 
-function getLabel(mode: ModeType, configuredLabel?: string) {
+function getLabel(
+  locale: string | undefined,
+  mode: ModeType,
+  configuredLabel?: string
+) {
   if (configuredLabel) {
     return configuredLabel
   }
   if (mode === 'range') {
-    return 'Select period'
+    return getTranslation(locale, 'selectRange')
+  }
+  if (mode === 'multiple') {
+    return getTranslation(locale, 'selectMultiple')
   }
   if (mode === 'single') {
-    return 'Select date'
-  }
-
-  if (mode === 'multiple') {
-    return 'Select dates'
+    return getTranslation(locale, 'selectSingle')
   }
   return '...?'
 }
 
-export default function DatePickerModalHeader(props: HeaderContentProps) {
+export default function DatePickerModalContentHeader(
+  props: HeaderContentProps
+) {
   const { onToggle, collapsed, mode, moreLabel } = props
 
-  const label = getLabel(props.mode, props.label)
+  const label = getLabel(props.locale, props.mode, props.label)
 
   const color = useHeaderTextColor()
   const allowEditing = mode !== 'multiple'

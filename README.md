@@ -13,8 +13,8 @@
 
 - Smooth and fast cross platform Material Design **date** picker and **time** picker for ([react-native-paper](https://callstack.github.io/react-native-paper/))
 - Tested on Android, iOS and the web
-- Uses the native Date.Intl API's which work out of the box on the web / iOS (automatic day name, month translations without bundle size increase)
-- For Android Intl support please follow the [android-caveats guide](https://github.com/web-ridge/react-native-paper-dates#android-caveats)
+- Uses the native Date.Intl API's which work out of the box on the web / iOS an on Android with Hermes from RN version 0.66 (automatic day name, month translations without bundle size increase)
+- For RN below 0.66 see for Android Intl support the [android-caveats guide](https://github.com/web-ridge/react-native-paper-dates#android-caveats)
 - Simple API
 - Typesafe
 - Endless (virtual) scrolling
@@ -282,18 +282,13 @@ This is to prevent the need to press 2 times before save or close button in moda
 [React Native Issue: #10138](https://github.com/facebook/react-native/issues/10138)
 
 ## Android Caveats
-
-
-
+We recommend Hermes with React Native >= 0.66 you won't need these polyfills at all!
+### Below React Native 0.66
 You will need to add a polyfill for the Intl API on Android if:
 
-- You have [Hermes](https://github.com/facebook/hermes/issues/23) enabled
+- You have [Hermes](https://github.com/facebook/hermes/issues/23) enabled and are below React Native 0.66
 - You have [Hermes](https://github.com/facebook/hermes/issues/23) disabled and you want to support locales outside of en-US and you don't have the org.webkit:android-jsc-intl:+ variant enabled in your app/build.gradle
 
-
-*update*: [Hermes is planning on native Intl support in version 0.65!](https://github.com/facebook/hermes/issues/23#issuecomment-816126715) when that's released we won't need any polyfills anymore!   
-
-But for now.   
 
 Install polyfills with Yarn
 

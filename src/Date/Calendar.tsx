@@ -1,8 +1,6 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
-
 import Swiper from './Swiper'
-
 import Month from './Month'
 import {
   areDatesOnSameDay,
@@ -37,6 +35,7 @@ export type BaseCalendarProps = {
   dates?: CalendarDates
   startDate?: CalendarDate
   endDate?: CalendarDate
+  dateMode?: 'start' | 'end'
 }
 
 export type CalendarDate = Date | undefined
@@ -47,7 +46,7 @@ export type RangeChange = (params: {
   endDate: CalendarDate
 }) => any
 
-export type SingleChange = (params: { date: CalendarDate }) => any
+export type SingleChange = (params: { date: CalendarDate }) => void
 
 export type MultiChange = (params: {
   dates: CalendarDates
@@ -55,7 +54,7 @@ export type MultiChange = (params: {
   change: 'added' | 'removed'
 }) => any
 
-export type MultiConfirm = (params: { dates: Date[] }) => any
+export type MultiConfirm = (params: { dates: Date[] }) => void
 
 export interface CalendarSingleProps extends BaseCalendarProps {
   mode: 'single'
@@ -89,6 +88,7 @@ function Calendar(
     disableWeekDays,
     dates,
     validRange,
+    dateMode,
   } = props
 
   const theme = useTheme()
@@ -128,7 +128,7 @@ function Calendar(
     (d: Date) => {
       if (mode === 'single') {
         ;(onChangeRef.current as SingleChange)({
-          date: d,
+          date: dateMode === 'start' ? d : getEndDate(d),
         })
       } else if (mode === 'range') {
         const sd = startDateRef.current
@@ -139,9 +139,7 @@ function Calendar(
         }
         ;(onChangeRef.current as RangeChange)({
           startDate: isStart ? d : sd,
-          endDate: !isStart
-            ? new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59)
-            : undefined,
+          endDate: !isStart ? getEndDate(d) : undefined,
         })
       } else if (mode === 'multiple') {
         datesRef.current = datesRef.current || []
@@ -159,10 +157,11 @@ function Calendar(
         })
       }
     },
-    [mode, onChangeRef, startDateRef, endDateRef, datesRef]
+    [mode, dateMode, onChangeRef, startDateRef, endDateRef, datesRef]
   )
 
   const firstDate = startDate || date || dates?.[0]
+
   return (
     <View style={styles.root}>
       <Swiper
@@ -209,6 +208,10 @@ function Calendar(
       ) : null}
     </View>
   )
+}
+
+function getEndDate(d: Date) {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59)
 }
 
 const styles = StyleSheet.create({

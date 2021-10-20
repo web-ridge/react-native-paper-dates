@@ -3,18 +3,21 @@ import { Animated, StyleSheet, SafeAreaView } from 'react-native'
 import { Appbar, Button } from 'react-native-paper'
 
 import { useHeaderTextColor } from '../utils'
+import { getTranslation } from '../translations/utils'
 
 export interface DatePickerModalHeaderProps {
   disableSafeTop?: boolean
   saveLabel?: string
   onDismiss: () => void
   onSave: () => void
+  locale: string | undefined
 }
 
 export default function DatePickerModalHeader(
   props: DatePickerModalHeaderProps
 ) {
-  const { saveLabel = 'Save', disableSafeTop } = props
+  const { disableSafeTop, locale } = props
+  const saveLabel = props.saveLabel || getTranslation(locale, 'save')
   const color = useHeaderTextColor()
   return (
     <>
