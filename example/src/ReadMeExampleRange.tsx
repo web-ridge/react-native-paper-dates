@@ -39,6 +39,7 @@ export default function ReadMeExampleRange() {
         // validRange={{
         //   startDate: new Date(2021, 1, 2),  // optional
         //   endDate: new Date(), // optional
+        //   disabledDates: [new Date()] // optional
         // }}
         // onChange={} // same props as onConfirm but triggered without confirmed by user
         // locale={'nl'} // optional

@@ -33,6 +33,7 @@ export default function ReadMeExampleMultiple() {
         // validRange={{
         //   startDate: new Date(2021, 1, 2),  // optional
         //   endDate: new Date(), // optional
+        //   disabledDates: [new Date()] // optional
         // }}
         // locale={'nl'} // optional
         // saveLabel="Save" // optional

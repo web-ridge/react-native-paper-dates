@@ -57,7 +57,7 @@ npm install react-native-paper-dates --save
 
 ## Usage
 
-### Single date Picker
+### Single date Picker (modal)
 
 ```tsx
 import * as React from 'react';
@@ -107,7 +107,7 @@ export default function ReadMeExampleSingle() {
 }
 ```
 
-### Range picker
+### Range picker (modal)
 ```tsx
 import * as React from 'react';
 import { Button } from 'react-native-paper';
@@ -140,7 +140,7 @@ export default function ReadMeExampleRange() {
         Pick range
       </Button>
       <DatePickerModal
-        // locale={'en'} optional, default: automatic
+        locale="en"
         mode="range"
         visible={open}
         onDismiss={onDismiss}
@@ -153,7 +153,6 @@ export default function ReadMeExampleRange() {
         //   disabledDates: [new Date()] // optional
         // }}
         // onChange={} // same props as onConfirm but triggered without confirmed by user
-        // locale={'nl'} // optional
         // saveLabel="Save" // optional
         // label="Select period" // optional
         // startLabel="From" // optional
@@ -195,7 +194,7 @@ export default function ReadMeExampleMultiple() {
       </Button>
 
       <DatePickerModal
-        // locale={'en'} optional, default: automatic
+        locale="en"
         mode="multiple"
         visible={open}
         onDismiss={onDismiss}
@@ -207,7 +206,6 @@ export default function ReadMeExampleMultiple() {
         //   endDate: new Date(), // optional
         //   disabledDates: [new Date()] // optional
         // }}
-        // locale={'nl'} // optional
         // saveLabel="Save" // optional
         // label="Select period" // optional
         // startLabel="From" // optional
@@ -217,6 +215,28 @@ export default function ReadMeExampleMultiple() {
     </>
   );
 }
+```
+
+### Input date with modal button
+```tsx
+export default function ReadMeExampleDatePickerInput() {
+  const [inputDate, setInputDate] = React.useState<Date | undefined>(undefined)
+
+  return (
+    <>
+      <DatePickerInput
+        locale="en"
+        label="Birthdate"
+        value={inputDate}
+        onChange={(d) => setInputDate(d)}
+        inputMode="start"
+        // mode="outlined" (see react-native-paper docs)
+        // other react native TextInput props
+      />
+    </>
+  )
+}
+
 ```
 
 ### Time picker
@@ -252,7 +272,7 @@ export default function TimePickerPage() {
         cancelLabel="Cancel" // optional, default: 'Cancel'
         confirmLabel="Ok" // optional, default: 'Ok'
         animationType="fade" // optional, default is 'none'
-        locale={'en'} // optional, default is automically detected by your system
+        locale="en" // optional, default is automically detected by your system
       />
       <Button onPress={()=> setVisible(true)}>
         Pick time
