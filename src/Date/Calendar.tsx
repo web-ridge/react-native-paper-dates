@@ -6,6 +6,7 @@ import {
   areDatesOnSameDay,
   dateToUnix,
   DisableWeekDaysType,
+  getEndOfDay,
   getInitialIndex,
 } from './dateUtils'
 
@@ -129,7 +130,7 @@ function Calendar(
     (d: Date) => {
       if (mode === 'single') {
         ;(onChangeRef.current as SingleChange)({
-          date: dateMode === 'start' ? d : getEndDate(d),
+          date: dateMode === 'start' ? d : getEndOfDay(d),
         })
       } else if (mode === 'range') {
         const sd = startDateRef.current
@@ -140,7 +141,7 @@ function Calendar(
         }
         ;(onChangeRef.current as RangeChange)({
           startDate: isStart ? d : sd,
-          endDate: !isStart ? getEndDate(d) : undefined,
+          endDate: !isStart ? getEndOfDay(d) : undefined,
         })
       } else if (mode === 'multiple') {
         datesRef.current = datesRef.current || []
@@ -209,10 +210,6 @@ function Calendar(
       ) : null}
     </View>
   )
-}
-
-function getEndDate(d: Date) {
-  return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59)
 }
 
 const styles = StyleSheet.create({

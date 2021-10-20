@@ -120,7 +120,10 @@ function App() {
       ? overlay(3, theme.colors.surface)
       : (theme.colors.surface as any)
 
-  const locale = 'nl'
+  const pastDate = new Date(new Date().setDate(new Date().getDate() - 5))
+  const futureDate = new Date(new Date().setDate(new Date().getDate() + 5))
+
+  const locale = 'en'
   return (
     <>
       <ScrollView
@@ -323,10 +326,12 @@ function App() {
         onDismiss={onDismissSingle}
         date={date}
         onConfirm={onChangeSingle}
-        // validRange={{
-        //   startDate: new Date(2021, 1, 2), // optional
-        //   endDate: new Date(), // optional
-        // }}
+        validRange={{
+          startDate: pastDate,
+          disabledDates: [futureDate],
+          // startDate: new Date(2021, 1, 2), // optional
+          // endDate: new Date(), // optional
+        }}
         // saveLabel="Save" // optional
         // label="Select date" // optional
         // animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web

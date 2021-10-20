@@ -48,22 +48,18 @@ function DatePickerInput(
   const onInnerConfirm = React.useCallback(
     ({ date }) => {
       setVisible(false)
-      if (date) {
-        onChangeRef.current(date)
-      }
+      onChangeRef.current(date)
     },
     [setVisible, onChangeRef]
   )
 
   return (
-    <>
+    <View>
       <View style={styles.root}>
         <TextInputWithMask
           {...rest}
           ref={ref}
-          label={
-            withDateFormatInLabel ? `${label || ''} (${inputFormat})` : label
-          }
+          label={getLabel({ label, inputFormat, withDateFormatInLabel })}
           value={formattedValue}
           keyboardType={'number-pad'}
           placeholder={inputFormat}
@@ -85,6 +81,7 @@ function DatePickerInput(
       <HelperText type="error" visible={!!error}>
         {error}
       </HelperText>
+
       {withModal ? (
         <DatePickerModal
           date={value}
@@ -96,8 +93,23 @@ function DatePickerInput(
           dateMode={inputMode}
         />
       ) : null}
-    </>
+    </View>
   )
+}
+
+function getLabel({
+  withDateFormatInLabel,
+  inputFormat,
+  label,
+}: {
+  withDateFormatInLabel: boolean
+  inputFormat: string
+  label: string | undefined
+}) {
+  if (withDateFormatInLabel) {
+    return label ? `${label} (${inputFormat})` : inputFormat
+  }
+  return label || ''
 }
 
 const styles = StyleSheet.create({

@@ -3,13 +3,19 @@ export type TranslationsType = {
   selectMultiple: string
   selectRange: string
   save: string
+  notAccordingToDateFormat: (inputFormat: string) => string
+  mustBeHigherThan: string
+  mustBeLowerThan: string
+  mustBeBetween: string
+  dateIsDisabled: string
 }
 
 let translationsPerLocale: Record<string, TranslationsType> = {}
 
 export function getTranslation(
   locale: string | undefined,
-  key: keyof TranslationsType
+  key: keyof TranslationsType,
+  fallback?: any
 ) {
   const l = locale || 'en'
   const translationForLocale = translationsPerLocale[l]
@@ -17,9 +23,15 @@ export function getTranslation(
     console.warn(
       `[react-native-paper-dates] ${locale} is not registered, key: ${key}`
     )
-    return key
+    return fallback || key
   }
-  return translationsPerLocale[l][key] || key
+  const translation = translationsPerLocale[l][key]
+  if (!translationForLocale) {
+    console.warn(
+      `[react-native-paper-dates] ${locale} is registered, but ${key} is missing`
+    )
+  }
+  return translation || fallback || key
 }
 
 export function registerTranslation(

@@ -1,4 +1,6 @@
 import * as React from 'react'
+import { useLatest } from '../utils'
+import type { ValidRangeType } from './Calendar'
 
 export type DisableWeekDaysType = number[]
 
@@ -63,15 +65,42 @@ export function getFirstDayOfMonth({
   return new Date(year, month, 1).getDay()
 }
 
-// export function getLastDayOfMonth({
-//   year,
-//   month,
-// }: {
-//   year: number
-//   month: number
-// }): number {
-//   return new Date(year, month, getDaysInMonth({ year, month })).getDay()
-// }
+export function useRangeChecker(validRange: ValidRangeType | undefined) {
+  const validStart = validRange?.startDate
+  const validEnd = validRange?.endDate
+  const startUnix =
+    validStart instanceof Date
+      ? dateToUnix(getStartOfDay(validStart))
+      : undefined
+
+  const endUnix =
+    validEnd instanceof Date ? dateToUnix(getEndOfDay(validEnd)) : undefined
+
+  const validDisabledDatesRef = useLatest(validRange?.disabledDates)
+
+  const isWithinValidRange = React.useCallback(
+    (day: Date) => {
+      return isDateWithinOptionalRange(day, {
+        startUnix: startUnix,
+        endUnix: endUnix,
+      })
+    },
+    [startUnix, endUnix]
+  )
+
+  const isDisabled = React.useCallback(
+    (day: Date) => {
+      return validDisabledDatesRef.current
+        ? validDisabledDatesRef.current.some((disabledDate) =>
+            areDatesOnSameDay(disabledDate, day)
+          )
+        : false
+    },
+    [validDisabledDatesRef]
+  )
+
+  return { isDisabled, isWithinValidRange, validStart, validEnd }
+}
 
 export function areDatesOnSameDay(a: Date, b?: Date | null | undefined) {
   if (!b) {
@@ -181,7 +210,12 @@ export function useInputFormatter({ locale }: { locale: string | undefined }) {
     })
   }, [locale])
 }
-
+export function getStartOfDay(d: Date): Date {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0)
+}
+export function getEndOfDay(d: Date): Date {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59)
+}
 export function useInputFormat({
   formatter,
 }: {

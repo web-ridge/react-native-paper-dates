@@ -1,11 +1,7 @@
-import {
-  dateToUnix,
-  isDateWithinOptionalRange,
-  useInputFormat,
-  useInputFormatter,
-} from './dateUtils'
+import { useInputFormat, useInputFormatter, useRangeChecker } from './dateUtils'
 import * as React from 'react'
 import type { ValidRangeType } from './Calendar'
+import { getTranslation } from 'react-native-paper-dates'
 
 export default function useDateInput({
   locale,
@@ -20,6 +16,8 @@ export default function useDateInput({
   validRange: ValidRangeType | undefined
   inputMode: 'start' | 'end'
 }) {
+  const { isDisabled, isWithinValidRange, validStart, validEnd } =
+    useRangeChecker(validRange)
   const [error, setError] = React.useState<null | string>(null)
   const formatter = useInputFormatter({ locale })
   const inputFormat = useInputFormat({ formatter })
@@ -34,7 +32,13 @@ export default function useDateInput({
     const month = Number(date.slice(monthIndex, monthIndex + 2))
 
     if (Number.isNaN(day) || Number.isNaN(year) || Number.isNaN(month)) {
-      setError(inputFormat)
+      setError(
+        getTranslation(
+          locale,
+          'notAccordingToDateFormat',
+          () => 'notAccordingToDateFormat'
+        )(inputFormat)
+      )
       return
     }
 
@@ -43,20 +47,31 @@ export default function useDateInput({
         ? new Date(year, month - 1, day, 23, 59, 59)
         : new Date(year, month - 1, day)
 
-    const validStart = validRange?.startDate
-    const validEnd = validRange?.endDate
-    if (
-      !isDateWithinOptionalRange(finalDate, {
-        startUnix: validStart ? dateToUnix(validStart) : undefined,
-        endUnix: validEnd ? dateToUnix(validEnd) : undefined,
-      })
-    ) {
+    if (isDisabled(finalDate)) {
+      setError(getTranslation(locale, 'dateIsDisabled'))
+      return
+    }
+    if (!isWithinValidRange(finalDate)) {
       let errors =
         validStart && validEnd
-          ? [`${formatter.format(validStart)} - ${formatter.format(validEnd)}`]
+          ? [
+              `${getTranslation(locale, 'mustBeBetween')} ${formatter.format(
+                validStart
+              )} - ${formatter.format(validEnd)}`,
+            ]
           : [
-              validStart ? `> ${formatter.format(validStart)}` : '',
-              validEnd ? `< ${formatter.format(validEnd)}` : '',
+              validStart
+                ? `${getTranslation(
+                    locale,
+                    'mustBeHigherThan'
+                  )} ${formatter.format(validStart)}`
+                : '',
+              validEnd
+                ? `${getTranslation(
+                    locale,
+                    'mustBeLowerThan'
+                  )} ${formatter.format(validEnd)}`
+                : '',
             ]
       setError(errors.filter((n) => n).join(' '))
       return

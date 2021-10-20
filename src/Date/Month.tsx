@@ -18,8 +18,7 @@ import {
   startAtIndex,
   beginOffset,
   estimatedMonthHeight,
-  isDateWithinOptionalRange,
-  dateToUnix,
+  useRangeChecker,
 } from './dateUtils'
 import { getCalendarHeaderHeight } from './CalendarHeader'
 import type {
@@ -91,39 +90,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
   const textColorOnPrimary = useTextColorOnPrimary()
   const realIndex = getRealIndex(index)
   const isHorizontal = scrollMode === 'horizontal'
-
-  const validRangeStart =
-    validRange?.startDate instanceof Date
-      ? dateToUnix(
-          new Date(
-            validRange?.startDate.getFullYear(),
-            validRange?.startDate.getMonth(),
-            validRange?.startDate.getDate(),
-            0,
-            0,
-            0
-          )
-        )
-      : undefined
-
-  const validRangeEnd =
-    validRange?.endDate instanceof Date
-      ? dateToUnix(
-          new Date(
-            validRange?.endDate.getFullYear(),
-            validRange?.endDate.getMonth(),
-            validRange?.endDate.getDate(),
-            23,
-            59,
-            59
-          )
-        )
-      : undefined
-
-  const validDisabledDates = validRange?.disabledDates
-    ? validRange?.disabledDates
-    : undefined
-
+  const { isDisabled, isWithinValidRange } = useRangeChecker(validRange)
   const { monthName, month, year } = React.useMemo(() => {
     const md = addMonths(new Date(), realIndex)
     const y = md.getFullYear()
@@ -155,23 +122,14 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
           const isToday = areDatesOnSameDay(day, today)
 
           let inRange = false
-          let disabled = false
+          let disabled = isDisabled(day)
           let selected = false
-          let inDisabledDates = false
+
           let leftCrop = dayOfMonth === 1
           let rightCrop = dayOfMonth === daysInMonth
 
           const isFirstDayOfMonth = dayOfMonth === 1
           const isLastDayOfMonth = dayOfMonth === daysInMonth
-
-          inDisabledDates = validDisabledDates
-            ? validDisabledDates.some((disabledDate) =>
-                areDatesOnSameDay(disabledDate, day)
-              )
-            : false
-          if (inDisabledDates) {
-            disabled = true
-          }
 
           if (mode === 'range') {
             const selectedStartDay = areDatesOnSameDay(day, startDate)
@@ -241,18 +199,13 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
                 selected = false
               }
             }
-
-            //
           } else if (mode === 'single') {
             selected = areDatesOnSameDay(day, date)
           }
-          //
-          const isWithinOptionalValidRange = isDateWithinOptionalRange(day, {
-            startUnix: validRangeStart,
-            endUnix: validRangeEnd,
-          })
 
-          if (inRange && !inDisabledDates) {
+          const isWithinOptionalValidRange = isWithinValidRange(day)
+
+          if (inRange && !disabled) {
             disabled = false
           }
 
@@ -282,14 +235,13 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
     year,
     month,
     index,
+    isDisabled,
+    mode,
+    isWithinValidRange,
     startDate,
     endDate,
-    date,
     dates,
-    validRangeStart,
-    validRangeEnd,
-    validDisabledDates,
-    mode,
+    date,
   ])
 
   return (
