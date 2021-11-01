@@ -70,10 +70,14 @@ function AnalogClock({
         let pickedHours = getHours(angle, previousHourType)
 
         let hours12AndPm = !hours24 && modeRef.current === 'PM'
+
         // Avoiding the "24h"
         // Should be 12h for 12 hours and PM mode
         if ((hours12AndPm || hours24) && pickedHours + 12 < 24) {
           pickedHours += 12
+        }
+        if (modeRef.current === 'AM' && pickedHours === 12) {
+          pickedHours = 0
         }
 
         if (pickedHours === 24) {
