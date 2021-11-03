@@ -123,7 +123,7 @@ function App() {
   const pastDate = new Date(new Date().setDate(new Date().getDate() - 5))
   const futureDate = new Date(new Date().setDate(new Date().getDate() + 5))
 
-  const locale = 'en'
+  const locale = 'en-gb'
   return (
     <>
       <ScrollView
