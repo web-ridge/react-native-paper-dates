@@ -266,6 +266,9 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
               borderRadius: roundness,
             },
           ]}
+          // RN types bug
+          hasTVPreferredFocus={undefined}
+          tvParallaxProperties={undefined}
         >
           <View
             style={[
@@ -285,6 +288,9 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
               <IconButton
                 onPress={isHorizontal ? () => onPressYear(year) : undefined}
                 icon={selectingYear ? 'chevron-up' : 'chevron-down'}
+                // RN types bug
+                hasTVPreferredFocus={undefined}
+                tvParallaxProperties={undefined}
               />
             </View>
           </View>

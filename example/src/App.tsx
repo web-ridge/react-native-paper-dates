@@ -123,7 +123,7 @@ function App() {
   const pastDate = new Date(new Date().setDate(new Date().getDate() - 5))
   const futureDate = new Date(new Date().setDate(new Date().getDate() + 5))
 
-  const locale = 'en-gb'
+  const locale = 'en-GB'
   return (
     <>
       <ScrollView
@@ -198,6 +198,7 @@ function App() {
                 value={inputDate}
                 onChange={setInputDate}
                 inputMode="start"
+                autoCompleteType={'birthdate-full'}
               />
             </Row>
             <Row>

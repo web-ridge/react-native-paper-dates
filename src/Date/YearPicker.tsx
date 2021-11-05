@@ -75,6 +75,9 @@ function YearPure({
       <TouchableRipple
         onPress={() => onPressYear(year)}
         style={styles.yearButton}
+        // RN types bug
+        hasTVPreferredFocus={undefined}
+        tvParallaxProperties={undefined}
       >
         <View
           style={[

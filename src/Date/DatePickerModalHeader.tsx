@@ -34,6 +34,9 @@ export default function DatePickerModalHeader(
               onPress={props.onDismiss}
               color={color}
               testID="react-native-paper-dates-close"
+              // RN types bug
+              hasTVPreferredFocus={undefined}
+              tvParallaxProperties={undefined}
             />
             <Appbar.Content title={''} />
             <Button

@@ -35,11 +35,7 @@ function TimeInputs({
   hours: number
   minutes: number
   onFocusInput: (type: PossibleClockTypes) => any
-  onChange: ({
-    hours,
-    minutes,
-    focused,
-  }: {
+  onChange: (hoursMinutesAndFocused: {
     hours: number
     minutes: number
     focused?: undefined | PossibleClockTypes

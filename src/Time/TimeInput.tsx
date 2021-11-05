@@ -96,6 +96,9 @@ function TimeInput(
           rippleColor={Color(theme.colors.primary).fade(0.7).hex()}
           onPress={() => onPress(clockType)}
           borderless={true}
+          // RN types bug
+          hasTVPreferredFocus={undefined}
+          tvParallaxProperties={undefined}
         >
           <View />
         </TouchableRipple>

@@ -30,7 +30,10 @@ function AnalogClockMinutes({ minutes }: { minutes: number }) {
             ]}
           >
             <View style={styles.outerHourInner}>
-              <Text style={isCurrent ? { color } : null} selectable={false}>
+              <Text
+                style={isCurrent ? { color } : undefined}
+                selectable={false}
+              >
                 {isZero ? '00' : currentMinutes}
               </Text>
             </View>

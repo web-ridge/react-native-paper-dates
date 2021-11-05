@@ -1,0 +1,8 @@
+{
+  "description": "Example app for react-native-paper-dates",
+  "display": "standalone",
+  "lang": "en",
+  "name": "react-native-paper-dates-example",
+  "short_name": "react-native-paper-dates-example",
+  "start_url": "/?utm_source=web_app_manifest"
+}

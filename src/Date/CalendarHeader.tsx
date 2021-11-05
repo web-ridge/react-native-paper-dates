@@ -46,7 +46,13 @@ function CalendarHeader({
               { backgroundColor: theme.colors.surface },
             ]}
           >
-            <IconButton icon="chevron-left" onPress={onPrev} />
+            <IconButton
+              icon="chevron-left"
+              onPress={onPrev}
+              // RN types bug
+              hasTVPreferredFocus={undefined}
+              tvParallaxProperties={undefined}
+            />
           </View>
 
           <View
@@ -55,7 +61,13 @@ function CalendarHeader({
               { backgroundColor: theme.colors.surface },
             ]}
           >
-            <IconButton icon="chevron-right" onPress={onNext} />
+            <IconButton
+              icon="chevron-right"
+              onPress={onNext}
+              // RN types bug
+              hasTVPreferredFocus={undefined}
+              tvParallaxProperties={undefined}
+            />
           </View>
         </View>
       ) : null}

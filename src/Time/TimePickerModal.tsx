@@ -48,7 +48,7 @@ export function TimePickerModal({
   minutes?: number | undefined
   visible: boolean | undefined
   onDismiss: () => any
-  onConfirm: ({ hours, minutes }: { hours: number; minutes: number }) => any
+  onConfirm: (hoursAndMinutes: { hours: number; minutes: number }) => any
   animationType?: 'slide' | 'fade' | 'none'
 }) {
   const theme = useTheme()
@@ -155,6 +155,9 @@ export function TimePickerModal({
                   size={24}
                   style={styles.inputTypeToggle}
                   accessibilityLabel="toggle keyboard"
+                  // RN types bug
+                  hasTVPreferredFocus={undefined}
+                  tvParallaxProperties={undefined}
                 />
                 <View style={styles.fill} />
                 <Button onPress={onDismiss}>{cancelLabel}</Button>

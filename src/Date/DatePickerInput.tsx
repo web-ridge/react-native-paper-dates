@@ -75,6 +75,9 @@ function DatePickerInput(
             style={styles.calendarButton}
             icon="calendar"
             onPress={() => setVisible(true)}
+            // RN types bug
+            hasTVPreferredFocus={undefined}
+            tvParallaxProperties={undefined}
           />
         ) : null}
       </View>

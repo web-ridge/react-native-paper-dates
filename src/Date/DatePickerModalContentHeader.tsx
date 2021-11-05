@@ -81,6 +81,9 @@ export default function DatePickerModalContentHeader(
           icon={collapsed ? 'pencil' : 'calendar'}
           color={color}
           onPress={onToggle}
+          // RN types bug
+          hasTVPreferredFocus={undefined}
+          tvParallaxProperties={undefined}
         />
       ) : null}
     </View>

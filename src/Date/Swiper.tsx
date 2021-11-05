@@ -94,6 +94,7 @@ function VerticalScroller({
   const [visibleIndexes, setVisibleIndexes] = React.useState<number[]>(
     visibleArray(initialIndex)
   )
+  // eslint-disable-next-line no-undef
   const parentRef = React.useRef<HTMLDivElement | null>(null)
 
   useIsomorphicLayoutEffect(() => {
