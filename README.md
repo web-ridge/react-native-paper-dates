@@ -61,12 +61,16 @@ Currently we only have made en/nl translations but it's really easy to add one e
 ```tsx
 // e.g in your index.js
 import {
-  en,
+  // en,
   // nl,
+  // pl,
+  enGB,
   registerTranslation,
 } from 'react-native-paper-dates'
-registerTranslation('en', en)
+// registerTranslation('en', en)
 // registerTranslation('nl', nl)
+// registerTranslation('pl', pl)
+registerTranslation('en-GB', enGB)
 ```
 
 ### or register your own
