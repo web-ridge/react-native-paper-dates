@@ -35,11 +35,7 @@ function AnalogClock({
   minutes: number
   focused: PossibleClockTypes
   is24Hour: boolean
-  onChange: ({
-    hours,
-    minutes,
-    focused,
-  }: {
+  onChange: (hoursMinutesAndFocused: {
     hours: number
     minutes: number
     focused?: undefined | PossibleClockTypes

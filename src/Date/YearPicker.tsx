@@ -67,7 +67,7 @@ function YearPure({
 }: {
   year: number
   selected: boolean
-  onPressYear: (year: number) => any
+  onPressYear: (newYear: number) => any
 }) {
   const theme = useTheme()
   return (

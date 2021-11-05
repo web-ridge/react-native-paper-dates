@@ -11,7 +11,7 @@ export default function AmPmSwitcher({
   hours,
 }: {
   hours: number
-  onChange: (hours: number) => any
+  onChange: (newHours: number) => any
 }) {
   const { setMode, mode } = React.useContext(DisplayModeContext)
   const theme = useTheme()
