@@ -79,6 +79,9 @@ export default function DatePickerModalContentHeader(
       {allowEditing ? (
         <IconButton
           icon={collapsed ? 'pencil' : 'calendar'}
+          accessibilityLabel={
+            collapsed ? 'Type in date' : 'Pick date from calendar'
+          }
           color={color}
           onPress={onToggle}
           // RN types bug

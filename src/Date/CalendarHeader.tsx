@@ -48,6 +48,7 @@ function CalendarHeader({
           >
             <IconButton
               icon="chevron-left"
+              accessibilityLabel="Previous"
               onPress={onPrev}
               // RN types bug
               hasTVPreferredFocus={undefined}
@@ -63,6 +64,7 @@ function CalendarHeader({
           >
             <IconButton
               icon="chevron-right"
+              accessibilityLabel="Next"
               onPress={onNext}
               // RN types bug
               hasTVPreferredFocus={undefined}
