@@ -74,6 +74,8 @@ function YearPure({
     <View style={styles.year}>
       <TouchableRipple
         onPress={() => onPressYear(year)}
+        accessibilityRole="button"
+        accessibilityLabel={String(year)}
         style={styles.yearButton}
         // RN types bug
         hasTVPreferredFocus={undefined}
