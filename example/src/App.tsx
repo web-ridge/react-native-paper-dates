@@ -198,6 +198,8 @@ function App() {
                 value={inputDate}
                 onChange={setInputDate}
                 inputMode="start"
+                // FIXME : remove the ts error
+                // @ts-ignore
                 autoCompleteType={'birthdate-full'}
               />
             </Row>
