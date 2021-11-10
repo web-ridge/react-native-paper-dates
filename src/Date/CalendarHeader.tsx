@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native'
 import { IconButton, useTheme } from 'react-native-paper'
 import DayNames, { dayNamesHeight } from './DayNames'
 import type { DisableWeekDaysType } from './dateUtils'
+import { getTranslation } from '../translations/utils'
 
 const buttonContainerHeight = 56
 const buttonContainerMarginTop = 4
@@ -48,7 +49,7 @@ function CalendarHeader({
           >
             <IconButton
               icon="chevron-left"
-              accessibilityLabel="Previous"
+              accessibilityLabel={getTranslation(locale, 'previous')}
               onPress={onPrev}
               // RN types bug
               hasTVPreferredFocus={undefined}
@@ -64,7 +65,7 @@ function CalendarHeader({
           >
             <IconButton
               icon="chevron-right"
-              accessibilityLabel="Next"
+              accessibilityLabel={getTranslation(locale, 'next')}
               onPress={onNext}
               // RN types bug
               hasTVPreferredFocus={undefined}

@@ -80,7 +80,9 @@ export default function DatePickerModalContentHeader(
         <IconButton
           icon={collapsed ? 'pencil' : 'calendar'}
           accessibilityLabel={
-            collapsed ? 'Type in date' : 'Pick date from calendar'
+            collapsed
+              ? getTranslation(props.locale, 'typeInDate')
+              : getTranslation(props.locale, 'pickDateFromCalendar')
           }
           color={color}
           onPress={onToggle}
