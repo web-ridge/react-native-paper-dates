@@ -8,6 +8,11 @@ export type TranslationsType = {
   mustBeLowerThan: string
   mustBeBetween: string
   dateIsDisabled: string
+  previous: string
+  next: string
+  typeInDate: string
+  pickDateFromCalendar: string
+  close: string
 }
 
 let translationsPerLocale: Record<string, TranslationsType> = {}

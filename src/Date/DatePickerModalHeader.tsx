@@ -31,6 +31,7 @@ export default function DatePickerModalHeader(
           <Appbar style={styles.appbarHeader}>
             <Appbar.Action
               icon="close"
+              accessibilityLabel={getTranslation(locale, 'close')}
               onPress={props.onDismiss}
               color={color}
               testID="react-native-paper-dates-close"

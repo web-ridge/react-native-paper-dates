@@ -260,6 +260,8 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
         <TouchableRipple
           disabled={!isHorizontal}
           onPress={isHorizontal ? () => onPressYear(year) : undefined}
+          accessibilityRole="button"
+          accessibilityLabel={`${monthName} ${year}`}
           style={[
             styles.yearButton,
             {
