@@ -11,5 +11,11 @@ const pl: TranslationsType = {
   mustBeLowerThan: 'Nie później niż',
   mustBeBetween: 'Pomiędzy',
   dateIsDisabled: 'Niedozwolona data',
+
+  previous: 'Poprzedni',
+  next: 'Dalej',
+  typeInDate: 'Wpisz datę',
+  pickDateFromCalendar: 'Wybierz datę z kalendarza',
+  close: 'Zamknij',
 }
 export default pl

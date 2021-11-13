@@ -11,5 +11,10 @@ const nl: TranslationsType = {
   mustBeLowerThan: 'Moet eerder dan',
   mustBeBetween: 'Moet tussen',
   dateIsDisabled: 'Deze dag mag niet',
+  previous: 'Vorige',
+  next: 'Volgende',
+  typeInDate: 'Typ datum',
+  pickDateFromCalendar: 'Kies datum van kalender',
+  close: 'Sluit',
 }
 export default nl
