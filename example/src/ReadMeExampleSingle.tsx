@@ -37,6 +37,7 @@ export default function ReadMeExampleSingle() {
         // }}
         // onChange={} // same props as onConfirm but triggered without confirmed by user
         // saveLabel="Save" // optional
+        // uppercase={false} // optional, default is true
         // label="Select date" // optional
         // animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
       />

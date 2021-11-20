@@ -315,6 +315,7 @@ function App() {
         onConfirm={onChangeRange}
         // locale={'nl'} // optional
         // saveLabel="Save" // optional
+        // uppercase={false} // optional, default is true
         // label="Select period" // optional
         // startLabel="From" // optional
         // endLabel="To" // optional
@@ -335,6 +336,7 @@ function App() {
           // endDate: new Date(), // optional
         }}
         // saveLabel="Save" // optional
+        // uppercase={false} // optional, default is true
         // label="Select date" // optional
         // animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
       />
@@ -352,6 +354,7 @@ function App() {
         // moreLabel="more" // optional, if multiple are selected this will show if we can't show all dates
         // onChange={onChangeMulti}
         // saveLabel="Save" // optional
+        // uppercase={false} // optional, default is true
         // label="Select date" // optional
         // animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
       />

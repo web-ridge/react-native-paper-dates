@@ -12,6 +12,7 @@ export interface HeaderPickProps {
   label?: string
   emptyLabel?: string
   saveLabel?: string
+  uppercase?: boolean
   headerSeparator?: string
   startLabel?: string
   endLabel?: string
@@ -48,7 +49,7 @@ function getLabel(
 export default function DatePickerModalContentHeader(
   props: HeaderContentProps
 ) {
-  const { onToggle, collapsed, mode, moreLabel } = props
+  const { onToggle, collapsed, mode, moreLabel, uppercase } = props
 
   const label = getLabel(props.locale, props.mode, props.label)
 
@@ -57,7 +58,7 @@ export default function DatePickerModalContentHeader(
   return (
     <View style={[styles.header]}>
       <View>
-        <Text style={[styles.label, { color }]}>{label.toUpperCase()}</Text>
+        <Text style={[styles.label, { color }]}>{uppercase ? label.toUpperCase() : label}</Text>
 
         <View style={styles.headerContentContainer}>
           {mode === 'range' ? (
