@@ -137,6 +137,7 @@ export default function ReadMeExampleSingle() {
         // }}
         // onChange={} // same props as onConfirm but triggered without confirmed by user
         // saveLabel="Save" // optional
+        // uppercase={false} // optional, default is true
         // label="Select date" // optional
         // animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
       />
@@ -192,6 +193,7 @@ export default function ReadMeExampleRange() {
         // }}
         // onChange={} // same props as onConfirm but triggered without confirmed by user
         // saveLabel="Save" // optional
+        // uppercase={false} // optional, default is true
         // label="Select period" // optional
         // startLabel="From" // optional
         // endLabel="To" // optional
@@ -245,6 +247,7 @@ export default function ReadMeExampleMultiple() {
         //   disabledDates: [new Date()] // optional
         // }}
         // saveLabel="Save" // optional
+        // uppercase={false} // optional, default is true
         // label="Select period" // optional
         // startLabel="From" // optional
         // endLabel="To" // optional
@@ -307,6 +310,7 @@ export default function TimePickerPage() {
         hours={12} // default: current hours
         minutes={14} // default: current minutes
         label="Select time" // optional, default 'Select time'
+        uppercase={false} // optional, default is true
         cancelLabel="Cancel" // optional, default: 'Cancel'
         confirmLabel="Ok" // optional, default: 'Ok'
         animationType="fade" // optional, default is 'none'

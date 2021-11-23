@@ -35,6 +35,7 @@ export function TimePickerModal({
   hours,
   minutes,
   label = 'Select time',
+  uppercase = true,
   cancelLabel = 'Cancel',
   confirmLabel = 'Ok',
   animationType = 'none',
@@ -42,6 +43,7 @@ export function TimePickerModal({
 }: {
   locale?: undefined | string
   label?: string
+  uppercase?: boolean
   cancelLabel?: string
   confirmLabel?: string
   hours?: number | undefined
@@ -134,7 +136,7 @@ export function TimePickerModal({
             >
               <View style={styles.labelContainer}>
                 <Text style={[styles.label, { color: theme.colors.text }]}>
-                  {label.toUpperCase()}
+                  {uppercase ? label.toUpperCase() : label}
                 </Text>
               </View>
               <View style={styles.timePickerContainer}>
@@ -160,11 +162,12 @@ export function TimePickerModal({
                   tvParallaxProperties={undefined}
                 />
                 <View style={styles.fill} />
-                <Button onPress={onDismiss}>{cancelLabel}</Button>
+                <Button onPress={onDismiss} uppercase={uppercase}>{cancelLabel}</Button>
                 <Button
                   onPress={() =>
                     onConfirm({ hours: localHours, minutes: localMinutes })
                   }
+                  uppercase={uppercase}
                 >
                   {confirmLabel}
                 </Button>

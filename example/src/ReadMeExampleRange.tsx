@@ -44,6 +44,7 @@ export default function ReadMeExampleRange() {
         // onChange={} // same props as onConfirm but triggered without confirmed by user
         // locale={'nl'} // optional
         // saveLabel="Save" // optional
+        // uppercase={false} // optional, default is true
         // label="Select period" // optional
         // startLabel="From" // optional
         // endLabel="To" // optional
