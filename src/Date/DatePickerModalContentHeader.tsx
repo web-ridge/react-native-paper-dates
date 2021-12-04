@@ -58,8 +58,9 @@ export default function DatePickerModalContentHeader(
   return (
     <View style={[styles.header]}>
       <View>
-        <Text style={[styles.label, { color }]}>{uppercase ? label.toUpperCase() : label}</Text>
-
+        <Text style={[styles.label, { color }]}>
+          {uppercase ? label.toUpperCase() : label}
+        </Text>
         <View style={styles.headerContentContainer}>
           {mode === 'range' ? (
             <HeaderContentRange {...props} color={color} />

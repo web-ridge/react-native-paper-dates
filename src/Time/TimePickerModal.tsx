@@ -162,7 +162,9 @@ export function TimePickerModal({
                   tvParallaxProperties={undefined}
                 />
                 <View style={styles.fill} />
-                <Button onPress={onDismiss} uppercase={uppercase}>{cancelLabel}</Button>
+                <Button onPress={onDismiss} uppercase={uppercase}>
+                  {cancelLabel}
+                </Button>
                 <Button
                   onPress={() =>
                     onConfirm({ hours: localHours, minutes: localMinutes })

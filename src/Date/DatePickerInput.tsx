@@ -20,7 +20,7 @@ function DatePickerInput(
     withModal = true,
     withDateFormatInLabel = true,
     ...rest
-  }: Omit<React.ComponentProps<typeof TextInput>, 'value' | 'onChange'> & {
+  }: {
     inputMode: 'start' | 'end'
     locale: string
     onChange: (date: Date | undefined) => void
@@ -28,7 +28,10 @@ function DatePickerInput(
     validRange?: ValidRangeType | undefined
     withModal?: boolean
     withDateFormatInLabel?: boolean
-  },
+  } & Omit<
+    React.ComponentProps<typeof TextInput>,
+    'value' | 'onChange' | 'onChangeText'
+  >,
   ref: any
 ) {
   const theme = useTheme()
@@ -122,7 +125,6 @@ const styles = StyleSheet.create({
     position: 'relative',
     alignItems: 'center',
     flexGrow: 1,
-    alignSelf: 'flex-start',
   },
   input: {
     flexGrow: 1,
