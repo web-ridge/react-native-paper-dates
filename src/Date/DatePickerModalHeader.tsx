@@ -8,6 +8,7 @@ import { getTranslation } from '../translations/utils'
 export interface DatePickerModalHeaderProps {
   disableSafeTop?: boolean
   saveLabel?: string
+  saveLabelDisabled?: boolean
   uppercase?: boolean
   onDismiss: () => void
   onSave: () => void
@@ -44,6 +45,7 @@ export default function DatePickerModalHeader(
             <Button
               color={color}
               onPress={props.onSave}
+              disabled={props.saveLabelDisabled ?? false}
               uppercase={props.uppercase ?? true}
               testID="react-native-paper-dates-save"
             >
