@@ -5,11 +5,12 @@ const enGB: TranslationsType = {
   selectSingle: 'Select date',
   selectMultiple: 'Select dates',
   selectRange: 'Select period',
-  notAccordingToDateFormat: (inputFormat: string) =>
+  notAccordingToDateFormat: (inputFormat) =>
     `Date format must be ${inputFormat}`,
-  mustBeHigherThan: 'Must be later then',
-  mustBeLowerThan: 'Must be earlier then',
-  mustBeBetween: 'Must be between',
+  mustBeHigherThan: (date) => `Must be later then ${date}`,
+  mustBeLowerThan: (date) => `Must be earlier then ${date}`,
+  mustBeBetween: (startDate, endDate) =>
+    `Must be between ${startDate} - ${endDate}`,
   dateIsDisabled: 'Day is not allowed',
   previous: 'Previous',
   next: 'Next',

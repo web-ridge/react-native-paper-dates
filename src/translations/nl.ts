@@ -5,11 +5,12 @@ const nl: TranslationsType = {
   selectSingle: 'Selecteer datum',
   selectMultiple: 'Selecteer datums',
   selectRange: 'Selecteer periode',
-  notAccordingToDateFormat: (inputFormat: string) =>
+  notAccordingToDateFormat: (inputFormat) =>
     `Datumformaat moet ${inputFormat} zijn`,
-  mustBeHigherThan: 'Moet later dan',
-  mustBeLowerThan: 'Moet eerder dan',
-  mustBeBetween: 'Moet tussen',
+  mustBeHigherThan: (date) => `Moet later dan ${date}`,
+  mustBeLowerThan: (date) => `Moet eerder dan ${date}`,
+  mustBeBetween: (startDate, endDate) =>
+    `Moet tussen ${startDate} - ${endDate}`,
   dateIsDisabled: 'Deze dag mag niet',
   previous: 'Vorige',
   next: 'Volgende',

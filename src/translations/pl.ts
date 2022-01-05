@@ -5,11 +5,11 @@ const pl: TranslationsType = {
   selectSingle: 'Wybierz datę',
   selectMultiple: 'Wybierz daty',
   selectRange: 'Wybierz zakres',
-  notAccordingToDateFormat: (inputFormat: string) =>
+  notAccordingToDateFormat: (inputFormat) =>
     `Data musi mieć format ${inputFormat}`,
-  mustBeHigherThan: 'Nie wcześniej niż',
-  mustBeLowerThan: 'Nie później niż',
-  mustBeBetween: 'Pomiędzy',
+  mustBeHigherThan: (date) => `Nie wcześniej niżn ${date}`,
+  mustBeLowerThan: (date) => `Nie później niż ${date}`,
+  mustBeBetween: (startDate, endDate) => `Pomiędzy ${startDate} - ${endDate}`,
   dateIsDisabled: 'Niedozwolona data',
 
   previous: 'Poprzedni',

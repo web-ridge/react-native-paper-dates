@@ -55,22 +55,26 @@ export default function useDateInput({
       let errors =
         validStart && validEnd
           ? [
-              `${getTranslation(locale, 'mustBeBetween')} ${formatter.format(
-                validStart
-              )} - ${formatter.format(validEnd)}`,
+              `${getTranslation(
+                locale,
+                'mustBeBetween',
+                () => 'mustBeBetween'
+              )(formatter.format(validStart), formatter.format(validEnd))}`,
             ]
           : [
               validStart
-                ? `${getTranslation(
+                ? getTranslation(
                     locale,
-                    'mustBeHigherThan'
-                  )} ${formatter.format(validStart)}`
+                    'mustBeHigherThan',
+                    () => 'mustBeHigherThan'
+                  )(formatter.format(validStart))
                 : '',
               validEnd
-                ? `${getTranslation(
+                ? getTranslation(
                     locale,
-                    'mustBeLowerThan'
-                  )} ${formatter.format(validEnd)}`
+                    'mustBeLowerThan',
+                    () => 'mustBeLowerThan'
+                  )(formatter.format(validEnd))
                 : '',
             ]
       setError(errors.filter((n) => n).join(' '))

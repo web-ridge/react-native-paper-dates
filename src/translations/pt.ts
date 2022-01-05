@@ -7,9 +7,10 @@ const pt: TranslationsType = {
   selectRange: 'Selecione o período',
   notAccordingToDateFormat: (inputFormat: string) =>
     `O formato da data deve ser ${inputFormat}`,
-  mustBeHigherThan: 'Deve ser depois de',
-  mustBeLowerThan: 'Deve ser antes de',
-  mustBeBetween: 'Deve estar entre',
+  mustBeHigherThan: (date) => `Deve ser depois de ${date}`,
+  mustBeLowerThan: (date) => `Deve ser antes de ${date}`,
+  mustBeBetween: (startDate, endDate) =>
+    `Deve estar entre ${startDate} - ${endDate}`,
   dateIsDisabled: 'Data não é permitida',
   previous: 'Anterior',
   next: 'Próximo',

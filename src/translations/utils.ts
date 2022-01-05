@@ -4,9 +4,9 @@ export type TranslationsType = {
   selectRange: string
   save: string
   notAccordingToDateFormat: (inputFormat: string) => string
-  mustBeHigherThan: string
-  mustBeLowerThan: string
-  mustBeBetween: string
+  mustBeHigherThan: (date: string) => string
+  mustBeLowerThan: (date: string) => string
+  mustBeBetween: (startDate: string, endDate: string) => string
   dateIsDisabled: string
   previous: string
   next: string
@@ -17,9 +17,9 @@ export type TranslationsType = {
 
 let translationsPerLocale: Record<string, TranslationsType> = {}
 
-export function getTranslation(
+export function getTranslation<K extends keyof TranslationsType>(
   locale: string | undefined,
-  key: keyof TranslationsType,
+  key: K,
   fallback?: any
 ) {
   const l = locale || 'en'
