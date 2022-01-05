@@ -76,52 +76,50 @@ function CalendarEdit({
 
   return (
     <View style={styles.root}>
-      <View style={styles.inner}>
-        {mode === 'single' ? (
+      {mode === 'single' ? (
+        <DatePickerInput
+          inputMode="start"
+          ref={dateInput}
+          label={label}
+          value={state.date}
+          onChange={(date) => onChange({ ...state, date })}
+          onSubmitEditing={onSubmitInput}
+          validRange={validRange}
+          locale={locale}
+          withModal={false}
+          autoComplete={'off'}
+        />
+      ) : null}
+      {mode === 'range' ? (
+        <View style={styles.inner}>
           <DatePickerInput
             inputMode="start"
-            ref={dateInput}
-            label={label}
-            value={state.date}
-            onChange={(date) => onChange({ ...state, date })}
-            onSubmitEditing={onSubmitInput}
+            ref={startInput}
+            label={startLabel}
+            value={state.startDate}
+            onChange={(startDate) => onChange({ ...state, startDate })}
+            returnKeyType={'next'}
+            onSubmitEditing={onSubmitStartInput}
             validRange={validRange}
             locale={locale}
             withModal={false}
             autoComplete={'off'}
           />
-        ) : null}
-        {mode === 'range' ? (
-          <>
-            <DatePickerInput
-              inputMode="start"
-              ref={startInput}
-              label={startLabel}
-              value={state.startDate}
-              onChange={(startDate) => onChange({ ...state, startDate })}
-              returnKeyType={'next'}
-              onSubmitEditing={onSubmitStartInput}
-              validRange={validRange}
-              locale={locale}
-              withModal={false}
-              autoComplete={'off'}
-            />
-            <View style={styles.separator} />
-            <DatePickerInput
-              inputMode="end"
-              ref={endInput}
-              label={endLabel}
-              value={state.endDate}
-              onChange={(endDate) => onChange({ ...state, endDate })}
-              onSubmitEditing={onSubmitEndInput}
-              validRange={validRange}
-              locale={locale}
-              withModal={false}
-              autoComplete="off"
-            />
-          </>
-        ) : null}
-      </View>
+          <View style={styles.separator} />
+          <DatePickerInput
+            inputMode="end"
+            ref={endInput}
+            label={endLabel}
+            value={state.endDate}
+            onChange={(endDate) => onChange({ ...state, endDate })}
+            onSubmitEditing={onSubmitEndInput}
+            validRange={validRange}
+            locale={locale}
+            withModal={false}
+            autoComplete="off"
+          />
+        </View>
+      ) : null}
     </View>
   )
 }
