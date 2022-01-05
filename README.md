@@ -354,8 +354,11 @@ If that is **not possible** use the following props on the surrounding ScrollVie
 This is to prevent the need to press 2 times before save or close button in modal works (1 press for closing keyboard, 1 press for confirm/close)
 [React Native Issue: #10138](https://github.com/facebook/react-native/issues/10138)
 
+
+
 ## Android Caveats
 We recommend Hermes with React Native >= 0.66 you won't need these polyfills at all!
+
 ### Below React Native 0.66
 You will need to add a polyfill for the Intl API on Android if:
 

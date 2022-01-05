@@ -13,7 +13,7 @@ export default function ReadMeExampleDatePickerInput() {
         value={inputDate}
         onChange={(d) => setInputDate(d)}
         inputMode="start"
-        autoCompleteType="birthdate-full"
+        autoComplete="birthdate-full"
         // mode="outlined" (see react-native-paper docs)
         // other react native TextInput props
       />

@@ -88,7 +88,7 @@ function CalendarEdit({
             validRange={validRange}
             locale={locale}
             withModal={false}
-            autoCompleteType={'off'}
+            autoComplete={'off'}
           />
         ) : null}
         {mode === 'range' ? (
@@ -104,7 +104,7 @@ function CalendarEdit({
               validRange={validRange}
               locale={locale}
               withModal={false}
-              autoCompleteType={'off'}
+              autoComplete={'off'}
             />
             <View style={styles.separator} />
             <DatePickerInput
@@ -117,7 +117,7 @@ function CalendarEdit({
               validRange={validRange}
               locale={locale}
               withModal={false}
-              autoCompleteType={'off'}
+              autoComplete="off"
             />
           </>
         ) : null}

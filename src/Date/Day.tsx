@@ -74,9 +74,6 @@ function Day(props: {
           { backgroundColor: inRange ? selectColor : undefined },
         ]}
         accessibilityRole="button"
-        // RN types bug
-        hasTVPreferredFocus={undefined}
-        tvParallaxProperties={undefined}
       >
         <View
           style={[

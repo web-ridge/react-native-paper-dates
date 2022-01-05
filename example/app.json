@@ -12,8 +12,10 @@
       "android",
       "web"
     ],
+    "jsEngine": "hermes",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "jsEngine": "jsc"
     },
     "assetBundlePatterns": [
       "**/*"

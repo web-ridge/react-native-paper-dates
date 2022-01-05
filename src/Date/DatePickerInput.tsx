@@ -62,7 +62,12 @@ function DatePickerInput(
         <TextInputWithMask
           {...rest}
           ref={ref}
-          label={getLabel({ label, inputFormat, withDateFormatInLabel })}
+          label={getLabel({
+            // TODO: support label components?
+            label: label as any,
+            inputFormat,
+            withDateFormatInLabel,
+          })}
           value={formattedValue}
           keyboardType={'number-pad'}
           placeholder={inputFormat}
@@ -78,9 +83,6 @@ function DatePickerInput(
             style={styles.calendarButton}
             icon="calendar"
             onPress={() => setVisible(true)}
-            // RN types bug
-            hasTVPreferredFocus={undefined}
-            tvParallaxProperties={undefined}
           />
         ) : null}
       </View>
@@ -130,6 +132,6 @@ const styles = StyleSheet.create({
   input: {
     flexGrow: 1,
   },
-  calendarButton: { position: 'absolute', right: 0 },
+  calendarButton: { position: 'absolute', right: 0, zIndex: 10 },
 })
 export default React.forwardRef(DatePickerInput)

@@ -51,9 +51,6 @@ function CalendarHeader({
               icon="chevron-left"
               accessibilityLabel={getTranslation(locale, 'previous')}
               onPress={onPrev}
-              // RN types bug
-              hasTVPreferredFocus={undefined}
-              tvParallaxProperties={undefined}
             />
           </View>
 
@@ -67,9 +64,6 @@ function CalendarHeader({
               icon="chevron-right"
               accessibilityLabel={getTranslation(locale, 'next')}
               onPress={onNext}
-              // RN types bug
-              hasTVPreferredFocus={undefined}
-              tvParallaxProperties={undefined}
             />
           </View>
         </View>

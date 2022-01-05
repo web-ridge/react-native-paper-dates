@@ -77,9 +77,6 @@ function YearPure({
         accessibilityRole="button"
         accessibilityLabel={String(year)}
         style={styles.yearButton}
-        // RN types bug
-        hasTVPreferredFocus={undefined}
-        tvParallaxProperties={undefined}
       >
         <View
           style={[

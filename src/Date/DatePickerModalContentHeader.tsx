@@ -88,9 +88,6 @@ export default function DatePickerModalContentHeader(
           }
           color={color}
           onPress={onToggle}
-          // RN types bug
-          hasTVPreferredFocus={undefined}
-          tvParallaxProperties={undefined}
         />
       ) : null}
     </View>

@@ -157,9 +157,6 @@ export function TimePickerModal({
                   size={24}
                   style={styles.inputTypeToggle}
                   accessibilityLabel="toggle keyboard"
-                  // RN types bug
-                  hasTVPreferredFocus={undefined}
-                  tvParallaxProperties={undefined}
                 />
                 <View style={styles.fill} />
                 <Button onPress={onDismiss} uppercase={uppercase}>

@@ -50,13 +50,7 @@ export default function DateRangeInput({ locale }: { locale: string }) {
         <Text>Tot</Text>
       </View>
       <View>
-        <IconButton
-          icon="calendar"
-          onPress={() => setVisible(true)}
-          // RN types bug
-          hasTVPreferredFocus={undefined}
-          tvParallaxProperties={undefined}
-        />
+        <IconButton icon="calendar" onPress={() => setVisible(true)} />
         <Text style={{ opacity: 0 }} accessible={false}>
           tot
         </Text>
