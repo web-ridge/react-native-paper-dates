@@ -57,7 +57,8 @@ npm install react-native-paper-dates --save
 
 ## Import some localized strings
 Ideally you do this somewhere in your `index.js` before `react-native-paper-dates` is used.
-Currently we only have en/nl/pl/pt translations but it's really easy to add one extra since it are only some labels and error messages
+Currently we only have en/nl/pl/pt translations but it's really easy to add one extra since it are only some labels and error messages.
+
 ```tsx
 // e.g in your index.js
 import {
@@ -85,12 +86,18 @@ registerTranslation("pl", {
   selectSingle: 'Select date',
   selectMultiple: 'Select dates',
   selectRange: 'Select period',
-  notAccordingToDateFormat: (inputFormat: string) =>
+  notAccordingToDateFormat: (inputFormat) =>
     `Date format must be ${inputFormat}`,
-  mustBeHigherThan: 'Must be later then',
-  mustBeLowerThan: 'Must be earlier then',
-  mustBeBetween: 'Must be between',
+  mustBeHigherThan: (date) => `Must be later then ${date}`,
+  mustBeLowerThan: (date) => `Must be earlier then ${date}`,
+  mustBeBetween: (startDate, endDate) =>
+    `Must be between ${startDate} - ${endDate}`,
   dateIsDisabled: 'Day is not allowed',
+  previous: 'Previous',
+  next: 'Next',
+  typeInDate: 'Type in date',
+  pickDateFromCalendar: 'Pick date from calendar',
+  close: 'Close',
 })
 ```
 

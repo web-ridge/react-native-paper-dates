@@ -97,6 +97,7 @@ function DatePickerInput(
           onConfirm={onInnerConfirm}
           locale={locale}
           dateMode={inputMode}
+          validRange={validRange}
         />
       ) : null}
     </>
