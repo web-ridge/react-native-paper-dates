@@ -221,7 +221,7 @@ export function useInputFormat({
   locale,
 }: {
   formatter: Intl.DateTimeFormat
-  locale?: string
+  locale: string | undefined
 }) {
   return React.useMemo(() => {
     // TODO: something cleaner and more universal?
