@@ -218,17 +218,19 @@ export function getEndOfDay(d: Date): Date {
 }
 export function useInputFormat({
   formatter,
+  locale,
 }: {
   formatter: Intl.DateTimeFormat
+  locale?: string
 }) {
   return React.useMemo(() => {
     // TODO: something cleaner and more universal?
     const inputDate = formatter.format(new Date(2020, 10 - 1, 1))
     return inputDate
-      .replace('2020', 'YYYY')
+      .replace('2020', locale === 'pt' ? 'AAAA' : 'YYYY')
       .replace('10', 'MM')
       .replace('01', 'DD')
-  }, [formatter])
+  }, [formatter, locale])
 }
 
 export function differenceInMonths(firstDate: Date, secondDate: Date) {

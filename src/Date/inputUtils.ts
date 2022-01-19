@@ -20,12 +20,15 @@ export default function useDateInput({
     useRangeChecker(validRange)
   const [error, setError] = React.useState<null | string>(null)
   const formatter = useInputFormatter({ locale })
-  const inputFormat = useInputFormat({ formatter })
+  const inputFormat = useInputFormat({ formatter, locale })
   const formattedValue = formatter.format(value)
   const onChangeText = (date: string) => {
     const dayIndex = inputFormat.indexOf('DD')
     const monthIndex = inputFormat.indexOf('MM')
-    const yearIndex = inputFormat.indexOf('YYYY')
+    const yearIndex =
+      locale === 'pt'
+        ? inputFormat.indexOf('AAAA')
+        : inputFormat.indexOf('YYYY')
 
     const day = Number(date.slice(dayIndex, dayIndex + 2))
     const year = Number(date.slice(yearIndex, yearIndex + 4))
