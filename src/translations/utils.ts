@@ -31,7 +31,7 @@ export function getTranslation<K extends keyof TranslationsType>(
     return fallback || key
   }
   const translation = translationsPerLocale[l][key]
-  if (!translationForLocale) {
+  if (!translation) {
     console.warn(
       `[react-native-paper-dates] ${locale} is registered, but ${key} is missing`
     )
