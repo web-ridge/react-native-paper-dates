@@ -118,8 +118,8 @@ function TimeInputs({
         onSubmitEditing={onSubmitEndInput}
         onChanged={(newMinutesFromInput) => {
           let newMinutes = newMinutesFromInput
-          if (newMinutesFromInput > 60) {
-            newMinutes = 60
+          if (newMinutesFromInput > 59) {
+            newMinutes = 59
           }
           onChange({
             hours,
