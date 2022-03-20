@@ -75,7 +75,7 @@ function DatePickerInput(
           onChangeText={onChangeText}
           keyboardAppearance={theme.dark ? 'dark' : 'default'}
           error={!!error}
-          style={[styles.input, style]}
+          style={style}
         />
         {withModal ? (
           <IconButton
@@ -85,11 +85,10 @@ function DatePickerInput(
             onPress={() => setVisible(true)}
           />
         ) : null}
+        <HelperText style={styles.helperText} type="error" visible={!!error}>
+          {error}
+        </HelperText>
       </View>
-      <HelperText type="error" visible={!!error}>
-        {error}
-      </HelperText>
-
       {withModal ? (
         <DatePickerModal
           date={value}
@@ -124,13 +123,11 @@ function getLabel({
 const styles = StyleSheet.create({
   root: {
     minWidth: 150,
-    flexDirection: 'row',
     position: 'relative',
-    alignItems: 'center',
     flexGrow: 1,
   },
-  input: {
-    flexGrow: 1,
+  helperText: {
+    flexDirection: 'column',
   },
   calendarButton: { position: 'absolute', right: 0, zIndex: 10 },
 })
