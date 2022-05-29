@@ -31,6 +31,8 @@ export type BaseCalendarProps = {
   locale: string
   disableWeekDays?: DisableWeekDaysType
   validRange?: ValidRangeType
+  startYear?: number
+  endYear?: number
 
   // here they are optional but in final implemenation they are required
   date?: CalendarDate
@@ -88,6 +90,8 @@ function Calendar(
     endDate,
     date,
     disableWeekDays,
+    startYear,
+    endYear,
     dates,
     validRange,
     dateMode,
@@ -206,6 +210,8 @@ function Calendar(
           selectedYear={selectedYear}
           selectingYear={selectingYear}
           onPressYear={onPressYear}
+          startYear={startYear ?? 1800}
+          endYear={endYear ?? 2200}
         />
       ) : null}
     </View>

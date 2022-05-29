@@ -151,6 +151,8 @@ export default function ReadMeExampleSingle() {
         // uppercase={false} // optional, default is true
         // label="Select date" // optional
         // animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
+        // startYear={2000} // optional, default is 1800
+        // endYear={2100} // optional, default is 2200
       />
     </>
   );
@@ -209,6 +211,8 @@ export default function ReadMeExampleRange() {
         // startLabel="From" // optional
         // endLabel="To" // optional
         // animationType="slide" // optional, default is slide on ios/android and none on web
+        // startYear={2000} // optional, default is 1800
+        // endYear={2100} // optional, default is 2200
       />
     </>
   );
@@ -263,6 +267,8 @@ export default function ReadMeExampleMultiple() {
         // startLabel="From" // optional
         // endLabel="To" // optional
         // animationType="slide" // optional, default is slide on ios/android and none on web
+        // startYear={2000} // optional, default is 1800
+        // endYear={2100} // optional, default is 2200
       />
     </>
   );
