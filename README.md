@@ -381,6 +381,8 @@ or npm
 npm install react-native-localize @formatjs/intl-pluralrules @formatjs/intl-getcanonicallocales @formatjs/intl-listformat @formatjs/intl-displaynames @formatjs/intl-locale @formatjs/intl-datetimeformat @formatjs/intl-numberformat @formatjs/intl-relativetimeformat --save
 ```
 
+If using Expo, omit `react-native-localize` and use `expo install expo-localization` instead. Read more [here](https://docs.expo.dev/versions/latest/sdk/localization/#installation).
+
 In your app starting entrypoint e.g. `./index.js` or even better use a `index.android.js` to prevent importing on iOS/web put the following code. (don't forget to import the languages you want to support, in the example only english language is supported)
 
 ```javascript
