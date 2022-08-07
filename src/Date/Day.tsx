@@ -1,5 +1,9 @@
 import * as React from 'react'
-import { DarkTheme, Text, TouchableRipple } from 'react-native-paper'
+import {
+  MD3DarkTheme as DarkTheme,
+  Text,
+  TouchableRipple,
+} from 'react-native-paper'
 import { StyleSheet, View } from 'react-native'
 import DayRange from './DayRange'
 import { daySize } from './dateUtils'

@@ -132,6 +132,6 @@ const styles = StyleSheet.create({
   input: {
     flexGrow: 1,
   },
-  calendarButton: { position: 'absolute', right: 0, zIndex: 10 },
+  calendarButton: { position: 'absolute', right: 0, zIndex: 10, top: -24 },
 })
 export default React.forwardRef(DatePickerInput)
