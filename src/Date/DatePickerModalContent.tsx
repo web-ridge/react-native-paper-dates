@@ -144,6 +144,7 @@ export function DatePickerModalContent(
           saveLabel={props.saveLabel}
           uppercase={props.uppercase ?? true}
           disableSafeTop={disableSafeTop}
+          closeIcon={props.closeIcon}
         />
         <DatePickerModalContentHeader
           state={state}
@@ -158,6 +159,8 @@ export function DatePickerModalContent(
           endLabel={props.endLabel}
           uppercase={props.uppercase ?? true}
           locale={locale}
+          editIcon={props.editIcon}
+          calendarIcon={props.calendarIcon}
         />
       </DatePickerModalHeaderBackground>
 

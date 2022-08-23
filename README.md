@@ -151,6 +151,9 @@ export default function ReadMeExampleSingle() {
         // uppercase={false} // optional, default is true
         // label="Select date" // optional
         // animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
+        // closeIcon="close" // optional, default is "close"
+        // editIcon="pencil" // optional, default is "pencil"
+        // calendarIcon="calendar" // optional, default is "calendar"
       />
     </>
   );
@@ -209,6 +212,9 @@ export default function ReadMeExampleRange() {
         // startLabel="From" // optional
         // endLabel="To" // optional
         // animationType="slide" // optional, default is slide on ios/android and none on web
+        // closeIcon="close" // optional, default is "close"
+        // editIcon="pencil" // optional, default is "pencil"
+        // calendarIcon="calendar" // optional, default is "calendar"
       />
     </>
   );
@@ -263,6 +269,7 @@ export default function ReadMeExampleMultiple() {
         // startLabel="From" // optional
         // endLabel="To" // optional
         // animationType="slide" // optional, default is slide on ios/android and none on web
+        // closeIcon="close" // optional, default is "close"
       />
     </>
   );
@@ -283,6 +290,7 @@ export default function ReadMeExampleDatePickerInput() {
         onChange={(d) => setInputDate(d)}
         inputMode="start"
         // mode="outlined" (see react-native-paper docs)
+        // calendarIcon="calendar" // optional, default is "calendar"
         // other react native TextInput props
       />
     </>
@@ -326,6 +334,8 @@ export default function TimePickerPage() {
         confirmLabel="Ok" // optional, default: 'Ok'
         animationType="fade" // optional, default is 'none'
         locale="en" // optional, default is automically detected by your system
+        // keyboardIcon="keyboard-outline" // optional, default is "keyboard-outline"
+        // clockIcon="clock-outline" // optional, default is "clock-outline"
       />
       <Button onPress={()=> setVisible(true)}>
         Pick time

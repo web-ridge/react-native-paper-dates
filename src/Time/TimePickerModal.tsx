@@ -13,7 +13,7 @@ import { Button, IconButton, overlay, useTheme } from 'react-native-paper'
 import TimePicker from './TimePicker'
 import {
   clockTypes,
-  inputTypeIcons,
+  getTimeInputTypeIcon,
   inputTypes,
   PossibleClockTypes,
   PossibleInputTypes,
@@ -40,6 +40,8 @@ export function TimePickerModal({
   confirmLabel = 'Ok',
   animationType = 'none',
   locale,
+  keyboardIcon = 'keyboard-outline',
+  clockIcon = 'clock-outline',
 }: {
   locale?: undefined | string
   label?: string
@@ -52,6 +54,8 @@ export function TimePickerModal({
   onDismiss: () => any
   onConfirm: (hoursAndMinutes: { hours: number; minutes: number }) => any
   animationType?: 'slide' | 'fade' | 'none'
+  keyboardIcon?: string
+  clockIcon?: string
 }) {
   const theme = useTheme()
 
@@ -152,7 +156,10 @@ export function TimePickerModal({
               </View>
               <View style={styles.bottom}>
                 <IconButton
-                  icon={inputTypeIcons[reverseInputTypes[inputType]]}
+                  icon={getTimeInputTypeIcon(inputType, {
+                    keyboard: keyboardIcon,
+                    picker: clockIcon,
+                  })}
                   onPress={() => setInputType(reverseInputTypes[inputType])}
                   size={24}
                   style={styles.inputTypeToggle}
