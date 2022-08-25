@@ -21,7 +21,7 @@ export default function useDateInput({
   const [error, setError] = React.useState<null | string>(null)
   const formatter = useInputFormatter({ locale })
   const inputFormat = useInputFormat({ formatter, locale })
-  const formattedValue = formatter.format(value)
+  const formattedValue = value !== null ? formatter.format(value) : '';
   const onChangeText = (date: string) => {
     const dayIndex = inputFormat.indexOf('DD')
     const monthIndex = inputFormat.indexOf('MM')

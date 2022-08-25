@@ -1,7 +1,7 @@
 import type { TranslationsType } from './utils'
 
 const ko: TranslationsType = {
-  save: '저장,
+  save: '저장',
   selectSingle: '날짜 선택',
   selectMultiple: '여러 날짜 선택',
   selectRange: '기간 선택',
