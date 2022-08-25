@@ -154,6 +154,7 @@
     ]
   },
   "dependencies": {
+    "caniuse-lite": "^1.0.30001383",
     "color": "^3.2.1"
   }
 }

@@ -10,6 +10,7 @@ import {
 // registerTranslation('nl', nl)
 // registerTranslation('pl', pl)
 // registerTranslation('pt', pt)
+
 registerTranslation('en-GB', enGB)
 
 import App from './App'

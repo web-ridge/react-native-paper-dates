@@ -31,6 +31,7 @@ interface DatePickerModalContentBaseProps {
   locale: string
   onDismiss: () => any
   disableSafeTop?: boolean
+  saveLabelDisabled?: boolean
 }
 
 export interface DatePickerModalContentRangeProps
@@ -82,7 +83,7 @@ export function DatePickerModalContent(
     validRange,
     dateMode,
     startYear,
-    endYear
+    endYear,
   } = props
 
   const anyProps = props as any
@@ -108,7 +109,7 @@ export function DatePickerModalContent(
   const [collapsed, setCollapsed] = React.useState<boolean>(true)
 
   const onInnerChange = React.useCallback(
-    (params) => {
+    (params: any) => {
       onChange && onChange(params)
       setState((prev) => ({ ...prev, ...params }))
     },
