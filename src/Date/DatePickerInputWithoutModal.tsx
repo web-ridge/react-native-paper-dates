@@ -20,13 +20,13 @@ function DatePickerInputWithoutModal(
     inputButtons,
     ...rest
   }: DatePickerInputProps & {
-    modal: (params: {
+    modal?: (params: {
       value: DatePickerInputProps['value']
       locale: DatePickerInputProps['locale']
       inputMode: DatePickerInputProps['inputMode']
       validRange: DatePickerInputProps['validRange']
     }) => any
-    inputButtons: any
+    inputButtons?: any
   },
   ref: any
 ) {
