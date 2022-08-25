@@ -87,11 +87,12 @@ function DatePickerInput(
             onPress={() => setVisible(true)}
           />
         ) : null}
+        <View style={styles.helperText}>
+          <HelperText style={styles.helperText} type="error" visible={!!error}>
+            {error}
+          </HelperText>
+        </View>
       </View>
-      <HelperText type="error" visible={!!error}>
-        {error}
-      </HelperText>
-
       {withModal ? (
         <DatePickerModal
           date={value}
@@ -126,13 +127,14 @@ function getLabel({
 const styles = StyleSheet.create({
   root: {
     minWidth: 150,
-    flexDirection: 'row',
-    position: 'relative',
-    alignItems: 'center',
+    display: "flex",
     flexGrow: 1,
   },
-  input: {
-    flexGrow: 1,
+  helperTextContainer: {
+    flexDirection: 'row'
+  },
+  helperText: {
+    flex: 1,
   },
   calendarButton: { position: 'absolute', right: 0, zIndex: 10 },
 })
