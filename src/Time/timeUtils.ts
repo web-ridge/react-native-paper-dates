@@ -45,6 +45,16 @@ export const inputTypeIcons: InputIconMap = {
   picker: 'clock-outline',
 }
 
+export const getTimeInputTypeIcon = (
+  inputType: PossibleInputTypes,
+  inputIconMap?: InputIconMap
+) => {
+  return (
+    inputIconMap?.[reverseInputTypes[inputType]] ||
+    inputTypeIcons?.[reverseInputTypes[inputType]]
+  )
+}
+
 export type PossibleClockTypes = 'hours' | 'minutes'
 export type ClockTypeMap = {
   [clockType in PossibleClockTypes]: PossibleClockTypes

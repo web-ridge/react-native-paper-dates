@@ -12,12 +12,13 @@ export interface DatePickerModalHeaderProps {
   onDismiss: () => void
   onSave: () => void
   locale: string | undefined
+  closeIcon?: string
 }
 
 export default function DatePickerModalHeader(
   props: DatePickerModalHeaderProps
 ) {
-  const { disableSafeTop, locale } = props
+  const { disableSafeTop, locale, closeIcon = 'close' } = props
   const saveLabel = props.saveLabel || getTranslation(locale, 'save')
   const color = useHeaderTextColor()
   return (
@@ -31,7 +32,7 @@ export default function DatePickerModalHeader(
         >
           <Appbar style={styles.appbarHeader}>
             <Appbar.Action
-              icon="close"
+              icon={closeIcon}
               accessibilityLabel={getTranslation(locale, 'close')}
               onPress={props.onDismiss}
               color={color}

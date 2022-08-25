@@ -5,7 +5,13 @@ import { Text, IconButton } from 'react-native-paper'
 import DatePickerModal from './DatePickerModal'
 
 // WORK IN PROGRESS
-export default function DateRangeInput({ locale }: { locale: string }) {
+export default function DateRangeInput({
+  locale,
+  calendarIcon = 'calendar',
+}: {
+  locale: string
+  calendarIcon?: string
+}) {
   const [visible, setVisible] = React.useState<boolean>(false)
   const onDismiss = React.useCallback(() => {
     setVisible(false)
@@ -50,7 +56,7 @@ export default function DateRangeInput({ locale }: { locale: string }) {
         <Text>Tot</Text>
       </View>
       <View>
-        <IconButton icon="calendar" onPress={() => setVisible(true)} />
+        <IconButton icon={calendarIcon} onPress={() => setVisible(true)} />
         <Text style={{ opacity: 0 }} accessible={false}>
           tot
         </Text>
