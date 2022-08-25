@@ -147,6 +147,7 @@ function SwiperInner({
   return (
     <>
       <ScrollView
+        scrollsToTop={false}
         ref={parentRef}
         horizontal={isHorizontal}
         pagingEnabled={isHorizontal}
