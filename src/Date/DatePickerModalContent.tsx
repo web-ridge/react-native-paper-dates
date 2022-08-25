@@ -81,6 +81,8 @@ export function DatePickerModalContent(
     locale,
     validRange,
     dateMode,
+    startYear,
+    endYear
   } = props
 
   const anyProps = props as any
@@ -178,6 +180,8 @@ export function DatePickerModalContent(
             dates={state.dates}
             validRange={validRange}
             dateMode={dateMode}
+            startYear={startYear}
+            endYear={endYear}
           />
         }
         calendarEdit={

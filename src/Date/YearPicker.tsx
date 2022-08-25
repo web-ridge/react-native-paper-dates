@@ -5,21 +5,22 @@ import { range } from '../utils'
 
 const ITEM_HEIGHT = 62
 
-const startYear = 1800
-const endYear = 2200
-const years = range(startYear, endYear)
-
 export default function YearPicker({
   selectedYear,
   selectingYear,
   onPressYear,
+  startYear,
+  endYear,
 }: {
   selectedYear: number | undefined
   selectingYear: boolean
   onPressYear: (year: number) => any
+  startYear: number
+  endYear: number
 }) {
   const theme = useTheme()
   const flatList = React.useRef<FlatList<number> | null>(null)
+  const years = range(isNaN(startYear) ? 1800 : startYear, isNaN(endYear) ? 2200 : endYear)
 
   // scroll to selected year
   React.useEffect(() => {
