@@ -9,7 +9,7 @@ import {
 import type { ModeType, ValidRangeType } from './Calendar'
 import type { LocalState } from './DatePickerModalContent'
 
-import DatePickerInput from './DatePickerInput'
+import DatePickerInputWithoutModal from './DatePickerInputWithoutModal'
 
 function CalendarEdit({
   mode,
@@ -77,7 +77,7 @@ function CalendarEdit({
   return (
     <View style={styles.root}>
       {mode === 'single' ? (
-        <DatePickerInput
+        <DatePickerInputWithoutModal
           inputMode="start"
           ref={dateInput}
           label={label}
@@ -92,7 +92,7 @@ function CalendarEdit({
       ) : null}
       {mode === 'range' ? (
         <View style={styles.inner}>
-          <DatePickerInput
+          <DatePickerInputWithoutModal
             inputMode="start"
             ref={startInput}
             label={startLabel}
@@ -106,7 +106,7 @@ function CalendarEdit({
             autoComplete={'off'}
           />
           <View style={styles.separator} />
-          <DatePickerInput
+          <DatePickerInputWithoutModal
             inputMode="end"
             ref={endInput}
             label={endLabel}
