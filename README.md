@@ -152,6 +152,7 @@ export default function ReadMeExampleSingle() {
         // }}
         // onChange={} // same props as onConfirm but triggered without confirmed by user
         // saveLabel="Save" // optional
+        // saveLabelDisabled={true} // optional, default is false
         // uppercase={false} // optional, default is true
         // label="Select date" // optional
         // animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
@@ -213,6 +214,7 @@ export default function ReadMeExampleRange() {
         // }}
         // onChange={} // same props as onConfirm but triggered without confirmed by user
         // saveLabel="Save" // optional
+        // saveLabelDisabled={true} // optional, default is false
         // uppercase={false} // optional, default is true
         // label="Select period" // optional
         // startLabel="From" // optional
@@ -275,6 +277,7 @@ export default function ReadMeExampleMultiple() {
         // uppercase={false} // optional, default is true
         // label="Select period" // optional
         // startLabel="From" // optional
+        // saveLabelDisabled={true} // optional, default is false
         // endLabel="To" // optional
         // animationType="slide" // optional, default is slide on ios/android and none on web
         // startYear={2000} // optional, default is 1800

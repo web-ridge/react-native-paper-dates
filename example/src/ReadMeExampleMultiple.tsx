@@ -37,7 +37,7 @@ export default function ReadMeExampleMultiple() {
         // }}
         // locale={'nl'} // optional
         // saveLabel="Save" // optional
-        // uppercase={false} // optional, default is true
+        // saveLabelDisabled={true} // optional, default is false        // uppercase={false} // optional, default is true
         // label="Select period" // optional
         // startLabel="From" // optional
         // endLabel="To" // optional
