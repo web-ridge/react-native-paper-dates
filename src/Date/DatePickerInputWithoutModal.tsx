@@ -58,7 +58,7 @@ function DatePickerInputWithoutModal(
           onChangeText={onChangeText}
           keyboardAppearance={theme.dark ? 'dark' : 'default'}
           error={!!error}
-          style={[styles.input, style]}
+          style={style}
         />
         {inputButtons}
         {!!error ? (
@@ -95,9 +95,8 @@ function getLabel({
 
 const styles = StyleSheet.create({
   root: {
-    minWidth: 150,
+    flex: 1,
     flexGrow: 1,
-    justifyContent: 'center',
   },
   helperTextContainer: {
     flexDirection: 'row',
@@ -105,6 +104,5 @@ const styles = StyleSheet.create({
   helperText: {
     flex: 1,
   },
-  input: {},
 })
 export default React.forwardRef(DatePickerInputWithoutModal)
