@@ -140,7 +140,7 @@ function Calendar(
         const sd = startDateRef.current
         const ed = endDateRef.current
         let isStart: boolean = true
-        if (sd && !ed && dateToUnix(d) > dateToUnix(sd!)) {
+        if (sd && !ed && dateToUnix(d) >= dateToUnix(sd!)) {
           isStart = false
         }
         ;(onChangeRef.current as RangeChange)({
