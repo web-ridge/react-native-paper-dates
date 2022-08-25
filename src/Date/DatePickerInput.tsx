@@ -19,6 +19,7 @@ function DatePickerInput(
     inputMode,
     withModal = true,
     withDateFormatInLabel = true,
+    calendarIcon = 'calendar',
     ...rest
   }: {
     inputMode: 'start' | 'end'
@@ -28,6 +29,7 @@ function DatePickerInput(
     validRange?: ValidRangeType | undefined
     withModal?: boolean
     withDateFormatInLabel?: boolean
+    calendarIcon?: string
   } & Omit<
     React.ComponentProps<typeof TextInput>,
     'value' | 'onChange' | 'onChangeText'
@@ -81,7 +83,7 @@ function DatePickerInput(
           <IconButton
             size={24}
             style={styles.calendarButton}
-            icon="calendar"
+            icon={calendarIcon}
             onPress={() => setVisible(true)}
           />
         ) : null}

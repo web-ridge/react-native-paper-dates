@@ -16,6 +16,9 @@ export interface HeaderPickProps {
   headerSeparator?: string
   startLabel?: string
   endLabel?: string
+  editIcon?: string
+  calendarIcon?: string
+  closeIcon?: string
 }
 
 export interface HeaderContentProps extends HeaderPickProps {
@@ -49,7 +52,15 @@ function getLabel(
 export default function DatePickerModalContentHeader(
   props: HeaderContentProps
 ) {
-  const { onToggle, collapsed, mode, moreLabel, uppercase } = props
+  const {
+    onToggle,
+    collapsed,
+    mode,
+    moreLabel,
+    uppercase,
+    editIcon = 'pencil',
+    calendarIcon = 'calendar',
+  } = props
 
   const label = getLabel(props.locale, props.mode, props.label)
 
@@ -80,7 +91,7 @@ export default function DatePickerModalContentHeader(
       <View style={styles.fill} />
       {allowEditing ? (
         <IconButton
-          icon={collapsed ? 'pencil' : 'calendar'}
+          icon={collapsed ? editIcon : calendarIcon}
           accessibilityLabel={
             collapsed
               ? getTranslation(props.locale, 'typeInDate')

@@ -57,7 +57,7 @@ npm install react-native-paper-dates --save
 
 ## Import some localized strings
 Ideally you do this somewhere in your `index.js` before `react-native-paper-dates` is used.
-Currently we have en/nl/de/pl/pt translations but it's really easy to add one extra since it are only some labels and error messages.
+Currently we have en/nl/de/pl/pt/ar translations but it's really easy to add one extra since it are only some labels and error messages.
 
 ```tsx
 // e.g in your index.js
@@ -67,6 +67,7 @@ import {
   // de,
   // pl,
   // pt,
+  //ar,
   enGB,
   registerTranslation,
 } from 'react-native-paper-dates'
@@ -75,6 +76,7 @@ import {
 // registerTranslation('pl', pl)
 // registerTranslation('pt', pt)
 // registerTranslation('de', de)
+// registerTranslation('ar', ar)
 registerTranslation('en-GB', enGB)
 ```
 
@@ -153,6 +155,9 @@ export default function ReadMeExampleSingle() {
         // animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
         // startYear={2000} // optional, default is 1800
         // endYear={2100} // optional, default is 2200
+        // closeIcon="close" // optional, default is "close"
+        // editIcon="pencil" // optional, default is "pencil"
+        // calendarIcon="calendar" // optional, default is "calendar"
       />
     </>
   );
@@ -213,6 +218,9 @@ export default function ReadMeExampleRange() {
         // animationType="slide" // optional, default is slide on ios/android and none on web
         // startYear={2000} // optional, default is 1800
         // endYear={2100} // optional, default is 2200
+        // closeIcon="close" // optional, default is "close"
+        // editIcon="pencil" // optional, default is "pencil"
+        // calendarIcon="calendar" // optional, default is "calendar"
       />
     </>
   );
@@ -269,6 +277,7 @@ export default function ReadMeExampleMultiple() {
         // animationType="slide" // optional, default is slide on ios/android and none on web
         // startYear={2000} // optional, default is 1800
         // endYear={2100} // optional, default is 2200
+        // closeIcon="close" // optional, default is "close"
       />
     </>
   );
@@ -289,6 +298,7 @@ export default function ReadMeExampleDatePickerInput() {
         onChange={(d) => setInputDate(d)}
         inputMode="start"
         // mode="outlined" (see react-native-paper docs)
+        // calendarIcon="calendar" // optional, default is "calendar"
         // other react native TextInput props
       />
     </>
@@ -332,6 +342,8 @@ export default function TimePickerPage() {
         confirmLabel="Ok" // optional, default: 'Ok'
         animationType="fade" // optional, default is 'none'
         locale="en" // optional, default is automically detected by your system
+        // keyboardIcon="keyboard-outline" // optional, default is "keyboard-outline"
+        // clockIcon="clock-outline" // optional, default is "clock-outline"
       />
       <Button onPress={()=> setVisible(true)}>
         Pick time
@@ -386,6 +398,8 @@ or npm
 ```
 npm install react-native-localize @formatjs/intl-pluralrules @formatjs/intl-getcanonicallocales @formatjs/intl-listformat @formatjs/intl-displaynames @formatjs/intl-locale @formatjs/intl-datetimeformat @formatjs/intl-numberformat @formatjs/intl-relativetimeformat --save
 ```
+
+If using Expo, omit `react-native-localize` and use `expo install expo-localization` instead. Read more [here](https://docs.expo.dev/versions/latest/sdk/localization/#installation).
 
 In your app starting entrypoint e.g. `./index.js` or even better use a `index.android.js` to prevent importing on iOS/web put the following code. (don't forget to import the languages you want to support, in the example only english language is supported)
 
