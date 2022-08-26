@@ -63,6 +63,7 @@ Currently we have en/nl/de/pl/pt/ar/ko/fr translations but it's really easy to a
 // e.g in your index.js
 import {
   // en,
+  // it,
   // fr,
   // nl,
   // de,
@@ -75,6 +76,7 @@ import {
   registerTranslation,
 } from 'react-native-paper-dates'
 // registerTranslation('en', en)
+// registerTranslation('it', it)
 // registerTranslation('fr', fr)
 // registerTranslation('nl', nl)
 // registerTranslation('pl', pl)
