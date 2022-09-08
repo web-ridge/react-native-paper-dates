@@ -210,8 +210,8 @@ function Calendar(
           selectedYear={selectedYear}
           selectingYear={selectingYear}
           onPressYear={onPressYear}
-          startYear={startYear ?? 1800}
-          endYear={endYear ?? 2200}
+          startYear={startYear || 1800}
+          endYear={endYear || 2200}
         />
       ) : null}
     </View>
