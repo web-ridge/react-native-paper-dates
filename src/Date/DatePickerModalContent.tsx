@@ -144,8 +144,8 @@ export function DatePickerModalContent(
           onSave={onInnerConfirm}
           onDismiss={onDismiss}
           saveLabel={props.saveLabel}
-          saveLabelDisabled={props.saveLabelDisabled ?? false}
-          uppercase={props.uppercase ?? true}
+          saveLabelDisabled={props.saveLabelDisabled || false}
+          uppercase={props.uppercase || true}
           disableSafeTop={disableSafeTop}
           closeIcon={props.closeIcon}
         />
@@ -160,7 +160,7 @@ export function DatePickerModalContent(
           moreLabel={props.moreLabel}
           startLabel={props.startLabel}
           endLabel={props.endLabel}
-          uppercase={props.uppercase ?? true}
+          uppercase={props.uppercase || true}
           locale={locale}
           editIcon={props.editIcon}
           calendarIcon={props.calendarIcon}
