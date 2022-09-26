@@ -3,14 +3,12 @@ import { Animated, StyleSheet, View } from 'react-native'
 import { useTheme } from 'react-native-paper'
 
 export default function AnimatedCrossView({
-  // visible,
   collapsed,
   calendar,
   calendarEdit,
 }: {
   calendar: any
   calendarEdit: any
-  // visible: boolean
   collapsed: boolean
 }) {
   const theme = useTheme()
@@ -18,13 +16,11 @@ export default function AnimatedCrossView({
     new Animated.Value(collapsed ? 1 : 0)
   )
   React.useEffect(() => {
-    // if (visible) {
     Animated.timing(calendarOpacity.current, {
       toValue: collapsed ? 1 : 0,
       duration: 250,
       useNativeDriver: true,
     }).start()
-    // }
   }, [collapsed])
 
   return (

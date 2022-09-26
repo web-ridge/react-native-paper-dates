@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Color from 'color'
-import { useTheme } from 'react-native-paper'
+import { Theme, useTheme } from 'react-native-paper'
 
 // 250? when bigger?
 export const circleSize = 215
@@ -157,7 +157,8 @@ export function getAngle(left: number, top: number, size: number) {
 }
 
 export function useSwitchColors(highlighted: boolean) {
-  const theme = useTheme()
+  const theme: Theme = useTheme()
+
   const backgroundColor = React.useMemo<string>(() => {
     if (theme.dark) {
       if (highlighted) {
@@ -176,7 +177,12 @@ export function useSwitchColors(highlighted: boolean) {
     if (highlighted && !theme.dark) {
       return theme.colors.primary
     }
-    return theme.colors.placeholder
+
+    if (theme.isV3) {
+      return theme.colors.primary
+    } else {
+      return theme.colors.placeholder
+    }
   }, [highlighted, theme])
 
   return { backgroundColor, color }

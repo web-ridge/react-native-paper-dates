@@ -34,7 +34,7 @@ export type BaseCalendarProps = {
   startYear?: number
   endYear?: number
 
-  // here they are optional but in final implemenation they are required
+  // here they are optional but in final implementation they are required
   date?: CalendarDate
   dates?: CalendarDates
   startDate?: CalendarDate
