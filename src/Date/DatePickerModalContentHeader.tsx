@@ -97,7 +97,7 @@ export default function DatePickerModalContentHeader(
               ? getTranslation(props.locale, 'typeInDate')
               : getTranslation(props.locale, 'pickDateFromCalendar')
           }
-          color={color}
+          iconColor={color}
           onPress={onToggle}
         />
       ) : null}
