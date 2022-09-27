@@ -1,6 +1,10 @@
 import * as React from 'react'
 import { FlatList, StyleSheet, View } from 'react-native'
 import { Text, TouchableRipple, useTheme } from 'react-native-paper'
+import type {
+  Fonts,
+  MD3Typescale,
+} from 'react-native-paper/lib/typescript/types'
 import { range } from '../utils'
 
 const ITEM_HEIGHT = 62
@@ -20,7 +24,10 @@ export default function YearPicker({
 }) {
   const theme = useTheme()
   const flatList = React.useRef<FlatList<number> | null>(null)
-  const years = range(isNaN(startYear) ? 1800 : startYear, isNaN(endYear) ? 2200 : endYear)
+  const years = range(
+    isNaN(startYear) ? 1800 : startYear,
+    isNaN(endYear) ? 2200 : endYear
+  )
 
   // scroll to selected year
   React.useEffect(() => {
@@ -31,7 +38,7 @@ export default function YearPicker({
         animated: false,
       })
     }
-  }, [flatList, selectedYear])
+  }, [flatList, selectedYear, startYear])
 
   return (
     <View
@@ -71,6 +78,13 @@ function YearPure({
   onPressYear: (newYear: number) => any
 }) {
   const theme = useTheme()
+
+  let textFont = (theme.fonts as Fonts)?.medium
+
+  if (theme.isV3) {
+    textFont = (theme.fonts as MD3Typescale)?.bodyLarge
+  }
+
   return (
     <View style={styles.year}>
       <TouchableRipple
@@ -86,7 +100,11 @@ function YearPure({
           ]}
         >
           <Text
-            style={[styles.yearLabel, selected ? styles.selectedYear : null]}
+            style={[
+              styles.yearLabel,
+              selected ? styles.selectedYear : null,
+              { ...textFont },
+            ]}
             selectable={false}
           >
             {year}

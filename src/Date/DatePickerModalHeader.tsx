@@ -42,6 +42,7 @@ export default function DatePickerModalHeader(
             <Appbar.Content title={''} />
             <Button
               color={color}
+              textColor={color}
               onPress={props.onSave}
               disabled={props.saveLabelDisabled || false}
               uppercase={props.uppercase || true}

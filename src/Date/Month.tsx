@@ -29,6 +29,10 @@ import type {
 } from './Calendar'
 import { dayNamesHeight } from './DayNames'
 import { useTextColorOnPrimary } from '../utils'
+import type {
+  Fonts,
+  MD3Typescale,
+} from 'react-native-paper/lib/typescript/types'
 
 interface BaseMonthProps {
   locale: undefined | string
@@ -244,6 +248,12 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
     date,
   ])
 
+  let textFont = (theme.fonts as Fonts)?.medium
+
+  if (theme.isV3) {
+    textFont = (theme.fonts as MD3Typescale)?.bodyMedium
+  }
+
   return (
     <View style={[styles.month, { height: getMonthHeight(scrollMode, index) }]}>
       <View
@@ -278,7 +288,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
             ]}
           >
             <Text
-              style={[styles.monthLabel, theme.fonts.medium]}
+              style={[styles.monthLabel, { ...textFont }]}
               selectable={false}
             >
               {monthName} {year}
