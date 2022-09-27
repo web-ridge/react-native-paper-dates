@@ -18,12 +18,16 @@ export default function AmPmSwitcher({
   onChange: (newHours: number) => any
 }) {
   const { setMode, mode } = React.useContext(DisplayModeContext)
-  const theme: Theme = useTheme()
+  const theme = useTheme()
   const backgroundColor = useMemo<string>(() => {
     if (theme.dark) {
       return Color(theme.colors.surface).lighten(1.2).hex()
     }
-    return Color(theme.colors.surface).darken(0.1).hex()
+    return Color(
+      theme.isV3 ? theme.colors.inverseOnSurface : theme.colors.surface
+    )
+      .darken(0.1)
+      .hex()
   }, [theme])
 
   const isAM = mode === 'AM'
@@ -100,7 +104,6 @@ function SwitchButton({
       <View style={[styles.switchButtonInner, { backgroundColor }]}>
         <Text
           selectable={false}
-          variant="bodyMedium"
           style={[
             {
               ...textFont,

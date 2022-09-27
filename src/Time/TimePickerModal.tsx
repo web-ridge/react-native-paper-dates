@@ -10,6 +10,10 @@ import {
 } from 'react-native'
 
 import { Button, IconButton, overlay, useTheme } from 'react-native-paper'
+import type {
+  Fonts,
+  MD3Typescale,
+} from 'react-native-paper/lib/typescript/types'
 import TimePicker from './TimePicker'
 import {
   clockTypes,
@@ -59,6 +63,12 @@ export function TimePickerModal({
 }) {
   const theme = useTheme()
 
+  let textFont = (theme.fonts as Fonts)?.medium
+
+  if (theme.isV3) {
+    textFont = (theme.fonts as MD3Typescale)?.bodyMedium
+  }
+  
   const [inputType, setInputType] = React.useState<PossibleInputTypes>(
     inputTypes.picker
   )
@@ -114,7 +124,7 @@ export function TimePickerModal({
             style={[
               StyleSheet.absoluteFill,
               styles.modalBackground,
-              { backgroundColor: theme.colors.backdrop },
+              { backgroundColor: theme.colors?.backdrop },
             ]}
           />
         </TouchableWithoutFeedback>
@@ -139,7 +149,17 @@ export function TimePickerModal({
               ]}
             >
               <View style={styles.labelContainer}>
-                <Text style={[styles.label, { color: theme.colors.text }]}>
+                <Text
+                  style={[
+                    styles.label,
+                    {
+                      ...textFont,
+                      color: theme?.isV3
+                        ? theme.colors.onBackground
+                        : theme.colors.text,
+                    },
+                  ]}
+                >
                   {uppercase ? label.toUpperCase() : label}
                 </Text>
               </View>
@@ -225,6 +245,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     paddingLeft: 24,
     paddingRight: 24,
+    marginTop: 8,
   },
   label: {
     letterSpacing: 1,

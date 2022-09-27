@@ -20,6 +20,7 @@ import {
 import TimeInput from './TimeInput'
 import AmPmSwitcher from './AmPmSwitcher'
 import { useLatest } from '../utils'
+import Color from 'color'
 
 function TimeInputs({
   hours,
@@ -85,6 +86,11 @@ function TimeInputs({
         pressed={focused === clockTypes.hours}
         onPress={onFocusInput}
         inputType={inputType}
+        selectionColor={
+          theme.dark
+            ? Color(theme.colors.primary).darken(0.2).hex()
+            : theme.colors.primary
+        }
         returnKeyType={'next'}
         onSubmitEditing={onSubmitStartInput}
         blurOnSubmit={false}
@@ -98,7 +104,6 @@ function TimeInputs({
             minutes,
           })
         }}
-        // onChangeText={onChangeStartInput}
       />
       <View style={styles.hoursAndMinutesSeparator}>
         <View style={styles.spaceDot} />
@@ -115,6 +120,11 @@ function TimeInputs({
         pressed={focused === clockTypes.minutes}
         onPress={onFocusInput}
         inputType={inputType}
+        selectionColor={
+          theme.dark
+            ? Color(theme.colors.primary).darken(0.2).hex()
+            : theme.colors.primary
+        }
         onSubmitEditing={onSubmitEndInput}
         onChanged={(newMinutesFromInput) => {
           let newMinutes = newMinutesFromInput

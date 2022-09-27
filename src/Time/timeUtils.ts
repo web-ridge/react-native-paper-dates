@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Color from 'color'
-import { Theme, useTheme } from 'react-native-paper'
+import { useTheme } from 'react-native-paper'
 
 // 250? when bigger?
 export const circleSize = 215
@@ -157,17 +157,23 @@ export function getAngle(left: number, top: number, size: number) {
 }
 
 export function useSwitchColors(highlighted: boolean) {
-  const theme: Theme = useTheme()
-
+  const theme = useTheme()
   const backgroundColor = React.useMemo<string>(() => {
     if (theme.dark) {
       if (highlighted) {
         return Color(theme.colors.primary).hex()
       }
+      if (theme.isV3) {
+        return Color(theme.colors.surface).lighten(1.2).hex()
+      }
       return theme.colors.backdrop
     }
 
     if (highlighted) {
+      if (theme.isV3) {
+        return theme.colors.primaryContainer
+      }
+
       return Color(theme.colors.primary).lighten(1).hex()
     }
     return theme.colors.surface
@@ -177,9 +183,11 @@ export function useSwitchColors(highlighted: boolean) {
     if (highlighted && !theme.dark) {
       return theme.colors.primary
     }
-
+    if (highlighted && theme.dark) {
+      return theme.colors.background
+    }
     if (theme.isV3) {
-      return theme.colors.primary
+      return theme.colors.onSurfaceVariant
     } else {
       return theme.colors.placeholder
     }
@@ -199,7 +207,13 @@ export function useInputColors(highlighted: boolean) {
     }
 
     if (highlighted) {
+      if (theme.isV3) {
+        return Color(theme.colors.primaryContainer).hex()
+      }
       return Color(theme.colors.primary).lighten(1).hex()
+    }
+    if (theme.isV3) {
+      return Color(theme.colors.outline).lighten(0.9).hex()
     }
     return Color(theme.colors.surface).darken(0.1).hex()
   }, [highlighted, theme])
@@ -208,7 +222,14 @@ export function useInputColors(highlighted: boolean) {
     if (highlighted && !theme.dark) {
       return theme.colors.primary
     }
-    return theme.colors.text
+    if (theme.isV3) {
+      if (!highlighted) {
+        return theme.colors.onBackground
+      }
+      return theme.colors.background
+    } else {
+      return theme.colors.text
+    }
   }, [highlighted, theme])
 
   return { backgroundColor, color }

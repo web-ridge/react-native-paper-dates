@@ -129,6 +129,8 @@ function AnalogClock({
         {
           backgroundColor: theme.dark
             ? Color(theme.colors.surface).lighten(1.2).hex()
+            : theme.isV3
+            ? Color(theme.colors.outline).lighten(0.9).hex()
             : Color(theme.colors.surface).darken(0.1).hex(),
         },
       ]}

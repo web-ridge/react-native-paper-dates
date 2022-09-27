@@ -117,7 +117,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 24 * 3 + 96 * 2 + 52 + circleSize,
   },
-  rootPortrait: {},
+  rootPortrait: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   clockContainer: { paddingTop: 36, paddingLeft: 12, paddingRight: 12 },
 })
 
