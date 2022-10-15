@@ -164,7 +164,7 @@ export function useSwitchColors(highlighted: boolean) {
         return Color(theme.colors.primary).hex()
       }
       if (theme.isV3) {
-        return Color(theme.colors.surface).lighten(1.2).hex()
+        return Color(theme.colors.surface).lighten(1.4).hex()
       }
       return theme.colors.backdrop
     }
@@ -203,7 +203,7 @@ export function useInputColors(highlighted: boolean) {
       if (highlighted) {
         return Color(theme.colors.primary).hex()
       }
-      return Color(theme.colors.surface).lighten(1.2).hex()
+      return Color(theme.colors.surface).lighten(1.4).hex()
     }
 
     if (highlighted) {
