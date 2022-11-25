@@ -1,11 +1,15 @@
 import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
-import { IconButton, Text } from 'react-native-paper'
+import { IconButton, Text, useTheme } from 'react-native-paper'
 import type { ModeType } from './Calendar'
 import type { LocalState } from './DatePickerModalContent'
 import { useHeaderTextColor } from '../utils'
 import Color from 'color'
 import { getTranslation } from '../translations/utils'
+import type {
+  Fonts,
+  MD3Typescale,
+} from 'react-native-paper/lib/typescript/types'
 
 export interface HeaderPickProps {
   moreLabel?: string
@@ -61,15 +65,22 @@ export default function DatePickerModalContentHeader(
     editIcon = 'pencil',
     calendarIcon = 'calendar',
   } = props
-
+  const theme = useTheme()
   const label = getLabel(props.locale, props.mode, props.label)
 
   const color = useHeaderTextColor()
   const allowEditing = mode !== 'multiple'
+
+  let textFont = (theme.fonts as Fonts)?.medium
+
+  if (theme.isV3) {
+    textFont = (theme.fonts as MD3Typescale)?.bodyLarge
+  }
+
   return (
     <View style={[styles.header]}>
       <View>
-        <Text style={[styles.label, { color }]}>
+        <Text style={[styles.label, { color, ...textFont }]}>
           {uppercase ? label.toUpperCase() : label}
         </Text>
         <View style={styles.headerContentContainer}>
@@ -97,7 +108,7 @@ export default function DatePickerModalContentHeader(
               ? getTranslation(props.locale, 'typeInDate')
               : getTranslation(props.locale, 'pickDateFromCalendar')
           }
-          color={color}
+          iconColor={color}
           onPress={onToggle}
         />
       ) : null}

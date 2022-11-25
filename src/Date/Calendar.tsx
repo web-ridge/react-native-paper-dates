@@ -34,7 +34,7 @@ export type BaseCalendarProps = {
   startYear?: number
   endYear?: number
 
-  // here they are optional but in final implemenation they are required
+  // here they are optional but in final implementation they are required
   date?: CalendarDate
   dates?: CalendarDates
   startDate?: CalendarDate
@@ -101,7 +101,7 @@ function Calendar(
 
   const selectColor = useMemo<string>(() => {
     if (theme.dark) {
-      return darkenBy(Color(theme.colors.primary), 0.9).hex()
+      return darkenBy(Color(theme.colors.primary), 0.1).hex()
     }
     return lightenBy(Color(theme.colors.primary), 0.9).hex()
   }, [theme])

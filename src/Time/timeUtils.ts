@@ -163,10 +163,17 @@ export function useSwitchColors(highlighted: boolean) {
       if (highlighted) {
         return Color(theme.colors.primary).hex()
       }
+      if (theme.isV3) {
+        return Color(theme.colors.surface).lighten(1.4).hex()
+      }
       return theme.colors.backdrop
     }
 
     if (highlighted) {
+      if (theme.isV3) {
+        return theme.colors.primaryContainer
+      }
+
       return Color(theme.colors.primary).lighten(1).hex()
     }
     return theme.colors.surface
@@ -176,7 +183,14 @@ export function useSwitchColors(highlighted: boolean) {
     if (highlighted && !theme.dark) {
       return theme.colors.primary
     }
-    return theme.colors.placeholder
+    if (highlighted && theme.dark) {
+      return theme.colors.background
+    }
+    if (theme.isV3) {
+      return theme.colors.onSurfaceVariant
+    } else {
+      return theme.colors.placeholder
+    }
   }, [highlighted, theme])
 
   return { backgroundColor, color }
@@ -189,11 +203,17 @@ export function useInputColors(highlighted: boolean) {
       if (highlighted) {
         return Color(theme.colors.primary).hex()
       }
-      return Color(theme.colors.surface).lighten(1.2).hex()
+      return Color(theme.colors.surface).lighten(1.4).hex()
     }
 
     if (highlighted) {
+      if (theme.isV3) {
+        return Color(theme.colors.primaryContainer).hex()
+      }
       return Color(theme.colors.primary).lighten(1).hex()
+    }
+    if (theme.isV3) {
+      return Color(theme.colors.outline).lighten(0.9).hex()
     }
     return Color(theme.colors.surface).darken(0.1).hex()
   }, [highlighted, theme])
@@ -202,7 +222,14 @@ export function useInputColors(highlighted: boolean) {
     if (highlighted && !theme.dark) {
       return theme.colors.primary
     }
-    return theme.colors.text
+    if (theme.isV3) {
+      if (!highlighted) {
+        return theme.colors.onBackground
+      }
+      return theme.colors.background
+    } else {
+      return theme.colors.text
+    }
   }, [highlighted, theme])
 
   return { backgroundColor, color }

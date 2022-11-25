@@ -157,7 +157,6 @@ function VerticalScroller({
               right: 0,
               position: 'absolute',
               height: getMonthHeight('vertical', visibleIndexes[vi]),
-              // transform: `translateY(${getMonthsOffset('vertical', vi)}px)`,
             }}
           >
             {renderItem({
