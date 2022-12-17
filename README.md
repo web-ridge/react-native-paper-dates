@@ -27,7 +27,7 @@
 
 ## Documentation
 
-Check out the official docs.
+Check out the official docs ADD LINK HERE.
 
 ## About us
 
