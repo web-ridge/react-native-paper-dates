@@ -8,7 +8,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const config = {
   title: 'Paper Dates',
   tagline: 'Cross-platform Material Design date and time pickers for React Native Paper',
-  url: 'https://your-docusaurus-test-site.com',
+  url: 'https://web-ridge.github.io',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -16,7 +16,7 @@ const config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'facebook', // Usually your GitHub org/user name.
+  organizationName: 'web-ridge', // Usually your GitHub org/user name.
   projectName: 'react-native-paper-dates', // Usually your repo name.
 
   // Even if you don't use internalization, you can use this field to set useful
@@ -120,11 +120,7 @@ const config = {
             items: [
               {
                 label: 'Report Bug',
-                href: 'https://www.youtube.com/watch?v=SHhQU2doTug',
-              },
-              {
-                label: 'Request Feature',
-                href: 'https://github.com/facebook/docusaurus',
+                href: 'https://github.com/web-ridge/react-native-paper-dates/issues',
               },
             ],
           },
