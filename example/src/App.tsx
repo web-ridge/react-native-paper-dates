@@ -6,7 +6,7 @@ import {
   Linking,
   Image,
   Animated,
-  useColorScheme,
+  Platform,
 } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
@@ -394,13 +394,16 @@ function Label({ children }: { children: string }) {
 }
 
 export default function AppWithProviders() {
-  return (
-    <SafeAreaProvider>
-      <PaperProvider>
-        <App />
-      </PaperProvider>
-    </SafeAreaProvider>
+  const inner = (
+    <PaperProvider>
+      <App />
+    </PaperProvider>
   )
+
+  if (Platform.OS === 'web') {
+    return <SafeAreaProvider>{inner}</SafeAreaProvider>
+  }
+  return <SafeAreaProvider>{inner}</SafeAreaProvider>
 }
 
 function TwitterFollowButton({ userName }: { userName: string }) {

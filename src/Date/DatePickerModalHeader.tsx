@@ -25,13 +25,6 @@ export default function DatePickerModalHeader(
   const color = useHeaderTextColor()
   const insets = useSafeAreaInsets()
 
-  // safeContent: {
-  //   paddingBottom: 0,
-  // },
-  // safeContentNoTop: {
-  //   paddingTop: 0,
-  // },
-
   return (
     <Animated.View
       style={[

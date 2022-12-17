@@ -16,7 +16,6 @@ export default function DatePickerModalHeaderBackground({
         styles.animated,
         {
           backgroundColor,
-          paddingTop: insets.top,
           paddingLeft: insets.left,
           paddingRight: insets.right,
         },
