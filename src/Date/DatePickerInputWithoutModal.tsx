@@ -44,35 +44,31 @@ function DatePickerInputWithoutModal(
   return (
     <>
       <View style={styles.root}>
-        <TextInputWithMask
-          {...rest}
-          ref={ref}
-          label={getLabel({
-            // TODO: support label components?
-            label: label as any,
-            inputFormat,
-            withDateFormatInLabel,
-          })}
-          value={formattedValue}
-          keyboardType={'number-pad'}
-          placeholder={inputFormat}
-          mask={inputFormat}
-          onChangeText={onChangeText}
-          keyboardAppearance={theme.dark ? 'dark' : 'default'}
-          error={!!error}
-          style={style}
-        />
-        {inputButtons}
-        {!!error ? (
-          <View style={styles.helperText}>
-            <HelperText
-              style={styles.helperText}
-              type="error"
-              visible={!!error}
-            >
-              {error}
-            </HelperText>
-          </View>
+        <View style={styles.inputContainer}>
+          <TextInputWithMask
+            {...rest}
+            ref={ref}
+            label={getLabel({
+              // TODO: support label components?
+              label: label as any,
+              inputFormat,
+              withDateFormatInLabel,
+            })}
+            value={formattedValue}
+            keyboardType={'number-pad'}
+            placeholder={inputFormat}
+            mask={inputFormat}
+            onChangeText={onChangeText}
+            keyboardAppearance={theme.dark ? 'dark' : 'default'}
+            error={!!error}
+            style={[styles.input, style]}
+          />
+          {inputButtons}
+        </View>
+        {error ? (
+          <HelperText style={styles.helperText} type="error" visible={!!error}>
+            {error}
+          </HelperText>
         ) : null}
       </View>
       {modal?.({ value, locale, inputMode, validRange, saveLabel })}
@@ -97,14 +93,20 @@ function getLabel({
 
 const styles = StyleSheet.create({
   root: {
-    flex: 1,
+    flexGrow: 1,
+    backgroundColor: 'pink',
+  },
+  inputContainer: {
+    flexGrow: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  input: {
     flexGrow: 1,
   },
-  helperTextContainer: {
-    flexDirection: 'row',
-  },
   helperText: {
-    flex: 1,
+    // flex: 1,
   },
 })
 export default React.forwardRef(DatePickerInputWithoutModal)
