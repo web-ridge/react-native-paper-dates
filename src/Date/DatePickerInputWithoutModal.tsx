@@ -18,6 +18,7 @@ function DatePickerInputWithoutModal(
     withDateFormatInLabel = true,
     modal,
     inputButtons,
+    saveLabel,
     ...rest
   }: DatePickerInputProps & {
     modal?: (params: {
@@ -25,6 +26,7 @@ function DatePickerInputWithoutModal(
       locale: DatePickerInputProps['locale']
       inputMode: DatePickerInputProps['inputMode']
       validRange: DatePickerInputProps['validRange']
+      saveLabel: DatePickerInputProps['saveLabel']
     }) => any
     inputButtons?: any
   },
@@ -73,7 +75,7 @@ function DatePickerInputWithoutModal(
           </View>
         ) : null}
       </View>
-      {modal?.({ value, locale, inputMode, validRange })}
+      {modal?.({ value, locale, inputMode, validRange, saveLabel })}
     </>
   )
 }

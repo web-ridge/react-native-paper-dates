@@ -8,14 +8,13 @@ import {
   Animated,
   useColorScheme,
 } from 'react-native'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 import {
   Title,
   Button,
   Text,
   Provider as PaperProvider,
-  DefaultTheme,
-  DarkTheme,
   useTheme,
   overlay,
   Paragraph,
@@ -395,34 +394,12 @@ function Label({ children }: { children: string }) {
 }
 
 export default function AppWithProviders() {
-  const dark = useColorScheme() === 'dark'
-
   return (
-    <PaperProvider
-      theme={
-        dark
-          ? {
-              ...DarkTheme,
-              roundness: 10,
-              colors: {
-                ...DarkTheme.colors,
-                // primary: '#F59E00',
-                // accent: '#FBBE5E',
-              },
-            }
-          : {
-              ...DefaultTheme,
-              roundness: 10,
-              colors: {
-                ...DefaultTheme.colors,
-                // primary: '#F59E00',
-                // accent: '#FBBE5E',
-              },
-            }
-      }
-    >
-      <App />
-    </PaperProvider>
+    <SafeAreaProvider>
+      <PaperProvider>
+        <App />
+      </PaperProvider>
+    </SafeAreaProvider>
   )
 }
 

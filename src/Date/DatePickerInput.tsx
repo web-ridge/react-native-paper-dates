@@ -42,7 +42,7 @@ function DatePickerInput(
           />
         ) : null
       }
-      modal={({ value, locale, inputMode, validRange }) =>
+      modal={({ value, locale, inputMode, validRange, saveLabel }) =>
         withModal ? (
           <DatePickerModal
             date={value}
@@ -53,6 +53,7 @@ function DatePickerInput(
             locale={locale}
             dateMode={inputMode}
             validRange={validRange}
+            saveLabel={saveLabel}
           />
         ) : null
       }

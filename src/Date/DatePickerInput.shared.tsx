@@ -11,6 +11,7 @@ export type DatePickerInputProps = {
   withModal?: boolean
   withDateFormatInLabel?: boolean
   calendarIcon?: string
+  saveLabel?: string
 } & Omit<
   React.ComponentProps<typeof TextInput>,
   'value' | 'onChange' | 'onChangeText'
