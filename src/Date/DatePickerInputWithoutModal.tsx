@@ -94,7 +94,6 @@ function getLabel({
 const styles = StyleSheet.create({
   root: {
     flexGrow: 1,
-    backgroundColor: 'pink',
   },
   inputContainer: {
     flexGrow: 1,

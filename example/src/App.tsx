@@ -6,7 +6,6 @@ import {
   Linking,
   Image,
   Animated,
-  Platform,
 } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
@@ -117,7 +116,7 @@ function App() {
   const backgroundColor =
     theme.dark && theme.mode === 'adaptive'
       ? overlay(3, theme.colors.surface)
-      : (theme.colors.surface as any)
+      : theme.colors.surface
 
   const pastDate = new Date(new Date().setDate(new Date().getDate() - 5))
   const futureDate = new Date(new Date().setDate(new Date().getDate() + 5))
@@ -389,21 +388,19 @@ function Row({ children }: { children: any }) {
 function Label({ children }: { children: string }) {
   const theme = useTheme()
   return (
-    <Text style={[styles.label, { ...theme.fonts.medium }]}>{children}</Text>
+    <Text style={[styles.label, { ...theme.fonts.bodyLarge }]}>{children}</Text>
   )
 }
 
+const theme = { version: 3 }
 export default function AppWithProviders() {
-  const inner = (
-    <PaperProvider>
-      <App />
-    </PaperProvider>
+  return (
+    <SafeAreaProvider>
+      <PaperProvider theme={theme as any}>
+        <App />
+      </PaperProvider>
+    </SafeAreaProvider>
   )
-
-  if (Platform.OS === 'web') {
-    return <SafeAreaProvider>{inner}</SafeAreaProvider>
-  }
-  return <SafeAreaProvider>{inner}</SafeAreaProvider>
 }
 
 function TwitterFollowButton({ userName }: { userName: string }) {
