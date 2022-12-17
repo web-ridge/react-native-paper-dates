@@ -14,18 +14,6 @@ sidebar_position: 1
 
 [![Demo of react-native-paper-dates](https://user-images.githubusercontent.com/6492229/98866767-bd3f2780-246d-11eb-890e-3491b47c95c5.gif)](https://www.youtube.com/watch?v=SHhQU2doTug)
 
-## Features
-
-- Smooth and fast cross platform Material Design date picker and time picker for [react-native-paper](https://reactnativepaper.com/).
-- Tested on Android, iOS and the web
-- Uses the native Date.Intl API's which work out of the box on the web / iOS an on Android with Hermes from RN version 0.66 (automatic day name, month translations without bundle size increase)
-- For RN below 0.66 see for Android Intl support the [Android Caveats](#android-caveats)
-- Simple API
-- Typesafe
-- Endless (virtual) scrolling
-- Performant
-- Great React Native Web support
-
 ## Installation
 
 ### Prerequisites

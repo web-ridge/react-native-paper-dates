@@ -57,36 +57,78 @@ View an interactive [Expo snack](https://snack.expo.dev/@fitzwabs/react-native-p
 
 ## Props
 
-**locale**  
-*Type: String*  
-A locale can be composed of both a base language, the country (territory) of use, and possibly codeset (which is usually assumed). For example, German is de, an abbreviation for Deutsch, while Swiss German is de_CH, CH being an abbreviation for Confederation Helvetica 
+**locale (Required)**  
+`Type: String`  
+A locale can be composed of both a base language, the country (territory) of use, and possibly codeset (which is usually assumed). For example, German is de.
 
-**mode**  
-*Type: String ("single" | "multiple" | "range")* 
-The selection type for the date picker. For this example it is "single".
+**mode (Required)**  
+`Type: 'single' | 'multiple' | 'range'`  
+The selection type for the date picker. For this example it is `"single"`.
 
-**visible**  
-*Type: String ("single" | "multiple" | "range")* 
-The selection type for the date picker. For this example it is "single".
+**visible (Required)**  
+`Type: boolean`  
+Flag indicating if the component should be displayed.
 
-        visible={open}
-        onDismiss={onDismissSingle}
-        date={date}
-        onConfirm={onConfirmSingle}
-        // validRange={{
-        //   startDate: new Date(2021, 1, 2),  // optional
-        //   endDate: new Date(), // optional
-        //   disabledDates: [new Date()] // optional
-        // }}
-        // onChange={} // same props as onConfirm but triggered without confirmed by user
-        // saveLabel="Save" // optional
-        // saveLabelDisabled={true} // optional, default is false
-        // uppercase={false} // optional, default is true
-        // label="Select date" // optional
-        // animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
-        // startYear={2000} // optional, default is 1800
-        // endYear={2100} // optional, default is 2200
-        // closeIcon="close" // optional, default is "close"
-        // editIcon="pencil" // optional, default is "pencil"
-        // calendarIcon="calendar" // optional, default is "calendar"
+**onDismiss (Required)**  
+`Type: Function`  
+The action to take when the component is closed.
 
+**date (Required)**  
+`Type: Date`  
+The date value used to populate the component.
+
+**onConfirm (Required)**  
+`Type: Function`  
+The action to take when the date is selected.
+
+**validRange**  
+`Type: {
+  startDate: Date | undefined,
+  endDate: Date | undefined,
+  disabledDates: Date[] | undefined
+}`  
+Limits which dates the user can navigate to and where events can go. Dates outside of the valid range will be grayed-out.
+
+**onChange**  
+`Type: Function`  
+Event handler when the component changes.
+
+**saveLabel**  
+`Type: String | undefined`  
+The label used confirm a date selection. Defaults to `'Save'`.
+
+**saveLabelDisabled**  
+`Type: boolean | undefined`  
+Flag indicating if the save label should be disabled and unable to receive events. Defaults to `false`.
+
+**uppercase**  
+`Type: boolean | undefined`  
+Flag indicating if the text in the component should be uppercase. Defaults to `true`.
+
+**label**  
+`Type: String | undefined`  
+The label used as the header in the component. Defaults to `'Select date'`.
+
+**animationType**  
+`Type: String | undefined`  
+The animation used when opening the component. Defaults to `'slide'` on ios/android and `'none'` on web.
+
+**startYear**  
+`Type: number | undefined`  
+The start year when the component is rendered. Defaults to `1800`.
+
+**endYear**  
+`Type: number | undefined`  
+The end year when the component is rendered. Defaults to `2200`.
+
+**closeIcon**  
+`Type: string | undefined`  
+The icon used to close the component. Defaults to `close`. You can pass the name of an icon from [MaterialCommunityIcons](https://materialdesignicons.com/).
+
+**editIcon**  
+`Type: string | undefined`  
+The edit icon used to toggle between calendar and input. Defaults to `pencil`. You can pass the name of an icon from [MaterialCommunityIcons](https://materialdesignicons.com/).
+
+**calendarIcon**  
+`Type: string | undefined`  
+The edit icon used to toggle between input and calendar. Defaults to `calendar`. You can pass the name of an icon from [MaterialCommunityIcons](https://materialdesignicons.com/).

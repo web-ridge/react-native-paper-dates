@@ -9,11 +9,13 @@ The time picker provides a modal allowing the selection or input of a time.
 ## Usage
 
 ```jsx
-import * as React from 'react'
-import { Button } from 'react-native-paper'
-import { TimePickerModal } from 'react-native-paper-dates'
+import React from "react";
+import { View, Text } from "react-native";
+import { Button } from 'react-native-paper';
+import { TimePickerModal } from 'react-native-paper-dates';
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
-export default function TimePickerPage() {
+export default function App() {
   const [visible, setVisible] = React.useState(false)
   const onDismiss = React.useCallback(() => {
     setVisible(false)
@@ -28,27 +30,21 @@ export default function TimePickerPage() {
   );
 
   return (
-    <>
-      <TimePickerModal
-        visible={visible}
-        onDismiss={onDismiss}
-        onConfirm={onConfirm}
-        hours={12} // default: current hours
-        minutes={14} // default: current minutes
-        label="Select time" // optional, default 'Select time'
-        uppercase={false} // optional, default is true
-        cancelLabel="Cancel" // optional, default: 'Cancel'
-        confirmLabel="Ok" // optional, default: 'Ok'
-        animationType="fade" // optional, default is 'none'
-        locale="en" // optional, default is automically detected by your system
-        // keyboardIcon="keyboard-outline" // optional, default is "keyboard-outline"
-        // clockIcon="clock-outline" // optional, default is "clock-outline"
-      />
-      <Button onPress={()=> setVisible(true)}>
-        Pick time
-      </Button>
-    </>
-  )
+    <SafeAreaProvider>
+      <View style={{justifyContent: 'center', flex: 1, alignItems: 'center'}}>
+        <Button onPress={() => setVisible(true)} uppercase={false} mode="outlined">
+          Pick time
+        </Button>
+        <TimePickerModal
+          visible={visible}
+          onDismiss={onDismiss}
+          onConfirm={onConfirm}
+          hours={12}
+          minutes={14}
+        />
+      </View>
+    </SafeAreaProvider>
+  );
 }
 ```
 
@@ -58,32 +54,54 @@ View an interactive [Expo snack](https://snack.expo.dev/@fitzwabs/react-native-p
 
 ## Props
 
-**locale**  
-*Type: String*  
-A locale can be composed of both a base language, the country (territory) of use, and possibly codeset (which is usually assumed). For example, German is de, an abbreviation for Deutsch, while Swiss German is de_CH, CH being an abbreviation for Confederation Helvetica 
+**locale (Required)**  
+`Type: String`  
+A locale can be composed of both a base language, the country (territory) of use, and possibly codeset (which is usually assumed). For example, German is de.
 
-**mode**  
-*Type: String* 
-The 
-        mode="single"
-        visible={open}
-        onDismiss={onDismissSingle}
-        date={date}
-        onConfirm={onConfirmSingle}
-        // validRange={{
-        //   startDate: new Date(2021, 1, 2),  // optional
-        //   endDate: new Date(), // optional
-        //   disabledDates: [new Date()] // optional
-        // }}
-        // onChange={} // same props as onConfirm but triggered without confirmed by user
-        // saveLabel="Save" // optional
-        // saveLabelDisabled={true} // optional, default is false
-        // uppercase={false} // optional, default is true
-        // label="Select date" // optional
-        // animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
-        // startYear={2000} // optional, default is 1800
-        // endYear={2100} // optional, default is 2200
-        // closeIcon="close" // optional, default is "close"
-        // editIcon="pencil" // optional, default is "pencil"
-        // calendarIcon="calendar" // optional, default is "calendar"
+**visible (Required)**  
+`Type: boolean`  
+Flag indicating if the component should be displayed.
 
+**onDismiss (Required)**  
+`Type: Function`  
+The action to take when the component is closed.
+
+**onConfirm (Required)**  
+`Type: Function`  
+The action to take when the date is selected.
+
+**hours**  
+`Type: number | undefined`  
+The hours values used to populate the component. Defaults to the current hour.
+
+**minutes**  
+`Type: number | undefined`  
+The minutes values used to populate the component. Defaults to the current minutes.
+
+**label**  
+`Type: String | undefined`  
+The label used as the header in the component. Defaults to `'Select time'`.
+
+**uppercase**  
+`Type: boolean | undefined`  
+Flag indicating if the text in the component should be uppercase. Defaults to `true`.
+
+**cancelLabel**  
+`Type: String | undefined`  
+The label that will close the component. Defaults to `'Cancel'`.
+
+**confirmLabel**  
+`Type: String | undefined`  
+The label that will confirm the component selection. Defaults to `'Ok'`.
+
+**animationType**  
+`Type: String | undefined`  
+The animation used when opening the component. Defaults to `'slide'` on ios/android and `'none'` on web.
+
+**keyboardIcon**  
+`Type: string | undefined`  
+The icon used to toggle between the OS input. Defaults to `keyboard-outline`. You can pass the name of an icon from [MaterialCommunityIcons](https://materialdesignicons.com/).
+
+**clockIcon**  
+`Type: string | undefined`  
+The icon used to toggle between time picker and input. Defaults to `clock-outline`. You can pass the name of an icon from [MaterialCommunityIcons](https://materialdesignicons.com/).
