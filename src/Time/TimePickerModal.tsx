@@ -9,11 +9,14 @@ import {
   KeyboardAvoidingView,
 } from 'react-native'
 
-import { Button, IconButton, overlay, useTheme } from 'react-native-paper'
-import type {
-  Fonts,
-  MD3Typescale,
-} from 'react-native-paper/lib/typescript/types'
+import {
+  Button,
+  IconButton,
+  MD2Theme,
+  overlay,
+  useTheme,
+} from 'react-native-paper'
+
 import TimePicker from './TimePicker'
 import {
   clockTypes,
@@ -63,12 +66,14 @@ export function TimePickerModal({
 }) {
   const theme = useTheme()
 
-  let textFont = (theme.fonts as Fonts)?.medium
+  let textFont
 
   if (theme.isV3) {
-    textFont = (theme.fonts as MD3Typescale)?.bodyMedium
+    textFont = theme.fonts.bodyMedium
+  } else {
+    textFont = (theme as any as MD2Theme)?.fonts.medium
   }
-  
+
   const [inputType, setInputType] = React.useState<PossibleInputTypes>(
     inputTypes.picker
   )
@@ -156,7 +161,7 @@ export function TimePickerModal({
                       ...textFont,
                       color: theme?.isV3
                         ? theme.colors.onBackground
-                        : theme.colors.text,
+                        : (theme as any as MD2Theme).colors.text,
                     },
                   ]}
                 >

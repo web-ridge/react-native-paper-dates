@@ -1,14 +1,10 @@
 import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
-import { Text, Theme, TouchableRipple, useTheme } from 'react-native-paper'
+import { MD2Theme, Text, TouchableRipple, useTheme } from 'react-native-paper'
 import { useMemo } from 'react'
 import Color from 'color'
 import { useSwitchColors } from './timeUtils'
 import { DisplayModeContext } from './TimePicker'
-import type {
-  Fonts,
-  MD3Typescale,
-} from 'react-native-paper/lib/typescript/types'
 
 export default function AmPmSwitcher({
   onChange,
@@ -79,14 +75,12 @@ function SwitchButton({
   selected: boolean
   disabled: boolean
 }) {
-  const theme: Theme = useTheme()
+  const theme = useTheme()
   const { backgroundColor, color } = useSwitchColors(selected)
 
-  let textFont = (theme.fonts as Fonts)?.medium
-
-  if (theme.isV3) {
-    textFont = (theme.fonts as MD3Typescale)?.bodyMedium
-  }
+  let textFont = theme?.isV3
+    ? theme.fonts.bodyMedium
+    : (theme as any as MD2Theme).fonts.medium
 
   return (
     <TouchableRipple

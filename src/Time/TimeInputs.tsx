@@ -8,7 +8,7 @@ import {
   useWindowDimensions,
   TextInput as TextInputNative,
 } from 'react-native'
-import { useTheme } from 'react-native-paper'
+import { MD2Theme, useTheme } from 'react-native-paper'
 
 import {
   clockTypes,
@@ -107,9 +107,27 @@ function TimeInputs({
       />
       <View style={styles.hoursAndMinutesSeparator}>
         <View style={styles.spaceDot} />
-        <View style={[styles.dot, { backgroundColor: theme.colors.text }]} />
+        <View
+          style={[
+            styles.dot,
+            {
+              backgroundColor: theme?.isV3
+                ? theme.colors.onBackground
+                : (theme as any as MD2Theme).colors.text,
+            },
+          ]}
+        />
         <View style={styles.betweenDot} />
-        <View style={[styles.dot, { backgroundColor: theme.colors.text }]} />
+        <View
+          style={[
+            styles.dot,
+            {
+              backgroundColor: theme?.isV3
+                ? theme.colors.onBackground
+                : (theme as any as MD2Theme).colors.text,
+            },
+          ]}
+        />
         <View style={styles.spaceDot} />
       </View>
       <TimeInput

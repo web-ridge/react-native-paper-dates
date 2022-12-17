@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Color from 'color'
-import { useTheme } from 'react-native-paper'
+import { MD2Theme, useTheme } from 'react-native-paper'
 
 // 250? when bigger?
 export const circleSize = 215
@@ -189,7 +189,7 @@ export function useSwitchColors(highlighted: boolean) {
     if (theme.isV3) {
       return theme.colors.onSurfaceVariant
     } else {
-      return theme.colors.placeholder
+      return (theme as any as MD2Theme).colors.placeholder
     }
   }, [highlighted, theme])
 
@@ -228,7 +228,7 @@ export function useInputColors(highlighted: boolean) {
       }
       return theme.colors.background
     } else {
-      return theme.colors.text
+      return (theme as any as MD2Theme).colors.text
     }
   }, [highlighted, theme])
 

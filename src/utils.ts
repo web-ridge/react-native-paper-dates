@@ -1,6 +1,13 @@
 import * as React from 'react'
-import { overlay, useTheme } from 'react-native-paper'
+import {
+  DefaultTheme,
+  MD3DarkTheme,
+  overlay,
+  useTheme,
+} from 'react-native-paper'
 import Color from 'color'
+
+export type PaperTheme = typeof MD3DarkTheme | typeof DefaultTheme
 
 export function useLatest<T>(value: T) {
   const ref = React.useRef(value)

@@ -1,15 +1,11 @@
 import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
-import { IconButton, Text, useTheme } from 'react-native-paper'
+import { IconButton, MD2Theme, Text, useTheme } from 'react-native-paper'
 import type { ModeType } from './Calendar'
 import type { LocalState } from './DatePickerModalContent'
 import { useHeaderTextColor } from '../utils'
 import Color from 'color'
 import { getTranslation } from '../translations/utils'
-import type {
-  Fonts,
-  MD3Typescale,
-} from 'react-native-paper/lib/typescript/types'
 
 export interface HeaderPickProps {
   moreLabel?: string
@@ -71,11 +67,9 @@ export default function DatePickerModalContentHeader(
   const color = useHeaderTextColor()
   const allowEditing = mode !== 'multiple'
 
-  let textFont = (theme.fonts as Fonts)?.medium
-
-  if (theme.isV3) {
-    textFont = (theme.fonts as MD3Typescale)?.bodyLarge
-  }
+  let textFont = theme?.isV3
+    ? theme.fonts.bodyLarge
+    : (theme as any as MD2Theme).fonts.medium
 
   return (
     <View style={[styles.header]}>

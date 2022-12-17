@@ -1,6 +1,12 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
-import { IconButton, Text, useTheme, TouchableRipple } from 'react-native-paper'
+import {
+  IconButton,
+  Text,
+  useTheme,
+  TouchableRipple,
+  MD2Theme,
+} from 'react-native-paper'
 import Day, { EmptyDay } from './Day'
 
 import {
@@ -29,10 +35,6 @@ import type {
 } from './Calendar'
 import { dayNamesHeight } from './DayNames'
 import { useTextColorOnPrimary } from '../utils'
-import type {
-  Fonts,
-  MD3Typescale,
-} from 'react-native-paper/lib/typescript/types'
 
 interface BaseMonthProps {
   locale: undefined | string
@@ -248,11 +250,9 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
     date,
   ])
 
-  let textFont = (theme.fonts as Fonts)?.medium
-
-  if (theme.isV3) {
-    textFont = (theme.fonts as MD3Typescale)?.bodyMedium
-  }
+  let textFont = theme?.isV3
+    ? theme.fonts.bodyMedium
+    : (theme as any as MD2Theme).fonts.medium
 
   return (
     <View style={[styles.month, { height: getMonthHeight(scrollMode, index) }]}>

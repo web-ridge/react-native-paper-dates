@@ -1,10 +1,6 @@
 import * as React from 'react'
 import { FlatList, StyleSheet, View } from 'react-native'
-import { Text, TouchableRipple, useTheme } from 'react-native-paper'
-import type {
-  Fonts,
-  MD3Typescale,
-} from 'react-native-paper/lib/typescript/types'
+import { MD2Theme, Text, TouchableRipple, useTheme } from 'react-native-paper'
 import { range } from '../utils'
 
 const ITEM_HEIGHT = 62
@@ -79,11 +75,9 @@ function YearPure({
 }) {
   const theme = useTheme()
 
-  let textFont = (theme.fonts as Fonts)?.medium
-
-  if (theme.isV3) {
-    textFont = (theme.fonts as MD3Typescale)?.bodyLarge
-  }
+  let textFont = theme?.isV3
+    ? theme.fonts.bodyLarge
+    : (theme as any as MD2Theme).fonts.medium
 
   return (
     <View style={styles.year}>

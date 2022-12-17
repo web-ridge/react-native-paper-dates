@@ -1,12 +1,10 @@
 import * as React from 'react'
-import { Theme, Text, TouchableRipple } from 'react-native-paper'
+import { MD2Theme, Text, TouchableRipple } from 'react-native-paper'
 import { StyleSheet, View } from 'react-native'
 import DayRange from './DayRange'
 import { daySize } from './dateUtils'
-import type {
-  Fonts,
-  MD3Typescale,
-} from 'react-native-paper/lib/typescript/types'
+
+import type { PaperTheme } from '../utils'
 
 function EmptyDayPure() {
   return <View style={styles.empty} />
@@ -14,7 +12,7 @@ function EmptyDayPure() {
 export const EmptyDay = React.memo(EmptyDayPure)
 
 function Day(props: {
-  theme: Theme
+  theme: PaperTheme
   textColorOnPrimary: string
   day: number
   month: number
@@ -58,11 +56,9 @@ function Day(props: {
   const textColor =
     selected || (inRange && theme.dark) ? textColorOnPrimary : undefined
 
-  let textFont = (theme.fonts as Fonts)?.medium
-
-  if (theme.isV3) {
-    textFont = (theme.fonts as MD3Typescale)?.bodyMedium
-  }
+  let textFont = theme?.isV3
+    ? theme.fonts.bodyMedium
+    : (theme as any as MD2Theme).fonts.medium
 
   return (
     <View style={[styles.root, disabled && styles.disabled]}>
