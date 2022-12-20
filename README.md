@@ -71,6 +71,7 @@ import {
   // ko
   // fr
   // it,
+  // es,
   enGB,
   registerTranslation,
 } from 'react-native-paper-dates'
@@ -84,6 +85,7 @@ import {
 // registerTranslation('ko', ko)
 // registerTranslation('fr', fr)
 // registerTranslation('it', it)
+// registerTranslation('es', es)
 registerTranslation('en-GB', enGB)
 ```
 
