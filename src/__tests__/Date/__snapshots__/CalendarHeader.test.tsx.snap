@@ -1,0 +1,335 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders CalendarHeader 1`] = `
+<View
+  pointerEvents="box-none"
+  style={
+    {
+      "left": 0,
+      "position": "absolute",
+      "right": 0,
+      "top": 0,
+      "zIndex": 10,
+    }
+  }
+>
+  <View
+    pointerEvents="none"
+    style={
+      [
+        {
+          "alignItems": "center",
+          "backgroundColor": "#fff",
+          "flexDirection": "row",
+          "height": 44,
+        },
+        {
+          "backgroundColor": "rgba(255, 251, 254, 1)",
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flex": 1,
+        }
+      }
+    >
+      <Text
+        selectable={false}
+        style={
+          [
+            {
+              "textAlign": "left",
+            },
+            {
+              "color": "rgba(28, 27, 31, 1)",
+              "fontFamily": "System",
+              "fontWeight": "400",
+              "letterSpacing": 0,
+            },
+            {
+              "writingDirection": "ltr",
+            },
+            [
+              {
+                "fontSize": 14,
+                "opacity": 0.7,
+              },
+              {
+                "fontFamily": "System",
+                "fontSize": 14,
+                "fontWeight": "400",
+                "letterSpacing": 0.25,
+                "lineHeight": 20,
+              },
+            ],
+          ]
+        }
+      >
+        S
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flex": 1,
+        }
+      }
+    >
+      <Text
+        selectable={false}
+        style={
+          [
+            {
+              "textAlign": "left",
+            },
+            {
+              "color": "rgba(28, 27, 31, 1)",
+              "fontFamily": "System",
+              "fontWeight": "400",
+              "letterSpacing": 0,
+            },
+            {
+              "writingDirection": "ltr",
+            },
+            [
+              {
+                "fontSize": 14,
+                "opacity": 0.7,
+              },
+              {
+                "fontFamily": "System",
+                "fontSize": 14,
+                "fontWeight": "400",
+                "letterSpacing": 0.25,
+                "lineHeight": 20,
+              },
+            ],
+          ]
+        }
+      >
+        M
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flex": 1,
+        }
+      }
+    >
+      <Text
+        selectable={false}
+        style={
+          [
+            {
+              "textAlign": "left",
+            },
+            {
+              "color": "rgba(28, 27, 31, 1)",
+              "fontFamily": "System",
+              "fontWeight": "400",
+              "letterSpacing": 0,
+            },
+            {
+              "writingDirection": "ltr",
+            },
+            [
+              {
+                "fontSize": 14,
+                "opacity": 0.7,
+              },
+              {
+                "fontFamily": "System",
+                "fontSize": 14,
+                "fontWeight": "400",
+                "letterSpacing": 0.25,
+                "lineHeight": 20,
+              },
+            ],
+          ]
+        }
+      >
+        T
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flex": 1,
+        }
+      }
+    >
+      <Text
+        selectable={false}
+        style={
+          [
+            {
+              "textAlign": "left",
+            },
+            {
+              "color": "rgba(28, 27, 31, 1)",
+              "fontFamily": "System",
+              "fontWeight": "400",
+              "letterSpacing": 0,
+            },
+            {
+              "writingDirection": "ltr",
+            },
+            [
+              {
+                "fontSize": 14,
+                "opacity": 0.7,
+              },
+              {
+                "fontFamily": "System",
+                "fontSize": 14,
+                "fontWeight": "400",
+                "letterSpacing": 0.25,
+                "lineHeight": 20,
+              },
+            ],
+          ]
+        }
+      >
+        W
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flex": 1,
+        }
+      }
+    >
+      <Text
+        selectable={false}
+        style={
+          [
+            {
+              "textAlign": "left",
+            },
+            {
+              "color": "rgba(28, 27, 31, 1)",
+              "fontFamily": "System",
+              "fontWeight": "400",
+              "letterSpacing": 0,
+            },
+            {
+              "writingDirection": "ltr",
+            },
+            [
+              {
+                "fontSize": 14,
+                "opacity": 0.7,
+              },
+              {
+                "fontFamily": "System",
+                "fontSize": 14,
+                "fontWeight": "400",
+                "letterSpacing": 0.25,
+                "lineHeight": 20,
+              },
+            ],
+          ]
+        }
+      >
+        T
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flex": 1,
+        }
+      }
+    >
+      <Text
+        selectable={false}
+        style={
+          [
+            {
+              "textAlign": "left",
+            },
+            {
+              "color": "rgba(28, 27, 31, 1)",
+              "fontFamily": "System",
+              "fontWeight": "400",
+              "letterSpacing": 0,
+            },
+            {
+              "writingDirection": "ltr",
+            },
+            [
+              {
+                "fontSize": 14,
+                "opacity": 0.7,
+              },
+              {
+                "fontFamily": "System",
+                "fontSize": 14,
+                "fontWeight": "400",
+                "letterSpacing": 0.25,
+                "lineHeight": 20,
+              },
+            ],
+          ]
+        }
+      >
+        F
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flex": 1,
+        }
+      }
+    >
+      <Text
+        selectable={false}
+        style={
+          [
+            {
+              "textAlign": "left",
+            },
+            {
+              "color": "rgba(28, 27, 31, 1)",
+              "fontFamily": "System",
+              "fontWeight": "400",
+              "letterSpacing": 0,
+            },
+            {
+              "writingDirection": "ltr",
+            },
+            [
+              {
+                "fontSize": 14,
+                "opacity": 0.7,
+              },
+              {
+                "fontFamily": "System",
+                "fontSize": 14,
+                "fontWeight": "400",
+                "letterSpacing": 0.25,
+                "lineHeight": 20,
+              },
+            ],
+          ]
+        }
+      >
+        S
+      </Text>
+    </View>
+  </View>
+</View>
+`;

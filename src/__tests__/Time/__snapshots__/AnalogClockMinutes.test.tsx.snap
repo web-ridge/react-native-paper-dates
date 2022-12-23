@@ -1,0 +1,644 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders AnalogClockMinutes 1`] = `
+[
+  <View
+    pointerEvents="none"
+    style={
+      [
+        {
+          "alignItems": "center",
+          "borderRadius": 25,
+          "height": 50,
+          "justifyContent": "center",
+          "marginLeft": -25,
+          "marginTop": -25,
+          "position": "absolute",
+          "width": 50,
+          "zIndex": 20,
+        },
+        {
+          "left": 108,
+          "top": 22,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        {
+          "borderRadius": 25,
+        }
+      }
+    >
+      <Text
+        selectable={false}
+        style={
+          [
+            {
+              "textAlign": "left",
+            },
+            {
+              "color": "rgba(28, 27, 31, 1)",
+              "fontFamily": "System",
+              "fontWeight": "400",
+              "letterSpacing": 0,
+            },
+            {
+              "writingDirection": "ltr",
+            },
+            undefined,
+          ]
+        }
+      >
+        00
+      </Text>
+    </View>
+  </View>,
+  <View
+    pointerEvents="none"
+    style={
+      [
+        {
+          "alignItems": "center",
+          "borderRadius": 25,
+          "height": 50,
+          "justifyContent": "center",
+          "marginLeft": -25,
+          "marginTop": -25,
+          "position": "absolute",
+          "width": 50,
+          "zIndex": 20,
+        },
+        {
+          "left": 151,
+          "top": 33,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        {
+          "borderRadius": 25,
+        }
+      }
+    >
+      <Text
+        selectable={false}
+        style={
+          [
+            {
+              "textAlign": "left",
+            },
+            {
+              "color": "rgba(28, 27, 31, 1)",
+              "fontFamily": "System",
+              "fontWeight": "400",
+              "letterSpacing": 0,
+            },
+            {
+              "writingDirection": "ltr",
+            },
+            undefined,
+          ]
+        }
+      >
+        5
+      </Text>
+    </View>
+  </View>,
+  <View
+    pointerEvents="none"
+    style={
+      [
+        {
+          "alignItems": "center",
+          "borderRadius": 25,
+          "height": 50,
+          "justifyContent": "center",
+          "marginLeft": -25,
+          "marginTop": -25,
+          "position": "absolute",
+          "width": 50,
+          "zIndex": 20,
+        },
+        {
+          "left": 182,
+          "top": 65,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        {
+          "borderRadius": 25,
+        }
+      }
+    >
+      <Text
+        selectable={false}
+        style={
+          [
+            {
+              "textAlign": "left",
+            },
+            {
+              "color": "rgba(28, 27, 31, 1)",
+              "fontFamily": "System",
+              "fontWeight": "400",
+              "letterSpacing": 0,
+            },
+            {
+              "writingDirection": "ltr",
+            },
+            undefined,
+          ]
+        }
+      >
+        10
+      </Text>
+    </View>
+  </View>,
+  <View
+    pointerEvents="none"
+    style={
+      [
+        {
+          "alignItems": "center",
+          "borderRadius": 25,
+          "height": 50,
+          "justifyContent": "center",
+          "marginLeft": -25,
+          "marginTop": -25,
+          "position": "absolute",
+          "width": 50,
+          "zIndex": 20,
+        },
+        {
+          "left": 194,
+          "top": 107,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        {
+          "borderRadius": 25,
+        }
+      }
+    >
+      <Text
+        selectable={false}
+        style={
+          [
+            {
+              "textAlign": "left",
+            },
+            {
+              "color": "rgba(28, 27, 31, 1)",
+              "fontFamily": "System",
+              "fontWeight": "400",
+              "letterSpacing": 0,
+            },
+            {
+              "writingDirection": "ltr",
+            },
+            undefined,
+          ]
+        }
+      >
+        15
+      </Text>
+    </View>
+  </View>,
+  <View
+    pointerEvents="none"
+    style={
+      [
+        {
+          "alignItems": "center",
+          "borderRadius": 25,
+          "height": 50,
+          "justifyContent": "center",
+          "marginLeft": -25,
+          "marginTop": -25,
+          "position": "absolute",
+          "width": 50,
+          "zIndex": 20,
+        },
+        {
+          "left": 182,
+          "top": 150,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        {
+          "borderRadius": 25,
+        }
+      }
+    >
+      <Text
+        selectable={false}
+        style={
+          [
+            {
+              "textAlign": "left",
+            },
+            {
+              "color": "rgba(28, 27, 31, 1)",
+              "fontFamily": "System",
+              "fontWeight": "400",
+              "letterSpacing": 0,
+            },
+            {
+              "writingDirection": "ltr",
+            },
+            undefined,
+          ]
+        }
+      >
+        20
+      </Text>
+    </View>
+  </View>,
+  <View
+    pointerEvents="none"
+    style={
+      [
+        {
+          "alignItems": "center",
+          "borderRadius": 25,
+          "height": 50,
+          "justifyContent": "center",
+          "marginLeft": -25,
+          "marginTop": -25,
+          "position": "absolute",
+          "width": 50,
+          "zIndex": 20,
+        },
+        {
+          "left": 151,
+          "top": 182,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        {
+          "borderRadius": 25,
+        }
+      }
+    >
+      <Text
+        selectable={false}
+        style={
+          [
+            {
+              "textAlign": "left",
+            },
+            {
+              "color": "rgba(28, 27, 31, 1)",
+              "fontFamily": "System",
+              "fontWeight": "400",
+              "letterSpacing": 0,
+            },
+            {
+              "writingDirection": "ltr",
+            },
+            undefined,
+          ]
+        }
+      >
+        25
+      </Text>
+    </View>
+  </View>,
+  <View
+    pointerEvents="none"
+    style={
+      [
+        {
+          "alignItems": "center",
+          "borderRadius": 25,
+          "height": 50,
+          "justifyContent": "center",
+          "marginLeft": -25,
+          "marginTop": -25,
+          "position": "absolute",
+          "width": 50,
+          "zIndex": 20,
+        },
+        {
+          "left": 108,
+          "top": 194,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        {
+          "borderRadius": 25,
+        }
+      }
+    >
+      <Text
+        selectable={false}
+        style={
+          [
+            {
+              "textAlign": "left",
+            },
+            {
+              "color": "rgba(28, 27, 31, 1)",
+              "fontFamily": "System",
+              "fontWeight": "400",
+              "letterSpacing": 0,
+            },
+            {
+              "writingDirection": "ltr",
+            },
+            undefined,
+          ]
+        }
+      >
+        30
+      </Text>
+    </View>
+  </View>,
+  <View
+    pointerEvents="none"
+    style={
+      [
+        {
+          "alignItems": "center",
+          "borderRadius": 25,
+          "height": 50,
+          "justifyContent": "center",
+          "marginLeft": -25,
+          "marginTop": -25,
+          "position": "absolute",
+          "width": 50,
+          "zIndex": 20,
+        },
+        {
+          "left": 65,
+          "top": 182,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        {
+          "borderRadius": 25,
+        }
+      }
+    >
+      <Text
+        selectable={false}
+        style={
+          [
+            {
+              "textAlign": "left",
+            },
+            {
+              "color": "rgba(28, 27, 31, 1)",
+              "fontFamily": "System",
+              "fontWeight": "400",
+              "letterSpacing": 0,
+            },
+            {
+              "writingDirection": "ltr",
+            },
+            undefined,
+          ]
+        }
+      >
+        35
+      </Text>
+    </View>
+  </View>,
+  <View
+    pointerEvents="none"
+    style={
+      [
+        {
+          "alignItems": "center",
+          "borderRadius": 25,
+          "height": 50,
+          "justifyContent": "center",
+          "marginLeft": -25,
+          "marginTop": -25,
+          "position": "absolute",
+          "width": 50,
+          "zIndex": 20,
+        },
+        {
+          "left": 33,
+          "top": 151,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        {
+          "borderRadius": 25,
+        }
+      }
+    >
+      <Text
+        selectable={false}
+        style={
+          [
+            {
+              "textAlign": "left",
+            },
+            {
+              "color": "rgba(28, 27, 31, 1)",
+              "fontFamily": "System",
+              "fontWeight": "400",
+              "letterSpacing": 0,
+            },
+            {
+              "writingDirection": "ltr",
+            },
+            undefined,
+          ]
+        }
+      >
+        40
+      </Text>
+    </View>
+  </View>,
+  <View
+    pointerEvents="none"
+    style={
+      [
+        {
+          "alignItems": "center",
+          "borderRadius": 25,
+          "height": 50,
+          "justifyContent": "center",
+          "marginLeft": -25,
+          "marginTop": -25,
+          "position": "absolute",
+          "width": 50,
+          "zIndex": 20,
+        },
+        {
+          "left": 22,
+          "top": 108,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        {
+          "borderRadius": 25,
+        }
+      }
+    >
+      <Text
+        selectable={false}
+        style={
+          [
+            {
+              "textAlign": "left",
+            },
+            {
+              "color": "rgba(28, 27, 31, 1)",
+              "fontFamily": "System",
+              "fontWeight": "400",
+              "letterSpacing": 0,
+            },
+            {
+              "writingDirection": "ltr",
+            },
+            {
+              "color": "#fff",
+            },
+          ]
+        }
+      >
+        45
+      </Text>
+    </View>
+  </View>,
+  <View
+    pointerEvents="none"
+    style={
+      [
+        {
+          "alignItems": "center",
+          "borderRadius": 25,
+          "height": 50,
+          "justifyContent": "center",
+          "marginLeft": -25,
+          "marginTop": -25,
+          "position": "absolute",
+          "width": 50,
+          "zIndex": 20,
+        },
+        {
+          "left": 33,
+          "top": 65,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        {
+          "borderRadius": 25,
+        }
+      }
+    >
+      <Text
+        selectable={false}
+        style={
+          [
+            {
+              "textAlign": "left",
+            },
+            {
+              "color": "rgba(28, 27, 31, 1)",
+              "fontFamily": "System",
+              "fontWeight": "400",
+              "letterSpacing": 0,
+            },
+            {
+              "writingDirection": "ltr",
+            },
+            undefined,
+          ]
+        }
+      >
+        50
+      </Text>
+    </View>
+  </View>,
+  <View
+    pointerEvents="none"
+    style={
+      [
+        {
+          "alignItems": "center",
+          "borderRadius": 25,
+          "height": 50,
+          "justifyContent": "center",
+          "marginLeft": -25,
+          "marginTop": -25,
+          "position": "absolute",
+          "width": 50,
+          "zIndex": 20,
+        },
+        {
+          "left": 64,
+          "top": 33,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        {
+          "borderRadius": 25,
+        }
+      }
+    >
+      <Text
+        selectable={false}
+        style={
+          [
+            {
+              "textAlign": "left",
+            },
+            {
+              "color": "rgba(28, 27, 31, 1)",
+              "fontFamily": "System",
+              "fontWeight": "400",
+              "letterSpacing": 0,
+            },
+            {
+              "writingDirection": "ltr",
+            },
+            undefined,
+          ]
+        }
+      >
+        55
+      </Text>
+    </View>
+  </View>,
+]
+`;

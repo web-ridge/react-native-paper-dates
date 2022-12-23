@@ -1,0 +1,153 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders TimeInputs 1`] = `
+<View
+  style={
+    [
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+      },
+      false,
+    ]
+  }
+>
+  <View
+    style={
+      {
+        "height": 80,
+        "position": "relative",
+        "width": 96,
+      }
+    }
+  >
+    <TextInput
+      blurOnSubmit={false}
+      keyboardAppearance="default"
+      keyboardType="number-pad"
+      maxLength={2}
+      onBlur={[Function]}
+      onChangeText={[Function]}
+      onFocus={[Function]}
+      onSubmitEditing={[Function]}
+      placeholder="00"
+      returnKeyType="next"
+      selectionColor="rgba(103, 80, 164, 1)"
+      style={
+        [
+          {
+            "fontSize": 50,
+            "height": 80,
+            "textAlign": "center",
+            "textAlignVertical": "center",
+            "width": 96,
+          },
+          {
+            "backgroundColor": "#E6E5E7",
+            "borderRadius": 4,
+            "color": "rgba(28, 27, 31, 1)",
+          },
+        ]
+      }
+      value="12"
+    />
+  </View>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "fontSize": 65,
+        "width": 24,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    />
+    <View
+      style={
+        [
+          {
+            "borderRadius": 3.5,
+            "height": 7,
+            "width": 7,
+          },
+          {
+            "backgroundColor": "rgba(28, 27, 31, 1)",
+          },
+        ]
+      }
+    />
+    <View
+      style={
+        {
+          "height": 12,
+        }
+      }
+    />
+    <View
+      style={
+        [
+          {
+            "borderRadius": 3.5,
+            "height": 7,
+            "width": 7,
+          },
+          {
+            "backgroundColor": "rgba(28, 27, 31, 1)",
+          },
+        ]
+      }
+    />
+    <View
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    />
+  </View>
+  <View
+    style={
+      {
+        "height": 80,
+        "position": "relative",
+        "width": 96,
+      }
+    }
+  >
+    <TextInput
+      keyboardAppearance="default"
+      keyboardType="number-pad"
+      maxLength={2}
+      onBlur={[Function]}
+      onChangeText={[Function]}
+      onFocus={[Function]}
+      onSubmitEditing={[Function]}
+      placeholder="00"
+      selectionColor="rgba(103, 80, 164, 1)"
+      style={
+        [
+          {
+            "fontSize": 50,
+            "height": 80,
+            "textAlign": "center",
+            "textAlignVertical": "center",
+            "width": 96,
+          },
+          {
+            "backgroundColor": "#E6E5E7",
+            "borderRadius": 4,
+            "color": "rgba(28, 27, 31, 1)",
+          },
+        ]
+      }
+      value="45"
+    />
+  </View>
+</View>
+`;
