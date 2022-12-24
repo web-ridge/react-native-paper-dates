@@ -2395,6 +2395,24 @@
   dependencies:
     defer-to-connect "^2.0.1"
 
+"@testing-library/jest-native@^5.3.3":
+  version "5.3.3"
+  resolved "https://registry.yarnpkg.com/@testing-library/jest-native/-/jest-native-5.3.3.tgz#8f7c97504d1373d20ded0704586e110a26f9ba1a"
+  integrity sha512-oakP6c4xHR5PyLbw6H6NiUxvTZmsIHNjQRMsI6P3aSLhDSBvzRQ3+KdEwhlhiU2oNMWW45XQakKZN3cf2BG5Dw==
+  dependencies:
+    chalk "^4.1.2"
+    jest-diff "^29.0.1"
+    jest-matcher-utils "^29.0.1"
+    pretty-format "^29.0.3"
+    redent "^3.0.0"
+
+"@testing-library/react-native@^11.5.0":
+  version "11.5.0"
+  resolved "https://registry.yarnpkg.com/@testing-library/react-native/-/react-native-11.5.0.tgz#b043c5db7b15eca42a65e95d3f3ae196fab9493b"
+  integrity sha512-seV+qebsbX4E5CWk/wizU1+2wVLsPyqEzG7sTgrhJ81cgAawg7ay06fIZR9IS75pDeWn2KZVd4mGk1pjJ3i3Zw==
+  dependencies:
+    pretty-format "^29.0.0"
+
 "@tootallnate/once@1":
   version "1.1.2"
   resolved "https://registry.npmjs.org/@tootallnate/once/-/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
@@ -2591,10 +2609,25 @@
   resolved "https://registry.npmjs.org/@types/q/-/q-1.5.5.tgz#75a2a8e7d8ab4b230414505d92335d1dcb53a6df"
   integrity sha512-L28j2FcJfSZOnL1WBjDYp2vUHCeIFlyYI/53EwD/rKUBQ7MtUUfbQWiyKJGpcnv4/WgrhWsFKrcPstcAt/J0tQ==
 
-"@types/react-native@^0.70.8":
+"@types/react-native-vector-icons@^6.4.12":
+  version "6.4.12"
+  resolved "https://registry.yarnpkg.com/@types/react-native-vector-icons/-/react-native-vector-icons-6.4.12.tgz#4b9c63bf85eb42fca7c5b0a55ec317900e4fb427"
+  integrity sha512-gSXtv3NMOsRwSXJ/gvGebm7CNjHbkeFKCse9h/Pvi+x2yjCLOkJR1FBfec06DhaFJpsK7Y8WRQpwOS0eLqx5Rg==
+  dependencies:
+    "@types/react" "*"
+    "@types/react-native" "*"
+
+"@types/react-native@*", "@types/react-native@^0.70.8":
   version "0.70.8"
   resolved "https://registry.npmjs.org/@types/react-native/-/react-native-0.70.8.tgz#3302a0f7eddcd3350448ca17a9e415d02b1efde6"
   integrity sha512-jvs5QMOrlyi0ScfT5Brha2roDoOWtbIOadNkp0jsueVen5+pH4SQAYtzL6xu0+dIcx3J/5LtZ/JYby2C1/zUug==
+  dependencies:
+    "@types/react" "*"
+
+"@types/react-test-renderer@^18.0.0":
+  version "18.0.0"
+  resolved "https://registry.yarnpkg.com/@types/react-test-renderer/-/react-test-renderer-18.0.0.tgz#7b7f69ca98821ea5501b21ba24ea7b6139da2243"
+  integrity sha512-C7/5FBJ3g3sqUahguGi03O79b8afNeSD6T8/GU50oQrJCU0bVCCGQHaGKUbg2Ce8VQEEqTw8/HiS6lXHHdgkdQ==
   dependencies:
     "@types/react" "*"
 
@@ -5515,6 +5548,11 @@ diff-sequences@^29.0.0:
   version "29.0.0"
   resolved "https://registry.npmjs.org/diff-sequences/-/diff-sequences-29.0.0.tgz#bae49972ef3933556bcb0800b72e8579d19d9e4f"
   integrity sha512-7Qe/zd1wxSDL4D/X/FPjOMB+ZMDt71W94KYaq05I2l0oQqgXgs7s4ftYYmV38gBSrPz2vcygxfs1xn0FT+rKNA==
+
+diff-sequences@^29.3.1:
+  version "29.3.1"
+  resolved "https://registry.yarnpkg.com/diff-sequences/-/diff-sequences-29.3.1.tgz#104b5b95fe725932421a9c6e5b4bef84c3f2249e"
+  integrity sha512-hlM3QR272NXCi4pq+N4Kok4kOp6EsgOM3ZSpJI7Da3UAs+Ttsi8MRmB6trM/lhyzUxGfOgnpkHtgqm5Q/CTcfQ==
 
 diff@^4.0.1:
   version "4.0.2"
@@ -8565,6 +8603,16 @@ jest-diff@^29.0.0:
     jest-get-type "^29.0.0"
     pretty-format "^29.0.0"
 
+jest-diff@^29.0.1, jest-diff@^29.3.1:
+  version "29.3.1"
+  resolved "https://registry.yarnpkg.com/jest-diff/-/jest-diff-29.3.1.tgz#d8215b72fed8f1e647aed2cae6c752a89e757527"
+  integrity sha512-vU8vyiO7568tmin2lA3r2DP8oRvzhvRcD4DjpXc6uGveQodyk7CKLhQlCSiwgx3g0pFaE88/KLZ0yaTWMc4Uiw==
+  dependencies:
+    chalk "^4.0.0"
+    diff-sequences "^29.3.1"
+    jest-get-type "^29.2.0"
+    pretty-format "^29.3.1"
+
 jest-docblock@^29.0.0:
   version "29.0.0"
   resolved "https://registry.npmjs.org/jest-docblock/-/jest-docblock-29.0.0.tgz#3151bcc45ed7f5a8af4884dcc049aee699b4ceae"
@@ -8605,6 +8653,11 @@ jest-get-type@^29.0.0:
   resolved "https://registry.npmjs.org/jest-get-type/-/jest-get-type-29.0.0.tgz#843f6c50a1b778f7325df1129a0fd7aa713aef80"
   integrity sha512-83X19z/HuLKYXYHskZlBAShO7UfLFXu/vWajw9ZNJASN32li8yHMaVGAQqxFW1RCFOkB7cubaL6FaJVQqqJLSw==
 
+jest-get-type@^29.2.0:
+  version "29.2.0"
+  resolved "https://registry.yarnpkg.com/jest-get-type/-/jest-get-type-29.2.0.tgz#726646f927ef61d583a3b3adb1ab13f3a5036408"
+  integrity sha512-uXNJlg8hKFEnDgFsrCjznB+sTxdkuqiCL6zMgA75qEbAJjJYTs9XPrvDctrEig2GDow22T/LvHgO57iJhXB/UA==
+
 jest-haste-map@^29.0.0:
   version "29.0.0"
   resolved "https://registry.npmjs.org/jest-haste-map/-/jest-haste-map-29.0.0.tgz#52078a615aaa8a3ef017903e43cd413894fca768"
@@ -8641,6 +8694,16 @@ jest-matcher-utils@^29.0.0:
     jest-diff "^29.0.0"
     jest-get-type "^29.0.0"
     pretty-format "^29.0.0"
+
+jest-matcher-utils@^29.0.1:
+  version "29.3.1"
+  resolved "https://registry.yarnpkg.com/jest-matcher-utils/-/jest-matcher-utils-29.3.1.tgz#6e7f53512f80e817dfa148672bd2d5d04914a572"
+  integrity sha512-fkRMZUAScup3txIKfMe3AIZZmPEjWEdsPJFK3AIy5qRohWqQFg1qrmKfYXR9qEkNc7OdAu2N4KPHibEmy4HPeQ==
+  dependencies:
+    chalk "^4.0.0"
+    jest-diff "^29.3.1"
+    jest-get-type "^29.2.0"
+    pretty-format "^29.3.1"
 
 jest-message-util@^29.0.0:
   version "29.0.0"
@@ -11578,6 +11641,15 @@ pretty-format@^29.0.0:
     ansi-styles "^5.0.0"
     react-is "^18.0.0"
 
+pretty-format@^29.0.3, pretty-format@^29.3.1:
+  version "29.3.1"
+  resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-29.3.1.tgz#1841cac822b02b4da8971dacb03e8a871b4722da"
+  integrity sha512-FyLnmb1cYJV8biEIiRyzRFvs2lry7PPIvOqKVe1GCUEYg4YGmlx1qG9EJNMxArYm7piII4qb8UV1Pncq5dxmcg==
+  dependencies:
+    "@jest/schemas" "^29.0.0"
+    ansi-styles "^5.0.0"
+    react-is "^18.0.0"
+
 probe-image-size@^7.1.0:
   version "7.2.3"
   resolved "https://registry.npmjs.org/probe-image-size/-/probe-image-size-7.2.3.tgz#d49c64be540ec8edea538f6f585f65a9b3ab4309"
@@ -11651,7 +11723,7 @@ prompts@^2.0.1, prompts@^2.3.2, prompts@^2.4.0, prompts@^2.4.2:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@^15.8.1:
+prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.npmjs.org/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -11928,7 +12000,7 @@ react-error-overlay@^6.0.9:
   resolved "https://registry.npmjs.org/react-error-overlay/-/react-error-overlay-6.0.11.tgz#92835de5841c5cf08ba00ddd2d677b6d17ff9adb"
   integrity sha512-/6UZ2qgEyH2aqzYZgQPxEnz33NJ2gNsnHA2o5+o4wW9bLM/JYQitNP9xPhsXwC08hMMovfGe/8retsdDsczPRg==
 
-"react-is@^16.12.0 || ^17.0.0 || ^18.0.0", react-is@^18.0.0:
+"react-is@^16.12.0 || ^17.0.0 || ^18.0.0", react-is@^18.0.0, react-is@^18.2.0:
   version "18.2.0"
   resolved "https://registry.npmjs.org/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
@@ -11999,6 +12071,14 @@ react-native-safe-area-context@^4.4.1:
   resolved "https://registry.npmjs.org/react-native-safe-area-context/-/react-native-safe-area-context-4.4.1.tgz#239c60b8a9a80eac70a38a822b04c0f1d15ffc01"
   integrity sha512-N9XTjiuD73ZpVlejHrUWIFZc+6Z14co1K/p1IFMkImU7+avD69F3y+lhkqA2hN/+vljdZrBSiOwXPkuo43nFQA==
 
+react-native-vector-icons@^9.2.0:
+  version "9.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-9.2.0.tgz#3c0c82e95defd274d56363cbe8fead8d53167ebd"
+  integrity sha512-wKYLaFuQST/chH3AJRjmOLoLy3JEs1JR6zMNgTaemFpNoXs0ztRnTxcxFD9xhX7cJe1/zoN5BpQYe7kL0m5yyA==
+  dependencies:
+    prop-types "^15.7.2"
+    yargs "^16.1.1"
+
 react-native@^0.70.6:
   version "0.70.6"
   resolved "https://registry.npmjs.org/react-native/-/react-native-0.70.6.tgz#d692f8b51baffc28e1a8bc5190cdb779de937aa8"
@@ -12049,6 +12129,15 @@ react-shallow-renderer@^16.15.0:
   dependencies:
     object-assign "^4.1.1"
     react-is "^16.12.0 || ^17.0.0 || ^18.0.0"
+
+react-test-renderer@^18.2.0:
+  version "18.2.0"
+  resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-18.2.0.tgz#1dd912bd908ff26da5b9fca4fd1c489b9523d37e"
+  integrity sha512-JWD+aQ0lh2gvh4NM3bBM42Kx+XybOxCpgYK7F8ugAlpaTSnWsX+39Z4XkOykGZAHrjwwTZT3x3KxswVWxHPUqA==
+  dependencies:
+    react-is "^18.2.0"
+    react-shallow-renderer "^16.15.0"
+    scheduler "^0.23.0"
 
 react@^18.2.0:
   version "18.2.0"
@@ -12664,6 +12753,13 @@ scheduler@^0.22.0:
   version "0.22.0"
   resolved "https://registry.npmjs.org/scheduler/-/scheduler-0.22.0.tgz#83a5d63594edf074add9a7198b1bae76c3db01b8"
   integrity sha512-6QAm1BgQI88NPYymgGQLCZgvep4FyePDWFpXVK+zNSUgHwlqpJy8VEh8Et0KxTACS4VWwMousBElAZOH9nkkoQ==
+  dependencies:
+    loose-envify "^1.1.0"
+
+scheduler@^0.23.0:
+  version "0.23.0"
+  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.23.0.tgz#ba8041afc3d30eb206a487b6b384002e4e61fdfe"
+  integrity sha512-CtuThmgHNg7zIZWAXi3AsyIzA3n4xx7aNyjwC2VJldO2LMVDhFK+63xGqq6CsJH4rTAt6/M+N4GhZiDYPx9eUw==
   dependencies:
     loose-envify "^1.1.0"
 
@@ -14946,7 +15042,7 @@ yargs@^15.1.0, yargs@^15.3.1:
     y18n "^4.0.0"
     yargs-parser "^18.1.2"
 
-yargs@^16.2.0:
+yargs@^16.1.1, yargs@^16.2.0:
   version "16.2.0"
   resolved "https://registry.npmjs.org/yargs/-/yargs-16.2.0.tgz#1c82bf0f6b6a66eafce7ef30e376f49a12477f66"
   integrity sha512-D1mvvtDG0L5ft/jGWkLpG1+m0eQxOfaBvTNELraWj22wSVUMWxZUvYgJYcKh6jGGIkJFhH4IZPQhR4TKpc8mBw==

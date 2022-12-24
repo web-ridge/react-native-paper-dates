@@ -61,3 +61,6 @@ lib/
 
 .env
 web-build
+
+# Code Coverage
+/coverage/
