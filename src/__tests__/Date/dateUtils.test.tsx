@@ -20,12 +20,14 @@ describe('timeUtils', () => {
   })
 
   it('should return correct unix time stamp for date', () => {
-    expect(dateToUnix(new Date(2022, 1, 1))).toBe(1643691600)
+    expect(dateToUnix(new Date(2022, 1, 1))).toBe(1643673600)
   })
 
   it('should add specified months to date', () => {
-    expect(addMonths(new Date(2022, 1, 1), 0).toISOString()).toBe(
-      '2022-02-01T05:00:00.000Z'
+    const expectedResult = '2022-03-10T00:00:00.000Z'
+    expect(new Date(2022, 2, 10).toISOString()).toBe(expectedResult)
+    expect(addMonths(new Date(2022, 2, 10), 0).toISOString()).toBe(
+      expectedResult
     )
   })
 

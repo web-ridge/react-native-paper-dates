@@ -1,7 +1,7 @@
 import { useInputFormat, useInputFormatter, useRangeChecker } from './dateUtils'
 import * as React from 'react'
 import type { ValidRangeType } from './Calendar'
-import { getTranslation } from 'react-native-paper-dates'
+import { getTranslation } from '../translations/utils'
 
 export default function useDateInput({
   locale,
@@ -21,7 +21,7 @@ export default function useDateInput({
   const [error, setError] = React.useState<null | string>(null)
   const formatter = useInputFormatter({ locale })
   const inputFormat = useInputFormat({ formatter, locale })
-  const formattedValue = value !== null ? formatter.format(value) : '';
+  const formattedValue = value !== null ? formatter.format(value) : ''
   const onChangeText = (date: string) => {
     const dayIndex = inputFormat.indexOf('DD')
     const monthIndex = inputFormat.indexOf('MM')

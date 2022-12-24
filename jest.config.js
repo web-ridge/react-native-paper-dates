@@ -1,3 +1,5 @@
+process.env.TZ = 'GMT'
+
 module.exports = {
   preset: 'react-native',
   modulePathIgnorePatterns: [
