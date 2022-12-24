@@ -14,7 +14,7 @@ To get started with the project, run `yarn bootstrap` in the root directory to i
 yarn bootstrap
 ```
 
-While developing, you can run the [example app](/old-example/) to test your changes.
+While developing, you can run the [example app](https://github.com/web-ridge/react-native-paper-dates/tree/master/example) to test your changes.
 
 To start the packager:
 
