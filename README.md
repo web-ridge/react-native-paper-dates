@@ -1,7 +1,6 @@
 
 <img align="left" width="56" height="56" src="https://user-images.githubusercontent.com/6492229/98982291-70b42480-251f-11eb-8d67-4b0b1b6e917b.png"> react-native-paper-dates
 ---
-
 <br>
 
 <p float="left">
