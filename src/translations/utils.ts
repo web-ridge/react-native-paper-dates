@@ -23,8 +23,6 @@ export function getTranslation<K extends keyof TranslationsType>(
   fallback?: any
 ) {
   const l = locale || 'en'
-  console.log('translationsPerLocale: ', translationsPerLocale)
-  console.log('wtf: ', l)
   const translationForLocale = translationsPerLocale[l]
   if (!translationForLocale) {
     console.warn(
