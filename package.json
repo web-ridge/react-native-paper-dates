@@ -31,7 +31,8 @@
     "example": "yarn --cwd example",
     "pods": "cd example && pod-install --quiet",
     "bootstrap": "yarn example && yarn && yarn pods",
-    "prepack": "bob build"
+    "prepack": "bob build",
+    "build-example": "cd example && expo export --public-url=https://reactnativepaperdates.com/"
   },
   "keywords": [
     "react-native",
