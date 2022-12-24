@@ -24,7 +24,7 @@
   "scripts": {
     "test": "jest --config=jest.config.js --watchAll=false",
     "test-watch": "jest --config=jest.config.js --watchAll",
-    "typescript": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "prepare": "husky install && bob build",
     "release": "release-it --ci",
@@ -87,7 +87,7 @@
   "husky": {
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "yarn lint && yarn typescript"
+      "pre-commit": "yarn lint && yarn typecheck"
     }
   },
   "commitlint": {
