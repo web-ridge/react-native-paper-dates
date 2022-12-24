@@ -30,7 +30,8 @@
     "release": "release-it --ci",
     "example": "yarn --cwd example",
     "pods": "cd example && pod-install --quiet",
-    "bootstrap": "yarn example && yarn && yarn pods"
+    "bootstrap": "yarn example && yarn && yarn pods",
+    "prepak": "bob build"
   },
   "keywords": [
     "react-native",
@@ -135,7 +136,8 @@
     "node_modules/",
     "lib/",
     "example/node_modules",
-    "example/web-build"
+    "example/web-build",
+    "docusaurus"
   ],
   "prettier": {
     "quoteProps": "consistent",
