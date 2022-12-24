@@ -57,7 +57,7 @@ npm install react-native-paper-dates --save
 
 ## Import some localized strings
 Ideally you do this somewhere in your `index.js` before `react-native-paper-dates` is used.
-Currently we have en/nl/de/pl/pt/ar/ko/fr/it translations but it's really easy to add one extra since it are only some labels and error messages.
+Currently we have en/nl/de/pl/pt/ar/ko/fr/it/es translations but it's really easy to add one extra since it are only some labels and error messages.
 
 ```tsx
 // e.g in your index.js
