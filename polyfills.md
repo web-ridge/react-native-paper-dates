@@ -1,4 +1,9 @@
 
+# Polyfills (not recommended)
+
+We recommend Hermes with React Native >= 0.66 you won't need these polyfills at all!
+
+
 Install polyfills with Yarn
 
 ```
