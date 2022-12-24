@@ -10,7 +10,7 @@ const config = {
   tagline:
     'Cross-platform Material Design date and time pickers for React Native Paper',
   url: 'https://web-ridge.github.io',
-  baseUrl: '/',
+  baseUrl: '/react-native-paper-dates/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
