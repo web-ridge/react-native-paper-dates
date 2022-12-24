@@ -79,23 +79,27 @@ const config = {
             ],
           },
           {
-            title: 'Community',
+            title: 'Other libraries',
             items: [
               {
                 label: 'React Native Use Form',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+                href: 'https://github.com/web-ridge/react-native-use-form',
               },
               {
                 label: 'React Native Paper Tabs',
-                href: 'https://discordapp.com/invite/docusaurus',
+                href: 'https://github.com/web-ridge/react-native-paper-tabs',
+              },
+              {
+                label: 'React Native Ridge Navigation',
+                href: 'https://github.com/web-ridge/react-native-ridge-navigation',
               },
               {
                 label: 'React Ridge Translations',
-                href: 'https://discordapp.com/invite/docusaurus',
+                href: 'https://github.com/web-ridge/react-ridge-translations',
               },
               {
                 label: 'React Ridge State',
-                href: 'https://discordapp.com/invite/docusaurus',
+                href: 'https://github.com/web-ridge/react-ridge-state',
               },
             ],
           },
