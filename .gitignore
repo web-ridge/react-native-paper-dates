@@ -4,6 +4,7 @@
 
 # XDE
 .expo/
+/example/dist
 
 # VSCode
 .vscode/
