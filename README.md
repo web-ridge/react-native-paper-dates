@@ -391,8 +391,10 @@ This is to prevent the need to press 2 times before save or close button in moda
 
 ## Android Caveats
 We recommend Hermes with React Native >= 0.66 **you won't need these polyfills at all!**
+We recommend Hermes with React Native >= 0.66 **you won't need these polyfills at all!**
+We recommend Hermes with React Native >= 0.66 **you won't need these polyfills at all!**
 
-### Below React Native 0.66
+#### Older than React Native 0.66
 You will need to add a polyfill for the Intl API on Android if:
 
 - You have [Hermes](https://github.com/facebook/hermes/issues/23) enabled and are below React Native 0.66
