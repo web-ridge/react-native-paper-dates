@@ -429,7 +429,7 @@ const styles = StyleSheet.create({
   content: {
     width: '100%',
     maxWidth: 500,
-    marginTop: 24,
+    marginTop: 12,
     padding: 24,
     alignSelf: 'center',
     // flex: 1,
