@@ -1,12 +1,12 @@
-import React from 'react';
-import clsx from 'clsx';
-import styles from './styles.module.css';
+import React from 'react'
+import clsx from 'clsx'
+import styles from './styles.module.css'
 
 type FeatureItem = {
-  title: string;
-  Svg: React.ComponentType<React.ComponentProps<'svg'>>;
-  description: JSX.Element;
-};
+  title: string
+  Svg: React.ComponentType<React.ComponentProps<'svg'>>
+  description: JSX.Element
+}
 
 const FeatureList: FeatureItem[] = [
   {
@@ -14,7 +14,8 @@ const FeatureList: FeatureItem[] = [
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Smooth and fast cross platform Material Design date picker and time picker for react-native-paper.
+        Smooth and fast cross platform Material Design date picker and time
+        picker for react-native-paper.
       </>
     ),
   },
@@ -23,7 +24,8 @@ const FeatureList: FeatureItem[] = [
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Our simple API is built using TypeScript to provide a modern approach to dates.
+        We provide a type-safe api with Typescript, and all code of the library
+        is written in Typescript
       </>
     ),
   },
@@ -32,13 +34,19 @@ const FeatureList: FeatureItem[] = [
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Paper dates provides endless scrolling and supports Android, iOS, and the web.
+        Paper dates provides endless scrolling and supports Android, iOS, and
+        the web. It uses the{' '}
+        <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl">
+          Intl
+        </a>{' '}
+        under the hood so you have automatic date localization without bundle
+        size increase!
       </>
     ),
   },
-];
+]
 
-function Feature({title, Svg, description}: FeatureItem) {
+function Feature({ title, Svg, description }: FeatureItem) {
   return (
     <div className={clsx('col col--4')}>
       <div className="text--center">
@@ -49,7 +57,7 @@ function Feature({title, Svg, description}: FeatureItem) {
         <p>{description}</p>
       </div>
     </div>
-  );
+  )
 }
 
 export default function HomepageFeatures(): JSX.Element {
@@ -63,5 +71,5 @@ export default function HomepageFeatures(): JSX.Element {
         </div>
       </div>
     </section>
-  );
+  )
 }

@@ -1,13 +1,14 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-const lightCodeTheme = require('prism-react-renderer/themes/github');
-const darkCodeTheme = require('prism-react-renderer/themes/dracula');
+const lightCodeTheme = require('prism-react-renderer/themes/github')
+const darkCodeTheme = require('prism-react-renderer/themes/dracula')
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Paper Dates',
-  tagline: 'Cross-platform Material Design date and time pickers for React Native Paper',
+  tagline:
+    'Cross-platform Material Design date and time pickers for React Native Paper',
   url: 'https://web-ridge.github.io',
   baseUrl: '/',
   onBrokenLinks: 'throw',
@@ -110,7 +111,7 @@ const config = {
                 href: 'https://www.reactnativepaperdates.com/',
               },
               {
-                label: 'Web Ridge',
+                label: 'webRidge',
                 href: 'https://www.webridge.nl/',
               },
             ],
@@ -132,6 +133,6 @@ const config = {
         darkTheme: darkCodeTheme,
       },
     }),
-};
+}
 
-module.exports = config;
+module.exports = config
