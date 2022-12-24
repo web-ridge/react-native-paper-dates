@@ -79,7 +79,7 @@ function App() {
   }, [setCustomOpen])
 
   const onChangeRange = React.useCallback(
-    ({ startDate, endDate }) => {
+    ({ startDate, endDate }: any) => {
       setRangeOpen(false)
       setRange({ startDate, endDate })
     },
@@ -87,21 +87,21 @@ function App() {
   )
 
   const onChangeSingle = React.useCallback(
-    (params) => {
+    (params: any) => {
       setSingleOpen(false)
       setDate(params.date)
     },
     [setSingleOpen, setDate]
   )
 
-  const onChangeMulti = React.useCallback((params) => {
+  const onChangeMulti = React.useCallback((params: any) => {
     setMultiOpen(false)
     setDates(params.dates)
     console.log('[on-change-multi]', params)
   }, [])
 
   const onConfirmTime = React.useCallback(
-    ({ hours, minutes }) => {
+    ({ hours, minutes }: any) => {
       setTimeOpen(false)
       setTime({ hours, minutes })
     },
