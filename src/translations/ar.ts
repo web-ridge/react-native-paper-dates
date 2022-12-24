@@ -5,7 +5,7 @@ const ar: TranslationsType = {
   selectSingle: 'حدد تاريخ',
   selectMultiple: 'حدد التواريخ',
   selectRange: 'حدد الفترة',
-  notAccordingToDateFormat: (inputFormat:string) =>
+  notAccordingToDateFormat: (inputFormat: string) =>
     `يجب أن يكون تنسيق التاريخ ${inputFormat}`,
   mustBeHigherThan: (date) => `يجب أن يكون بعد  ${date}`,
   mustBeLowerThan: (date) => `يجب أن يكون قبل  ${date}`,

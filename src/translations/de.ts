@@ -1,4 +1,5 @@
 import type { TranslationsType } from './utils'
+
 const de: TranslationsType = {
   save: 'Speichern',
   selectSingle: 'Wähle Datum',
