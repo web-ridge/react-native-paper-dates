@@ -27,7 +27,11 @@
 
 ## Documentation
 
-Check out the official docs ADD LINK HERE.
+Check out the official docs: [web-ridge.github.io/react-native-paper-dates](https://web-ridge.github.io/react-native-paper-dates/)
+
+## Demo
+
+[reactnativepaperdates.com](https://www.reactnativepaperdates.com/)
 
 ## About us
 
