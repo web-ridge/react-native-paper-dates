@@ -39,6 +39,15 @@ export function useHeaderTextColor() {
 export function useTextColorOnPrimary() {
   const theme = useTheme()
   const isDark = !Color(theme.colors.primary).isLight()
+
+  if (theme.isV3) {
+    if (isDark && theme.dark) {
+      return theme.colors.onSurface
+    } else {
+      return theme.colors.onPrimary
+    }
+  }
+
   return isDark ? '#fff' : '#000'
 }
 

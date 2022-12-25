@@ -127,10 +127,10 @@ function AnalogClock({
       style={[
         styles.clock,
         {
-          backgroundColor: theme.dark
+          backgroundColor: theme.isV3
+            ? theme.colors.surfaceVariant
+            : theme.dark
             ? Color(theme.colors.surface).lighten(1.4).hex()
-            : theme.isV3
-            ? Color(theme.colors.outline).lighten(0.9).hex()
             : Color(theme.colors.surface).darken(0.1).hex(),
         },
       ]}
@@ -145,7 +145,15 @@ function AnalogClock({
             transform: [
               { rotate: -90 + pointerNumber * degreesPerNumber + 'deg' },
               {
-                translateX: circleSize / 4 - 4 - dynamicSize / 2,
+                translateX:
+                  circleSize / 4 -
+                  (focused === clockTypes.hours &&
+                  pointerNumber >= 0 &&
+                  pointerNumber < 13
+                    ? 0
+                    : 4) +
+                  (focused === clockTypes.minutes ? 4 : 0) -
+                  dynamicSize / 2,
               },
             ],
             width: circleSize / 2 - 4 - dynamicSize,
@@ -194,16 +202,15 @@ const styles = StyleSheet.create({
   },
   center: { justifyContent: 'center', alignItems: 'center' },
   endPoint: {
-    borderRadius: 15,
-    height: 30,
-    width: 30,
+    borderRadius: 24,
+    height: 48,
+    width: 48,
     position: 'absolute',
     right: 0,
-    bottom: -14,
+    bottom: -23,
   },
   line: {
     position: 'absolute',
-    marginBottom: -1,
     height: 2,
     borderRadius: 4,
   },

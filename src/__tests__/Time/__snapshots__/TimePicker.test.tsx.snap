@@ -23,50 +23,88 @@ exports[`renders TimePicker 1`] = `
     <View
       style={
         {
-          "height": 80,
-          "position": "relative",
-          "width": 96,
+          "flexDirection": "column",
         }
       }
     >
-      <TextInput
-        blurOnSubmit={false}
-        keyboardAppearance="default"
-        keyboardType="number-pad"
-        maxLength={2}
-        onBlur={[Function]}
-        onChangeText={[Function]}
-        onFocus={[Function]}
-        onSubmitEditing={[Function]}
-        placeholder="00"
-        returnKeyType="next"
-        selectionColor="rgba(103, 80, 164, 1)"
+      <View
+        style={
+          {
+            "height": 80,
+            "position": "relative",
+            "width": 96,
+          }
+        }
+      >
+        <TextInput
+          blurOnSubmit={false}
+          keyboardAppearance="default"
+          keyboardType="number-pad"
+          maxLength={2}
+          onBlur={[Function]}
+          onChangeText={[Function]}
+          onFocus={[Function]}
+          onSubmitEditing={[Function]}
+          placeholder="00"
+          returnKeyType="next"
+          selectionColor="rgba(103, 80, 164, 1)"
+          style={
+            [
+              {
+                "fontSize": 57,
+                "textAlign": "center",
+                "textAlignVertical": "center",
+                "width": 96,
+              },
+              {
+                "backgroundColor": "rgba(231, 224, 236, 1)",
+                "borderColor": undefined,
+                "borderRadius": 8,
+                "borderWidth": 0,
+                "color": "rgba(28, 27, 31, 1)",
+                "height": 72,
+              },
+            ]
+          }
+          value="06"
+        />
+      </View>
+      <Text
         style={
           [
             {
-              "fontSize": 50,
-              "height": 80,
-              "textAlign": "center",
-              "textAlignVertical": "center",
-              "width": 96,
+              "color": "rgba(28, 27, 31, 1)",
+              "fontFamily": "System",
+              "fontSize": 12,
+              "fontWeight": "400",
+              "letterSpacing": 0.4,
+              "lineHeight": 16,
             },
             {
-              "backgroundColor": "#E6E5E7",
-              "borderRadius": 4,
-              "color": "rgba(28, 27, 31, 1)",
+              "textAlign": "left",
             },
+            {
+              "writingDirection": "ltr",
+            },
+            undefined,
           ]
         }
-        value="06"
-      />
+      >
+        Hour
+      </Text>
     </View>
     <View
       style={
-        {
-          "alignItems": "center",
-          "fontSize": 65,
-          "width": 24,
-        }
+        [
+          {
+            "alignItems": "center",
+            "fontSize": 65,
+            "width": 24,
+          },
+          {
+            "marginBottom": 24,
+          },
+        ]
       }
     >
       <View
@@ -122,40 +160,73 @@ exports[`renders TimePicker 1`] = `
     <View
       style={
         {
-          "height": 80,
-          "position": "relative",
-          "width": 96,
+          "flexDirection": "column",
         }
       }
     >
-      <TextInput
-        keyboardAppearance="default"
-        keyboardType="number-pad"
-        maxLength={2}
-        onBlur={[Function]}
-        onChangeText={[Function]}
-        onFocus={[Function]}
-        onSubmitEditing={[Function]}
-        placeholder="00"
-        selectionColor="rgba(103, 80, 164, 1)"
+      <View
+        style={
+          {
+            "height": 80,
+            "position": "relative",
+            "width": 96,
+          }
+        }
+      >
+        <TextInput
+          keyboardAppearance="default"
+          keyboardType="number-pad"
+          maxLength={2}
+          onBlur={[Function]}
+          onChangeText={[Function]}
+          onFocus={[Function]}
+          onSubmitEditing={[Function]}
+          placeholder="00"
+          selectionColor="rgba(103, 80, 164, 1)"
+          style={
+            [
+              {
+                "fontSize": 57,
+                "textAlign": "center",
+                "textAlignVertical": "center",
+                "width": 96,
+              },
+              {
+                "backgroundColor": "rgba(231, 224, 236, 1)",
+                "borderColor": undefined,
+                "borderRadius": 8,
+                "borderWidth": 0,
+                "color": "rgba(28, 27, 31, 1)",
+                "height": 72,
+              },
+            ]
+          }
+          value="30"
+        />
+      </View>
+      <Text
         style={
           [
             {
-              "fontSize": 50,
-              "height": 80,
-              "textAlign": "center",
-              "textAlignVertical": "center",
-              "width": 96,
+              "color": "rgba(28, 27, 31, 1)",
+              "fontFamily": "System",
+              "fontSize": 12,
+              "fontWeight": "400",
+              "letterSpacing": 0.4,
+              "lineHeight": 16,
             },
             {
-              "backgroundColor": "#E6E5E7",
-              "borderRadius": 4,
-              "color": "rgba(28, 27, 31, 1)",
+              "textAlign": "left",
             },
+            {
+              "writingDirection": "ltr",
+            },
+            undefined,
           ]
         }
-        value="30"
-      />
+      >
+        Minute
+      </Text>
     </View>
     <View
       style={
@@ -169,13 +240,14 @@ exports[`renders TimePicker 1`] = `
         [
           {
             "borderWidth": 1,
-            "height": 80,
             "overflow": "hidden",
-            "width": 50,
+            "width": 52,
           },
           {
-            "borderColor": "#E0D2E0",
-            "borderRadius": 4,
+            "borderColor": "rgba(121, 116, 126, 1)",
+            "borderRadius": 8,
+            "height": 72,
+            "marginBottom": 24,
           },
         ]
       }
@@ -246,10 +318,10 @@ exports[`renders TimePicker 1`] = `
                   {
                     "color": "rgba(73, 69, 79, 1)",
                     "fontFamily": "System",
-                    "fontSize": 14,
-                    "fontWeight": "400",
-                    "letterSpacing": 0.25,
-                    "lineHeight": 20,
+                    "fontSize": 16,
+                    "fontWeight": "500",
+                    "letterSpacing": 0.15,
+                    "lineHeight": 24,
                   },
                 ],
               ]
@@ -264,10 +336,10 @@ exports[`renders TimePicker 1`] = `
           [
             {
               "height": 1,
-              "width": 48,
+              "width": 52,
             },
             {
-              "backgroundColor": "#E0D2E0",
+              "backgroundColor": "rgba(121, 116, 126, 1)",
             },
           ]
         }
@@ -341,12 +413,12 @@ exports[`renders TimePicker 1`] = `
                 },
                 [
                   {
-                    "color": "rgba(103, 80, 164, 1)",
+                    "color": "rgba(73, 69, 79, 1)",
                     "fontFamily": "System",
-                    "fontSize": 14,
-                    "fontWeight": "400",
-                    "letterSpacing": 0.25,
-                    "lineHeight": 20,
+                    "fontSize": 16,
+                    "fontWeight": "500",
+                    "letterSpacing": 0.15,
+                    "lineHeight": 24,
                   },
                 ],
               ]

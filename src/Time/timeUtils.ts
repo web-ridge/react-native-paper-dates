@@ -2,8 +2,7 @@ import * as React from 'react'
 import Color from 'color'
 import { MD2Theme, useTheme } from 'react-native-paper'
 
-// 250? when bigger?
-export const circleSize = 215
+export const circleSize = 256
 
 export type PossibleHourTypes = 'am' | 'pm'
 export type HourTypeMap = {
@@ -161,10 +160,9 @@ export function useSwitchColors(highlighted: boolean) {
   const backgroundColor = React.useMemo<string>(() => {
     if (theme.dark) {
       if (highlighted) {
-        return Color(theme.colors.primary).hex()
-      }
-      if (theme.isV3) {
-        return Color(theme.colors.surface).lighten(1.4).hex()
+        return theme.isV3
+          ? theme.colors.tertiaryContainer
+          : Color(theme.colors.primary).hex()
       }
       return theme.colors.backdrop
     }
@@ -181,10 +179,12 @@ export function useSwitchColors(highlighted: boolean) {
 
   const color = React.useMemo<string>(() => {
     if (highlighted && !theme.dark) {
-      return theme.colors.primary
+      return theme.isV3 ? theme.colors.onSurfaceVariant : theme.colors.primary
     }
     if (highlighted && theme.dark) {
-      return theme.colors.background
+      return theme.isV3
+        ? theme.colors.onTertiaryContainer
+        : theme.colors.background
     }
     if (theme.isV3) {
       return theme.colors.onSurfaceVariant
@@ -201,33 +201,39 @@ export function useInputColors(highlighted: boolean) {
   const backgroundColor = React.useMemo<string>(() => {
     if (theme.dark) {
       if (highlighted) {
-        return Color(theme.colors.primary).hex()
+        return theme.isV3
+          ? theme.colors.primaryContainer
+          : Color(theme.colors.primary).hex()
       }
-      return Color(theme.colors.surface).lighten(1.4).hex()
+      return theme.isV3
+        ? theme.colors.surfaceVariant
+        : Color(theme.colors.surface).lighten(1.4).hex()
     }
 
     if (highlighted) {
       if (theme.isV3) {
-        return Color(theme.colors.primaryContainer).hex()
+        return theme.colors.secondaryContainer
       }
       return Color(theme.colors.primary).lighten(1).hex()
     }
     if (theme.isV3) {
-      return Color(theme.colors.outline).lighten(0.9).hex()
+      return theme.colors.surfaceVariant
     }
     return Color(theme.colors.surface).darken(0.1).hex()
   }, [highlighted, theme])
 
   const color = React.useMemo<string>(() => {
-    if (highlighted && !theme.dark) {
-      return theme.colors.primary
-    }
     if (theme.isV3) {
       if (!highlighted) {
-        return theme.colors.onBackground
+        return theme.isV3 ? theme.colors.onSurface : theme.colors.onBackground
       }
-      return theme.colors.background
+      return theme.isV3
+        ? theme.colors.onPrimaryContainer
+        : theme.colors.onBackground
     } else {
+      if (highlighted && !theme.dark) {
+        return theme.colors.primary
+      }
       return (theme as any as MD2Theme).colors.text
     }
   }, [highlighted, theme])
