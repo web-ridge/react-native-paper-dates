@@ -84,7 +84,24 @@ function TimePicker({
     <DisplayModeContext.Provider
       value={{ mode: displayMode, setMode: setDisplayMode }}
     >
-      <View style={isLandscape ? styles.rootLandscape : styles.rootPortrait}>
+      <View
+        style={
+          isLandscape
+            ? [
+                styles.rootLandscape,
+                {
+                  width:
+                    24 * 3 +
+                    96 * 2 +
+                    52 +
+                    (inputType === inputTypes.picker
+                      ? circleSize
+                      : -circleSize),
+                },
+              ]
+            : styles.rootPortrait
+        }
+      >
         <TimeInputs
           inputType={inputType}
           hours={hours}
@@ -115,7 +132,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 24 * 3 + 96 * 2 + 52 + circleSize,
   },
   rootPortrait: {
     alignItems: 'center',

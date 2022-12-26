@@ -27,7 +27,13 @@ import {
   reverseInputTypes,
 } from './timeUtils'
 
-const supportedOrientations: any[] = [
+const supportedOrientations: (
+  | 'portrait'
+  | 'portrait-upside-down'
+  | 'landscape'
+  | 'landscape-left'
+  | 'landscape-right'
+)[] = [
   'portrait',
   'portrait-upside-down',
   'landscape',
@@ -125,7 +131,6 @@ export function TimePickerModal({
       onRequestClose={onDismiss}
       presentationStyle="overFullScreen"
       supportedOrientations={supportedOrientations}
-      //@ts-ignore
       statusBarTranslucent={true}
     >
       <>
