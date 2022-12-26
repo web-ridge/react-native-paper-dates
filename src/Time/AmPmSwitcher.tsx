@@ -12,7 +12,7 @@ export default function AmPmSwitcher({
   inputType,
 }: {
   hours: number
-  onChange: (newHours: number) => any,
+  onChange: (newHours: number) => any
   inputType: PossibleInputTypes
 }) {
   const { setMode, mode } = React.useContext(DisplayModeContext)

@@ -8,7 +8,7 @@ it('renders DatePickerInput', () => {
     .create(
       <DatePickerInput
         locale={'en'}
-        value={undefined}
+        value={new Date('12/26/2022')}
         onChange={() => null}
         inputMode="start"
         autoComplete={'birthdate-full'}
