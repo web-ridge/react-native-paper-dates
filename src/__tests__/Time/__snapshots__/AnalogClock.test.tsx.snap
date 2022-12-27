@@ -19,14 +19,14 @@ exports[`renders AnalogClock 1`] = `
     [
       {
         "alignItems": "center",
-        "borderRadius": 107.5,
-        "height": 215,
+        "borderRadius": 128,
+        "height": 256,
         "justifyContent": "center",
         "position": "relative",
-        "width": 215,
+        "width": 256,
       },
       {
-        "backgroundColor": "#E6E5E7",
+        "backgroundColor": "rgba(231, 224, 236, 1)",
       },
     ]
   }
@@ -38,7 +38,6 @@ exports[`renders AnalogClock 1`] = `
         {
           "borderRadius": 4,
           "height": 2,
-          "marginBottom": -1,
           "position": "absolute",
         },
         {
@@ -48,10 +47,10 @@ exports[`renders AnalogClock 1`] = `
               "rotate": "270deg",
             },
             {
-              "translateX": 49.75,
+              "translateX": 64,
             },
           ],
-          "width": 103.5,
+          "width": 124,
         },
       ]
     }
@@ -60,12 +59,12 @@ exports[`renders AnalogClock 1`] = `
       style={
         [
           {
-            "borderRadius": 15,
-            "bottom": -14,
-            "height": 30,
+            "borderRadius": 24,
+            "bottom": -23,
+            "height": 48,
             "position": "absolute",
             "right": 0,
-            "width": 30,
+            "width": 48,
           },
           {
             "backgroundColor": "rgba(103, 80, 164, 1)",
@@ -143,18 +142,18 @@ exports[`renders AnalogClock 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 25,
-              "height": 50,
+              "borderRadius": 24,
+              "height": 48,
               "justifyContent": "center",
-              "marginLeft": -25,
-              "marginTop": -25,
+              "marginLeft": -24,
+              "marginTop": -24,
               "position": "absolute",
-              "width": 50,
+              "width": 48,
               "zIndex": 20,
             },
             {
-              "left": 151,
-              "top": 33,
+              "left": 179,
+              "top": 39,
             },
           ]
         }
@@ -162,7 +161,7 @@ exports[`renders AnalogClock 1`] = `
         <View
           style={
             {
-              "borderRadius": 25,
+              "borderRadius": 24,
             }
           }
         >
@@ -171,13 +170,15 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "textAlign": "left",
-                },
-                {
                   "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
+                  "fontSize": 16,
                   "fontWeight": "400",
-                  "letterSpacing": 0,
+                  "letterSpacing": 0.15,
+                  "lineHeight": 24,
+                },
+                {
+                  "textAlign": "left",
                 },
                 {
                   "writingDirection": "ltr",
@@ -196,18 +197,18 @@ exports[`renders AnalogClock 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 25,
-              "height": 50,
+              "borderRadius": 24,
+              "height": 48,
               "justifyContent": "center",
-              "marginLeft": -25,
-              "marginTop": -25,
+              "marginLeft": -24,
+              "marginTop": -24,
               "position": "absolute",
-              "width": 50,
+              "width": 48,
               "zIndex": 20,
             },
             {
-              "left": 182,
-              "top": 65,
+              "left": 217,
+              "top": 77,
             },
           ]
         }
@@ -215,7 +216,7 @@ exports[`renders AnalogClock 1`] = `
         <View
           style={
             {
-              "borderRadius": 25,
+              "borderRadius": 24,
             }
           }
         >
@@ -224,13 +225,15 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "textAlign": "left",
-                },
-                {
                   "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
+                  "fontSize": 16,
                   "fontWeight": "400",
-                  "letterSpacing": 0,
+                  "letterSpacing": 0.15,
+                  "lineHeight": 24,
+                },
+                {
+                  "textAlign": "left",
                 },
                 {
                   "writingDirection": "ltr",
@@ -249,18 +252,18 @@ exports[`renders AnalogClock 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 25,
-              "height": 50,
+              "borderRadius": 24,
+              "height": 48,
               "justifyContent": "center",
-              "marginLeft": -25,
-              "marginTop": -25,
+              "marginLeft": -24,
+              "marginTop": -24,
               "position": "absolute",
-              "width": 50,
+              "width": 48,
               "zIndex": 20,
             },
             {
-              "left": 194,
-              "top": 107,
+              "left": 230,
+              "top": 128,
             },
           ]
         }
@@ -268,7 +271,7 @@ exports[`renders AnalogClock 1`] = `
         <View
           style={
             {
-              "borderRadius": 25,
+              "borderRadius": 24,
             }
           }
         >
@@ -277,13 +280,15 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "textAlign": "left",
-                },
-                {
                   "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
+                  "fontSize": 16,
                   "fontWeight": "400",
-                  "letterSpacing": 0,
+                  "letterSpacing": 0.15,
+                  "lineHeight": 24,
+                },
+                {
+                  "textAlign": "left",
                 },
                 {
                   "writingDirection": "ltr",
@@ -302,18 +307,18 @@ exports[`renders AnalogClock 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 25,
-              "height": 50,
+              "borderRadius": 24,
+              "height": 48,
               "justifyContent": "center",
-              "marginLeft": -25,
-              "marginTop": -25,
+              "marginLeft": -24,
+              "marginTop": -24,
               "position": "absolute",
-              "width": 50,
+              "width": 48,
               "zIndex": 20,
             },
             {
-              "left": 182,
-              "top": 150,
+              "left": 217,
+              "top": 179,
             },
           ]
         }
@@ -321,7 +326,7 @@ exports[`renders AnalogClock 1`] = `
         <View
           style={
             {
-              "borderRadius": 25,
+              "borderRadius": 24,
             }
           }
         >
@@ -330,13 +335,15 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "textAlign": "left",
-                },
-                {
                   "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
+                  "fontSize": 16,
                   "fontWeight": "400",
-                  "letterSpacing": 0,
+                  "letterSpacing": 0.15,
+                  "lineHeight": 24,
+                },
+                {
+                  "textAlign": "left",
                 },
                 {
                   "writingDirection": "ltr",
@@ -355,18 +362,18 @@ exports[`renders AnalogClock 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 25,
-              "height": 50,
+              "borderRadius": 24,
+              "height": 48,
               "justifyContent": "center",
-              "marginLeft": -25,
-              "marginTop": -25,
+              "marginLeft": -24,
+              "marginTop": -24,
               "position": "absolute",
-              "width": 50,
+              "width": 48,
               "zIndex": 20,
             },
             {
-              "left": 151,
-              "top": 182,
+              "left": 179,
+              "top": 217,
             },
           ]
         }
@@ -374,7 +381,7 @@ exports[`renders AnalogClock 1`] = `
         <View
           style={
             {
-              "borderRadius": 25,
+              "borderRadius": 24,
             }
           }
         >
@@ -383,13 +390,15 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "textAlign": "left",
-                },
-                {
                   "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
+                  "fontSize": 16,
                   "fontWeight": "400",
-                  "letterSpacing": 0,
+                  "letterSpacing": 0.15,
+                  "lineHeight": 24,
+                },
+                {
+                  "textAlign": "left",
                 },
                 {
                   "writingDirection": "ltr",
@@ -408,18 +417,18 @@ exports[`renders AnalogClock 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 25,
-              "height": 50,
+              "borderRadius": 24,
+              "height": 48,
               "justifyContent": "center",
-              "marginLeft": -25,
-              "marginTop": -25,
+              "marginLeft": -24,
+              "marginTop": -24,
               "position": "absolute",
-              "width": 50,
+              "width": 48,
               "zIndex": 20,
             },
             {
-              "left": 108,
-              "top": 194,
+              "left": 128,
+              "top": 230,
             },
           ]
         }
@@ -427,7 +436,7 @@ exports[`renders AnalogClock 1`] = `
         <View
           style={
             {
-              "borderRadius": 25,
+              "borderRadius": 24,
             }
           }
         >
@@ -436,13 +445,15 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "textAlign": "left",
-                },
-                {
                   "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
+                  "fontSize": 16,
                   "fontWeight": "400",
-                  "letterSpacing": 0,
+                  "letterSpacing": 0.15,
+                  "lineHeight": 24,
+                },
+                {
+                  "textAlign": "left",
                 },
                 {
                   "writingDirection": "ltr",
@@ -461,18 +472,18 @@ exports[`renders AnalogClock 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 25,
-              "height": 50,
+              "borderRadius": 24,
+              "height": 48,
               "justifyContent": "center",
-              "marginLeft": -25,
-              "marginTop": -25,
+              "marginLeft": -24,
+              "marginTop": -24,
               "position": "absolute",
-              "width": 50,
+              "width": 48,
               "zIndex": 20,
             },
             {
-              "left": 65,
-              "top": 182,
+              "left": 77,
+              "top": 217,
             },
           ]
         }
@@ -480,7 +491,7 @@ exports[`renders AnalogClock 1`] = `
         <View
           style={
             {
-              "borderRadius": 25,
+              "borderRadius": 24,
             }
           }
         >
@@ -489,13 +500,15 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "textAlign": "left",
-                },
-                {
                   "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
+                  "fontSize": 16,
                   "fontWeight": "400",
-                  "letterSpacing": 0,
+                  "letterSpacing": 0.15,
+                  "lineHeight": 24,
+                },
+                {
+                  "textAlign": "left",
                 },
                 {
                   "writingDirection": "ltr",
@@ -514,18 +527,18 @@ exports[`renders AnalogClock 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 25,
-              "height": 50,
+              "borderRadius": 24,
+              "height": 48,
               "justifyContent": "center",
-              "marginLeft": -25,
-              "marginTop": -25,
+              "marginLeft": -24,
+              "marginTop": -24,
               "position": "absolute",
-              "width": 50,
+              "width": 48,
               "zIndex": 20,
             },
             {
-              "left": 33,
-              "top": 151,
+              "left": 39,
+              "top": 179,
             },
           ]
         }
@@ -533,7 +546,7 @@ exports[`renders AnalogClock 1`] = `
         <View
           style={
             {
-              "borderRadius": 25,
+              "borderRadius": 24,
             }
           }
         >
@@ -542,13 +555,15 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "textAlign": "left",
-                },
-                {
                   "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
+                  "fontSize": 16,
                   "fontWeight": "400",
-                  "letterSpacing": 0,
+                  "letterSpacing": 0.15,
+                  "lineHeight": 24,
+                },
+                {
+                  "textAlign": "left",
                 },
                 {
                   "writingDirection": "ltr",
@@ -567,18 +582,18 @@ exports[`renders AnalogClock 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 25,
-              "height": 50,
+              "borderRadius": 24,
+              "height": 48,
               "justifyContent": "center",
-              "marginLeft": -25,
-              "marginTop": -25,
+              "marginLeft": -24,
+              "marginTop": -24,
               "position": "absolute",
-              "width": 50,
+              "width": 48,
               "zIndex": 20,
             },
             {
-              "left": 22,
-              "top": 108,
+              "left": 26,
+              "top": 128,
             },
           ]
         }
@@ -586,7 +601,7 @@ exports[`renders AnalogClock 1`] = `
         <View
           style={
             {
-              "borderRadius": 25,
+              "borderRadius": 24,
             }
           }
         >
@@ -595,13 +610,15 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "textAlign": "left",
-                },
-                {
                   "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
+                  "fontSize": 16,
                   "fontWeight": "400",
-                  "letterSpacing": 0,
+                  "letterSpacing": 0.15,
+                  "lineHeight": 24,
+                },
+                {
+                  "textAlign": "left",
                 },
                 {
                   "writingDirection": "ltr",
@@ -620,18 +637,18 @@ exports[`renders AnalogClock 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 25,
-              "height": 50,
+              "borderRadius": 24,
+              "height": 48,
               "justifyContent": "center",
-              "marginLeft": -25,
-              "marginTop": -25,
+              "marginLeft": -24,
+              "marginTop": -24,
               "position": "absolute",
-              "width": 50,
+              "width": 48,
               "zIndex": 20,
             },
             {
-              "left": 33,
-              "top": 65,
+              "left": 39,
+              "top": 77,
             },
           ]
         }
@@ -639,7 +656,7 @@ exports[`renders AnalogClock 1`] = `
         <View
           style={
             {
-              "borderRadius": 25,
+              "borderRadius": 24,
             }
           }
         >
@@ -648,13 +665,15 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "textAlign": "left",
-                },
-                {
                   "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
+                  "fontSize": 16,
                   "fontWeight": "400",
-                  "letterSpacing": 0,
+                  "letterSpacing": 0.15,
+                  "lineHeight": 24,
+                },
+                {
+                  "textAlign": "left",
                 },
                 {
                   "writingDirection": "ltr",
@@ -673,18 +692,18 @@ exports[`renders AnalogClock 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 25,
-              "height": 50,
+              "borderRadius": 24,
+              "height": 48,
               "justifyContent": "center",
-              "marginLeft": -25,
-              "marginTop": -25,
+              "marginLeft": -24,
+              "marginTop": -24,
               "position": "absolute",
-              "width": 50,
+              "width": 48,
               "zIndex": 20,
             },
             {
-              "left": 64,
-              "top": 33,
+              "left": 77,
+              "top": 39,
             },
           ]
         }
@@ -692,7 +711,7 @@ exports[`renders AnalogClock 1`] = `
         <View
           style={
             {
-              "borderRadius": 25,
+              "borderRadius": 24,
             }
           }
         >
@@ -701,13 +720,15 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "textAlign": "left",
-                },
-                {
                   "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
+                  "fontSize": 16,
                   "fontWeight": "400",
-                  "letterSpacing": 0,
+                  "letterSpacing": 0.15,
+                  "lineHeight": 24,
+                },
+                {
+                  "textAlign": "left",
                 },
                 {
                   "writingDirection": "ltr",
@@ -726,18 +747,18 @@ exports[`renders AnalogClock 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 25,
-              "height": 50,
+              "borderRadius": 24,
+              "height": 48,
               "justifyContent": "center",
-              "marginLeft": -25,
-              "marginTop": -25,
+              "marginLeft": -24,
+              "marginTop": -24,
               "position": "absolute",
-              "width": 50,
+              "width": 48,
               "zIndex": 20,
             },
             {
-              "left": 107,
-              "top": 22,
+              "left": 128,
+              "top": 26,
             },
           ]
         }
@@ -745,7 +766,7 @@ exports[`renders AnalogClock 1`] = `
         <View
           style={
             {
-              "borderRadius": 25,
+              "borderRadius": 24,
             }
           }
         >
@@ -754,19 +775,21 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "textAlign": "left",
-                },
-                {
                   "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
+                  "fontSize": 16,
                   "fontWeight": "400",
-                  "letterSpacing": 0,
+                  "letterSpacing": 0.15,
+                  "lineHeight": 24,
+                },
+                {
+                  "textAlign": "left",
                 },
                 {
                   "writingDirection": "ltr",
                 },
                 {
-                  "color": "#fff",
+                  "color": "rgba(255, 255, 255, 1)",
                 },
               ]
             }
@@ -801,18 +824,18 @@ exports[`renders AnalogClock 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 25,
-              "height": 50,
+              "borderRadius": 24,
+              "height": 48,
               "justifyContent": "center",
-              "marginLeft": -25,
-              "marginTop": -25,
+              "marginLeft": -24,
+              "marginTop": -24,
               "position": "absolute",
-              "width": 50,
+              "width": 48,
               "zIndex": 20,
             },
             {
-              "left": 108,
-              "top": 22,
+              "left": 128,
+              "top": 26,
             },
           ]
         }
@@ -820,7 +843,7 @@ exports[`renders AnalogClock 1`] = `
         <View
           style={
             {
-              "borderRadius": 25,
+              "borderRadius": 24,
             }
           }
         >
@@ -829,13 +852,15 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "textAlign": "left",
-                },
-                {
                   "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
+                  "fontSize": 16,
                   "fontWeight": "400",
-                  "letterSpacing": 0,
+                  "letterSpacing": 0.15,
+                  "lineHeight": 24,
+                },
+                {
+                  "textAlign": "left",
                 },
                 {
                   "writingDirection": "ltr",
@@ -854,18 +879,18 @@ exports[`renders AnalogClock 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 25,
-              "height": 50,
+              "borderRadius": 24,
+              "height": 48,
               "justifyContent": "center",
-              "marginLeft": -25,
-              "marginTop": -25,
+              "marginLeft": -24,
+              "marginTop": -24,
               "position": "absolute",
-              "width": 50,
+              "width": 48,
               "zIndex": 20,
             },
             {
-              "left": 151,
-              "top": 33,
+              "left": 179,
+              "top": 39,
             },
           ]
         }
@@ -873,7 +898,7 @@ exports[`renders AnalogClock 1`] = `
         <View
           style={
             {
-              "borderRadius": 25,
+              "borderRadius": 24,
             }
           }
         >
@@ -882,13 +907,15 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "textAlign": "left",
-                },
-                {
                   "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
+                  "fontSize": 16,
                   "fontWeight": "400",
-                  "letterSpacing": 0,
+                  "letterSpacing": 0.15,
+                  "lineHeight": 24,
+                },
+                {
+                  "textAlign": "left",
                 },
                 {
                   "writingDirection": "ltr",
@@ -907,18 +934,18 @@ exports[`renders AnalogClock 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 25,
-              "height": 50,
+              "borderRadius": 24,
+              "height": 48,
               "justifyContent": "center",
-              "marginLeft": -25,
-              "marginTop": -25,
+              "marginLeft": -24,
+              "marginTop": -24,
               "position": "absolute",
-              "width": 50,
+              "width": 48,
               "zIndex": 20,
             },
             {
-              "left": 182,
-              "top": 65,
+              "left": 217,
+              "top": 77,
             },
           ]
         }
@@ -926,7 +953,7 @@ exports[`renders AnalogClock 1`] = `
         <View
           style={
             {
-              "borderRadius": 25,
+              "borderRadius": 24,
             }
           }
         >
@@ -935,13 +962,15 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "textAlign": "left",
-                },
-                {
                   "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
+                  "fontSize": 16,
                   "fontWeight": "400",
-                  "letterSpacing": 0,
+                  "letterSpacing": 0.15,
+                  "lineHeight": 24,
+                },
+                {
+                  "textAlign": "left",
                 },
                 {
                   "writingDirection": "ltr",
@@ -960,18 +989,18 @@ exports[`renders AnalogClock 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 25,
-              "height": 50,
+              "borderRadius": 24,
+              "height": 48,
               "justifyContent": "center",
-              "marginLeft": -25,
-              "marginTop": -25,
+              "marginLeft": -24,
+              "marginTop": -24,
               "position": "absolute",
-              "width": 50,
+              "width": 48,
               "zIndex": 20,
             },
             {
-              "left": 194,
-              "top": 107,
+              "left": 230,
+              "top": 128,
             },
           ]
         }
@@ -979,7 +1008,7 @@ exports[`renders AnalogClock 1`] = `
         <View
           style={
             {
-              "borderRadius": 25,
+              "borderRadius": 24,
             }
           }
         >
@@ -988,13 +1017,15 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "textAlign": "left",
-                },
-                {
                   "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
+                  "fontSize": 16,
                   "fontWeight": "400",
-                  "letterSpacing": 0,
+                  "letterSpacing": 0.15,
+                  "lineHeight": 24,
+                },
+                {
+                  "textAlign": "left",
                 },
                 {
                   "writingDirection": "ltr",
@@ -1013,18 +1044,18 @@ exports[`renders AnalogClock 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 25,
-              "height": 50,
+              "borderRadius": 24,
+              "height": 48,
               "justifyContent": "center",
-              "marginLeft": -25,
-              "marginTop": -25,
+              "marginLeft": -24,
+              "marginTop": -24,
               "position": "absolute",
-              "width": 50,
+              "width": 48,
               "zIndex": 20,
             },
             {
-              "left": 182,
-              "top": 150,
+              "left": 217,
+              "top": 179,
             },
           ]
         }
@@ -1032,7 +1063,7 @@ exports[`renders AnalogClock 1`] = `
         <View
           style={
             {
-              "borderRadius": 25,
+              "borderRadius": 24,
             }
           }
         >
@@ -1041,13 +1072,15 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "textAlign": "left",
-                },
-                {
                   "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
+                  "fontSize": 16,
                   "fontWeight": "400",
-                  "letterSpacing": 0,
+                  "letterSpacing": 0.15,
+                  "lineHeight": 24,
+                },
+                {
+                  "textAlign": "left",
                 },
                 {
                   "writingDirection": "ltr",
@@ -1066,18 +1099,18 @@ exports[`renders AnalogClock 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 25,
-              "height": 50,
+              "borderRadius": 24,
+              "height": 48,
               "justifyContent": "center",
-              "marginLeft": -25,
-              "marginTop": -25,
+              "marginLeft": -24,
+              "marginTop": -24,
               "position": "absolute",
-              "width": 50,
+              "width": 48,
               "zIndex": 20,
             },
             {
-              "left": 151,
-              "top": 182,
+              "left": 179,
+              "top": 217,
             },
           ]
         }
@@ -1085,7 +1118,7 @@ exports[`renders AnalogClock 1`] = `
         <View
           style={
             {
-              "borderRadius": 25,
+              "borderRadius": 24,
             }
           }
         >
@@ -1094,13 +1127,15 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "textAlign": "left",
-                },
-                {
                   "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
+                  "fontSize": 16,
                   "fontWeight": "400",
-                  "letterSpacing": 0,
+                  "letterSpacing": 0.15,
+                  "lineHeight": 24,
+                },
+                {
+                  "textAlign": "left",
                 },
                 {
                   "writingDirection": "ltr",
@@ -1119,18 +1154,18 @@ exports[`renders AnalogClock 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 25,
-              "height": 50,
+              "borderRadius": 24,
+              "height": 48,
               "justifyContent": "center",
-              "marginLeft": -25,
-              "marginTop": -25,
+              "marginLeft": -24,
+              "marginTop": -24,
               "position": "absolute",
-              "width": 50,
+              "width": 48,
               "zIndex": 20,
             },
             {
-              "left": 108,
-              "top": 194,
+              "left": 128,
+              "top": 230,
             },
           ]
         }
@@ -1138,7 +1173,7 @@ exports[`renders AnalogClock 1`] = `
         <View
           style={
             {
-              "borderRadius": 25,
+              "borderRadius": 24,
             }
           }
         >
@@ -1147,19 +1182,21 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "textAlign": "left",
-                },
-                {
                   "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
+                  "fontSize": 16,
                   "fontWeight": "400",
-                  "letterSpacing": 0,
+                  "letterSpacing": 0.15,
+                  "lineHeight": 24,
+                },
+                {
+                  "textAlign": "left",
                 },
                 {
                   "writingDirection": "ltr",
                 },
                 {
-                  "color": "#fff",
+                  "color": "rgba(255, 255, 255, 1)",
                 },
               ]
             }
@@ -1174,18 +1211,18 @@ exports[`renders AnalogClock 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 25,
-              "height": 50,
+              "borderRadius": 24,
+              "height": 48,
               "justifyContent": "center",
-              "marginLeft": -25,
-              "marginTop": -25,
+              "marginLeft": -24,
+              "marginTop": -24,
               "position": "absolute",
-              "width": 50,
+              "width": 48,
               "zIndex": 20,
             },
             {
-              "left": 65,
-              "top": 182,
+              "left": 77,
+              "top": 217,
             },
           ]
         }
@@ -1193,7 +1230,7 @@ exports[`renders AnalogClock 1`] = `
         <View
           style={
             {
-              "borderRadius": 25,
+              "borderRadius": 24,
             }
           }
         >
@@ -1202,13 +1239,15 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "textAlign": "left",
-                },
-                {
                   "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
+                  "fontSize": 16,
                   "fontWeight": "400",
-                  "letterSpacing": 0,
+                  "letterSpacing": 0.15,
+                  "lineHeight": 24,
+                },
+                {
+                  "textAlign": "left",
                 },
                 {
                   "writingDirection": "ltr",
@@ -1227,18 +1266,18 @@ exports[`renders AnalogClock 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 25,
-              "height": 50,
+              "borderRadius": 24,
+              "height": 48,
               "justifyContent": "center",
-              "marginLeft": -25,
-              "marginTop": -25,
+              "marginLeft": -24,
+              "marginTop": -24,
               "position": "absolute",
-              "width": 50,
+              "width": 48,
               "zIndex": 20,
             },
             {
-              "left": 33,
-              "top": 151,
+              "left": 39,
+              "top": 179,
             },
           ]
         }
@@ -1246,7 +1285,7 @@ exports[`renders AnalogClock 1`] = `
         <View
           style={
             {
-              "borderRadius": 25,
+              "borderRadius": 24,
             }
           }
         >
@@ -1255,13 +1294,15 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "textAlign": "left",
-                },
-                {
                   "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
+                  "fontSize": 16,
                   "fontWeight": "400",
-                  "letterSpacing": 0,
+                  "letterSpacing": 0.15,
+                  "lineHeight": 24,
+                },
+                {
+                  "textAlign": "left",
                 },
                 {
                   "writingDirection": "ltr",
@@ -1280,18 +1321,18 @@ exports[`renders AnalogClock 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 25,
-              "height": 50,
+              "borderRadius": 24,
+              "height": 48,
               "justifyContent": "center",
-              "marginLeft": -25,
-              "marginTop": -25,
+              "marginLeft": -24,
+              "marginTop": -24,
               "position": "absolute",
-              "width": 50,
+              "width": 48,
               "zIndex": 20,
             },
             {
-              "left": 22,
-              "top": 108,
+              "left": 26,
+              "top": 128,
             },
           ]
         }
@@ -1299,7 +1340,7 @@ exports[`renders AnalogClock 1`] = `
         <View
           style={
             {
-              "borderRadius": 25,
+              "borderRadius": 24,
             }
           }
         >
@@ -1308,13 +1349,15 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "textAlign": "left",
-                },
-                {
                   "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
+                  "fontSize": 16,
                   "fontWeight": "400",
-                  "letterSpacing": 0,
+                  "letterSpacing": 0.15,
+                  "lineHeight": 24,
+                },
+                {
+                  "textAlign": "left",
                 },
                 {
                   "writingDirection": "ltr",
@@ -1333,18 +1376,18 @@ exports[`renders AnalogClock 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 25,
-              "height": 50,
+              "borderRadius": 24,
+              "height": 48,
               "justifyContent": "center",
-              "marginLeft": -25,
-              "marginTop": -25,
+              "marginLeft": -24,
+              "marginTop": -24,
               "position": "absolute",
-              "width": 50,
+              "width": 48,
               "zIndex": 20,
             },
             {
-              "left": 33,
-              "top": 65,
+              "left": 39,
+              "top": 77,
             },
           ]
         }
@@ -1352,7 +1395,7 @@ exports[`renders AnalogClock 1`] = `
         <View
           style={
             {
-              "borderRadius": 25,
+              "borderRadius": 24,
             }
           }
         >
@@ -1361,13 +1404,15 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "textAlign": "left",
-                },
-                {
                   "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
+                  "fontSize": 16,
                   "fontWeight": "400",
-                  "letterSpacing": 0,
+                  "letterSpacing": 0.15,
+                  "lineHeight": 24,
+                },
+                {
+                  "textAlign": "left",
                 },
                 {
                   "writingDirection": "ltr",
@@ -1386,18 +1431,18 @@ exports[`renders AnalogClock 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 25,
-              "height": 50,
+              "borderRadius": 24,
+              "height": 48,
               "justifyContent": "center",
-              "marginLeft": -25,
-              "marginTop": -25,
+              "marginLeft": -24,
+              "marginTop": -24,
               "position": "absolute",
-              "width": 50,
+              "width": 48,
               "zIndex": 20,
             },
             {
-              "left": 64,
-              "top": 33,
+              "left": 77,
+              "top": 39,
             },
           ]
         }
@@ -1405,7 +1450,7 @@ exports[`renders AnalogClock 1`] = `
         <View
           style={
             {
-              "borderRadius": 25,
+              "borderRadius": 24,
             }
           }
         >
@@ -1414,13 +1459,15 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "textAlign": "left",
-                },
-                {
                   "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
+                  "fontSize": 16,
                   "fontWeight": "400",
-                  "letterSpacing": 0,
+                  "letterSpacing": 0.15,
+                  "lineHeight": 24,
+                },
+                {
+                  "textAlign": "left",
                 },
                 {
                   "writingDirection": "ltr",

@@ -175,17 +175,6 @@ function App() {
             },
           ]}
         >
-          {/*<View style={styles.switchContainer}>*/}
-          {/*  <Text style={[styles.switchLabel, { ...theme.fonts.medium }]}>*/}
-          {/*    Dark mode (does not wo*/}
-          {/*  </Text>*/}
-          {/*  <View style={styles.switchSpace} />*/}
-          {/*  <Switch value={dark} onValueChange={onToggleDarkMode} />*/}
-          {/*</View>*/}
-          {/*<Enter />*/}
-          {/*<Enter />*/}
-          {/*<Enter />*/}
-          {/*<Enter />*/}
           <View>
             <Row>
               <Label>Input</Label>
@@ -432,7 +421,6 @@ const styles = StyleSheet.create({
     marginTop: 12,
     padding: 24,
     alignSelf: 'center',
-    // flex: 1,
   },
   contentInline: {
     padding: 0,
@@ -466,8 +454,6 @@ const styles = StyleSheet.create({
     left: 12,
     right: 12,
     bottom: 12,
-    // borderTopRightRadius: 20,
-    // borderBottomRightRadius: 20,
     backgroundColor: '#fff',
     overflow: 'hidden',
     shadowColor: '#000',

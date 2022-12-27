@@ -20,16 +20,18 @@ exports[`renders TimeInput 1`] = `
     style={
       [
         {
-          "fontSize": 50,
-          "height": 80,
+          "fontSize": 57,
           "textAlign": "center",
           "textAlignVertical": "center",
           "width": 96,
         },
         {
-          "backgroundColor": "#EADDFF",
-          "borderRadius": 4,
-          "color": "rgba(103, 80, 164, 1)",
+          "backgroundColor": "rgba(232, 222, 248, 1)",
+          "borderColor": "rgba(33, 0, 93, 1)",
+          "borderRadius": 8,
+          "borderWidth": 2,
+          "color": "rgba(33, 0, 93, 1)",
+          "height": 80,
         },
       ]
     }

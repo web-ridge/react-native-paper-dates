@@ -33,6 +33,7 @@ function AnalogClockMinutes({ minutes }: { minutes: number }) {
               <Text
                 style={isCurrent ? { color } : undefined}
                 selectable={false}
+                variant="bodyLarge"
               >
                 {isZero ? '00' : currentMinutes}
               </Text>
@@ -50,14 +51,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 20,
-    width: 50,
-    height: 50,
-    marginLeft: -25,
-    marginTop: -25,
-
-    borderRadius: 25,
+    width: 48,
+    height: 48,
+    marginLeft: -24,
+    marginTop: -24,
+    borderRadius: 24,
   },
-  outerHourInner: { borderRadius: 25 },
+  outerHourInner: { borderRadius: 24 },
   innerHourRoot: {
     position: 'absolute',
     zIndex: 20,

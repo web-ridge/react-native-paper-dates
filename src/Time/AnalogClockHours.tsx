@@ -33,7 +33,11 @@ function AnalogClockHours({
         >
           <View style={styles.outerHourInner}>
             {/* Display 00 instead of 12 for AM hours */}
-            <Text style={hours === i + 1 ? { color } : null} selectable={false}>
+            <Text
+              style={hours === i + 1 ? { color } : null}
+              variant="bodyLarge"
+              selectable={false}
+            >
               {mode === 'AM' && !is24Hour && i + 1 === 12 ? '00' : i + 1}
             </Text>
           </View>
@@ -56,11 +60,11 @@ function AnalogClockHours({
                 <Text
                   selectable={false}
                   style={[
-                    styles.innerHourText,
                     i + 13 === hours || (i + 13 === 24 && hours === 0)
                       ? { color }
                       : null,
                   ]}
+                  variant="bodyLarge"
                 >
                   {i + 13 === 24 ? '00' : i + 13}
                 </Text>
@@ -78,27 +82,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 20,
-    width: 50,
-    height: 50,
-    marginLeft: -25,
-    marginTop: -25,
-
-    borderRadius: 25,
+    width: 48,
+    height: 48,
+    marginLeft: -24,
+    marginTop: -24,
+    borderRadius: 24,
   },
-  outerHourInner: { borderRadius: 25 },
+  outerHourInner: { borderRadius: 24 },
   innerHourRoot: {
     position: 'absolute',
     zIndex: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    width: 40,
-    height: 40,
-    marginLeft: -20,
-    marginTop: -20,
-    borderRadius: 20,
+    width: 48,
+    height: 48,
+    marginLeft: -24,
+    marginTop: -24,
+    borderRadius: 24,
   },
-  innerHourInner: { borderRadius: 20 },
-  innerHourText: { fontSize: 13 },
+  innerHourInner: { borderRadius: 24 },
 })
 
 function getHourNumbers(

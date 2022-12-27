@@ -6,13 +6,14 @@ exports[`renders AmPmSwitcher 1`] = `
     [
       {
         "borderWidth": 1,
-        "height": 80,
         "overflow": "hidden",
-        "width": 50,
+        "width": 52,
       },
       {
-        "borderColor": "#E0D2E0",
-        "borderRadius": 4,
+        "borderColor": "rgba(121, 116, 126, 1)",
+        "borderRadius": 8,
+        "height": 72,
+        "marginBottom": 24,
       },
     ]
   }
@@ -86,12 +87,12 @@ exports[`renders AmPmSwitcher 1`] = `
             },
             [
               {
-                "color": "rgba(103, 80, 164, 1)",
+                "color": "rgba(73, 69, 79, 1)",
                 "fontFamily": "System",
-                "fontSize": 14,
-                "fontWeight": "400",
-                "letterSpacing": 0.25,
-                "lineHeight": 20,
+                "fontSize": 16,
+                "fontWeight": "500",
+                "letterSpacing": 0.15,
+                "lineHeight": 24,
               },
             ],
           ]
@@ -106,10 +107,10 @@ exports[`renders AmPmSwitcher 1`] = `
       [
         {
           "height": 1,
-          "width": 48,
+          "width": 52,
         },
         {
-          "backgroundColor": "#E0D2E0",
+          "backgroundColor": "rgba(121, 116, 126, 1)",
         },
       ]
     }
@@ -180,10 +181,10 @@ exports[`renders AmPmSwitcher 1`] = `
               {
                 "color": "rgba(73, 69, 79, 1)",
                 "fontFamily": "System",
-                "fontSize": 14,
-                "fontWeight": "400",
-                "letterSpacing": 0.25,
-                "lineHeight": 20,
+                "fontSize": 16,
+                "fontWeight": "500",
+                "letterSpacing": 0.15,
+                "lineHeight": 24,
               },
             ],
           ]
