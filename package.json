@@ -27,7 +27,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "prepare": "husky install && bob build",
-    "release": "release-it --ci",
+    "release": "release-it --ci --github.autoGenerate",
     "example": "yarn --cwd example",
     "pods": "cd example && pod-install --quiet",
     "bootstrap": "yarn example && yarn && yarn pods",
