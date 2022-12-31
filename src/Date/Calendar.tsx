@@ -100,6 +100,9 @@ function Calendar(
   const theme = useTheme()
 
   const selectColor = useMemo<string>(() => {
+    if (theme.isV3) {
+      return theme.colors.primaryContainer
+    }
     if (theme.dark) {
       return darkenBy(Color(theme.colors.primary), 0.1).hex()
     }

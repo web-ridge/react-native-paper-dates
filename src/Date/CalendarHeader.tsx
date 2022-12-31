@@ -53,7 +53,6 @@ function CalendarHeader({
               onPress={onPrev}
             />
           </View>
-
           <View
             style={[
               styles.buttonWrapper,

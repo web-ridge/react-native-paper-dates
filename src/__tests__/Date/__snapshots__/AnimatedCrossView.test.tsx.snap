@@ -584,7 +584,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -676,7 +678,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -768,7 +772,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -873,7 +879,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -965,7 +973,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -1057,7 +1067,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -1162,7 +1174,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -1254,7 +1268,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -1346,7 +1362,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -1451,7 +1469,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -1543,7 +1563,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -1635,7 +1657,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -1740,7 +1764,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -1832,7 +1858,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -1924,7 +1952,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -2029,7 +2059,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -2121,7 +2153,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -2213,7 +2247,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -2318,7 +2354,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -2410,7 +2448,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -2502,7 +2542,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -2607,7 +2649,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -2699,7 +2743,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -2791,7 +2837,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -2896,7 +2944,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -2988,7 +3038,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -3080,7 +3132,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -3185,7 +3239,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -3277,7 +3333,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,
@@ -3369,7 +3427,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                               {
                                 "fontSize": 16,
                               },
-                              null,
+                              {
+                                "color": "rgba(73, 69, 79, 1)",
+                              },
                               {
                                 "fontFamily": "System",
                                 "fontSize": 16,

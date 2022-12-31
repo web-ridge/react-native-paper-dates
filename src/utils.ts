@@ -17,6 +17,9 @@ export function useLatest<T>(value: T) {
 
 export function useHeaderBackgroundColor() {
   const theme = useTheme()
+  if (theme.isV3) {
+    return theme.colors.surface
+  }
   return theme.dark && theme.mode === 'adaptive'
     ? overlay(4, theme.colors.surface)
     : theme.colors.primary
@@ -32,7 +35,11 @@ export function useHeaderColorIsLight() {
 }
 
 export function useHeaderTextColor() {
+  const theme = useTheme()
   const isLight = useHeaderColorIsLight()
+  if (theme.isV3) {
+    return theme.colors.onSurfaceVariant
+  }
   return !isLight ? '#fff' : '#000'
 }
 
