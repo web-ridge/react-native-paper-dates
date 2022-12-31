@@ -11,7 +11,6 @@ import Calendar, {
 } from './Calendar'
 
 import AnimatedCrossView from './AnimatedCrossView'
-import { useTheme } from 'react-native-paper'
 import DatePickerModalHeader from './DatePickerModalHeader'
 import DatePickerModalContentHeader, {
   HeaderPickProps,
@@ -86,7 +85,6 @@ export function DatePickerModalContent(
     startYear,
     endYear,
   } = props
-  const theme = useTheme()
   const anyProps = props as any
 
   // use local state to add only onConfirm state changes
@@ -164,10 +162,8 @@ export function DatePickerModalContent(
           endLabel={props.endLabel}
           uppercase={props.uppercase ?? true}
           locale={locale}
-          editIcon={props?.editIcon ?? theme.isV3 ? 'pencil-outline' : 'pencil'}
-          calendarIcon={
-            props.calendarIcon ?? theme.isV3 ? 'calendar-blank' : 'calendar'
-          }
+          editIcon={props?.editIcon}
+          calendarIcon={props.calendarIcon}
         />
       </DatePickerModalHeaderBackground>
       <AnimatedCrossView
