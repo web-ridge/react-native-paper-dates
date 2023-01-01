@@ -16,7 +16,7 @@ export default function useDateInput({
   value: Date | undefined
   validRange: ValidRangeType | undefined
   inputMode: 'start' | 'end'
-  onValidationError?: ((error: string) => void) | undefined
+  onValidationError?: ((error: string | null) => void) | undefined
 }) {
   const { isDisabled, isWithinValidRange, validStart, validEnd } =
     useRangeChecker(validRange)
@@ -43,7 +43,7 @@ export default function useDateInput({
         () => 'notAccordingToDateFormat'
       )(inputFormat)
       setError(inputError)
-      onValidationError(inputError)
+      onValidationError && onValidationError(inputError)
       return
     }
 
@@ -55,7 +55,7 @@ export default function useDateInput({
     if (isDisabled(finalDate)) {
       const inputError = getTranslation(locale, 'dateIsDisabled')
       setError(inputError)
-      onValidationError(inputError)
+      onValidationError && onValidationError(inputError)
       return
     }
     if (!isWithinValidRange(finalDate)) {
@@ -86,12 +86,12 @@ export default function useDateInput({
             ]
       const inputError = errors.filter((n) => n).join(' ')
       setError(errors.filter((n) => n).join(' '))
-      onValidationError(inputError)
+      onValidationError && onValidationError(inputError)
       return
     }
 
     setError(null)
-    onValidationError(null)
+    onValidationError && onValidationError(null)
     if (inputMode === 'end') {
       onChange(finalDate)
     } else {

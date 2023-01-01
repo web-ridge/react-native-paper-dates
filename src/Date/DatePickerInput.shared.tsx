@@ -12,7 +12,7 @@ export type DatePickerInputProps = {
   withDateFormatInLabel?: boolean
   hideValidationErrors?: boolean
   hasError?: boolean
-  onValidationError?: ((error: string) => void) | undefined
+  onValidationError?: ((error: string | null) => void) | undefined
   calendarIcon?: string
   saveLabel?: string
 } & Omit<
