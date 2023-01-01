@@ -63,4 +63,20 @@ The type of input needed for the the picker component.
 `Type: 'flat' | 'outlined'`  
 See [react-native-paper text-input](https://callstack.github.io/react-native-paper/text-input.html#mode).
 
+**withDateFormatInLabel**
+`Type: boolean | undefined`  
+Flag indicating if the date format should be inside the components label.
+
+**hasError**  
+`Type: boolean | undefined`  
+Flag indicating if the the component should display error styles.
+
+**hideValidationErrors**  
+`Type: boolean | undefined`  
+Flag indicating if the the component should hide error styles along with the `helperText` component displaying the error message.
+
+**onValidationError**  
+`Type: Function | undefined`  
+Callback used to return any error messages from the components validation.
+
 * Other [react-native TextInput props](https://reactnative.dev/docs/textinput#props).*

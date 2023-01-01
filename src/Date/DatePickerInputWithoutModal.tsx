@@ -16,6 +16,9 @@ function DatePickerInputWithoutModal(
     validRange,
     inputMode,
     withDateFormatInLabel = true,
+    hasError,
+    hideValidationErrors,
+    onValidationError,
     modal,
     inputButtons,
     saveLabel,
@@ -39,6 +42,7 @@ function DatePickerInputWithoutModal(
     validRange,
     inputMode,
     onChange,
+    onValidationError,
   })
 
   return (
@@ -56,16 +60,15 @@ function DatePickerInputWithoutModal(
             })}
             value={formattedValue}
             keyboardType={'number-pad'}
-            placeholder={inputFormat}
             mask={inputFormat}
             onChangeText={onChangeText}
             keyboardAppearance={theme.dark ? 'dark' : 'default'}
-            error={!!error}
+            error={(!!error && !hideValidationErrors) || !!hasError}
             style={[styles.input, style]}
           />
           {inputButtons}
         </View>
-        {error ? (
+        {error && !hideValidationErrors ? (
           <HelperText style={styles.helperText} type="error" visible={!!error}>
             {error}
           </HelperText>
