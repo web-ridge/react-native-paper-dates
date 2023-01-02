@@ -65,10 +65,10 @@ function DatePickerInput(
             dateMode={inputMode}
             validRange={validRange}
             saveLabel={saveLabel}
-            saveLabelDisabled={saveLabelDisabled || false}
-            uppercase={uppercase || true}
-            startYear={startYear || 1800}
-            endYear={endYear || 2200}
+            saveLabelDisabled={saveLabelDisabled ?? false}
+            uppercase={uppercase ?? true}
+            startYear={startYear ?? 1800}
+            endYear={endYear ?? 2200}
           />
         ) : null
       }
