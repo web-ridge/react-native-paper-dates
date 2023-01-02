@@ -69,6 +69,7 @@ function enhanceTextWithMask(
 function TextInputWithMask(
   {
     onChangeText,
+    onChange,
     value,
     mask,
     ...rest
@@ -101,6 +102,9 @@ function TextInputWithMask(
       {...rest}
       value={controlledValue}
       onChangeText={onInnerChange}
+      onChange={(e) => {
+        onChange && onChange(e)
+      }}
       onBlur={onInnerBlur}
     />
   )

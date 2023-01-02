@@ -42,7 +42,18 @@ function DatePickerInput(
           />
         ) : null
       }
-      modal={({ value, locale, inputMode, validRange, saveLabel }) =>
+      // eslint-disable-next-line react/no-unstable-nested-components
+      modal={({
+        value,
+        locale,
+        inputMode,
+        validRange,
+        saveLabel,
+        saveLabelDisabled,
+        uppercase,
+        startYear,
+        endYear,
+      }) =>
         withModal ? (
           <DatePickerModal
             date={value}
@@ -54,6 +65,10 @@ function DatePickerInput(
             dateMode={inputMode}
             validRange={validRange}
             saveLabel={saveLabel}
+            saveLabelDisabled={saveLabelDisabled || false}
+            uppercase={uppercase || true}
+            startYear={startYear || 1800}
+            endYear={endYear || 2200}
           />
         ) : null
       }

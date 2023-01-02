@@ -22,6 +22,11 @@ function DatePickerInputWithoutModal(
     modal,
     inputButtons,
     saveLabel,
+    saveLabelDisabled,
+    uppercase,
+    startYear,
+    endYear,
+    onChangeText,
     ...rest
   }: DatePickerInputProps & {
     modal?: (params: {
@@ -30,13 +35,22 @@ function DatePickerInputWithoutModal(
       inputMode: DatePickerInputProps['inputMode']
       validRange: DatePickerInputProps['validRange']
       saveLabel: DatePickerInputProps['saveLabel']
+      saveLabelDisabled: DatePickerInputProps['saveLabelDisabled']
+      uppercase: DatePickerInputProps['uppercase']
+      startYear: DatePickerInputProps['startYear']
+      endYear: DatePickerInputProps['endYear']
     }) => any
     inputButtons?: any
   },
   ref: any
 ) {
   const theme = useTheme()
-  const { formattedValue, inputFormat, onChangeText, error } = useDateInput({
+  const {
+    formattedValue,
+    inputFormat,
+    onChangeText: onDateInputChangeText,
+    error,
+  } = useDateInput({
     locale,
     value,
     validRange,
@@ -61,7 +75,8 @@ function DatePickerInputWithoutModal(
             value={formattedValue}
             keyboardType={'number-pad'}
             mask={inputFormat}
-            onChangeText={onChangeText}
+            onChangeText={onDateInputChangeText}
+            onChange={(e) => onChangeText && onChangeText(e.nativeEvent.text)}
             keyboardAppearance={theme.dark ? 'dark' : 'default'}
             error={(!!error && !hideValidationErrors) || !!hasError}
             style={[styles.input, style]}
@@ -69,12 +84,22 @@ function DatePickerInputWithoutModal(
           {inputButtons}
         </View>
         {error && !hideValidationErrors ? (
-          <HelperText style={styles.helperText} type="error" visible={!!error}>
+          <HelperText type="error" visible={!!error}>
             {error}
           </HelperText>
         ) : null}
       </View>
-      {modal?.({ value, locale, inputMode, validRange, saveLabel })}
+      {modal?.({
+        value,
+        locale,
+        inputMode,
+        validRange,
+        saveLabel,
+        saveLabelDisabled,
+        uppercase,
+        startYear,
+        endYear,
+      })}
     </>
   )
 }
@@ -106,9 +131,6 @@ const styles = StyleSheet.create({
   },
   input: {
     flexGrow: 1,
-  },
-  helperText: {
-    // flex: 1,
   },
 })
 export default React.forwardRef(DatePickerInputWithoutModal)
