@@ -660,7 +660,7 @@ exports[`renders AnalogClockHours 1`] = `
           ]
         }
       >
-        12
+        00
       </Text>
     </View>
   </View>,

@@ -38,7 +38,7 @@ function AnalogClockHours({
               variant="bodyLarge"
               selectable={false}
             >
-              {mode === 'AM' && !is24Hour && i + 1 === 12 ? '00' : i + 1}
+              {mode === 'AM' && is24Hour && i + 1 === 12 ? '00' : i + 1}
             </Text>
           </View>
         </View>

@@ -63,7 +63,7 @@ function AnalogClock({
         let previousHourType = getHourType(hoursRef.current)
         let pickedHours = getHours(angle, previousHourType)
 
-        let hours12AndPm = !hours24 && modeRef.current === 'AM'
+        let hours12AndPm = !hours24 && modeRef.current === 'PM'
 
         let hourTypeFromOffset = getHourTypeFromOffset(x, y, circleSize)
         let hours24AndPM = hours24 && hourTypeFromOffset === hourTypes.pm

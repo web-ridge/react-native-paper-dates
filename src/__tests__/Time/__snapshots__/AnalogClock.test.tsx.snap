@@ -794,7 +794,7 @@ exports[`renders AnalogClock 1`] = `
               ]
             }
           >
-            00
+            12
           </Text>
         </View>
       </View>
