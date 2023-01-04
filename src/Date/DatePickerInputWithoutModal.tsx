@@ -73,7 +73,7 @@ function DatePickerInputWithoutModal(
               withDateFormatInLabel,
             })}
             value={formattedValue}
-            keyboardType={'number-pad'}
+            keyboardType={rest.keyboardType ?? 'number-pad'}
             mask={inputFormat}
             onChangeText={onDateInputChangeText}
             onChange={(e) => onChangeText && onChangeText(e.nativeEvent.text)}
