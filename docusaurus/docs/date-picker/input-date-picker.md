@@ -53,7 +53,11 @@ The value used to populate the component.
 
 **onChange**  
 `Type: Function`  
-Event handler when the component changes.
+Callback event when the component date mask length matches the text input length.
+
+**onChangeText**  
+`Type: Function`  
+Callback event when the component text input changes.
 
 **inputMode (Required)**  
 `Type: String`  
@@ -62,5 +66,37 @@ The type of input needed for the the picker component.
 **mode**  
 `Type: 'flat' | 'outlined'`  
 See [react-native-paper text-input](https://callstack.github.io/react-native-paper/text-input.html#mode).
+
+**withDateFormatInLabel**
+`Type: boolean | undefined`  
+Flag indicating if the date format should be inside the components label.
+
+**hasError**  
+`Type: boolean | undefined`  
+Flag indicating if the the component should display error styles.
+
+**hideValidationErrors**  
+`Type: boolean | undefined`  
+Flag indicating if the the component should hide error styles along with the `helperText` component displaying the error message.
+
+**onValidationError**  
+`Type: Function | undefined`  
+Callback used to return any error messages from the components validation.
+
+**saveLabelDisabled**  
+`Type: boolean | undefined`  
+Flag indicating if the save label should be disabled and unable to receive events. Defaults to `false`.
+
+**uppercase**  
+`Type: boolean | undefined`  
+Flag indicating if the text in the component should be uppercase. Defaults to `true`.
+
+**startYear**  
+`Type: number | undefined`  
+The start year when the component is rendered. Defaults to `1800`.
+
+**endYear**  
+`Type: number | undefined`  
+The end year when the component is rendered. Defaults to `2200`.
 
 * Other [react-native TextInput props](https://reactnative.dev/docs/textinput#props).*
