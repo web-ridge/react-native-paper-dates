@@ -78,7 +78,7 @@ describe('timeUtils', () => {
   })
 
   it('should return correct hour output format when not is24Hour', () => {
-    expect(toHourOutputFormat(11, 13, false)).toBe(11)
+    expect(toHourOutputFormat(11, 13, false)).toBe(23)
   })
 
   it('should return correct hour output format when is24Hour', () => {

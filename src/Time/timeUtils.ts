@@ -265,7 +265,10 @@ export function toHourOutputFormat(
   if (is24Hour) {
     return newHours
   }
-  if ((!is24Hour && previousHours === 0) || newHours === 0) {
+  if (previousHours === 0 && newHours !== 0) {
+    return newHours - 12 < 0 ? newHours : newHours - 12
+  }
+  if (previousHours >= 12 && newHours < 12) {
     return newHours + 12
   }
   return newHours
