@@ -47,17 +47,27 @@ function Day(props: {
     onPressDate(new Date(year, month, day))
   }, [onPressDate, year, month, day])
 
-  const borderColor =
-    selected || (inRange && theme.dark)
-      ? textColorOnPrimary
-      : theme.dark
-      ? '#fff'
-      : '#000'
+  const borderColor = theme.isV3
+    ? theme.colors.primary
+    : selected || (inRange && theme.dark)
+    ? textColorOnPrimary
+    : theme.dark
+    ? '#fff'
+    : '#000'
+
   const textColor =
-    selected || (inRange && theme.dark) ? textColorOnPrimary : undefined
+    theme.isV3 && selected
+      ? theme.colors.onPrimary
+      : theme.isV3 && inRange && theme.dark
+      ? theme.colors.onPrimaryContainer
+      : selected || (inRange && theme.dark)
+      ? textColorOnPrimary
+      : theme.isV3
+      ? theme.colors.onSurface
+      : undefined
 
   let textFont = theme?.isV3
-    ? theme.fonts.bodyMedium
+    ? theme.fonts.bodySmall
     : (theme as any as MD2Theme).fonts.medium
 
   return (
@@ -68,7 +78,6 @@ function Day(props: {
         rightCrop={rightCrop}
         selectColor={selectColor}
       />
-
       <TouchableRipple
         testID={`react-native-paper-dates-day-${year}-${month}-${day}`}
         disabled={disabled}
@@ -89,7 +98,12 @@ function Day(props: {
         >
           <Text
             style={[
-              textColor ? { color: textColor } : undefined,
+              textColor
+                ? {
+                    color:
+                      theme.isV3 && isToday ? theme.colors.primary : textColor,
+                  }
+                : undefined,
               { ...textFont },
             ]}
             selectable={false}

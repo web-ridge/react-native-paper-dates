@@ -6,12 +6,18 @@ function DayName({ label }: { label: string }) {
   const theme = useTheme()
 
   let textFont = theme?.isV3
-    ? theme.fonts.bodyMedium
+    ? theme.fonts.bodySmall
     : (theme as any as MD2Theme).fonts.medium
 
   return (
     <View style={styles.dayName}>
-      <Text style={[styles.dayNameLabel, { ...textFont }]} selectable={false}>
+      <Text
+        style={[
+          styles.dayNameLabel,
+          { ...textFont, color: theme.colors.onSurface },
+        ]}
+        selectable={false}
+      >
         {label}
       </Text>
     </View>

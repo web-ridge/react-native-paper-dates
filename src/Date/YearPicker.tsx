@@ -96,7 +96,14 @@ function YearPure({
           <Text
             style={[
               styles.yearLabel,
-              selected ? styles.selectedYear : null,
+              selected
+                ? // eslint-disable-next-line react-native/no-inline-styles
+                  { color: theme.isV3 ? theme.colors.onPrimary : '#fff' }
+                : {
+                    color: theme.isV3
+                      ? theme.colors.onSurfaceVariant
+                      : undefined,
+                  },
               { ...textFont },
             ]}
             selectable={false}
@@ -127,7 +134,6 @@ const styles = StyleSheet.create({
     height: ITEM_HEIGHT,
     justifyContent: 'center',
   },
-  selectedYear: { color: '#fff' },
   yearButton: {
     borderRadius: 46 / 2,
     overflow: 'hidden',

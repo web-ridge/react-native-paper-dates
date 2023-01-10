@@ -58,23 +58,26 @@ export default function DatePickerModalContentHeader(
     mode,
     moreLabel,
     uppercase,
-    editIcon = 'pencil',
-    calendarIcon = 'calendar',
+    editIcon,
+    calendarIcon,
   } = props
   const theme = useTheme()
   const label = getLabel(props.locale, props.mode, props.label)
 
   const color = useHeaderTextColor()
+  const supportingTextColor = theme.isV3 ? theme.colors.onSurfaceVariant : color
   const allowEditing = mode !== 'multiple'
 
   let textFont = theme?.isV3
-    ? theme.fonts.bodyLarge
+    ? theme.fonts.labelMedium
     : (theme as any as MD2Theme).fonts.medium
 
   return (
-    <View style={[styles.header]}>
+    <View style={styles.header}>
       <View>
-        <Text style={[styles.label, { color, ...textFont }]}>
+        <Text
+          style={[styles.label, { color: supportingTextColor, ...textFont }]}
+        >
           {uppercase ? label.toUpperCase() : label}
         </Text>
         <View style={styles.headerContentContainer}>
@@ -96,13 +99,21 @@ export default function DatePickerModalContentHeader(
       <View style={styles.fill} />
       {allowEditing ? (
         <IconButton
-          icon={collapsed ? editIcon : calendarIcon}
+          icon={
+            collapsed
+              ? editIcon ?? theme.isV3
+                ? 'pencil-outline'
+                : 'pencil'
+              : calendarIcon ?? theme.isV3
+              ? 'calendar-blank'
+              : 'calendar'
+          }
           accessibilityLabel={
             collapsed
               ? getTranslation(props.locale, 'typeInDate')
               : getTranslation(props.locale, 'pickDateFromCalendar')
           }
-          iconColor={color}
+          iconColor={theme.isV3 ? theme.colors.onSurface : color}
           onPress={onToggle}
         />
       ) : null}
@@ -116,8 +127,13 @@ export function HeaderContentSingle({
   color,
   locale,
 }: HeaderContentProps & { color: string }) {
+  const theme = useTheme()
   const lighterColor = Color(color).fade(0.5).rgb().toString()
-  const dateColor = state.date ? color : lighterColor
+  const dateColor = state.date
+    ? theme.isV3
+      ? theme.colors.onSurface
+      : color
+    : lighterColor
 
   const formatter = React.useMemo(() => {
     return new Intl.DateTimeFormat(locale, {
@@ -140,9 +156,14 @@ export function HeaderContentMulti({
   color,
   locale,
 }: HeaderContentProps & { color: string; moreLabel: string | undefined }) {
+  const theme = useTheme()
   const dateCount = state.dates?.length || 0
   const lighterColor = Color(color).fade(0.5).rgb().toString()
-  const dateColor = dateCount ? color : lighterColor
+  const dateColor = dateCount
+    ? theme.isV3
+      ? theme.colors.onSurface
+      : color
+    : lighterColor
 
   const formatter = React.useMemo(() => {
     return new Intl.DateTimeFormat(locale, {
@@ -174,6 +195,7 @@ export function HeaderContentRange({
   endLabel = 'End',
   color,
 }: HeaderContentProps & { color: string }) {
+  const theme = useTheme()
   const formatter = React.useMemo(() => {
     return new Intl.DateTimeFormat(locale, {
       month: 'short',
@@ -182,8 +204,16 @@ export function HeaderContentRange({
   }, [locale])
 
   const lighterColor = Color(color).fade(0.5).rgb().toString()
-  const startColor = state.startDate ? color : lighterColor
-  const endColor = state.endDate ? color : lighterColor
+  const startColor = state.startDate
+    ? theme.isV3
+      ? theme.colors.onSurface
+      : color
+    : lighterColor
+  const endColor = state.endDate
+    ? theme.isV3
+      ? theme.colors.onSurface
+      : color
+    : lighterColor
 
   return (
     <>
@@ -226,7 +256,6 @@ const styles = StyleSheet.create({
     marginTop: -3,
     marginLeft: 3,
   },
-
   headerSeparator: {
     color: 'rgba(255,255,255,1)',
     fontSize: 25,

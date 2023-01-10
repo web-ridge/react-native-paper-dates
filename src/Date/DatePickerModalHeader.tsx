@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Animated, StyleSheet } from 'react-native'
-import { Appbar, Button } from 'react-native-paper'
+import { Appbar, Button, useTheme } from 'react-native-paper'
 
 import { useHeaderTextColor } from '../utils'
 import { getTranslation } from '../translations/utils'
@@ -20,6 +20,7 @@ export interface DatePickerModalHeaderProps {
 export default function DatePickerModalHeader(
   props: DatePickerModalHeaderProps
 ) {
+  const theme = useTheme()
   const { disableSafeTop, locale, closeIcon = 'close' } = props
   const saveLabel = props.saveLabel || getTranslation(locale, 'save')
   const color = useHeaderTextColor()
@@ -29,6 +30,7 @@ export default function DatePickerModalHeader(
     <Animated.View
       style={[
         styles.animated,
+        // eslint-disable-next-line react-native/no-inline-styles
         {
           paddingTop: disableSafeTop ? 0 : insets.top,
           paddingLeft: insets.left,
@@ -47,7 +49,7 @@ export default function DatePickerModalHeader(
         <Appbar.Content title={''} />
         <Button
           color={color}
-          textColor={color}
+          textColor={theme.isV3 ? theme.colors.primary : color}
           onPress={props.onSave}
           disabled={props.saveLabelDisabled ?? false}
           uppercase={props.uppercase ?? true}
@@ -90,6 +92,5 @@ const styles = StyleSheet.create({
   appbarHeader: {
     elevation: 0,
     backgroundColor: 'transparent',
-    // alignItems:'center'
   },
 })

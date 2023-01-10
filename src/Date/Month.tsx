@@ -251,7 +251,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
   ])
 
   let textFont = theme?.isV3
-    ? theme.fonts.bodyMedium
+    ? theme.fonts.titleSmall
     : (theme as any as MD2Theme).fonts.medium
 
   return (
@@ -288,7 +288,15 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
             ]}
           >
             <Text
-              style={[styles.monthLabel, { ...textFont }]}
+              style={[
+                styles.monthLabel,
+                {
+                  ...textFont,
+                  color: theme.isV3
+                    ? theme.colors.onSurfaceVariant
+                    : theme.colors.onSurface,
+                },
+              ]}
               selectable={false}
             >
               {monthName} {year}
@@ -296,13 +304,20 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
             <View style={isHorizontal ? styles.opacity1 : styles.opacity0}>
               <IconButton
                 onPress={isHorizontal ? () => onPressYear(year) : undefined}
-                icon={selectingYear ? 'chevron-up' : 'chevron-down'}
+                icon={
+                  selectingYear
+                    ? theme.isV3
+                      ? 'menu-up'
+                      : 'chevron-up'
+                    : theme.isV3
+                    ? 'menu-down'
+                    : 'chevron-down'
+                }
               />
             </View>
           </View>
         </TouchableRipple>
       </View>
-
       {grid.map(({ weekIndex, generatedDays }) => (
         <View style={styles.week} key={weekIndex}>
           {generatedDays
@@ -350,9 +365,7 @@ const styles = StyleSheet.create({
     marginBottom: weekMargin,
     height: daySize,
   },
-
   month: {},
-
   monthHeader: {
     height: montHeaderHeight,
     justifyContent: 'center',
