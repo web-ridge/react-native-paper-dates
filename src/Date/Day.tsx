@@ -101,7 +101,11 @@ function Day(props: {
               textColor
                 ? {
                     color:
-                      theme.isV3 && isToday ? theme.colors.primary : textColor,
+                      theme.isV3 && isToday && selected
+                        ? textColor
+                        : theme.isV3 && isToday
+                        ? theme.colors.primary
+                        : textColor,
                   }
                 : undefined,
               { ...textFont },
