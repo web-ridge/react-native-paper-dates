@@ -3,7 +3,6 @@ import { View, StyleSheet } from 'react-native'
 import { Text } from 'react-native-paper'
 import { circleSize } from './timeUtils'
 import { useTextColorOnPrimary } from '../utils'
-import { DisplayModeContext } from './TimePicker'
 
 function AnalogClockHours({
   is24Hour,
@@ -12,7 +11,6 @@ function AnalogClockHours({
   is24Hour: boolean
   hours: number
 }) {
-  const { mode } = React.useContext(DisplayModeContext)
   const outerRange = getHourNumbers(false, circleSize, 12, 12)
   const innerRange = getHourNumbers(true, circleSize, 12, 12)
   const color = useTextColorOnPrimary()
