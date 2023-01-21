@@ -34,11 +34,16 @@ function AnalogClockHours({
           <View style={styles.outerHourInner}>
             {/* Display 00 instead of 12 for AM hours */}
             <Text
-              style={hours === i + 1 ? { color } : null}
+              style={
+                (hours === i + 1 && hours !== 12) ||
+                (i + 1 === 12 && hours === 0)
+                  ? { color }
+                  : null
+              }
               variant="bodyLarge"
               selectable={false}
             >
-              {mode === 'AM' && is24Hour && i + 1 === 12 ? '00' : i + 1}
+              {(mode === 'AM' || is24Hour) && i + 1 === 12 ? '00' : i + 1}
             </Text>
           </View>
         </View>
@@ -60,13 +65,13 @@ function AnalogClockHours({
                 <Text
                   selectable={false}
                   style={[
-                    i + 13 === hours || (i + 13 === 24 && hours === 0)
+                    i + 13 === hours || (i + 13 === 24 && hours === 12)
                       ? { color }
                       : null,
                   ]}
                   variant="bodyLarge"
                 >
-                  {i + 13 === 24 ? '00' : i + 13}
+                  {i + 13 === 24 ? '12' : i + 13}
                 </Text>
               </View>
             </View>

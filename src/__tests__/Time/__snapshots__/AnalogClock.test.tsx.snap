@@ -788,13 +788,11 @@ exports[`renders AnalogClock 1`] = `
                 {
                   "writingDirection": "ltr",
                 },
-                {
-                  "color": "rgba(255, 255, 255, 1)",
-                },
+                null,
               ]
             }
           >
-            12
+            00
           </Text>
         </View>
       </View>
