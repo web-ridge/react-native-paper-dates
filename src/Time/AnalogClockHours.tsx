@@ -35,6 +35,7 @@ function AnalogClockHours({
             {/* Display 00 instead of 12 for AM hours */}
             <Text
               style={
+                (!is24Hour && i + 1 === hours) ||
                 (hours === i + 1 && hours !== 12) ||
                 (i + 1 === 12 && hours === 0)
                   ? { color }
@@ -43,7 +44,7 @@ function AnalogClockHours({
               variant="bodyLarge"
               selectable={false}
             >
-              {(mode === 'AM' || is24Hour) && i + 1 === 12 ? '00' : i + 1}
+              {is24Hour && i + 1 === 12 ? '00' : i + 1}
             </Text>
           </View>
         </View>
