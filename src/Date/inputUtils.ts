@@ -25,12 +25,14 @@ export default function useDateInput({
   const inputFormat = useInputFormat({ formatter, locale })
   const formattedValue = value ? formatter.format(value) : ''
   const onChangeText = (date: string) => {
-    const dayIndex = inputFormat.indexOf('DD')
-    const monthIndex = inputFormat.indexOf('MM')
-    const yearIndex =
-      locale === 'pt'
-        ? inputFormat.indexOf('AAAA')
-        : inputFormat.indexOf('YYYY')
+    const { dd, mm, yyyy } = getTranslation(locale, 'dateFormat', () => ({
+      yyyy: 'YYYY',
+      mm: 'MM',
+      dd: 'DD',
+    }))
+    const dayIndex = inputFormat.indexOf(dd)
+    const monthIndex = inputFormat.indexOf(mm)
+    const yearIndex = inputFormat.indexOf(yyyy)
 
     const day = Number(date.slice(dayIndex, dayIndex + 2))
     const year = Number(date.slice(yearIndex, yearIndex + 4))

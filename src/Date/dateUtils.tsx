@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { useLatest } from '../utils'
 import type { ValidRangeType } from './Calendar'
+import { getTranslation } from '../translations/utils'
 
 export type DisableWeekDaysType = number[]
 
@@ -225,11 +226,13 @@ export function useInputFormat({
 }) {
   return React.useMemo(() => {
     // TODO: something cleaner and more universal?
+    const { dd, mm, yyyy } = getTranslation(locale, 'dateFormat', () => ({
+      yyyy: 'YYYY',
+      mm: 'MM',
+      dd: 'DD',
+    }))
     const inputDate = formatter.format(new Date(2020, 10 - 1, 1))
-    return inputDate
-      .replace('2020', locale === 'pt' ? 'AAAA' : 'YYYY')
-      .replace('10', 'MM')
-      .replace('01', 'DD')
+    return inputDate.replace('2020', yyyy).replace('10', mm).replace('01', dd)
   }, [formatter, locale])
 }
 

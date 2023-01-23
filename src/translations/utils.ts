@@ -13,6 +13,11 @@ export type TranslationsType = {
   typeInDate: string
   pickDateFromCalendar: string
   close: string
+  dateFormat: {
+    dd: string
+    mm: string
+    yyyy: string
+  }
 }
 
 let translationsPerLocale: Record<string, TranslationsType> = {}
