@@ -226,11 +226,11 @@ export function useInputFormat({
 }) {
   return React.useMemo(() => {
     // TODO: something cleaner and more universal?
-    const { dd, mm, yyyy } = getTranslation(locale, 'dateFormat', () => ({
+    const { dd, mm, yyyy } = getTranslation(locale, 'dateFormat', {
       yyyy: 'YYYY',
       mm: 'MM',
       dd: 'DD',
-    }))
+    })
     const inputDate = formatter.format(new Date(2020, 10 - 1, 1))
     return inputDate.replace('2020', yyyy).replace('10', mm).replace('01', dd)
   }, [formatter, locale])
