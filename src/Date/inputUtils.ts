@@ -25,11 +25,11 @@ export default function useDateInput({
   const inputFormat = useInputFormat({ formatter, locale })
   const formattedValue = value ? formatter.format(value) : ''
   const onChangeText = (date: string) => {
-    const { dd, mm, yyyy } = getTranslation(locale, 'dateFormat', () => ({
+    const { dd, mm, yyyy } = getTranslation(locale, 'dateFormat', {
       yyyy: 'YYYY',
       mm: 'MM',
       dd: 'DD',
-    }))
+    })
     const dayIndex = inputFormat.indexOf(dd)
     const monthIndex = inputFormat.indexOf(mm)
     const yearIndex = inputFormat.indexOf(yyyy)
