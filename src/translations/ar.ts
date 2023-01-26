@@ -17,5 +17,10 @@ const ar: TranslationsType = {
   typeInDate: 'اكتب التاريخ',
   pickDateFromCalendar: 'اختر التاريخ من التقويم',
   close: 'أغلق',
+  dateFormat: {
+    dd: 'يوم',
+    mm: 'شهر',
+    yyyy: 'سنة',
+  },
 }
 export default ar

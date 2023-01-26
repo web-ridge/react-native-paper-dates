@@ -17,5 +17,10 @@ const nl: TranslationsType = {
   typeInDate: 'Typ datum',
   pickDateFromCalendar: 'Kies datum van kalender',
   close: 'Sluit',
+  dateFormat: {
+    dd: 'DD',
+    mm: 'MM',
+    yyyy: 'JJJJ',
+  },
 }
 export default nl

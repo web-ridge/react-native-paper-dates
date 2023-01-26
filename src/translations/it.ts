@@ -17,5 +17,10 @@ const it: TranslationsType = {
   typeInDate: 'Digita la data',
   pickDateFromCalendar: 'Scegli data dal calendario',
   close: 'Chiudi',
+  dateFormat: {
+    dd: 'GG',
+    mm: 'MM',
+    yyyy: 'AAAA',
+  },
 }
 export default it

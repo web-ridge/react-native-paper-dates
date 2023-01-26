@@ -17,5 +17,10 @@ const pl: TranslationsType = {
   typeInDate: 'Wpisz datę',
   pickDateFromCalendar: 'Wybierz datę z kalendarza',
   close: 'Zamknij',
+  dateFormat: {
+    dd: 'DD',
+    mm: 'MM',
+    yyyy: 'RRRR',
+  },
 }
 export default pl

@@ -17,5 +17,10 @@ const tr: TranslationsType = {
   typeInDate: 'Tarihi yazın',
   pickDateFromCalendar: 'Takvimden tarih seçin',
   close: 'Kapat',
+  dateFormat: {
+    dd: 'GG',
+    mm: 'AA',
+    yyyy: 'YYYY',
+  },
 }
 export default tr

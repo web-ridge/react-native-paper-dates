@@ -17,5 +17,10 @@ const ko: TranslationsType = {
   typeInDate: '날짜 입력',
   pickDateFromCalendar: '달력에서 날짜 선택',
   close: '닫기',
+  dateFormat: {
+    dd: 'YYYY년',
+    mm: 'MM월',
+    yyyy: 'DD일',
+  },
 }
 export default ko
