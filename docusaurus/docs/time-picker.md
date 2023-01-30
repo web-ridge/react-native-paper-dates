@@ -105,3 +105,11 @@ The icon used to toggle between the OS input. Defaults to `keyboard-outline`. Yo
 **clockIcon**  
 `Type: string | undefined`  
 The icon used to toggle between time picker and input. Defaults to `clock-outline`. You can pass the name of an icon from [MaterialCommunityIcons](https://materialdesignicons.com/).
+
+**use24HourClock**
+`Type: boolean | undefined`
+Flag indicating if the time input should use the 24 hours clock. Defaults to the system clock.
+
+**inputFontSize**
+`Type: number | undefined`
+Font size of the time input. Defaults to 57. Useful when using a custom font.

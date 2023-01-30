@@ -36,6 +36,8 @@ function TimePicker({
   inputType,
   onChange,
   locale,
+  use24HourClock,
+  inputFontSize,
 }: {
   locale?: undefined | string
   inputType: PossibleInputTypes
@@ -44,6 +46,8 @@ function TimePicker({
   minutes: number
   onFocusInput: (type: PossibleClockTypes) => any
   onChange: onChangeFunc
+  use24HourClock?: boolean
+  inputFontSize?: number
 }) {
   const [displayMode, setDisplayMode] = React.useState<'AM' | 'PM' | undefined>(
     undefined
@@ -53,6 +57,9 @@ function TimePicker({
 
   // method to check whether we have 24 hours in clock or 12
   const is24Hour = React.useMemo(() => {
+    if (use24HourClock !== undefined) {
+      return use24HourClock
+    }
     const formatter = new Intl.DateTimeFormat(locale, {
       hour: '2-digit',
       minute: '2-digit',
@@ -60,7 +67,7 @@ function TimePicker({
     })
     const formatted = formatter.format(new Date(Date.UTC(2020, 1, 1, 23)))
     return formatted.includes('23')
-  }, [locale])
+  }, [locale, use24HourClock])
 
   // Initialize display Mode according the hours value
   React.useEffect(() => {
@@ -104,6 +111,7 @@ function TimePicker({
       >
         <TimeInputs
           inputType={inputType}
+          inputFontSize={inputFontSize}
           hours={hours}
           minutes={minutes}
           is24Hour={is24Hour}

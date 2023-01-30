@@ -55,6 +55,8 @@ export function TimePickerModal({
   locale,
   keyboardIcon = 'keyboard-outline',
   clockIcon = 'clock-outline',
+  use24HourClock,
+  inputFontSize,
 }: {
   locale?: undefined | string
   label?: string
@@ -69,6 +71,8 @@ export function TimePickerModal({
   animationType?: 'slide' | 'fade' | 'none'
   keyboardIcon?: string
   clockIcon?: string
+  use24HourClock?: boolean
+  inputFontSize?: number
 }) {
   const theme = useTheme()
 
@@ -188,6 +192,8 @@ export function TimePickerModal({
                 <TimePicker
                   locale={locale}
                   inputType={inputType}
+                  use24HourClock={use24HourClock}
+                  inputFontSize={inputFontSize}
                   focused={focused}
                   hours={localHours}
                   minutes={localMinutes}

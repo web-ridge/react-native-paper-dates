@@ -27,6 +27,7 @@ function TimeInputs({
   inputType,
   onChange,
   is24Hour,
+  inputFontSize,
 }: {
   inputType: PossibleInputTypes
   focused: PossibleClockTypes
@@ -39,6 +40,7 @@ function TimeInputs({
     focused?: undefined | PossibleClockTypes
   }) => any
   is24Hour: boolean
+  inputFontSize?: number
 }) {
   const startInput = React.useRef<TextInputNative | null>(null)
   const endInput = React.useRef<TextInputNative | null>(null)
@@ -78,6 +80,7 @@ function TimeInputs({
       <View style={styles.column}>
         <TimeInput
           ref={startInput}
+          inputFontSize={inputFontSize}
           placeholder={'00'}
           value={toHourInputFormat(hours, is24Hour)}
           clockType={clockTypes.hours}
@@ -145,6 +148,7 @@ function TimeInputs({
       <View style={styles.column}>
         <TimeInput
           ref={endInput}
+          inputFontSize={inputFontSize}
           placeholder={'00'}
           value={minutes}
           clockType={clockTypes.minutes}

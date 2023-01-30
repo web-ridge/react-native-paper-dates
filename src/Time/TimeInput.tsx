@@ -24,6 +24,7 @@ interface TimeInputProps
   pressed: boolean
   onChanged: (n: number) => any
   inputType: PossibleInputTypes
+  inputFontSize?: number
 }
 
 function TimeInput(
@@ -34,6 +35,7 @@ function TimeInput(
     onPress,
     onChanged,
     inputType,
+    inputFontSize = 57,
     ...rest
   }: TimeInputProps,
   ref: any
@@ -77,6 +79,7 @@ function TimeInput(
           // eslint-disable-next-line react-native/no-inline-styles
           {
             color,
+            fontSize: inputFontSize,
             backgroundColor,
             borderRadius: theme.roundness * 2,
             borderColor:
@@ -123,7 +126,6 @@ function TimeInput(
 const styles = StyleSheet.create({
   root: { position: 'relative', height: 80, width: 96 },
   input: {
-    fontSize: 57,
     textAlign: 'center',
     textAlignVertical: 'center',
     width: 96,
