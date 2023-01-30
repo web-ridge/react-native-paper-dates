@@ -38,6 +38,7 @@ function DatePickerInput(
             size={24}
             style={styles.calendarButton}
             icon={calendarIcon}
+            disabled={rest.disabled}
             onPress={() => setVisible(true)}
           />
         ) : null
