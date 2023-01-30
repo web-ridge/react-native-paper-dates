@@ -43,7 +43,7 @@ function AnalogClock({
   const theme = useTheme()
   const { mode } = React.useContext(DisplayModeContext)
   // used to make pointer shorter if hours are selected and above 12
-  const shortPointer = (hours === 0 || hours > 12) && is24Hour
+  const shortPointer = hours >= 12 && is24Hour
   const clockRef = React.useRef<View | null>(null)
   // Hooks are nice, sometimes... :-)..
   // We need the latest values, since the onPointerMove uses a closure to the function
@@ -74,15 +74,16 @@ function AnalogClock({
         if (hours12AndPm || hours24AndPM) {
           pickedHours += 12
         }
-        if (modeRef.current === 'AM' && pickedHours === 12) {
+        if ((modeRef.current === 'AM' || hours24) && pickedHours === 12) {
           pickedHours = 0
         }
 
-        if (
-          (!hours24 && modeRef.current === 'AM' && pickedHours === 12) ||
-          pickedHours === 24
-        ) {
+        if (!hours24 && modeRef.current === 'AM' && pickedHours === 12) {
           pickedHours = 0
+        }
+
+        if (pickedHours === 24) {
+          pickedHours = 12
         }
 
         if (hoursRef.current !== pickedHours || final) {

@@ -654,9 +654,7 @@ exports[`renders AnalogClockHours 1`] = `
             {
               "writingDirection": "ltr",
             },
-            {
-              "color": "rgba(255, 255, 255, 1)",
-            },
+            null,
           ]
         }
       >
@@ -1339,12 +1337,14 @@ exports[`renders AnalogClockHours 1`] = `
               "writingDirection": "ltr",
             },
             [
-              null,
+              {
+                "color": "rgba(255, 255, 255, 1)",
+              },
             ],
           ]
         }
       >
-        00
+        12
       </Text>
     </View>
   </View>,
