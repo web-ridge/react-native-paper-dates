@@ -3506,7 +3506,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
             style={
               [
                 {
-                  "backgroundColor": "rgba(231, 224, 236, 1)",
+                  "backgroundColor": "rgba(29, 25, 43, 0.08)",
                   "borderTopLeftRadius": 4,
                   "borderTopRightRadius": 4,
                 },
@@ -3520,7 +3520,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
               collapsable={false}
               style={
                 {
-                  "backgroundColor": "rgba(28, 27, 31, 1)",
+                  "backgroundColor": "rgba(28, 27, 31, 0.38)",
                   "bottom": 0,
                   "height": 1,
                   "left": 0,
@@ -3576,7 +3576,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                   onLayout={[Function]}
                   style={
                     {
-                      "color": "rgba(103, 80, 164, 1)",
+                      "color": "rgba(28, 27, 31, 0.38)",
                       "fontFamily": "System",
                       "fontSize": 16,
                       "fontWeight": undefined,
@@ -3613,7 +3613,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                   numberOfLines={1}
                   style={
                     {
-                      "color": "rgba(73, 69, 79, 1)",
+                      "color": "rgba(28, 27, 31, 0.38)",
                       "fontFamily": "System",
                       "fontSize": 16,
                       "fontWeight": undefined,
@@ -3647,7 +3647,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
               </View>
               <TextInput
                 autoComplete="off"
-                editable={true}
+                editable={false}
                 keyboardAppearance="default"
                 keyboardType="number-pad"
                 maxFontSizeMultiplier={1.5}
@@ -3658,8 +3658,8 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                 onFocus={[Function]}
                 onSubmitEditing={[Function]}
                 placeholder=" "
-                placeholderTextColor="rgba(73, 69, 79, 1)"
-                selectionColor="rgba(103, 80, 164, 1)"
+                placeholderTextColor="rgba(28, 27, 31, 0.38)"
+                selectionColor="rgba(28, 27, 31, 0.38)"
                 style={
                   [
                     {
@@ -3678,7 +3678,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       "paddingTop": 24,
                     },
                     {
-                      "color": "rgba(73, 69, 79, 1)",
+                      "color": "rgba(28, 27, 31, 0.38)",
                       "fontFamily": "System",
                       "fontSize": 16,
                       "fontWeight": undefined,

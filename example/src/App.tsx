@@ -311,6 +311,7 @@ function App() {
       <DatePickerModal
         locale={locale}
         mode="single"
+        inputEnabled={true}
         visible={singleOpen}
         onDismiss={onDismissSingle}
         date={date}

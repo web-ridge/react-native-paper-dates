@@ -32,6 +32,7 @@ interface DatePickerModalContentBaseProps {
   disableSafeTop?: boolean
   saveLabelDisabled?: boolean
   uppercase?: boolean
+  inputEnabled?: boolean
 }
 
 export interface DatePickerModalContentRangeProps

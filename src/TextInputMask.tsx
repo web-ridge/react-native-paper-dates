@@ -72,6 +72,7 @@ function TextInputWithMask(
     onChange,
     value,
     mask,
+    disabled,
     ...rest
   }: React.ComponentProps<typeof TextInput> & { mask: string; value: string },
   ref: any
@@ -99,6 +100,7 @@ function TextInputWithMask(
   return (
     <TextInput
       ref={ref}
+      disabled={disabled}
       {...rest}
       value={controlledValue}
       onChangeText={onInnerChange}
