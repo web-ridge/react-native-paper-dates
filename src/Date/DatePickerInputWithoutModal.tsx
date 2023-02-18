@@ -61,6 +61,16 @@ function DatePickerInputWithoutModal(
     onValidationError,
   })
 
+  let disabled
+
+  if (inputEnabled !== undefined) {
+    disabled = !inputEnabled
+  }
+
+  if (rest.disabled) {
+    disabled = rest.disabled
+  }
+
   return (
     <>
       <View style={styles.root}>
@@ -77,7 +87,7 @@ function DatePickerInputWithoutModal(
             value={formattedValue}
             keyboardType={rest.keyboardType ?? 'number-pad'}
             mask={inputFormat}
-            disabled={!inputEnabled}
+            disabled={disabled}
             onChangeText={onDateInputChangeText}
             onChange={(e) => onChangeText && onChangeText(e.nativeEvent.text)}
             keyboardAppearance={theme.dark ? 'dark' : 'default'}

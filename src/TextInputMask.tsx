@@ -100,8 +100,8 @@ function TextInputWithMask(
   return (
     <TextInput
       ref={ref}
-      disabled={disabled}
       {...rest}
+      disabled={disabled}
       value={controlledValue}
       onChangeText={onInnerChange}
       onChange={(e) => {

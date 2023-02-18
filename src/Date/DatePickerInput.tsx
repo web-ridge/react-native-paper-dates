@@ -54,6 +54,7 @@ function DatePickerInput(
         uppercase,
         startYear,
         endYear,
+        inputEnabled,
       }) =>
         withModal ? (
           <DatePickerModal
@@ -70,6 +71,7 @@ function DatePickerInput(
             uppercase={uppercase ?? true}
             startYear={startYear ?? 1800}
             endYear={endYear ?? 2200}
+            inputEnabled={inputEnabled}
           />
         ) : null
       }

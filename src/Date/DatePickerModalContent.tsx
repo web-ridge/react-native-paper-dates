@@ -196,6 +196,7 @@ export function DatePickerModalContent(
             onChange={onInnerChange}
             validRange={validRange}
             locale={locale}
+            inputEnabled={props.inputEnabled}
           />
         }
       />
