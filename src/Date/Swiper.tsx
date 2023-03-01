@@ -94,7 +94,6 @@ function VerticalScroller({
   const [visibleIndexes, setVisibleIndexes] = React.useState<number[]>(
     visibleArray(initialIndex)
   )
-  // eslint-disable-next-line no-undef
   const parentRef = React.useRef<HTMLDivElement | null>(null)
 
   useIsomorphicLayoutEffect(() => {
@@ -132,6 +131,7 @@ function VerticalScroller({
   return (
     <div
       ref={parentRef}
+      // eslint-disable-next-line react-native/no-inline-styles
       style={{
         height,
         width,
@@ -140,6 +140,7 @@ function VerticalScroller({
       onScroll={onScroll}
     >
       <div
+        // eslint-disable-next-line react-native/no-inline-styles
         style={{
           height: estimatedHeight * totalMonths,
           position: 'relative',
@@ -148,6 +149,7 @@ function VerticalScroller({
         {[0, 1, 2, 3, 4].map((vi) => (
           <div
             key={vi}
+            // eslint-disable-next-line react-native/no-inline-styles
             style={{
               willChange: 'transform',
               transform: `translateY(${getVerticalMonthsOffset(
