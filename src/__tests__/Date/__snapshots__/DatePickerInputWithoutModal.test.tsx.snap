@@ -178,7 +178,6 @@ exports[`renders DatePickerInput 1`] = `
           style={
             [
               {
-                "flexGrow": 1,
                 "margin": 0,
               },
               {
@@ -206,6 +205,7 @@ exports[`renders DatePickerInput 1`] = `
               [
                 {},
               ],
+              undefined,
             ]
           }
           testID="text-input-flat"

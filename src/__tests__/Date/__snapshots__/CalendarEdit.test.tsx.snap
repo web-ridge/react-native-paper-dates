@@ -186,7 +186,6 @@ exports[`renders CalendarEdit 1`] = `
             style={
               [
                 {
-                  "flexGrow": 1,
                   "margin": 0,
                 },
                 {
@@ -214,6 +213,7 @@ exports[`renders CalendarEdit 1`] = `
                 [
                   {},
                 ],
+                undefined,
               ]
             }
             testID="text-input-flat"

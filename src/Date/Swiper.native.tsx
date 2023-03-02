@@ -175,6 +175,7 @@ function SwiperInner({
             ? new Array(visibleIndexes.length).fill(undefined).map((_, vi) => (
                 <View
                   key={vi}
+                  // eslint-disable-next-line react-native/no-inline-styles
                   style={{
                     top: isHorizontal
                       ? 0

@@ -13,19 +13,19 @@
   },
   "dependencies": {
     "add": "^2.0.6",
-    "expo": "^47.0.0",
+    "expo": "^47.0.13",
     "expo-splash-screen": "~0.17.5",
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-native": "0.70.5",
-    "react-native-paper": "^5.0.2",
-    "react-native-web": "~0.18.7"
+    "react-native-paper": "^5.2.0",
+    "react-native-web": "~0.18.12"
   },
   "devDependencies": {
-    "@babel/core": "^7.19.3",
-    "@babel/runtime": "^7.9.6",
+    "@babel/core": "^7.21.0",
+    "@babel/runtime": "^7.21.0",
     "babel-plugin-module-resolver": "^4.0.0",
     "babel-preset-expo": "~9.2.1",
-    "expo-cli": "^6.0.5"
+    "expo-cli": "^6.3.2"
   }
 }

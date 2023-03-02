@@ -51,7 +51,6 @@ exports[`renders TimePicker 1`] = `
           style={
             [
               {
-                "fontSize": 57,
                 "textAlign": "center",
                 "textAlignVertical": "center",
                 "width": 96,
@@ -62,6 +61,7 @@ exports[`renders TimePicker 1`] = `
                 "borderRadius": 8,
                 "borderWidth": 0,
                 "color": "rgba(28, 27, 31, 1)",
+                "fontSize": 57,
                 "height": 72,
               },
             ]
@@ -186,7 +186,6 @@ exports[`renders TimePicker 1`] = `
           style={
             [
               {
-                "fontSize": 57,
                 "textAlign": "center",
                 "textAlignVertical": "center",
                 "width": 96,
@@ -197,6 +196,7 @@ exports[`renders TimePicker 1`] = `
                 "borderRadius": 8,
                 "borderWidth": 0,
                 "color": "rgba(28, 27, 31, 1)",
+                "fontSize": 57,
                 "height": 72,
               },
             ]
