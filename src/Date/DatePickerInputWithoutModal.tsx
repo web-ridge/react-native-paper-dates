@@ -27,6 +27,7 @@ function DatePickerInputWithoutModal(
     startYear,
     endYear,
     onChangeText,
+    inputEnabled,
     ...rest
   }: DatePickerInputProps & {
     modal?: (params: {
@@ -39,6 +40,7 @@ function DatePickerInputWithoutModal(
       uppercase: DatePickerInputProps['uppercase']
       startYear: DatePickerInputProps['startYear']
       endYear: DatePickerInputProps['endYear']
+      inputEnabled: DatePickerInputProps['inputEnabled']
     }) => any
     inputButtons?: any
   },
@@ -59,6 +61,16 @@ function DatePickerInputWithoutModal(
     onValidationError,
   })
 
+  let disabled
+
+  if (inputEnabled !== undefined) {
+    disabled = !inputEnabled
+  }
+
+  if (rest.disabled) {
+    disabled = rest.disabled
+  }
+
   return (
     <>
       <View style={styles.root}>
@@ -75,6 +87,7 @@ function DatePickerInputWithoutModal(
             value={formattedValue}
             keyboardType={rest.keyboardType ?? 'number-pad'}
             mask={inputFormat}
+            disabled={disabled}
             onChangeText={onDateInputChangeText}
             onChange={(e) => onChangeText && onChangeText(e.nativeEvent.text)}
             keyboardAppearance={theme.dark ? 'dark' : 'default'}
@@ -99,6 +112,7 @@ function DatePickerInputWithoutModal(
         uppercase,
         startYear,
         endYear,
+        inputEnabled,
       })}
     </>
   )

@@ -132,3 +132,7 @@ The edit icon used to toggle between calendar and input. Defaults to `pencil`. Y
 **calendarIcon**  
 `Type: string | undefined`  
 The edit icon used to toggle between input and calendar. Defaults to `calendar`. You can pass the name of an icon from [MaterialCommunityIcons](https://materialdesignicons.com/).
+
+**inputEnabled**  
+`Type: boolean | undefined`  
+Flag indicating if the component should be enabled or not. Defaults to `true`.

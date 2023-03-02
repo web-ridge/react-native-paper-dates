@@ -99,4 +99,8 @@ The start year when the component is rendered. Defaults to `1800`.
 `Type: number | undefined`  
 The end year when the component is rendered. Defaults to `2200`.
 
+**inputEnabled**  
+`Type: boolean | undefined`  
+Flag indicating if the component should be enabled or not. Behavior similarly to `disabled`. Defaults to `true`.
+
 * Other [react-native TextInput props](https://reactnative.dev/docs/textinput#props).*

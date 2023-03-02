@@ -32,6 +32,7 @@ interface DatePickerModalContentBaseProps {
   disableSafeTop?: boolean
   saveLabelDisabled?: boolean
   uppercase?: boolean
+  inputEnabled?: boolean
 }
 
 export interface DatePickerModalContentRangeProps
@@ -195,6 +196,7 @@ export function DatePickerModalContent(
             onChange={onInnerChange}
             validRange={validRange}
             locale={locale}
+            inputEnabled={props.inputEnabled}
           />
         }
       />

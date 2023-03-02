@@ -27,6 +27,7 @@ export interface HeaderContentProps extends HeaderPickProps {
   collapsed: boolean
   onToggle: () => any
   locale: string | undefined
+  inputDate?: boolean
 }
 
 function getLabel(
@@ -60,13 +61,18 @@ export default function DatePickerModalContentHeader(
     uppercase,
     editIcon,
     calendarIcon,
+    inputDate,
   } = props
   const theme = useTheme()
   const label = getLabel(props.locale, props.mode, props.label)
 
   const color = useHeaderTextColor()
   const supportingTextColor = theme.isV3 ? theme.colors.onSurfaceVariant : color
-  const allowEditing = mode !== 'multiple'
+  let allowEditing = mode !== 'multiple'
+
+  if (inputDate !== undefined) {
+    allowEditing = inputDate
+  }
 
   let textFont = theme?.isV3
     ? theme.fonts.labelMedium
