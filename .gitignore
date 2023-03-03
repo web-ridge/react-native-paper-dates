@@ -4,6 +4,7 @@
 
 # XDE
 .expo/
+/example/dist
 
 # VSCode
 .vscode/
@@ -61,3 +62,6 @@ lib/
 
 .env
 web-build
+
+# Code Coverage
+/coverage/

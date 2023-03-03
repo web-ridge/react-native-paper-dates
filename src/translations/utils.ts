@@ -26,14 +26,14 @@ export function getTranslation<K extends keyof TranslationsType>(
   const translationForLocale = translationsPerLocale[l]
   if (!translationForLocale) {
     console.warn(
-      `[react-native-paper-dates] ${locale} is not registered, key: ${key}`
+      `[react-native-paper-dates] The locale ${locale} is not registered, see README!, key: ${key}`
     )
     return fallback || key
   }
   const translation = translationsPerLocale[l][key]
   if (!translation) {
     console.warn(
-      `[react-native-paper-dates] ${locale} is registered, but ${key} is missing`
+      `[react-native-paper-dates] The locale ${locale} is registered, but ${key} is missing`
     )
   }
   return translation || fallback || key

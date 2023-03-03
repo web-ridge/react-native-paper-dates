@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { FlatList, StyleSheet, View, ScrollView } from 'react-native'
 import { Text, TouchableRipple, useTheme } from 'react-native-paper'
+import { MD2Theme, Text, TouchableRipple, useTheme } from 'react-native-paper'
 import { range } from '../utils'
 
 const ITEM_HEIGHT = 62
@@ -20,7 +21,10 @@ export default function YearPicker({
 }) {
   const theme = useTheme()
   const flatList = React.useRef<FlatList<number> | null>(null)
-  const years = range(isNaN(startYear) ? 1800 : startYear, isNaN(endYear) ? 2200 : endYear)
+  const years = range(
+    isNaN(startYear) ? 1800 : startYear,
+    isNaN(endYear) ? 2200 : endYear
+  )
 
   // scroll to selected year
   React.useEffect(() => {
@@ -31,7 +35,7 @@ export default function YearPicker({
         animated: false,
       })
     }
-  }, [flatList, selectedYear])
+  }, [flatList, selectedYear, startYear])
 
   return (
     <View
@@ -74,6 +78,11 @@ function YearPure({
   onPressYear: (newYear: number) => any
 }) {
   const theme = useTheme()
+
+  let textFont = theme?.isV3
+    ? theme.fonts.bodyLarge
+    : (theme as any as MD2Theme).fonts.medium
+
   return (
     <View style={styles.year}>
       <TouchableRipple
@@ -89,7 +98,18 @@ function YearPure({
           ]}
         >
           <Text
-            style={[styles.yearLabel, selected ? styles.selectedYear : null]}
+            style={[
+              styles.yearLabel,
+              selected
+                ? // eslint-disable-next-line react-native/no-inline-styles
+                  { color: theme.isV3 ? theme.colors.onPrimary : '#fff' }
+                : {
+                    color: theme.isV3
+                      ? theme.colors.onSurfaceVariant
+                      : undefined,
+                  },
+              { ...textFont },
+            ]}
             selectable={false}
           >
             {year}
@@ -118,7 +138,6 @@ const styles = StyleSheet.create({
     height: ITEM_HEIGHT,
     justifyContent: 'center',
   },
-  selectedYear: { color: '#fff' },
   yearButton: {
     borderRadius: 46 / 2,
     overflow: 'hidden',

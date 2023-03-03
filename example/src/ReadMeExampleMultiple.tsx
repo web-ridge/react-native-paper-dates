@@ -11,7 +11,7 @@ export default function ReadMeExampleMultiple() {
     setOpen(false)
   }, [setOpen])
 
-  const onConfirm = React.useCallback((params) => {
+  const onConfirm = React.useCallback((params: any) => {
     setOpen(false)
     setDates(params.dates)
     console.log('[on-change-multi]', params)

@@ -1,0 +1,198 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders AmPmSwitcher 1`] = `
+<View
+  style={
+    [
+      {
+        "borderWidth": 1,
+        "overflow": "hidden",
+        "width": 52,
+      },
+      {
+        "borderColor": "rgba(121, 116, 126, 1)",
+        "borderRadius": 8,
+        "height": 72,
+        "marginBottom": 24,
+      },
+    ]
+  }
+>
+  <View
+    accessibilityComponentType="button"
+    accessibilityLabel="AM"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "disabled": true,
+      }
+    }
+    accessibilityTraits={
+      [
+        "button",
+        "disabled",
+      ]
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      [
+        false,
+        false,
+        {
+          "flex": 1,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        [
+          {
+            "alignItems": "center",
+            "flex": 1,
+            "justifyContent": "center",
+          },
+          {
+            "backgroundColor": "rgba(234, 221, 255, 1)",
+          },
+        ]
+      }
+    >
+      <Text
+        selectable={false}
+        style={
+          [
+            {
+              "textAlign": "left",
+            },
+            {
+              "color": "rgba(28, 27, 31, 1)",
+              "fontFamily": "System",
+              "fontWeight": "400",
+              "letterSpacing": 0,
+            },
+            {
+              "writingDirection": "ltr",
+            },
+            [
+              {
+                "color": "rgba(73, 69, 79, 1)",
+                "fontFamily": "System",
+                "fontSize": 16,
+                "fontWeight": "500",
+                "letterSpacing": 0.15,
+                "lineHeight": 24,
+              },
+            ],
+          ]
+        }
+      >
+        AM
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      [
+        {
+          "height": 1,
+          "width": 52,
+        },
+        {
+          "backgroundColor": "rgba(121, 116, 126, 1)",
+        },
+      ]
+    }
+  />
+  <View
+    accessibilityComponentType="button"
+    accessibilityLabel="PM"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "disabled": false,
+      }
+    }
+    accessibilityTraits="button"
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      [
+        false,
+        false,
+        {
+          "flex": 1,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        [
+          {
+            "alignItems": "center",
+            "flex": 1,
+            "justifyContent": "center",
+          },
+          {
+            "backgroundColor": "rgba(255, 251, 254, 1)",
+          },
+        ]
+      }
+    >
+      <Text
+        selectable={false}
+        style={
+          [
+            {
+              "textAlign": "left",
+            },
+            {
+              "color": "rgba(28, 27, 31, 1)",
+              "fontFamily": "System",
+              "fontWeight": "400",
+              "letterSpacing": 0,
+            },
+            {
+              "writingDirection": "ltr",
+            },
+            [
+              {
+                "color": "rgba(73, 69, 79, 1)",
+                "fontFamily": "System",
+                "fontSize": 16,
+                "fontWeight": "500",
+                "letterSpacing": 0.15,
+                "lineHeight": 24,
+              },
+            ],
+          ]
+        }
+      >
+        PM
+      </Text>
+    </View>
+  </View>
+</View>
+`;

@@ -1,6 +1,6 @@
 {
   "name": "react-native-paper-dates",
-  "version": "0.9.2",
+  "version": "0.11.14",
   "description": "Performant Date Picker for React Native Paper",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -22,14 +22,17 @@
     "!**/__mocks__"
   ],
   "scripts": {
-    "test": "jest",
-    "typescript": "tsc --noEmit",
+    "test": "jest --config=jest.config.js --watchAll=false",
+    "test-watch": "jest --config=jest.config.js --watchAll",
+    "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "prepare": "husky install && bob build",
-    "release": "release-it",
+    "release": "release-it --ci --github.autoGenerate",
     "example": "yarn --cwd example",
     "pods": "cd example && pod-install --quiet",
-    "bootstrap": "yarn example && yarn && yarn pods"
+    "bootstrap": "yarn example && yarn && yarn pods",
+    "prepack": "bob build",
+    "build-example": "cd example && expo build:web"
   },
   "keywords": [
     "react-native",
@@ -47,29 +50,37 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "^17.0.3",
-    "@react-native-community/eslint-config": "^3.1.0",
-    "@release-it/conventional-changelog": "^5.1.0",
+    "@commitlint/config-conventional": "^17.4.4",
+    "@react-native-community/eslint-config": "^3.2.0",
+    "@release-it/conventional-changelog": "^5.1.1",
+    "@testing-library/jest-native": "^5.4.2",
+    "@testing-library/react-native": "^11.5.2",
     "@types/color": "^3.0.3",
-    "@types/jest": "^28.1.8",
-    "@types/react": "^18.0.17",
-    "@types/react-native": "^0.69.5",
-    "babel-loader": "^8.2.5",
-    "commitlint": "^17.0.3",
-    "eslint": "^8.22.0",
-    "eslint-config-prettier": "^8.5.0",
+    "@types/jest": "^29.4.0",
+    "@types/react": "^18.0.28",
+    "@types/react-native": "^0.70.11",
+    "@types/react-native-vector-icons": "^6.4.13",
+    "babel-loader": "^8.3.0",
+    "commitlint": "^17.4.4",
+    "eslint": "^8.35.0",
+    "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "expo-cli": "^6.0.5",
-    "husky": "^8.0.1",
-    "jest": "^29.0.0",
+    "expo-cli": "^6.3.2",
+    "husky": "^8.0.3",
+    "jest": "^29.4.3",
     "pod-install": "^0.1.38",
-    "prettier": "^2.7.1",
+    "prettier": "^2.8.4",
     "react": "^18.2.0",
-    "react-native": "^0.69.5",
+    "react-native": "^0.70.7",
     "react-native-builder-bob": "^0.18.3",
-    "react-native-paper": "^4.12.4",
-    "release-it": "^15.4.0",
-    "typescript": "^4.7.4"
+    "react-native-paper": "^5.2.0",
+    "react-native-safe-area-context": "^4.5.0",
+    "react-native-vector-icons": "^9.2.0",
+    "release-it": "^15.7.0",
+    "typescript": "^4.9.5",
+    "react-test-renderer": "^18.2.0",
+    "@types/react-test-renderer": "^18.0.0",
+    "caniuse-lite": "^1.0.30001458"
   },
   "peerDependencies": {
     "react": "*",
@@ -80,7 +91,7 @@
   "husky": {
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "yarn lint && yarn typescript"
+      "pre-commit": "yarn lint && yarn typecheck"
     }
   },
   "commitlint": {
@@ -129,7 +140,9 @@
     "node_modules/",
     "lib/",
     "example/node_modules",
-    "example/web-build"
+    "example/web-build",
+    "docusaurus",
+    "coverage"
   ],
   "prettier": {
     "quoteProps": "consistent",
@@ -154,7 +167,6 @@
     ]
   },
   "dependencies": {
-    "caniuse-lite": "^1.0.30001383",
     "color": "^3.2.1"
   }
 }

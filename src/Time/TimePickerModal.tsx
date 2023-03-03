@@ -9,7 +9,14 @@ import {
   KeyboardAvoidingView,
 } from 'react-native'
 
-import { Button, IconButton, overlay, useTheme } from 'react-native-paper'
+import {
+  Button,
+  IconButton,
+  MD2Theme,
+  overlay,
+  useTheme,
+} from 'react-native-paper'
+
 import TimePicker from './TimePicker'
 import {
   clockTypes,
@@ -20,7 +27,13 @@ import {
   reverseInputTypes,
 } from './timeUtils'
 
-const supportedOrientations: any[] = [
+const supportedOrientations: (
+  | 'portrait'
+  | 'portrait-upside-down'
+  | 'landscape'
+  | 'landscape-left'
+  | 'landscape-right'
+)[] = [
   'portrait',
   'portrait-upside-down',
   'landscape',
@@ -42,6 +55,8 @@ export function TimePickerModal({
   locale,
   keyboardIcon = 'keyboard-outline',
   clockIcon = 'clock-outline',
+  use24HourClock,
+  inputFontSize,
 }: {
   locale?: undefined | string
   label?: string
@@ -56,8 +71,19 @@ export function TimePickerModal({
   animationType?: 'slide' | 'fade' | 'none'
   keyboardIcon?: string
   clockIcon?: string
+  use24HourClock?: boolean
+  inputFontSize?: number
 }) {
   const theme = useTheme()
+
+  let textFont
+  let labelText = label
+
+  if (theme.isV3) {
+    textFont = theme.fonts.labelMedium
+  } else {
+    textFont = (theme as any as MD2Theme)?.fonts.medium
+  }
 
   const [inputType, setInputType] = React.useState<PossibleInputTypes>(
     inputTypes.picker
@@ -69,6 +95,10 @@ export function TimePickerModal({
   const [localMinutes, setLocalMinutes] = React.useState<number>(
     getMinutes(minutes)
   )
+
+  if (inputType === inputTypes.keyboard && !label) {
+    labelText = 'Enter time'
+  }
 
   React.useEffect(() => {
     setLocalHours(getHours(hours))
@@ -105,7 +135,6 @@ export function TimePickerModal({
       onRequestClose={onDismiss}
       presentationStyle="overFullScreen"
       supportedOrientations={supportedOrientations}
-      //@ts-ignore
       statusBarTranslucent={true}
     >
       <>
@@ -114,11 +143,10 @@ export function TimePickerModal({
             style={[
               StyleSheet.absoluteFill,
               styles.modalBackground,
-              { backgroundColor: theme.colors.backdrop },
+              { backgroundColor: theme.colors?.backdrop },
             ]}
           />
         </TouchableWithoutFeedback>
-
         <View
           style={[StyleSheet.absoluteFill, styles.modalRoot]}
           pointerEvents="box-none"
@@ -131,22 +159,41 @@ export function TimePickerModal({
               style={[
                 styles.modalContent,
                 {
-                  backgroundColor: theme.dark
-                    ? overlay(10, theme.colors.surface)
-                    : theme.colors.surface,
-                  borderRadius: theme.roundness,
+                  backgroundColor:
+                    theme.dark && theme.isV3
+                      ? theme.colors.elevation.level3
+                      : theme.isV3
+                      ? theme.colors.surface
+                      : theme.dark
+                      ? overlay(10, theme.colors.surface)
+                      : theme.colors.surface,
+                  borderRadius: theme.isV3
+                    ? theme.roundness * 6
+                    : theme.roundness,
                 },
               ]}
             >
               <View style={styles.labelContainer}>
-                <Text style={[styles.label, { color: theme.colors.text }]}>
-                  {uppercase ? label.toUpperCase() : label}
+                <Text
+                  style={[
+                    styles.label,
+                    {
+                      ...textFont,
+                      color: theme?.isV3
+                        ? theme.colors.onSurfaceVariant
+                        : (theme as any as MD2Theme).colors.text,
+                    },
+                  ]}
+                >
+                  {uppercase ? labelText.toUpperCase() : labelText}
                 </Text>
               </View>
               <View style={styles.timePickerContainer}>
                 <TimePicker
                   locale={locale}
                   inputType={inputType}
+                  use24HourClock={use24HourClock}
+                  inputFontSize={inputFontSize}
                   focused={focused}
                   hours={localHours}
                   minutes={localMinutes}
@@ -217,20 +264,26 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.34,
     shadowRadius: 6.27,
-    elevation: 10,
+    elevation: 3,
     minWidth: 287,
+    paddingVertical: 8,
   },
   labelContainer: {
-    height: 28,
     justifyContent: 'flex-end',
     paddingLeft: 24,
     paddingRight: 24,
+    paddingTop: 16,
   },
   label: {
     letterSpacing: 1,
     fontSize: 13,
   },
-  timePickerContainer: { padding: 24 },
+  timePickerContainer: {
+    paddingLeft: 24,
+    paddingTop: 20,
+    paddingBottom: 16,
+    paddingRight: 24,
+  },
   bottom: {
     flexDirection: 'row',
     alignItems: 'center',

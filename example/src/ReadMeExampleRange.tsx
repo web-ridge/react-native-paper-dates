@@ -16,7 +16,7 @@ export default function ReadMeExampleRange() {
   }, [setOpen])
 
   const onConfirm = React.useCallback(
-    ({ startDate, endDate }) => {
+    ({ startDate, endDate }: any) => {
       setOpen(false)
       setRange({ startDate, endDate })
     },

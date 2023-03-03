@@ -1,9 +1,10 @@
 import * as React from 'react'
-import { Animated, StyleSheet, SafeAreaView } from 'react-native'
-import { Appbar, Button } from 'react-native-paper'
+import { Animated, StyleSheet } from 'react-native'
+import { Appbar, Button, useTheme } from 'react-native-paper'
 
 import { useHeaderTextColor } from '../utils'
 import { getTranslation } from '../translations/utils'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export interface DatePickerModalHeaderProps {
   disableSafeTop?: boolean
@@ -19,40 +20,45 @@ export interface DatePickerModalHeaderProps {
 export default function DatePickerModalHeader(
   props: DatePickerModalHeaderProps
 ) {
+  const theme = useTheme()
   const { disableSafeTop, locale, closeIcon = 'close' } = props
   const saveLabel = props.saveLabel || getTranslation(locale, 'save')
   const color = useHeaderTextColor()
+  const insets = useSafeAreaInsets()
+
   return (
-    <>
-      <Animated.View style={styles.animated}>
-        <SafeAreaView
-          style={[
-            styles.safeContent,
-            disableSafeTop && styles.safeContentNoTop,
-          ]}
+    <Animated.View
+      style={[
+        styles.animated,
+        // eslint-disable-next-line react-native/no-inline-styles
+        {
+          paddingTop: disableSafeTop ? 0 : insets.top,
+          paddingLeft: insets.left,
+          paddingRight: insets.right,
+        },
+      ]}
+    >
+      <Appbar style={styles.appbarHeader}>
+        <Appbar.Action
+          icon={closeIcon}
+          accessibilityLabel={getTranslation(locale, 'close')}
+          onPress={props.onDismiss}
+          color={color}
+          testID="react-native-paper-dates-close"
+        />
+        <Appbar.Content title={''} />
+        <Button
+          color={color}
+          textColor={theme.isV3 ? theme.colors.primary : color}
+          onPress={props.onSave}
+          disabled={props.saveLabelDisabled ?? false}
+          uppercase={props.uppercase ?? true}
+          testID="react-native-paper-dates-save"
         >
-          <Appbar style={styles.appbarHeader}>
-            <Appbar.Action
-              icon={closeIcon}
-              accessibilityLabel={getTranslation(locale, 'close')}
-              onPress={props.onDismiss}
-              color={color}
-              testID="react-native-paper-dates-close"
-            />
-            <Appbar.Content title={''} />
-            <Button
-              color={color}
-              onPress={props.onSave}
-              disabled={props.saveLabelDisabled || false}
-              uppercase={props.uppercase || true}
-              testID="react-native-paper-dates-save"
-            >
-              {saveLabel}
-            </Button>
-          </Appbar>
-        </SafeAreaView>
-      </Animated.View>
-    </>
+          {saveLabel}
+        </Button>
+      </Appbar>
+    </Animated.View>
   )
 }
 
@@ -61,15 +67,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   animated: {
-    paddingBottom: 0,
     elevation: 4,
   },
-  safeContent: {
-    paddingBottom: 0,
-  },
-  safeContentNoTop: {
-    paddingTop: 0,
-  },
+
   header: {
     height: 75,
     alignItems: 'center',
@@ -92,6 +92,5 @@ const styles = StyleSheet.create({
   appbarHeader: {
     elevation: 0,
     backgroundColor: 'transparent',
-    // alignItems:'center'
   },
 })

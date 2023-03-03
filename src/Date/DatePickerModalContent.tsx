@@ -11,7 +11,6 @@ import Calendar, {
 } from './Calendar'
 
 import AnimatedCrossView from './AnimatedCrossView'
-
 import DatePickerModalHeader from './DatePickerModalHeader'
 import DatePickerModalContentHeader, {
   HeaderPickProps,
@@ -32,6 +31,8 @@ interface DatePickerModalContentBaseProps {
   onDismiss: () => any
   disableSafeTop?: boolean
   saveLabelDisabled?: boolean
+  uppercase?: boolean
+  inputEnabled?: boolean
 }
 
 export interface DatePickerModalContentRangeProps
@@ -85,7 +86,6 @@ export function DatePickerModalContent(
     startYear,
     endYear,
   } = props
-
   const anyProps = props as any
 
   // use local state to add only onConfirm state changes
@@ -145,8 +145,8 @@ export function DatePickerModalContent(
           onSave={onInnerConfirm}
           onDismiss={onDismiss}
           saveLabel={props.saveLabel}
-          saveLabelDisabled={props.saveLabelDisabled || false}
-          uppercase={props.uppercase || true}
+          saveLabelDisabled={props.saveLabelDisabled ?? false}
+          uppercase={props.uppercase ?? true}
           disableSafeTop={disableSafeTop}
           closeIcon={props.closeIcon}
         />
@@ -161,14 +161,13 @@ export function DatePickerModalContent(
           moreLabel={props.moreLabel}
           startLabel={props.startLabel}
           endLabel={props.endLabel}
-          uppercase={props.uppercase || true}
+          uppercase={props.uppercase ?? true}
           locale={locale}
-          editIcon={props.editIcon}
+          editIcon={props?.editIcon}
           calendarIcon={props.calendarIcon}
           allowEditing={props.allowEditing || true}
         />
       </DatePickerModalHeaderBackground>
-
       <AnimatedCrossView
         collapsed={collapsed}
         calendar={
@@ -198,6 +197,7 @@ export function DatePickerModalContent(
             onChange={onInnerChange}
             validRange={validRange}
             locale={locale}
+            inputEnabled={props.inputEnabled}
           />
         }
       />

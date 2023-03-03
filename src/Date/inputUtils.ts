@@ -1,7 +1,7 @@
 import { useInputFormat, useInputFormatter, useRangeChecker } from './dateUtils'
 import * as React from 'react'
 import type { ValidRangeType } from './Calendar'
-import { getTranslation } from 'react-native-paper-dates'
+import { getTranslation } from '../translations/utils'
 
 export default function useDateInput({
   locale,
@@ -9,19 +9,21 @@ export default function useDateInput({
   validRange,
   inputMode,
   onChange,
+  onValidationError,
 }: {
   onChange: (d: Date) => void
   locale: undefined | string
   value: Date | undefined
   validRange: ValidRangeType | undefined
   inputMode: 'start' | 'end'
+  onValidationError?: ((error: string | null) => void) | undefined
 }) {
   const { isDisabled, isWithinValidRange, validStart, validEnd } =
     useRangeChecker(validRange)
   const [error, setError] = React.useState<null | string>(null)
   const formatter = useInputFormatter({ locale })
   const inputFormat = useInputFormat({ formatter, locale })
-  const formattedValue = value !== null ? formatter.format(value) : '';
+  const formattedValue = value ? formatter.format(value) : ''
   const onChangeText = (date: string) => {
     const dayIndex = inputFormat.indexOf('DD')
     const monthIndex = inputFormat.indexOf('MM')
@@ -35,13 +37,13 @@ export default function useDateInput({
     const month = Number(date.slice(monthIndex, monthIndex + 2))
 
     if (Number.isNaN(day) || Number.isNaN(year) || Number.isNaN(month)) {
-      setError(
-        getTranslation(
-          locale,
-          'notAccordingToDateFormat',
-          () => 'notAccordingToDateFormat'
-        )(inputFormat)
-      )
+      const inputError = getTranslation(
+        locale,
+        'notAccordingToDateFormat',
+        () => 'notAccordingToDateFormat'
+      )(inputFormat)
+      setError(inputError)
+      onValidationError && onValidationError(inputError)
       return
     }
 
@@ -51,7 +53,9 @@ export default function useDateInput({
         : new Date(year, month - 1, day)
 
     if (isDisabled(finalDate)) {
-      setError(getTranslation(locale, 'dateIsDisabled'))
+      const inputError = getTranslation(locale, 'dateIsDisabled')
+      setError(inputError)
+      onValidationError && onValidationError(inputError)
       return
     }
     if (!isWithinValidRange(finalDate)) {
@@ -80,11 +84,14 @@ export default function useDateInput({
                   )(formatter.format(validEnd))
                 : '',
             ]
+      const inputError = errors.filter((n) => n).join(' ')
       setError(errors.filter((n) => n).join(' '))
+      onValidationError && onValidationError(inputError)
       return
     }
 
     setError(null)
+    onValidationError && onValidationError(null)
     if (inputMode === 'end') {
       onChange(finalDate)
     } else {

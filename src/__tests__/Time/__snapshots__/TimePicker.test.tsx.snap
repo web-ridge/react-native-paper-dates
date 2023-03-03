@@ -1,0 +1,434 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders TimePicker 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "justifyContent": "center",
+    }
+  }
+>
+  <View
+    style={
+      [
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+        },
+        false,
+      ]
+    }
+  >
+    <View
+      style={
+        {
+          "flexDirection": "column",
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "height": 80,
+            "position": "relative",
+            "width": 96,
+          }
+        }
+      >
+        <TextInput
+          blurOnSubmit={false}
+          keyboardAppearance="default"
+          keyboardType="number-pad"
+          maxLength={2}
+          onBlur={[Function]}
+          onChangeText={[Function]}
+          onFocus={[Function]}
+          onSubmitEditing={[Function]}
+          placeholder="00"
+          returnKeyType="next"
+          selectionColor="rgba(103, 80, 164, 1)"
+          style={
+            [
+              {
+                "textAlign": "center",
+                "textAlignVertical": "center",
+                "width": 96,
+              },
+              {
+                "backgroundColor": "rgba(231, 224, 236, 1)",
+                "borderColor": undefined,
+                "borderRadius": 8,
+                "borderWidth": 0,
+                "color": "rgba(28, 27, 31, 1)",
+                "fontSize": 57,
+                "height": 72,
+              },
+            ]
+          }
+          value="06"
+        />
+      </View>
+      <Text
+        style={
+          [
+            {
+              "color": "rgba(28, 27, 31, 1)",
+              "fontFamily": "System",
+              "fontSize": 12,
+              "fontWeight": "400",
+              "letterSpacing": 0.4,
+              "lineHeight": 16,
+            },
+            {
+              "textAlign": "left",
+            },
+            {
+              "writingDirection": "ltr",
+            },
+            undefined,
+          ]
+        }
+      >
+        Hour
+      </Text>
+    </View>
+    <View
+      style={
+        [
+          {
+            "alignItems": "center",
+            "fontSize": 65,
+            "width": 24,
+          },
+          {
+            "marginBottom": 24,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          {
+            "flex": 1,
+          }
+        }
+      />
+      <View
+        style={
+          [
+            {
+              "borderRadius": 3.5,
+              "height": 7,
+              "width": 7,
+            },
+            {
+              "backgroundColor": "rgba(28, 27, 31, 1)",
+            },
+          ]
+        }
+      />
+      <View
+        style={
+          {
+            "height": 12,
+          }
+        }
+      />
+      <View
+        style={
+          [
+            {
+              "borderRadius": 3.5,
+              "height": 7,
+              "width": 7,
+            },
+            {
+              "backgroundColor": "rgba(28, 27, 31, 1)",
+            },
+          ]
+        }
+      />
+      <View
+        style={
+          {
+            "flex": 1,
+          }
+        }
+      />
+    </View>
+    <View
+      style={
+        {
+          "flexDirection": "column",
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "height": 80,
+            "position": "relative",
+            "width": 96,
+          }
+        }
+      >
+        <TextInput
+          keyboardAppearance="default"
+          keyboardType="number-pad"
+          maxLength={2}
+          onBlur={[Function]}
+          onChangeText={[Function]}
+          onFocus={[Function]}
+          onSubmitEditing={[Function]}
+          placeholder="00"
+          selectionColor="rgba(103, 80, 164, 1)"
+          style={
+            [
+              {
+                "textAlign": "center",
+                "textAlignVertical": "center",
+                "width": 96,
+              },
+              {
+                "backgroundColor": "rgba(231, 224, 236, 1)",
+                "borderColor": undefined,
+                "borderRadius": 8,
+                "borderWidth": 0,
+                "color": "rgba(28, 27, 31, 1)",
+                "fontSize": 57,
+                "height": 72,
+              },
+            ]
+          }
+          value="30"
+        />
+      </View>
+      <Text
+        style={
+          [
+            {
+              "color": "rgba(28, 27, 31, 1)",
+              "fontFamily": "System",
+              "fontSize": 12,
+              "fontWeight": "400",
+              "letterSpacing": 0.4,
+              "lineHeight": 16,
+            },
+            {
+              "textAlign": "left",
+            },
+            {
+              "writingDirection": "ltr",
+            },
+            undefined,
+          ]
+        }
+      >
+        Minute
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "width": 12,
+        }
+      }
+    />
+    <View
+      style={
+        [
+          {
+            "borderWidth": 1,
+            "overflow": "hidden",
+            "width": 52,
+          },
+          {
+            "borderColor": "rgba(121, 116, 126, 1)",
+            "borderRadius": 8,
+            "height": 72,
+            "marginBottom": 24,
+          },
+        ]
+      }
+    >
+      <View
+        accessibilityComponentType="button"
+        accessibilityLabel="AM"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "disabled": false,
+          }
+        }
+        accessibilityTraits="button"
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          [
+            false,
+            false,
+            {
+              "flex": 1,
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "alignItems": "center",
+                "flex": 1,
+                "justifyContent": "center",
+              },
+              {
+                "backgroundColor": "rgba(255, 251, 254, 1)",
+              },
+            ]
+          }
+        >
+          <Text
+            selectable={false}
+            style={
+              [
+                {
+                  "textAlign": "left",
+                },
+                {
+                  "color": "rgba(28, 27, 31, 1)",
+                  "fontFamily": "System",
+                  "fontWeight": "400",
+                  "letterSpacing": 0,
+                },
+                {
+                  "writingDirection": "ltr",
+                },
+                [
+                  {
+                    "color": "rgba(73, 69, 79, 1)",
+                    "fontFamily": "System",
+                    "fontSize": 16,
+                    "fontWeight": "500",
+                    "letterSpacing": 0.15,
+                    "lineHeight": 24,
+                  },
+                ],
+              ]
+            }
+          >
+            AM
+          </Text>
+        </View>
+      </View>
+      <View
+        style={
+          [
+            {
+              "height": 1,
+              "width": 52,
+            },
+            {
+              "backgroundColor": "rgba(121, 116, 126, 1)",
+            },
+          ]
+        }
+      />
+      <View
+        accessibilityComponentType="button"
+        accessibilityLabel="PM"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "disabled": true,
+          }
+        }
+        accessibilityTraits={
+          [
+            "button",
+            "disabled",
+          ]
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          [
+            false,
+            false,
+            {
+              "flex": 1,
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "alignItems": "center",
+                "flex": 1,
+                "justifyContent": "center",
+              },
+              {
+                "backgroundColor": "rgba(234, 221, 255, 1)",
+              },
+            ]
+          }
+        >
+          <Text
+            selectable={false}
+            style={
+              [
+                {
+                  "textAlign": "left",
+                },
+                {
+                  "color": "rgba(28, 27, 31, 1)",
+                  "fontFamily": "System",
+                  "fontWeight": "400",
+                  "letterSpacing": 0,
+                },
+                {
+                  "writingDirection": "ltr",
+                },
+                [
+                  {
+                    "color": "rgba(73, 69, 79, 1)",
+                    "fontFamily": "System",
+                    "fontSize": 16,
+                    "fontWeight": "500",
+                    "letterSpacing": 0.15,
+                    "lineHeight": 24,
+                  },
+                ],
+              ]
+            }
+          >
+            PM
+          </Text>
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;

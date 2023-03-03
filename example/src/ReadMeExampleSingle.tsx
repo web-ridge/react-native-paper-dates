@@ -11,7 +11,7 @@ export default function ReadMeExampleSingle() {
   }, [setOpen])
 
   const onConfirmSingle = React.useCallback(
-    (params) => {
+    (params: any) => {
       setOpen(false)
       setDate(params.date)
     },

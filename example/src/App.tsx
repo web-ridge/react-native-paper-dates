@@ -6,16 +6,14 @@ import {
   Linking,
   Image,
   Animated,
-  useColorScheme,
 } from 'react-native'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 import {
   Title,
   Button,
   Text,
   Provider as PaperProvider,
-  DefaultTheme,
-  DarkTheme,
   useTheme,
   overlay,
   Paragraph,
@@ -81,7 +79,7 @@ function App() {
   }, [setCustomOpen])
 
   const onChangeRange = React.useCallback(
-    ({ startDate, endDate }) => {
+    ({ startDate, endDate }: any) => {
       setRangeOpen(false)
       setRange({ startDate, endDate })
     },
@@ -89,21 +87,21 @@ function App() {
   )
 
   const onChangeSingle = React.useCallback(
-    (params) => {
+    (params: any) => {
       setSingleOpen(false)
       setDate(params.date)
     },
     [setSingleOpen, setDate]
   )
 
-  const onChangeMulti = React.useCallback((params) => {
+  const onChangeMulti = React.useCallback((params: any) => {
     setMultiOpen(false)
     setDates(params.dates)
     console.log('[on-change-multi]', params)
   }, [])
 
   const onConfirmTime = React.useCallback(
-    ({ hours, minutes }) => {
+    ({ hours, minutes }: any) => {
       setTimeOpen(false)
       setTime({ hours, minutes })
     },
@@ -118,7 +116,7 @@ function App() {
   const backgroundColor =
     theme.dark && theme.mode === 'adaptive'
       ? overlay(3, theme.colors.surface)
-      : (theme.colors.surface as any)
+      : theme.colors.surface
 
   const pastDate = new Date(new Date().setDate(new Date().getDate() - 5))
   const futureDate = new Date(new Date().setDate(new Date().getDate() + 5))
@@ -150,7 +148,6 @@ function App() {
               webRidge
             </Text>
           </Paragraph>
-          <Paragraph>Example version: 0.9.0</Paragraph>
         </View>
         <View style={styles.content}>
           <Button
@@ -178,17 +175,6 @@ function App() {
             },
           ]}
         >
-          {/*<View style={styles.switchContainer}>*/}
-          {/*  <Text style={[styles.switchLabel, { ...theme.fonts.medium }]}>*/}
-          {/*    Dark mode (does not wo*/}
-          {/*  </Text>*/}
-          {/*  <View style={styles.switchSpace} />*/}
-          {/*  <Switch value={dark} onValueChange={onToggleDarkMode} />*/}
-          {/*</View>*/}
-          {/*<Enter />*/}
-          {/*<Enter />*/}
-          {/*<Enter />*/}
-          {/*<Enter />*/}
           <View>
             <Row>
               <Label>Input</Label>
@@ -390,39 +376,18 @@ function Row({ children }: { children: any }) {
 function Label({ children }: { children: string }) {
   const theme = useTheme()
   return (
-    <Text style={[styles.label, { ...theme.fonts.medium }]}>{children}</Text>
+    <Text style={[styles.label, { ...theme.fonts.bodyLarge }]}>{children}</Text>
   )
 }
 
+const theme = { version: 3 }
 export default function AppWithProviders() {
-  const dark = useColorScheme() === 'dark'
-
   return (
-    <PaperProvider
-      theme={
-        dark
-          ? {
-              ...DarkTheme,
-              roundness: 10,
-              colors: {
-                ...DarkTheme.colors,
-                // primary: '#F59E00',
-                // accent: '#FBBE5E',
-              },
-            }
-          : {
-              ...DefaultTheme,
-              roundness: 10,
-              colors: {
-                ...DefaultTheme.colors,
-                // primary: '#F59E00',
-                // accent: '#FBBE5E',
-              },
-            }
-      }
-    >
-      <App />
-    </PaperProvider>
+    <SafeAreaProvider>
+      <PaperProvider theme={theme as any}>
+        <App />
+      </PaperProvider>
+    </SafeAreaProvider>
   )
 }
 
@@ -453,10 +418,9 @@ const styles = StyleSheet.create({
   content: {
     width: '100%',
     maxWidth: 500,
-    marginTop: 24,
+    marginTop: 12,
     padding: 24,
     alignSelf: 'center',
-    // flex: 1,
   },
   contentInline: {
     padding: 0,
@@ -490,8 +454,6 @@ const styles = StyleSheet.create({
     left: 12,
     right: 12,
     bottom: 12,
-    // borderTopRightRadius: 20,
-    // borderBottomRightRadius: 20,
     backgroundColor: '#fff',
     overflow: 'hidden',
     shadowColor: '#000',

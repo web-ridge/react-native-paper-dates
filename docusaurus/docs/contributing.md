@@ -1,3 +1,7 @@
+---
+sidebar_position: 3
+---
+
 # Contributing
 
 We want this community to be friendly and respectful to each other. Please follow it in all your interactions with the project.
@@ -10,7 +14,7 @@ To get started with the project, run `yarn bootstrap` in the root directory to i
 yarn bootstrap
 ```
 
-While developing, you can run the [example app](/old-example/) to test your changes.
+While developing, you can run the [example app](https://github.com/web-ridge/react-native-paper-dates/tree/master/example) to test your changes.
 
 To start the packager:
 
@@ -76,7 +80,6 @@ The `package.json` file contains various scripts for common tasks:
 ### Sending a pull request
 
 > **Working on your first pull request?** You can learn how from this _free_ series: [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github).
-
 When you're sending a pull request:
 
 - Prefer small pull requests focused on one change.
@@ -161,11 +164,11 @@ Community leaders will follow these Community Impact Guidelines in determining t
 ### Attribution
 
 This Code of Conduct is adapted from the [Contributor Covenant][homepage], version 2.0,
-available at https://www.contributor-covenant.org/version/2/0/code_of_conduct.html.
+available at <https://www.contributor-covenant.org/version/2/0/code_of_conduct.html>.
 
 Community Impact Guidelines were inspired by [Mozilla's code of conduct enforcement ladder](https://github.com/mozilla/diversity).
 
 [homepage]: https://www.contributor-covenant.org
 
 For answers to common questions about this code of conduct, see the FAQ at
-https://www.contributor-covenant.org/faq. Translations are available at https://www.contributor-covenant.org/translations.
+<https://www.contributor-covenant.org/faq>. Translations are available at <https://www.contributor-covenant.org/translations>.

@@ -1,25 +1,33 @@
 import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
-import { Text, TouchableRipple, useTheme } from 'react-native-paper'
+import { MD2Theme, Text, TouchableRipple, useTheme } from 'react-native-paper'
 import { useMemo } from 'react'
 import Color from 'color'
-import { useSwitchColors } from './timeUtils'
+import { inputTypes, PossibleInputTypes, useSwitchColors } from './timeUtils'
 import { DisplayModeContext } from './TimePicker'
 
 export default function AmPmSwitcher({
   onChange,
   hours,
+  inputType,
 }: {
   hours: number
   onChange: (newHours: number) => any
+  inputType: PossibleInputTypes
 }) {
   const { setMode, mode } = React.useContext(DisplayModeContext)
   const theme = useTheme()
   const backgroundColor = useMemo<string>(() => {
-    if (theme.dark) {
-      return Color(theme.colors.surface).lighten(1.2).hex()
+    if (theme.isV3) {
+      return theme.colors.outline
     }
-    return Color(theme.colors.surface).darken(0.1).hex()
+    return Color(
+      theme.dark
+        ? Color(theme.colors.surface).lighten(1.2).hex()
+        : theme.colors.surface
+    )
+      .darken(0.1)
+      .hex()
   }, [theme])
 
   const isAM = mode === 'AM'
@@ -27,9 +35,12 @@ export default function AmPmSwitcher({
     <View
       style={[
         styles.root,
+        // eslint-disable-next-line react-native/no-inline-styles
         {
           borderColor: backgroundColor,
-          borderRadius: theme.roundness,
+          borderRadius: theme.roundness * 2,
+          height: inputType === inputTypes.keyboard ? 72 : 80,
+          marginBottom: inputType === 'keyboard' ? 24 : 0,
         },
       ]}
     >
@@ -74,6 +85,10 @@ function SwitchButton({
   const theme = useTheme()
   const { backgroundColor, color } = useSwitchColors(selected)
 
+  let textFont = theme?.isV3
+    ? theme.fonts.titleMedium
+    : (theme as any as MD2Theme).fonts.medium
+
   return (
     <TouchableRipple
       onPress={onPress}
@@ -92,7 +107,7 @@ function SwitchButton({
           selectable={false}
           style={[
             {
-              ...theme.fonts.medium,
+              ...textFont,
               color: color,
             },
           ]}
@@ -106,14 +121,13 @@ function SwitchButton({
 
 const styles = StyleSheet.create({
   root: {
-    width: 50,
-    height: 80,
+    width: 52,
     borderWidth: 1,
     overflow: 'hidden',
   },
   switchSeparator: {
     height: 1,
-    width: 48,
+    width: 52,
   },
   switchButton: {
     flex: 1,

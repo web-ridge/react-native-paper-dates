@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders DayName 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flex": 1,
+    }
+  }
+>
+  <Text
+    selectable={false}
+    style={
+      [
+        {
+          "textAlign": "left",
+        },
+        {
+          "color": "rgba(28, 27, 31, 1)",
+          "fontFamily": "System",
+          "fontWeight": "400",
+          "letterSpacing": 0,
+        },
+        {
+          "writingDirection": "ltr",
+        },
+        [
+          {
+            "fontSize": 14,
+            "opacity": 0.7,
+          },
+          {
+            "color": "rgba(28, 27, 31, 1)",
+            "fontFamily": "System",
+            "fontSize": 12,
+            "fontWeight": "400",
+            "letterSpacing": 0.4,
+            "lineHeight": 16,
+          },
+        ],
+      ]
+    }
+  >
+    Monday
+  </Text>
+</View>
+`;

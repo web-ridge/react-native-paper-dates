@@ -1,8 +1,10 @@
 import * as React from 'react'
-import { DarkTheme, Text, TouchableRipple } from 'react-native-paper'
+import { MD2Theme, Text, TouchableRipple } from 'react-native-paper'
 import { StyleSheet, View } from 'react-native'
 import DayRange from './DayRange'
 import { daySize } from './dateUtils'
+
+import type { PaperTheme } from '../utils'
 
 function EmptyDayPure() {
   return <View style={styles.empty} />
@@ -10,7 +12,7 @@ function EmptyDayPure() {
 export const EmptyDay = React.memo(EmptyDayPure)
 
 function Day(props: {
-  theme: typeof DarkTheme
+  theme: PaperTheme
   textColorOnPrimary: string
   day: number
   month: number
@@ -41,19 +43,32 @@ function Day(props: {
     textColorOnPrimary,
     theme,
   } = props
-  // console.log(month, { day })
   const onPress = React.useCallback(() => {
     onPressDate(new Date(year, month, day))
   }, [onPressDate, year, month, day])
 
-  const borderColor =
-    selected || (inRange && theme.dark)
-      ? textColorOnPrimary
-      : theme.dark
-      ? '#fff'
-      : '#000'
+  const borderColor = theme.isV3
+    ? theme.colors.primary
+    : selected || (inRange && theme.dark)
+    ? textColorOnPrimary
+    : theme.dark
+    ? '#fff'
+    : '#000'
+
   const textColor =
-    selected || (inRange && theme.dark) ? textColorOnPrimary : undefined
+    theme.isV3 && selected
+      ? theme.colors.onPrimary
+      : theme.isV3 && inRange && theme.dark
+      ? theme.colors.onPrimaryContainer
+      : selected || (inRange && theme.dark)
+      ? textColorOnPrimary
+      : theme.isV3
+      ? theme.colors.onSurface
+      : undefined
+
+  let textFont = theme?.isV3
+    ? theme.fonts.bodySmall
+    : (theme as any as MD2Theme).fonts.medium
 
   return (
     <View style={[styles.root, disabled && styles.disabled]}>
@@ -63,7 +78,6 @@ function Day(props: {
         rightCrop={rightCrop}
         selectColor={selectColor}
       />
-
       <TouchableRipple
         testID={`react-native-paper-dates-day-${year}-${month}-${day}`}
         disabled={disabled}
@@ -83,7 +97,19 @@ function Day(props: {
           ]}
         >
           <Text
-            style={textColor ? { color: textColor } : undefined}
+            style={[
+              textColor
+                ? {
+                    color:
+                      theme.isV3 && isToday && selected
+                        ? textColor
+                        : theme.isV3 && isToday
+                        ? theme.colors.primary
+                        : textColor,
+                  }
+                : undefined,
+              { ...textFont },
+            ]}
             selectable={false}
           >
             {day}

@@ -1,5 +1,11 @@
 import * as React from 'react'
-import { View, TextInput, TextInputProps, StyleSheet } from 'react-native'
+import {
+  View,
+  TextInput,
+  TextInputProps,
+  StyleSheet,
+  Platform,
+} from 'react-native'
 import { useTheme, TouchableRipple } from 'react-native-paper'
 
 import Color from 'color'
@@ -18,6 +24,7 @@ interface TimeInputProps
   pressed: boolean
   onChanged: (n: number) => any
   inputType: PossibleInputTypes
+  inputFontSize?: number
 }
 
 function TimeInput(
@@ -28,6 +35,7 @@ function TimeInput(
     onPress,
     onChanged,
     inputType,
+    inputFontSize = 57,
     ...rest
   }: TimeInputProps,
   ref: any
@@ -68,10 +76,18 @@ function TimeInput(
         ref={ref}
         style={[
           styles.input,
+          // eslint-disable-next-line react-native/no-inline-styles
           {
             color,
+            fontSize: inputFontSize,
             backgroundColor,
-            borderRadius: theme.roundness,
+            borderRadius: theme.roundness * 2,
+            borderColor:
+              theme.isV3 && highlighted
+                ? theme.colors.onPrimaryContainer
+                : undefined,
+            borderWidth: theme.isV3 && highlighted ? 2 : 0,
+            height: inputType === inputTypes.keyboard ? 72 : 80,
           },
         ]}
         value={formattedValue}
@@ -89,11 +105,14 @@ function TimeInput(
             StyleSheet.absoluteFill,
             styles.buttonOverlay,
             {
-              // backgroundColor: 'blue',
               borderRadius: theme.roundness,
             },
           ]}
-          rippleColor={Color(theme.colors.primary).fade(0.7).hex()}
+          rippleColor={
+            Platform.OS !== 'ios'
+              ? Color(theme.colors.onSurface).fade(0.7).hex()
+              : undefined
+          }
           onPress={() => onPress(clockType)}
           borderless={true}
         >
@@ -107,11 +126,9 @@ function TimeInput(
 const styles = StyleSheet.create({
   root: { position: 'relative', height: 80, width: 96 },
   input: {
-    fontSize: 50,
     textAlign: 'center',
     textAlignVertical: 'center',
     width: 96,
-    height: 80,
   },
   buttonOverlay: { overflow: 'hidden' },
 })

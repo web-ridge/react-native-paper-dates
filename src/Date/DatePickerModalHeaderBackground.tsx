@@ -1,6 +1,7 @@
-import { Animated, SafeAreaView, StyleSheet } from 'react-native'
+import { Animated, StyleSheet } from 'react-native'
 import * as React from 'react'
 import { useHeaderBackgroundColor } from '../utils'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default function DatePickerModalHeaderBackground({
   children,
@@ -8,27 +9,25 @@ export default function DatePickerModalHeaderBackground({
   children: any
 }) {
   const backgroundColor = useHeaderBackgroundColor()
-
+  const insets = useSafeAreaInsets()
   return (
     <Animated.View
       style={[
         styles.animated,
         {
           backgroundColor,
+          paddingLeft: insets.left,
+          paddingRight: insets.right,
         },
       ]}
     >
-      <SafeAreaView style={styles.safeContent}>{children}</SafeAreaView>
+      {children}
     </Animated.View>
   )
 }
 
 const styles = StyleSheet.create({
   animated: {
-    paddingBottom: 0,
     elevation: 4,
-  },
-  safeContent: {
-    paddingBottom: 0,
   },
 })

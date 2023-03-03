@@ -1,9 +1,8 @@
 import * as React from 'react'
 import Color from 'color'
-import { useTheme } from 'react-native-paper'
+import { MD2Theme, useTheme } from 'react-native-paper'
 
-// 250? when bigger?
-export const circleSize = 215
+export const circleSize = 256
 
 export type PossibleHourTypes = 'am' | 'pm'
 export type HourTypeMap = {
@@ -161,12 +160,18 @@ export function useSwitchColors(highlighted: boolean) {
   const backgroundColor = React.useMemo<string>(() => {
     if (theme.dark) {
       if (highlighted) {
-        return Color(theme.colors.primary).hex()
+        return theme.isV3
+          ? theme.colors.tertiaryContainer
+          : Color(theme.colors.primary).hex()
       }
       return theme.colors.backdrop
     }
 
     if (highlighted) {
+      if (theme.isV3) {
+        return theme.colors.primaryContainer
+      }
+
       return Color(theme.colors.primary).lighten(1).hex()
     }
     return theme.colors.surface
@@ -174,9 +179,18 @@ export function useSwitchColors(highlighted: boolean) {
 
   const color = React.useMemo<string>(() => {
     if (highlighted && !theme.dark) {
-      return theme.colors.primary
+      return theme.isV3 ? theme.colors.onSurfaceVariant : theme.colors.primary
     }
-    return theme.colors.placeholder
+    if (highlighted && theme.dark) {
+      return theme.isV3
+        ? theme.colors.onTertiaryContainer
+        : theme.colors.background
+    }
+    if (theme.isV3) {
+      return theme.colors.onSurfaceVariant
+    } else {
+      return (theme as any as MD2Theme).colors.placeholder
+    }
   }, [highlighted, theme])
 
   return { backgroundColor, color }
@@ -187,36 +201,58 @@ export function useInputColors(highlighted: boolean) {
   const backgroundColor = React.useMemo<string>(() => {
     if (theme.dark) {
       if (highlighted) {
-        return Color(theme.colors.primary).hex()
+        return theme.isV3
+          ? theme.colors.primaryContainer
+          : Color(theme.colors.primary).hex()
       }
-      return Color(theme.colors.surface).lighten(1.2).hex()
+      return theme.isV3
+        ? theme.colors.surfaceVariant
+        : Color(theme.colors.surface).lighten(1.4).hex()
     }
 
     if (highlighted) {
+      if (theme.isV3) {
+        return theme.colors.secondaryContainer
+      }
       return Color(theme.colors.primary).lighten(1).hex()
+    }
+    if (theme.isV3) {
+      return theme.colors.surfaceVariant
     }
     return Color(theme.colors.surface).darken(0.1).hex()
   }, [highlighted, theme])
 
   const color = React.useMemo<string>(() => {
-    if (highlighted && !theme.dark) {
-      return theme.colors.primary
+    if (theme.isV3) {
+      if (!highlighted) {
+        return theme.isV3 ? theme.colors.onSurface : theme.colors.onBackground
+      }
+      return theme.isV3
+        ? theme.colors.onPrimaryContainer
+        : theme.colors.onBackground
+    } else {
+      if (highlighted && !theme.dark) {
+        return theme.colors.primary
+      }
+      return (theme as any as MD2Theme).colors.text
     }
-    return theme.colors.text
   }, [highlighted, theme])
 
   return { backgroundColor, color }
 }
 
 export function toHourInputFormat(hours: number, is24Hour: boolean): number {
-  if (hours === 24) {
-    return 0
-  }
   if (is24Hour) {
+    if (hours === 24) {
+      return 0
+    }
     return hours
   }
   if (hours > 12) {
     return hours - 12
+  }
+  if (hours === 0) {
+    return hours + 12
   }
   return hours
 }
@@ -229,7 +265,10 @@ export function toHourOutputFormat(
   if (is24Hour) {
     return newHours
   }
-  if (previousHours > 12 && newHours < 12) {
+  if (previousHours === 0 && newHours !== 0) {
+    return newHours - 12 < 0 ? newHours : newHours - 12
+  }
+  if (previousHours >= 12 && newHours < 12) {
     return newHours + 12
   }
   return newHours
