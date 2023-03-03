@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { FlatList, StyleSheet, View, ScrollView } from 'react-native'
-import { Text, TouchableRipple, useTheme } from 'react-native-paper'
 import { MD2Theme, Text, TouchableRipple, useTheme } from 'react-native-paper'
 import { range } from '../utils'
 
