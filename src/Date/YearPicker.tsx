@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { FlatList, StyleSheet, View } from 'react-native'
+import { FlatList, StyleSheet, View, ScrollView } from 'react-native'
 import { MD2Theme, Text, TouchableRipple, useTheme } from 'react-native-paper'
 import { range } from '../utils'
 
@@ -50,6 +50,9 @@ export default function YearPicker({
         ref={flatList}
         style={styles.list}
         data={years}
+        renderScrollComponent={(sProps) => {
+          return <ScrollView {...sProps} />
+        }}
         renderItem={({ item }) => (
           <Year
             year={item}

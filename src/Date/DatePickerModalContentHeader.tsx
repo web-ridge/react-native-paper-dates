@@ -19,6 +19,7 @@ export interface HeaderPickProps {
   editIcon?: string
   calendarIcon?: string
   closeIcon?: string
+  allowEditing?: boolean
 }
 
 export interface HeaderContentProps extends HeaderPickProps {
@@ -62,19 +63,18 @@ export default function DatePickerModalContentHeader(
     editIcon,
     calendarIcon,
     inputDate,
+    allowEditing,
   } = props
   const theme = useTheme()
   const label = getLabel(props.locale, props.mode, props.label)
 
   const color = useHeaderTextColor()
+
+  const isAllowEditing = allowEditing && mode !== 'multiple' && inputDate !== undefined
+
   const supportingTextColor = theme.isV3 ? theme.colors.onSurfaceVariant : color
-  let allowEditing = mode !== 'multiple'
 
-  if (inputDate !== undefined) {
-    allowEditing = inputDate
-  }
-
-  let textFont = theme?.isV3
+  const textFont = theme?.isV3
     ? theme.fonts.labelMedium
     : (theme as any as MD2Theme).fonts.medium
 
@@ -103,7 +103,7 @@ export default function DatePickerModalContentHeader(
         </View>
       </View>
       <View style={styles.fill} />
-      {allowEditing ? (
+      {isAllowEditing ? (
         <IconButton
           icon={
             collapsed

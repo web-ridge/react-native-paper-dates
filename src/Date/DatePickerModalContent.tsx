@@ -165,6 +165,7 @@ export function DatePickerModalContent(
           locale={locale}
           editIcon={props?.editIcon}
           calendarIcon={props.calendarIcon}
+          allowEditing={props.allowEditing || true}
         />
       </DatePickerModalHeaderBackground>
       <AnimatedCrossView
