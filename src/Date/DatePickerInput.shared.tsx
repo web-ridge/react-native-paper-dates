@@ -23,5 +23,5 @@ export type DatePickerInputProps = {
   inputEnabled?: boolean
 } & Omit<
   React.ComponentProps<typeof TextInput>,
-  'value' | 'onChange' | 'onChangeText'
+  'value' | 'onChange' | 'onChangeText' | 'inputMode'
 >
