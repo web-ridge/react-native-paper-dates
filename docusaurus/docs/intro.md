@@ -36,13 +36,10 @@ npm install react-native-paper-dates --save
 
 ### Supported
 
-React-Native-Paper-Dates currently supports `en/nl/de/pl/pt/ar/ko/fr/tr/enGB` translations. Ideally you would do this somewhere before react-native-paper-dates is used. For example, you might add the follow to your `index.js` or `app.js`.
+React-Native-Paper-Dates currently supports `en/nl/de/pl/pt/ar/ko/fr/he/tr/enGB` translations. Ideally you would do this somewhere before react-native-paper-dates is used. For example, you might add the follow to your `index.js` or `app.js`.
 
 ```javascript
-import {
-  enGB,
-  registerTranslation,
-} from 'react-native-paper-dates'
+import { enGB, registerTranslation } from 'react-native-paper-dates'
 registerTranslation('en-GB', enGB)
 ```
 
@@ -51,10 +48,8 @@ registerTranslation('en-GB', enGB)
 React-Native-Paper-Dates also provides the ability to register your own translation. Ideally you would do this somewhere before react-native-paper-dates is used. For example, you might add the follow to your `index.js` or `app.js`.
 
 ```javascript
-import {
-  registerTranslation,
-} from 'react-native-paper-dates'
-registerTranslation("pl", {
+import { registerTranslation } from 'react-native-paper-dates'
+registerTranslation('pl', {
   save: 'Save',
   selectSingle: 'Select date',
   selectMultiple: 'Select dates',
@@ -119,41 +114,41 @@ Don't forget to import the languages you want to support, in the example only en
 
 ```javascript
 // on top of your index.android.js file
-const isAndroid = require('react-native').Platform.OS === 'android'; // this line is only needed if you don't use an .android.js file
-const isHermesEnabled = !!global.HermesInternal;  // this line is only needed if you don't use an .android.js file
+const isAndroid = require('react-native').Platform.OS === 'android' // this line is only needed if you don't use an .android.js file
+const isHermesEnabled = !!global.HermesInternal // this line is only needed if you don't use an .android.js file
 
 // in your index.js file
-if (isHermesEnabled || isAndroid) {  // this line is only needed if you don't use an .android.js file
+if (isHermesEnabled || isAndroid) {
+  // this line is only needed if you don't use an .android.js file
 
-  require('@formatjs/intl-getcanonicallocales/polyfill');
-  require('@formatjs/intl-locale/polyfill');
+  require('@formatjs/intl-getcanonicallocales/polyfill')
+  require('@formatjs/intl-locale/polyfill')
 
-  require('@formatjs/intl-pluralrules/polyfill');
-  require('@formatjs/intl-pluralrules/locale-data/en.js'); // USE YOUR OWN LANGUAGE OR MULTIPLE IMPORTS YOU WANT TO SUPPORT
+  require('@formatjs/intl-pluralrules/polyfill')
+  require('@formatjs/intl-pluralrules/locale-data/en.js') // USE YOUR OWN LANGUAGE OR MULTIPLE IMPORTS YOU WANT TO SUPPORT
 
-  require('@formatjs/intl-displaynames/polyfill');
-  require('@formatjs/intl-displaynames/locale-data/en.js'); // USE YOUR OWN LANGUAGE OR MULTIPLE IMPORTS YOU WANT TO SUPPORT
+  require('@formatjs/intl-displaynames/polyfill')
+  require('@formatjs/intl-displaynames/locale-data/en.js') // USE YOUR OWN LANGUAGE OR MULTIPLE IMPORTS YOU WANT TO SUPPORT
 
-  require('@formatjs/intl-listformat/polyfill');
-  require('@formatjs/intl-listformat/locale-data/en.js'); // USE YOUR OWN LANGUAGE OR MULTIPLE IMPORTS YOU WANT TO SUPPORT
+  require('@formatjs/intl-listformat/polyfill')
+  require('@formatjs/intl-listformat/locale-data/en.js') // USE YOUR OWN LANGUAGE OR MULTIPLE IMPORTS YOU WANT TO SUPPORT
 
-  require('@formatjs/intl-numberformat/polyfill');
-  require('@formatjs/intl-numberformat/locale-data/en.js'); // USE YOUR OWN LANGUAGE OR MULTIPLE IMPORTS YOU WANT TO SUPPORT
+  require('@formatjs/intl-numberformat/polyfill')
+  require('@formatjs/intl-numberformat/locale-data/en.js') // USE YOUR OWN LANGUAGE OR MULTIPLE IMPORTS YOU WANT TO SUPPORT
 
-  require('@formatjs/intl-relativetimeformat/polyfill');
-  require('@formatjs/intl-relativetimeformat/locale-data/en.js'); // USE YOUR OWN LANGUAGE OR MULTIPLE IMPORTS YOU WANT TO SUPPORT
+  require('@formatjs/intl-relativetimeformat/polyfill')
+  require('@formatjs/intl-relativetimeformat/locale-data/en.js') // USE YOUR OWN LANGUAGE OR MULTIPLE IMPORTS YOU WANT TO SUPPORT
 
-  require('@formatjs/intl-datetimeformat/polyfill');
-  require('@formatjs/intl-datetimeformat/locale-data/en.js'); // USE YOUR OWN LANGUAGE OR MULTIPLE IMPORTS YOU WANT TO SUPPORT
+  require('@formatjs/intl-datetimeformat/polyfill')
+  require('@formatjs/intl-datetimeformat/locale-data/en.js') // USE YOUR OWN LANGUAGE OR MULTIPLE IMPORTS YOU WANT TO SUPPORT
 
-  require('@formatjs/intl-datetimeformat/add-golden-tz.js');
+  require('@formatjs/intl-datetimeformat/add-golden-tz.js')
 
   // https://formatjs.io/docs/polyfills/intl-datetimeformat/#default-timezone
   if ('__setDefaultTimeZone' in Intl.DateTimeFormat) {
-
     // If you are using react-native-cli
-    let RNLocalize = require('react-native-localize');
-    Intl.DateTimeFormat.__setDefaultTimeZone(RNLocalize.getTimeZone());
+    let RNLocalize = require('react-native-localize')
+    Intl.DateTimeFormat.__setDefaultTimeZone(RNLocalize.getTimeZone())
 
     //  Are you using Expo, use this instead of previous 2 lines
     //  Intl.DateTimeFormat.__setDefaultTimeZone(
@@ -169,9 +164,9 @@ if (isHermesEnabled || isAndroid) {  // this line is only needed if you don't us
 - Try to avoid putting the Picker Modals inside of a scrollView If that is not possible use the following props on the surrounding ScrollViews/Flatlists
 
 ```javascript
-  keyboardDismissMode="on-drag"
-  keyboardShouldPersistTaps="handled"
-  contentInsetAdjustmentBehavior="always"
+keyboardDismissMode = 'on-drag'
+keyboardShouldPersistTaps = 'handled'
+contentInsetAdjustmentBehavior = 'always'
 ```
 
 This is to prevent the need to press 2 times before save or close button in modal works (1 press for closing keyboard, 1 press for confirm/close) [React Native Issue: #10138](https://github.com/facebook/react-native/issues/10138)
