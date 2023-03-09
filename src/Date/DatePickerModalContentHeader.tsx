@@ -70,7 +70,8 @@ export default function DatePickerModalContentHeader(
 
   const color = useHeaderTextColor()
 
-  const isAllowEditing = allowEditing && mode !== 'multiple' && inputDate !== undefined
+  const isAllowEditing =
+    allowEditing && mode !== 'multiple' && inputDate !== undefined
 
   const supportingTextColor = theme.isV3 ? theme.colors.onSurfaceVariant : color
 
