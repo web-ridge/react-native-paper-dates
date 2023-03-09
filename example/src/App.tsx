@@ -306,6 +306,8 @@ function App() {
         // animationType="slide" // optional, default is slide on ios/android and none on web
         // startYear={2000} // optional, default is 1800
         // endYear={2100} // optional, default is 2200
+        // allowEditing={false} // optional, default is true
+        // inputEnabled={false} // optional, default is true
       />
 
       <DatePickerModal
@@ -327,6 +329,8 @@ function App() {
         // animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
         // startYear={2000} // optional, default is 1800
         // endYear={2100} // optional, default is 2200
+        // allowEditing={false} // optional, default is true
+        // inputEnabled={false} // optional, default is true
       />
 
       <DatePickerModal
