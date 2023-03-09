@@ -384,7 +384,7 @@ exports[`renders DatePickerInput 1`] = `
       animationType="slide"
       hardwareAccelerated={false}
       onRequestClose={[Function]}
-      presentationStyle="overFullScreen"
+      presentationStyle="pageSheet"
       statusBarTranslucent={true}
       supportedOrientations={
         [
@@ -395,7 +395,6 @@ exports[`renders DatePickerInput 1`] = `
           "landscape-right",
         ]
       }
-      transparent={true}
       visible={false}
     />
   </View>,

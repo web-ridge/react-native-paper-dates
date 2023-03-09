@@ -488,6 +488,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
           onScrollEndDrag={[Function]}
           removeClippedSubviews={false}
           renderItem={[Function]}
+          renderScrollComponent={[Function]}
           scrollEventThrottle={50}
           stickyHeaderIndices={[]}
           style={
