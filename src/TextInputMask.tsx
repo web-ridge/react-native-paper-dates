@@ -82,10 +82,30 @@ function TextInputWithMask(
   )
 
   const onInnerChange = (text: string) => {
-    if (text.length === mask.length) {
-      onChangeText && onChangeText(text)
+    let trimmedText = text.trim()
+    const format = 'mm/dd/yyyy'
+    const match = new RegExp(
+      format
+        .replace(/(\w+)\W(\w+)\W(\w+)/, '^\\s*($1)\\W*($2)?\\W*($3)?([0-9]*).*')
+        .replace(/m|d|y/g, '\\d')
+    )
+    const replaceValue = format.match(/\W/)
+    const replace = '$1/$2/$3$4'.replace(/\//g, (replaceValue ?? '') as string)
+
+    const isBackSpace = controlledValue.length > trimmedText.length
+
+    if (!isBackSpace) {
+      trimmedText = trimmedText
+        .replace(/(^|\W)(?=\d\W)/g, '$10')
+        .replace(match, replace)
+        .replace(/(\W)+/g, '$1')
     }
-    setControlledValue(text)
+
+    if (trimmedText.length === mask.length) {
+      onChangeText && onChangeText(trimmedText)
+    }
+
+    setControlledValue(trimmedText)
   }
 
   const onInnerBlur = () => {
@@ -107,6 +127,7 @@ function TextInputWithMask(
       onChange={(e) => {
         onChange && onChange(e)
       }}
+      maxLength={10}
       onBlur={onInnerBlur}
     />
   )
