@@ -105,7 +105,7 @@ function YearPure({
                 : {
                     color: theme.isV3
                       ? theme.colors.onSurfaceVariant
-                      : undefined,
+                      : theme.colors.onSurface,
                   },
               { ...textFont },
             ]}
@@ -126,7 +126,6 @@ const styles = StyleSheet.create({
     top: 56,
     zIndex: 100,
   },
-
   list: {
     flex: 1,
   },
