@@ -168,6 +168,7 @@ exports[`renders DatePickerInput 1`] = `
             keyboardAppearance="default"
             keyboardType="number-pad"
             maxFontSizeMultiplier={1.5}
+            maxLength={10}
             multiline={false}
             onBlur={[Function]}
             onChange={[Function]}
