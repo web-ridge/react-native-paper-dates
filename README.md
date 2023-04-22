@@ -34,11 +34,9 @@ Check out the official docs: [web-ridge.github.io/react-native-paper-dates](http
 
 ## About us
 
-We want developers to be able to build software faster using modern tools like GraphQL, Golang and React Native.
+[RichardLindhout](https://twitter.com/RichardLindhout) from [web_ridge](https://twitter.com/web_ridge)
+[Brandon Fitzwater](https://github.com/iM-GeeKy)
 
-Give us a follow on Twitter:
-[RichardLindhout](https://twitter.com/RichardLindhout),
-[web_ridge](https://twitter.com/web_ridge)
 
 ## License
 
