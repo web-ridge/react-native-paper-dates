@@ -544,7 +544,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -638,7 +637,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -731,7 +729,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     onStartShouldSetResponder={[Function]}
                     style={
                       [
-                        false,
                         false,
                         {
                           "borderRadius": 23,
@@ -839,7 +836,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -933,7 +929,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -1026,7 +1021,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     onStartShouldSetResponder={[Function]}
                     style={
                       [
-                        false,
                         false,
                         {
                           "borderRadius": 23,
@@ -1134,7 +1128,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -1228,7 +1221,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -1321,7 +1313,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     onStartShouldSetResponder={[Function]}
                     style={
                       [
-                        false,
                         false,
                         {
                           "borderRadius": 23,
@@ -1429,7 +1420,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -1523,7 +1513,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -1616,7 +1605,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     onStartShouldSetResponder={[Function]}
                     style={
                       [
-                        false,
                         false,
                         {
                           "borderRadius": 23,
@@ -1724,7 +1712,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -1818,7 +1805,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -1911,7 +1897,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     onStartShouldSetResponder={[Function]}
                     style={
                       [
-                        false,
                         false,
                         {
                           "borderRadius": 23,
@@ -2019,7 +2004,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -2113,7 +2097,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -2206,7 +2189,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     onStartShouldSetResponder={[Function]}
                     style={
                       [
-                        false,
                         false,
                         {
                           "borderRadius": 23,
@@ -2314,7 +2296,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -2408,7 +2389,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -2501,7 +2481,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     onStartShouldSetResponder={[Function]}
                     style={
                       [
-                        false,
                         false,
                         {
                           "borderRadius": 23,
@@ -2609,7 +2588,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -2703,7 +2681,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -2796,7 +2773,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     onStartShouldSetResponder={[Function]}
                     style={
                       [
-                        false,
                         false,
                         {
                           "borderRadius": 23,
@@ -2904,7 +2880,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -2998,7 +2973,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -3091,7 +3065,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     onStartShouldSetResponder={[Function]}
                     style={
                       [
-                        false,
                         false,
                         {
                           "borderRadius": 23,
@@ -3199,7 +3172,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -3293,7 +3265,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -3386,7 +3357,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     onStartShouldSetResponder={[Function]}
                     style={
                       [
-                        false,
                         false,
                         {
                           "borderRadius": 23,

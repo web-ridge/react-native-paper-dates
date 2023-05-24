@@ -519,7 +519,6 @@ exports[`renders Calendar 1`] = `
                 style={
                   [
                     false,
-                    false,
                     {
                       "borderRadius": 23,
                       "overflow": "hidden",
@@ -613,7 +612,6 @@ exports[`renders Calendar 1`] = `
                 style={
                   [
                     false,
-                    false,
                     {
                       "borderRadius": 23,
                       "overflow": "hidden",
@@ -706,7 +704,6 @@ exports[`renders Calendar 1`] = `
                 onStartShouldSetResponder={[Function]}
                 style={
                   [
-                    false,
                     false,
                     {
                       "borderRadius": 23,
@@ -814,7 +811,6 @@ exports[`renders Calendar 1`] = `
                 style={
                   [
                     false,
-                    false,
                     {
                       "borderRadius": 23,
                       "overflow": "hidden",
@@ -908,7 +904,6 @@ exports[`renders Calendar 1`] = `
                 style={
                   [
                     false,
-                    false,
                     {
                       "borderRadius": 23,
                       "overflow": "hidden",
@@ -1001,7 +996,6 @@ exports[`renders Calendar 1`] = `
                 onStartShouldSetResponder={[Function]}
                 style={
                   [
-                    false,
                     false,
                     {
                       "borderRadius": 23,
@@ -1109,7 +1103,6 @@ exports[`renders Calendar 1`] = `
                 style={
                   [
                     false,
-                    false,
                     {
                       "borderRadius": 23,
                       "overflow": "hidden",
@@ -1203,7 +1196,6 @@ exports[`renders Calendar 1`] = `
                 style={
                   [
                     false,
-                    false,
                     {
                       "borderRadius": 23,
                       "overflow": "hidden",
@@ -1296,7 +1288,6 @@ exports[`renders Calendar 1`] = `
                 onStartShouldSetResponder={[Function]}
                 style={
                   [
-                    false,
                     false,
                     {
                       "borderRadius": 23,
@@ -1404,7 +1395,6 @@ exports[`renders Calendar 1`] = `
                 style={
                   [
                     false,
-                    false,
                     {
                       "borderRadius": 23,
                       "overflow": "hidden",
@@ -1498,7 +1488,6 @@ exports[`renders Calendar 1`] = `
                 style={
                   [
                     false,
-                    false,
                     {
                       "borderRadius": 23,
                       "overflow": "hidden",
@@ -1591,7 +1580,6 @@ exports[`renders Calendar 1`] = `
                 onStartShouldSetResponder={[Function]}
                 style={
                   [
-                    false,
                     false,
                     {
                       "borderRadius": 23,
@@ -1699,7 +1687,6 @@ exports[`renders Calendar 1`] = `
                 style={
                   [
                     false,
-                    false,
                     {
                       "borderRadius": 23,
                       "overflow": "hidden",
@@ -1793,7 +1780,6 @@ exports[`renders Calendar 1`] = `
                 style={
                   [
                     false,
-                    false,
                     {
                       "borderRadius": 23,
                       "overflow": "hidden",
@@ -1886,7 +1872,6 @@ exports[`renders Calendar 1`] = `
                 onStartShouldSetResponder={[Function]}
                 style={
                   [
-                    false,
                     false,
                     {
                       "borderRadius": 23,
@@ -1994,7 +1979,6 @@ exports[`renders Calendar 1`] = `
                 style={
                   [
                     false,
-                    false,
                     {
                       "borderRadius": 23,
                       "overflow": "hidden",
@@ -2088,7 +2072,6 @@ exports[`renders Calendar 1`] = `
                 style={
                   [
                     false,
-                    false,
                     {
                       "borderRadius": 23,
                       "overflow": "hidden",
@@ -2181,7 +2164,6 @@ exports[`renders Calendar 1`] = `
                 onStartShouldSetResponder={[Function]}
                 style={
                   [
-                    false,
                     false,
                     {
                       "borderRadius": 23,
@@ -2289,7 +2271,6 @@ exports[`renders Calendar 1`] = `
                 style={
                   [
                     false,
-                    false,
                     {
                       "borderRadius": 23,
                       "overflow": "hidden",
@@ -2383,7 +2364,6 @@ exports[`renders Calendar 1`] = `
                 style={
                   [
                     false,
-                    false,
                     {
                       "borderRadius": 23,
                       "overflow": "hidden",
@@ -2476,7 +2456,6 @@ exports[`renders Calendar 1`] = `
                 onStartShouldSetResponder={[Function]}
                 style={
                   [
-                    false,
                     false,
                     {
                       "borderRadius": 23,
@@ -2584,7 +2563,6 @@ exports[`renders Calendar 1`] = `
                 style={
                   [
                     false,
-                    false,
                     {
                       "borderRadius": 23,
                       "overflow": "hidden",
@@ -2678,7 +2656,6 @@ exports[`renders Calendar 1`] = `
                 style={
                   [
                     false,
-                    false,
                     {
                       "borderRadius": 23,
                       "overflow": "hidden",
@@ -2771,7 +2748,6 @@ exports[`renders Calendar 1`] = `
                 onStartShouldSetResponder={[Function]}
                 style={
                   [
-                    false,
                     false,
                     {
                       "borderRadius": 23,
@@ -2879,7 +2855,6 @@ exports[`renders Calendar 1`] = `
                 style={
                   [
                     false,
-                    false,
                     {
                       "borderRadius": 23,
                       "overflow": "hidden",
@@ -2973,7 +2948,6 @@ exports[`renders Calendar 1`] = `
                 style={
                   [
                     false,
-                    false,
                     {
                       "borderRadius": 23,
                       "overflow": "hidden",
@@ -3066,7 +3040,6 @@ exports[`renders Calendar 1`] = `
                 onStartShouldSetResponder={[Function]}
                 style={
                   [
-                    false,
                     false,
                     {
                       "borderRadius": 23,
@@ -3174,7 +3147,6 @@ exports[`renders Calendar 1`] = `
                 style={
                   [
                     false,
-                    false,
                     {
                       "borderRadius": 23,
                       "overflow": "hidden",
@@ -3268,7 +3240,6 @@ exports[`renders Calendar 1`] = `
                 style={
                   [
                     false,
-                    false,
                     {
                       "borderRadius": 23,
                       "overflow": "hidden",
@@ -3361,7 +3332,6 @@ exports[`renders Calendar 1`] = `
                 onStartShouldSetResponder={[Function]}
                 style={
                   [
-                    false,
                     false,
                     {
                       "borderRadius": 23,

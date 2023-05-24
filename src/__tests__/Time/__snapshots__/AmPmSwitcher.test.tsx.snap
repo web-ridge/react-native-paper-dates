@@ -48,7 +48,6 @@ exports[`renders AmPmSwitcher 1`] = `
     style={
       [
         false,
-        false,
         {
           "flex": 1,
         },
@@ -139,7 +138,6 @@ exports[`renders AmPmSwitcher 1`] = `
     onStartShouldSetResponder={[Function]}
     style={
       [
-        false,
         false,
         {
           "flex": 1,

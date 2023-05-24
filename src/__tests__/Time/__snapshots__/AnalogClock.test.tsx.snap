@@ -170,7 +170,6 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
                   "fontSize": 16,
                   "fontWeight": "400",
@@ -181,6 +180,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
+                  "color": "rgba(28, 27, 31, 1)",
                   "writingDirection": "ltr",
                 },
                 null,
@@ -225,7 +225,6 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
                   "fontSize": 16,
                   "fontWeight": "400",
@@ -236,6 +235,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
+                  "color": "rgba(28, 27, 31, 1)",
                   "writingDirection": "ltr",
                 },
                 null,
@@ -280,7 +280,6 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
                   "fontSize": 16,
                   "fontWeight": "400",
@@ -291,6 +290,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
+                  "color": "rgba(28, 27, 31, 1)",
                   "writingDirection": "ltr",
                 },
                 null,
@@ -335,7 +335,6 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
                   "fontSize": 16,
                   "fontWeight": "400",
@@ -346,6 +345,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
+                  "color": "rgba(28, 27, 31, 1)",
                   "writingDirection": "ltr",
                 },
                 null,
@@ -390,7 +390,6 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
                   "fontSize": 16,
                   "fontWeight": "400",
@@ -401,6 +400,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
+                  "color": "rgba(28, 27, 31, 1)",
                   "writingDirection": "ltr",
                 },
                 null,
@@ -445,7 +445,6 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
                   "fontSize": 16,
                   "fontWeight": "400",
@@ -456,6 +455,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
+                  "color": "rgba(28, 27, 31, 1)",
                   "writingDirection": "ltr",
                 },
                 null,
@@ -500,7 +500,6 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
                   "fontSize": 16,
                   "fontWeight": "400",
@@ -511,6 +510,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
+                  "color": "rgba(28, 27, 31, 1)",
                   "writingDirection": "ltr",
                 },
                 null,
@@ -555,7 +555,6 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
                   "fontSize": 16,
                   "fontWeight": "400",
@@ -566,6 +565,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
+                  "color": "rgba(28, 27, 31, 1)",
                   "writingDirection": "ltr",
                 },
                 null,
@@ -610,7 +610,6 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
                   "fontSize": 16,
                   "fontWeight": "400",
@@ -621,6 +620,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
+                  "color": "rgba(28, 27, 31, 1)",
                   "writingDirection": "ltr",
                 },
                 null,
@@ -665,7 +665,6 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
                   "fontSize": 16,
                   "fontWeight": "400",
@@ -676,6 +675,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
+                  "color": "rgba(28, 27, 31, 1)",
                   "writingDirection": "ltr",
                 },
                 null,
@@ -720,7 +720,6 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
                   "fontSize": 16,
                   "fontWeight": "400",
@@ -731,6 +730,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
+                  "color": "rgba(28, 27, 31, 1)",
                   "writingDirection": "ltr",
                 },
                 null,
@@ -775,7 +775,6 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
                   "fontSize": 16,
                   "fontWeight": "400",
@@ -786,6 +785,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
+                  "color": "rgba(28, 27, 31, 1)",
                   "writingDirection": "ltr",
                 },
                 {
@@ -852,7 +852,6 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
                   "fontSize": 16,
                   "fontWeight": "400",
@@ -863,6 +862,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
+                  "color": "rgba(28, 27, 31, 1)",
                   "writingDirection": "ltr",
                 },
                 undefined,
@@ -907,7 +907,6 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
                   "fontSize": 16,
                   "fontWeight": "400",
@@ -918,6 +917,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
+                  "color": "rgba(28, 27, 31, 1)",
                   "writingDirection": "ltr",
                 },
                 undefined,
@@ -962,7 +962,6 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
                   "fontSize": 16,
                   "fontWeight": "400",
@@ -973,6 +972,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
+                  "color": "rgba(28, 27, 31, 1)",
                   "writingDirection": "ltr",
                 },
                 undefined,
@@ -1017,7 +1017,6 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
                   "fontSize": 16,
                   "fontWeight": "400",
@@ -1028,6 +1027,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
+                  "color": "rgba(28, 27, 31, 1)",
                   "writingDirection": "ltr",
                 },
                 undefined,
@@ -1072,7 +1072,6 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
                   "fontSize": 16,
                   "fontWeight": "400",
@@ -1083,6 +1082,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
+                  "color": "rgba(28, 27, 31, 1)",
                   "writingDirection": "ltr",
                 },
                 undefined,
@@ -1127,7 +1127,6 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
                   "fontSize": 16,
                   "fontWeight": "400",
@@ -1138,6 +1137,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
+                  "color": "rgba(28, 27, 31, 1)",
                   "writingDirection": "ltr",
                 },
                 undefined,
@@ -1182,7 +1182,6 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
                   "fontSize": 16,
                   "fontWeight": "400",
@@ -1193,6 +1192,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
+                  "color": "rgba(28, 27, 31, 1)",
                   "writingDirection": "ltr",
                 },
                 {
@@ -1239,7 +1239,6 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
                   "fontSize": 16,
                   "fontWeight": "400",
@@ -1250,6 +1249,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
+                  "color": "rgba(28, 27, 31, 1)",
                   "writingDirection": "ltr",
                 },
                 undefined,
@@ -1294,7 +1294,6 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
                   "fontSize": 16,
                   "fontWeight": "400",
@@ -1305,6 +1304,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
+                  "color": "rgba(28, 27, 31, 1)",
                   "writingDirection": "ltr",
                 },
                 undefined,
@@ -1349,7 +1349,6 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
                   "fontSize": 16,
                   "fontWeight": "400",
@@ -1360,6 +1359,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
+                  "color": "rgba(28, 27, 31, 1)",
                   "writingDirection": "ltr",
                 },
                 undefined,
@@ -1404,7 +1404,6 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
                   "fontSize": 16,
                   "fontWeight": "400",
@@ -1415,6 +1414,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
+                  "color": "rgba(28, 27, 31, 1)",
                   "writingDirection": "ltr",
                 },
                 undefined,
@@ -1459,7 +1459,6 @@ exports[`renders AnalogClock 1`] = `
             style={
               [
                 {
-                  "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
                   "fontSize": 16,
                   "fontWeight": "400",
@@ -1470,6 +1469,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
+                  "color": "rgba(28, 27, 31, 1)",
                   "writingDirection": "ltr",
                 },
                 undefined,

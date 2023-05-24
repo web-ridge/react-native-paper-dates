@@ -73,7 +73,6 @@ exports[`renders TimePicker 1`] = `
         style={
           [
             {
-              "color": "rgba(28, 27, 31, 1)",
               "fontFamily": "System",
               "fontSize": 12,
               "fontWeight": "400",
@@ -84,6 +83,7 @@ exports[`renders TimePicker 1`] = `
               "textAlign": "left",
             },
             {
+              "color": "rgba(28, 27, 31, 1)",
               "writingDirection": "ltr",
             },
             undefined,
@@ -208,7 +208,6 @@ exports[`renders TimePicker 1`] = `
         style={
           [
             {
-              "color": "rgba(28, 27, 31, 1)",
               "fontFamily": "System",
               "fontSize": 12,
               "fontWeight": "400",
@@ -219,6 +218,7 @@ exports[`renders TimePicker 1`] = `
               "textAlign": "left",
             },
             {
+              "color": "rgba(28, 27, 31, 1)",
               "writingDirection": "ltr",
             },
             undefined,
@@ -276,7 +276,6 @@ exports[`renders TimePicker 1`] = `
         onStartShouldSetResponder={[Function]}
         style={
           [
-            false,
             false,
             {
               "flex": 1,
@@ -373,7 +372,6 @@ exports[`renders TimePicker 1`] = `
         onStartShouldSetResponder={[Function]}
         style={
           [
-            false,
             false,
             {
               "flex": 1,
