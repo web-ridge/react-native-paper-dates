@@ -22,7 +22,22 @@ import {
   DatePickerInput,
   // @ts-ignore TODO: try to fix expo to work with local library
 } from 'react-native-paper-dates'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import {
+  ar,
+  de,
+  en,
+  enGB,
+  fr,
+  he,
+  hi,
+  ko,
+  nl,
+  pl,
+  pt,
+  registerTranslation,
+  tr,
+} from '../../src'
 
 function App() {
   /** Hooks. */
@@ -78,6 +93,11 @@ function App() {
   time.hours !== undefined && timeDate.setHours(time.hours)
   time.minutes !== undefined && timeDate.setMinutes(time.minutes)
 
+  /** Use effects. */
+  useEffect(() => {
+    registerTranslation(locale, getImportTranslation(locale))
+  }, [locale])
+
   /** Callbacks. */
   const onConfirmTime = useCallback(
     ({ hours, minutes }: any) => {
@@ -119,6 +139,36 @@ function App() {
   const onDismissRange = useCallback(() => {
     setRangeOpen(false)
   }, [setRangeOpen])
+
+  /** Functions. */
+  const getImportTranslation = (currentLocale: string) => {
+    switch (currentLocale) {
+      case 'ar':
+        return ar
+      case 'en':
+        return en
+      case 'de':
+        return de
+      case 'fr':
+        return fr
+      case 'he':
+        return he
+      case 'hi':
+        return hi
+      case 'ko':
+        return ko
+      case 'nl':
+        return nl
+      case 'pl':
+        return pl
+      case 'pt':
+        return pt
+      case 'tr':
+        return tr
+      default:
+        return enGB
+    }
+  }
 
   return (
     <>
