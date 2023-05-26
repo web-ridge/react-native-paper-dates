@@ -16,6 +16,6 @@ const hi: TranslationsType = {
   next: 'अगला',
   typeInDate: 'तारीख़ लिखें',
   pickDateFromCalendar: 'कैलेंडर से तारीख़ चुनें',
-  close: 'बंद करें'
+  close: 'बंद करें',
 }
 export default hi
