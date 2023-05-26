@@ -335,6 +335,7 @@ function App() {
     </>
   )
 }
+
 const theme: MD2Theme | MD3Theme = { version: 3 } as MD2Theme | MD3Theme
 export default function AppWithProviders() {
   return (
