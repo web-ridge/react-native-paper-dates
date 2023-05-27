@@ -12,7 +12,7 @@ sidebar_position: 1
 
 [React Native Paper Dates](https://github.com/web-ridge/react-native-paper-dates) is a cross-platform [Material Design](https://m3.material.io/) date and time picker library for [React Native Paper](https://reactnativepaper.com/).
 
-[![Demo of react-native-paper-dates](https://user-images.githubusercontent.com/6492229/98866767-bd3f2780-246d-11eb-890e-3491b47c95c5.gif)](https://www.youtube.com/watch?v=SHhQU2doTug)
+[![Demo of react-native-paper-dates](https://github.com/web-ridge/react-native-paper-dates/assets/7604441/c1ae6c92-94a6-43f8-90b0-8f21c20fd4e9)](https://www.youtube.com/watch?v=SHhQU2doTug)
 
 ## Installation
 
