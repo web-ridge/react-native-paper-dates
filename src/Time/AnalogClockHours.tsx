@@ -32,6 +32,7 @@ function AnalogClockHours({
           <View style={styles.outerHourInner}>
             {/* Display 00 instead of 12 for AM hours */}
             <Text
+              maxFontSizeMultiplier={1.5}
               style={
                 (!is24Hour && i + 1 === hours) ||
                 (hours === i + 1 && hours !== 12) ||
@@ -62,6 +63,7 @@ function AnalogClockHours({
             >
               <View style={styles.innerHourInner}>
                 <Text
+                  maxFontSizeMultiplier={1.5}
                   selectable={false}
                   style={[
                     i + 13 === hours || (i + 13 === 24 && hours === 12)

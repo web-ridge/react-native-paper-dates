@@ -32,6 +32,7 @@ exports[`renders AnalogClockHours 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1.5}
         selectable={false}
         style={
           [
@@ -87,6 +88,7 @@ exports[`renders AnalogClockHours 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1.5}
         selectable={false}
         style={
           [
@@ -142,6 +144,7 @@ exports[`renders AnalogClockHours 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1.5}
         selectable={false}
         style={
           [
@@ -197,6 +200,7 @@ exports[`renders AnalogClockHours 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1.5}
         selectable={false}
         style={
           [
@@ -252,6 +256,7 @@ exports[`renders AnalogClockHours 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1.5}
         selectable={false}
         style={
           [
@@ -307,6 +312,7 @@ exports[`renders AnalogClockHours 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1.5}
         selectable={false}
         style={
           [
@@ -362,6 +368,7 @@ exports[`renders AnalogClockHours 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1.5}
         selectable={false}
         style={
           [
@@ -417,6 +424,7 @@ exports[`renders AnalogClockHours 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1.5}
         selectable={false}
         style={
           [
@@ -472,6 +480,7 @@ exports[`renders AnalogClockHours 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1.5}
         selectable={false}
         style={
           [
@@ -527,6 +536,7 @@ exports[`renders AnalogClockHours 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1.5}
         selectable={false}
         style={
           [
@@ -582,6 +592,7 @@ exports[`renders AnalogClockHours 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1.5}
         selectable={false}
         style={
           [
@@ -637,6 +648,7 @@ exports[`renders AnalogClockHours 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1.5}
         selectable={false}
         style={
           [
@@ -692,6 +704,7 @@ exports[`renders AnalogClockHours 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1.5}
         selectable={false}
         style={
           [
@@ -749,6 +762,7 @@ exports[`renders AnalogClockHours 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1.5}
         selectable={false}
         style={
           [
@@ -806,6 +820,7 @@ exports[`renders AnalogClockHours 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1.5}
         selectable={false}
         style={
           [
@@ -863,6 +878,7 @@ exports[`renders AnalogClockHours 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1.5}
         selectable={false}
         style={
           [
@@ -920,6 +936,7 @@ exports[`renders AnalogClockHours 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1.5}
         selectable={false}
         style={
           [
@@ -977,6 +994,7 @@ exports[`renders AnalogClockHours 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1.5}
         selectable={false}
         style={
           [
@@ -1034,6 +1052,7 @@ exports[`renders AnalogClockHours 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1.5}
         selectable={false}
         style={
           [
@@ -1091,6 +1110,7 @@ exports[`renders AnalogClockHours 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1.5}
         selectable={false}
         style={
           [
@@ -1148,6 +1168,7 @@ exports[`renders AnalogClockHours 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1.5}
         selectable={false}
         style={
           [
@@ -1205,6 +1226,7 @@ exports[`renders AnalogClockHours 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1.5}
         selectable={false}
         style={
           [
@@ -1262,6 +1284,7 @@ exports[`renders AnalogClockHours 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1.5}
         selectable={false}
         style={
           [
@@ -1319,6 +1342,7 @@ exports[`renders AnalogClockHours 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1.5}
         selectable={false}
         style={
           [

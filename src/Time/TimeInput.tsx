@@ -90,6 +90,7 @@ function TimeInput(
             height: inputType === inputTypes.keyboard ? 72 : 80,
           },
         ]}
+        maxFontSizeMultiplier={1.5}
         value={formattedValue}
         maxLength={2}
         onFocus={() => setInputFocused(true)}

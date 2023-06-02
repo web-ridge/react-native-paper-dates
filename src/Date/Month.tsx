@@ -288,6 +288,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
             ]}
           >
             <Text
+              maxFontSizeMultiplier={1.5}
               style={[
                 styles.monthLabel,
                 {

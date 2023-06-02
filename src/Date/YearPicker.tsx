@@ -97,6 +97,7 @@ function YearPure({
           ]}
         >
           <Text
+            maxFontSizeMultiplier={1.5}
             style={[
               styles.yearLabel,
               selected

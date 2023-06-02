@@ -175,6 +175,7 @@ export function TimePickerModal({
             >
               <View style={styles.labelContainer}>
                 <Text
+                  maxFontSizeMultiplier={1.5}
                   style={[
                     styles.label,
                     {

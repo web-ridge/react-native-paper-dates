@@ -97,6 +97,7 @@ function Day(props: {
           ]}
         >
           <Text
+            maxFontSizeMultiplier={1.5}
             style={[
               textColor
                 ? {

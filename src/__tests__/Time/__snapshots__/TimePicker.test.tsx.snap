@@ -40,6 +40,7 @@ exports[`renders TimePicker 1`] = `
           blurOnSubmit={false}
           keyboardAppearance="default"
           keyboardType="number-pad"
+          maxFontSizeMultiplier={1.2}
           maxLength={2}
           onBlur={[Function]}
           onChangeText={[Function]}
@@ -70,6 +71,7 @@ exports[`renders TimePicker 1`] = `
         />
       </View>
       <Text
+        maxFontSizeMultiplier={1.5}
         style={
           [
             {
@@ -176,6 +178,7 @@ exports[`renders TimePicker 1`] = `
         <TextInput
           keyboardAppearance="default"
           keyboardType="number-pad"
+          maxFontSizeMultiplier={1.2}
           maxLength={2}
           onBlur={[Function]}
           onChangeText={[Function]}
@@ -205,6 +208,7 @@ exports[`renders TimePicker 1`] = `
         />
       </View>
       <Text
+        maxFontSizeMultiplier={1.5}
         style={
           [
             {
@@ -298,6 +302,7 @@ exports[`renders TimePicker 1`] = `
           }
         >
           <Text
+            maxFontSizeMultiplier={1.5}
             selectable={false}
             style={
               [
@@ -394,6 +399,7 @@ exports[`renders TimePicker 1`] = `
           }
         >
           <Text
+            maxFontSizeMultiplier={1.5}
             selectable={false}
             style={
               [

@@ -12,6 +12,7 @@ function DayName({ label }: { label: string }) {
   return (
     <View style={styles.dayName}>
       <Text
+        maxFontSizeMultiplier={1.5}
         style={[
           styles.dayNameLabel,
           { ...textFont, color: theme.colors.onSurface },
