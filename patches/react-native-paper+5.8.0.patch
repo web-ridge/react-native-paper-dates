@@ -1,0 +1,545 @@
+diff --git a/node_modules/react-native-paper/src/components/Appbar/AppbarContent.tsx b/node_modules/react-native-paper/src/components/Appbar/AppbarContent.tsx
+index 52b0b09..8f96eac 100644
+--- a/node_modules/react-native-paper/src/components/Appbar/AppbarContent.tsx
++++ b/node_modules/react-native-paper/src/components/Appbar/AppbarContent.tsx
+@@ -63,6 +63,10 @@ export type Props = $RemoveChildren<typeof View> & {
+    * Custom color for the text.
+    */
+   color?: string;
++  /**
++   * Specifies the largest possible scale a title font can reach.
++   */
++  titleMaxFontSizeMultiplier?: number;
+   /**
+    * @internal
+    */
+@@ -109,6 +113,7 @@ const AppbarContent = ({
+   titleRef,
+   titleStyle,
+   title,
++  titleMaxFontSizeMultiplier = 1.5,
+   mode = 'small',
+   theme: themeOverrides,
+   testID = 'appbar-content',
+@@ -169,6 +174,7 @@ const AppbarContent = ({
+           // @ts-expect-error We keep old a11y props for backwards compat with old RN versions
+           accessibilityTraits="header"
+           testID={`${testID}-title-text`}
++          maxFontSizeMultiplier={titleMaxFontSizeMultiplier}
+         >
+           {title}
+         </Text>
+diff --git a/node_modules/react-native-paper/src/components/Avatar/AvatarText.tsx b/node_modules/react-native-paper/src/components/Avatar/AvatarText.tsx
+index ff79a12..5d50b09 100644
+--- a/node_modules/react-native-paper/src/components/Avatar/AvatarText.tsx
++++ b/node_modules/react-native-paper/src/components/Avatar/AvatarText.tsx
+@@ -37,6 +37,10 @@ export type Props = React.ComponentPropsWithRef<typeof View> & {
+    * Style for the title.
+    */
+   labelStyle?: StyleProp<TextStyle>;
++  /**
++   * Specifies the largest possible scale a text font can reach.
++   */
++  maxFontSizeMultiplier?: number;
+   /**
+    * @optional
+    */
+@@ -69,6 +73,7 @@ const AvatarText = ({
+   labelStyle,
+   color: customColor,
+   theme: themeOverrides,
++  maxFontSizeMultiplier = 1.5,
+   ...rest
+ }: Props) => {
+   const theme = useInternalTheme(themeOverrides);
+@@ -104,6 +109,7 @@ const AvatarText = ({
+           labelStyle,
+         ]}
+         numberOfLines={1}
++        maxFontSizeMultiplier={maxFontSizeMultiplier}
+       >
+         {label}
+       </Text>
+diff --git a/node_modules/react-native-paper/src/components/Banner.tsx b/node_modules/react-native-paper/src/components/Banner.tsx
+index 98bb3ef..dba989e 100644
+--- a/node_modules/react-native-paper/src/components/Banner.tsx
++++ b/node_modules/react-native-paper/src/components/Banner.tsx
+@@ -49,6 +49,10 @@ export type Props = $Omit<$RemoveChildren<typeof Surface>, 'mode'> & {
+    * Changes Banner shadow and background on iOS and Android.
+    */
+   elevation?: 0 | 1 | 2 | 3 | 4 | 5 | Animated.Value;
++  /**
++   * Specifies the largest possible scale a text font can reach.
++   */
++  maxFontSizeMultiplier?: number;
+   style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+   ref?: React.RefObject<View>;
+   /**
+@@ -137,6 +141,7 @@ const Banner = ({
+   theme: themeOverrides,
+   onShowAnimationFinished = () => {},
+   onHideAnimationFinished = () => {},
++  maxFontSizeMultiplier = 1.5,
+   ...rest
+ }: Props) => {
+   const theme = useInternalTheme(themeOverrides);
+@@ -240,6 +245,7 @@ const Banner = ({
+               ]}
+               accessibilityLiveRegion={visible ? 'polite' : 'none'}
+               accessibilityRole="alert"
++              maxFontSizeMultiplier={maxFontSizeMultiplier}
+             >
+               {children}
+             </Text>
+diff --git a/node_modules/react-native-paper/src/components/Button/Button.tsx b/node_modules/react-native-paper/src/components/Button/Button.tsx
+index 13d18da..80c6adc 100644
+--- a/node_modules/react-native-paper/src/components/Button/Button.tsx
++++ b/node_modules/react-native-paper/src/components/Button/Button.tsx
+@@ -112,6 +112,10 @@ export type Props = $Omit<React.ComponentProps<typeof Surface>, 'mode'> & {
+    * Use this prop to apply custom height and width and to set the icon on the right with `flexDirection: 'row-reverse'`.
+    */
+   contentStyle?: StyleProp<ViewStyle>;
++  /**
++   * Specifies the largest possible scale a text font can reach.
++   */
++  maxFontSizeMultiplier?: number;
+   style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+   /**
+    * Style for the button text.
+@@ -192,6 +196,7 @@ const Button = ({
+   labelStyle,
+   testID = 'button',
+   accessible,
++  maxFontSizeMultiplier = 1.5,
+   ...rest
+ }: Props) => {
+   const theme = useInternalTheme(themeOverrides);
+@@ -381,6 +386,7 @@ const Button = ({
+               textStyle,
+               labelStyle,
+             ]}
++            maxFontSizeMultiplier={maxFontSizeMultiplier}
+           >
+             {children}
+           </Text>
+diff --git a/node_modules/react-native-paper/src/components/Card/CardTitle.tsx b/node_modules/react-native-paper/src/components/Card/CardTitle.tsx
+index e84ff36..8ab604c 100644
+--- a/node_modules/react-native-paper/src/components/Card/CardTitle.tsx
++++ b/node_modules/react-native-paper/src/components/Card/CardTitle.tsx
+@@ -96,6 +96,14 @@ export type Props = React.ComponentPropsWithRef<typeof View> & {
+    * @internal
+    */
+   total?: number;
++  /**
++   * Specifies the largest possible scale a title font can reach.
++   */
++  titleMaxFontSizeMultiplier?: number;
++  /**
++   * Specifies the largest possible scale a subtitle font can reach.
++   */
++  subtitleMaxFontSizeMultiplier?: number;
+   style?: StyleProp<ViewStyle>;
+   /**
+    * @optional
+@@ -134,10 +142,12 @@ const CardTitle = ({
+   titleStyle,
+   titleNumberOfLines = 1,
+   titleVariant = 'bodyLarge',
++  titleMaxFontSizeMultiplier = 1.5,
+   subtitle,
+   subtitleStyle,
+   subtitleNumberOfLines = 1,
+   subtitleVariant = 'bodyMedium',
++  subtitleMaxFontSizeMultiplier = 1.5,
+   left,
+   leftStyle,
+   right,
+@@ -168,6 +178,7 @@ const CardTitle = ({
+             style={[styles.title, { marginBottom }, titleStyle]}
+             numberOfLines={titleNumberOfLines}
+             variant={titleVariant}
++            maxFontSizeMultiplier={titleMaxFontSizeMultiplier}
+           >
+             {title}
+           </TitleComponent>
+@@ -177,6 +188,7 @@ const CardTitle = ({
+             style={[styles.subtitle, subtitleStyle]}
+             numberOfLines={subtitleNumberOfLines}
+             variant={subtitleVariant}
++            maxFontSizeMultiplier={subtitleMaxFontSizeMultiplier}
+           >
+             {subtitle}
+           </SubtitleComponent>
+diff --git a/node_modules/react-native-paper/src/components/Chip/Chip.tsx b/node_modules/react-native-paper/src/components/Chip/Chip.tsx
+index 1bfbf94..296e9be 100644
+--- a/node_modules/react-native-paper/src/components/Chip/Chip.tsx
++++ b/node_modules/react-native-paper/src/components/Chip/Chip.tsx
+@@ -122,6 +122,10 @@ export type Props = $Omit<React.ComponentProps<typeof Surface>, 'mode'> & {
+    * Ellipsize Mode for the children text
+    */
+   ellipsizeMode?: EllipsizeProp;
++  /**
++   * Specifies the largest possible scale a text font can reach.
++   */
++  maxFontSizeMultiplier?: number;
+ };
+ 
+ /**
+@@ -174,6 +178,7 @@ const Chip = ({
+   ellipsizeMode,
+   compact,
+   elevated = false,
++  maxFontSizeMultiplier = 1.5,
+   ...rest
+ }: Props) => {
+   const theme = useInternalTheme(themeOverrides);
+@@ -352,6 +357,7 @@ const Chip = ({
+               textStyle,
+             ]}
+             ellipsizeMode={ellipsizeMode}
++            maxFontSizeMultiplier={maxFontSizeMultiplier}
+           >
+             {children}
+           </Text>
+diff --git a/node_modules/react-native-paper/src/components/Dialog/DialogTitle.tsx b/node_modules/react-native-paper/src/components/Dialog/DialogTitle.tsx
+index 713ea48..7739720 100644
+--- a/node_modules/react-native-paper/src/components/Dialog/DialogTitle.tsx
++++ b/node_modules/react-native-paper/src/components/Dialog/DialogTitle.tsx
+@@ -11,6 +11,10 @@ export type Props = React.ComponentPropsWithRef<typeof Title> & {
+    * Title text for the `DialogTitle`.
+    */
+   children: React.ReactNode;
++  /**
++   * Specifies the largest possible scale a title font can reach.
++   */
++  titleMaxFontSizeMultiplier?: number;
+   style?: StyleProp<TextStyle>;
+   /**
+    * @optional
+@@ -56,6 +60,7 @@ const DialogTitle = ({
+   children,
+   theme: themeOverrides,
+   style,
++  titleMaxFontSizeMultiplier = 1.5,
+   ...rest
+ }: Props) => {
+   const theme = useInternalTheme(themeOverrides);
+@@ -73,6 +78,7 @@ const DialogTitle = ({
+       variant="headlineSmall"
+       accessibilityRole="header"
+       style={[styles.text, isV3 && styles.v3Text, headerTextStyle, style]}
++      maxFontSizeMultiplier={titleMaxFontSizeMultiplier}
+       {...rest}
+     >
+       {children}
+diff --git a/node_modules/react-native-paper/src/components/FAB/AnimatedFAB.tsx b/node_modules/react-native-paper/src/components/FAB/AnimatedFAB.tsx
+index 7a553cf..3a41187 100644
+--- a/node_modules/react-native-paper/src/components/FAB/AnimatedFAB.tsx
++++ b/node_modules/react-native-paper/src/components/FAB/AnimatedFAB.tsx
+@@ -95,6 +95,10 @@ export type Props = $Omit<$RemoveChildren<typeof Surface>, 'mode'> & {
+    * Whether `FAB` should start animation to extend.
+    */
+   extended: boolean;
++  /**
++   * Specifies the largest possible scale a label font can reach.
++   */
++  labelMaxFontSizeMultiplier?: number;
+   /**
+    * @supported Available in v5.x with theme version 3
+    *
+@@ -212,6 +216,7 @@ const AnimatedFAB = ({
+   extended = false,
+   iconMode = 'dynamic',
+   variant = 'primary',
++  labelMaxFontSizeMultiplier = 1.5,
+   ...rest
+ }: Props) => {
+   const theme = useInternalTheme(themeOverrides);
+@@ -492,6 +497,7 @@ const AnimatedFAB = ({
+           ]}
+           theme={theme}
+           testID={`${testID}-text`}
++          maxFontSizeMultiplier={labelMaxFontSizeMultiplier}
+         >
+           {label}
+         </AnimatedText>
+diff --git a/node_modules/react-native-paper/src/components/List/ListAccordion.tsx b/node_modules/react-native-paper/src/components/List/ListAccordion.tsx
+index cc6da5d..e0b83ee 100644
+--- a/node_modules/react-native-paper/src/components/List/ListAccordion.tsx
++++ b/node_modules/react-native-paper/src/components/List/ListAccordion.tsx
+@@ -91,6 +91,14 @@ export type Props = {
+    * exceed this number.
+    */
+   descriptionNumberOfLines?: number;
++  /**
++   * Specifies the largest possible scale a title font can reach.
++   */
++  titleMaxFontSizeMultiplier?: number;
++  /**
++   * Specifies the largest possible scale a description font can reach.
++   */
++  descriptionMaxFontSizeMultiplier?: number;
+   /**
+    * Id is used for distinguishing specific accordion when using List.AccordionGroup. Property is required when using List.AccordionGroup and has no impact on behavior when using standalone List.Accordion.
+    */
+@@ -173,6 +181,8 @@ const ListAccordion = ({
+   expanded: expandedProp,
+   accessibilityLabel,
+   pointerEvents = 'none',
++  titleMaxFontSizeMultiplier = 1.5,
++  descriptionMaxFontSizeMultiplier = 1.5,
+ }: Props) => {
+   const theme = useInternalTheme(themeOverrides);
+   const [expanded, setExpanded] = React.useState<boolean>(
+@@ -262,6 +272,7 @@ const ListAccordion = ({
+                   },
+                   titleStyle,
+                 ]}
++                maxFontSizeMultiplier={titleMaxFontSizeMultiplier}
+               >
+                 {title}
+               </Text>
+@@ -277,6 +288,7 @@ const ListAccordion = ({
+                     descriptionStyle,
+                   ]}
+                   onTextLayout={onDescriptionTextLayout}
++                  maxFontSizeMultiplier={descriptionMaxFontSizeMultiplier}
+                 >
+                   {description}
+                 </Text>
+diff --git a/node_modules/react-native-paper/src/components/List/ListItem.tsx b/node_modules/react-native-paper/src/components/List/ListItem.tsx
+index 22ce291..fffd614 100644
+--- a/node_modules/react-native-paper/src/components/List/ListItem.tsx
++++ b/node_modules/react-native-paper/src/components/List/ListItem.tsx
+@@ -95,6 +95,14 @@ export type Props = $RemoveChildren<typeof TouchableRipple> & {
+    * See [`ellipsizeMode`](https://reactnative.dev/docs/text#ellipsizemode)
+    */
+   descriptionEllipsizeMode?: EllipsizeProp;
++  /**
++   * Specifies the largest possible scale a title font can reach.
++   */
++  titleMaxFontSizeMultiplier?: number;
++  /**
++   * Specifies the largest possible scale a description font can reach.
++   */
++  descriptionMaxFontSizeMultiplier?: number;
+ };
+ 
+ /**
+@@ -138,6 +146,8 @@ const ListItem = ({
+   titleEllipsizeMode,
+   descriptionEllipsizeMode,
+   descriptionStyle,
++  descriptionMaxFontSizeMultiplier = 1.5,
++  titleMaxFontSizeMultiplier = 1.5,
+   ...rest
+ }: Props) => {
+   const theme = useInternalTheme(themeOverrides);
+@@ -175,6 +185,7 @@ const ListItem = ({
+           descriptionStyle,
+         ]}
+         onTextLayout={onDescriptionTextLayout}
++        maxFontSizeMultiplier={descriptionMaxFontSizeMultiplier}
+       >
+         {description}
+       </Text>
+@@ -199,6 +210,7 @@ const ListItem = ({
+         ellipsizeMode={titleEllipsizeMode}
+         numberOfLines={titleNumberOfLines}
+         style={[styles.title, { color: titleColor }, titleStyle]}
++        maxFontSizeMultiplier={titleMaxFontSizeMultiplier}
+       >
+         {title}
+       </Text>
+diff --git a/node_modules/react-native-paper/src/components/List/ListSubheader.tsx b/node_modules/react-native-paper/src/components/List/ListSubheader.tsx
+index 46f264f..9c61f54 100644
+--- a/node_modules/react-native-paper/src/components/List/ListSubheader.tsx
++++ b/node_modules/react-native-paper/src/components/List/ListSubheader.tsx
+@@ -16,6 +16,10 @@ export type Props = React.ComponentProps<typeof Text> & {
+    * Style that is passed to Text element.
+    */
+   style?: StyleProp<TextStyle>;
++  /**
++   * Specifies the largest possible scale a text font can reach.
++   */
++  maxFontSizeMultiplier?: number;
+ };
+ 
+ /**
+@@ -31,7 +35,12 @@ export type Props = React.ComponentProps<typeof Text> & {
+  * export default MyComponent;
+  * ```
+  */
+-const ListSubheader = ({ style, theme: overrideTheme, ...rest }: Props) => {
++const ListSubheader = ({
++  style,
++  theme: overrideTheme,
++  maxFontSizeMultiplier = 1.5,
++  ...rest
++}: Props) => {
+   const theme = useInternalTheme(overrideTheme);
+ 
+   const textColor = theme.isV3
+@@ -44,6 +53,7 @@ const ListSubheader = ({ style, theme: overrideTheme, ...rest }: Props) => {
+     <Text
+       variant="bodyMedium"
+       numberOfLines={1}
++      maxFontSizeMultiplier={maxFontSizeMultiplier}
+       {...rest}
+       style={[
+         styles.container,
+diff --git a/node_modules/react-native-paper/src/components/RadioButton/RadioButtonItem.tsx b/node_modules/react-native-paper/src/components/RadioButton/RadioButtonItem.tsx
+index 3980e00..98e9627 100644
+--- a/node_modules/react-native-paper/src/components/RadioButton/RadioButtonItem.tsx
++++ b/node_modules/react-native-paper/src/components/RadioButton/RadioButtonItem.tsx
+@@ -76,6 +76,10 @@ export type Props = {
+    *  Body: `bodyLarge`, `bodyMedium`, `bodySmall`
+    */
+   labelVariant?: keyof typeof MD3TypescaleKey;
++  /**
++   * Specifies the largest possible scale a label font can reach.
++   */
++  labelMaxFontSizeMultiplier?: number;
+   /**
+    * @optional
+    */
+@@ -140,6 +144,7 @@ const RadioButtonItem = ({
+   mode,
+   position = 'trailing',
+   labelVariant = 'bodyLarge',
++  labelMaxFontSizeMultiplier = 1.5,
+ }: Props) => {
+   const theme = useInternalTheme(themeOverrides);
+   const radioButtonProps = { value, disabled, status, color, uncheckedColor };
+@@ -204,6 +209,7 @@ const RadioButtonItem = ({
+                   computedStyle,
+                   labelStyle,
+                 ]}
++                maxFontSizeMultiplier={labelMaxFontSizeMultiplier}
+               >
+                 {label}
+               </Text>
+diff --git a/node_modules/react-native-paper/src/components/Searchbar.tsx b/node_modules/react-native-paper/src/components/Searchbar.tsx
+index 62c77a4..abbf5c2 100644
+--- a/node_modules/react-native-paper/src/components/Searchbar.tsx
++++ b/node_modules/react-native-paper/src/components/Searchbar.tsx
+@@ -118,6 +118,10 @@ export type Props = React.ComponentPropsWithRef<typeof TextInput> & {
+    * Changes Searchbar shadow and background on iOS and Android.
+    */
+   elevation?: 0 | 1 | 2 | 3 | 4 | 5 | Animated.Value;
++  /**
++   * Specifies the largest possible scale a text font can reach.
++   */
++  maxFontSizeMultiplier?: number;
+   /**
+    * Set style of the TextInput component inside the searchbar
+    */
+@@ -197,6 +201,7 @@ const Searchbar = forwardRef<TextInputHandles, Props>(
+       value,
+       loading = false,
+       testID = 'search-bar',
++      maxFontSizeMultiplier = 1.5,
+       ...rest
+     }: Props,
+     ref
+@@ -323,6 +328,7 @@ const Searchbar = forwardRef<TextInputHandles, Props>(
+           ref={root}
+           value={value}
+           testID={testID}
++          maxFontSizeMultiplier={maxFontSizeMultiplier}
+           {...rest}
+         />
+         {loading ? (
+diff --git a/node_modules/react-native-paper/src/components/SegmentedButtons/SegmentedButtonItem.tsx b/node_modules/react-native-paper/src/components/SegmentedButtons/SegmentedButtonItem.tsx
+index c32d8bd..e771f72 100644
+--- a/node_modules/react-native-paper/src/components/SegmentedButtons/SegmentedButtonItem.tsx
++++ b/node_modules/react-native-paper/src/components/SegmentedButtons/SegmentedButtonItem.tsx
+@@ -79,6 +79,10 @@ export type Props = {
+    * Density is applied to the height, to allow usage in denser UIs.
+    */
+   density?: 'regular' | 'small' | 'medium' | 'high';
++  /**
++   * Specifies the largest possible scale a label font can reach.
++   */
++  labelMaxFontSizeMultiplier?: number;
+   style?: StyleProp<ViewStyle>;
+   /**
+    * testID to be used on tests.
+@@ -106,6 +110,7 @@ const SegmentedButtonItem = ({
+   segment,
+   density = 'regular',
+   theme: themeOverrides,
++  labelMaxFontSizeMultiplier = 1.5,
+ }: Props) => {
+   const theme = useInternalTheme(themeOverrides);
+ 
+@@ -219,6 +224,7 @@ const SegmentedButtonItem = ({
+             style={[styles.label, labelTextStyle]}
+             selectable={false}
+             numberOfLines={1}
++            maxFontSizeMultiplier={labelMaxFontSizeMultiplier}
+           >
+             {label}
+           </Text>
+diff --git a/node_modules/react-native-paper/src/components/Snackbar.tsx b/node_modules/react-native-paper/src/components/Snackbar.tsx
+index 137d617..c9110da 100644
+--- a/node_modules/react-native-paper/src/components/Snackbar.tsx
++++ b/node_modules/react-native-paper/src/components/Snackbar.tsx
+@@ -69,6 +69,10 @@ export type Props = $Omit<React.ComponentProps<typeof Surface>, 'mode'> & {
+    * Changes Snackbar shadow and background on iOS and Android.
+    */
+   elevation?: 0 | 1 | 2 | 3 | 4 | 5 | Animated.Value;
++  /**
++   * Specifies the largest possible scale a text font can reach.
++   */
++  maxFontSizeMultiplier?: number;
+   wrapperStyle?: StyleProp<ViewStyle>;
+   style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+   ref?: React.RefObject<View>;
+@@ -143,6 +147,7 @@ const Snackbar = ({
+   wrapperStyle,
+   style,
+   theme: themeOverrides,
++  maxFontSizeMultiplier = 1.5,
+   ...rest
+ }: Props) => {
+   const theme = useInternalTheme(themeOverrides);
+@@ -245,6 +250,7 @@ const Snackbar = ({
+         <Text
+           variant="bodyMedium"
+           style={[styles.content, { color: textColor }]}
++          maxFontSizeMultiplier={maxFontSizeMultiplier}
+         >
+           {children}
+         </Text>
+diff --git a/node_modules/react-native-paper/src/components/Tooltip/Tooltip.tsx b/node_modules/react-native-paper/src/components/Tooltip/Tooltip.tsx
+index e506bd7..07073ef 100644
+--- a/node_modules/react-native-paper/src/components/Tooltip/Tooltip.tsx
++++ b/node_modules/react-native-paper/src/components/Tooltip/Tooltip.tsx
+@@ -34,6 +34,10 @@ export type Props = {
+    * Tooltip title
+    */
+   title: string;
++  /**
++   * Specifies the largest possible scale a title font can reach.
++   */
++  titleMaxFontSizeMultiplier?: number;
+   /**
+    * @optional
+    */
+@@ -71,6 +75,7 @@ const Tooltip = ({
+   leaveTouchDelay = 1500,
+   title,
+   theme: themeOverrides,
++  titleMaxFontSizeMultiplier = 1.5,
+   ...rest
+ }: Props) => {
+   const theme = useInternalTheme(themeOverrides);
+@@ -192,6 +197,7 @@ const Tooltip = ({
+               selectable={false}
+               variant="labelLarge"
+               style={{ color: theme.colors.surface }}
++              maxFontSizeMultiplier={titleMaxFontSizeMultiplier}
+             >
+               {title}
+             </Text>

@@ -1,35 +1,69 @@
 import * as React from 'react'
+import { StyleSheet, ScrollView, View, Linking, Image } from 'react-native'
 import {
-  StyleSheet,
-  ScrollView,
-  View,
-  Linking,
-  Image,
-  Animated,
-} from 'react-native'
-import { SafeAreaProvider } from 'react-native-safe-area-context'
-
+  SafeAreaProvider,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context'
 import {
-  Title,
   Button,
   Text,
   Provider as PaperProvider,
   useTheme,
-  overlay,
   Paragraph,
-  Portal,
+  List,
+  Divider,
+  Chip,
+  MD2Theme,
+  MD3Theme,
 } from 'react-native-paper'
-
 import {
   DatePickerModal,
-  DatePickerModalContent,
   TimePickerModal,
   DatePickerInput,
   // @ts-ignore TODO: try to fix expo to work with local library
 } from 'react-native-paper-dates'
+import { useCallback, useEffect, useState } from 'react'
+import {
+  ar,
+  de,
+  en,
+  enGB,
+  fr,
+  he,
+  hi,
+  ko,
+  nl,
+  pl,
+  pt,
+  registerTranslation,
+  tr,
+} from '../../src'
 
 function App() {
+  /** Hooks. */
   const theme = useTheme()
+  const insets = useSafeAreaInsets()
+
+  /** State variables. */
+  const [inputDate, setInputDate] = useState<Date | undefined>(undefined)
+  const [date, setDate] = useState<Date | undefined>(undefined)
+  const [dates, setDates] = useState<Date[] | undefined>()
+  const [range, setRange] = useState<{
+    startDate: Date | undefined
+    endDate: Date | undefined
+  }>({ startDate: undefined, endDate: undefined })
+  const [time, setTime] = useState<{
+    hours: number | undefined
+    minutes: number | undefined
+  }>({ hours: undefined, minutes: undefined })
+  const [locale, setLocale] = useState('en-GB')
+  const [timeOpen, setTimeOpen] = useState(false)
+  const [rangeOpen, setRangeOpen] = useState(false)
+  const [singleOpen, setSingleOpen] = useState(false)
+  const [multiOpen, setMultiOpen] = useState(false)
+
+  /** Constants. */
+  const maxFontSizeMultiplier = 1.5
   const dateFormatter = new Intl.DateTimeFormat(undefined, {
     day: 'numeric',
     month: 'long',
@@ -40,255 +74,328 @@ function App() {
     minute: '2-digit',
     hour12: false,
   })
-  const [inputDate, setInputDate] = React.useState<Date | undefined>(undefined)
+  const pastDate = new Date(new Date().setDate(new Date().getDate() - 5))
+  const futureDate = new Date(new Date().setDate(new Date().getDate() + 5))
+  const locales = [
+    'en',
+    'nl',
+    'de',
+    'pl',
+    'pt',
+    'ar',
+    'ko',
+    'fr',
+    'he',
+    'hi',
+    'tr',
+    'en-GB',
+  ]
+  let timeDate = new Date()
+  time.hours !== undefined && timeDate.setHours(time.hours)
+  time.minutes !== undefined && timeDate.setMinutes(time.minutes)
 
-  const [date, setDate] = React.useState<Date | undefined>(undefined)
-  const [dates, setDates] = React.useState<Date[] | undefined>()
-  const [range, setRange] = React.useState<{
-    startDate: Date | undefined
-    endDate: Date | undefined
-  }>({ startDate: undefined, endDate: undefined })
-  const [time, setTime] = React.useState<{
-    hours: number | undefined
-    minutes: number | undefined
-  }>({ hours: undefined, minutes: undefined })
-  const [timeOpen, setTimeOpen] = React.useState(false)
-  const [rangeOpen, setRangeOpen] = React.useState(false)
+  /** Use effects. */
+  useEffect(() => {
+    registerTranslation(locale, getImportTranslation(locale))
+  }, [locale])
 
-  const [singleOpen, setSingleOpen] = React.useState(false)
-  const [customOpen, setCustomOpen] = React.useState(false)
-  const onDismissTime = React.useCallback(() => {
-    setTimeOpen(false)
-  }, [setTimeOpen])
-  const [multiOpen, setMultiOpen] = React.useState(false)
-
-  const onDismissRange = React.useCallback(() => {
-    setRangeOpen(false)
-  }, [setRangeOpen])
-
-  const onDismissSingle = React.useCallback(() => {
-    setSingleOpen(false)
-  }, [setSingleOpen])
-
-  const onDismissMulti = React.useCallback(() => {
-    setMultiOpen(false)
-  }, [])
-
-  const onDismissCustom = React.useCallback(() => {
-    setCustomOpen(false)
-  }, [setCustomOpen])
-
-  const onChangeRange = React.useCallback(
-    ({ startDate, endDate }: any) => {
-      setRangeOpen(false)
-      setRange({ startDate, endDate })
-    },
-    [setRangeOpen, setRange]
-  )
-
-  const onChangeSingle = React.useCallback(
-    (params: any) => {
-      setSingleOpen(false)
-      setDate(params.date)
-    },
-    [setSingleOpen, setDate]
-  )
-
-  const onChangeMulti = React.useCallback((params: any) => {
-    setMultiOpen(false)
-    setDates(params.dates)
-    console.log('[on-change-multi]', params)
-  }, [])
-
-  const onConfirmTime = React.useCallback(
+  /** Callbacks. */
+  const onConfirmTime = useCallback(
     ({ hours, minutes }: any) => {
       setTimeOpen(false)
       setTime({ hours, minutes })
     },
     [setTimeOpen, setTime]
   )
+  const onDismissTime = useCallback(() => {
+    setTimeOpen(false)
+  }, [setTimeOpen])
 
-  // generate date from time
-  let timeDate = new Date()
-  time.hours !== undefined && timeDate.setHours(time.hours)
-  time.minutes !== undefined && timeDate.setMinutes(time.minutes)
+  const onChangeSingle = useCallback(
+    (params: any) => {
+      setSingleOpen(false)
+      setDate(params.date)
+    },
+    [setSingleOpen, setDate]
+  )
+  const onDismissSingle = useCallback(() => {
+    setSingleOpen(false)
+  }, [setSingleOpen])
 
-  const backgroundColor =
-    theme.dark && theme.mode === 'adaptive'
-      ? overlay(3, theme.colors.surface)
-      : theme.colors.surface
+  const onChangeMulti = useCallback((params: any) => {
+    setMultiOpen(false)
+    setDates(params.dates)
+  }, [])
+  const onDismissMulti = useCallback(() => {
+    setMultiOpen(false)
+  }, [])
 
-  const pastDate = new Date(new Date().setDate(new Date().getDate() - 5))
-  const futureDate = new Date(new Date().setDate(new Date().getDate() + 5))
+  const onChangeRange = useCallback(
+    ({ startDate, endDate }: any) => {
+      setRangeOpen(false)
+      setRange({ startDate, endDate })
+    },
+    [setRangeOpen, setRange]
+  )
+  const onDismissRange = useCallback(() => {
+    setRangeOpen(false)
+  }, [setRangeOpen])
 
-  const locale = 'en-GB'
+  /** Functions. */
+  const getImportTranslation = (currentLocale: string) => {
+    switch (currentLocale) {
+      case 'ar':
+        return ar
+      case 'en':
+        return en
+      case 'de':
+        return de
+      case 'fr':
+        return fr
+      case 'he':
+        return he
+      case 'hi':
+        return hi
+      case 'ko':
+        return ko
+      case 'nl':
+        return nl
+      case 'pl':
+        return pl
+      case 'pt':
+        return pt
+      case 'tr':
+        return tr
+      default:
+        return enGB
+    }
+  }
+
   return (
     <>
       <ScrollView
-        style={[
-          styles.root,
-          {
-            backgroundColor: theme.colors.background,
-          },
+        style={{ backgroundColor: theme.colors.background }}
+        contentContainerStyle={[
+          styles.paddingSixteen,
+          { paddingTop: insets.top },
         ]}
       >
-        <View style={styles.content}>
-          <View style={styles.titleContainer}>
-            <Image source={require('./schedule.png')} style={styles.logo} />
-            <Title>react-native-paper-dates</Title>
-          </View>
-
-          <Paragraph>
-            Smooth and fast cross platform Material Design date picker for React
-            Native Paper brought to you by{' '}
+        <View style={styles.row}>
+          <Image source={require('./schedule.png')} style={styles.logo} />
+          <View style={styles.column}>
             <Text
-              onPress={() => Linking.openURL('https://webridge.nl')}
-              style={styles.underline}
+              maxFontSizeMultiplier={maxFontSizeMultiplier}
+              onPress={() =>
+                Linking.openURL(
+                  'https://github.com/web-ridge/react-native-paper-dates'
+                )
+              }
+              style={{ color: theme.colors.primary }}
+              variant="titleLarge"
             >
-              webRidge
+              react-native-paper-dates
             </Text>
-          </Paragraph>
+            <Text
+              maxFontSizeMultiplier={maxFontSizeMultiplier}
+              variant="bodySmall"
+            >
+              Authors:{' '}
+              <Text
+                maxFontSizeMultiplier={maxFontSizeMultiplier}
+                onPress={() =>
+                  Linking.openURL('https://twitter.com/RichardLindhout')
+                }
+                style={{ color: theme.colors.secondary }}
+                variant="bodySmall"
+              >
+                Richard Lindhout
+              </Text>
+              ,{' '}
+              <Text
+                maxFontSizeMultiplier={maxFontSizeMultiplier}
+                onPress={() => Linking.openURL('https://github.com/iM-GeeKy')}
+                style={{ color: theme.colors.secondary }}
+                variant="bodySmall"
+              >
+                Brandon Fitzwater
+              </Text>
+            </Text>
+          </View>
         </View>
-        <View style={styles.content}>
-          <Button
-            uppercase={false}
-            mode="contained"
-            icon="github"
-            style={styles.twitterButton}
+        <Paragraph
+          maxFontSizeMultiplier={maxFontSizeMultiplier}
+          style={styles.marginBottomEight}
+        >
+          Smooth and fast cross platform Material Design date picker for React
+          Native Paper brought to you by{' '}
+          <Text
+            maxFontSizeMultiplier={maxFontSizeMultiplier}
+            onPress={() => Linking.openURL('https://webridge.nl')}
+            style={[styles.underline, { color: theme.colors.secondary }]}
+          >
+            webRidge
+          </Text>
+          . For more information check out the official{' '}
+          <Text
+            maxFontSizeMultiplier={maxFontSizeMultiplier}
             onPress={() =>
               Linking.openURL(
-                'https://github.com/web-ridge/react-native-paper-dates'
+                'https://web-ridge.github.io/react-native-paper-dates/'
               )
             }
+            style={[styles.underline, { color: theme.colors.secondary }]}
           >
-            GitHub
-          </Button>
-          <TwitterFollowButton userName={'RichardLindhout'} />
-          <TwitterFollowButton userName={'web_ridge'} />
-        </View>
-        <Animated.View
-          style={[
-            styles.content,
-            styles.contentShadow,
-            {
-              backgroundColor,
-            },
-          ]}
+            documentation
+          </Text>
+          .
+        </Paragraph>
+        <Divider style={styles.marginVerticalEight} />
+        <Text
+          maxFontSizeMultiplier={maxFontSizeMultiplier}
+          style={[styles.marginVerticalEight, styles.bold]}
         >
-          <View>
-            <Row>
-              <Label>Input</Label>
-
-              <DatePickerInput
-                locale={locale}
-                value={inputDate}
-                onChange={setInputDate}
-                inputMode="start"
-                autoComplete={'birthdate-full'}
-              />
-            </Row>
-            <Row>
-              <Label>Date</Label>
-              <Text>{date ? dateFormatter.format(date) : '-'}</Text>
-            </Row>
-            <Row>
-              <Label>Range</Label>
-              <Text>
-                {[
-                  range.startDate ? dateFormatter.format(range.startDate) : '',
-                  range.endDate ? dateFormatter.format(range.endDate) : '',
-                ].join(' - ')}
+          Locale
+        </Text>
+        <View style={styles.chipContainer}>
+          {locales.map((option) => {
+            return (
+              <Chip
+                compact
+                key={option}
+                selected={locale === option}
+                onPress={() => setLocale(option)}
+                style={styles.chip}
+              >
+                {option}
+              </Chip>
+            )
+          })}
+        </View>
+        <Divider style={styles.marginTopSixteen} />
+        <List.Section>
+          <View style={[styles.row, styles.marginVerticalEight]}>
+            <View style={styles.section}>
+              <Text
+                maxFontSizeMultiplier={maxFontSizeMultiplier}
+                style={styles.bold}
+              >
+                Time Picker
               </Text>
-            </Row>
-            <Row>
-              <Label>Time</Label>
-              <Text>
+              <Text
+                maxFontSizeMultiplier={maxFontSizeMultiplier}
+                variant="bodySmall"
+              >
                 {time && time.hours !== undefined && time.minutes !== undefined
                   ? timeFormatter.format(timeDate)
-                  : '-'}
+                  : 'No time selected.'}
               </Text>
-            </Row>
-            <Row>
-              <Label>Dates</Label>
-              <Text>
-                {dates
-                  ?.map((d) => dateFormatter.format(d))
-                  .filter(Boolean)
-                  .join(', ') || '-'}
-              </Text>
-            </Row>
-          </View>
-          <Enter />
-          <Enter />
-          <View style={styles.buttons}>
-            <Button
-              onPress={() => setSingleOpen(true)}
-              uppercase={false}
-              mode="outlined"
-              style={styles.pickButton}
-            >
-              Pick single date
-            </Button>
-            <View style={styles.buttonSeparator} />
-            <Button
-              onPress={() => setMultiOpen(true)}
-              uppercase={false}
-              mode="outlined"
-              style={styles.pickButton}
-            >
-              Pick multiple dates
-            </Button>
-            <View style={styles.buttonSeparator} />
-            <Button
-              onPress={() => setRangeOpen(true)}
-              uppercase={false}
-              mode="outlined"
-              style={styles.pickButton}
-            >
-              Pick range
-            </Button>
-
-            <View style={styles.buttonSeparator} />
+            </View>
             <Button
               onPress={() => setTimeOpen(true)}
               uppercase={false}
               mode="outlined"
-              style={styles.pickButton}
+              compact
             >
               Pick time
             </Button>
-            <View style={styles.buttonSeparator} />
+          </View>
+          <Divider style={styles.marginVerticalEight} />
+          <Text
+            maxFontSizeMultiplier={maxFontSizeMultiplier}
+            style={[styles.marginTopEight, styles.bold]}
+          >
+            Date Picker
+          </Text>
+          <Text
+            maxFontSizeMultiplier={maxFontSizeMultiplier}
+            style={[styles.marginTopSixteen, styles.marginBottomEight]}
+          >
+            Input
+          </Text>
+          <DatePickerInput
+            locale={locale}
+            value={inputDate}
+            onChange={setInputDate}
+            inputMode="start"
+            autoComplete={'birthdate-full'}
+            style={styles.marginBottomEight}
+          />
+          <View style={styles.sectionContainer}>
+            <View style={styles.section}>
+              <Text maxFontSizeMultiplier={maxFontSizeMultiplier}>
+                Single Date
+              </Text>
+              <Text
+                maxFontSizeMultiplier={maxFontSizeMultiplier}
+                variant="bodySmall"
+              >
+                {date ? dateFormatter.format(date) : 'No date selected.'}
+              </Text>
+            </View>
             <Button
-              onPress={() => setCustomOpen(true)}
+              onPress={() => setSingleOpen(true)}
               uppercase={false}
               mode="outlined"
-              style={styles.pickButton}
+              compact
             >
-              Custom modal
+              Pick single date
             </Button>
           </View>
-          <Enter />
-        </Animated.View>
-
-        <Enter />
-        <Enter />
-        <Enter />
-      </ScrollView>
-      <Portal>
-        {customOpen ? (
-          <View style={[StyleSheet.absoluteFill, styles.customModal]}>
-            <DatePickerModalContent
-              locale={locale}
-              mode="range"
-              onDismiss={onDismissCustom}
-              startDate={range.startDate}
-              endDate={range.endDate}
-              onConfirm={onChangeRange}
-            />
+          <View style={styles.sectionContainer}>
+            <View style={styles.section}>
+              <Text maxFontSizeMultiplier={maxFontSizeMultiplier}>
+                Multiple Dates
+              </Text>
+              <Text
+                maxFontSizeMultiplier={maxFontSizeMultiplier}
+                variant="bodySmall"
+              >
+                {dates
+                  ?.map((d) => dateFormatter.format(d))
+                  .filter(Boolean)
+                  .join(', ') || 'No dates selected.'}
+              </Text>
+            </View>
+            <Button
+              onPress={() => setMultiOpen(true)}
+              uppercase={false}
+              mode="outlined"
+              compact
+            >
+              Pick multiple dates
+            </Button>
           </View>
-        ) : null}
-      </Portal>
 
+          <View style={styles.sectionContainer}>
+            <View style={styles.section}>
+              <Text maxFontSizeMultiplier={maxFontSizeMultiplier}>
+                Date Range
+              </Text>
+              <Text
+                maxFontSizeMultiplier={maxFontSizeMultiplier}
+                variant="bodySmall"
+              >
+                {!range.startDate && !range.endDate
+                  ? 'No dates selected.'
+                  : [
+                      range.startDate
+                        ? dateFormatter.format(range.startDate)
+                        : '',
+                      range.endDate ? dateFormatter.format(range.endDate) : '',
+                    ].join(' - ')}
+              </Text>
+            </View>
+            <Button
+              onPress={() => setRangeOpen(true)}
+              uppercase={false}
+              mode="outlined"
+              compact
+            >
+              Pick range
+            </Button>
+          </View>
+        </List.Section>
+      </ScrollView>
       <DatePickerModal
         locale={locale}
         mode="range"
@@ -297,19 +404,7 @@ function App() {
         startDate={range.startDate}
         endDate={range.endDate}
         onConfirm={onChangeRange}
-        // locale={'nl'} // optional
-        // saveLabel="Save" // optional
-        // uppercase={false} // optional, default is true
-        // label="Select period" // optional
-        // startLabel="From" // optional
-        // endLabel="To" // optional
-        // animationType="slide" // optional, default is slide on ios/android and none on web
-        // startYear={2000} // optional, default is 1800
-        // endYear={2100} // optional, default is 2200
-        // allowEditing={false} // optional, default is true
-        // inputEnabled={false} // optional, default is true
       />
-
       <DatePickerModal
         locale={locale}
         mode="single"
@@ -320,154 +415,92 @@ function App() {
         validRange={{
           startDate: pastDate,
           disabledDates: [futureDate],
-          // startDate: new Date(2021, 1, 2), // optional
-          // endDate: new Date(), // optional
         }}
-        // saveLabel="Save" // optional
-        // uppercase={false} // optional, default is true
-        // label="Select date" // optional
-        // animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
-        // startYear={2000} // optional, default is 1800
-        // endYear={2100} // optional, default is 2200
-        // allowEditing={false} // optional, default is true
-        // inputEnabled={false} // optional, default is true
       />
-
       <DatePickerModal
         locale={locale}
         mode="multiple"
         visible={multiOpen}
         onDismiss={onDismissMulti}
         dates={dates}
-        validRange={{
-          startDate: new Date(),
-        }}
+        validRange={{ startDate: new Date() }}
         onConfirm={onChangeMulti}
-        // moreLabel="more" // optional, if multiple are selected this will show if we can't show all dates
-        // onChange={onChangeMulti}
-        // saveLabel="Save" // optional
-        // uppercase={false} // optional, default is true
-        // label="Select date" // optional
-        // animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
-        // startYear={2000} // optional, default is 1800
-        // endYear={2100} // optional, default is 2200
       />
-
       <TimePickerModal
         locale={locale}
         visible={timeOpen}
         onDismiss={onDismissTime}
         onConfirm={onConfirmTime}
-        hours={time.hours} // optional, default: current hours
-        minutes={time.minutes} // optional, default: current minutes
-        // label="Select time" // optional, default 'Select time'
-        // cancelLabel="Cancel" // optional, default: 'Cancel'
-        // confirmLabel="Ok" // optional, default: 'Ok'
-        // animationType="fade" // optional, default is 'none'
+        hours={time.hours}
+        minutes={time.minutes}
       />
     </>
   )
 }
 
-function Enter() {
-  return <View style={styles.enter} />
-}
-
-function Row({ children }: { children: any }) {
-  return <View style={styles.row}>{children}</View>
-}
-
-function Label({ children }: { children: string }) {
-  const theme = useTheme()
-  return (
-    <Text style={[styles.label, { ...theme.fonts.bodyLarge }]}>{children}</Text>
-  )
-}
-
-const theme = { version: 3 }
+const theme: MD2Theme | MD3Theme = { version: 3 } as MD2Theme | MD3Theme
 export default function AppWithProviders() {
   return (
     <SafeAreaProvider>
-      <PaperProvider theme={theme as any}>
+      <PaperProvider theme={theme}>
         <App />
       </PaperProvider>
     </SafeAreaProvider>
   )
 }
 
-function TwitterFollowButton({ userName }: { userName: string }) {
-  return (
-    <Button
-      uppercase={false}
-      mode="outlined"
-      icon="twitter"
-      style={styles.twitterButton}
-      onPress={() => Linking.openURL(`https://twitter.com/${userName}`)}
-    >
-      @{userName}
-    </Button>
-  )
-}
-
 const styles = StyleSheet.create({
-  underline: { textDecorationLine: 'underline' },
-  logo: { width: 56, height: 56, marginRight: 24 },
-  titleContainer: {
+  bold: {
+    fontWeight: 'bold',
+  },
+  column: {
+    flexDirection: 'column',
+  },
+  chip: {
+    marginHorizontal: 4,
+    marginVertical: 4,
+  },
+  chipContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start',
   },
-  twitterButton: { marginBottom: 16 },
-  root: { flex: 1 },
-  content: {
-    width: '100%',
-    maxWidth: 500,
-    marginTop: 12,
-    padding: 24,
-    alignSelf: 'center',
+  logo: {
+    height: 56,
+    marginRight: 12,
+    width: 56,
   },
-  contentInline: {
-    padding: 0,
-    height: 600,
+  paddingSixteen: {
+    padding: 16,
   },
-  contentShadow: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 3.84,
-    elevation: 3,
+  marginBottomEight: {
+    marginBottom: 8,
   },
-  switchContainer: {
+  marginTopEight: {
+    marginTop: 8,
+  },
+  marginTopSixteen: {
+    marginTop: 16,
+  },
+  marginVerticalEight: {
+    marginVertical: 8,
+  },
+  marginVerticalSixteen: {
+    marginVertical: 16,
+  },
+  row: {
     flexDirection: 'row',
-    marginTop: 24,
-    alignItems: 'center',
   },
-  switchSpace: { flex: 1 },
-  switchLabel: { fontSize: 16 },
-  buttons: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 24 },
-  pickButton: { marginTop: 6 },
-  buttonSeparator: { width: 6 },
-  enter: { height: 12 },
-  label: { width: 100, fontSize: 16 },
-  row: { paddingTop: 12, paddingBottom: 12, flexDirection: 'row' },
-  customModal: {
-    top: 12,
-    left: 12,
-    right: 12,
-    bottom: 12,
-    backgroundColor: '#fff',
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-
-    elevation: 5,
+  section: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  },
+  sectionContainer: {
+    flexDirection: 'row',
+    marginVertical: 16,
+  },
+  underline: {
+    textDecorationLine: 'underline',
   },
 })

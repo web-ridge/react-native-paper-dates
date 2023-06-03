@@ -544,7 +544,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -566,6 +565,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -638,7 +638,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -660,6 +659,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -732,7 +732,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -754,6 +753,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -839,7 +839,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -861,6 +860,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -933,7 +933,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -955,6 +954,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -1027,7 +1027,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -1049,6 +1048,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -1134,7 +1134,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -1156,6 +1155,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -1228,7 +1228,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -1250,6 +1249,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -1322,7 +1322,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -1344,6 +1343,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -1429,7 +1429,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -1451,6 +1450,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -1523,7 +1523,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -1545,6 +1544,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -1617,7 +1617,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -1639,6 +1638,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -1724,7 +1724,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -1746,6 +1745,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -1818,7 +1818,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -1840,6 +1839,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -1912,7 +1912,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -1934,6 +1933,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -2019,7 +2019,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -2041,6 +2040,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -2113,7 +2113,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -2135,6 +2134,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -2207,7 +2207,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -2229,6 +2228,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -2314,7 +2314,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -2336,6 +2335,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -2408,7 +2408,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -2430,6 +2429,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -2502,7 +2502,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -2524,6 +2523,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -2609,7 +2609,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -2631,6 +2630,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -2703,7 +2703,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -2725,6 +2724,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -2797,7 +2797,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -2819,6 +2818,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -2904,7 +2904,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -2926,6 +2925,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -2998,7 +2998,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -3020,6 +3019,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -3092,7 +3092,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -3114,6 +3113,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -3199,7 +3199,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -3221,6 +3220,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -3293,7 +3293,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -3315,6 +3314,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [
@@ -3387,7 +3387,6 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                     style={
                       [
                         false,
-                        false,
                         {
                           "borderRadius": 23,
                           "overflow": "hidden",
@@ -3409,6 +3408,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                       }
                     >
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         selectable={false}
                         style={
                           [

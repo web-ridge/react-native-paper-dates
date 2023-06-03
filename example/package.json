@@ -9,22 +9,24 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "start": "expo start",
-    "test": "jest"
+    "test": "jest",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "add": "^2.0.6",
-    "expo": "^48.0.5",
-    "expo-splash-screen": "~0.18.1",
+    "expo": "^48.0.19",
+    "expo-splash-screen": "~0.18.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-native": "0.71.3",
-    "react-native-paper": "^5.2.0",
+    "react-native": "0.71.8",
+    "react-native-paper": "^5.8.0",
     "react-native-web": "~0.18.12"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.0",
-    "@babel/runtime": "^7.21.0",
+    "@babel/core": "^7.22.1",
+    "@babel/runtime": "^7.22.3",
     "babel-plugin-module-resolver": "^4.0.0",
-    "babel-preset-expo": "^9.3.0"
+    "babel-preset-expo": "^9.3.2",
+    "patch-package": "^7.0.0"
   }
 }

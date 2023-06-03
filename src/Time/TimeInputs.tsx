@@ -87,6 +87,7 @@ function TimeInputs({
           pressed={focused === clockTypes.hours}
           onPress={onFocusInput}
           inputType={inputType}
+          maxFontSizeMultiplier={1.2}
           selectionColor={
             theme.dark
               ? Color(theme.colors.primary).darken(0.2).hex()
@@ -111,7 +112,9 @@ function TimeInputs({
           }}
         />
         {inputType === 'keyboard' ? (
-          <Text variant="bodySmall">Hour</Text>
+          <Text maxFontSizeMultiplier={1.5} variant="bodySmall">
+            Hour
+          </Text>
         ) : null}
       </View>
       <View
@@ -155,6 +158,7 @@ function TimeInputs({
           pressed={focused === clockTypes.minutes}
           onPress={onFocusInput}
           inputType={inputType}
+          maxFontSizeMultiplier={1.2}
           selectionColor={
             theme.dark
               ? Color(theme.colors.primary).darken(0.2).hex()
@@ -173,7 +177,9 @@ function TimeInputs({
           }}
         />
         {inputType === 'keyboard' ? (
-          <Text variant="bodySmall">Minute</Text>
+          <Text maxFontSizeMultiplier={1.5} variant="bodySmall">
+            Minute
+          </Text>
         ) : null}
       </View>
       {!is24Hour && (

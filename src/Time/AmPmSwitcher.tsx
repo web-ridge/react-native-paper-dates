@@ -104,6 +104,7 @@ function SwitchButton({
     >
       <View style={[styles.switchButtonInner, { backgroundColor }]}>
         <Text
+          maxFontSizeMultiplier={1.5}
           selectable={false}
           style={[
             {

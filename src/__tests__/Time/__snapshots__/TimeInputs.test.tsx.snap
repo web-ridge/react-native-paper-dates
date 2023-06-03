@@ -32,6 +32,7 @@ exports[`renders TimeInputs 1`] = `
         blurOnSubmit={false}
         keyboardAppearance="default"
         keyboardType="number-pad"
+        maxFontSizeMultiplier={1.2}
         maxLength={2}
         onBlur={[Function]}
         onChangeText={[Function]}
@@ -62,10 +63,10 @@ exports[`renders TimeInputs 1`] = `
       />
     </View>
     <Text
+      maxFontSizeMultiplier={1.5}
       style={
         [
           {
-            "color": "rgba(28, 27, 31, 1)",
             "fontFamily": "System",
             "fontSize": 12,
             "fontWeight": "400",
@@ -76,6 +77,7 @@ exports[`renders TimeInputs 1`] = `
             "textAlign": "left",
           },
           {
+            "color": "rgba(28, 27, 31, 1)",
             "writingDirection": "ltr",
           },
           undefined,
@@ -168,6 +170,7 @@ exports[`renders TimeInputs 1`] = `
       <TextInput
         keyboardAppearance="default"
         keyboardType="number-pad"
+        maxFontSizeMultiplier={1.2}
         maxLength={2}
         onBlur={[Function]}
         onChangeText={[Function]}
@@ -197,10 +200,10 @@ exports[`renders TimeInputs 1`] = `
       />
     </View>
     <Text
+      maxFontSizeMultiplier={1.5}
       style={
         [
           {
-            "color": "rgba(28, 27, 31, 1)",
             "fontFamily": "System",
             "fontSize": 12,
             "fontWeight": "400",
@@ -211,6 +214,7 @@ exports[`renders TimeInputs 1`] = `
             "textAlign": "left",
           },
           {
+            "color": "rgba(28, 27, 31, 1)",
             "writingDirection": "ltr",
           },
           undefined,

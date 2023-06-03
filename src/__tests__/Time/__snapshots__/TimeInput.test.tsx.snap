@@ -13,6 +13,7 @@ exports[`renders TimeInput 1`] = `
   <TextInput
     keyboardAppearance="default"
     keyboardType="number-pad"
+    maxFontSizeMultiplier={1.5}
     maxLength={2}
     onBlur={[Function]}
     onChangeText={[Function]}

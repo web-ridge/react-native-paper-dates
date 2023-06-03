@@ -80,6 +80,7 @@ export default function DatePickerModalContentHeader(
     <View style={styles.header}>
       <View>
         <Text
+          maxFontSizeMultiplier={1.5}
           style={[styles.label, { color: supportingTextColor, ...textFont }]}
         >
           {uppercase ? label.toUpperCase() : label}
@@ -147,7 +148,10 @@ export function HeaderContentSingle({
   }, [locale])
 
   return (
-    <Text style={[styles.singleHeaderText, { color: dateColor }]}>
+    <Text
+      maxFontSizeMultiplier={1.5}
+      style={[styles.singleHeaderText, { color: dateColor }]}
+    >
       {state.date ? formatter.format(state.date) : emptyLabel}
     </Text>
   )
@@ -187,7 +191,12 @@ export function HeaderContentMulti({
   }
 
   return (
-    <Text style={[styles.singleHeaderText, { color: dateColor }]}>{label}</Text>
+    <Text
+      maxFontSizeMultiplier={1.5}
+      style={[styles.singleHeaderText, { color: dateColor }]}
+    >
+      {label}
+    </Text>
   )
 }
 
@@ -221,11 +230,22 @@ export function HeaderContentRange({
 
   return (
     <>
-      <Text style={[styles.rangeHeaderText, { color: startColor }]}>
+      <Text
+        maxFontSizeMultiplier={1.5}
+        style={[styles.rangeHeaderText, { color: startColor }]}
+      >
         {state.startDate ? formatter.format(state.startDate) : startLabel}
       </Text>
-      <Text style={[styles.headerSeparator, { color }]}>{headerSeparator}</Text>
-      <Text style={[styles.rangeHeaderText, { color: endColor }]}>
+      <Text
+        maxFontSizeMultiplier={1.5}
+        style={[styles.headerSeparator, { color }]}
+      >
+        {headerSeparator}
+      </Text>
+      <Text
+        maxFontSizeMultiplier={1.5}
+        style={[styles.rangeHeaderText, { color: endColor }]}
+      >
         {state.endDate ? formatter.format(state.endDate) : endLabel}
       </Text>
     </>
