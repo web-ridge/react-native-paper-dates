@@ -22,15 +22,16 @@
 - Great React Native Web support
 - Dependencies are [react-native-paper](https://callstack.github.io/react-native-paper/)
 
+## Demo
+
+[reactnativepaperdates.com](https://www.reactnativepaperdates.com/)
+
 [![Demo of react-native-paper-dates](https://github.com/web-ridge/react-native-paper-dates/assets/7604441/c1ae6c92-94a6-43f8-90b0-8f21c20fd4e9)](https://www.youtube.com/watch?v=SHhQU2doTug)
 
 ## Documentation
 
 Check out the official docs: [web-ridge.github.io/react-native-paper-dates](https://web-ridge.github.io/react-native-paper-dates/)
 
-## Demo
-
-[reactnativepaperdates.com](https://www.reactnativepaperdates.com/)
 
 ## Maintainers
 
