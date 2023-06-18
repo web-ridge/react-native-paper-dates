@@ -36,7 +36,7 @@ npm install react-native-paper-dates --save
 
 ### Supported
 
-React-Native-Paper-Dates currently supports `en/nl/de/pl/pt/ar/ko/fr/he/hi/tr/enGB` translations. Ideally you would do this somewhere before react-native-paper-dates is used. For example, you might add the follow to your `index.js` or `app.js`.
+React-Native-Paper-Dates currently supports `en/nl/de/pl/pt/ar/ko/fr/he/hi/tr/enGB/zh` translations. Ideally you would do this somewhere before react-native-paper-dates is used. For example, you might add the follow to your `index.js` or `app.js`.
 
 ```javascript
 import { enGB, registerTranslation } from 'react-native-paper-dates'
