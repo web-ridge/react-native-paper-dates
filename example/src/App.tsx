@@ -37,6 +37,8 @@ import {
   pt,
   registerTranslation,
   tr,
+  zh,
+  zhTW,
 } from '../../src'
 
 function App() {
@@ -89,6 +91,8 @@ function App() {
     'hi',
     'tr',
     'en-GB',
+    'zh',
+    'zh-TW',
   ]
   let timeDate = new Date()
   time.hours !== undefined && timeDate.setHours(time.hours)
@@ -166,6 +170,10 @@ function App() {
         return pt
       case 'tr':
         return tr
+      case 'zh':
+        return zh
+      case 'zh-TW':
+        return zhTW
       default:
         return enGB
     }
