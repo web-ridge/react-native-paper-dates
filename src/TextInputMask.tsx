@@ -7,6 +7,10 @@ function detectCharacter(mask: string): string {
   return c || ''
 }
 
+function escapeForRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
 function TextInputWithMask(
   {
     onChangeText,
@@ -40,7 +44,7 @@ function TextInputWithMask(
     )
     const replaceValue = format.match(/\W/)
     const replace = `$1${splitCharacter}$2${splitCharacter}$3$4`.replace(
-      new RegExp(splitCharacter, 'g'),
+      new RegExp(escapeForRegExp(splitCharacter), 'g'),
       (replaceValue ?? '') as string
     )
 
