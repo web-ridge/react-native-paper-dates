@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Button } from 'react-native-paper'
 
-import { DatePickerModal } from '../../src/index'
+import { DatePickerModal } from 'react-native-paper-dates'
 
 export default function ReadMeExampleRange() {
   const [range, setRange] = React.useState<{

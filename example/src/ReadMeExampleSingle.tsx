@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Button } from 'react-native-paper'
-import { DatePickerModal } from '../../src/index'
+import { DatePickerModal } from 'react-native-paper-dates'
 
 export default function ReadMeExampleSingle() {
   const [date, setDate] = React.useState<Date | undefined>(undefined)

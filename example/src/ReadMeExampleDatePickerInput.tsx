@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { DatePickerInput } from '../../src/index'
+import { DatePickerInput } from 'react-native-paper-dates'
 
 export default function ReadMeExampleDatePickerInput() {
   const [inputDate, setInputDate] = React.useState<Date | undefined>(undefined)
