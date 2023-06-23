@@ -1,5 +1,13 @@
 import * as React from 'react'
-import { StyleSheet, ScrollView, View, Linking, Image } from 'react-native'
+import {
+  StyleSheet,
+  ScrollView,
+  View,
+  Linking,
+  Image,
+  useWindowDimensions,
+  useColorScheme,
+} from 'react-native'
 import {
   SafeAreaProvider,
   useSafeAreaInsets,
@@ -13,17 +21,13 @@ import {
   List,
   Divider,
   Chip,
-  MD2Theme,
-  MD3Theme,
+  MD3DarkTheme,
+  MD3LightTheme,
 } from 'react-native-paper'
 import {
   DatePickerModal,
   TimePickerModal,
   DatePickerInput,
-  // @ts-ignore TODO: try to fix expo to work with local library
-} from 'react-native-paper-dates'
-import { useCallback, useEffect, useState } from 'react'
-import {
   ar,
   de,
   en,
@@ -37,9 +41,32 @@ import {
   pt,
   registerTranslation,
   tr,
+  TranslationsType,
   zh,
   zhTW,
-} from '../../src'
+} from 'react-native-paper-dates'
+import { useCallback, useState } from 'react'
+
+const locales: [string, TranslationsType][] = [
+  ['en', en],
+  ['nl', nl],
+  ['de', de],
+  ['pl', pl],
+  ['pt', pt],
+  ['ar', ar],
+  ['ko', ko],
+  ['fr', fr],
+  ['he', he],
+  ['hi', hi],
+  ['tr', tr],
+  ['en-GB', enGB],
+  ['zh', zh],
+  ['zh-TW', zhTW],
+]
+
+locales.forEach((locale) => {
+  registerTranslation(locale[0], locale[1])
+})
 
 function App() {
   /** Hooks. */
@@ -66,42 +93,31 @@ function App() {
 
   /** Constants. */
   const maxFontSizeMultiplier = 1.5
-  const dateFormatter = new Intl.DateTimeFormat(undefined, {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  })
-  const timeFormatter = new Intl.DateTimeFormat(undefined, {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  })
+  const dateFormatter = React.useMemo(
+    () =>
+      new Intl.DateTimeFormat(locale, {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      }),
+    [locale]
+  )
+  const timeFormatter = React.useMemo(
+    () =>
+      new Intl.DateTimeFormat(locale, {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      }),
+    [locale]
+  )
+
   const pastDate = new Date(new Date().setDate(new Date().getDate() - 5))
   const futureDate = new Date(new Date().setDate(new Date().getDate() + 5))
-  const locales = [
-    'en',
-    'nl',
-    'de',
-    'pl',
-    'pt',
-    'ar',
-    'ko',
-    'fr',
-    'he',
-    'hi',
-    'tr',
-    'en-GB',
-    'zh',
-    'zh-TW',
-  ]
+
   let timeDate = new Date()
   time.hours !== undefined && timeDate.setHours(time.hours)
   time.minutes !== undefined && timeDate.setMinutes(time.minutes)
-
-  /** Use effects. */
-  useEffect(() => {
-    registerTranslation(locale, getImportTranslation(locale))
-  }, [locale])
 
   /** Callbacks. */
   const onConfirmTime = useCallback(
@@ -145,264 +161,284 @@ function App() {
     setRangeOpen(false)
   }, [setRangeOpen])
 
-  /** Functions. */
-  const getImportTranslation = (currentLocale: string) => {
-    switch (currentLocale) {
-      case 'ar':
-        return ar
-      case 'en':
-        return en
-      case 'de':
-        return de
-      case 'fr':
-        return fr
-      case 'he':
-        return he
-      case 'hi':
-        return hi
-      case 'ko':
-        return ko
-      case 'nl':
-        return nl
-      case 'pl':
-        return pl
-      case 'pt':
-        return pt
-      case 'tr':
-        return tr
-      case 'zh':
-        return zh
-      case 'zh-TW':
-        return zhTW
-      default:
-        return enGB
-    }
-  }
+  const dimensions = useWindowDimensions()
+  const isLarge = dimensions.width > 600
 
   return (
     <>
       <ScrollView
         style={{ backgroundColor: theme.colors.background }}
         contentContainerStyle={[
+          styles.contentContainer,
           styles.paddingSixteen,
           { paddingTop: insets.top },
         ]}
       >
-        <View style={styles.row}>
-          <Image source={require('./schedule.png')} style={styles.logo} />
-          <View style={styles.column}>
-            <Text
-              maxFontSizeMultiplier={maxFontSizeMultiplier}
+        <View style={isLarge && styles.surface}>
+          <View style={styles.row}>
+            <Image source={require('./schedule.png')} style={styles.logo} />
+            <View style={styles.column}>
+              <Text
+                maxFontSizeMultiplier={maxFontSizeMultiplier}
+                onPress={() =>
+                  Linking.openURL(
+                    'https://github.com/web-ridge/react-native-paper-dates'
+                  )
+                }
+                style={{ color: theme.colors.primary }}
+                variant="titleLarge"
+              >
+                react-native-paper-dates
+              </Text>
+              <Text
+                maxFontSizeMultiplier={maxFontSizeMultiplier}
+                variant="bodySmall"
+              >
+                Authors:{' '}
+                <Text
+                  maxFontSizeMultiplier={maxFontSizeMultiplier}
+                  onPress={() =>
+                    Linking.openURL('https://twitter.com/RichardLindhout')
+                  }
+                  style={{ color: theme.colors.secondary }}
+                  variant="bodySmall"
+                >
+                  Richard Lindhout
+                </Text>
+                ,{' '}
+                <Text
+                  maxFontSizeMultiplier={maxFontSizeMultiplier}
+                  onPress={() => Linking.openURL('https://github.com/iM-GeeKy')}
+                  style={{ color: theme.colors.secondary }}
+                  variant="bodySmall"
+                >
+                  Brandon Fitzwater
+                </Text>
+              </Text>
+            </View>
+          </View>
+          <Paragraph
+            maxFontSizeMultiplier={maxFontSizeMultiplier}
+            style={styles.marginBottomEight}
+          >
+            Smooth and fast cross platform Material Design date picker for React
+            Native Paper.
+          </Paragraph>
+
+          <View style={[styles.row, styles.gap, styles.marginVerticalEight]}>
+            <Button
+              icon="github"
+              mode="contained-tonal"
               onPress={() =>
                 Linking.openURL(
                   'https://github.com/web-ridge/react-native-paper-dates'
                 )
               }
-              style={{ color: theme.colors.primary }}
-              variant="titleLarge"
             >
-              react-native-paper-dates
+              GitHub
+            </Button>
+            <Button
+              icon="file-document-outline"
+              mode="contained"
+              onPress={() =>
+                Linking.openURL(
+                  'https://web-ridge.github.io/react-native-paper-dates/'
+                )
+              }
+            >
+              View documentation
+            </Button>
+          </View>
+
+          <Divider style={styles.marginVerticalEight} />
+          <Text
+            maxFontSizeMultiplier={maxFontSizeMultiplier}
+            style={[styles.marginVerticalEight, styles.bold]}
+          >
+            Locale
+          </Text>
+          <View style={styles.chipContainer}>
+            {locales.map(([option]) => {
+              return (
+                <Chip
+                  compact
+                  key={option}
+                  selected={locale === option}
+                  onPress={() => setLocale(option)}
+                  style={styles.chip}
+                >
+                  {option}
+                </Chip>
+              )
+            })}
+          </View>
+          <Divider style={styles.marginTopSixteen} />
+          <List.Section>
+            <View style={[styles.row, styles.marginVerticalEight]}>
+              <View style={styles.section}>
+                <Text
+                  maxFontSizeMultiplier={maxFontSizeMultiplier}
+                  style={styles.bold}
+                >
+                  Time Picker
+                </Text>
+                <Text
+                  maxFontSizeMultiplier={maxFontSizeMultiplier}
+                  variant="bodySmall"
+                >
+                  {time &&
+                  time.hours !== undefined &&
+                  time.minutes !== undefined
+                    ? timeFormatter.format(timeDate)
+                    : 'No time selected.'}
+                </Text>
+              </View>
+              <Button
+                onPress={() => setTimeOpen(true)}
+                uppercase={false}
+                mode="contained-tonal"
+              >
+                Pick time
+              </Button>
+            </View>
+            <Divider style={styles.marginVerticalEight} />
+            <Text
+              maxFontSizeMultiplier={maxFontSizeMultiplier}
+              style={[styles.marginTopEight, styles.bold]}
+            >
+              Date Picker
             </Text>
             <Text
               maxFontSizeMultiplier={maxFontSizeMultiplier}
-              variant="bodySmall"
+              style={[styles.marginTopSixteen, styles.marginBottomEight]}
             >
-              Authors:{' '}
-              <Text
-                maxFontSizeMultiplier={maxFontSizeMultiplier}
-                onPress={() =>
-                  Linking.openURL('https://twitter.com/RichardLindhout')
-                }
-                style={{ color: theme.colors.secondary }}
-                variant="bodySmall"
-              >
-                Richard Lindhout
-              </Text>
-              ,{' '}
-              <Text
-                maxFontSizeMultiplier={maxFontSizeMultiplier}
-                onPress={() => Linking.openURL('https://github.com/iM-GeeKy')}
-                style={{ color: theme.colors.secondary }}
-                variant="bodySmall"
-              >
-                Brandon Fitzwater
-              </Text>
+              Input
             </Text>
-          </View>
-        </View>
-        <Paragraph
-          maxFontSizeMultiplier={maxFontSizeMultiplier}
-          style={styles.marginBottomEight}
-        >
-          Smooth and fast cross platform Material Design date picker for React
-          Native Paper brought to you by{' '}
-          <Text
-            maxFontSizeMultiplier={maxFontSizeMultiplier}
-            onPress={() => Linking.openURL('https://webridge.nl')}
-            style={[styles.underline, { color: theme.colors.secondary }]}
-          >
-            webRidge
-          </Text>
-          . For more information check out the official{' '}
-          <Text
-            maxFontSizeMultiplier={maxFontSizeMultiplier}
-            onPress={() =>
-              Linking.openURL(
-                'https://web-ridge.github.io/react-native-paper-dates/'
-              )
-            }
-            style={[styles.underline, { color: theme.colors.secondary }]}
-          >
-            documentation
-          </Text>
-          .
-        </Paragraph>
-        <Divider style={styles.marginVerticalEight} />
-        <Text
-          maxFontSizeMultiplier={maxFontSizeMultiplier}
-          style={[styles.marginVerticalEight, styles.bold]}
-        >
-          Locale
-        </Text>
-        <View style={styles.chipContainer}>
-          {locales.map((option) => {
-            return (
-              <Chip
-                compact
-                key={option}
-                selected={locale === option}
-                onPress={() => setLocale(option)}
-                style={styles.chip}
+            <DatePickerInput
+              locale={locale}
+              value={inputDate}
+              onChange={setInputDate}
+              inputMode="start"
+              autoComplete={'birthdate-full'}
+              style={styles.marginBottomEight}
+            />
+            <View style={styles.sectionContainer}>
+              <View style={styles.section}>
+                <Text maxFontSizeMultiplier={maxFontSizeMultiplier}>
+                  Single Date
+                </Text>
+                <Text
+                  maxFontSizeMultiplier={maxFontSizeMultiplier}
+                  variant="bodySmall"
+                >
+                  {date ? dateFormatter.format(date) : 'No date selected.'}
+                </Text>
+              </View>
+              <Button
+                onPress={() => setSingleOpen(true)}
+                uppercase={false}
+                mode="contained-tonal"
               >
-                {option}
-              </Chip>
-            )
-          })}
-        </View>
-        <Divider style={styles.marginTopSixteen} />
-        <List.Section>
-          <View style={[styles.row, styles.marginVerticalEight]}>
-            <View style={styles.section}>
+                Pick single date
+              </Button>
+            </View>
+            <View style={styles.sectionContainer}>
+              <View style={styles.section}>
+                <Text maxFontSizeMultiplier={maxFontSizeMultiplier}>
+                  Multiple Dates
+                </Text>
+                <Text
+                  maxFontSizeMultiplier={maxFontSizeMultiplier}
+                  variant="bodySmall"
+                >
+                  {dates
+                    ?.map((d) => dateFormatter.format(d))
+                    .filter(Boolean)
+                    .join(', ') || 'No dates selected.'}
+                </Text>
+              </View>
+              <Button
+                onPress={() => setMultiOpen(true)}
+                uppercase={false}
+                mode="contained-tonal"
+              >
+                Pick multiple dates
+              </Button>
+            </View>
+
+            <View style={styles.sectionContainer}>
+              <View style={styles.section}>
+                <Text maxFontSizeMultiplier={maxFontSizeMultiplier}>
+                  Date Range
+                </Text>
+                <Text
+                  maxFontSizeMultiplier={maxFontSizeMultiplier}
+                  variant="bodySmall"
+                >
+                  {!range.startDate && !range.endDate
+                    ? 'No dates selected.'
+                    : [
+                        range.startDate
+                          ? dateFormatter.format(range.startDate)
+                          : '',
+                        range.endDate
+                          ? dateFormatter.format(range.endDate)
+                          : '',
+                      ].join(' - ')}
+                </Text>
+              </View>
+              <Button
+                onPress={() => setRangeOpen(true)}
+                uppercase={false}
+                mode="contained-tonal"
+              >
+                Pick range
+              </Button>
+            </View>
+          </List.Section>
+          <Divider />
+          <List.Section>
+            <View style={[styles.section, styles.marginTopSixteen]}>
               <Text
                 maxFontSizeMultiplier={maxFontSizeMultiplier}
                 style={styles.bold}
               >
-                Time Picker
+                Other great libraries
               </Text>
               <Text
                 maxFontSizeMultiplier={maxFontSizeMultiplier}
                 variant="bodySmall"
               >
-                {time && time.hours !== undefined && time.minutes !== undefined
-                  ? timeFormatter.format(timeDate)
-                  : 'No time selected.'}
+                We have made performant, type-safe libraries to help you build
+                great apps, they also always work great on the web too!
               </Text>
             </View>
-            <Button
-              onPress={() => setTimeOpen(true)}
-              uppercase={false}
-              mode="outlined"
-              compact
-            >
-              Pick time
-            </Button>
-          </View>
-          <Divider style={styles.marginVerticalEight} />
-          <Text
-            maxFontSizeMultiplier={maxFontSizeMultiplier}
-            style={[styles.marginTopEight, styles.bold]}
-          >
-            Date Picker
-          </Text>
-          <Text
-            maxFontSizeMultiplier={maxFontSizeMultiplier}
-            style={[styles.marginTopSixteen, styles.marginBottomEight]}
-          >
-            Input
-          </Text>
-          <DatePickerInput
-            locale={locale}
-            value={inputDate}
-            onChange={setInputDate}
-            inputMode="start"
-            autoComplete={'birthdate-full'}
-            style={styles.marginBottomEight}
-          />
-          <View style={styles.sectionContainer}>
-            <View style={styles.section}>
-              <Text maxFontSizeMultiplier={maxFontSizeMultiplier}>
-                Single Date
-              </Text>
-              <Text
-                maxFontSizeMultiplier={maxFontSizeMultiplier}
-                variant="bodySmall"
+            <View style={[styles.row, styles.gap, styles.marginVerticalEight]}>
+              <Button
+                icon="github"
+                mode="contained-tonal"
+                onPress={() =>
+                  Linking.openURL(
+                    'https://github.com/web-ridge/react-native-use-form'
+                  )
+                }
               >
-                {date ? dateFormatter.format(date) : 'No date selected.'}
-              </Text>
-            </View>
-            <Button
-              onPress={() => setSingleOpen(true)}
-              uppercase={false}
-              mode="outlined"
-              compact
-            >
-              Pick single date
-            </Button>
-          </View>
-          <View style={styles.sectionContainer}>
-            <View style={styles.section}>
-              <Text maxFontSizeMultiplier={maxFontSizeMultiplier}>
-                Multiple Dates
-              </Text>
-              <Text
-                maxFontSizeMultiplier={maxFontSizeMultiplier}
-                variant="bodySmall"
+                React Native Use Form
+              </Button>
+              <Button
+                icon="github"
+                mode="contained-tonal"
+                onPress={() =>
+                  Linking.openURL(
+                    'https://github.com/web-ridge/react-native-ridge-navigation'
+                  )
+                }
               >
-                {dates
-                  ?.map((d) => dateFormatter.format(d))
-                  .filter(Boolean)
-                  .join(', ') || 'No dates selected.'}
-              </Text>
+                React Native Ridge Navigation
+              </Button>
             </View>
-            <Button
-              onPress={() => setMultiOpen(true)}
-              uppercase={false}
-              mode="outlined"
-              compact
-            >
-              Pick multiple dates
-            </Button>
-          </View>
-
-          <View style={styles.sectionContainer}>
-            <View style={styles.section}>
-              <Text maxFontSizeMultiplier={maxFontSizeMultiplier}>
-                Date Range
-              </Text>
-              <Text
-                maxFontSizeMultiplier={maxFontSizeMultiplier}
-                variant="bodySmall"
-              >
-                {!range.startDate && !range.endDate
-                  ? 'No dates selected.'
-                  : [
-                      range.startDate
-                        ? dateFormatter.format(range.startDate)
-                        : '',
-                      range.endDate ? dateFormatter.format(range.endDate) : '',
-                    ].join(' - ')}
-              </Text>
-            </View>
-            <Button
-              onPress={() => setRangeOpen(true)}
-              uppercase={false}
-              mode="outlined"
-              compact
-            >
-              Pick range
-            </Button>
-          </View>
-        </List.Section>
+          </List.Section>
+        </View>
       </ScrollView>
       <DatePickerModal
         locale={locale}
@@ -446,11 +482,13 @@ function App() {
   )
 }
 
-const theme: MD2Theme | MD3Theme = { version: 3 } as MD2Theme | MD3Theme
 export default function AppWithProviders() {
+  const colorScheme = useColorScheme()
   return (
     <SafeAreaProvider>
-      <PaperProvider theme={theme}>
+      <PaperProvider
+        theme={colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme}
+      >
         <App />
       </PaperProvider>
     </SafeAreaProvider>
@@ -481,6 +519,10 @@ const styles = StyleSheet.create({
   paddingSixteen: {
     padding: 16,
   },
+  contentContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+  },
   marginBottomEight: {
     marginBottom: 8,
   },
@@ -510,5 +552,14 @@ const styles = StyleSheet.create({
   },
   underline: {
     textDecorationLine: 'underline',
+  },
+  gap: {
+    gap: 12,
+  },
+  surface: {
+    padding: 24,
+    maxWidth: 550,
+    alignSelf: 'center',
+    borderRadius: 10,
   },
 })

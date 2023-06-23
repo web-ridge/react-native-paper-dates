@@ -60,6 +60,11 @@ const config = {
             label: 'Docs',
           },
           {
+            href: 'https://www.reactnativepaperdates.com',
+            label: 'Example',
+            position: 'right',
+          },
+          {
             href: 'https://github.com/web-ridge/react-native-paper-dates',
             label: 'GitHub',
             position: 'right',
