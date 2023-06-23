@@ -12,10 +12,14 @@
       "android",
       "web"
     ],
-    "jsEngine": "hermes",
     "ios": {
-      "supportsTablet": true,
-      "jsEngine": "jsc"
+      "supportsTablet": true
+    },
+    "web": {
+      "favicon": "./favicon.png",
+      "name": "React Native Paper Dates",
+      "shortName": "PaperDates",
+      "description": "Example app for react-native-paper-dates"
     },
     "assetBundlePatterns": [
       "**/*"
