@@ -16,6 +16,7 @@ import DatePickerModalContent, {
   DatePickerModalContentSingleProps,
 } from './DatePickerModalContent'
 import { useHeaderBackgroundColor, useHeaderColorIsLight } from '../utils'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 interface DatePickerModalProps {
   visible: boolean
@@ -62,6 +63,7 @@ export function DatePickerModal(
 
   const isLight = useHeaderColorIsLight()
   const headerBackgroundColor = useHeaderBackgroundColor()
+  const insets = useSafeAreaInsets()
 
   return (
     <View style={[StyleSheet.absoluteFill]} pointerEvents="box-none">
@@ -106,7 +108,7 @@ export function DatePickerModal(
                 <View
                   style={[
                     {
-                      height: StatusBar.currentHeight,
+                      height: insets.top,
                       backgroundColor: headerBackgroundColor,
                     },
                   ]}

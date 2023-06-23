@@ -262,10 +262,22 @@ exports[`renders TimePicker 1`] = `
         accessibilityRole="button"
         accessibilityState={
           {
+            "busy": undefined,
+            "checked": undefined,
             "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
           }
         }
         accessibilityTraits="button"
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
         accessible={true}
         collapsable={false}
         focusable={true}
@@ -354,7 +366,11 @@ exports[`renders TimePicker 1`] = `
         accessibilityRole="button"
         accessibilityState={
           {
+            "busy": undefined,
+            "checked": undefined,
             "disabled": true,
+            "expanded": undefined,
+            "selected": undefined,
           }
         }
         accessibilityTraits={
@@ -362,6 +378,14 @@ exports[`renders TimePicker 1`] = `
             "button",
             "disabled",
           ]
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
         }
         accessible={true}
         collapsable={false}
