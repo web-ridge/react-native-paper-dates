@@ -11,7 +11,6 @@
 <img src="https://img.shields.io/badge/Runs%20with%20Expo-4630EB.svg?style=flat-square&logo=EXPO&labelColor=f3f3f3&logoColor=000" />
 </p>
 
-<img  width="400" src="https://github.com/web-ridge/react-native-paper-dates/assets/7604441/c1ae6c92-94a6-43f8-90b0-8f21c20fd4e9">
 <br>
 
 
@@ -27,6 +26,7 @@
 - Dependencies are [react-native-paper](https://callstack.github.io/react-native-paper/)
 
 ## Demo
+<img  width="400" src="https://github.com/web-ridge/react-native-paper-dates/assets/7604441/c1ae6c92-94a6-43f8-90b0-8f21c20fd4e9">
 
 [reactnativepaperdates.com](https://www.reactnativepaperdates.com/)
 
