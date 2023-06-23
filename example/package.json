@@ -1,9 +1,9 @@
 {
   "name": "react-native-paper-dates-example",
   "description": "Example app for react-native-paper-dates",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
-  "main": "node_modules/expo/AppEntry.js",
+  "main": "index.js",
   "scripts": {
     "android": "expo start --android",
     "ios": "expo start --ios",
@@ -12,7 +12,6 @@
     "test": "jest"
   },
   "dependencies": {
-    "add": "^2.0.6",
     "expo": "^48.0.0",
     "expo-splash-screen": "~0.18.2",
     "react": "18.2.0",
