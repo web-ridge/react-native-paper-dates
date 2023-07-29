@@ -75,20 +75,22 @@ exports[`renders TimePicker 1`] = `
         style={
           [
             {
-              "fontFamily": "System",
-              "fontSize": 12,
-              "fontWeight": "400",
-              "letterSpacing": 0.4,
-              "lineHeight": 16,
-            },
-            {
               "textAlign": "left",
             },
             {
               "color": "rgba(28, 27, 31, 1)",
               "writingDirection": "ltr",
             },
-            undefined,
+            [
+              {
+                "fontFamily": "System",
+                "fontSize": 12,
+                "fontWeight": "400",
+                "letterSpacing": 0.4,
+                "lineHeight": 16,
+              },
+              undefined,
+            ],
           ]
         }
       >
@@ -212,20 +214,22 @@ exports[`renders TimePicker 1`] = `
         style={
           [
             {
-              "fontFamily": "System",
-              "fontSize": 12,
-              "fontWeight": "400",
-              "letterSpacing": 0.4,
-              "lineHeight": 16,
-            },
-            {
               "textAlign": "left",
             },
             {
               "color": "rgba(28, 27, 31, 1)",
               "writingDirection": "ltr",
             },
-            undefined,
+            [
+              {
+                "fontFamily": "System",
+                "fontSize": 12,
+                "fontWeight": "400",
+                "letterSpacing": 0.4,
+                "lineHeight": 16,
+              },
+              undefined,
+            ],
           ]
         }
       >

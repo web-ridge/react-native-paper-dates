@@ -170,6 +170,7 @@ exports[`renders CalendarEdit 1`] = `
           </View>
           <TextInput
             autoComplete="off"
+            cursorColor="rgba(103, 80, 164, 1)"
             editable={true}
             keyboardAppearance="default"
             keyboardType="number-pad"

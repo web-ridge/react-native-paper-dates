@@ -37,20 +37,22 @@ exports[`renders AnalogClockMinutes 1`] = `
         style={
           [
             {
-              "fontFamily": "System",
-              "fontSize": 16,
-              "fontWeight": "400",
-              "letterSpacing": 0.15,
-              "lineHeight": 24,
-            },
-            {
               "textAlign": "left",
             },
             {
               "color": "rgba(28, 27, 31, 1)",
               "writingDirection": "ltr",
             },
-            undefined,
+            [
+              {
+                "fontFamily": "System",
+                "fontSize": 16,
+                "fontWeight": "400",
+                "letterSpacing": 0.15,
+                "lineHeight": 24,
+              },
+              undefined,
+            ],
           ]
         }
       >
@@ -93,20 +95,22 @@ exports[`renders AnalogClockMinutes 1`] = `
         style={
           [
             {
-              "fontFamily": "System",
-              "fontSize": 16,
-              "fontWeight": "400",
-              "letterSpacing": 0.15,
-              "lineHeight": 24,
-            },
-            {
               "textAlign": "left",
             },
             {
               "color": "rgba(28, 27, 31, 1)",
               "writingDirection": "ltr",
             },
-            undefined,
+            [
+              {
+                "fontFamily": "System",
+                "fontSize": 16,
+                "fontWeight": "400",
+                "letterSpacing": 0.15,
+                "lineHeight": 24,
+              },
+              undefined,
+            ],
           ]
         }
       >
@@ -149,20 +153,22 @@ exports[`renders AnalogClockMinutes 1`] = `
         style={
           [
             {
-              "fontFamily": "System",
-              "fontSize": 16,
-              "fontWeight": "400",
-              "letterSpacing": 0.15,
-              "lineHeight": 24,
-            },
-            {
               "textAlign": "left",
             },
             {
               "color": "rgba(28, 27, 31, 1)",
               "writingDirection": "ltr",
             },
-            undefined,
+            [
+              {
+                "fontFamily": "System",
+                "fontSize": 16,
+                "fontWeight": "400",
+                "letterSpacing": 0.15,
+                "lineHeight": 24,
+              },
+              undefined,
+            ],
           ]
         }
       >
@@ -205,20 +211,22 @@ exports[`renders AnalogClockMinutes 1`] = `
         style={
           [
             {
-              "fontFamily": "System",
-              "fontSize": 16,
-              "fontWeight": "400",
-              "letterSpacing": 0.15,
-              "lineHeight": 24,
-            },
-            {
               "textAlign": "left",
             },
             {
               "color": "rgba(28, 27, 31, 1)",
               "writingDirection": "ltr",
             },
-            undefined,
+            [
+              {
+                "fontFamily": "System",
+                "fontSize": 16,
+                "fontWeight": "400",
+                "letterSpacing": 0.15,
+                "lineHeight": 24,
+              },
+              undefined,
+            ],
           ]
         }
       >
@@ -261,20 +269,22 @@ exports[`renders AnalogClockMinutes 1`] = `
         style={
           [
             {
-              "fontFamily": "System",
-              "fontSize": 16,
-              "fontWeight": "400",
-              "letterSpacing": 0.15,
-              "lineHeight": 24,
-            },
-            {
               "textAlign": "left",
             },
             {
               "color": "rgba(28, 27, 31, 1)",
               "writingDirection": "ltr",
             },
-            undefined,
+            [
+              {
+                "fontFamily": "System",
+                "fontSize": 16,
+                "fontWeight": "400",
+                "letterSpacing": 0.15,
+                "lineHeight": 24,
+              },
+              undefined,
+            ],
           ]
         }
       >
@@ -317,20 +327,22 @@ exports[`renders AnalogClockMinutes 1`] = `
         style={
           [
             {
-              "fontFamily": "System",
-              "fontSize": 16,
-              "fontWeight": "400",
-              "letterSpacing": 0.15,
-              "lineHeight": 24,
-            },
-            {
               "textAlign": "left",
             },
             {
               "color": "rgba(28, 27, 31, 1)",
               "writingDirection": "ltr",
             },
-            undefined,
+            [
+              {
+                "fontFamily": "System",
+                "fontSize": 16,
+                "fontWeight": "400",
+                "letterSpacing": 0.15,
+                "lineHeight": 24,
+              },
+              undefined,
+            ],
           ]
         }
       >
@@ -373,20 +385,22 @@ exports[`renders AnalogClockMinutes 1`] = `
         style={
           [
             {
-              "fontFamily": "System",
-              "fontSize": 16,
-              "fontWeight": "400",
-              "letterSpacing": 0.15,
-              "lineHeight": 24,
-            },
-            {
               "textAlign": "left",
             },
             {
               "color": "rgba(28, 27, 31, 1)",
               "writingDirection": "ltr",
             },
-            undefined,
+            [
+              {
+                "fontFamily": "System",
+                "fontSize": 16,
+                "fontWeight": "400",
+                "letterSpacing": 0.15,
+                "lineHeight": 24,
+              },
+              undefined,
+            ],
           ]
         }
       >
@@ -429,20 +443,22 @@ exports[`renders AnalogClockMinutes 1`] = `
         style={
           [
             {
-              "fontFamily": "System",
-              "fontSize": 16,
-              "fontWeight": "400",
-              "letterSpacing": 0.15,
-              "lineHeight": 24,
-            },
-            {
               "textAlign": "left",
             },
             {
               "color": "rgba(28, 27, 31, 1)",
               "writingDirection": "ltr",
             },
-            undefined,
+            [
+              {
+                "fontFamily": "System",
+                "fontSize": 16,
+                "fontWeight": "400",
+                "letterSpacing": 0.15,
+                "lineHeight": 24,
+              },
+              undefined,
+            ],
           ]
         }
       >
@@ -485,20 +501,22 @@ exports[`renders AnalogClockMinutes 1`] = `
         style={
           [
             {
-              "fontFamily": "System",
-              "fontSize": 16,
-              "fontWeight": "400",
-              "letterSpacing": 0.15,
-              "lineHeight": 24,
-            },
-            {
               "textAlign": "left",
             },
             {
               "color": "rgba(28, 27, 31, 1)",
               "writingDirection": "ltr",
             },
-            undefined,
+            [
+              {
+                "fontFamily": "System",
+                "fontSize": 16,
+                "fontWeight": "400",
+                "letterSpacing": 0.15,
+                "lineHeight": 24,
+              },
+              undefined,
+            ],
           ]
         }
       >
@@ -541,22 +559,24 @@ exports[`renders AnalogClockMinutes 1`] = `
         style={
           [
             {
-              "fontFamily": "System",
-              "fontSize": 16,
-              "fontWeight": "400",
-              "letterSpacing": 0.15,
-              "lineHeight": 24,
-            },
-            {
               "textAlign": "left",
             },
             {
               "color": "rgba(28, 27, 31, 1)",
               "writingDirection": "ltr",
             },
-            {
-              "color": "rgba(255, 255, 255, 1)",
-            },
+            [
+              {
+                "fontFamily": "System",
+                "fontSize": 16,
+                "fontWeight": "400",
+                "letterSpacing": 0.15,
+                "lineHeight": 24,
+              },
+              {
+                "color": "rgba(255, 255, 255, 1)",
+              },
+            ],
           ]
         }
       >
@@ -599,20 +619,22 @@ exports[`renders AnalogClockMinutes 1`] = `
         style={
           [
             {
-              "fontFamily": "System",
-              "fontSize": 16,
-              "fontWeight": "400",
-              "letterSpacing": 0.15,
-              "lineHeight": 24,
-            },
-            {
               "textAlign": "left",
             },
             {
               "color": "rgba(28, 27, 31, 1)",
               "writingDirection": "ltr",
             },
-            undefined,
+            [
+              {
+                "fontFamily": "System",
+                "fontSize": 16,
+                "fontWeight": "400",
+                "letterSpacing": 0.15,
+                "lineHeight": 24,
+              },
+              undefined,
+            ],
           ]
         }
       >
@@ -655,20 +677,22 @@ exports[`renders AnalogClockMinutes 1`] = `
         style={
           [
             {
-              "fontFamily": "System",
-              "fontSize": 16,
-              "fontWeight": "400",
-              "letterSpacing": 0.15,
-              "lineHeight": 24,
-            },
-            {
               "textAlign": "left",
             },
             {
               "color": "rgba(28, 27, 31, 1)",
               "writingDirection": "ltr",
             },
-            undefined,
+            [
+              {
+                "fontFamily": "System",
+                "fontSize": 16,
+                "fontWeight": "400",
+                "letterSpacing": 0.15,
+                "lineHeight": 24,
+              },
+              undefined,
+            ],
           ]
         }
       >
