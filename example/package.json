@@ -12,17 +12,17 @@
     "test": "jest"
   },
   "dependencies": {
-    "expo": "^48.0.0",
-    "expo-splash-screen": "~0.18.2",
+    "expo": "^49.0.5",
+    "expo-splash-screen": "~0.20.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-native": "0.71.3",
-    "react-native-paper": "^5.8.0",
-    "react-native-web": "~0.18.11"
+    "react-native": "0.72.3",
+    "react-native-paper": "^5.9.1",
+    "react-native-web": "~0.19.6"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0",
-    "@expo/webpack-config": "^18.0.1",
+    "@babel/core": "^7.22.9",
+    "@expo/webpack-config": "^18.1.2",
     "babel-loader": "^8.1.0",
     "babel-plugin-module-resolver": "^4.1.0"
   }
