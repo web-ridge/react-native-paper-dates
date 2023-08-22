@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   Modal,
   StyleSheet,
@@ -7,23 +7,24 @@ import {
   View,
   Platform,
   StatusBar,
-} from 'react-native'
+} from 'react-native';
 
-import { useTheme } from 'react-native-paper'
+import { useTheme } from 'react-native-paper';
 import DatePickerModalContent, {
   DatePickerModalContentMultiProps,
   DatePickerModalContentRangeProps,
   DatePickerModalContentSingleProps,
-} from './DatePickerModalContent'
-import { useHeaderBackgroundColor, useHeaderColorIsLight } from '../utils'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+} from './DatePickerModalContent';
+import { useHeaderBackgroundColor, useHeaderColorIsLight } from '../utils';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface DatePickerModalProps {
-  visible: boolean
-  animationType?: 'slide' | 'fade' | 'none'
-  disableStatusBar?: boolean
-  disableStatusBarPadding?: boolean
-  inputEnabled?: boolean
+  visible: boolean;
+  animationType?: 'slide' | 'fade' | 'none';
+  disableStatusBar?: boolean;
+  disableStatusBarPadding?: boolean;
+  inputEnabled?: boolean;
+  presentationStyle?: 'fullScreen' | 'pageSheet' | 'formSheet' | 'overFullScreen';
 }
 
 export interface DatePickerModalSingleProps
@@ -44,35 +45,36 @@ export function DatePickerModal(
     | DatePickerModalSingleProps
     | DatePickerModalMultiProps
 ) {
-  const theme = useTheme()
-  const dimensions = useWindowDimensions()
+  const theme = useTheme();
+  const dimensions = useWindowDimensions();
   const {
     visible,
     animationType,
     disableStatusBar,
     disableStatusBarPadding,
     inputEnabled,
+    presentationStyle,
     ...rest
-  } = props
+  } = props;
   const animationTypeCalculated =
     animationType ||
     Platform.select({
       web: 'none',
       default: 'slide',
-    })
+    });
 
-  const isLight = useHeaderColorIsLight()
-  const headerBackgroundColor = useHeaderBackgroundColor()
-  const insets = useSafeAreaInsets()
-
+  const isLight = useHeaderColorIsLight();
+  const headerBackgroundColor = useHeaderBackgroundColor();
+  const insets = useSafeAreaInsets();
+  const isTransparent = presentationStyle === 'pageSheet' ? false : true;
   return (
     <View style={[StyleSheet.absoluteFill]} pointerEvents="box-none">
       <Modal
         animationType={animationTypeCalculated}
-        transparent={false}
+        transparent={isTransparent}
         visible={visible}
         onRequestClose={rest.onDismiss}
-        presentationStyle="pageSheet"
+        presentationStyle={presentationStyle || "overFullScreen"}
         supportedOrientations={supportedOrientations}
         //@ts-ignore
         statusBarTranslucent={true}
@@ -124,15 +126,16 @@ export function DatePickerModal(
         </>
       </Modal>
     </View>
-  )
+  );
 }
+
 const supportedOrientations: any = [
   'portrait',
   'portrait-upside-down',
   'landscape',
   'landscape-left',
   'landscape-right',
-]
+];
 
 const styles = StyleSheet.create({
   modalRoot: {
@@ -154,6 +157,6 @@ const styles = StyleSheet.create({
     width: '100%',
     overflow: 'hidden',
   },
-})
+});
 
-export default React.memo(DatePickerModal)
+export default React.memo(DatePickerModal);
