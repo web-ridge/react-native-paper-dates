@@ -69,10 +69,10 @@ export function DatePickerModal(
     <View style={[StyleSheet.absoluteFill]} pointerEvents="box-none">
       <Modal
         animationType={animationTypeCalculated}
-        transparent={true}
+        transparent={false}
         visible={visible}
         onRequestClose={rest.onDismiss}
-        presentationStyle="overFullScreen"
+        presentationStyle="pageSheet"
         supportedOrientations={supportedOrientations}
         //@ts-ignore
         statusBarTranslucent={true}
