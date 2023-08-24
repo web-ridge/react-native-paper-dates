@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from 'react'
 import {
   Modal,
   StyleSheet,
@@ -6,25 +6,25 @@ import {
   useWindowDimensions,
   View,
   Platform,
-  StatusBar,
-} from 'react-native';
+  StatusBar
+} from 'react-native'
 
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'react-native-paper'
 import DatePickerModalContent, {
   DatePickerModalContentMultiProps,
   DatePickerModalContentRangeProps,
-  DatePickerModalContentSingleProps,
-} from './DatePickerModalContent';
-import { useHeaderBackgroundColor, useHeaderColorIsLight } from '../utils';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+  DatePickerModalContentSingleProps
+} from './DatePickerModalContent'
+import { useHeaderBackgroundColor, useHeaderColorIsLight } from '../utils'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 interface DatePickerModalProps {
-  visible: boolean;
-  animationType?: 'slide' | 'fade' | 'none';
-  disableStatusBar?: boolean;
-  disableStatusBarPadding?: boolean;
-  inputEnabled?: boolean;
-  presentationStyle?: 'fullScreen' | 'pageSheet' | 'formSheet' | 'overFullScreen';
+  visible: boolean
+  animationType?: 'slide' | 'fade' | 'none'
+  disableStatusBar?: boolean
+  disableStatusBarPadding?: boolean
+  inputEnabled?: boolean
+  presentationStyle?: 'fullScreen' | 'pageSheet' | 'formSheet' | 'overFullScreen'
 }
 
 export interface DatePickerModalSingleProps
@@ -45,8 +45,8 @@ export function DatePickerModal(
     | DatePickerModalSingleProps
     | DatePickerModalMultiProps
 ) {
-  const theme = useTheme();
-  const dimensions = useWindowDimensions();
+  const theme = useTheme()
+  const dimensions = useWindowDimensions()
   const {
     visible,
     animationType,
@@ -55,18 +55,18 @@ export function DatePickerModal(
     inputEnabled,
     presentationStyle,
     ...rest
-  } = props;
+  } = props
   const animationTypeCalculated =
     animationType ||
     Platform.select({
       web: 'none',
-      default: 'slide',
-    });
+      default: 'slide'
+    })
 
-  const isLight = useHeaderColorIsLight();
-  const headerBackgroundColor = useHeaderBackgroundColor();
-  const insets = useSafeAreaInsets();
-  const isTransparent = presentationStyle === 'pageSheet' ? false : true;
+  const isLight = useHeaderColorIsLight()
+  const headerBackgroundColor = useHeaderBackgroundColor()
+  const insets = useSafeAreaInsets()
+  const isTransparent = presentationStyle === 'pageSheet' ? false : true
   return (
     <View style={[StyleSheet.absoluteFill]} pointerEvents="box-none">
       <Modal
@@ -74,7 +74,7 @@ export function DatePickerModal(
         transparent={isTransparent}
         visible={visible}
         onRequestClose={rest.onDismiss}
-        presentationStyle={presentationStyle || "overFullScreen"}
+        presentationStyle={presentationStyle || 'overFullScreen'}
         supportedOrientations={supportedOrientations}
         //@ts-ignore
         statusBarTranslucent={true}
@@ -85,19 +85,16 @@ export function DatePickerModal(
               style={[
                 StyleSheet.absoluteFill,
                 styles.modalBackground,
-                { backgroundColor: theme.colors.backdrop },
+                { backgroundColor: theme.colors.backdrop }
               ]}
             />
           </TouchableWithoutFeedback>
-          <View
-            style={[StyleSheet.absoluteFill, styles.modalRoot]}
-            pointerEvents="box-none"
-          >
+          <View style={[StyleSheet.absoluteFill, styles.modalRoot]} pointerEvents="box-none">
             <View
               style={[
                 styles.modalContent,
                 { backgroundColor: theme.colors.surface },
-                dimensions.width > 650 ? styles.modalContentBig : null,
+                dimensions.width > 650 ? styles.modalContentBig : null
               ]}
             >
               {disableStatusBar ? null : (
@@ -111,8 +108,8 @@ export function DatePickerModal(
                   style={[
                     {
                       height: insets.top,
-                      backgroundColor: headerBackgroundColor,
-                    },
+                      backgroundColor: headerBackgroundColor
+                    }
                   ]}
                 />
               )}
@@ -126,7 +123,7 @@ export function DatePickerModal(
         </>
       </Modal>
     </View>
-  );
+  )
 }
 
 const supportedOrientations: any = [
@@ -134,29 +131,29 @@ const supportedOrientations: any = [
   'portrait-upside-down',
   'landscape',
   'landscape-left',
-  'landscape-right',
-];
+  'landscape-right'
+]
 
 const styles = StyleSheet.create({
   modalRoot: {
     justifyContent: 'center',
     alignItems: 'center',
-    flex: 1,
+    flex: 1
   },
   modalBackground: {
-    flex: 1,
+    flex: 1
   },
   modalContent: {
     flex: 1,
-    width: '100%',
+    width: '100%'
   },
   modalContentBig: {
     maxWidth: 600,
     maxHeight: 800,
     borderRadius: 10,
     width: '100%',
-    overflow: 'hidden',
-  },
-});
+    overflow: 'hidden'
+  }
+})
 
-export default React.memo(DatePickerModal);
+export default React.memo(DatePickerModal)
