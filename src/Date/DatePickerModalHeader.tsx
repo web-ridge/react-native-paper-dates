@@ -65,7 +65,6 @@ const styles = StyleSheet.create({
   animated: {
     elevation: 4,
   },
-
   header: {
     height: 75,
     alignItems: 'center',
