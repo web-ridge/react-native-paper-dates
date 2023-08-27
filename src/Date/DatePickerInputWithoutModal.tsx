@@ -20,7 +20,7 @@ function DatePickerInputWithoutModal(
     hideValidationErrors,
     onValidationError,
     modal,
-    inputButtons,
+    inputButton,
     saveLabel,
     saveLabelDisabled,
     uppercase,
@@ -76,6 +76,7 @@ function DatePickerInputWithoutModal(
       <View style={styles.root}>
         <View style={styles.inputContainer}>
           <TextInputWithMask
+            inputButton={inputButton}
             {...rest}
             ref={ref}
             label={getLabel({
@@ -94,7 +95,7 @@ function DatePickerInputWithoutModal(
             error={(!!error && !hideValidationErrors) || !!hasError}
             style={[styles.input, style]}
           />
-          {inputButtons}
+          {/* {inputButtons} */}
         </View>
         {error && !hideValidationErrors ? (
           <HelperText type="error" visible={!!error}>
@@ -136,6 +137,8 @@ function getLabel({
 const styles = StyleSheet.create({
   root: {
     flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
   },
   inputContainer: {
     flexGrow: 1,

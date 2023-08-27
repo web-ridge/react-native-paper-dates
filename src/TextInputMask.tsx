@@ -13,13 +13,18 @@ function escapeForRegExp(value: string): string {
 
 function TextInputWithMask(
   {
+    inputButton,
     onChangeText,
     onChange,
     value,
     mask,
     disabled,
     ...rest
-  }: React.ComponentProps<typeof TextInput> & { mask: string; value: string },
+  }: React.ComponentProps<typeof TextInput> & {
+    mask: string
+    value: string
+    inputButton: React.ReactNode
+  },
   ref: any
 ) {
   const [controlledValue, setControlledValue] = React.useState<string>(
@@ -69,17 +74,20 @@ function TextInputWithMask(
   }, [value])
 
   return (
-    <TextInput
-      ref={ref}
-      {...rest}
-      disabled={disabled}
-      value={controlledValue}
-      onChangeText={onInnerChange}
-      onChange={(e) => {
-        onChange && onChange(e)
-      }}
-      maxLength={10}
-    />
+    <>
+      <TextInput
+        ref={ref}
+        {...rest}
+        disabled={disabled}
+        value={controlledValue}
+        onChangeText={onInnerChange}
+        onChange={(e) => {
+          onChange && onChange(e)
+        }}
+        maxLength={10}
+        right={<TextInput.Icon icon={() => inputButton} />}
+      />
+    </>
   )
 }
 
