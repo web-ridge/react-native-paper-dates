@@ -74,20 +74,18 @@ function TextInputWithMask(
   }, [value])
 
   return (
-    <>
-      <TextInput
-        ref={ref}
-        {...rest}
-        disabled={disabled}
-        value={controlledValue}
-        onChangeText={onInnerChange}
-        onChange={(e) => {
-          onChange && onChange(e)
-        }}
-        maxLength={10}
-        right={inputButton}
-      />
-    </>
+    <TextInput
+      ref={ref}
+      {...rest}
+      disabled={disabled}
+      value={controlledValue}
+      onChangeText={onInnerChange}
+      onChange={(e) => {
+        onChange && onChange(e)
+      }}
+      maxLength={10}
+      right={inputButton}
+    />
   )
 }
 
