@@ -9,10 +9,10 @@ The input date picker provides a text field allowing for a date to be input or t
 ## Usage
 
 ```jsx
-import React from 'react'
-import { View, Text } from 'react-native'
-import { DatePickerInput } from 'react-native-paper-dates'
-import { SafeAreaProvider } from 'react-native-safe-area-context'
+import React from "react";
+import { View, Text } from "react-native";
+import { DatePickerInput } from 'react-native-paper-dates';
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function App() {
   const [inputDate, setInputDate] = React.useState(undefined)

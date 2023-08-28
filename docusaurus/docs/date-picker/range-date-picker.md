@@ -9,30 +9,27 @@ The range date picker provides a modal allowing the selection of a date range.
 ## Usage
 
 ```jsx
-import React from 'react'
-import { View, Text } from 'react-native'
-import { Button } from 'react-native-paper'
-import { DatePickerModal } from 'react-native-paper-dates'
-import { SafeAreaProvider } from 'react-native-safe-area-context'
+import React from "react";
+import { View, Text } from "react-native";
+import { Button } from 'react-native-paper';
+import { DatePickerModal } from 'react-native-paper-dates';
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function App() {
-  const [range, setRange] = React.useState({
-    startDate: undefined,
-    endDate: undefined,
-  })
-  const [open, setOpen] = React.useState(false)
+  const [range, setRange] = React.useState({ startDate: undefined, endDate: undefined });
+  const [open, setOpen] = React.useState(false);
 
-  const onDismiss = React.useCallback(() => {
-    setOpen(false)
-  }, [setOpen])
+   const onDismiss = React.useCallback(() => {
+    setOpen(false);
+  }, [setOpen]);
 
-  const onConfirm = React.useCallback(
+ const onConfirm = React.useCallback(
     ({ startDate, endDate }) => {
-      setOpen(false)
-      setRange({ startDate, endDate })
+      setOpen(false);
+      setRange({ startDate, endDate });
     },
     [setOpen, setRange]
-  )
+  );
 
   return (
     <SafeAreaProvider>
