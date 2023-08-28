@@ -95,7 +95,6 @@ function DatePickerInputWithoutModal(
             error={(!!error && !hideValidationErrors) || !!hasError}
             style={[styles.input, style]}
           />
-          {/* {inputButtons} */}
         </View>
         {error && !hideValidationErrors ? (
           <HelperText type="error" visible={!!error}>
