@@ -64,6 +64,8 @@ export function DatePickerModal(
       default: 'slide',
     })
 
+  const isTransparent = presentationStyle === 'pageSheet' ? false : true
+
   return (
     <View style={[StyleSheet.absoluteFill]} pointerEvents="box-none">
       <Modal
