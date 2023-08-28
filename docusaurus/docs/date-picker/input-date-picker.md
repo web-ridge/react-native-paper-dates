@@ -9,17 +9,17 @@ The input date picker provides a text field allowing for a date to be input or t
 ## Usage
 
 ```jsx
-import React from "react";
-import { View, Text } from "react-native";
-import { DatePickerInput } from 'react-native-paper-dates';
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import React from 'react'
+import { View, Text } from 'react-native'
+import { DatePickerInput } from 'react-native-paper-dates'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 export default function App() {
   const [inputDate, setInputDate] = React.useState(undefined)
 
   return (
     <SafeAreaProvider>
-      <View style={{justifyContent: 'center', flex: 1, alignItems: 'center'}}>
+      <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
         <DatePickerInput
           locale="en"
           label="Birthdate"
@@ -29,7 +29,7 @@ export default function App() {
         />
       </View>
     </SafeAreaProvider>
-  );
+  )
 }
 ```
 
@@ -103,4 +103,15 @@ The end year when the component is rendered. Defaults to `2200`.
 `Type: boolean | undefined`  
 Flag indicating if the component should be enabled or not. Behavior similarly to `disabled`. Defaults to `true`.
 
-* Other [react-native TextInput props](https://reactnative.dev/docs/textinput#props).*
+**presentationStyle**
+`Type: 'fullScreen' | 'pageSheet' | 'formSheet' | 'overFullScreen'`
+Determines the visual presentation style of the date picker modal. This prop allows you to define how the modal appears on the screen when it is displayed.
+
+- `'fullScreen'`: Presents the modal as a full-screen overlay.
+- `'pageSheet'`: Displays the modal as a card-style sheet that covers a portion of the screen.
+- `'formSheet'`: Renders the modal as a smaller form-style sheet.
+- `'overFullScreen'`: Overlays the modal on top of the content, allowing interaction with the underlying content.
+
+For example, if you set `presentationStyle` to `'pageSheet'`, the modal will be presented as a card-like sheet.
+
+- Other [react-native TextInput props](https://reactnative.dev/docs/textinput#props).\*
