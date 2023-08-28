@@ -8,7 +8,6 @@ import {
   Platform,
   StatusBar,
 } from 'react-native'
-
 import { useTheme } from 'react-native-paper'
 import DatePickerModalContent, {
   DatePickerModalContentMultiProps,
@@ -24,6 +23,11 @@ interface DatePickerModalProps {
   disableStatusBar?: boolean
   disableStatusBarPadding?: boolean
   inputEnabled?: boolean
+  presentationStyle?:
+    | 'fullScreen'
+    | 'pageSheet'
+    | 'formSheet'
+    | 'overFullScreen'
 }
 
 export interface DatePickerModalSingleProps
@@ -52,6 +56,7 @@ export function DatePickerModal(
     disableStatusBar,
     disableStatusBarPadding,
     inputEnabled,
+    presentationStyle,
     ...rest
   } = props
   const animationTypeCalculated =
@@ -64,15 +69,15 @@ export function DatePickerModal(
   const isLight = useHeaderColorIsLight()
   const headerBackgroundColor = useHeaderBackgroundColor()
   const insets = useSafeAreaInsets()
-
+  const isTransparent = presentationStyle === 'pageSheet' ? false : true
   return (
     <View style={[StyleSheet.absoluteFill]} pointerEvents="box-none">
       <Modal
         animationType={animationTypeCalculated}
-        transparent={true}
+        transparent={isTransparent}
         visible={visible}
         onRequestClose={rest.onDismiss}
-        presentationStyle="overFullScreen"
+        presentationStyle={presentationStyle || 'overFullScreen'}
         supportedOrientations={supportedOrientations}
         //@ts-ignore
         statusBarTranslucent={true}
@@ -126,6 +131,7 @@ export function DatePickerModal(
     </View>
   )
 }
+
 const supportedOrientations: any = [
   'portrait',
   'portrait-upside-down',

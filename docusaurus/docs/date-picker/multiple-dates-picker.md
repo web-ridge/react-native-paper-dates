@@ -31,7 +31,7 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <View style={{justifyContent: 'center', flex: 1, alignItems: 'center'}}>
+      <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
         <Button onPress={() => setOpen(true)} uppercase={false} mode="outlined">
           Pick multiple dates
         </Button>
@@ -45,7 +45,7 @@ export default function App() {
         />
       </View>
     </SafeAreaProvider>
-  );
+  )
 }
 ```
 
@@ -142,3 +142,14 @@ The edit icon used to toggle between calendar and input. Defaults to `pencil`. Y
 **calendarIcon**  
 `Type: string | undefined`  
 The edit icon used to toggle between input and calendar. Defaults to `calendar`. You can pass the name of an icon from [MaterialCommunityIcons](https://materialdesignicons.com/).
+
+**presentationStyle**
+`Type: 'fullScreen' | 'pageSheet' | 'formSheet' | 'overFullScreen'`
+Determines the visual presentation style of the date picker modal. This prop allows you to define how the modal appears on the screen when it is displayed.
+
+- `'fullScreen'`: Presents the modal as a full-screen overlay.
+- `'pageSheet'`: Displays the modal as a card-style sheet that covers a portion of the screen.
+- `'formSheet'`: Renders the modal as a smaller form-style sheet.
+- `'overFullScreen'`: Overlays the modal on top of the content, allowing interaction with the underlying content.
+
+For example, if you set `presentationStyle` to `'pageSheet'`, the modal will be presented as a card-like sheet.
