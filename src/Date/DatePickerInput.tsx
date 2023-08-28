@@ -1,7 +1,6 @@
 import * as React from 'react'
 
-import { IconButton } from 'react-native-paper'
-import { StyleSheet } from 'react-native'
+import { TextInput } from 'react-native-paper'
 import DatePickerModal from './DatePickerModal'
 import { useLatest } from '../utils'
 import type { DatePickerInputProps } from './DatePickerInput.shared'
@@ -32,11 +31,10 @@ function DatePickerInput(
     <DatePickerInputWithoutModal
       ref={ref}
       {...rest}
-      inputButtons={
+      inputButton={
         withModal ? (
-          <IconButton
+          <TextInput.Icon
             size={24}
-            style={styles.calendarButton}
             icon={calendarIcon}
             disabled={rest.disabled}
             onPress={() => setVisible(true)}
@@ -78,9 +76,5 @@ function DatePickerInput(
     />
   )
 }
-
-const styles = StyleSheet.create({
-  calendarButton: { position: 'absolute', right: 0, zIndex: 10 },
-})
 
 export default React.forwardRef(DatePickerInput)
