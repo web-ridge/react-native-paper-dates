@@ -3859,7 +3859,9 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
       <View
         style={
           {
+            "alignItems": "flex-start",
             "flexGrow": 1,
+            "justifyContent": "center",
           }
         }
       >
