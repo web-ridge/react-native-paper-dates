@@ -48,7 +48,6 @@ export default function DatePickerModalHeader(
         />
         <Appbar.Content title={''} />
         <Button
-          color={color}
           textColor={theme.isV3 ? theme.colors.primary : color}
           onPress={props.onSave}
           disabled={props.saveLabelDisabled ?? false}
@@ -63,13 +62,9 @@ export default function DatePickerModalHeader(
 }
 
 const styles = StyleSheet.create({
-  fill: {
-    flex: 1,
-  },
   animated: {
     elevation: 4,
   },
-
   header: {
     height: 75,
     alignItems: 'center',
