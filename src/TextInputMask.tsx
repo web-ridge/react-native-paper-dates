@@ -85,7 +85,7 @@ function TextInputWithMask(
           onChange && onChange(e)
         }}
         maxLength={10}
-        right={<TextInput.Icon icon={() => inputButton} />}
+        right={inputButton}
       />
     </>
   )

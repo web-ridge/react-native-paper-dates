@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { IconButton } from 'react-native-paper'
+import { TextInput } from 'react-native-paper'
 import DatePickerModal from './DatePickerModal'
 import { useLatest } from '../utils'
 import type { DatePickerInputProps } from './DatePickerInput.shared'
@@ -33,7 +33,7 @@ function DatePickerInput(
       {...rest}
       inputButton={
         withModal ? (
-          <IconButton
+          <TextInput.Icon
             size={24}
             icon={calendarIcon}
             disabled={rest.disabled}

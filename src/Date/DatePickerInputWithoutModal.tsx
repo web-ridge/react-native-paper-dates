@@ -42,7 +42,7 @@ function DatePickerInputWithoutModal(
       endYear: DatePickerInputProps['endYear']
       inputEnabled: DatePickerInputProps['inputEnabled']
     }) => any
-    inputButtons?: any
+    inputButton?: React.ReactNode
   },
   ref: any
 ) {
@@ -76,7 +76,6 @@ function DatePickerInputWithoutModal(
       <View style={styles.root}>
         <View style={styles.inputContainer}>
           <TextInputWithMask
-            inputButton={inputButton}
             {...rest}
             ref={ref}
             label={getLabel({
@@ -94,6 +93,7 @@ function DatePickerInputWithoutModal(
             keyboardAppearance={theme.dark ? 'dark' : 'default'}
             error={(!!error && !hideValidationErrors) || !!hasError}
             style={[styles.input, style]}
+            inputButton={inputButton}
           />
         </View>
         {error && !hideValidationErrors ? (
