@@ -20,7 +20,7 @@ function DatePickerInputWithoutModal(
     hideValidationErrors,
     onValidationError,
     modal,
-    inputButtons,
+    inputButton,
     saveLabel,
     saveLabelDisabled,
     uppercase,
@@ -42,7 +42,7 @@ function DatePickerInputWithoutModal(
       endYear: DatePickerInputProps['endYear']
       inputEnabled: DatePickerInputProps['inputEnabled']
     }) => any
-    inputButtons?: any
+    inputButton?: React.ReactNode
   },
   ref: any
 ) {
@@ -93,8 +93,8 @@ function DatePickerInputWithoutModal(
             keyboardAppearance={theme.dark ? 'dark' : 'default'}
             error={(!!error && !hideValidationErrors) || !!hasError}
             style={[styles.input, style]}
+            inputButton={inputButton}
           />
-          {inputButtons}
         </View>
         {error && !hideValidationErrors ? (
           <HelperText type="error" visible={!!error}>
@@ -136,6 +136,8 @@ function getLabel({
 const styles = StyleSheet.create({
   root: {
     flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
   },
   inputContainer: {
     flexGrow: 1,
