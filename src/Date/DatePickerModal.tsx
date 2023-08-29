@@ -15,6 +15,7 @@ import DatePickerModalContent, {
   DatePickerModalContentSingleProps,
 } from './DatePickerModalContent'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useHeaderBackgroundColor } from '../utils'
 
 interface DatePickerModalProps {
   visible: boolean
@@ -66,6 +67,7 @@ export function DatePickerModal(
     })
 
   const isTransparent = presentationStyle === 'pageSheet' ? false : true
+  const headerBackgroundColor = useHeaderBackgroundColor()
   const insets = useSafeAreaInsets()
 
   return (
@@ -110,7 +112,11 @@ export function DatePickerModal(
                         android: StatusBar.currentHeight,
                         web: insets.top,
                       }),
-                      backgroundColor: theme.colors.primary,
+                      backgroundColor: Platform.select({
+                        ios: theme.colors.primary,
+                        android: theme.colors.primary,
+                        web: headerBackgroundColor,
+                      }),
                     },
                   ]}
                 />
