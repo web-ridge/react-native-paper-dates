@@ -51,6 +51,10 @@ The label used to display in the component.
 `Type: Date | undefined`  
 The value used to populate the component.
 
+**inputMode (Required)**  
+`Type: String`  
+The type of input needed for the the picker component.
+
 **onChange**  
 `Type: Function`  
 Callback event when the component date mask length matches the text input length.
@@ -59,13 +63,17 @@ Callback event when the component date mask length matches the text input length
 `Type: Function`  
 Callback event when the component text input changes.
 
-**inputMode (Required)**  
-`Type: String`  
-The type of input needed for the the picker component.
-
 **mode**  
 `Type: 'flat' | 'outlined'`  
 See [react-native-paper text-input](https://callstack.github.io/react-native-paper/text-input.html#mode).
+
+**validRange**  
+`Type: {
+  startDate: Date | undefined,
+  endDate: Date | undefined,
+  disabledDates: Date[] | undefined
+}`  
+Limits which dates the user can navigate to and where events can go. Dates outside of the valid range will be grayed-out.
 
 **withDateFormatInLabel**
 `Type: boolean | undefined`  
