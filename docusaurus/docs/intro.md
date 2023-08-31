@@ -71,7 +71,7 @@ registerTranslation('pl', {
 
 :::info Note
 
-If a language is not supported. Consider creating a pull request so that it can officially be supported.
+If a language is not supported, consider creating a pull request so that it can officially be supported.
 
 :::
 
