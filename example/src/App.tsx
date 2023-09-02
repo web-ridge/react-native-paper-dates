@@ -423,7 +423,7 @@ function App() {
                 great apps, they also always work great on the web too!
               </Text>
             </View>
-            <View style={[styles.gap, styles.marginVerticalEight]}>
+            <View style={[styles.gap, styles.marginVerticalSixteen]}>
               <Button
                 icon="github"
                 mode="contained-tonal"
