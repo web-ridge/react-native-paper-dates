@@ -4,12 +4,9 @@ exports[`renders DatePickerModalHeaderBackground 1`] = `
 <RNCSafeAreaProvider
   onInsetsChange={[Function]}
   style={
-    [
-      {
-        "flex": 1,
-      },
-      undefined,
-    ]
+    {
+      "flex": 1,
+    }
   }
 />
 `;
