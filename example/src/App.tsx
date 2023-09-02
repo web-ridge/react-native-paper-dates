@@ -7,6 +7,7 @@ import {
   Image,
   useWindowDimensions,
   useColorScheme,
+  StatusBar,
 } from 'react-native'
 import {
   SafeAreaProvider,
@@ -170,12 +171,17 @@ function App() {
 
   return (
     <>
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={theme.colors.primary}
+        translucent={true}
+      />
       <ScrollView
         style={{ backgroundColor: theme.colors.background }}
         contentContainerStyle={[
           styles.contentContainer,
           styles.paddingSixteen,
-          { paddingTop: insets.top },
+          { marginTop: insets.top },
         ]}
       >
         <View style={isLarge && styles.surface}>
@@ -417,7 +423,7 @@ function App() {
                 great apps, they also always work great on the web too!
               </Text>
             </View>
-            <View style={[styles.row, styles.gap, styles.marginVerticalEight]}>
+            <View style={[styles.gap, styles.marginVerticalEight]}>
               <Button
                 icon="github"
                 mode="contained-tonal"
