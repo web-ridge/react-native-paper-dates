@@ -115,7 +115,7 @@ function DatePickerInputWithoutModal(
         startYear,
         endYear,
         inputEnabled,
-        disableStatusBarPadding
+        disableStatusBarPadding,
       })}
     </>
   )
