@@ -143,6 +143,14 @@ The edit icon used to toggle between calendar and input. Defaults to `pencil`. Y
 `Type: string | undefined`  
 The edit icon used to toggle between input and calendar. Defaults to `calendar`. You can pass the name of an icon from [MaterialCommunityIcons](https://materialdesignicons.com/).
 
+**inputEnabled**  
+`Type: boolean | undefined`  
+Flag indicating if the component should be enabled or not. Defaults to `true`.
+
+**disableStatusBarPadding**  
+`Type: boolean | undefined`  
+Flag indicating if the status bar padding should be enabled or not. Defaults to `false`.
+
 **presentationStyle**
 `Type: 'fullScreen' | 'pageSheet' | 'formSheet' | 'overFullScreen'`
 Determines the visual presentation style of the date picker modal. This prop allows you to define how the modal appears on the screen when it is displayed.

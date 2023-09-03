@@ -53,6 +53,7 @@ function DatePickerInput(
         startYear,
         endYear,
         inputEnabled,
+        disableStatusBarPadding,
       }) =>
         withModal ? (
           <DatePickerModal
@@ -70,6 +71,7 @@ function DatePickerInput(
             startYear={startYear ?? 1800}
             endYear={endYear ?? 2200}
             inputEnabled={inputEnabled}
+            disableStatusBarPadding={disableStatusBarPadding ?? false}
           />
         ) : null
       }

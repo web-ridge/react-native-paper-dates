@@ -28,6 +28,7 @@ function DatePickerInputWithoutModal(
     endYear,
     onChangeText,
     inputEnabled,
+    disableStatusBarPadding,
     ...rest
   }: DatePickerInputProps & {
     modal?: (params: {
@@ -41,6 +42,7 @@ function DatePickerInputWithoutModal(
       startYear: DatePickerInputProps['startYear']
       endYear: DatePickerInputProps['endYear']
       inputEnabled: DatePickerInputProps['inputEnabled']
+      disableStatusBarPadding: DatePickerInputProps['disableStatusBarPadding']
     }) => any
     inputButton?: React.ReactNode
   },
@@ -113,6 +115,7 @@ function DatePickerInputWithoutModal(
         startYear,
         endYear,
         inputEnabled,
+        disableStatusBarPadding
       })}
     </>
   )
