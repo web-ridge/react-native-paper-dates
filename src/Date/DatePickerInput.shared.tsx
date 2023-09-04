@@ -21,6 +21,7 @@ export type DatePickerInputProps = {
   endYear?: number
   onChangeText?: (text: string | undefined) => void
   inputEnabled?: boolean
+  disableStatusBarPadding?: boolean
 } & Omit<
   React.ComponentProps<typeof TextInput>,
   'value' | 'onChange' | 'onChangeText' | 'inputMode'
