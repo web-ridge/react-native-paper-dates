@@ -32,6 +32,7 @@ import {
   registerTranslation,
   TranslationsType,
   ar,
+  ca,
   de,
   en,
   enGB,
@@ -52,6 +53,7 @@ import { useCallback, useState } from 'react'
 
 const locales: [string, TranslationsType][] = [
   ['ar', ar],
+  ['ca', ca],
   ['de', de],
   ['en', en],
   ['en-GB', enGB],
