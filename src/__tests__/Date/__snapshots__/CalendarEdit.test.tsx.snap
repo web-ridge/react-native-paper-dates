@@ -14,6 +14,7 @@ exports[`renders CalendarEdit 1`] = `
         "alignItems": "flex-start",
         "flexGrow": 1,
         "justifyContent": "center",
+        "width": "100%",
       }
     }
   >
@@ -23,7 +24,8 @@ exports[`renders CalendarEdit 1`] = `
           "alignItems": "center",
           "flexDirection": "row",
           "flexGrow": 1,
-          "justifyContent": "flex-start",
+          "justifyContent": "flex-start",,
+          "width": "100%",
         }
       }
     >
@@ -36,7 +38,8 @@ exports[`renders CalendarEdit 1`] = `
               "borderTopRightRadius": 4,
             },
             {
-              "flexGrow": 1,
+              "flexGrow": 1,,
+              "width": "100%",
             },
           ]
         }
