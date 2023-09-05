@@ -8,6 +8,8 @@ We want this community to be friendly and respectful to each other. Please follo
 
 ## Development workflow
 
+> **Working on a Windows machine?** Before executing any of the commands below, please make sure to comment out the line: `yarn-path "scripts/bootstrap.js"` in the `.yarnrc` file located at the project's root.
+
 To get started with the project, run `yarn bootstrap` in the root directory to install the required dependencies for each package:
 
 ```sh
