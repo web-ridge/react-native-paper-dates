@@ -3862,6 +3862,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
             "alignItems": "flex-start",
             "flexGrow": 1,
             "justifyContent": "center",
+            "width": "100%",
           }
         }
       >
@@ -3872,6 +3873,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
               "flexDirection": "row",
               "flexGrow": 1,
               "justifyContent": "flex-start",
+              "width": "100%",
             }
           }
         >
@@ -3885,6 +3887,7 @@ exports[`renders collapsed AnimatedCrossView 1`] = `
                 },
                 {
                   "flexGrow": 1,
+                  "width": "100%",
                 },
               ]
             }

@@ -141,15 +141,18 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'flex-start',
+    width: '100%',
   },
   inputContainer: {
     flexGrow: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
+    width: '100%',
   },
   input: {
     flexGrow: 1,
+    width: '100%',
   },
 })
 export default React.forwardRef(DatePickerInputWithoutModal)
