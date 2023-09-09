@@ -5,6 +5,7 @@ exports[`renders DatePickerInput 1`] = `
   style={
     {
       "alignItems": "flex-start",
+      "flex": 1,
       "flexGrow": 1,
       "justifyContent": "center",
       "width": "100%",
@@ -188,6 +189,10 @@ exports[`renders DatePickerInput 1`] = `
                 "margin": 0,
               },
               {
+                "paddingLeft": 16,
+                "paddingRight": 16,
+              },
+              {
                 "height": 56,
               },
               {
@@ -201,8 +206,6 @@ exports[`renders DatePickerInput 1`] = `
                 "fontWeight": undefined,
                 "letterSpacing": 0.15,
                 "lineHeight": undefined,
-                "paddingLeft": 16,
-                "paddingRight": 16,
                 "textAlign": "left",
                 "textAlignVertical": "center",
               },
