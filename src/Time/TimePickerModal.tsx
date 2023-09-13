@@ -74,7 +74,7 @@ export function TimePickerModal({
   clockIcon?: string
   use24HourClock?: boolean
   inputFontSize?: number
-    defaultInputType?: PossibleInputTypes
+  defaultInputType?: PossibleInputTypes
 }) {
   const theme = useTheme()
 
