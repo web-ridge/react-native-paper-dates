@@ -113,3 +113,7 @@ Flag indicating if the time input should use the 24 hours clock. Defaults to the
 **inputFontSize**
 `Type: number | undefined`
 Font size of the time input. Defaults to 57. Useful when using a custom font.
+
+**defaultInputType**
+`Type: 'picker' | 'keyboard'`
+Which input type to use by default. Defaults to the clock-face picker.
