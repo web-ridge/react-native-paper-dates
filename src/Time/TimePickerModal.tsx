@@ -57,6 +57,7 @@ export function TimePickerModal({
   clockIcon = 'clock-outline',
   use24HourClock,
   inputFontSize,
+  defaultInputType,
 }: {
   locale?: undefined | string
   label?: string
@@ -73,6 +74,7 @@ export function TimePickerModal({
   clockIcon?: string
   use24HourClock?: boolean
   inputFontSize?: number
+    defaultInputType?: PossibleInputTypes
 }) {
   const theme = useTheme()
 
@@ -86,7 +88,7 @@ export function TimePickerModal({
   }
 
   const [inputType, setInputType] = React.useState<PossibleInputTypes>(
-    inputTypes.picker
+    defaultInputType || inputTypes.picker
   )
   const [focused, setFocused] = React.useState<PossibleClockTypes>(
     clockTypes.hours
