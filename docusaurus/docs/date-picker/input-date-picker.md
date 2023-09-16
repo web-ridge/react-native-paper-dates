@@ -67,6 +67,18 @@ Callback event when the component text input changes.
 `Type: 'flat' | 'outlined'`  
 See [react-native-paper text-input](https://callstack.github.io/react-native-paper/text-input.html#mode).
 
+**iconSize**  
+`Type: Number`  
+Specifies the size of the icon in pixels.
+
+**iconColor**  
+`Type: String`  
+Sets the color of the icon.
+
+**iconStyle**  
+`Type: React.CSSProperties`  
+Defines the CSS styles for the icon element.
+
 **validRange**  
 `Type: {
   startDate: Date | undefined,
