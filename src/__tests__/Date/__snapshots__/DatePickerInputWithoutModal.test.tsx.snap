@@ -189,6 +189,10 @@ exports[`renders DatePickerInput 1`] = `
                 "margin": 0,
               },
               {
+                "paddingLeft": 16,
+                "paddingRight": 16,
+              },
+              {
                 "height": 56,
               },
               {
