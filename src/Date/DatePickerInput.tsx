@@ -5,6 +5,8 @@ import DatePickerModal from './DatePickerModal'
 import { useLatest } from '../utils'
 import type { DatePickerInputProps } from './DatePickerInput.shared'
 import DatePickerInputWithoutModal from './DatePickerInputWithoutModal'
+import { StyleProp } from 'react-native'
+import { ViewStyle } from 'react-native'
 
 function DatePickerInput(
   {
@@ -34,10 +36,12 @@ function DatePickerInput(
       inputButton={
         withModal ? (
           <TextInput.Icon
-            size={24}
+            size={rest.iconSize ?? 24}
             icon={calendarIcon}
+            color={rest.iconColor ?? undefined}
             disabled={rest.disabled}
             onPress={() => setVisible(true)}
+            style={rest.iconStyle as StyleProp<ViewStyle>}
           />
         ) : null
       }

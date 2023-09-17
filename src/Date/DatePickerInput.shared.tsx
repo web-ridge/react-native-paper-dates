@@ -14,6 +14,9 @@ export type DatePickerInputProps = {
   hasError?: boolean
   onValidationError?: ((error: string | null) => void) | undefined
   calendarIcon?: string
+  iconSize?: number
+  iconStyle?: React.CSSProperties
+  iconColor?: string
   saveLabel?: string
   saveLabelDisabled?: boolean
   uppercase?: boolean
