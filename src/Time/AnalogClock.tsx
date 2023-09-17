@@ -22,7 +22,7 @@ import { useLatest } from '../utils'
 import AnalogClockHours from './AnalogClockHours'
 import AnimatedClockSwitcher from './AnimatedClockSwitcher'
 import AnalogClockMinutes from './AnalogClockMinutes'
-import { DisplayModeContext } from './TimePicker'
+import { DisplayModeContext } from '../contexts/DisplayModeContext'
 function AnalogClock({
   hours,
   minutes,
