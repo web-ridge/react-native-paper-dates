@@ -12,11 +12,7 @@ import {
 import AnalogClock from './AnalogClock'
 import { circleSize } from './timeUtils'
 import TimeInputs from './TimeInputs'
-
-export const DisplayModeContext = React.createContext<{
-  mode: 'AM' | 'PM' | undefined
-  setMode: React.Dispatch<React.SetStateAction<'AM' | 'PM' | undefined>>
-}>({ mode: 'AM', setMode: () => {} })
+import { DisplayModeContext } from '../contexts/DisplayModeContext'
 
 type onChangeFunc = ({
   hours,
