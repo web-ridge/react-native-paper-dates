@@ -1,4 +1,3 @@
-
 import type { TranslationsType } from './utils';
 
 const ru: TranslationsType = {
