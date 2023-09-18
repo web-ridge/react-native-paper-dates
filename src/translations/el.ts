@@ -1,4 +1,4 @@
-import type { TranslationsType } from './utils';
+import type { TranslationsType } from './utils'
 
 const el: TranslationsType = {
     save: 'Αποθηκεύσετε',
@@ -17,6 +17,6 @@ const el: TranslationsType = {
     typeInDate: 'Πληκτρολογήστε την ημερομηνία',
     pickDateFromCalendar: 'Επιλέξτε ημερομηνία από το ημερολόγιο',
     close: 'Κλείσε',
-  };
-  export default el;
+  }
+  export default el
   

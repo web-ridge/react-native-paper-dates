@@ -1,4 +1,4 @@
-import type { TranslationsType } from './utils';
+import type { TranslationsType } from './utils'
 
 const cs: TranslationsType = {
   save: 'Uložit',
@@ -17,5 +17,5 @@ const cs: TranslationsType = {
   typeInDate: 'Zadejte datum',
   pickDateFromCalendar: 'Vyberte datum z kalendáře',
   close: 'Zavřít',
-};
-export default cs;
+}
+export default cs
