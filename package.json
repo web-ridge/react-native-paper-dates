@@ -1,6 +1,6 @@
 {
   "name": "react-native-paper-dates",
-  "version": "0.19.5",
+  "version": "0.19.6",
   "description": "Performant Date Picker for React Native Paper",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
