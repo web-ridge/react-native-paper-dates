@@ -42,6 +42,7 @@ function DatePickerInput(
             disabled={rest.disabled}
             onPress={() => setVisible(true)}
             style={rest.iconStyle as StyleProp<ViewStyle>}
+            testID={`${rest.testID || 'date-picker'}-icon-button`}
           />
         ) : null
       }
