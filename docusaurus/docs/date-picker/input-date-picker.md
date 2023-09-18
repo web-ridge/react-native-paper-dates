@@ -136,6 +136,10 @@ Determines the visual presentation style of the date picker modal. This prop all
 - `'formSheet'`: Renders the modal as a smaller form-style sheet.
 - `'overFullScreen'`: Overlays the modal on top of the content, allowing interaction with the underlying content.
 
+**animationType**  
+`Type: 'slide' | 'fade' | 'none' | undefined`  
+The animation used when opening the date picker modal. Defaults to `'slide'`.
+
 For example, if you set `presentationStyle` to `'pageSheet'`, the modal will be presented as a card-like sheet.
 
 - Other [react-native TextInput props](https://reactnative.dev/docs/textinput#props).\*
