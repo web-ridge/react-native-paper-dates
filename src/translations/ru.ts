@@ -19,4 +19,3 @@ const ru: TranslationsType = {
   close: 'Закрыть',
 }
 export default ru
-  

@@ -19,4 +19,3 @@ const el: TranslationsType = {
   close: 'Κλείσε',
 }
 export default el
-  
