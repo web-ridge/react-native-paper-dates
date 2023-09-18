@@ -17,6 +17,6 @@ const el: TranslationsType = {
   typeInDate: 'Πληκτρολογήστε την ημερομηνία',
   pickDateFromCalendar: 'Επιλέξτε ημερομηνία από το ημερολόγιο',
   close: 'Κλείσε',
-  }
-  export default el
+}
+export default el
   
