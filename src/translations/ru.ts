@@ -1,4 +1,4 @@
-import type { TranslationsType } from './utils';
+import type { TranslationsType } from './utils'
 
 const ru: TranslationsType = {
     save: 'Сохранить',
@@ -17,6 +17,6 @@ const ru: TranslationsType = {
     typeInDate: 'Ввод в дате',
     pickDateFromCalendar: 'Выбор даты из календаря',
     close: 'Закрыть',
-  };
-  export default ru;
+  }
+  export default ru
   
