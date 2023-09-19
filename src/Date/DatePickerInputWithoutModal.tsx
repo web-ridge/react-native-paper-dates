@@ -92,7 +92,9 @@ function DatePickerInputWithoutModal(
             disabled={disabled}
             onChangeText={onDateInputChangeText}
             onChange={(e) => onChangeText && onChangeText(e.nativeEvent.text)}
-            keyboardAppearance={theme.dark ? 'dark' : 'default'}
+            keyboardAppearance={
+              rest.keyboardAppearance ?? (theme.dark ? 'dark' : 'default')
+            }
             error={(!!error && !hideValidationErrors) || !!hasError}
             style={[styles.input, style]}
             inputButton={inputButton}
