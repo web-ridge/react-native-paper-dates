@@ -26,6 +26,7 @@ export type DatePickerInputProps = {
   inputEnabled?: boolean
   disableStatusBarPadding?: boolean
   animationType?: 'slide' | 'fade' | 'none'
+  presentationStyle?: 'fullScreen' | 'pageSheet' | 'formSheet' | 'overFullScreen'
 } & Omit<
   React.ComponentProps<typeof TextInput>,
   'value' | 'onChange' | 'onChangeText' | 'inputMode'
