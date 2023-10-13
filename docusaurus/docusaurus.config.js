@@ -60,6 +60,12 @@ const config = {
             label: 'Docs',
           },
           {
+            type: 'doc',
+            docId: 'showcase',
+            position: 'left',
+            label: 'Showcase',
+          },
+          {
             href: 'https://www.reactnativepaperdates.com',
             label: 'Example',
             position: 'right',
