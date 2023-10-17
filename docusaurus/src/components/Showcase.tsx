@@ -17,13 +17,12 @@ type Data = {
 
 const data: Data[] = [
   {
-    color: '#6200EE',
-    name: 'Paper Example App',
-    image: '/react-native-paper-dates/showcase/paper.png',
+    color: '#2979FF',
+    name: 'Bluebirding',
+    image: '/react-native-paper-dates/showcase/bluebirding.png',
     android:
-      'https://play.google.com/store/apps/details?id=com.callstack.reactnativepaperexample',
-    ios: 'https://apps.apple.com/app/react-native-paper/id1548934513',
-    github: 'https://github.com/callstack/react-native-paper/tree/main/example',
+      'https://play.google.com/store/apps/details?id=com.bitzllc.bluebird',
+    ios: 'https://apps.apple.com/us/app/bluebirding/id1553837668',
   },
 ];
 
