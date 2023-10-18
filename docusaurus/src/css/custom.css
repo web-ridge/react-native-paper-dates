@@ -59,7 +59,6 @@
   }
 }
 
-
 .showcase-image {
   display: block;
   max-height: 560px;
@@ -84,7 +83,6 @@
   font-size: 16px;
   margin-top: 0;
   margin-bottom: 12px;
-  /* width: 228px; */
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
