@@ -12,7 +12,7 @@ function DatePickerInput(
     withModal = true,
     calendarIcon = 'calendar',
     animationType = 'slide',
-    presentationStyle = "fullScreen",
+    presentationStyle = 'fullScreen',
     ...rest
   }: DatePickerInputProps,
   ref: any
