@@ -12,6 +12,7 @@ function DatePickerInput(
     withModal = true,
     calendarIcon = 'calendar',
     animationType = 'slide',
+    presentationStyle = 'fullScreen',
     ...rest
   }: DatePickerInputProps,
   ref: any
@@ -78,6 +79,7 @@ function DatePickerInput(
             inputEnabled={inputEnabled}
             disableStatusBarPadding={disableStatusBarPadding ?? false}
             animationType={animationType}
+            presentationStyle={presentationStyle}
           />
         ) : null
       }
