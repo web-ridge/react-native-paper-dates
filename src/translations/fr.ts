@@ -10,7 +10,7 @@ const fr: TranslationsType = {
   mustBeHigherThan: (date) => `La date doit être après le ${date}`,
   mustBeLowerThan: (date) => `La date doit être avant le ${date}`,
   mustBeBetween: (startDate, endDate) =>
-    `La date doit être en le ${startDate} et le ${endDate}`,
+    `La date doit être entre le ${startDate} et le ${endDate}`,
   dateIsDisabled: "Le jour n'est pas autorisé",
   previous: 'Précédent',
   next: 'Suivant',
