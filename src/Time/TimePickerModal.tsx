@@ -16,7 +16,7 @@ import {
   overlay,
   useTheme,
 } from 'react-native-paper'
-
+import { IconSource } from 'react-native-paper/lib/typescript/components/Icon'
 import TimePicker from './TimePicker'
 import {
   clockTypes,
@@ -70,8 +70,8 @@ export function TimePickerModal({
   onDismiss: () => any
   onConfirm: (hoursAndMinutes: { hours: number; minutes: number }) => any
   animationType?: 'slide' | 'fade' | 'none'
-  keyboardIcon?: string
-  clockIcon?: string
+  keyboardIcon?: IconSource
+  clockIcon?: IconSource
   use24HourClock?: boolean
   inputFontSize?: number
   defaultInputType?: PossibleInputTypes
