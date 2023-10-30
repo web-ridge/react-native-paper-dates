@@ -130,6 +130,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
     width: 96,
+    padding:0
   },
   buttonOverlay: { overflow: 'hidden' },
 })
