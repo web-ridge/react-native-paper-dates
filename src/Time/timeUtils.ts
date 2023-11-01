@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Color from 'color'
 import { MD2Theme, useTheme } from 'react-native-paper'
-
+import { IconSource } from 'react-native-paper/lib/typescript/components/Icon'
 export const circleSize = 256
 
 export type PossibleHourTypes = 'am' | 'pm'
@@ -37,7 +37,7 @@ export const reverseInputTypes: InputTypeMap = {
   picker: 'keyboard',
 }
 type InputIconMap = {
-  [inputType in PossibleInputTypes]: string
+  [inputType in PossibleInputTypes]: IconSource
 }
 export const inputTypeIcons: InputIconMap = {
   keyboard: 'keyboard-outline',
