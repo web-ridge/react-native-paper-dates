@@ -105,9 +105,7 @@ export function DatePickerModal(
                 dimensions.width > 650 ? styles.modalContentBig : null,
               ]}
             >
-              
-              {disableStatusBarPadding ? null : 
-              (
+              {disableStatusBarPadding ? null : (
                 <View
                   style={[
                     {
