@@ -6,6 +6,7 @@ import {
   useWindowDimensions,
   View,
   Platform,
+  NativeModules,
   StatusBar,
 } from 'react-native'
 import { useTheme } from 'react-native-paper'
@@ -69,6 +70,7 @@ export function DatePickerModal(
   const isTransparent = presentationStyle === 'pageSheet' ? false : true
   const headerBackgroundColor = useHeaderBackgroundColor()
   const insets = useSafeAreaInsets()
+  const {StatusBarManager} = NativeModules;
 
   return (
     <View style={[StyleSheet.absoluteFill]} pointerEvents="box-none">
@@ -103,12 +105,14 @@ export function DatePickerModal(
                 dimensions.width > 650 ? styles.modalContentBig : null,
               ]}
             >
-              {disableStatusBarPadding ? null : (
+              
+              {disableStatusBarPadding ? null : 
+              (
                 <View
                   style={[
                     {
                       height: Platform.select({
-                        ios: StatusBar.currentHeight,
+                        ios: StatusBarManager.HEIGHT ,
                         android: StatusBar.currentHeight,
                         web: insets.top,
                       }),
