@@ -66,7 +66,10 @@ export function DatePickerModal(
       default: 'slide',
     })
 
-  const isTransparent = presentationStyle === 'pageSheet' ? false : true
+  const isTransparent =
+    presentationStyle === 'pageSheet' || presentationStyle === 'fullScreen'
+      ? false
+      : true
   const headerBackgroundColor = useHeaderBackgroundColor()
   const insets = useSafeAreaInsets()
 

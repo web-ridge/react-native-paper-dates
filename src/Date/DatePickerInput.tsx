@@ -6,14 +6,13 @@ import { useLatest } from '../utils'
 import type { DatePickerInputProps } from './DatePickerInput.shared'
 import DatePickerInputWithoutModal from './DatePickerInputWithoutModal'
 import { StyleProp, ViewStyle } from 'react-native'
-import { Platform } from 'react-native'
 
 function DatePickerInput(
   {
     withModal = true,
     calendarIcon = 'calendar',
     animationType = 'slide',
-    presentationStyle = Platform.OS === 'ios' ? 'fullScreen' : 'pageSheet',
+    presentationStyle = 'fullScreen',
     ...rest
   }: DatePickerInputProps,
   ref: any
