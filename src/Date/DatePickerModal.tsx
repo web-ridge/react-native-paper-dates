@@ -6,7 +6,6 @@ import {
   useWindowDimensions,
   View,
   Platform,
-  StatusBar,
 } from 'react-native'
 import { useTheme } from 'react-native-paper'
 import DatePickerModalContent, {
