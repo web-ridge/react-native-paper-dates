@@ -18,6 +18,7 @@ import TimeInput from './TimeInput'
 import AmPmSwitcher from './AmPmSwitcher'
 import { useLatest } from '../utils'
 import Color from 'color'
+import { getTranslation } from '../translations/utils'
 
 function TimeInputs({
   hours,
@@ -28,6 +29,7 @@ function TimeInputs({
   onChange,
   is24Hour,
   inputFontSize,
+  locale,
 }: {
   inputType: PossibleInputTypes
   focused: PossibleClockTypes
@@ -41,6 +43,7 @@ function TimeInputs({
   }) => any
   is24Hour: boolean
   inputFontSize?: number
+  locale?: string
 }) {
   const startInput = React.useRef<TextInputNative | null>(null)
   const endInput = React.useRef<TextInputNative | null>(null)
@@ -113,7 +116,7 @@ function TimeInputs({
         />
         {inputType === 'keyboard' ? (
           <Text maxFontSizeMultiplier={1.5} variant="bodySmall">
-            Hour
+            {getTranslation(locale, 'hour', 'Hour')}
           </Text>
         ) : null}
       </View>
@@ -178,7 +181,7 @@ function TimeInputs({
         />
         {inputType === 'keyboard' ? (
           <Text maxFontSizeMultiplier={1.5} variant="bodySmall">
-            Minute
+            {getTranslation(locale, 'minute', 'Minute')}
           </Text>
         ) : null}
       </View>
