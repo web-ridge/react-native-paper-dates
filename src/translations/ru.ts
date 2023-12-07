@@ -17,5 +17,7 @@ const ru: TranslationsType = {
   typeInDate: 'Ввод в дате',
   pickDateFromCalendar: 'Выбор даты из календаря',
   close: 'Закрыть',
+  hour: 'Час',
+  minute: 'Минута',
 }
 export default ru

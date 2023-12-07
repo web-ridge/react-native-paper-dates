@@ -17,5 +17,7 @@ const ro: TranslationsType = {
   typeInDate: 'Tipul în dată',
   pickDateFromCalendar: 'Alege o dată din calendar',
   close: 'Închide',
+  minute: 'Minut',
+  hour: 'Oră',
 }
 export default ro

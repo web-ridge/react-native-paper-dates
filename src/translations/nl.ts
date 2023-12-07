@@ -17,5 +17,7 @@ const nl: TranslationsType = {
   typeInDate: 'Typ datum',
   pickDateFromCalendar: 'Kies datum van kalender',
   close: 'Sluit',
+  hour: 'Uur',
+  minute: 'Minuut',
 }
 export default nl

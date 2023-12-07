@@ -17,5 +17,7 @@ const cs: TranslationsType = {
   typeInDate: 'Zadejte datum',
   pickDateFromCalendar: 'Vyberte datum z kalendáře',
   close: 'Zavřít',
+  minute: 'minuta',
+  hour: 'hodina',
 }
 export default cs

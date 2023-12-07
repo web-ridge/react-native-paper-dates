@@ -17,5 +17,7 @@ const ar: TranslationsType = {
   typeInDate: 'اكتب التاريخ',
   pickDateFromCalendar: 'اختر التاريخ من التقويم',
   close: 'أغلق',
+  hour: 'ساعة',
+  minute: 'دقيقة',
 }
 export default ar

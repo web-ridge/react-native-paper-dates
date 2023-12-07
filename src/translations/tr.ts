@@ -17,5 +17,7 @@ const tr: TranslationsType = {
   typeInDate: 'Tarihi yazın',
   pickDateFromCalendar: 'Takvimden tarih seçin',
   close: 'Kapat',
+  minute: 'Dakika',
+  hour: 'Saat',
 }
 export default tr

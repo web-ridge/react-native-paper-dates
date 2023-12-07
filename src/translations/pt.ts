@@ -17,5 +17,7 @@ const pt: TranslationsType = {
   typeInDate: 'Digite a data',
   pickDateFromCalendar: 'Escolha a data do calendário',
   close: 'Fechar',
+  hour: 'Hora',
+  minute: 'Minuto',
 }
 export default pt

@@ -16,5 +16,7 @@ const zh: TranslationsType = {
   typeInDate: '输入日期',
   pickDateFromCalendar: '从日历中选择日期',
   close: '关闭',
+  hour: '小时',
+  minute: '分钟',
 }
 export default zh
