@@ -110,16 +110,8 @@ export function DatePickerModal(
                 <View
                   style={[
                     {
-                      height: Platform.select({
-                        ios: StatusBar.currentHeight,
-                        android: StatusBar.currentHeight,
-                        web: insets.top,
-                      }),
-                      backgroundColor: Platform.select({
-                        ios: theme.colors.primary,
-                        android: theme.colors.primary,
-                        web: headerBackgroundColor,
-                      }),
+                      height: insets.top,
+                      backgroundColor: headerBackgroundColor,
                     },
                   ]}
                 />
