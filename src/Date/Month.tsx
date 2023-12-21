@@ -305,6 +305,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
             <View style={isHorizontal ? styles.opacity1 : styles.opacity0}>
               <IconButton
                 onPress={isHorizontal ? () => onPressYear(year) : undefined}
+                disabled
                 icon={
                   selectingYear
                     ? theme.isV3
