@@ -20,10 +20,6 @@ function DatePickerModalStatusBar({
   statusBarOnTopOfBackdrop: boolean
 }) {
   const insets = useSafeAreaInsets()
-  //
-  // const disableStatusBarPadding =
-  //   props.presentationStyle === 'pageSheet' ? false : _disableStatusBarPadding
-
   const headerBackgroundColor = useHeaderBackgroundColor()
   const onDarkBackground =
     Color(headerBackgroundColor).isDark() || statusBarOnTopOfBackdrop

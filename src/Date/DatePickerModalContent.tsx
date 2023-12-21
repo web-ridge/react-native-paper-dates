@@ -147,10 +147,7 @@ export function DatePickerModalContent(
 
   const theme = useTheme()
   const defaultUppercase = !theme.isV3
-  console.log({
-    defaultUppercase,
-    uppercase: props.uppercase,
-  })
+
   return (
     <>
       <DatePickerModalHeaderBackground>
