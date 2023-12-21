@@ -12,7 +12,7 @@ function DatePickerInput(
     withModal = true,
     calendarIcon = 'calendar',
     animationType = 'slide',
-    presentationStyle = 'fullScreen',
+    presentationStyle = 'overFullScreen',
     ...rest
   }: DatePickerInputProps,
   ref: any
@@ -73,7 +73,7 @@ function DatePickerInput(
             validRange={validRange}
             saveLabel={saveLabel}
             saveLabelDisabled={saveLabelDisabled ?? false}
-            uppercase={uppercase ?? true}
+            uppercase={uppercase}
             startYear={startYear ?? 1800}
             endYear={endYear ?? 2200}
             inputEnabled={inputEnabled}

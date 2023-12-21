@@ -18,6 +18,7 @@ import DatePickerModalContentHeader, {
 import CalendarEdit from './CalendarEdit'
 import DatePickerModalHeaderBackground from './DatePickerModalHeaderBackground'
 import { useTheme } from 'react-native-paper'
+import DatePickerModalStatusBar from './DatePickerModalStatusBar'
 
 export type LocalState = {
   startDate: CalendarDate
@@ -30,10 +31,14 @@ interface DatePickerModalContentBaseProps {
   inputFormat?: string
   locale: string
   onDismiss: () => any
-  disableSafeTop?: boolean
+
   saveLabelDisabled?: boolean
   uppercase?: boolean
   inputEnabled?: boolean
+
+  disableSafeTop?: boolean
+  disableStatusBar?: boolean
+  statusBarOnTopOfBackdrop?: boolean
 }
 
 export interface DatePickerModalContentRangeProps
@@ -80,12 +85,14 @@ export function DatePickerModalContent(
     onConfirm,
     onDismiss,
     disableSafeTop,
+    disableStatusBar,
     disableWeekDays,
     locale,
     validRange,
     dateMode,
     startYear,
     endYear,
+    statusBarOnTopOfBackdrop,
   } = props
   const anyProps = props as any
 
@@ -140,9 +147,18 @@ export function DatePickerModalContent(
 
   const theme = useTheme()
   const defaultUppercase = !theme.isV3
+  console.log({
+    defaultUppercase,
+    uppercase: props.uppercase,
+  })
   return (
     <>
       <DatePickerModalHeaderBackground>
+        <DatePickerModalStatusBar
+          disableSafeTop={!!disableSafeTop}
+          disableStatusBar={!!disableStatusBar}
+          statusBarOnTopOfBackdrop={!!statusBarOnTopOfBackdrop}
+        />
         <DatePickerModalHeader
           locale={locale}
           onSave={onInnerConfirm}
@@ -150,7 +166,6 @@ export function DatePickerModalContent(
           saveLabel={props.saveLabel}
           saveLabelDisabled={props.saveLabelDisabled ?? false}
           uppercase={props.uppercase ?? defaultUppercase}
-          disableSafeTop={disableSafeTop}
           closeIcon={props.closeIcon}
         />
         <DatePickerModalContentHeader

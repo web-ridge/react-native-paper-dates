@@ -15,6 +15,9 @@
     "ios": {
       "supportsTablet": true
     },
+    "androidStatusBar": {
+      "translucent": true
+    },
     "web": {
       "favicon": "./favicon.png",
       "name": "React Native Paper Dates",
