@@ -24,6 +24,7 @@ import {
   Chip,
   MD3DarkTheme,
   MD3LightTheme,
+  MD2LightTheme,
 } from 'react-native-paper'
 import {
   DatePickerModal,
@@ -55,6 +56,7 @@ import {
 } from 'react-native-paper-dates'
 import { useCallback, useState } from 'react'
 
+const presentationStyles = ['overFullScreen', 'pageSheet'] as const
 const locales: [string, TranslationsType][] = [
   ['ar', ar],
   ['ca', ca],
@@ -83,7 +85,13 @@ locales.forEach((locale) => {
   registerTranslation(locale[0], locale[1])
 })
 
-function App() {
+function App({
+  materialYouEnabled,
+  setMaterialYouEnabled,
+}: {
+  materialYouEnabled: boolean
+  setMaterialYouEnabled: (v: boolean) => void
+}) {
   /** Hooks. */
   const theme = useTheme()
   const insets = useSafeAreaInsets()
@@ -101,6 +109,8 @@ function App() {
     minutes: number | undefined
   }>({ hours: undefined, minutes: undefined })
   const [locale, setLocale] = useState('en-GB')
+  const [presentationStyle, setPresentationStyle] =
+    useState<(typeof presentationStyles)[number]>('overFullScreen')
   const [timeOpen, setTimeOpen] = useState(false)
   const [rangeOpen, setRangeOpen] = useState(false)
   const [singleOpen, setSingleOpen] = useState(false)
@@ -182,8 +192,8 @@ function App() {
   return (
     <>
       <StatusBar
-        barStyle="light-content"
-        backgroundColor={theme.colors.primary}
+        // barStyle="light-content"
+        // backgroundColor={theme.colors.primary}
         translucent={true}
       />
       <ScrollView
@@ -191,7 +201,7 @@ function App() {
         contentContainerStyle={[
           styles.contentContainer,
           styles.paddingSixteen,
-          { marginTop: insets.top },
+          { paddingTop: insets.top + 24, paddingBottom: insets.bottom },
         ]}
       >
         <View style={isLarge && styles.surface}>
@@ -269,7 +279,58 @@ function App() {
               View documentation
             </Button>
           </View>
+          <Divider style={styles.marginVerticalEight} />
+          <Text
+            maxFontSizeMultiplier={maxFontSizeMultiplier}
+            style={[styles.marginVerticalEight, styles.bold]}
+          >
+            Material theme
+          </Text>
+          <View style={styles.chipContainer}>
+            <Chip
+              compact
+              selected={materialYouEnabled}
+              onPress={() => setMaterialYouEnabled(true)}
+              style={styles.chip}
+            >
+              Material You
+            </Chip>
+            <Chip
+              compact
+              selected={!materialYouEnabled}
+              onPress={() => setMaterialYouEnabled(false)}
+              style={styles.chip}
+            >
+              Material Design 2
+            </Chip>
+          </View>
 
+          <Divider style={styles.marginVerticalEight} />
+          <Text
+            maxFontSizeMultiplier={maxFontSizeMultiplier}
+            style={[styles.marginVerticalEight, styles.bold]}
+          >
+            Presentation Style (iOS only)
+          </Text>
+          <View style={styles.chipContainer}>
+            {presentationStyles.map((option) => {
+              return (
+                <Chip
+                  compact
+                  key={option}
+                  selected={presentationStyle === option}
+                  onPress={() =>
+                    setPresentationStyle(
+                      option as (typeof presentationStyles)[number]
+                    )
+                  }
+                  style={styles.chip}
+                >
+                  {option}
+                </Chip>
+              )
+            })}
+          </View>
           <Divider style={styles.marginVerticalEight} />
           <Text
             maxFontSizeMultiplier={maxFontSizeMultiplier}
@@ -468,6 +529,7 @@ function App() {
         startDate={range.startDate}
         endDate={range.endDate}
         onConfirm={onChangeRange}
+        presentationStyle={presentationStyle}
       />
       <DatePickerModal
         locale={locale}
@@ -480,6 +542,7 @@ function App() {
           startDate: pastDate,
           disabledDates: [futureDate],
         }}
+        presentationStyle={presentationStyle}
       />
       <DatePickerModal
         locale={locale}
@@ -489,6 +552,7 @@ function App() {
         dates={dates}
         validRange={{ startDate: new Date() }}
         onConfirm={onChangeMulti}
+        presentationStyle={presentationStyle}
       />
       <TimePickerModal
         locale={locale}
@@ -504,12 +568,16 @@ function App() {
 
 export default function AppWithProviders() {
   const colorScheme = useColorScheme()
+  const [materialYouEnabled, setMaterialYouEnabled] = React.useState(true)
+  const m3Theme = colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme
+  const m2Theme = colorScheme === 'dark' ? MD2LightTheme : MD2LightTheme
   return (
     <SafeAreaProvider>
-      <PaperProvider
-        theme={colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme}
-      >
-        <App />
+      <PaperProvider theme={materialYouEnabled ? m3Theme : m2Theme}>
+        <App
+          materialYouEnabled={materialYouEnabled}
+          setMaterialYouEnabled={setMaterialYouEnabled}
+        />
       </PaperProvider>
     </SafeAreaProvider>
   )

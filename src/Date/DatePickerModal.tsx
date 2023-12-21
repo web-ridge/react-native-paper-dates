@@ -13,8 +13,6 @@ import DatePickerModalContent, {
   DatePickerModalContentRangeProps,
   DatePickerModalContentSingleProps,
 } from './DatePickerModalContent'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useHeaderBackgroundColor } from '../utils'
 
 interface DatePickerModalProps {
   visible: boolean
@@ -22,11 +20,7 @@ interface DatePickerModalProps {
   disableStatusBar?: boolean
   disableStatusBarPadding?: boolean
   inputEnabled?: boolean
-  presentationStyle?:
-    | 'fullScreen'
-    | 'pageSheet'
-    | 'formSheet'
-    | 'overFullScreen'
+  presentationStyle?: 'pageSheet' | 'overFullScreen'
 }
 
 export interface DatePickerModalSingleProps
@@ -56,6 +50,7 @@ export function DatePickerModal(
     disableStatusBarPadding,
     inputEnabled,
     presentationStyle,
+    statusBarOnTopOfBackdrop,
     ...rest
   } = props
   const animationTypeCalculated =
@@ -65,64 +60,48 @@ export function DatePickerModal(
       default: 'slide',
     })
 
-  const isTransparent =
-    presentationStyle === 'pageSheet' || presentationStyle === 'fullScreen'
-      ? false
-      : true
-  const headerBackgroundColor = useHeaderBackgroundColor()
-  const insets = useSafeAreaInsets()
+  const isPageSheet = presentationStyle === 'pageSheet' && Platform.OS === 'ios'
 
   return (
     <View style={[StyleSheet.absoluteFill]} pointerEvents="box-none">
       <Modal
         animationType={animationTypeCalculated}
-        transparent={isTransparent}
+        transparent={!isPageSheet}
         visible={visible}
         onRequestClose={rest.onDismiss}
-        presentationStyle={presentationStyle || 'overFullScreen'}
+        presentationStyle={isPageSheet ? 'pageSheet' : 'overFullScreen'}
         supportedOrientations={supportedOrientations}
-        //@ts-ignore
         statusBarTranslucent={true}
       >
-        <>
-          <TouchableWithoutFeedback onPress={rest.onDismiss}>
-            <View
-              style={[
-                StyleSheet.absoluteFill,
-                styles.modalBackground,
-                { backgroundColor: theme.colors.backdrop },
-              ]}
-            />
-          </TouchableWithoutFeedback>
+        <TouchableWithoutFeedback onPress={rest.onDismiss}>
           <View
-            style={[StyleSheet.absoluteFill, styles.modalRoot]}
-            pointerEvents="box-none"
+            style={[
+              StyleSheet.absoluteFill,
+              styles.modalBackground,
+              { backgroundColor: theme.colors.backdrop },
+            ]}
+          />
+        </TouchableWithoutFeedback>
+        <View
+          style={[StyleSheet.absoluteFill, styles.modalRoot]}
+          pointerEvents="box-none"
+        >
+          <View
+            style={[
+              styles.modalContent,
+              { backgroundColor: theme.colors.surface },
+              dimensions.width > 650 ? styles.modalContentBig : null,
+            ]}
           >
-            <View
-              style={[
-                styles.modalContent,
-                { backgroundColor: theme.colors.surface },
-                dimensions.width > 650 ? styles.modalContentBig : null,
-              ]}
-            >
-              {disableStatusBarPadding ? null : (
-                <View
-                  style={[
-                    {
-                      height: insets.top,
-                      backgroundColor: headerBackgroundColor,
-                    },
-                  ]}
-                />
-              )}
-              <DatePickerModalContent
-                {...rest}
-                inputEnabled={inputEnabled}
-                disableSafeTop={disableStatusBar}
-              />
-            </View>
+            <DatePickerModalContent
+              {...rest}
+              inputEnabled={inputEnabled}
+              disableSafeTop={disableStatusBarPadding}
+              disableStatusBar={disableStatusBar}
+              statusBarOnTopOfBackdrop={isPageSheet || statusBarOnTopOfBackdrop}
+            />
           </View>
-        </>
+        </View>
       </Modal>
     </View>
   )
