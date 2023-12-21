@@ -17,5 +17,7 @@ const it: TranslationsType = {
   typeInDate: 'Digita la data',
   pickDateFromCalendar: 'Scegli data dal calendario',
   close: 'Chiudi',
+  hour: 'Ora',
+  minute: 'Minuto',
 }
 export default it

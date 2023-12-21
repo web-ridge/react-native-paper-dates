@@ -114,6 +114,7 @@ function TimePicker({
           onChange={onChange}
           onFocusInput={onFocusInput}
           focused={focused}
+          locale={locale}
         />
         {inputType === inputTypes.picker ? (
           <View style={styles.clockContainer}>

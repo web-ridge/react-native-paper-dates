@@ -17,5 +17,7 @@ const ko: TranslationsType = {
   typeInDate: '날짜 입력',
   pickDateFromCalendar: '달력에서 날짜 선택',
   close: '닫기',
+  minute: '분',
+  hour: '시',
 }
 export default ko

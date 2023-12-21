@@ -17,5 +17,7 @@ const he: TranslationsType = {
   typeInDate: 'הקש תאריך',
   pickDateFromCalendar: 'בחר תאריך מהלוח שנה',
   close: 'סגור',
+  hour: 'שעה',
+  minute: 'דקה',
 }
 export default he

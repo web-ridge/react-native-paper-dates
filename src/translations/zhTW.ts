@@ -16,6 +16,8 @@ const zhTW: TranslationsType = {
   typeInDate: '輸入日期',
   pickDateFromCalendar: '從日曆中選擇日期',
   close: '關閉',
+  minute: '分鐘',
+  hour: '小時',
 }
 
 export default zhTW

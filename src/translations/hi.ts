@@ -17,5 +17,7 @@ const hi: TranslationsType = {
   typeInDate: 'तारीख़ लिखें',
   pickDateFromCalendar: 'कैलेंडर से तारीख़ चुनें',
   close: 'बंद करें',
+  minute: 'मिनट',
+  hour: 'घंटा',
 }
 export default hi

@@ -17,5 +17,7 @@ const fr: TranslationsType = {
   typeInDate: 'Entrer la date',
   pickDateFromCalendar: 'Sélectionner une date dans le calendrier',
   close: 'Fermer',
+  minute: 'minutes',
+  hour: 'heures',
 }
 export default fr

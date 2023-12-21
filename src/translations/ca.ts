@@ -17,5 +17,7 @@ const ca: TranslationsType = {
   typeInDate: 'Escriu la data',
   pickDateFromCalendar: 'Seleccionar la data del calendari',
   close: 'Tancar',
+  minute: 'Minut',
+  hour: 'Hora',
 }
 export default ca
