@@ -48,7 +48,7 @@ export function TimePickerModal({
   hours,
   minutes,
   label = 'Select time',
-  uppercase = true,
+  uppercase: _uppercase,
   cancelLabel = 'Cancel',
   confirmLabel = 'Ok',
   animationType = 'none',
@@ -77,7 +77,8 @@ export function TimePickerModal({
   defaultInputType?: PossibleInputTypes
 }) {
   const theme = useTheme()
-
+  const defaultUppercase = !theme.isV3
+  const uppercase = _uppercase ?? defaultUppercase
   let textFont
   let labelText = label
 

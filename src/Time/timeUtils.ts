@@ -231,12 +231,17 @@ export function useInputColors(highlighted: boolean) {
         ? theme.colors.onPrimaryContainer
         : theme.colors.onBackground
     } else {
+      const t = theme as any as MD2Theme
       if (highlighted && !theme.dark) {
-        return theme.colors.primary
+        const primary = Color(t.colors.primary)
+        const background = Color(backgroundColor)
+        return background.isDark() && primary.isDark()
+          ? '#ffffffff'
+          : t.colors.primary
       }
       return (theme as any as MD2Theme).colors.text
     }
-  }, [highlighted, theme])
+  }, [highlighted, theme, backgroundColor])
 
   return { backgroundColor, color }
 }

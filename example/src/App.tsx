@@ -571,6 +571,7 @@ export default function AppWithProviders() {
   const [materialYouEnabled, setMaterialYouEnabled] = React.useState(true)
   const m3Theme = colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme
   const m2Theme = colorScheme === 'dark' ? MD2LightTheme : MD2LightTheme
+
   return (
     <SafeAreaProvider>
       <PaperProvider theme={materialYouEnabled ? m3Theme : m2Theme}>
