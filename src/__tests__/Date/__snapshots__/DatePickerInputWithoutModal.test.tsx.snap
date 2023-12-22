@@ -59,6 +59,7 @@ exports[`renders DatePickerInput 1`] = `
         testID="text-input-underline"
       />
       <View
+        onLayout={[Function]}
         style={
           [
             {
@@ -87,6 +88,7 @@ exports[`renders DatePickerInput 1`] = `
                   "translateX": 4,
                 },
               ],
+              "width": 750,
               "zIndex": 3,
             }
           }
@@ -96,6 +98,7 @@ exports[`renders DatePickerInput 1`] = `
             maxFontSizeMultiplier={1.5}
             numberOfLines={1}
             onLayout={[Function]}
+            onTextLayout={[Function]}
             style={
               {
                 "color": "rgba(103, 80, 164, 1)",
@@ -104,7 +107,8 @@ exports[`renders DatePickerInput 1`] = `
                 "fontWeight": undefined,
                 "left": 0,
                 "letterSpacing": 0.15,
-                "lineHeight": undefined,
+                "lineHeight": 19.2,
+                "maxWidth": 73,
                 "opacity": 0,
                 "paddingLeft": 16,
                 "paddingRight": 16,
@@ -141,7 +145,8 @@ exports[`renders DatePickerInput 1`] = `
                 "fontWeight": undefined,
                 "left": 0,
                 "letterSpacing": 0.15,
-                "lineHeight": undefined,
+                "lineHeight": 19.2,
+                "maxWidth": 73,
                 "opacity": 0,
                 "paddingLeft": 16,
                 "paddingRight": 16,
@@ -201,7 +206,8 @@ exports[`renders DatePickerInput 1`] = `
                 "fontSize": 16,
                 "fontWeight": undefined,
                 "letterSpacing": 0.15,
-                "lineHeight": undefined,
+                "lineHeight": 19.2,
+                "minWidth": 65,
                 "paddingLeft": 16,
                 "paddingRight": 16,
                 "textAlign": "left",
