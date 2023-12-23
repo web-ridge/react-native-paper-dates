@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useHeaderBackgroundColor } from '../utils'
 import Color from 'color'
-import { Platform, Animated, StatusBar, StatusBarStyle } from 'react-native'
+import { Animated, StatusBar, StatusBarStyle } from 'react-native'
 
 function DatePickerModalStatusBar({
   disableSafeTop,
@@ -17,26 +17,16 @@ function DatePickerModalStatusBar({
   const headerBackgroundColor = useHeaderBackgroundColor()
   const onDarkBackground =
     Color(headerBackgroundColor).isDark() || statusBarOnTopOfBackdrop
+
   const statusBarTheme: StatusBarStyle = onDarkBackground
     ? 'light-content'
     : 'dark-content'
   const statusBarBackground = statusBarOnTopOfBackdrop
     ? 'transparent'
-    : Platform.select({
-        android: headerBackgroundColor,
-        ios: headerBackgroundColor,
-        web: headerBackgroundColor,
-      })
+    : headerBackgroundColor
 
   return (
     <>
-      {!disableStatusBar && (
-        <StatusBar
-          barStyle={statusBarTheme}
-          backgroundColor={statusBarBackground}
-          translucent={true}
-        />
-      )}
       {!disableSafeTop && !statusBarOnTopOfBackdrop && (
         <Animated.View
           style={[
@@ -45,6 +35,13 @@ function DatePickerModalStatusBar({
               height: insets.top || StatusBar.currentHeight,
             },
           ]}
+        />
+      )}
+      {!disableStatusBar && (
+        <StatusBar
+          barStyle={statusBarTheme}
+          translucent={true}
+          backgroundColor="transparent"
         />
       )}
     </>

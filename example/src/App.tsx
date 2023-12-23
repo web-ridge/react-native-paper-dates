@@ -192,9 +192,9 @@ function App({
   return (
     <>
       <StatusBar
-        // barStyle="light-content"
-        // backgroundColor={theme.colors.primary}
-        translucent={true}
+        barStyle={'dark-content'}
+        translucent
+        backgroundColor={'transparent'}
       />
       <ScrollView
         style={{ backgroundColor: theme.colors.background }}
