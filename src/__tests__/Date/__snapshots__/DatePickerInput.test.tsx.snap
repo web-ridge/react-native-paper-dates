@@ -4,9 +4,12 @@ exports[`renders DatePickerInput 1`] = `
 <RNCSafeAreaProvider
   onInsetsChange={[Function]}
   style={
-    {
-      "flex": 1,
-    }
+    [
+      {
+        "flex": 1,
+      },
+      undefined,
+    ]
   }
 />
 `;
