@@ -6,6 +6,7 @@ import {
   useTheme,
   TouchableRipple,
   MD2Theme,
+  Icon,
 } from 'react-native-paper'
 import Day, { EmptyDay } from './Day'
 
@@ -302,18 +303,23 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
             >
               {monthName} {year}
             </Text>
-            <View style={isHorizontal ? styles.opacity1 : styles.opacity0}>
-              <IconButton
-                onPress={isHorizontal ? () => onPressYear(year) : undefined}
-                disabled
-                icon={
-                  selectingYear
-                    ? theme.isV3
-                      ? 'menu-up'
-                      : 'chevron-up'
-                    : theme.isV3
-                    ? 'menu-down'
-                    : 'chevron-down'
+            <View style={{
+              ...(isHorizontal ? styles.opacity1 : styles.opacity0),
+              padding: 8,
+            }}>
+              <Icon
+                size={24}
+                color={theme.isV3
+                  ? theme.colors.onSurfaceVariant
+                  : theme.colors.onSurface
+                }
+                source={selectingYear
+                  ? theme.isV3
+                    ? 'menu-up'
+                    : 'chevron-up'
+                  : theme.isV3
+                  ? 'menu-down'
+                  : 'chevron-down'
                 }
               />
             </View>
