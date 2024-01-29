@@ -303,10 +303,12 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
             >
               {monthName} {year}
             </Text>
-            <View style={{
-              ...(isHorizontal ? styles.opacity1 : styles.opacity0),
-              padding: 8,
-            }}>
+            <View
+              style={[
+                styles.iconWrapper,
+                isHorizontal ? styles.opacity1 : styles.opacity0
+              ]}
+            >
               <Icon
                 size={24}
                 color={theme.isV3
@@ -368,6 +370,9 @@ export const monthHeaderSingleHeight =
   monthHeaderSingleMarginTop + monthHeaderSingleMarginBottom
 
 const styles = StyleSheet.create({
+  iconWrapper: {
+    padding: 8
+  },
   week: {
     flexDirection: 'row',
     marginBottom: weekMargin,
