@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { LayoutChangeEvent, StyleSheet, View } from 'react-native'
+import { Dimensions, LayoutChangeEvent, StyleSheet, View } from 'react-native'
 
 type WidthAndHeight = {
   width: number
@@ -15,9 +15,17 @@ export default function AutoSizer({
   const onLayout = React.useCallback(
     (event: LayoutChangeEvent) => {
       const nl = event.nativeEvent.layout
+      const windowDimensions = Dimensions.get('window')
+      const isLandscapeScreen = windowDimensions.width > windowDimensions.height
 
       // https://github.com/necolas/react-native-web/issues/1704
-      if (!layout || layout.width !== nl.width || layout.height !== nl.height) {
+      if (!layout) {
+        setLayout({ width: nl.width, height: nl.height })
+        return
+      }
+      if (isLandscapeScreen && nl.width < layout.width) {
+        return
+      } else if (layout.width !== nl.width || layout.height !== nl.height) {
         setLayout({ width: nl.width, height: nl.height })
       }
     },
