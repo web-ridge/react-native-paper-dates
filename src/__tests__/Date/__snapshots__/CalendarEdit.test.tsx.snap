@@ -49,7 +49,7 @@ exports[`renders CalendarEdit 1`] = `
           collapsable={false}
           style={
             {
-              "backgroundColor": "rgba(28, 27, 31, 1)",
+              "backgroundColor": "rgba(73, 69, 79, 1)",
               "bottom": 0,
               "height": 1,
               "left": 0,
@@ -114,7 +114,7 @@ exports[`renders CalendarEdit 1`] = `
                   "fontWeight": undefined,
                   "left": 0,
                   "letterSpacing": 0.15,
-                  "lineHeight": 19.2,
+                  "lineHeight": undefined,
                   "maxWidth": 73,
                   "opacity": 0,
                   "paddingLeft": 16,
@@ -152,7 +152,7 @@ exports[`renders CalendarEdit 1`] = `
                   "fontWeight": undefined,
                   "left": 0,
                   "letterSpacing": 0.15,
-                  "lineHeight": 19.2,
+                  "lineHeight": undefined,
                   "maxWidth": 73,
                   "opacity": 0,
                   "paddingLeft": 16,
@@ -209,12 +209,12 @@ exports[`renders CalendarEdit 1`] = `
                   "paddingTop": 24,
                 },
                 {
-                  "color": "rgba(73, 69, 79, 1)",
+                  "color": "rgba(28, 27, 31, 1)",
                   "fontFamily": "System",
                   "fontSize": 16,
                   "fontWeight": undefined,
                   "letterSpacing": 0.15,
-                  "lineHeight": 19.2,
+                  "lineHeight": undefined,
                   "minWidth": 65,
                   "paddingLeft": 16,
                   "paddingRight": 16,
