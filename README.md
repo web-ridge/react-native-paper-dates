@@ -13,10 +13,11 @@
 
 <br>
 
-
+- Compatible with Expo
 - Smooth and fast cross platform Material Design **date** picker and **time** picker for ([react-native-paper](https://callstack.github.io/react-native-paper/))
 - Tested on Android, iOS and the web
-- Uses the native Date.Intl API's which work out of the box on the web / iOS an on Android with Hermes from RN version 0.66 (automatic day name, month translations without bundle size increase)
+- Uses native Date.Intl API's (web / iOS / Android)
+- Small bundle size (because we use Intl implementation for each platform)
 - Simple API
 - Typesafe
 - Endless (virtual) scrolling
