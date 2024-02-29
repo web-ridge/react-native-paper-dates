@@ -17,7 +17,6 @@
 - Smooth and fast cross platform Material Design **date** picker and **time** picker for ([react-native-paper](https://callstack.github.io/react-native-paper/))
 - Tested on Android, iOS and the web
 - Uses the native Date.Intl API's which work out of the box on the web / iOS an on Android with Hermes from RN version 0.66 (automatic day name, month translations without bundle size increase)
-- For RN below 0.66 see for Android Intl support the [android-caveats guide](https://github.com/web-ridge/react-native-paper-dates#android-caveats)
 - Simple API
 - Typesafe
 - Endless (virtual) scrolling
@@ -38,7 +37,7 @@ Check out the official docs: [web-ridge.github.io/react-native-paper-dates](http
 
 ## Maintainers
 
-[RichardLindhout](https://twitter.com/RichardLindhout) from [web_ridge](https://twitter.com/web_ridge)   
+[RichardLindhout](https://twitter.com/RichardLindhout) from [web_ridge](https://twitter.com/web_ridge)
 [Brandon Fitzwater](https://github.com/iM-GeeKy)
 
 
