@@ -5,13 +5,13 @@ import DatePickerModal from './DatePickerModal'
 import { useLatest } from '../utils'
 import type { DatePickerInputProps } from './DatePickerInput.shared'
 import DatePickerInputWithoutModal from './DatePickerInputWithoutModal'
-import { StyleProp, ViewStyle } from 'react-native'
+import { Platform, StyleProp, ViewStyle } from 'react-native'
 
 function DatePickerInput(
   {
     withModal = true,
     calendarIcon = 'calendar',
-    animationType = 'slide',
+    animationType = Platform.select({ web: 'none', default: 'slide' }),
     presentationStyle = 'overFullScreen',
     ...rest
   }: DatePickerInputProps,
@@ -80,6 +80,7 @@ function DatePickerInput(
             disableStatusBarPadding={disableStatusBarPadding ?? false}
             animationType={animationType}
             presentationStyle={presentationStyle}
+            label={rest.label as any}
           />
         ) : null
       }
