@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import {
-  IconButton,
   Text,
   useTheme,
   TouchableRipple,
   MD2Theme,
+  Icon,
 } from 'react-native-paper'
 import Day, { EmptyDay } from './Day'
 
@@ -302,18 +302,25 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
             >
               {monthName} {year}
             </Text>
-            <View style={isHorizontal ? styles.opacity1 : styles.opacity0}>
-              <IconButton
-                onPress={isHorizontal ? () => onPressYear(year) : undefined}
-                disabled
-                icon={
-                  selectingYear
-                    ? theme.isV3
-                      ? 'menu-up'
-                      : 'chevron-up'
-                    : theme.isV3
-                    ? 'menu-down'
-                    : 'chevron-down'
+            <View
+              style={[
+                styles.iconWrapper,
+                isHorizontal ? styles.opacity1 : styles.opacity0
+              ]}
+            >
+              <Icon
+                size={24}
+                color={theme.isV3
+                  ? theme.colors.onSurfaceVariant
+                  : theme.colors.onSurface
+                }
+                source={selectingYear
+                  ? theme.isV3
+                    ? 'menu-up'
+                    : 'chevron-up'
+                  : theme.isV3
+                  ? 'menu-down'
+                  : 'chevron-down'
                 }
               />
             </View>
@@ -362,6 +369,9 @@ export const monthHeaderSingleHeight =
   monthHeaderSingleMarginTop + monthHeaderSingleMarginBottom
 
 const styles = StyleSheet.create({
+  iconWrapper: {
+    padding: 8
+  },
   week: {
     flexDirection: 'row',
     marginBottom: weekMargin,
