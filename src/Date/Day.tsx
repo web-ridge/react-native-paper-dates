@@ -47,24 +47,44 @@ function Day(props: {
     onPressDate(new Date(year, month, day))
   }, [onPressDate, year, month, day])
 
-  const borderColor = theme.isV3
-    ? theme.colors.primary
-    : selected || (inRange && theme.dark)
+  // const borderColorV3 =
+  const borderColorFallback = theme.dark ? '#fff' : '#000'
+  const selectedOrInRangeDarkMode = selected || (inRange && theme.dark)
+  const v2BorderColor = selectedOrInRangeDarkMode
     ? textColorOnPrimary
-    : theme.dark
-    ? '#fff'
-    : '#000'
+    : borderColorFallback
+  const borderColor = theme.isV3 ? theme.colors.primary : v2BorderColor
 
-  const textColor =
-    theme.isV3 && selected
-      ? theme.colors.onPrimary
-      : theme.isV3 && inRange && theme.dark
-      ? theme.colors.onPrimaryContainer
-      : selected || (inRange && theme.dark)
-      ? textColorOnPrimary
-      : theme.isV3
-      ? theme.colors.onSurface
-      : undefined
+  // TODO: check if this can be simplified
+  // converted with Chat-GPT for now from enormous conditional to if-else
+  let baseTextColor
+  let finalTextColor
+
+  if (theme.isV3) {
+    // Theme V3 specific logic for base text color
+    if (selected) {
+      baseTextColor = theme.colors.onPrimary
+    } else if (inRange && theme.dark) {
+      baseTextColor = theme.colors.onPrimaryContainer
+    } else {
+      baseTextColor = theme.colors.onSurface
+    }
+
+    // Theme V3 specific logic for final text color
+    if (isToday) {
+      finalTextColor = selected ? baseTextColor : theme.colors.primary
+    } else {
+      finalTextColor = baseTextColor
+    }
+  } else {
+    // Logic for themes other than V3
+    if (selected || (inRange && theme.dark)) {
+      baseTextColor = textColorOnPrimary
+    }
+    // Since there's no additional logic provided for non-V3 themes in the step 2,
+    // the final text color for non-V3 themes will simply be the base text color.
+    finalTextColor = baseTextColor
+  }
 
   let textFont = theme?.isV3
     ? theme.fonts.bodySmall
@@ -99,14 +119,9 @@ function Day(props: {
           <Text
             maxFontSizeMultiplier={1.5}
             style={[
-              textColor
+              baseTextColor
                 ? {
-                    color:
-                      theme.isV3 && isToday && selected
-                        ? textColor
-                        : theme.isV3 && isToday
-                        ? theme.colors.primary
-                        : textColor,
+                    color: finalTextColor,
                   }
                 : undefined,
               { ...textFont },

@@ -254,6 +254,14 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
     ? theme.fonts.titleSmall
     : (theme as any as MD2Theme).fonts.medium
 
+  const iconColor = theme.isV3
+    ? theme.colors.onSurfaceVariant
+    : theme.colors.onSurface
+
+  const iconSourceV3 = selectingYear ? 'menu-up' : 'menu-down'
+  const iconSourceV2 = selectingYear ? 'chevron-up' : 'chevron-down'
+  const iconSource = theme.isV3 ? iconSourceV3 : iconSourceV2
+
   return (
     <View style={[styles.month, { height: getMonthHeight(scrollMode, index) }]}>
       <View
@@ -305,24 +313,10 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
             <View
               style={[
                 styles.iconWrapper,
-                isHorizontal ? styles.opacity1 : styles.opacity0
+                isHorizontal ? styles.opacity1 : styles.opacity0,
               ]}
             >
-              <Icon
-                size={24}
-                color={theme.isV3
-                  ? theme.colors.onSurfaceVariant
-                  : theme.colors.onSurface
-                }
-                source={selectingYear
-                  ? theme.isV3
-                    ? 'menu-up'
-                    : 'chevron-up'
-                  : theme.isV3
-                  ? 'menu-down'
-                  : 'chevron-down'
-                }
-              />
+              <Icon size={24} color={iconColor} source={iconSource} />
             </View>
           </View>
         </TouchableRipple>
@@ -370,7 +364,7 @@ export const monthHeaderSingleHeight =
 
 const styles = StyleSheet.create({
   iconWrapper: {
-    padding: 8
+    padding: 8,
   },
   week: {
     flexDirection: 'row',

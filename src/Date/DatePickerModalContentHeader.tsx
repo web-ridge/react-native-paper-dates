@@ -76,6 +76,10 @@ export default function DatePickerModalContentHeader(
     ? theme.fonts.labelMedium
     : (theme as any as MD2Theme).fonts.medium
 
+  const collapsedIcon = theme.isV3 ? 'pencil-outline' : 'pencil'
+  const expandedIcon = theme.isV3 ? 'calendar-blank' : 'calendar'
+  const finalCollapsedIcon = editIcon ?? collapsedIcon
+  const finalExpandedIcon = calendarIcon ?? expandedIcon
   return (
     <View style={styles.header}>
       <View>
@@ -104,15 +108,7 @@ export default function DatePickerModalContentHeader(
       <View style={styles.fill} />
       {isEditingEnabled ? (
         <IconButton
-          icon={
-            collapsed
-              ? editIcon ?? theme.isV3
-                ? 'pencil-outline'
-                : 'pencil'
-              : calendarIcon ?? theme.isV3
-              ? 'calendar-blank'
-              : 'calendar'
-          }
+          icon={collapsed ? finalCollapsedIcon : finalExpandedIcon}
           accessibilityLabel={
             collapsed
               ? getTranslation(props.locale, 'typeInDate')
@@ -217,16 +213,10 @@ export function HeaderContentRange({
   }, [locale])
 
   const lighterColor = Color(color).fade(0.5).rgb().toString()
-  const startColor = state.startDate
-    ? theme.isV3
-      ? theme.colors.onSurface
-      : color
-    : lighterColor
-  const endColor = state.endDate
-    ? theme.isV3
-      ? theme.colors.onSurface
-      : color
-    : lighterColor
+  const startColorFilled = theme.isV3 ? theme.colors.onSurface : color
+  const endColorFilled = theme.isV3 ? theme.colors.onSurface : color
+  const startColor = state.startDate ? startColorFilled : lighterColor
+  const endColor = state.endDate ? endColorFilled : lighterColor
 
   return (
     <>

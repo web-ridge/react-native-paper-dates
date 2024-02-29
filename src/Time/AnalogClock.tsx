@@ -121,6 +121,11 @@ function AnalogClock({
   const dynamicSize = focused === clockTypes.hours && shortPointer ? 33 : 0
   const pointerNumber = focused === clockTypes.hours ? hours : minutes
   const degreesPerNumber = focused === clockTypes.hours ? 30 : 6
+
+  const v3Color = theme.colors.surfaceVariant
+  const v2Color = theme.dark
+    ? Color(theme.colors.surface).lighten(1.4).hex()
+    : Color(theme.colors.surface).darken(0.1).hex()
   return (
     <View
       ref={clockRef}
@@ -128,11 +133,7 @@ function AnalogClock({
       style={[
         styles.clock,
         {
-          backgroundColor: theme.isV3
-            ? theme.colors.surfaceVariant
-            : theme.dark
-            ? Color(theme.colors.surface).lighten(1.4).hex()
-            : Color(theme.colors.surface).darken(0.1).hex(),
+          backgroundColor: theme.isV3 ? v3Color : v2Color,
         },
       ]}
       // @ts-ignore -> https://github.com/necolas/react-native-web/issues/506

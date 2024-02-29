@@ -130,6 +130,14 @@ export function TimePickerModal({
     },
     [setFocused, setLocalHours, setLocalMinutes]
   )
+
+  const v3Color = theme.dark
+    ? theme.colors.elevation.level3
+    : theme.colors.surface
+  const v2Color = theme.dark
+    ? overlay(10, theme.colors.surface)
+    : theme.colors.surface
+
   return (
     <Modal
       animationType={animationType}
@@ -162,17 +170,7 @@ export function TimePickerModal({
               style={[
                 styles.modalContent,
                 {
-                  backgroundColor:
-                    theme.dark && theme.isV3
-                      ? theme.colors.elevation.level3
-                      : theme.isV3
-                      ? theme.colors.surface
-                      : theme.dark
-                      ? overlay(10, theme.colors.surface)
-                      : theme.colors.surface,
-                  borderRadius: theme.isV3
-                    ? theme.roundness * 6
-                    : theme.roundness,
+                  backgroundColor: theme.isV3 ? v3Color : v2Color,
                 },
               ]}
             >
