@@ -16,6 +16,7 @@ import YearPicker from './YearPicker'
 import Color from 'color'
 import { useTheme } from 'react-native-paper'
 import { useLatest, lightenBy, darkenBy } from '../utils'
+import { Dimensions } from 'react-native'
 
 export type ModeType = 'single' | 'range' | 'multiple'
 
@@ -109,8 +110,34 @@ function Calendar(
     return lightenBy(Color(theme.colors.primary), 0.9).hex()
   }, [theme])
 
-  const scrollMode =
-    mode === 'range' || mode === 'multiple' ? 'vertical' : 'horizontal'
+  const [isLandscape, setIsLandscape] = React.useState(
+    Dimensions.get('window').width > Dimensions.get('window').height
+  )
+
+  const [scrollMode, setScrollMode] = React.useState<'vertical' | 'horizontal'>(
+    mode === 'range' || mode === 'multiple' || isLandscape
+      ? 'vertical'
+      : 'horizontal'
+  )
+
+  React.useEffect(() => {
+    const handleOrientationChange = () => {
+      const newIsLandscape =
+        Dimensions.get('window').width > Dimensions.get('window').height
+      setIsLandscape(newIsLandscape)
+      setScrollMode(
+        mode === 'range' || mode === 'multiple' || newIsLandscape
+          ? 'vertical'
+          : 'horizontal'
+      )
+    }
+
+    Dimensions.addEventListener('change', handleOrientationChange)
+
+    return () => {
+      Dimensions.addEventListener('change', handleOrientationChange).remove()
+    }
+  }, [mode])
 
   const [selectedYear, setSelectedYear] = React.useState<number | undefined>(
     undefined
