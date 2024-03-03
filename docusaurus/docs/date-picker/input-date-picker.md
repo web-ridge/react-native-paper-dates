@@ -91,13 +91,21 @@ Limits which dates the user can navigate to and where events can go. Dates outsi
 `Type: boolean | undefined`  
 Flag indicating if the date format should be inside the components label.
 
+**withModal**
+`Type: boolean | undefined`  
+Flag indicating if the `datepicker` component is available from the input.
+
 **hasError**  
 `Type: boolean | undefined`  
-Flag indicating if the the component should display error styles.
+Flag indicating if the  component should display error styles.
 
 **hideValidationErrors**  
 `Type: boolean | undefined`  
-Flag indicating if the the component should hide error styles along with the `helperText` component displaying the error message.
+Flag indicating if the  component should hide error styles along with the `helperText` component displaying the error message.
+
+**showHelperTextOnError**  
+`Type: boolean | undefined`  
+Flag indicating if the `helperText` component should be hidden if there is an error or always (hide empty line caused by empty`helperText` component).
 
 **onValidationError**  
 `Type: Function | undefined`  
@@ -128,7 +136,7 @@ Flag indicating if the component should be enabled or not. Behavior similarly to
 Flag indicating if the status bar padding should be enabled or not. Defaults to `false`.
 
 **presentationStyle**
-`Type: 'fullScreen' | 'pageSheet' | 'formSheet' | 'overFullScreen'`
+`Type: ''pageSheet' | 'overFullScreen'`
 Determines the visual presentation style of the date picker modal. This prop allows you to define how the modal appears on the screen when it is displayed.
 
 - `'fullScreen'`: Presents the modal as a full-screen overlay.
