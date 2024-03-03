@@ -97,11 +97,11 @@ Flag indicating if the `datepicker` component is available from the input.
 
 **hasError**  
 `Type: boolean | undefined`  
-Flag indicating if the  component should display error styles.
+Flag indicating if the component should display error styles.
 
 **hideValidationErrors**  
 `Type: boolean | undefined`  
-Flag indicating if the  component should hide error styles along with the `helperText` component displaying the error message.
+Flag indicating if the component should hide error styles along with the `helperText` component displaying the error message.
 
 **showHelperTextOnError**  
 `Type: boolean | undefined`  
