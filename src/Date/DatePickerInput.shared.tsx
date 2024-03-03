@@ -11,6 +11,7 @@ export type DatePickerInputProps = {
   withModal?: boolean
   withDateFormatInLabel?: boolean
   hideValidationErrors?: boolean
+  showHelperTextOnError?: boolean
   hasError?: boolean
   onValidationError?: ((error: string | null) => void) | undefined
   calendarIcon?: string
