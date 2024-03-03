@@ -100,7 +100,7 @@ function DatePickerInputWithoutModal(
             inputButton={inputButton}
           />
         </View>
-        {error && !hideValidationErrors ? (
+        {!hideValidationErrors ? (
           <HelperText type="error" visible={!!error}>
             {error}
           </HelperText>
@@ -140,8 +140,6 @@ function getLabel({
 
 const styles = StyleSheet.create({
   root: {
-    flex: 1,
-    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'flex-start',
     width: '100%',
