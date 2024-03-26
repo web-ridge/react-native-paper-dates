@@ -31,6 +31,7 @@ exports[`renders TimeInput 1`] = `
           "borderRadius": 8,
           "borderWidth": 2,
           "color": "rgba(33, 0, 93, 1)",
+          "fontFamily": "System",
           "fontSize": 57,
           "height": 80,
         },

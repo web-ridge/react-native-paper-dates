@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Platform,
 } from 'react-native'
-import { useTheme, TouchableRipple } from 'react-native-paper'
+import { useTheme, TouchableRipple, MD2Theme } from 'react-native-paper'
 
 import Color from 'color'
 import {
@@ -79,6 +79,9 @@ function TimeInput(
           // eslint-disable-next-line react-native/no-inline-styles
           {
             color,
+            fontFamily: theme?.isV3
+              ? theme.fonts.titleMedium.fontFamily
+              : (theme as any as MD2Theme).fonts.medium.fontFamily,
             fontSize: inputFontSize,
             backgroundColor,
             borderRadius: theme.roundness * 2,
