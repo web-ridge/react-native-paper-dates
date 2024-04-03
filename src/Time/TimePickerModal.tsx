@@ -133,9 +133,7 @@ export function TimePickerModal({
 
   let color
   if (theme.isV3) {
-    color = theme.dark
-      ? theme.colors.elevation.level3
-      : theme.colors.surface
+    color = theme.dark ? theme.colors.elevation.level3 : theme.colors.surface
   } else {
     color = theme.dark
       ? overlay(10, theme.colors.surface)
