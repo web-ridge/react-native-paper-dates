@@ -25,6 +25,7 @@ function Day(props: {
   selectColor: string
   isToday: boolean
   disabled: boolean
+  isHighlighted?: boolean
   onPressDate: (date: Date) => any
 }) {
   const {
@@ -42,6 +43,7 @@ function Day(props: {
     disabled,
     textColorOnPrimary,
     theme,
+    isHighlighted,
   } = props
   const onPress = React.useCallback(() => {
     onPressDate(new Date(year, month, day))
@@ -125,6 +127,9 @@ function Day(props: {
                   }
                 : undefined,
               { ...textFont },
+              isHighlighted
+                ? { ...styles.highlightedDay, color: theme.colors.primary }
+                : undefined,
             ]}
             selectable={false}
           >
@@ -167,6 +172,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: 'transparent',
+  },
+  highlightedDay: {
+    fontWeight: '900',
   },
   flex1: {
     flex: 1,
