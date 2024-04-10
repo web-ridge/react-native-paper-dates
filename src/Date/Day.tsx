@@ -96,10 +96,6 @@ function Day(props: {
     ? theme.fonts.bodySmall
     : (theme as any as MD2Theme).fonts.medium
 
-  if (isHighlighted) {
-    textFont.fontWeight = '900'
-  }
-
   return (
     <View style={[styles.root, disabled && styles.disabled]}>
       <DayRange
@@ -135,6 +131,7 @@ function Day(props: {
                   }
                 : undefined,
               { ...textFont },
+              isHighlighted ? styles.highlightedDay : undefined,
             ]}
             selectable={false}
           >
