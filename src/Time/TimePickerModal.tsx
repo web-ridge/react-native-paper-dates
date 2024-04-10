@@ -169,8 +169,10 @@ export function TimePickerModal({
             <Animated.View
               style={[
                 styles.modalContent,
+                // eslint-disable-next-line react-native/no-inline-styles
                 {
                   backgroundColor: theme.isV3 ? v3Color : v2Color,
+                  borderRadius: theme.isV3 ? 28 : undefined,
                 },
               ]}
             >
