@@ -68,6 +68,8 @@ function Day(props: {
       baseTextColor = theme.colors.onPrimary
     } else if (inRange && theme.dark) {
       baseTextColor = theme.colors.onPrimaryContainer
+    } else if (isHighlighted) {
+      baseTextColor = theme.colors.primary
     } else {
       baseTextColor = theme.colors.onSurface
     }
@@ -82,6 +84,8 @@ function Day(props: {
     // Logic for themes other than V3
     if (selected || (inRange && theme.dark)) {
       baseTextColor = textColorOnPrimary
+    } else if (isHighlighted) {
+      baseTextColor = theme.colors.primary
     }
     // Since there's no additional logic provided for non-V3 themes in the step 2,
     // the final text color for non-V3 themes will simply be the base text color.
@@ -91,6 +95,10 @@ function Day(props: {
   let textFont = theme?.isV3
     ? theme.fonts.bodySmall
     : (theme as any as MD2Theme).fonts.medium
+
+  if (isHighlighted) {
+    textFont.fontWeight = '900'
+  }
 
   return (
     <View style={[styles.root, disabled && styles.disabled]}>
@@ -127,9 +135,6 @@ function Day(props: {
                   }
                 : undefined,
               { ...textFont },
-              isHighlighted
-                ? { ...styles.highlightedDay, color: theme.colors.primary }
-                : undefined,
             ]}
             selectable={false}
           >
