@@ -131,12 +131,14 @@ export function TimePickerModal({
     [setFocused, setLocalHours, setLocalMinutes]
   )
 
-  const v3Color = theme.dark
-    ? theme.colors.elevation.level3
-    : theme.colors.surface
-  const v2Color = theme.dark
-    ? overlay(10, theme.colors.surface)
-    : theme.colors.surface
+  let color
+  if (theme.isV3) {
+    color = theme.dark ? theme.colors.elevation.level3 : theme.colors.surface
+  } else {
+    color = theme.dark
+      ? overlay(10, theme.colors.surface)
+      : theme.colors.surface
+  }
 
   return (
     <Modal
@@ -171,7 +173,7 @@ export function TimePickerModal({
                 styles.modalContent,
                 // eslint-disable-next-line react-native/no-inline-styles
                 {
-                  backgroundColor: theme.isV3 ? v3Color : v2Color,
+                  backgroundColor: color,
                   borderRadius: theme.isV3 ? 28 : undefined,
                 },
               ]}
