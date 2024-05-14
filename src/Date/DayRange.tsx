@@ -35,7 +35,7 @@ function DayRange({
           <>
             <View
               style={[
-                styles.rightCrop,
+                styles.flex1,
                 rightCrop
                   ? {
                       backgroundColor: selectColor,
@@ -89,9 +89,6 @@ const styles = StyleSheet.create({
   },
   rangeRoot: {
     flexDirection: 'row',
-  },
-  rightCrop: {
-    flexBasis: 5,
   },
 })
 
