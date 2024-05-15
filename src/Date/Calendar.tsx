@@ -33,6 +33,7 @@ export type BaseCalendarProps = {
   validRange?: ValidRangeType
   startYear?: number
   endYear?: number
+  highlightedDays?: CalendarDate[]
 
   // here they are optional but in final implementation they are required
   date?: CalendarDate
@@ -95,6 +96,7 @@ function Calendar(
     dates,
     validRange,
     dateMode,
+    highlightedDays,
   } = props
 
   const theme = useTheme()
@@ -196,6 +198,7 @@ function Calendar(
             selectColor={selectColor}
             roundness={theme.roundness}
             disableWeekDays={disableWeekDays}
+            highlightedDays={highlightedDays}
           />
         )}
         renderHeader={({ onPrev, onNext }) => (

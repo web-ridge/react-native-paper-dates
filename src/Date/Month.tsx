@@ -49,6 +49,7 @@ interface BaseMonthProps {
   selectColor: string
   roundness: number
   validRange?: ValidRangeType
+  highlightedDays?: CalendarDate[]
 
   // some of these should be required in final implementation
   startDate?: CalendarDate
@@ -91,6 +92,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
     disableWeekDays,
     locale,
     validRange,
+    highlightedDays,
   } = props
   const theme = useTheme()
   const textColorOnPrimary = useTextColorOnPrimary()
@@ -126,6 +128,9 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
 
           const day = new Date(year, month, dayOfMonth)
           const isToday = areDatesOnSameDay(day, today)
+          const isHighlighted = highlightedDays?.some((d) =>
+            areDatesOnSameDay(day, d)
+          )
 
           let inRange = false
           let disabled = isDisabled(day)
@@ -233,6 +238,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
             rightCrop,
             isToday,
             disabled,
+            isHighlighted,
           }
         }),
       }
@@ -248,6 +254,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
     endDate,
     dates,
     date,
+    highlightedDays,
   ])
 
   let textFont = theme?.isV3
@@ -345,6 +352,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
                   primaryColor={primaryColor}
                   disabled={gd.disabled}
                   textColorOnPrimary={textColorOnPrimary}
+                  isHighlighted={gd.isHighlighted}
                 />
               )
             )}

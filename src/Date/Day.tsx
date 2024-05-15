@@ -25,6 +25,7 @@ function Day(props: {
   selectColor: string
   isToday: boolean
   disabled: boolean
+  isHighlighted?: boolean
   onPressDate: (date: Date) => any
 }) {
   const {
@@ -42,6 +43,7 @@ function Day(props: {
     disabled,
     textColorOnPrimary,
     theme,
+    isHighlighted,
   } = props
   const onPress = React.useCallback(() => {
     onPressDate(new Date(year, month, day))
@@ -66,6 +68,8 @@ function Day(props: {
       baseTextColor = theme.colors.onPrimary
     } else if (inRange && theme.dark) {
       baseTextColor = theme.colors.onPrimaryContainer
+    } else if (isHighlighted) {
+      baseTextColor = theme.colors.primary
     } else {
       baseTextColor = theme.colors.onSurface
     }
@@ -80,6 +84,8 @@ function Day(props: {
     // Logic for themes other than V3
     if (selected || (inRange && theme.dark)) {
       baseTextColor = textColorOnPrimary
+    } else if (isHighlighted) {
+      baseTextColor = theme.colors.primary
     }
     // Since there's no additional logic provided for non-V3 themes in the step 2,
     // the final text color for non-V3 themes will simply be the base text color.
@@ -125,6 +131,7 @@ function Day(props: {
                   }
                 : undefined,
               { ...textFont },
+              isHighlighted ? styles.highlightedDay : undefined,
             ]}
             selectable={false}
           >
@@ -167,6 +174,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: 'transparent',
+  },
+  highlightedDay: {
+    fontWeight: '900',
   },
   flex1: {
     flex: 1,

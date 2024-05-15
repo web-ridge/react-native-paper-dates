@@ -93,6 +93,7 @@ export function DatePickerModalContent(
     startYear,
     endYear,
     statusBarOnTopOfBackdrop,
+    highlightedDays,
   } = props
   const anyProps = props as any
 
@@ -199,6 +200,7 @@ export function DatePickerModalContent(
             dateMode={dateMode}
             startYear={startYear}
             endYear={endYear}
+            highlightedDays={highlightedDays}
           />
         }
         calendarEdit={
