@@ -54,6 +54,7 @@ import {
   ru,
   ro,
   id,
+  ja,
 } from 'react-native-paper-dates'
 import { useCallback, useState } from 'react'
 
@@ -81,6 +82,7 @@ const locales: [string, TranslationsType][] = [
   ['ru', ru],
   ['ro', ro],
   ['id', id],
+  ['ja', ja],
 ]
 
 locales.forEach((locale) => {
