@@ -58,11 +58,19 @@ export function getDaysInMonth({
 export function getFirstDayOfMonth({
   year,
   month,
+  startWeekOnMonday,
 }: {
   year: number
   month: number
+  startWeekOnMonday: boolean
 }): number {
-  return new Date(year, month, 1).getDay()
+  let dayOfWeek = new Date(year, month, 1).getDay()
+  if (startWeekOnMonday) {
+    // Map Sunday (0) to 6, Monday (1) to 0, etc.
+    dayOfWeek = (dayOfWeek + 6) % 7
+  }
+
+  return dayOfWeek
 }
 
 export function useRangeChecker(validRange: ValidRangeType | undefined) {
@@ -167,22 +175,22 @@ export const totalMonths = startAtIndex * 2
 export const beginOffset = estimatedMonthHeight * startAtIndex
 export const gridCounts = new Array<number | undefined>(totalMonths)
 
-export function getGridCount(index: number) {
+export function getGridCount(index: number, startWeekOnMonday: boolean) {
   const cHeight = gridCounts[index]
   if (cHeight) {
     return cHeight
   }
   const monthDate = addMonths(new Date(), getRealIndex(index))
-  const h = getGridCountForDate(monthDate)
+  const h = getGridCountForDate(monthDate, startWeekOnMonday)
   gridCounts[index] = h
   return h
 }
 
-export function getGridCountForDate(date: Date) {
+export function getGridCountForDate(date: Date, startWeekOnMonday: boolean) {
   const year = date.getFullYear()
   const month = date.getMonth()
   const daysInMonth = getDaysInMonth({ year, month })
-  const dayOfWeek = getFirstDayOfMonth({ year, month })
+  const dayOfWeek = getFirstDayOfMonth({ year, month, startWeekOnMonday })
   return Math.ceil((daysInMonth + dayOfWeek) / 7)
 }
 

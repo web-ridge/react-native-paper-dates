@@ -49,6 +49,7 @@ interface BaseMonthProps {
   selectColor: string
   roundness: number
   validRange?: ValidRangeType
+  startWeekOnMonday: boolean
 
   // some of these should be required in final implementation
   startDate?: CalendarDate
@@ -91,6 +92,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
     disableWeekDays,
     locale,
     validRange,
+    startWeekOnMonday,
   } = props
   const theme = useTheme()
   const textColorOnPrimary = useTextColorOnPrimary()
@@ -111,10 +113,10 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
     const today = new Date()
 
     const daysInMonth = getDaysInMonth({ year, month })
-    const dayOfWeek = getFirstDayOfMonth({ year, month })
+    const dayOfWeek = getFirstDayOfMonth({ year, month, startWeekOnMonday })
     const emptyDays = dayOfWeek
 
-    return monthGrid(index).map(({ days, weekGrid }) => {
+    return monthGrid(index, startWeekOnMonday).map(({ days, weekGrid }) => {
       return {
         weekIndex: weekGrid,
         generatedDays: days.map((_, dayIndex) => {
@@ -248,6 +250,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
     endDate,
     dates,
     date,
+    startWeekOnMonday,
   ])
 
   let textFont = theme?.isV3
@@ -263,7 +266,12 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
   const iconSource = theme.isV3 ? iconSourceV3 : iconSourceV2
 
   return (
-    <View style={[styles.month, { height: getMonthHeight(scrollMode, index) }]}>
+    <View
+      style={[
+        styles.month,
+        { height: getMonthHeight(scrollMode, index, startWeekOnMonday) },
+      ]}
+    >
       <View
         style={[
           styles.monthHeader,
@@ -388,8 +396,8 @@ const styles = StyleSheet.create({
   opacity1: { opacity: 1 },
 })
 
-const monthGrid = (index: number) => {
-  return Array(getGridCount(index))
+const monthGrid = (index: number, startWeekOnMonday: boolean) => {
+  return Array(getGridCount(index, startWeekOnMonday))
     .fill(null)
     .map((_, weekGrid) => {
       const days = Array(7).fill(null)
@@ -405,7 +413,7 @@ function getIndexCount(index: number): number {
   return -(startAtIndex - index)
 }
 
-function weeksOffset(index: number): number {
+function weeksOffset(index: number, startWeekOnMonday: boolean): number {
   if (index === startAtIndex) {
     return 0
   }
@@ -413,12 +421,12 @@ function weeksOffset(index: number): number {
   if (index > startAtIndex) {
     for (let i = 0; i < index - startAtIndex; i++) {
       const cIndex = startAtIndex + i
-      off += gridCounts[cIndex] || getGridCount(cIndex)
+      off += gridCounts[cIndex] || getGridCount(cIndex, startWeekOnMonday)
     }
   } else {
     for (let i = 0; i < startAtIndex - index; i++) {
       const cIndex = startAtIndex - i - 1
-      off -= gridCounts[cIndex] || getGridCount(cIndex)
+      off -= gridCounts[cIndex] || getGridCount(cIndex, startWeekOnMonday)
     }
   }
   return off
@@ -431,10 +439,13 @@ export function getIndexFromHorizontalOffset(
   return startAtIndex + Math.floor(offset / width)
 }
 
-export function getIndexFromVerticalOffset(offset: number): number {
+export function getIndexFromVerticalOffset(
+  offset: number,
+  startWeekOnMonday: boolean
+): number {
   let estimatedIndex = startAtIndex + Math.ceil(offset / estimatedMonthHeight)
 
-  const realOffset = getVerticalMonthsOffset(estimatedIndex)
+  const realOffset = getVerticalMonthsOffset(estimatedIndex, startWeekOnMonday)
   const difference = (realOffset - beginOffset - offset) / estimatedMonthHeight
   if (difference >= 1 || difference <= -1) {
     estimatedIndex -= Math.floor(difference)
@@ -449,9 +460,12 @@ export function getHorizontalMonthOffset(index: number, width: number) {
   return width * index
 }
 
-export function getVerticalMonthsOffset(index: number) {
+export function getVerticalMonthsOffset(
+  index: number,
+  startWeekOnMonday: boolean
+) {
   const count = getIndexCount(index)
-  const ob = weeksOffset(index)
+  const ob = weeksOffset(index, startWeekOnMonday)
   const monthsHeight = weekSize * ob
   const c = monthsHeight + count * (dayNamesHeight + montHeaderHeight)
 
@@ -460,10 +474,11 @@ export function getVerticalMonthsOffset(index: number) {
 
 export function getMonthHeight(
   scrollMode: 'horizontal' | 'vertical',
-  index: number
+  index: number,
+  startWeekOnMonday: boolean
 ): number {
   const calendarHeight = getCalendarHeaderHeight(scrollMode)
-  const gc = getGridCount(index)
+  const gc = getGridCount(index, startWeekOnMonday)
 
   const currentMonthHeight = weekSize * gc
   const extraHeight =

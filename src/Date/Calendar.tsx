@@ -33,6 +33,7 @@ export type BaseCalendarProps = {
   validRange?: ValidRangeType
   startYear?: number
   endYear?: number
+  startWeekOnMonday?: boolean
 
   // here they are optional but in final implementation they are required
   date?: CalendarDate
@@ -95,6 +96,7 @@ function Calendar(
     dates,
     validRange,
     dateMode,
+    startWeekOnMonday,
   } = props
 
   const theme = useTheme()
@@ -177,6 +179,7 @@ function Calendar(
         initialIndex={getInitialIndex(firstDate)}
         selectedYear={selectedYear}
         scrollMode={scrollMode}
+        startWeekOnMonday={startWeekOnMonday || false}
         renderItem={({ index }) => (
           <Month
             locale={locale}
@@ -196,6 +199,7 @@ function Calendar(
             selectColor={selectColor}
             roundness={theme.roundness}
             disableWeekDays={disableWeekDays}
+            startWeekOnMonday={startWeekOnMonday || false}
           />
         )}
         renderHeader={({ onPrev, onNext }) => (
@@ -205,6 +209,7 @@ function Calendar(
             onNext={onNext}
             scrollMode={scrollMode}
             disableWeekDays={disableWeekDays}
+            startWeekOnMonday={startWeekOnMonday || false}
           />
         )}
       />

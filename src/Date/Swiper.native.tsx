@@ -56,6 +56,7 @@ function SwiperInner({
   initialIndex,
   width,
   height,
+  startWeekOnMonday,
 }: SwiperProps & { width: number; height: number }) {
   const idx = React.useRef<number>(initialIndex)
   const isHorizontal = scrollMode === 'horizontal'
@@ -75,7 +76,7 @@ function SwiperInner({
       }
       const offset = isHorizontal
         ? getHorizontalMonthOffset(index, width)
-        : getVerticalMonthsOffset(index) - montHeaderHeight
+        : getVerticalMonthsOffset(index, startWeekOnMonday) - montHeaderHeight
 
       if (isHorizontal) {
         parentRef.current.scrollTo({
@@ -91,7 +92,7 @@ function SwiperInner({
         })
       }
     },
-    [parentRef, isHorizontal, width, height]
+    [parentRef, isHorizontal, width, height, startWeekOnMonday]
   )
 
   const onPrev = React.useCallback(() => {
@@ -112,7 +113,10 @@ function SwiperInner({
       const viewSize = e.nativeEvent.layoutMeasurement
       const newIndex = isHorizontal
         ? Math.floor(contentOffset.x / viewSize.width)
-        : getIndexFromVerticalOffset(contentOffset.y - beginOffset)
+        : getIndexFromVerticalOffset(
+            contentOffset.y - beginOffset,
+            startWeekOnMonday
+          )
 
       if (newIndex === 0) {
         return
@@ -123,7 +127,7 @@ function SwiperInner({
         setVisibleIndexes(getVisibleArray(newIndex, { isHorizontal, height }))
       }
     },
-    [idx, height, isHorizontal]
+    [idx, height, isHorizontal, startWeekOnMonday]
   )
 
   const renderProps = {
@@ -179,7 +183,10 @@ function SwiperInner({
                   style={{
                     top: isHorizontal
                       ? 0
-                      : getVerticalMonthsOffset(visibleIndexes[vi]),
+                      : getVerticalMonthsOffset(
+                          visibleIndexes[vi],
+                          startWeekOnMonday
+                        ),
                     left: isHorizontal
                       ? getHorizontalMonthOffset(visibleIndexes[vi], width)
                       : 0,
@@ -189,7 +196,11 @@ function SwiperInner({
                     width: isHorizontal ? width : undefined,
                     height: isHorizontal
                       ? undefined
-                      : getMonthHeight(scrollMode, visibleIndexes[vi]),
+                      : getMonthHeight(
+                          scrollMode,
+                          visibleIndexes[vi],
+                          startWeekOnMonday
+                        ),
                   }}
                 >
                   {renderItem({

@@ -29,6 +29,7 @@ function DatePickerInputWithoutModal(
     onChangeText,
     inputEnabled,
     disableStatusBarPadding,
+    startWeekOnMonday,
     ...rest
   }: DatePickerInputProps & {
     modal?: (params: {
@@ -43,6 +44,7 @@ function DatePickerInputWithoutModal(
       endYear: DatePickerInputProps['endYear']
       inputEnabled: DatePickerInputProps['inputEnabled']
       disableStatusBarPadding: DatePickerInputProps['disableStatusBarPadding']
+      startWeekOnMonday?: DatePickerInputProps['startWeekOnMonday']
     }) => any
     inputButton?: React.ReactNode
   },
@@ -118,6 +120,7 @@ function DatePickerInputWithoutModal(
         endYear,
         inputEnabled,
         disableStatusBarPadding,
+        startWeekOnMonday,
       })}
     </>
   )

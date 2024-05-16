@@ -60,6 +60,7 @@ function DatePickerInput(
         endYear,
         inputEnabled,
         disableStatusBarPadding,
+        startWeekOnMonday,
       }) =>
         withModal ? (
           <DatePickerModal
@@ -81,6 +82,7 @@ function DatePickerInput(
             animationType={animationType}
             presentationStyle={presentationStyle}
             label={rest.label as any}
+            startWeekOnMonday={startWeekOnMonday}
           />
         ) : null
       }
