@@ -52,6 +52,7 @@ export default function ReadMeExampleRange() {
         // animationType="slide" // optional, default is slide on ios/android and none on web
         // startYear={2000} // optional, default is 1800
         // endYear={2100} // optional, default is 2200
+        // startWeekOnMonday={true} // optional, default is false
       />
     </>
   )

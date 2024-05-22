@@ -6,31 +6,35 @@ import { DisableWeekDaysType, showWeekDay } from './dateUtils'
 
 export const dayNamesHeight = 44
 
-// TODO: wait for a better Intl api ;-)
-const weekdays = [
-  new Date(2020, 7, 2),
-  new Date(2020, 7, 3),
-  new Date(2020, 7, 4),
-  new Date(2020, 7, 5),
-  new Date(2020, 7, 6),
-  new Date(2020, 7, 7),
-  new Date(2020, 7, 8),
-]
-
 function DayNames({
   disableWeekDays,
   locale,
+  startWeekOnMonday,
 }: {
   locale: undefined | string
   disableWeekDays?: DisableWeekDaysType
+  startWeekOnMonday: boolean
 }) {
   const theme = useTheme()
   const shortDayNames = React.useMemo<string[]>(() => {
+    // TODO: wait for a better Intl api ;-)
+    const weekdays = [
+      new Date(2020, 7, 2),
+      new Date(2020, 7, 3),
+      new Date(2020, 7, 4),
+      new Date(2020, 7, 5),
+      new Date(2020, 7, 6),
+      new Date(2020, 7, 7),
+      new Date(2020, 7, 8),
+    ]
+    if (startWeekOnMonday) {
+      weekdays.push(weekdays.shift() as Date)
+    }
     const formatter = new Intl.DateTimeFormat(locale, {
       weekday: 'narrow',
     })
     return weekdays.map((date) => formatter.format(date))
-  }, [locale])
+  }, [locale, startWeekOnMonday])
 
   return (
     <View

@@ -20,6 +20,7 @@ function Swiper({
   renderFooter,
   selectedYear,
   initialIndex,
+  startWeekOnMonday,
 }: SwiperProps) {
   const isHorizontal = scrollMode === 'horizontal'
   const [index, setIndex] = React.useState(initialIndex)
@@ -66,6 +67,7 @@ function Swiper({
               initialIndex={initialIndex}
               estimatedHeight={estimatedMonthHeight}
               renderItem={renderItem}
+              startWeekOnMonday={startWeekOnMonday}
             />
           )}
         </AutoSizer>
@@ -83,12 +85,14 @@ function VerticalScroller({
   initialIndex,
   estimatedHeight,
   renderItem,
+  startWeekOnMonday,
 }: {
   renderItem: (renderProps: RenderProps) => any
   width: number
   height: number
   initialIndex: number
   estimatedHeight: number
+  startWeekOnMonday: boolean
 }) {
   const idx = React.useRef<number>(initialIndex)
   const [visibleIndexes, setVisibleIndexes] = React.useState<number[]>(
@@ -101,7 +105,8 @@ function VerticalScroller({
     if (!element) {
       return
     }
-    const top = getVerticalMonthsOffset(idx.current) - montHeaderHeight
+    const top =
+      getVerticalMonthsOffset(idx.current, startWeekOnMonday) - montHeaderHeight
 
     element.scrollTo({
       top,
@@ -118,14 +123,14 @@ function VerticalScroller({
       }
 
       const offset = top - beginOffset
-      const index = getIndexFromVerticalOffset(offset)
+      const index = getIndexFromVerticalOffset(offset, startWeekOnMonday)
 
       if (idx.current !== index) {
         idx.current = index
         setVisibleIndexesThrottled(visibleArray(index))
       }
     },
-    [setVisibleIndexesThrottled]
+    [setVisibleIndexesThrottled, startWeekOnMonday]
   )
 
   return (
@@ -153,12 +158,17 @@ function VerticalScroller({
             style={{
               willChange: 'transform',
               transform: `translateY(${getVerticalMonthsOffset(
-                visibleIndexes[vi]
+                visibleIndexes[vi],
+                startWeekOnMonday
               )}px)`,
               left: 0,
               right: 0,
               position: 'absolute',
-              height: getMonthHeight('vertical', visibleIndexes[vi]),
+              height: getMonthHeight(
+                'vertical',
+                visibleIndexes[vi],
+                startWeekOnMonday
+              ),
             }}
           >
             {renderItem({

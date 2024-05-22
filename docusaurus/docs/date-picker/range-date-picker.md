@@ -134,6 +134,10 @@ The start year when the component is rendered. Defaults to `1800`.
 `Type: number | undefined`  
 The end year when the component is rendered. Defaults to `2200`.
 
+**startWeekOnMonday**  
+`Type: boolean | undefined`  
+Flag indicating if calendar grid sould show monday as the first column. Defaults to `false`.
+
 **closeIcon**  
 `Type: string | undefined`  
 The icon used to close the component. Defaults to `close`. You can pass the name of an icon from [MaterialCommunityIcons](https://materialdesignicons.com/).

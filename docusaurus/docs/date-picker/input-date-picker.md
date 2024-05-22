@@ -119,6 +119,10 @@ The start year when the component is rendered. Defaults to `1800`.
 `Type: number | undefined`  
 The end year when the component is rendered. Defaults to `2200`.
 
+**startWeekOnMonday**  
+`Type: boolean | undefined`  
+Flag indicating if calendar grid sould show monday as the first column. Defaults to `false`.
+
 **inputEnabled**  
 `Type: boolean | undefined`  
 Flag indicating if the component should be enabled or not. Behavior similarly to `disabled`. Defaults to `true`.

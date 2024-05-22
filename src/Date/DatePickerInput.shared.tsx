@@ -27,6 +27,7 @@ export type DatePickerInputProps = {
   disableStatusBarPadding?: boolean
   animationType?: 'slide' | 'fade' | 'none'
   presentationStyle?: 'pageSheet' | 'overFullScreen'
+  startWeekOnMonday?: boolean
 } & Omit<
   React.ComponentProps<typeof TextInput>,
   'value' | 'onChange' | 'onChangeText' | 'inputMode'

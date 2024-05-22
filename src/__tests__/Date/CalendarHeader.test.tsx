@@ -11,6 +11,7 @@ it('renders CalendarHeader', () => {
         onPrev={() => null}
         onNext={() => null}
         scrollMode={'vertical'}
+        startWeekOnMonday={false}
       />
     )
     .toJSON()

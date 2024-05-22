@@ -21,6 +21,7 @@ export type SwiperProps = {
   renderHeader?: (renderProps: RenderProps) => any
   renderFooter?: (renderProps: RenderProps) => any
   selectedYear: number | undefined
+  startWeekOnMonday: boolean
 }
 
 export function useYearChange(
