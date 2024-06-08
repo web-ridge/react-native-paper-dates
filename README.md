@@ -38,7 +38,7 @@ Check out the official docs: [web-ridge.github.io/react-native-paper-dates](http
 
 ## Maintainers
 
-[RichardLindhout](https://twitter.com/RichardLindhout) from [web_ridge](https://twitter.com/web_ridge)
+[RichardLindhout](https://twitter.com/RichardLindhout) from [web_ridge](https://twitter.com/web_ridge)   
 [Brandon Fitzwater](https://github.com/iM-GeeKy)
 
 
