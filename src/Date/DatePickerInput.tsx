@@ -40,6 +40,7 @@ function DatePickerInput(
             size={rest.iconSize ?? 24}
             icon={calendarIcon}
             color={rest.iconColor ?? undefined}
+            forceTextInputFocus={false}
             disabled={rest.disabled}
             onPress={() => setVisible(true)}
             style={rest.iconStyle as StyleProp<ViewStyle>}
