@@ -116,9 +116,9 @@ export function areDatesOnSameDay(a: Date, b?: Date | null | undefined) {
   }
 
   return (
-    a.getFullYear() === b.getFullYear() &&
-    a.getMonth() === b.getMonth() &&
-    a.getDate() === b.getDate()
+    a.getUTCFullYear() === b.getUTCFullYear() &&
+    a.getUTCMonth() === b.getUTCMonth() &&
+    a.getUTCDate() === b.getUTCDate()
   )
 }
 
