@@ -24,6 +24,7 @@ import {
   MD3DarkTheme,
   MD3LightTheme,
   MD2LightTheme,
+  MD2DarkTheme,
 } from 'react-native-paper'
 import {
   DatePickerModal,
@@ -572,7 +573,7 @@ export default function AppWithProviders() {
   const colorScheme = useColorScheme()
   const [materialYouEnabled, setMaterialYouEnabled] = useState(true)
   const m3Theme = colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme
-  const m2Theme = colorScheme === 'dark' ? MD2LightTheme : MD2LightTheme
+  const m2Theme = colorScheme === 'dark' ? MD2DarkTheme : MD2LightTheme
 
   return (
     <SafeAreaProvider>
