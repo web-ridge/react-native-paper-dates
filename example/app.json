@@ -26,6 +26,7 @@
     },
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "userInterfaceStyle": "automatic"
   }
 }
