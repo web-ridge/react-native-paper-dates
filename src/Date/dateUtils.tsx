@@ -220,11 +220,15 @@ export function useInputFormatter({ locale }: { locale: string | undefined }) {
 }
 
 export function getStartOfDay(d: Date): Date {
-  return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0)
+  const startOfDay = new Date(d)
+  startOfDay.setUTCHours(0, 0, 0, 0)
+  return startOfDay
 }
 
 export function getEndOfDay(d: Date): Date {
-  return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59)
+  const endOfDay = new Date(d)
+  endOfDay.setUTCHours(23, 59, 59, 999)
+  return endOfDay
 }
 
 export function useInputFormat({
