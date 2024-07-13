@@ -1,6 +1,6 @@
 import type { ValidRangeType } from './Calendar'
 import type * as React from 'react'
-import type { TextInput } from 'react-native-paper'
+import type { TextInput, TextInputIconProps } from 'react-native-paper'
 
 export type DatePickerInputProps = {
   inputMode: 'start' | 'end'
@@ -17,6 +17,7 @@ export type DatePickerInputProps = {
   iconSize?: number
   iconStyle?: React.CSSProperties
   iconColor?: string
+  iconProps?: Partial<TextInputIconProps>
   saveLabel?: string
   saveLabelDisabled?: boolean
   uppercase?: boolean

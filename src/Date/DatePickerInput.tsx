@@ -10,6 +10,7 @@ import { Platform, StyleProp, ViewStyle } from 'react-native'
 function DatePickerInput(
   {
     withModal = true,
+    iconProps = {},
     calendarIcon = 'calendar',
     animationType = Platform.select({ web: 'none', default: 'slide' }),
     presentationStyle = 'overFullScreen',
@@ -45,6 +46,7 @@ function DatePickerInput(
             onPress={() => setVisible(true)}
             style={rest.iconStyle as StyleProp<ViewStyle>}
             testID={`${rest.testID || 'date-picker'}-icon-button`}
+            {...iconProps}
           />
         ) : null
       }
