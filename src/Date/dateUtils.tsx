@@ -1,5 +1,5 @@
-import * as React from 'react'
-import { useLatest } from '../utils'
+import { useCallback, useMemo } from 'react'
+import { useLatest } from '../shared/utils'
 import type { ValidRangeType } from './Calendar'
 
 export type DisableWeekDaysType = number[]
@@ -86,7 +86,7 @@ export function useRangeChecker(validRange: ValidRangeType | undefined) {
 
   const validDisabledDatesRef = useLatest(validRange?.disabledDates)
 
-  const isWithinValidRange = React.useCallback(
+  const isWithinValidRange = useCallback(
     (day: Date) => {
       return isDateWithinOptionalRange(day, {
         startUnix: startUnix,
@@ -96,7 +96,7 @@ export function useRangeChecker(validRange: ValidRangeType | undefined) {
     [startUnix, endUnix]
   )
 
-  const isDisabled = React.useCallback(
+  const isDisabled = useCallback(
     (day: Date) => {
       return validDisabledDatesRef.current
         ? validDisabledDatesRef.current.some((disabledDate) =>
@@ -210,7 +210,7 @@ export function getInitialIndex(date: Date | undefined) {
 }
 
 export function useInputFormatter({ locale }: { locale: string | undefined }) {
-  return React.useMemo(() => {
+  return useMemo(() => {
     return new Intl.DateTimeFormat(locale, {
       month: '2-digit',
       day: '2-digit',
@@ -218,12 +218,15 @@ export function useInputFormatter({ locale }: { locale: string | undefined }) {
     })
   }, [locale])
 }
+
 export function getStartOfDay(d: Date): Date {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0)
 }
+
 export function getEndOfDay(d: Date): Date {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59)
 }
+
 export function useInputFormat({
   formatter,
   locale,
@@ -231,7 +234,7 @@ export function useInputFormat({
   formatter: Intl.DateTimeFormat
   locale: string | undefined
 }) {
-  return React.useMemo(() => {
+  return useMemo(() => {
     // TODO: something cleaner and more universal?
     const inputDate = formatter.format(new Date(2020, 10 - 1, 1))
     return inputDate

@@ -1,6 +1,6 @@
+import React from 'react'
 import { Animated, StyleSheet } from 'react-native'
-import * as React from 'react'
-import { useHeaderBackgroundColor } from '../utils'
+import { useHeaderBackgroundColor } from '../shared/utils'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default function DatePickerModalHeaderBackground({
@@ -10,6 +10,7 @@ export default function DatePickerModalHeaderBackground({
 }) {
   const backgroundColor = useHeaderBackgroundColor()
   const insets = useSafeAreaInsets()
+
   return (
     <Animated.View
       style={[

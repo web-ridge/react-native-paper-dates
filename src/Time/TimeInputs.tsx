@@ -1,4 +1,3 @@
-import * as React from 'react'
 import {
   View,
   StyleSheet,
@@ -16,9 +15,12 @@ import {
 } from './timeUtils'
 import TimeInput from './TimeInput'
 import AmPmSwitcher from './AmPmSwitcher'
-import { useLatest } from '../utils'
+import { useLatest } from '../shared/utils'
 import Color from 'color'
 import { getTranslation } from '../translations/utils'
+import { memo, useCallback, useRef } from 'react'
+import React from 'react'
+import { sharedStyles } from '../shared/styles'
 
 function TimeInputs({
   hours,
@@ -45,24 +47,25 @@ function TimeInputs({
   inputFontSize?: number
   locale?: string
 }) {
-  const startInput = React.useRef<TextInputNative | null>(null)
-  const endInput = React.useRef<TextInputNative | null>(null)
-  const dimensions = useWindowDimensions()
-  const isLandscape = dimensions.width > dimensions.height
   const theme = useTheme()
 
-  const onSubmitStartInput = React.useCallback(() => {
+  const startInput = useRef<TextInputNative | null>(null)
+  const endInput = useRef<TextInputNative | null>(null)
+  const dimensions = useWindowDimensions()
+  const isLandscape = dimensions.width > dimensions.height
+  const minutesRef = useLatest(minutes)
+
+  const onSubmitStartInput = useCallback(() => {
     if (endInput.current) {
       endInput.current.focus()
     }
   }, [endInput])
 
-  const onSubmitEndInput = React.useCallback(() => {
+  const onSubmitEndInput = useCallback(() => {
     // TODO: close modal and persist time
   }, [])
 
-  const minutesRef = useLatest(minutes)
-  const onChangeHours = React.useCallback(
+  const onChangeHours = useCallback(
     (newHours: number) => {
       onChange({
         hours: newHours,
@@ -74,12 +77,7 @@ function TimeInputs({
   )
 
   return (
-    <View
-      style={[
-        styles.inputContainer,
-        isLandscape && styles.inputContainerLandscape,
-      ]}
-    >
+    <View style={[styles.inputContainer, isLandscape && sharedStyles.root]}>
       <View style={styles.column}>
         <TimeInput
           ref={startInput}
@@ -127,7 +125,7 @@ function TimeInputs({
           { marginBottom: inputType === 'keyboard' ? 24 : 0 },
         ]}
       >
-        <View style={styles.spaceDot} />
+        <View style={sharedStyles.root} />
         <View
           style={[
             styles.dot,
@@ -149,7 +147,7 @@ function TimeInputs({
             },
           ]}
         />
-        <View style={styles.spaceDot} />
+        <View style={sharedStyles.root} />
       </View>
       <View style={styles.column}>
         <TimeInput
@@ -200,33 +198,29 @@ function TimeInputs({
 }
 
 const styles = StyleSheet.create({
+  betweenDot: {
+    height: 12,
+  },
   column: {
     flexDirection: 'column',
-  },
-  spaceBetweenInputsAndSwitcher: { width: 12 },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  inputContainerLandscape: {
-    flex: 1,
-  },
-  hoursAndMinutesSeparator: {
-    fontSize: 65,
-    width: 24,
-    alignItems: 'center',
-  },
-  spaceDot: {
-    flex: 1,
   },
   dot: {
     width: 7,
     height: 7,
     borderRadius: 7 / 2,
   },
-  betweenDot: {
-    height: 12,
+  hoursAndMinutesSeparator: {
+    fontSize: 65,
+    width: 24,
+    alignItems: 'center',
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  spaceBetweenInputsAndSwitcher: {
+    width: 12,
   },
 })
 
-export default React.memo(TimeInputs)
+export default memo(TimeInputs)

@@ -1,8 +1,8 @@
-import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Text } from 'react-native-paper'
 import { circleSize } from './timeUtils'
-import { useTextColorOnPrimary } from '../utils'
+import { useTextColorOnPrimary } from '../shared/utils'
+import React, { memo } from 'react'
 
 function AnalogClockHours({
   is24Hour,
@@ -22,14 +22,14 @@ function AnalogClockHours({
           key={i}
           pointerEvents="none"
           style={[
-            styles.outerHourRoot,
+            styles.hourRoot,
             {
               top: a[1] || 0,
               left: a[0] || 0,
             },
           ]}
         >
-          <View style={styles.outerHourInner}>
+          <View style={styles.hourInner}>
             {/* Display 00 instead of 12 for AM hours */}
             <Text
               maxFontSizeMultiplier={1.5}
@@ -54,14 +54,14 @@ function AnalogClockHours({
               key={i}
               pointerEvents="none"
               style={[
-                styles.innerHourRoot,
+                styles.hourRoot,
                 {
                   top: a[1] || 0,
                   left: a[0] || 0,
                 },
               ]}
             >
-              <View style={styles.innerHourInner}>
+              <View style={styles.hourInner}>
                 <Text
                   maxFontSizeMultiplier={1.5}
                   selectable={false}
@@ -83,7 +83,10 @@ function AnalogClockHours({
 }
 
 const styles = StyleSheet.create({
-  outerHourRoot: {
+  hourInner: {
+    borderRadius: 24,
+  },
+  hourRoot: {
     position: 'absolute',
     justifyContent: 'center',
     alignItems: 'center',
@@ -94,19 +97,6 @@ const styles = StyleSheet.create({
     marginTop: -24,
     borderRadius: 24,
   },
-  outerHourInner: { borderRadius: 24 },
-  innerHourRoot: {
-    position: 'absolute',
-    zIndex: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 48,
-    height: 48,
-    marginLeft: -24,
-    marginTop: -24,
-    borderRadius: 24,
-  },
-  innerHourInner: { borderRadius: 24 },
 })
 
 function getHourNumbers(
@@ -131,4 +121,4 @@ function getHourNumbers(
     })
 }
 
-export default React.memo(AnalogClockHours)
+export default memo(AnalogClockHours)

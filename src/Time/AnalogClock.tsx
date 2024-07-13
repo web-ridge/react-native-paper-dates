@@ -17,12 +17,18 @@ import {
   hourTypes,
   PossibleClockTypes,
 } from './timeUtils'
-import * as React from 'react'
-import { useLatest } from '../utils'
+import { useLatest } from '../shared/utils'
 import AnalogClockHours from './AnalogClockHours'
 import AnimatedClockSwitcher from './AnimatedClockSwitcher'
 import AnalogClockMinutes from './AnalogClockMinutes'
 import { DisplayModeContext } from '../contexts/DisplayModeContext'
+import { memo, useCallback, useContext, useRef } from 'react'
+import React from 'react'
+
+function returnTrue() {
+  return true
+}
+
 function AnalogClock({
   hours,
   minutes,
@@ -40,11 +46,15 @@ function AnalogClock({
     focused?: undefined | PossibleClockTypes
   }) => any
 }) {
-  const theme = useTheme()
-  const { mode } = React.useContext(DisplayModeContext)
-  // used to make pointer shorter if hours are selected and above 12
   const shortPointer = hours >= 12 && is24Hour
-  const clockRef = React.useRef<View | null>(null)
+
+  const theme = useTheme()
+
+  const { mode } = useContext(DisplayModeContext)
+
+  // used to make pointer shorter if hours are selected and above 12
+  const clockRef = useRef<View | null>(null)
+
   // Hooks are nice, sometimes... :-)..
   // We need the latest values, since the onPointerMove uses a closure to the function
   const hoursRef = useLatest(hours)
@@ -53,7 +63,8 @@ function AnalogClock({
   const focusedRef = useLatest(focused)
   const is24HourRef = useLatest(is24Hour)
   const modeRef = useLatest(mode)
-  const onPointerMove = React.useCallback(
+
+  const onPointerMove = useCallback(
     (e: GestureResponderEvent, final: boolean) => {
       let x = e.nativeEvent.locationX
       let y = e.nativeEvent.locationY
@@ -105,7 +116,7 @@ function AnalogClock({
     },
     [focusedRef, is24HourRef, hoursRef, onChangeRef, minutesRef, modeRef]
   )
-  const panResponder = React.useRef(
+  const panResponder = useRef(
     PanResponder.create({
       onPanResponderGrant: (e) => onPointerMove(e, false),
       onPanResponderMove: (e) => onPointerMove(e, false),
@@ -118,6 +129,7 @@ function AnalogClock({
       onShouldBlockNativeResponder: returnTrue,
     })
   ).current
+
   const dynamicSize = focused === clockTypes.hours && shortPointer ? 33 : 0
   const pointerNumber = focused === clockTypes.hours ? hours : minutes
   const degreesPerNumber = focused === clockTypes.hours ? 30 : 6
@@ -188,36 +200,38 @@ function AnalogClock({
     </View>
   )
 }
+
 const styles = StyleSheet.create({
-  clock: {
-    height: circleSize,
-    width: circleSize,
-    position: 'relative',
+  center: {
+    alignItems: 'center',
     justifyContent: 'center',
+  },
+  clock: {
     alignItems: 'center',
     borderRadius: circleSize / 2,
+    height: circleSize,
+    justifyContent: 'center',
+    position: 'relative',
+    width: circleSize,
+  },
+  endPoint: {
+    borderRadius: 24,
+    bottom: -23,
+    height: 48,
+    position: 'absolute',
+    right: 0,
+    width: 48,
+  },
+  line: {
+    borderRadius: 4,
+    height: 2,
+    position: 'absolute',
   },
   middlePoint: {
     borderRadius: 4,
     height: 8,
     width: 8,
   },
-  center: { justifyContent: 'center', alignItems: 'center' },
-  endPoint: {
-    borderRadius: 24,
-    height: 48,
-    width: 48,
-    position: 'absolute',
-    right: 0,
-    bottom: -23,
-  },
-  line: {
-    position: 'absolute',
-    height: 2,
-    borderRadius: 4,
-  },
 })
-function returnTrue() {
-  return true
-}
-export default React.memo(AnalogClock)
+
+export default memo(AnalogClock)

@@ -1,5 +1,5 @@
-import * as React from 'react'
 import Color from 'color'
+import { useMemo } from 'react'
 import { MD2Theme, useTheme } from 'react-native-paper'
 
 export const circleSize = 256
@@ -64,7 +64,6 @@ export const clockTypes: ClockTypeMap = {
 }
 
 // Code inspiration and copied from: https://github.com/ShaneGH/analogue-time-picker/blob/master/src/utils/angle.ts
-
 const outerHeight = 34
 const _30 = Math.PI / 6
 const _12 = Math.PI / 30
@@ -157,7 +156,7 @@ export function getAngle(left: number, top: number, size: number) {
 
 export function useSwitchColors(highlighted: boolean) {
   const theme = useTheme()
-  const backgroundColor = React.useMemo<string>(() => {
+  const backgroundColor = useMemo<string>(() => {
     if (theme.dark) {
       if (highlighted) {
         return theme.isV3
@@ -177,7 +176,7 @@ export function useSwitchColors(highlighted: boolean) {
     return theme.colors.surface
   }, [highlighted, theme])
 
-  const color = React.useMemo<string>(() => {
+  const color = useMemo<string>(() => {
     if (highlighted && !theme.dark) {
       return theme.isV3 ? theme.colors.onSurfaceVariant : theme.colors.primary
     }
@@ -198,7 +197,7 @@ export function useSwitchColors(highlighted: boolean) {
 
 export function useInputColors(highlighted: boolean) {
   const theme = useTheme()
-  const backgroundColor = React.useMemo<string>(() => {
+  const backgroundColor = useMemo<string>(() => {
     if (theme.dark) {
       if (highlighted) {
         return theme.isV3
@@ -222,7 +221,7 @@ export function useInputColors(highlighted: boolean) {
     return Color(theme.colors.surface).darken(0.1).hex()
   }, [highlighted, theme])
 
-  const color = React.useMemo<string>(() => {
+  const color = useMemo<string>(() => {
     if (theme.isV3) {
       if (!highlighted) {
         return theme.isV3 ? theme.colors.onSurface : theme.colors.onBackground

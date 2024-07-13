@@ -1,4 +1,3 @@
-import * as React from 'react'
 import {
   NativeScrollEvent,
   NativeSyntheticEvent,
@@ -17,15 +16,9 @@ import {
 import { SwiperProps, useYearChange } from './SwiperUtils'
 import { beginOffset, estimatedMonthHeight, totalMonths } from './dateUtils'
 import AutoSizer from './AutoSizer'
-
-const styles = StyleSheet.create({
-  viewPager: {
-    flex: 1,
-  },
-  inner: {
-    position: 'relative',
-  },
-})
+import { memo, useCallback, useRef, useState } from 'react'
+import React from 'react'
+import { sharedStyles } from '../shared/styles'
 
 function getVisibleArray(
   i: number,
@@ -58,15 +51,15 @@ function SwiperInner({
   height,
   startWeekOnMonday,
 }: SwiperProps & { width: number; height: number }) {
-  const idx = React.useRef<number>(initialIndex)
+  const idx = useRef<number>(initialIndex)
   const isHorizontal = scrollMode === 'horizontal'
-  const [visibleIndexes, setVisibleIndexes] = React.useState<number[]>(
+  const [visibleIndexes, setVisibleIndexes] = useState<number[]>(
     getVisibleArray(initialIndex, { isHorizontal, height })
   )
 
-  const parentRef = React.useRef<ScrollView | null>(null)
+  const parentRef = useRef<ScrollView | null>(null)
 
-  const scrollTo = React.useCallback(
+  const scrollTo = useCallback(
     (index: number, animated: boolean) => {
       idx.current = index
       setVisibleIndexes(getVisibleArray(index, { isHorizontal, height }))
@@ -95,19 +88,19 @@ function SwiperInner({
     [parentRef, isHorizontal, width, height, startWeekOnMonday]
   )
 
-  const onPrev = React.useCallback(() => {
+  const onPrev = useCallback(() => {
     scrollTo(idx.current - 1, true)
   }, [scrollTo, idx])
 
-  const onNext = React.useCallback(() => {
+  const onNext = useCallback(() => {
     scrollTo(idx.current + 1, true)
   }, [scrollTo, idx])
 
-  const scrollToInitial = React.useCallback(() => {
+  const scrollToInitial = useCallback(() => {
     scrollTo(idx.current, false)
   }, [scrollTo])
 
-  const onMomentumScrollEnd = React.useCallback(
+  const onMomentumScrollEnd = useCallback(
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
       const contentOffset = e.nativeEvent.contentOffset
       const viewSize = e.nativeEvent.layoutMeasurement
@@ -155,7 +148,7 @@ function SwiperInner({
         ref={parentRef}
         horizontal={isHorizontal}
         pagingEnabled={isHorizontal}
-        style={styles.viewPager}
+        style={sharedStyles.root}
         onMomentumScrollEnd={onMomentumScrollEnd}
         onScrollEndDrag={onMomentumScrollEnd}
         onLayout={scrollToInitial}
@@ -219,4 +212,10 @@ function SwiperInner({
   )
 }
 
-export default React.memo(Swiper)
+const styles = StyleSheet.create({
+  inner: {
+    position: 'relative',
+  },
+})
+
+export default memo(Swiper)

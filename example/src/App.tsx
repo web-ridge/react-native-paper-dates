@@ -1,4 +1,3 @@
-import * as React from 'react'
 import {
   StyleSheet,
   ScrollView,
@@ -57,7 +56,8 @@ import {
   ja,
   th,
 } from 'react-native-paper-dates'
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
+import React from 'react'
 
 const presentationStyles = ['overFullScreen', 'pageSheet'] as const
 const locales: [string, TranslationsType][] = [
@@ -124,7 +124,7 @@ function App({
 
   /** Constants. */
   const maxFontSizeMultiplier = 1.5
-  const dateFormatter = React.useMemo(
+  const dateFormatter = useMemo(
     () =>
       new Intl.DateTimeFormat(locale, {
         day: 'numeric',
@@ -133,7 +133,7 @@ function App({
       }),
     [locale]
   )
-  const timeFormatter = React.useMemo(
+  const timeFormatter = useMemo(
     () =>
       new Intl.DateTimeFormat(locale, {
         hour: '2-digit',
@@ -570,7 +570,7 @@ function App({
 
 export default function AppWithProviders() {
   const colorScheme = useColorScheme()
-  const [materialYouEnabled, setMaterialYouEnabled] = React.useState(true)
+  const [materialYouEnabled, setMaterialYouEnabled] = useState(true)
   const m3Theme = colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme
   const m2Theme = colorScheme === 'dark' ? MD2LightTheme : MD2LightTheme
 

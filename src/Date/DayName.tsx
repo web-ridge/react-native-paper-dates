@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { memo } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { MD2Theme, Text, useTheme } from 'react-native-paper'
 
@@ -24,8 +24,16 @@ function DayName({ label }: { label: string }) {
     </View>
   )
 }
+
 const styles = StyleSheet.create({
-  dayName: { flex: 1, alignItems: 'center' },
-  dayNameLabel: { fontSize: 14, opacity: 0.7 },
+  dayName: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  dayNameLabel: {
+    fontSize: 14,
+    opacity: 0.7,
+  },
 })
-export default React.memo(DayName)
+
+export default memo(DayName)

@@ -1,4 +1,3 @@
-import * as React from 'react'
 import {
   Modal,
   StyleSheet,
@@ -13,6 +12,9 @@ import DatePickerModalContent, {
   DatePickerModalContentRangeProps,
   DatePickerModalContentSingleProps,
 } from './DatePickerModalContent'
+import React, { memo } from 'react'
+import { sharedStyles } from '../shared/styles'
+import { supportedOrientations } from '../shared/utils'
 
 interface DatePickerModalProps {
   visible: boolean
@@ -41,8 +43,6 @@ export function DatePickerModal(
     | DatePickerModalSingleProps
     | DatePickerModalMultiProps
 ) {
-  const theme = useTheme()
-  const dimensions = useWindowDimensions()
   const {
     visible,
     animationType,
@@ -59,11 +59,13 @@ export function DatePickerModal(
       web: 'none',
       default: 'slide',
     })
-
   const isPageSheet = presentationStyle === 'pageSheet' && Platform.OS === 'ios'
 
+  const theme = useTheme()
+  const dimensions = useWindowDimensions()
+
   return (
-    <View style={[StyleSheet.absoluteFill]} pointerEvents="box-none">
+    <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
       <Modal
         animationType={animationTypeCalculated}
         transparent={!isPageSheet}
@@ -77,7 +79,7 @@ export function DatePickerModal(
           <View
             style={[
               StyleSheet.absoluteFill,
-              styles.modalBackground,
+              sharedStyles.root,
               { backgroundColor: theme.colors.backdrop },
             ]}
           />
@@ -107,23 +109,7 @@ export function DatePickerModal(
   )
 }
 
-const supportedOrientations: any = [
-  'portrait',
-  'portrait-upside-down',
-  'landscape',
-  'landscape-left',
-  'landscape-right',
-]
-
 const styles = StyleSheet.create({
-  modalRoot: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
-  },
-  modalBackground: {
-    flex: 1,
-  },
   modalContent: {
     flex: 1,
     width: '100%',
@@ -135,6 +121,11 @@ const styles = StyleSheet.create({
     width: '100%',
     overflow: 'hidden',
   },
+  modalRoot: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+  },
 })
 
-export default React.memo(DatePickerModal)
+export default memo(DatePickerModal)

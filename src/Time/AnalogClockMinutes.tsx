@@ -1,12 +1,13 @@
-import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Text } from 'react-native-paper'
 import { circleSize } from './timeUtils'
-import { useTextColorOnPrimary } from '../utils'
+import { useTextColorOnPrimary } from '../shared/utils'
+import React, { memo } from 'react'
 
 function AnalogClockMinutes({ minutes }: { minutes: number }) {
   const range = getMinuteNumbers(circleSize, 12)
   const color = useTextColorOnPrimary()
+
   return (
     <>
       {range.map((a, i) => {
@@ -46,35 +47,6 @@ function AnalogClockMinutes({ minutes }: { minutes: number }) {
   )
 }
 
-const styles = StyleSheet.create({
-  outerHourRoot: {
-    position: 'absolute',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 20,
-    width: 48,
-    height: 48,
-    marginLeft: -24,
-    marginTop: -24,
-    borderRadius: 24,
-  },
-  outerHourInner: { borderRadius: 24 },
-  innerHourRoot: {
-    position: 'absolute',
-    zIndex: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 40,
-    height: 40,
-    marginLeft: -20,
-    marginTop: -20,
-    borderRadius: 20,
-  },
-  innerHourInner: { borderRadius: 20 },
-  innerHourText: { fontSize: 13 },
-  textWhite: { color: '#fff' },
-})
-
 function getMinuteNumbers(size: number, count: number) {
   let angle = 0
   let step = (2 * Math.PI) / count
@@ -92,4 +64,19 @@ function getMinuteNumbers(size: number, count: number) {
     })
 }
 
-export default React.memo(AnalogClockMinutes)
+const styles = StyleSheet.create({
+  outerHourRoot: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 20,
+    width: 48,
+    height: 48,
+    marginLeft: -24,
+    marginTop: -24,
+    borderRadius: 24,
+  },
+  outerHourInner: { borderRadius: 24 },
+})
+
+export default memo(AnalogClockMinutes)

@@ -1,16 +1,17 @@
-import * as React from 'react'
+import React from 'react'
+import { useCallback, useState } from 'react'
 import { Button } from 'react-native-paper'
 import { DatePickerModal } from 'react-native-paper-dates'
 
 export default function ReadMeExampleSingle() {
-  const [date, setDate] = React.useState<Date | undefined>(undefined)
-  const [open, setOpen] = React.useState(false)
+  const [date, setDate] = useState<Date | undefined>(undefined)
+  const [open, setOpen] = useState(false)
 
-  const onDismissSingle = React.useCallback(() => {
+  const onDismissSingle = useCallback(() => {
     setOpen(false)
   }, [setOpen])
 
-  const onConfirmSingle = React.useCallback(
+  const onConfirmSingle = useCallback(
     (params: any) => {
       setOpen(false)
       setDate(params.date)

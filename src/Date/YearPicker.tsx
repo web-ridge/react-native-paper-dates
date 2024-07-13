@@ -1,7 +1,9 @@
-import * as React from 'react'
 import { FlatList, StyleSheet, View, ScrollView } from 'react-native'
 import { MD2Theme, Text, TouchableRipple, useTheme } from 'react-native-paper'
-import { range } from '../utils'
+import { range } from '../shared/utils'
+import { memo, useEffect, useRef } from 'react'
+import React from 'react'
+import { sharedStyles } from '../shared/styles'
 
 const ITEM_HEIGHT = 62
 
@@ -19,14 +21,15 @@ export default function YearPicker({
   endYear: number
 }) {
   const theme = useTheme()
-  const flatList = React.useRef<FlatList<number> | null>(null)
+
+  const flatList = useRef<FlatList<number> | null>(null)
   const years = range(
     isNaN(startYear) ? 1800 : startYear,
     isNaN(endYear) ? 2200 : endYear
   )
 
   // scroll to selected year
-  React.useEffect(() => {
+  useEffect(() => {
     if (flatList.current && selectedYear) {
       const indexToGo = selectedYear - startYear
       flatList.current.scrollToOffset({
@@ -42,13 +45,13 @@ export default function YearPicker({
         StyleSheet.absoluteFill,
         styles.root,
         { backgroundColor: theme.colors.surface },
-        selectingYear ? styles.opacity1 : styles.opacity0,
+        selectingYear ? sharedStyles.opacity1 : sharedStyles.opacity0,
       ]}
       pointerEvents={selectingYear ? 'auto' : 'none'}
     >
       <FlatList<number>
         ref={flatList}
-        style={styles.list}
+        style={sharedStyles.root}
         data={years}
         renderScrollComponent={(sProps) => {
           return <ScrollView {...sProps} />
@@ -119,16 +122,12 @@ function YearPure({
     </View>
   )
 }
-const Year = React.memo(YearPure)
 
 const styles = StyleSheet.create({
   root: {
     flex: 1,
     top: 56,
     zIndex: 100,
-  },
-  list: {
-    flex: 1,
   },
   year: {
     flex: 1,
@@ -150,10 +149,6 @@ const styles = StyleSheet.create({
   yearLabel: {
     fontSize: 16,
   },
-  opacity0: {
-    opacity: 0,
-  },
-  opacity1: {
-    opacity: 1,
-  },
 })
+
+const Year = memo(YearPure)

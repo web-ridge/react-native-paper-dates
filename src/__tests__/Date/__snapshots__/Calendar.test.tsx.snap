@@ -13,8 +13,10 @@ exports[`renders Calendar 1`] = `
     style={
       [
         {
-          "flex": 1,
           "overflow": "hidden",
+        },
+        {
+          "flex": 1,
         },
         null,
       ]

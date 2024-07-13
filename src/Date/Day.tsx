@@ -1,15 +1,17 @@
-import * as React from 'react'
 import { MD2Theme, Text, TouchableRipple } from 'react-native-paper'
 import { StyleSheet, View } from 'react-native'
 import DayRange from './DayRange'
 import { daySize } from './dateUtils'
 
-import type { PaperTheme } from '../utils'
+import type { PaperTheme } from '../shared/utils'
+import { memo, useCallback } from 'react'
+import React from 'react'
 
 function EmptyDayPure() {
   return <View style={styles.empty} />
 }
-export const EmptyDay = React.memo(EmptyDayPure)
+
+export const EmptyDay = memo(EmptyDayPure)
 
 function Day(props: {
   theme: PaperTheme
@@ -43,17 +45,16 @@ function Day(props: {
     textColorOnPrimary,
     theme,
   } = props
-  const onPress = React.useCallback(() => {
-    onPressDate(new Date(year, month, day))
-  }, [onPressDate, year, month, day])
-
-  // const borderColorV3 =
   const borderColorFallback = theme.dark ? '#fff' : '#000'
   const selectedOrInRangeDarkMode = selected || (inRange && theme.dark)
   const v2BorderColor = selectedOrInRangeDarkMode
     ? textColorOnPrimary
     : borderColorFallback
   const borderColor = theme.isV3 ? theme.colors.primary : v2BorderColor
+
+  const onPress = useCallback(() => {
+    onPressDate(new Date(year, month, day))
+  }, [onPressDate, year, month, day])
 
   // TODO: check if this can be simplified
   // converted with Chat-GPT for now from enormous conditional to if-else
@@ -137,20 +138,6 @@ function Day(props: {
 }
 
 const styles = StyleSheet.create({
-  empty: {
-    flex: 1,
-    flexBasis: 0,
-  },
-  disabled: {
-    opacity: 0.3,
-  },
-  root: {
-    flexBasis: 0,
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'relative',
-  },
   button: {
     width: daySize,
     height: daySize,
@@ -168,9 +155,20 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'transparent',
   },
-  flex1: {
+  disabled: {
+    opacity: 0.3,
+  },
+  empty: {
     flex: 1,
+    flexBasis: 0,
+  },
+  root: {
+    flexBasis: 0,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
   },
 })
 
-export default React.memo(Day)
+export default memo(Day)

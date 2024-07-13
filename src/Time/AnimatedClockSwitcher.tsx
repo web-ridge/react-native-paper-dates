@@ -1,6 +1,8 @@
-import * as React from 'react'
 import { Animated, StyleSheet, View } from 'react-native'
 import { clockTypes, PossibleClockTypes } from './timeUtils'
+import React, { ReactElement, useEffect, useRef } from 'react'
+import AnalogClockHours from './AnalogClockHours'
+import AnalogClockMinutes from './AnalogClockMinutes'
 
 export default function AnimatedClockSwitcher({
   focused,
@@ -8,14 +10,16 @@ export default function AnimatedClockSwitcher({
   minutes,
 }: {
   focused: PossibleClockTypes
-  hours: any
-  minutes: any
+  hours: ReactElement<typeof AnalogClockHours>
+  minutes: ReactElement<typeof AnalogClockMinutes>
 }) {
   const collapsed = focused === clockTypes.hours
-  const animatedCollapsed = React.useRef<Animated.Value>(
+
+  const animatedCollapsed = useRef<Animated.Value>(
     new Animated.Value(collapsed ? 1 : 0)
   )
-  React.useEffect(() => {
+
+  useEffect(() => {
     Animated.timing(animatedCollapsed.current, {
       toValue: collapsed ? 1 : 0,
       duration: 250,
