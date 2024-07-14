@@ -6,7 +6,6 @@ import {
   Image,
   useWindowDimensions,
   useColorScheme,
-  StatusBar,
 } from 'react-native'
 import {
   SafeAreaProvider,
@@ -59,6 +58,7 @@ import {
 } from 'react-native-paper-dates'
 import { useCallback, useMemo, useState } from 'react'
 import React from 'react'
+import { StatusBar } from 'expo-status-bar'
 
 const presentationStyles = ['overFullScreen', 'pageSheet'] as const
 const locales: [string, TranslationsType][] = [
