@@ -1,5 +1,5 @@
+import { ComponentProps, CSSProperties } from 'react'
 import type { ValidRangeType } from './Calendar'
-import type * as React from 'react'
 import type { TextInput } from 'react-native-paper'
 
 export type DatePickerInputProps = {
@@ -15,7 +15,7 @@ export type DatePickerInputProps = {
   onValidationError?: ((error: string | null) => void) | undefined
   calendarIcon?: string
   iconSize?: number
-  iconStyle?: React.CSSProperties
+  iconStyle?: CSSProperties
   iconColor?: string
   saveLabel?: string
   saveLabelDisabled?: boolean
@@ -29,6 +29,6 @@ export type DatePickerInputProps = {
   presentationStyle?: 'pageSheet' | 'overFullScreen'
   startWeekOnMonday?: boolean
 } & Omit<
-  React.ComponentProps<typeof TextInput>,
+  ComponentProps<typeof TextInput>,
   'value' | 'onChange' | 'onChangeText' | 'inputMode'
 >

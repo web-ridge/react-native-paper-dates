@@ -1,21 +1,22 @@
-import * as React from 'react'
+import React from 'react'
+import { useCallback, useState } from 'react'
 import { Button } from 'react-native-paper'
 
 import { DatePickerModal } from 'react-native-paper-dates'
 
 export default function ReadMeExampleRange() {
-  const [range, setRange] = React.useState<{
+  const [range, setRange] = useState<{
     startDate: Date | undefined
     endDate: Date | undefined
   }>({ startDate: undefined, endDate: undefined })
 
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = useState(false)
 
-  const onDismiss = React.useCallback(() => {
+  const onDismiss = useCallback(() => {
     setOpen(false)
   }, [setOpen])
 
-  const onConfirm = React.useCallback(
+  const onConfirm = useCallback(
     ({ startDate, endDate }: any) => {
       setOpen(false)
       setRange({ startDate, endDate })

@@ -1,5 +1,3 @@
-import * as React from 'react'
-
 import Calendar, {
   BaseCalendarProps,
   CalendarDate,
@@ -19,6 +17,7 @@ import CalendarEdit from './CalendarEdit'
 import DatePickerModalHeaderBackground from './DatePickerModalHeaderBackground'
 import { useTheme } from 'react-native-paper'
 import DatePickerModalStatusBar from './DatePickerModalStatusBar'
+import React, { memo, useCallback, useEffect, useState } from 'react'
 
 export type LocalState = {
   startDate: CalendarDate
@@ -95,18 +94,21 @@ export function DatePickerModalContent(
     statusBarOnTopOfBackdrop,
     startWeekOnMonday,
   } = props
+  const theme = useTheme()
   const anyProps = props as any
+  const defaultUppercase = !theme.isV3
 
   // use local state to add only onConfirm state changes
-  const [state, setState] = React.useState<LocalState>({
+  const [state, setState] = useState<LocalState>({
     date: anyProps.date,
     startDate: anyProps.startDate,
     endDate: anyProps.endDate,
     dates: anyProps.dates,
   })
+  const [collapsed, setCollapsed] = useState(true)
 
   // update local state if changed from outside or if modal is opened
-  React.useEffect(() => {
+  useEffect(() => {
     setState({
       date: anyProps.date,
       startDate: anyProps.startDate,
@@ -115,9 +117,7 @@ export function DatePickerModalContent(
     })
   }, [anyProps.date, anyProps.startDate, anyProps.endDate, anyProps.dates])
 
-  const [collapsed, setCollapsed] = React.useState<boolean>(true)
-
-  const onInnerChange = React.useCallback(
+  const onInnerChange = useCallback(
     (params: any) => {
       onChange && onChange(params)
       setState((prev) => ({ ...prev, ...params }))
@@ -125,7 +125,7 @@ export function DatePickerModalContent(
     [onChange, setState]
   )
 
-  const onInnerConfirm = React.useCallback(() => {
+  const onInnerConfirm = useCallback(() => {
     if (mode === 'single') {
       ;(onConfirm as DatePickerModalContentSingleProps['onConfirm'])({
         date: state.date,
@@ -142,12 +142,9 @@ export function DatePickerModalContent(
     }
   }, [state, mode, onConfirm])
 
-  const onToggleCollapse = React.useCallback(() => {
+  const onToggleCollapse = useCallback(() => {
     setCollapsed((prev) => !prev)
   }, [setCollapsed])
-
-  const theme = useTheme()
-  const defaultUppercase = !theme.isV3
 
   return (
     <>
@@ -222,4 +219,4 @@ export function DatePickerModalContent(
   )
 }
 
-export default React.memo(DatePickerModalContent)
+export default memo(DatePickerModalContent)

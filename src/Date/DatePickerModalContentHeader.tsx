@@ -1,11 +1,12 @@
-import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { IconButton, MD2Theme, Text, useTheme } from 'react-native-paper'
 import type { ModeType } from './Calendar'
 import type { LocalState } from './DatePickerModalContent'
-import { useHeaderTextColor } from '../utils'
+import { useHeaderTextColor } from '../shared/utils'
 import Color from 'color'
 import { getTranslation } from '../translations/utils'
+import React, { useMemo } from 'react'
+import { sharedStyles } from '../shared/styles'
 
 export interface HeaderPickProps {
   moreLabel?: string
@@ -65,21 +66,17 @@ export default function DatePickerModalContentHeader(
   } = props
   const theme = useTheme()
   const label = getLabel(props.locale, props.mode, props.label)
-
   const color = useHeaderTextColor()
-
   const isEditingEnabled = allowEditing && mode !== 'multiple'
-
   const supportingTextColor = theme.isV3 ? theme.colors.onSurfaceVariant : color
-
   const textFont = theme?.isV3
     ? theme.fonts.labelMedium
     : (theme as any as MD2Theme).fonts.medium
-
   const collapsedIcon = theme.isV3 ? 'pencil-outline' : 'pencil'
   const expandedIcon = theme.isV3 ? 'calendar-blank' : 'calendar'
   const finalCollapsedIcon = editIcon ?? collapsedIcon
   const finalExpandedIcon = calendarIcon ?? expandedIcon
+
   return (
     <View style={styles.header}>
       <View>
@@ -105,7 +102,7 @@ export default function DatePickerModalContentHeader(
           ) : null}
         </View>
       </View>
-      <View style={styles.fill} />
+      <View style={sharedStyles.root} />
       {isEditingEnabled ? (
         <IconButton
           icon={collapsed ? finalCollapsedIcon : finalExpandedIcon}
@@ -129,6 +126,7 @@ export function HeaderContentSingle({
   locale,
 }: HeaderContentProps & { color: string }) {
   const theme = useTheme()
+
   const lighterColor = Color(color).fade(0.5).rgb().toString()
   const dateColor = state.date
     ? theme.isV3
@@ -136,7 +134,7 @@ export function HeaderContentSingle({
       : color
     : lighterColor
 
-  const formatter = React.useMemo(() => {
+  const formatter = useMemo(() => {
     return new Intl.DateTimeFormat(locale, {
       month: 'short',
       day: 'numeric',
@@ -146,7 +144,7 @@ export function HeaderContentSingle({
   return (
     <Text
       maxFontSizeMultiplier={1.5}
-      style={[styles.singleHeaderText, { color: dateColor }]}
+      style={[styles.text, { color: dateColor }]}
     >
       {state.date ? formatter.format(state.date) : emptyLabel}
     </Text>
@@ -161,6 +159,7 @@ export function HeaderContentMulti({
   locale,
 }: HeaderContentProps & { color: string; moreLabel: string | undefined }) {
   const theme = useTheme()
+
   const dateCount = state.dates?.length || 0
   const lighterColor = Color(color).fade(0.5).rgb().toString()
   const dateColor = dateCount
@@ -169,7 +168,7 @@ export function HeaderContentMulti({
       : color
     : lighterColor
 
-  const formatter = React.useMemo(() => {
+  const formatter = useMemo(() => {
     return new Intl.DateTimeFormat(locale, {
       month: 'short',
       day: 'numeric',
@@ -189,7 +188,7 @@ export function HeaderContentMulti({
   return (
     <Text
       maxFontSizeMultiplier={1.5}
-      style={[styles.singleHeaderText, { color: dateColor }]}
+      style={[styles.text, { color: dateColor }]}
     >
       {label}
     </Text>
@@ -205,12 +204,6 @@ export function HeaderContentRange({
   color,
 }: HeaderContentProps & { color: string }) {
   const theme = useTheme()
-  const formatter = React.useMemo(() => {
-    return new Intl.DateTimeFormat(locale, {
-      month: 'short',
-      day: 'numeric',
-    })
-  }, [locale])
 
   const lighterColor = Color(color).fade(0.5).rgb().toString()
   const startColorFilled = theme.isV3 ? theme.colors.onSurface : color
@@ -218,11 +211,18 @@ export function HeaderContentRange({
   const startColor = state.startDate ? startColorFilled : lighterColor
   const endColor = state.endDate ? endColorFilled : lighterColor
 
+  const formatter = useMemo(() => {
+    return new Intl.DateTimeFormat(locale, {
+      month: 'short',
+      day: 'numeric',
+    })
+  }, [locale])
+
   return (
     <>
       <Text
         maxFontSizeMultiplier={1.5}
-        style={[styles.rangeHeaderText, { color: startColor }]}
+        style={[styles.text, { color: startColor }]}
       >
         {state.startDate ? formatter.format(state.startDate) : startLabel}
       </Text>
@@ -234,7 +234,7 @@ export function HeaderContentRange({
       </Text>
       <Text
         maxFontSizeMultiplier={1.5}
-        style={[styles.rangeHeaderText, { color: endColor }]}
+        style={[styles.text, { color: endColor }]}
       >
         {state.endDate ? formatter.format(state.endDate) : endLabel}
       </Text>
@@ -243,16 +243,6 @@ export function HeaderContentRange({
 }
 
 const styles = StyleSheet.create({
-  fill: {
-    flex: 1,
-  },
-  animated: {
-    paddingBottom: 0,
-    elevation: 4,
-  },
-  safeContent: {
-    paddingBottom: 0,
-  },
   header: {
     height: 75,
     alignItems: 'center',
@@ -260,15 +250,9 @@ const styles = StyleSheet.create({
     paddingLeft: 24,
     paddingRight: 12,
   },
-  headerContentContainer: { marginTop: 5, flexDirection: 'row' },
-  label: { color: '#fff', letterSpacing: 1, fontSize: 13 },
-  singleHeaderText: { color: '#fff', fontSize: 25 },
-  rangeHeaderText: { color: '#fff', fontSize: 25 },
-  excludeInRangeHeaderText: { fontSize: 25 },
-  excludeInRangeHeaderTextSmall: {
-    fontSize: 14,
-    marginTop: -3,
-    marginLeft: 3,
+  headerContentContainer: {
+    flexDirection: 'row',
+    marginTop: 5,
   },
   headerSeparator: {
     color: 'rgba(255,255,255,1)',
@@ -276,9 +260,13 @@ const styles = StyleSheet.create({
     paddingLeft: 6,
     paddingRight: 6,
   },
-  appbarHeader: {
-    elevation: 0,
+  label: {
+    color: '#fff',
+    fontSize: 13,
+    letterSpacing: 1,
   },
-  column: { flexDirection: 'column' },
-  row: { flexDirection: 'row' },
+  text: {
+    color: '#fff',
+    fontSize: 25,
+  },
 })

@@ -1,9 +1,10 @@
-import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { IconButton, useTheme } from 'react-native-paper'
 import DayNames, { dayNamesHeight } from './DayNames'
 import type { DisableWeekDaysType } from './dateUtils'
 import { getTranslation } from '../translations/utils'
+import { sharedStyles } from '../shared/styles'
+import React, { memo } from 'react'
 
 const buttonContainerHeight = 56
 const buttonContainerMarginTop = 4
@@ -36,31 +37,23 @@ function CalendarHeader({
   disableWeekDays?: DisableWeekDaysType
   startWeekOnMonday: boolean
 }) {
-  const theme = useTheme()
   const isHorizontal = scrollMode === 'horizontal'
+
+  const theme = useTheme()
+
   return (
     <View style={styles.datePickerHeader} pointerEvents={'box-none'}>
       {isHorizontal ? (
         <View style={styles.buttonContainer} pointerEvents={'box-none'}>
-          <View style={styles.spacer} pointerEvents={'box-none'} />
-          <View
-            style={[
-              styles.buttonWrapper,
-              { backgroundColor: theme.colors.surface },
-            ]}
-          >
+          <View style={sharedStyles.root} pointerEvents={'box-none'} />
+          <View style={{ backgroundColor: theme.colors.surface }}>
             <IconButton
               icon="chevron-left"
               accessibilityLabel={getTranslation(locale, 'previous')}
               onPress={onPrev}
             />
           </View>
-          <View
-            style={[
-              styles.buttonWrapper,
-              { backgroundColor: theme.colors.surface },
-            ]}
-          >
+          <View style={{ backgroundColor: theme.colors.surface }}>
             <IconButton
               icon="chevron-right"
               accessibilityLabel={getTranslation(locale, 'next')}
@@ -93,8 +86,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  buttonWrapper: {},
-  spacer: { flex: 1 },
 })
 
-export default React.memo(CalendarHeader)
+export default memo(CalendarHeader)

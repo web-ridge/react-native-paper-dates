@@ -1,10 +1,11 @@
-import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { MD2Theme, Text, TouchableRipple, useTheme } from 'react-native-paper'
-import { useMemo } from 'react'
+import { useContext, useMemo } from 'react'
 import Color from 'color'
 import { inputTypes, PossibleInputTypes, useSwitchColors } from './timeUtils'
 import { DisplayModeContext } from '../contexts/DisplayModeContext'
+import React from 'react'
+import { sharedStyles } from '../shared/styles'
 
 export default function AmPmSwitcher({
   onChange,
@@ -15,8 +16,10 @@ export default function AmPmSwitcher({
   onChange: (newHours: number) => any
   inputType: PossibleInputTypes
 }) {
-  const { setMode, mode } = React.useContext(DisplayModeContext)
   const theme = useTheme()
+
+  const { setMode, mode } = useContext(DisplayModeContext)
+
   const backgroundColor = useMemo<string>(() => {
     if (theme.isV3) {
       return theme.colors.outline
@@ -31,6 +34,7 @@ export default function AmPmSwitcher({
   }, [theme])
 
   const isAM = mode === 'AM'
+
   return (
     <View
       style={[
@@ -83,6 +87,7 @@ function SwitchButton({
   disabled: boolean
 }) {
   const theme = useTheme()
+
   const { backgroundColor, color } = useSwitchColors(selected)
 
   let textFont = theme?.isV3
@@ -92,7 +97,7 @@ function SwitchButton({
   return (
     <TouchableRipple
       onPress={onPress}
-      style={styles.switchButton}
+      style={sharedStyles.root}
       accessibilityLabel={label}
       // @ts-ignore old React Native versions
       accessibilityTraits={disabled ? ['button', 'disabled'] : 'button'}
@@ -129,9 +134,6 @@ const styles = StyleSheet.create({
   switchSeparator: {
     height: 1,
     width: 52,
-  },
-  switchButton: {
-    flex: 1,
   },
   switchButtonInner: {
     flex: 1,

@@ -1,4 +1,3 @@
-import * as React from 'react'
 import {
   View,
   StyleSheet,
@@ -10,6 +9,9 @@ import type { ModeType, ValidRangeType } from './Calendar'
 import type { LocalState } from './DatePickerModalContent'
 
 import DatePickerInputWithoutModal from './DatePickerInputWithoutModal'
+import { memo, useCallback, useEffect, useRef } from 'react'
+import React from 'react'
+import { sharedStyles } from '../shared/styles'
 
 function CalendarEdit({
   mode,
@@ -34,12 +36,12 @@ function CalendarEdit({
   locale: string
   inputEnabled?: boolean
 }) {
-  const dateInput = React.useRef<TextInputNative | null>(null)
-  const startInput = React.useRef<TextInputNative | null>(null)
-  const endInput = React.useRef<TextInputNative | null>(null)
+  const dateInput = useRef<TextInputNative | null>(null)
+  const startInput = useRef<TextInputNative | null>(null)
+  const endInput = useRef<TextInputNative | null>(null)
 
   // when switching views focus, or un-focus text input
-  React.useEffect(() => {
+  useEffect(() => {
     // hide open keyboard
     if (collapsed) {
       Keyboard.dismiss()
@@ -62,17 +64,17 @@ function CalendarEdit({
     }
   }, [mode, startInput, endInput, dateInput, collapsed])
 
-  const onSubmitStartInput = React.useCallback(() => {
+  const onSubmitStartInput = useCallback(() => {
     if (endInput.current) {
       endInput.current.focus()
     }
   }, [endInput])
 
-  const onSubmitEndInput = React.useCallback(() => {
+  const onSubmitEndInput = useCallback(() => {
     // TODO: close modal and persist range
   }, [])
 
-  const onSubmitInput = React.useCallback(() => {
+  const onSubmitInput = useCallback(() => {
     // TODO: close modal and persist range
   }, [])
 
@@ -94,7 +96,7 @@ function CalendarEdit({
         />
       ) : null}
       {mode === 'range' ? (
-        <View style={styles.inner}>
+        <View style={sharedStyles.flexDirectionRow}>
           <DatePickerInputWithoutModal
             inputMode="start"
             ref={startInput}
@@ -130,11 +132,12 @@ function CalendarEdit({
 }
 
 const styles = StyleSheet.create({
-  root: { padding: 12 },
-  inner: { flexDirection: 'row' },
-  inputContainer: { flex: 1 },
-  input: { flex: 1 },
-  separator: { width: 12 },
+  root: {
+    padding: 12,
+  },
+  separator: {
+    width: 12,
+  },
 })
 
-export default React.memo(CalendarEdit)
+export default memo(CalendarEdit)

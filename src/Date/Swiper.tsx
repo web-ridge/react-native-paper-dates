@@ -1,17 +1,27 @@
-import * as React from 'react'
-import { StyleSheet, View } from 'react-native'
-
+import { View } from 'react-native'
 import {
   getIndexFromVerticalOffset,
   getMonthHeight,
   getVerticalMonthsOffset,
   montHeaderHeight,
 } from './Month'
-
 import { beginOffset, estimatedMonthHeight, totalMonths } from './dateUtils'
-import { useLatest } from '../utils'
+import { useLatest } from '../shared/utils'
 import { RenderProps, SwiperProps, useYearChange } from './SwiperUtils'
 import AutoSizer from './AutoSizer'
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  UIEvent,
+} from 'react'
+import { sharedStyles } from '../shared/styles'
+
+const useIsomorphicLayoutEffect =
+  typeof window !== 'undefined' ? useLayoutEffect : useEffect
 
 function Swiper({
   scrollMode,
@@ -23,13 +33,14 @@ function Swiper({
   startWeekOnMonday,
 }: SwiperProps) {
   const isHorizontal = scrollMode === 'horizontal'
-  const [index, setIndex] = React.useState(initialIndex)
 
-  const onPrev = React.useCallback(() => {
+  const [index, setIndex] = useState(initialIndex)
+
+  const onPrev = useCallback(() => {
     setIndex((prev) => prev - 1)
   }, [setIndex])
 
-  const onNext = React.useCallback(() => {
+  const onNext = useCallback(() => {
     setIndex((prev) => prev + 1)
   }, [setIndex])
 
@@ -55,7 +66,7 @@ function Swiper({
     <>
       {renderHeader && renderHeader(renderProps)}
       {isHorizontal ? (
-        <View style={styles.flex1}>
+        <View style={sharedStyles.root}>
           {renderItem({ index, onPrev, onNext })}
         </View>
       ) : (
@@ -94,11 +105,12 @@ function VerticalScroller({
   estimatedHeight: number
   startWeekOnMonday: boolean
 }) {
-  const idx = React.useRef<number>(initialIndex)
-  const [visibleIndexes, setVisibleIndexes] = React.useState<number[]>(
+  const [visibleIndexes, setVisibleIndexes] = useState<number[]>(
     visibleArray(initialIndex)
   )
-  const parentRef = React.useRef<HTMLDivElement | null>(null)
+
+  const idx = useRef<number>(initialIndex)
+  const parentRef = useRef<HTMLDivElement | null>(null)
 
   useIsomorphicLayoutEffect(() => {
     const element = parentRef.current
@@ -115,9 +127,9 @@ function VerticalScroller({
 
   const setVisibleIndexesThrottled = useDebouncedCallback(setVisibleIndexes)
 
-  const onScroll = React.useCallback(
-    (e: React.UIEvent) => {
-      const top = e.currentTarget.scrollTop
+  const onScroll = useCallback(
+    (e: UIEvent) => {
+      const top = e.currentTarget?.scrollTop
       if (top === 0) {
         return
       }
@@ -185,18 +197,12 @@ function VerticalScroller({
 
 const empty = () => null
 
-const styles = StyleSheet.create({
-  flex1: {
-    flex: 1,
-  },
-})
-
 export function useDebouncedCallback(callback: any): any {
-  const mounted = React.useRef<boolean>(true)
+  const mounted = useRef<boolean>(true)
+  const timerId = useRef<any>(null)
   const latest = useLatest(callback)
-  const timerId = React.useRef<any>(null)
 
-  React.useEffect(() => {
+  useEffect(() => {
     return () => {
       mounted.current = false
       if (timerId.current) {
@@ -205,7 +211,7 @@ export function useDebouncedCallback(callback: any): any {
     }
   }, [mounted, timerId])
 
-  return React.useCallback(
+  return useCallback(
     (args: any) => {
       if (timerId.current) {
         window.cancelAnimationFrame(timerId.current)
@@ -220,7 +226,4 @@ export function useDebouncedCallback(callback: any): any {
   )
 }
 
-const useIsomorphicLayoutEffect =
-  typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect
-
-export default React.memo(Swiper)
+export default memo(Swiper)

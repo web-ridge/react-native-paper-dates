@@ -1,4 +1,5 @@
-import * as React from 'react'
+import React, { ComponentProps, ReactNode, useEffect, useState } from 'react'
+import { forwardRef } from 'react'
 import { TextInput } from 'react-native-paper'
 
 const splitCharacters = ['-', '/', '.', '年', ' ']
@@ -20,16 +21,18 @@ function TextInputWithMask(
     mask,
     disabled,
     ...rest
-  }: React.ComponentProps<typeof TextInput> & {
+  }: ComponentProps<typeof TextInput> & {
     mask: string
     value: string
-    inputButton: React.ReactNode
+    inputButton: ReactNode
   },
   ref: any
 ) {
-  const [controlledValue, setControlledValue] = React.useState<string>(
-    value || ''
-  )
+  const [controlledValue, setControlledValue] = useState(value || '')
+
+  useEffect(() => {
+    setControlledValue(value || '')
+  }, [value])
 
   const onInnerChange = (text: string) => {
     const splitCharacter = detectCharacter(mask)
@@ -69,10 +72,6 @@ function TextInputWithMask(
     setControlledValue(trimmedText)
   }
 
-  React.useEffect(() => {
-    setControlledValue(value || '')
-  }, [value])
-
   return (
     <TextInput
       ref={ref}
@@ -89,4 +88,4 @@ function TextInputWithMask(
   )
 }
 
-export default React.forwardRef(TextInputWithMask)
+export default forwardRef(TextInputWithMask)

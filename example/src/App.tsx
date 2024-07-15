@@ -1,4 +1,3 @@
-import * as React from 'react'
 import {
   StyleSheet,
   ScrollView,
@@ -7,7 +6,6 @@ import {
   Image,
   useWindowDimensions,
   useColorScheme,
-  StatusBar,
 } from 'react-native'
 import {
   SafeAreaProvider,
@@ -25,6 +23,7 @@ import {
   MD3DarkTheme,
   MD3LightTheme,
   MD2LightTheme,
+  MD2DarkTheme,
 } from 'react-native-paper'
 import {
   DatePickerModal,
@@ -57,7 +56,9 @@ import {
   ja,
   th,
 } from 'react-native-paper-dates'
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
+import React from 'react'
+import { StatusBar } from 'expo-status-bar'
 
 const presentationStyles = ['overFullScreen', 'pageSheet'] as const
 const locales: [string, TranslationsType][] = [
@@ -124,7 +125,7 @@ function App({
 
   /** Constants. */
   const maxFontSizeMultiplier = 1.5
-  const dateFormatter = React.useMemo(
+  const dateFormatter = useMemo(
     () =>
       new Intl.DateTimeFormat(locale, {
         day: 'numeric',
@@ -133,12 +134,12 @@ function App({
       }),
     [locale]
   )
-  const timeFormatter = React.useMemo(
+  const timeFormatter = useMemo(
     () =>
       new Intl.DateTimeFormat(locale, {
         hour: '2-digit',
         minute: '2-digit',
-        hour12: false,
+        hour12: locale === 'en',
       }),
     [locale]
   )
@@ -570,9 +571,9 @@ function App({
 
 export default function AppWithProviders() {
   const colorScheme = useColorScheme()
-  const [materialYouEnabled, setMaterialYouEnabled] = React.useState(true)
+  const [materialYouEnabled, setMaterialYouEnabled] = useState(true)
   const m3Theme = colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme
-  const m2Theme = colorScheme === 'dark' ? MD2LightTheme : MD2LightTheme
+  const m2Theme = colorScheme === 'dark' ? MD2DarkTheme : MD2LightTheme
 
   return (
     <SafeAreaProvider>

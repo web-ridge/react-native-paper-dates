@@ -1,6 +1,6 @@
-import * as React from 'react'
+import React, { memo } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useHeaderBackgroundColor } from '../utils'
+import { useHeaderBackgroundColor } from '../shared/utils'
 import Color from 'color'
 import { Animated, StatusBar, StatusBarStyle } from 'react-native'
 
@@ -15,9 +15,9 @@ function DatePickerModalStatusBar({
 }) {
   const insets = useSafeAreaInsets()
   const headerBackgroundColor = useHeaderBackgroundColor()
+
   const onDarkBackground =
     Color(headerBackgroundColor).isDark() || statusBarOnTopOfBackdrop
-
   const statusBarTheme: StatusBarStyle = onDarkBackground
     ? 'light-content'
     : 'dark-content'
@@ -48,4 +48,4 @@ function DatePickerModalStatusBar({
   )
 }
 
-export default React.memo(DatePickerModalStatusBar)
+export default memo(DatePickerModalStatusBar)

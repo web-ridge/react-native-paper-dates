@@ -1,5 +1,4 @@
-import * as React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 import Swiper from './Swiper'
 import Month from './Month'
 import {
@@ -11,11 +10,13 @@ import {
 } from './dateUtils'
 
 import CalendarHeader from './CalendarHeader'
-import { useCallback, useMemo } from 'react'
+import { memo, useCallback, useMemo, useState } from 'react'
 import YearPicker from './YearPicker'
 import Color from 'color'
 import { useTheme } from 'react-native-paper'
-import { useLatest, lightenBy, darkenBy } from '../utils'
+import { useLatest, lightenBy, darkenBy } from '../shared/utils'
+import React from 'react'
+import { sharedStyles } from '../shared/styles'
 
 export type ModeType = 'single' | 'range' | 'multiple'
 
@@ -34,7 +35,6 @@ export type BaseCalendarProps = {
   startYear?: number
   endYear?: number
   startWeekOnMonday?: boolean
-
   // here they are optional but in final implementation they are required
   date?: CalendarDate
   dates?: CalendarDates
@@ -98,33 +98,16 @@ function Calendar(
     dateMode,
     startWeekOnMonday,
   } = props
+  const scrollMode =
+    mode === 'range' || mode === 'multiple' ? 'vertical' : 'horizontal'
+  const firstDate = startDate || date || dates?.[0]
 
   const theme = useTheme()
 
-  const selectColor = useMemo<string>(() => {
-    if (theme.isV3) {
-      return theme.colors.primaryContainer
-    }
-    if (theme.dark) {
-      return darkenBy(Color(theme.colors.primary), 0.1).hex()
-    }
-    return lightenBy(Color(theme.colors.primary), 0.9).hex()
-  }, [theme])
-
-  const scrollMode =
-    mode === 'range' || mode === 'multiple' ? 'vertical' : 'horizontal'
-
-  const [selectedYear, setSelectedYear] = React.useState<number | undefined>(
+  const [selectedYear, setSelectedYear] = useState<number | undefined>(
     undefined
   )
-  const [selectingYear, setSelectingYear] = React.useState<boolean>(false)
-  const onPressYear = useCallback(
-    (year: number) => {
-      setSelectedYear(year)
-      setSelectingYear((prev) => !prev)
-    },
-    [setSelectingYear]
-  )
+  const [selectingYear, setSelectingYear] = useState(false)
 
   // prevent re-rendering all months when something changed we only need the
   // latest version of the props and we don't want the useCallback to change
@@ -134,6 +117,14 @@ function Calendar(
     onChange
   )
   const datesRef = useLatest<CalendarDates>(dates)
+
+  const onPressYear = useCallback(
+    (year: number) => {
+      setSelectedYear(year)
+      setSelectingYear((prev) => !prev)
+    },
+    [setSelectingYear]
+  )
 
   const onPressDate = useCallback(
     (d: Date) => {
@@ -171,10 +162,18 @@ function Calendar(
     [mode, dateMode, onChangeRef, startDateRef, endDateRef, datesRef]
   )
 
-  const firstDate = startDate || date || dates?.[0]
+  const selectColor = useMemo<string>(() => {
+    if (theme.isV3) {
+      return theme.colors.primaryContainer
+    }
+    if (theme.dark) {
+      return darkenBy(Color(theme.colors.primary), 0.1).hex()
+    }
+    return lightenBy(Color(theme.colors.primary), 0.9).hex()
+  }, [theme])
 
   return (
-    <View style={styles.root}>
+    <View style={sharedStyles.root}>
       <Swiper
         initialIndex={getInitialIndex(firstDate)}
         selectedYear={selectedYear}
@@ -226,9 +225,4 @@ function Calendar(
   )
 }
 
-const styles = StyleSheet.create({
-  root: { flex: 1 },
-  viewPager: { flex: 1 },
-})
-
-export default React.memo(Calendar)
+export default memo(Calendar)

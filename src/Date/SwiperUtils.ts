@@ -1,6 +1,5 @@
-import type { MutableRefObject } from 'react'
-import { useLatest } from '../utils'
-import * as React from 'react'
+import { useEffect, type MutableRefObject } from 'react'
+import { useLatest } from '../shared/utils'
 import {
   addMonths,
   differenceInMonths,
@@ -35,7 +34,7 @@ export function useYearChange(
   }
 ) {
   const onChangeRef = useLatest(onChange)
-  React.useEffect(() => {
+  useEffect(() => {
     if (selectedYear) {
       const currentIndex = currentIndexRef.current || 0
       const currentDate = addMonths(new Date(), getRealIndex(currentIndex))

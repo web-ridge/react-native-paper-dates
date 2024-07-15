@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import {
   Text,
@@ -34,7 +33,10 @@ import type {
   ValidRangeType,
 } from './Calendar'
 import { dayNamesHeight } from './DayNames'
-import { useTextColorOnPrimary } from '../utils'
+import { useTextColorOnPrimary } from '../shared/utils'
+import { memo, useMemo } from 'react'
+import React from 'react'
+import { sharedStyles } from '../shared/styles'
 
 interface BaseMonthProps {
   locale: undefined | string
@@ -50,7 +52,6 @@ interface BaseMonthProps {
   roundness: number
   validRange?: ValidRangeType
   startWeekOnMonday: boolean
-
   // some of these should be required in final implementation
   startDate?: CalendarDate
   endDate?: CalendarDate
@@ -94,12 +95,14 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
     validRange,
     startWeekOnMonday,
   } = props
+  const isHorizontal = scrollMode === 'horizontal'
+
   const theme = useTheme()
   const textColorOnPrimary = useTextColorOnPrimary()
   const realIndex = getRealIndex(index)
-  const isHorizontal = scrollMode === 'horizontal'
   const { isDisabled, isWithinValidRange } = useRangeChecker(validRange)
-  const { monthName, month, year } = React.useMemo(() => {
+
+  const { monthName, month, year } = useMemo(() => {
     const md = addMonths(new Date(), realIndex)
     const y = md.getFullYear()
     const m = md.getMonth()
@@ -109,7 +112,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
     return { monthName: formatter.format(md), month: m, year: y }
   }, [realIndex, locale])
 
-  const grid = React.useMemo(() => {
+  const grid = useMemo(() => {
     const today = new Date()
 
     const daysInMonth = getDaysInMonth({ year, month })
@@ -267,10 +270,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
 
   return (
     <View
-      style={[
-        styles.month,
-        { height: getMonthHeight(scrollMode, index, startWeekOnMonday) },
-      ]}
+      style={{ height: getMonthHeight(scrollMode, index, startWeekOnMonday) }}
     >
       <View
         style={[
@@ -321,7 +321,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
             <View
               style={[
                 styles.iconWrapper,
-                isHorizontal ? styles.opacity1 : styles.opacity0,
+                isHorizontal ? sharedStyles.opacity1 : sharedStyles.opacity0,
               ]}
             >
               <Icon size={24} color={iconColor} source={iconSource} />
@@ -374,26 +374,29 @@ const styles = StyleSheet.create({
   iconWrapper: {
     padding: 8,
   },
-  week: {
-    flexDirection: 'row',
-    marginBottom: weekMargin,
-    height: daySize,
-  },
-  month: {},
   monthHeader: {
     height: montHeaderHeight,
     justifyContent: 'center',
     overflow: 'hidden',
   },
-  monthLabel: { fontSize: 14, opacity: 0.7 },
-  yearButton: { alignSelf: 'flex-start', marginLeft: 6 },
+  monthLabel: {
+    fontSize: 14,
+    opacity: 0.7,
+  },
+  week: {
+    flexDirection: 'row',
+    marginBottom: weekMargin,
+    height: daySize,
+  },
+  yearButton: {
+    alignSelf: 'flex-start',
+    marginLeft: 6,
+  },
   yearButtonInner: {
     paddingLeft: 16,
     flexDirection: 'row',
     alignItems: 'center',
   },
-  opacity0: { opacity: 0 },
-  opacity1: { opacity: 1 },
 })
 
 const monthGrid = (index: number, startWeekOnMonday: boolean) => {
@@ -487,4 +490,4 @@ export function getMonthHeight(
   return c || 0
 }
 
-export default React.memo(Month)
+export default memo(Month)

@@ -1,7 +1,7 @@
 import { useInputFormat, useInputFormatter, useRangeChecker } from './dateUtils'
-import * as React from 'react'
 import type { ValidRangeType } from './Calendar'
 import { getTranslation } from '../translations/utils'
+import { useState } from 'react'
 
 export default function useDateInput({
   locale,
@@ -18,12 +18,15 @@ export default function useDateInput({
   inputMode: 'start' | 'end'
   onValidationError?: ((error: string | null) => void) | undefined
 }) {
-  const { isDisabled, isWithinValidRange, validStart, validEnd } =
-    useRangeChecker(validRange)
-  const [error, setError] = React.useState<null | string>(null)
   const formatter = useInputFormatter({ locale })
   const inputFormat = useInputFormat({ formatter, locale })
   const formattedValue = value ? formatter.format(value) : ''
+
+  const [error, setError] = useState<null | string>(null)
+
+  const { isDisabled, isWithinValidRange, validStart, validEnd } =
+    useRangeChecker(validRange)
+
   const onChangeText = (date: string) => {
     const dayIndex = inputFormat.indexOf('DD')
     const monthIndex = inputFormat.indexOf('MM')
@@ -31,7 +34,6 @@ export default function useDateInput({
       locale === 'pt'
         ? inputFormat.indexOf('AAAA')
         : inputFormat.indexOf('YYYY')
-
     const day = Number(date.slice(dayIndex, dayIndex + 2))
     const year = Number(date.slice(yearIndex, yearIndex + 4))
     const month = Number(date.slice(monthIndex, monthIndex + 2))

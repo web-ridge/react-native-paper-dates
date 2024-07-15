@@ -1,6 +1,7 @@
-import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { daySize } from './dateUtils'
+import React, { memo } from 'react'
+import { sharedStyles } from '../shared/styles'
 
 function DayRange({
   leftCrop,
@@ -22,7 +23,7 @@ function DayRange({
         pointerEvents="none"
         style={[
           StyleSheet.absoluteFill,
-          styles.rangeRoot,
+          sharedStyles.flexDirectionRow,
           bothWays && styles.rangeRootBoth,
           inRange && !isCrop
             ? {
@@ -35,7 +36,7 @@ function DayRange({
           <>
             <View
               style={[
-                styles.flex1,
+                sharedStyles.root,
                 rightCrop
                   ? {
                       backgroundColor: selectColor,
@@ -56,7 +57,7 @@ function DayRange({
             />
             <View
               style={[
-                styles.flex1,
+                sharedStyles.root,
                 leftCrop
                   ? {
                       backgroundColor: selectColor,
@@ -84,12 +85,6 @@ const styles = StyleSheet.create({
   rangeRootBoth: {
     borderRadius: daySize / 2,
   },
-  flex1: {
-    flex: 1,
-  },
-  rangeRoot: {
-    flexDirection: 'row',
-  },
 })
 
-export default React.memo(DayRange)
+export default memo(DayRange)

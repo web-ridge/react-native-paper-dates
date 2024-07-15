@@ -1,4 +1,3 @@
-import * as React from 'react'
 import {
   View,
   TextInput,
@@ -15,6 +14,9 @@ import {
   PossibleInputTypes,
   useInputColors,
 } from './timeUtils'
+import { forwardRef, useEffect, useState } from 'react'
+import React from 'react'
+import { sharedStyles } from '../shared/styles'
 
 interface TimeInputProps
   extends Omit<Omit<TextInputProps, 'value'>, 'onFocus'> {
@@ -40,9 +42,18 @@ function TimeInput(
   }: TimeInputProps,
   ref: any
 ) {
-  const [controlledValue, setControlledValue] = React.useState<string>(
-    `${value}`
-  )
+  const theme = useTheme()
+  const [inputFocused, setInputFocused] = useState<boolean>(false)
+
+  const [controlledValue, setControlledValue] = useState(`${value}`)
+
+  const highlighted = inputType === inputTypes.picker ? pressed : inputFocused
+
+  const { color, backgroundColor } = useInputColors(highlighted)
+
+  useEffect(() => {
+    setControlledValue(`${value}`)
+  }, [value])
 
   const onInnerChange = (text: string) => {
     setControlledValue(text)
@@ -50,17 +61,6 @@ function TimeInput(
       onChanged(Number(text))
     }
   }
-
-  React.useEffect(() => {
-    setControlledValue(`${value}`)
-  }, [value])
-
-  const theme = useTheme()
-  const [inputFocused, setInputFocused] = React.useState<boolean>(false)
-
-  const highlighted = inputType === inputTypes.picker ? pressed : inputFocused
-
-  const { color, backgroundColor } = useInputColors(highlighted)
 
   let formattedValue = controlledValue
   if (!inputFocused) {
@@ -107,7 +107,7 @@ function TimeInput(
         <TouchableRipple
           style={[
             StyleSheet.absoluteFill,
-            styles.buttonOverlay,
+            sharedStyles.overflowHidden,
             {
               borderRadius: theme.roundness,
             },
@@ -128,13 +128,16 @@ function TimeInput(
 }
 
 const styles = StyleSheet.create({
-  root: { position: 'relative', height: 80, width: 96 },
   input: {
     textAlign: 'center',
     textAlignVertical: 'center',
     width: 96,
   },
-  buttonOverlay: { overflow: 'hidden' },
+  root: {
+    height: 80,
+    position: 'relative',
+    width: 96,
+  },
 })
 
-export default React.forwardRef(TimeInput)
+export default forwardRef(TimeInput)

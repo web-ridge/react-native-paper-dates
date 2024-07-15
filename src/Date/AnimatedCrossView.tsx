@@ -1,6 +1,8 @@
-import * as React from 'react'
+import React from 'react'
+import { useEffect, useRef } from 'react'
 import { Animated, StyleSheet, View } from 'react-native'
 import { useTheme } from 'react-native-paper'
+import { sharedStyles } from '../shared/styles'
 
 export default function AnimatedCrossView({
   collapsed,
@@ -12,10 +14,12 @@ export default function AnimatedCrossView({
   collapsed: boolean
 }) {
   const theme = useTheme()
-  const calendarOpacity = React.useRef<Animated.Value>(
+
+  const calendarOpacity = useRef<Animated.Value>(
     new Animated.Value(collapsed ? 1 : 0)
   )
-  React.useEffect(() => {
+
+  useEffect(() => {
     Animated.timing(calendarOpacity.current, {
       toValue: collapsed ? 1 : 0,
       duration: 250,
@@ -24,11 +28,11 @@ export default function AnimatedCrossView({
   }, [collapsed])
 
   return (
-    <View style={styles.root}>
+    <View style={sharedStyles.root}>
       <Animated.View
         pointerEvents={collapsed ? 'auto' : 'none'}
         style={[
-          styles.calendar,
+          sharedStyles.root,
           {
             opacity: calendarOpacity.current,
             transform: [
@@ -78,14 +82,9 @@ export default function AnimatedCrossView({
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1 },
   calendarEdit: {
     position: 'absolute',
-
     left: 0,
     right: 0,
-  },
-  calendar: {
-    flex: 1,
   },
 })

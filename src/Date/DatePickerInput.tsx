@@ -1,11 +1,11 @@
-import * as React from 'react'
-
 import { TextInput } from 'react-native-paper'
 import DatePickerModal from './DatePickerModal'
-import { useLatest } from '../utils'
+import { useLatest } from '../shared/utils'
 import type { DatePickerInputProps } from './DatePickerInput.shared'
 import DatePickerInputWithoutModal from './DatePickerInputWithoutModal'
 import { Platform, StyleProp, ViewStyle } from 'react-native'
+import { forwardRef, useCallback, useState } from 'react'
+import React from 'react'
 
 function DatePickerInput(
   {
@@ -17,12 +17,15 @@ function DatePickerInput(
   }: DatePickerInputProps,
   ref: any
 ) {
-  const [visible, setVisible] = React.useState<boolean>(false)
-  const onDismiss = React.useCallback(() => {
+  const [visible, setVisible] = useState(false)
+
+  const onChangeRef = useLatest(rest.onChange)
+
+  const onDismiss = useCallback(() => {
     setVisible(false)
   }, [setVisible])
-  const onChangeRef = useLatest(rest.onChange)
-  const onInnerConfirm = React.useCallback(
+
+  const onInnerConfirm = useCallback(
     ({ date }: any) => {
       setVisible(false)
       onChangeRef.current(date)
@@ -91,4 +94,4 @@ function DatePickerInput(
   )
 }
 
-export default React.forwardRef(DatePickerInput)
+export default forwardRef(DatePickerInput)

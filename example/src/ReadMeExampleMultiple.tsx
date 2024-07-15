@@ -1,17 +1,18 @@
-import * as React from 'react'
+import React from 'react'
+import { useCallback, useState } from 'react'
 import { Button } from 'react-native-paper'
 
 import { DatePickerModal } from 'react-native-paper-dates'
 
 export default function ReadMeExampleMultiple() {
-  const [dates, setDates] = React.useState<Date[] | undefined>()
-  const [open, setOpen] = React.useState(false)
+  const [dates, setDates] = useState<Date[] | undefined>()
+  const [open, setOpen] = useState(false)
 
-  const onDismiss = React.useCallback(() => {
+  const onDismiss = useCallback(() => {
     setOpen(false)
   }, [setOpen])
 
-  const onConfirm = React.useCallback((params: any) => {
+  const onConfirm = useCallback((params: any) => {
     setOpen(false)
     setDates(params.dates)
     console.log('[on-change-multi]', params)

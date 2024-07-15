@@ -1,6 +1,5 @@
-import * as React from 'react'
 import { View, StyleSheet, useWindowDimensions } from 'react-native'
-
+import React, { memo } from 'react'
 import {
   inputTypes,
   PossibleClockTypes,
@@ -13,6 +12,7 @@ import AnalogClock from './AnalogClock'
 import { circleSize } from './timeUtils'
 import TimeInputs from './TimeInputs'
 import { DisplayModeContext } from '../contexts/DisplayModeContext'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 type onChangeFunc = ({
   hours,
@@ -45,14 +45,15 @@ function TimePicker({
   use24HourClock?: boolean
   inputFontSize?: number
 }) {
-  const [displayMode, setDisplayMode] = React.useState<'AM' | 'PM' | undefined>(
-    undefined
-  )
   const dimensions = useWindowDimensions()
   const isLandscape = dimensions.width > dimensions.height
 
+  const [displayMode, setDisplayMode] = useState<'AM' | 'PM' | undefined>(
+    undefined
+  )
+
   // method to check whether we have 24 hours in clock or 12
-  const is24Hour = React.useMemo(() => {
+  const is24Hour = useMemo(() => {
     if (use24HourClock !== undefined) {
       return use24HourClock
     }
@@ -66,7 +67,7 @@ function TimePicker({
   }, [locale, use24HourClock])
 
   // Initialize display Mode according the hours value
-  React.useEffect(() => {
+  useEffect(() => {
     if (hours >= 12) {
       setDisplayMode('PM')
     } else {
@@ -75,7 +76,7 @@ function TimePicker({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const onInnerChange = React.useCallback<onChangeFunc>(
+  const onInnerChange = useCallback<onChangeFunc>(
     (params) => {
       params.hours = toHourOutputFormat(params.hours, hours, is24Hour)
       onChange(params)
@@ -133,6 +134,11 @@ function TimePicker({
 }
 
 const styles = StyleSheet.create({
+  clockContainer: {
+    paddingTop: 36,
+    paddingLeft: 12,
+    paddingRight: 12,
+  },
   rootLandscape: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -142,7 +148,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  clockContainer: { paddingTop: 36, paddingLeft: 12, paddingRight: 12 },
 })
 
-export default React.memo(TimePicker)
+export default memo(TimePicker)

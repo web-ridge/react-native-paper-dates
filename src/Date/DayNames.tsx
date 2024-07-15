@@ -1,8 +1,8 @@
-import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import DayName from './DayName'
 import { useTheme } from 'react-native-paper'
 import { DisableWeekDaysType, showWeekDay } from './dateUtils'
+import React, { memo, useMemo } from 'react'
 
 export const dayNamesHeight = 44
 
@@ -16,7 +16,8 @@ function DayNames({
   startWeekOnMonday: boolean
 }) {
   const theme = useTheme()
-  const shortDayNames = React.useMemo<string[]>(() => {
+
+  const shortDayNames = useMemo<string[]>(() => {
     // TODO: wait for a better Intl api ;-)
     const weekdays = [
       new Date(2020, 7, 2),
@@ -39,7 +40,7 @@ function DayNames({
   return (
     <View
       style={[styles.dayNames, { backgroundColor: theme.colors.surface }]}
-      pointerEvents={'none'}
+      pointerEvents="none"
     >
       {shortDayNames
         .filter((_, dayIndex) => showWeekDay(dayIndex, disableWeekDays))
@@ -51,10 +52,10 @@ function DayNames({
 }
 const styles = StyleSheet.create({
   dayNames: {
-    height: dayNamesHeight,
-    flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#fff',
+    flexDirection: 'row',
+    height: dayNamesHeight,
   },
 })
-export default React.memo(DayNames)
+export default memo(DayNames)

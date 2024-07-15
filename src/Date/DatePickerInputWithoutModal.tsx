@@ -1,10 +1,9 @@
-import * as React from 'react'
-
 import TextInputWithMask from '../TextInputMask'
 import { HelperText, useTheme } from 'react-native-paper'
 import { View, StyleSheet } from 'react-native'
 import useDateInput from './inputUtils'
 import type { DatePickerInputProps } from './DatePickerInput.shared'
+import React, { forwardRef, ReactNode } from 'react'
 
 function DatePickerInputWithoutModal(
   {
@@ -46,7 +45,7 @@ function DatePickerInputWithoutModal(
       disableStatusBarPadding: DatePickerInputProps['disableStatusBarPadding']
       startWeekOnMonday?: DatePickerInputProps['startWeekOnMonday']
     }) => any
-    inputButton?: React.ReactNode
+    inputButton?: ReactNode
   },
   ref: any
 ) {
@@ -161,4 +160,4 @@ const styles = StyleSheet.create({
     width: '100%',
   },
 })
-export default React.forwardRef(DatePickerInputWithoutModal)
+export default forwardRef(DatePickerInputWithoutModal)

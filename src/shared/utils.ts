@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useRef } from 'react'
 import {
   DefaultTheme,
   MD3DarkTheme,
@@ -7,10 +7,24 @@ import {
 } from 'react-native-paper'
 import Color from 'color'
 
+export const supportedOrientations: (
+  | 'portrait'
+  | 'portrait-upside-down'
+  | 'landscape'
+  | 'landscape-left'
+  | 'landscape-right'
+)[] = [
+  'portrait',
+  'portrait-upside-down',
+  'landscape',
+  'landscape-left',
+  'landscape-right',
+]
+
 export type PaperTheme = typeof MD3DarkTheme | typeof DefaultTheme
 
 export function useLatest<T>(value: T) {
-  const ref = React.useRef(value)
+  const ref = useRef(value)
   ref.current = value
   return ref
 }

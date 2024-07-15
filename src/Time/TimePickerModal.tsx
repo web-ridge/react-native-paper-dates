@@ -1,4 +1,3 @@
-import * as React from 'react'
 import {
   Modal,
   StyleSheet,
@@ -26,20 +25,9 @@ import {
   PossibleInputTypes,
   reverseInputTypes,
 } from './timeUtils'
-
-const supportedOrientations: (
-  | 'portrait'
-  | 'portrait-upside-down'
-  | 'landscape'
-  | 'landscape-left'
-  | 'landscape-right'
-)[] = [
-  'portrait',
-  'portrait-upside-down',
-  'landscape',
-  'landscape-left',
-  'landscape-right',
-]
+import React, { memo, useCallback, useEffect, useState } from 'react'
+import { sharedStyles } from '../shared/styles'
+import { supportedOrientations } from '../shared/utils'
 
 export function TimePickerModal({
   visible,
@@ -77,45 +65,27 @@ export function TimePickerModal({
   defaultInputType?: PossibleInputTypes
 }) {
   const theme = useTheme()
-  const defaultUppercase = !theme.isV3
-  const uppercase = _uppercase ?? defaultUppercase
-  let textFont
-  let labelText = label
 
-  if (theme.isV3) {
-    textFont = theme.fonts.labelMedium
-  } else {
-    textFont = (theme as any as MD2Theme)?.fonts.medium
-  }
-
-  const [inputType, setInputType] = React.useState<PossibleInputTypes>(
+  const [inputType, setInputType] = useState<PossibleInputTypes>(
     defaultInputType || inputTypes.picker
   )
-  const [focused, setFocused] = React.useState<PossibleClockTypes>(
-    clockTypes.hours
-  )
-  const [localHours, setLocalHours] = React.useState<number>(getHours(hours))
-  const [localMinutes, setLocalMinutes] = React.useState<number>(
-    getMinutes(minutes)
-  )
+  const [focused, setFocused] = useState<PossibleClockTypes>(clockTypes.hours)
+  const [localHours, setLocalHours] = useState(getHours(hours))
+  const [localMinutes, setLocalMinutes] = useState(getMinutes(minutes))
 
-  if (inputType === inputTypes.keyboard && !label) {
-    labelText = 'Enter time'
-  }
-
-  React.useEffect(() => {
+  useEffect(() => {
     setLocalHours(getHours(hours))
   }, [setLocalHours, hours])
 
-  React.useEffect(() => {
+  useEffect(() => {
     setLocalMinutes(getMinutes(minutes))
   }, [setLocalMinutes, minutes])
 
-  const onFocusInput = React.useCallback(
+  const onFocusInput = useCallback(
     (type: PossibleClockTypes) => setFocused(type),
     []
   )
-  const onChange = React.useCallback(
+  const onChange = useCallback(
     (params: {
       focused?: PossibleClockTypes | undefined
       hours: number
@@ -130,6 +100,21 @@ export function TimePickerModal({
     },
     [setFocused, setLocalHours, setLocalMinutes]
   )
+
+  const defaultUppercase = !theme.isV3
+  const uppercase = _uppercase ?? defaultUppercase
+  let textFont
+  let labelText = label
+
+  if (theme.isV3) {
+    textFont = theme.fonts.labelMedium
+  } else {
+    textFont = (theme as any as MD2Theme)?.fonts.medium
+  }
+
+  if (inputType === inputTypes.keyboard && !label) {
+    labelText = 'Enter time'
+  }
 
   let color
   if (theme.isV3) {
@@ -155,19 +140,16 @@ export function TimePickerModal({
           <View
             style={[
               StyleSheet.absoluteFill,
-              styles.modalBackground,
+              sharedStyles.root,
               { backgroundColor: theme.colors?.backdrop },
             ]}
           />
         </TouchableWithoutFeedback>
         <View
-          style={[StyleSheet.absoluteFill, styles.modalRoot]}
+          style={[StyleSheet.absoluteFill, styles.center]}
           pointerEvents="box-none"
         >
-          <KeyboardAvoidingView
-            style={styles.keyboardView}
-            behavior={'padding'}
-          >
+          <KeyboardAvoidingView style={styles.center} behavior="padding">
             <Animated.View
               style={[
                 styles.modalContent,
@@ -218,7 +200,7 @@ export function TimePickerModal({
                   style={styles.inputTypeToggle}
                   accessibilityLabel="toggle keyboard"
                 />
-                <View style={styles.fill} />
+                <View style={sharedStyles.root} />
                 <Button onPress={onDismiss} uppercase={uppercase}>
                   {cancelLabel}
                 </Button>
@@ -244,23 +226,34 @@ function getMinutes(minutes: number | undefined | null): number {
     ? new Date().getMinutes()
     : minutes
 }
+
 function getHours(hours: number | undefined | null): number {
   return hours === undefined || hours === null ? new Date().getHours() : hours
 }
 
 const styles = StyleSheet.create({
-  modalRoot: {
+  bottom: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 8,
+  },
+  center: {
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
   },
-  keyboardView: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
+  inputTypeToggle: {
+    margin: 4,
   },
-  modalBackground: {
-    flex: 1,
+  labelContainer: {
+    justifyContent: 'flex-end',
+    paddingLeft: 24,
+    paddingRight: 24,
+    paddingTop: 16,
+  },
+  label: {
+    letterSpacing: 1,
+    fontSize: 13,
   },
   modalContent: {
     shadowColor: '#000',
@@ -274,29 +267,12 @@ const styles = StyleSheet.create({
     minWidth: 287,
     paddingVertical: 8,
   },
-  labelContainer: {
-    justifyContent: 'flex-end',
-    paddingLeft: 24,
-    paddingRight: 24,
-    paddingTop: 16,
-  },
-  label: {
-    letterSpacing: 1,
-    fontSize: 13,
-  },
   timePickerContainer: {
     paddingLeft: 24,
     paddingTop: 20,
     paddingBottom: 16,
     paddingRight: 24,
   },
-  bottom: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 8,
-  },
-  inputTypeToggle: { margin: 4 },
-  fill: { flex: 1 },
 })
 
-export default React.memo(TimePickerModal)
+export default memo(TimePickerModal)
