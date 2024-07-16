@@ -21,10 +21,11 @@ module.exports = async function (env, argv) {
     'react-native-web': path.join(node_modules, 'react-native-web'),
   })
 
-  // Add fallback for crypto module
+  // Add fallback for crypto and stream module
   config.resolve.fallback = {
     ...config.resolve.fallback,
     crypto: require.resolve('crypto-browserify'),
+    stream: require.resolve('stream-browserify'),
   }
 
   return config
