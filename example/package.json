@@ -20,7 +20,8 @@
     "react-dom": "18.2.0",
     "react-native": "0.73.6",
     "react-native-paper": "^5.12.3",
-    "react-native-web": "~0.19.12"
+    "react-native-web": "~0.19.12",
+    "stream-browserify": "^3.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.8",
