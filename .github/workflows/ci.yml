@@ -2,10 +2,10 @@ name: CI
 on:
   push:
     branches:
-      - fix-ci-example-deploy
+      - master
   pull_request:
     branches:
-      - fix-ci-example-deploy
+      - master
 
 jobs:
   lint:
@@ -66,7 +66,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   deploy-example:
     runs-on: ubuntu-latest
-    # if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
