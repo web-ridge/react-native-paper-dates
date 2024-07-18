@@ -17,6 +17,7 @@ function DatePickerInputWithoutModal(
     withDateFormatInLabel = true,
     hasError,
     hideValidationErrors,
+    showHelperTextOnError,
     onValidationError,
     modal,
     inputButton,
@@ -101,11 +102,13 @@ function DatePickerInputWithoutModal(
             inputButton={inputButton}
           />
         </View>
-        {error && !hideValidationErrors ? (
-          <HelperText type="error" visible={!!error}>
-            {error}
-          </HelperText>
-        ) : null}
+        {!!!showHelperTextOnError || !!hasError ? (
+          !hideValidationErrors ? (
+            <HelperText type="error" visible={!!error}>
+              {error}
+            </HelperText>
+          ) : null
+        ): null}
       </View>
       {modal?.({
         value,
@@ -142,8 +145,6 @@ function getLabel({
 
 const styles = StyleSheet.create({
   root: {
-    flex: 1,
-    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'flex-start',
     width: '100%',
