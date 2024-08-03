@@ -9,6 +9,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "start": "expo start",
+    "local-deploy": "npx expo export --platform web && npx serve dist",
     "test": "jest"
   },
   "dependencies": {
