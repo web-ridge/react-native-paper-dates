@@ -139,7 +139,7 @@
     "node_modules/",
     "lib/",
     "example/node_modules",
-    "example/web-build",
+    "example/dist",
     "docusaurus",
     "coverage"
   ],
