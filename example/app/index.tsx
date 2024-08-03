@@ -7,23 +7,20 @@ import {
   useWindowDimensions,
   useColorScheme,
 } from 'react-native'
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import {
   Button,
   Text,
-  Provider as PaperProvider,
   useTheme,
   Paragraph,
   List,
   Divider,
   Chip,
+  Provider as PaperProvider,
   MD3DarkTheme,
   MD3LightTheme,
-  MD2LightTheme,
   MD2DarkTheme,
+  MD2LightTheme,
 } from 'react-native-paper'
 import {
   DatePickerModal,
@@ -92,18 +89,14 @@ locales.forEach((locale) => {
   registerTranslation(locale[0], locale[1])
 })
 
-function App({
-  materialYouEnabled,
-  setMaterialYouEnabled,
-}: {
-  materialYouEnabled: boolean
-  setMaterialYouEnabled: (v: boolean) => void
-}) {
+export default function Example() {
   /** Hooks. */
+  const colorScheme = useColorScheme()
   const theme = useTheme()
   const insets = useSafeAreaInsets()
 
   /** State variables. */
+  const [materialYouEnabled, setMaterialYouEnabled] = useState(true)
   const [inputDate, setInputDate] = useState<Date | undefined>(undefined)
   const [date, setDate] = useState<Date | undefined>(undefined)
   const [dates, setDates] = useState<Date[] | undefined>()
@@ -124,6 +117,8 @@ function App({
   const [multiOpen, setMultiOpen] = useState(false)
 
   /** Constants. */
+  const m3Theme = colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme
+  const m2Theme = colorScheme === 'dark' ? MD2DarkTheme : MD2LightTheme
   const maxFontSizeMultiplier = 1.5
   const dateFormatter = useMemo(
     () =>
@@ -197,7 +192,7 @@ function App({
   const isLarge = dimensions.width > 600
 
   return (
-    <>
+    <PaperProvider theme={materialYouEnabled ? m3Theme : m2Theme}>
       <StatusBar />
       <ScrollView
         style={{ backgroundColor: theme.colors.background }}
@@ -209,7 +204,10 @@ function App({
         <View style={styles.contentContainer}>
           <View style={isLarge && styles.surface}>
             <View style={styles.row}>
-              <Image source={require('./schedule.png')} style={styles.logo} />
+              <Image
+                source={require('../assets/images/schedule.png')}
+                style={styles.logo}
+              />
               <View style={styles.column}>
                 <Text
                   maxFontSizeMultiplier={maxFontSizeMultiplier}
@@ -453,7 +451,6 @@ function App({
                   Pick multiple dates
                 </Button>
               </View>
-
               <View style={styles.sectionContainer}>
                 <View style={styles.section}>
                   <Text maxFontSizeMultiplier={maxFontSizeMultiplier}>
@@ -570,25 +567,7 @@ function App({
         hours={time.hours}
         minutes={time.minutes}
       />
-    </>
-  )
-}
-
-export default function AppWithProviders() {
-  const colorScheme = useColorScheme()
-  const [materialYouEnabled, setMaterialYouEnabled] = useState(true)
-  const m3Theme = colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme
-  const m2Theme = colorScheme === 'dark' ? MD2DarkTheme : MD2LightTheme
-
-  return (
-    <SafeAreaProvider>
-      <PaperProvider theme={materialYouEnabled ? m3Theme : m2Theme}>
-        <App
-          materialYouEnabled={materialYouEnabled}
-          setMaterialYouEnabled={setMaterialYouEnabled}
-        />
-      </PaperProvider>
-    </SafeAreaProvider>
+    </PaperProvider>
   )
 }
 
