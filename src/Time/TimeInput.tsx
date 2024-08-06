@@ -55,10 +55,10 @@ function TimeInput(
     setControlledValue(`${value}`)
   }, [value])
 
-  const onInnerChange = (text: string) => {
-    setControlledValue(text)
-    if (text !== '' && text !== '0') {
-      onChanged(Number(text))
+  const onInnerChange = (number: number) => {
+    setControlledValue(`${number}`)
+    if (number !== 0) {
+      onChanged(Number(number))
     }
   }
 
@@ -100,7 +100,10 @@ function TimeInput(
         onBlur={() => setInputFocused(false)}
         keyboardAppearance={theme.dark ? 'dark' : 'default'}
         keyboardType="number-pad"
-        onChangeText={onInnerChange}
+        onChangeText={(e: string) => {
+          onInnerChange(Number(e));
+        }
+        }
         {...rest}
       />
       {onPress && inputType === inputTypes.picker ? (
