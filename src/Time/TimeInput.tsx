@@ -101,9 +101,8 @@ function TimeInput(
         keyboardAppearance={theme.dark ? 'dark' : 'default'}
         keyboardType="number-pad"
         onChangeText={(e: string) => {
-          onInnerChange(Number(e));
-        }
-        }
+          onInnerChange(Number(e))
+        }}
         {...rest}
       />
       {onPress && inputType === inputTypes.picker ? (
