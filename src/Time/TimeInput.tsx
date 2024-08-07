@@ -57,7 +57,7 @@ function TimeInput(
 
   const onInnerChange = (number: number) => {
     setControlledValue(`${number}`)
-    if (number !== 0) {
+    if (number >= 0) {
       onChanged(Number(number))
     }
   }
