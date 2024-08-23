@@ -236,11 +236,11 @@ export function useInputFormat({
     const inputDate = formatter.format(new Date(2020, 10 - 1, 1))
 
     if (inputDate.includes('٢٠٢٠')) {
-			return inputDate
-				.replace('٢٠٢٠', 'YYYY')
-				.replace('١٠', 'MM')
-				.replace('٠١', 'DD');
-		}
+      return inputDate
+        .replace('٢٠٢٠', 'YYYY')
+        .replace('١٠', 'MM')
+        .replace('٠١', 'DD')
+    }
     return inputDate
       .replace('2020', locale === 'pt' ? 'AAAA' : 'YYYY')
       .replace('10', 'MM')
