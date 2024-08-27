@@ -5,6 +5,7 @@ import {
   useWindowDimensions,
   View,
   Platform,
+  Dimensions,
 } from 'react-native'
 import { useTheme } from 'react-native-paper'
 import DatePickerModalContent, {
@@ -75,33 +76,35 @@ export function DatePickerModal(
         supportedOrientations={supportedOrientations}
         statusBarTranslucent={true}
       >
-        <TouchableWithoutFeedback onPress={rest.onDismiss}>
-          <View
-            style={[
-              StyleSheet.absoluteFill,
-              sharedStyles.root,
-              { backgroundColor: theme.colors.backdrop },
-            ]}
-          />
-        </TouchableWithoutFeedback>
-        <View
-          style={[StyleSheet.absoluteFill, styles.modalRoot]}
-          pointerEvents="box-none"
-        >
-          <View
-            style={[
-              styles.modalContent,
-              { backgroundColor: theme.colors.surface },
-              dimensions.width > 650 ? styles.modalContentBig : null,
-            ]}
-          >
-            <DatePickerModalContent
-              {...rest}
-              inputEnabled={inputEnabled}
-              disableSafeTop={disableStatusBarPadding}
-              disableStatusBar={disableStatusBar}
-              statusBarOnTopOfBackdrop={isPageSheet || statusBarOnTopOfBackdrop}
+        <View style={styles.modal}>
+          <TouchableWithoutFeedback onPress={rest.onDismiss}>
+            <View
+              style={[
+                StyleSheet.absoluteFill,
+                sharedStyles.root,
+                { backgroundColor: theme.colors.backdrop },
+              ]}
             />
+          </TouchableWithoutFeedback>
+          <View
+            style={[StyleSheet.absoluteFill, styles.modalRoot]}
+            pointerEvents="box-none"
+          >
+            <View
+              style={[
+                styles.modalContent,
+                { backgroundColor: theme.colors.surface },
+                dimensions.width > 650 ? styles.modalContentBig : null,
+              ]}
+            >
+              <DatePickerModalContent
+                {...rest}
+                inputEnabled={inputEnabled}
+                disableSafeTop={disableStatusBarPadding}
+                disableStatusBar={disableStatusBar}
+                statusBarOnTopOfBackdrop={isPageSheet || statusBarOnTopOfBackdrop}
+              />
+            </View>
           </View>
         </View>
       </Modal>
@@ -110,6 +113,9 @@ export function DatePickerModal(
 }
 
 const styles = StyleSheet.create({
+  modal: {
+    height: Dimensions.get('screen').height
+  },
   modalContent: {
     flex: 1,
     width: '100%',
