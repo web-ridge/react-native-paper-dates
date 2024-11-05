@@ -24,6 +24,7 @@ function CalendarEdit({
   validRange,
   locale,
   inputEnabled,
+  withDateFormatInLabel,
 }: {
   mode: ModeType
   label?: string
@@ -35,6 +36,7 @@ function CalendarEdit({
   validRange: ValidRangeType | undefined
   locale: string
   inputEnabled?: boolean
+  withDateFormatInLabel?: boolean
 }) {
   const dateInput = useRef<TextInputNative | null>(null)
   const startInput = useRef<TextInputNative | null>(null)
@@ -93,6 +95,7 @@ function CalendarEdit({
           withModal={false}
           autoComplete={'off'}
           inputEnabled={inputEnabled}
+          withDateFormatInLabel={withDateFormatInLabel}
         />
       ) : null}
       {mode === 'range' ? (
@@ -110,6 +113,7 @@ function CalendarEdit({
             withModal={false}
             autoComplete={'off'}
             inputEnabled={inputEnabled}
+            withDateFormatInLabel={withDateFormatInLabel}
           />
           <View style={styles.separator} />
           <DatePickerInputWithoutModal
@@ -124,6 +128,7 @@ function CalendarEdit({
             withModal={false}
             autoComplete="off"
             inputEnabled={inputEnabled}
+            withDateFormatInLabel={withDateFormatInLabel}
           />
         </View>
       ) : null}

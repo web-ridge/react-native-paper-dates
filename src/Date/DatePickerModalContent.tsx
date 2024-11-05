@@ -212,6 +212,7 @@ export function DatePickerModalContent(
             validRange={validRange}
             locale={locale}
             inputEnabled={props.inputEnabled}
+            withDateFormatInLabel={props.withDateFormatInLabel}
           />
         }
       />

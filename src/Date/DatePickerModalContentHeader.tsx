@@ -12,6 +12,7 @@ export interface HeaderPickProps {
   moreLabel?: string
   label?: string
   emptyLabel?: string
+  withDateFormatInLabel?: boolean
   saveLabel?: string
   uppercase?: boolean
   headerSeparator?: string
