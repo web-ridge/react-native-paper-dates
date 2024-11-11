@@ -87,6 +87,8 @@ function DatePickerInput(
             presentationStyle={presentationStyle}
             label={rest.label as any}
             startWeekOnMonday={startWeekOnMonday}
+            withDateFormatInLabel={rest.withDateFormatInLabel}
+            placeholder={rest.placeholder}
           />
         ) : null
       }

@@ -101,6 +101,8 @@ export function DatePickerModal(
               disableSafeTop={disableStatusBarPadding}
               disableStatusBar={disableStatusBar}
               statusBarOnTopOfBackdrop={isPageSheet || statusBarOnTopOfBackdrop}
+              withDateFormatInLabel={props.withDateFormatInLabel}
+              placeholder={props.placeholder}
             />
           </View>
         </View>
