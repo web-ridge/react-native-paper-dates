@@ -12,7 +12,7 @@ export function showWeekDay(
 }
 
 export function dateToUnix(d: Date): number {
-  return Math.round(d.getTime() / 1000)
+  return Math.trunc(d.getTime() / 1000)
 }
 
 export function addMonths(date: Date, count: number) {
