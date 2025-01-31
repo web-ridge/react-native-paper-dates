@@ -71,11 +71,26 @@ function TimeInput(
   }
 
   return (
-    <View style={styles.root}>
+    <View
+      style={[
+        styles.root,
+        // eslint-disable-next-line react-native/no-inline-styles
+        {
+          backgroundColor,
+          borderRadius: theme.roundness * 2,
+          borderColor:
+            theme.isV3 && highlighted
+              ? theme.colors.onPrimaryContainer
+              : undefined,
+          borderWidth: theme.isV3 && highlighted ? 2 : 0,
+          height: inputType === inputTypes.keyboard ? 72 : 80,
+        },
+      ]}
+    >
       <TextInput
         ref={ref}
+        textAlign="center"
         style={[
-          styles.input,
           // eslint-disable-next-line react-native/no-inline-styles
           {
             color,
@@ -83,14 +98,12 @@ function TimeInput(
               ? theme.fonts.titleMedium.fontFamily
               : (theme as any as MD2Theme).fonts.medium.fontFamily,
             fontSize: inputFontSize,
-            backgroundColor,
-            borderRadius: theme.roundness * 2,
-            borderColor:
-              theme.isV3 && highlighted
-                ? theme.colors.onPrimaryContainer
+            lineHeight:
+              Platform.OS === 'android'
+                ? Math.max(inputFontSize, 48)
                 : undefined,
-            borderWidth: theme.isV3 && highlighted ? 2 : 0,
-            height: inputType === inputTypes.keyboard ? 72 : 80,
+            paddingTop: Platform.OS === 'android' ? 10 : undefined,
+            paddingBottom: Platform.OS === 'android' ? 0 : undefined,
           },
         ]}
         maxFontSizeMultiplier={1.5}
@@ -100,9 +113,7 @@ function TimeInput(
         onBlur={() => setInputFocused(false)}
         keyboardAppearance={theme.dark ? 'dark' : 'default'}
         keyboardType="number-pad"
-        onChangeText={(e: string) => {
-          onInnerChange(Number(e))
-        }}
+        onChangeText={(e) => onInnerChange(Number(e))}
         {...rest}
       />
       {onPress && inputType === inputTypes.picker ? (
@@ -130,14 +141,9 @@ function TimeInput(
 }
 
 const styles = StyleSheet.create({
-  input: {
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    width: 96,
-  },
   root: {
-    height: 80,
-    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
     width: 96,
   },
 })

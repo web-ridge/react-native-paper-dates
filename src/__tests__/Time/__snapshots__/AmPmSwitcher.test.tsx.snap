@@ -13,7 +13,7 @@ exports[`renders AmPmSwitcher 1`] = `
         "borderColor": "rgba(121, 116, 126, 1)",
         "borderRadius": 8,
         "height": 72,
-        "marginBottom": 24,
+        "marginBottom": 16,
       },
     ]
   }

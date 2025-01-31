@@ -44,7 +44,7 @@ export default function AmPmSwitcher({
           borderColor: backgroundColor,
           borderRadius: theme.roundness * 2,
           height: inputType === inputTypes.keyboard ? 72 : 80,
-          marginBottom: inputType === 'keyboard' ? 24 : 0,
+          marginBottom: inputType === 'keyboard' ? 16 : 0,
         },
       ]}
     >
