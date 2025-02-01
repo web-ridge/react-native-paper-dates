@@ -70,6 +70,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   buttonStyle: {
-    paddingHorizontal: 8
+    paddingHorizontal: 8,
   },
 })
