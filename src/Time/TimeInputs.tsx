@@ -122,7 +122,7 @@ function TimeInputs({
         style={[
           styles.hoursAndMinutesSeparator,
           // eslint-disable-next-line react-native/no-inline-styles
-          { marginBottom: inputType === 'keyboard' ? 24 : 0 },
+          { marginBottom: inputType === 'keyboard' ? 16 : 0 },
         ]}
       >
         <View style={sharedStyles.root} />

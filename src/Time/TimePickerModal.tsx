@@ -6,6 +6,7 @@ import {
   Animated,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
+  Keyboard,
 } from 'react-native'
 
 import {
@@ -195,7 +196,10 @@ export function TimePickerModal({
                     keyboard: keyboardIcon,
                     picker: clockIcon,
                   })}
-                  onPress={() => setInputType(reverseInputTypes[inputType])}
+                  onPress={() => {
+                    Keyboard.dismiss()
+                    setInputType(reverseInputTypes[inputType])
+                  }}
                   size={24}
                   style={styles.inputTypeToggle}
                   accessibilityLabel="toggle keyboard"

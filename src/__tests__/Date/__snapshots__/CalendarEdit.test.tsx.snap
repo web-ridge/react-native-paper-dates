@@ -220,8 +220,7 @@ exports[`renders CalendarEdit 1`] = `
             onChangeText={[Function]}
             onFocus={[Function]}
             onSubmitEditing={[Function]}
-            placeholder=" "
-            placeholderTextColor="rgba(73, 69, 79, 1)"
+            placeholderTextColor="transparent"
             selectionColor="rgba(103, 80, 164, 1)"
             style={
               [

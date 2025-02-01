@@ -10,7 +10,6 @@ module.exports = {
     'node_modules/(?!(@react-native|react-native(-.*)?)/)',
   ],
   setupFiles: ['<rootDir>/testSetup.js'],
-  setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect'],
   collectCoverage: true,
   collectCoverageFrom: [
     '**/src/**',

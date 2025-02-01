@@ -4,7 +4,6 @@
     "slug": "react-native-paper-dates-example",
     "description": "Example app for react-native-paper-dates",
     "version": "1.0.0",
-    "privacy": "public",
     "scheme": "react-native-paper-dates",
     "ios": {
       "supportsTablet": true

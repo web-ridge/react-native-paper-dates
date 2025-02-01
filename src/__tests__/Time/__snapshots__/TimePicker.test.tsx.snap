@@ -29,11 +29,20 @@ exports[`renders TimePicker 1`] = `
     >
       <View
         style={
-          {
-            "height": 80,
-            "position": "relative",
-            "width": 96,
-          }
+          [
+            {
+              "alignItems": "center",
+              "justifyContent": "center",
+              "width": 96,
+            },
+            {
+              "backgroundColor": "rgba(231, 224, 236, 1)",
+              "borderColor": undefined,
+              "borderRadius": 8,
+              "borderWidth": 0,
+              "height": 72,
+            },
+          ]
         }
       >
         <TextInput
@@ -52,22 +61,16 @@ exports[`renders TimePicker 1`] = `
           style={
             [
               {
-                "textAlign": "center",
-                "textAlignVertical": "center",
-                "width": 96,
-              },
-              {
-                "backgroundColor": "rgba(231, 224, 236, 1)",
-                "borderColor": undefined,
-                "borderRadius": 8,
-                "borderWidth": 0,
                 "color": "rgba(28, 27, 31, 1)",
                 "fontFamily": "System",
                 "fontSize": 57,
-                "height": 72,
+                "lineHeight": undefined,
+                "paddingBottom": undefined,
+                "paddingTop": undefined,
               },
             ]
           }
+          textAlign="center"
           value="06"
         />
       </View>
@@ -107,7 +110,7 @@ exports[`renders TimePicker 1`] = `
             "width": 24,
           },
           {
-            "marginBottom": 24,
+            "marginBottom": 16,
           },
         ]
       }
@@ -171,11 +174,20 @@ exports[`renders TimePicker 1`] = `
     >
       <View
         style={
-          {
-            "height": 80,
-            "position": "relative",
-            "width": 96,
-          }
+          [
+            {
+              "alignItems": "center",
+              "justifyContent": "center",
+              "width": 96,
+            },
+            {
+              "backgroundColor": "rgba(231, 224, 236, 1)",
+              "borderColor": undefined,
+              "borderRadius": 8,
+              "borderWidth": 0,
+              "height": 72,
+            },
+          ]
         }
       >
         <TextInput
@@ -192,22 +204,16 @@ exports[`renders TimePicker 1`] = `
           style={
             [
               {
-                "textAlign": "center",
-                "textAlignVertical": "center",
-                "width": 96,
-              },
-              {
-                "backgroundColor": "rgba(231, 224, 236, 1)",
-                "borderColor": undefined,
-                "borderRadius": 8,
-                "borderWidth": 0,
                 "color": "rgba(28, 27, 31, 1)",
                 "fontFamily": "System",
                 "fontSize": 57,
-                "height": 72,
+                "lineHeight": undefined,
+                "paddingBottom": undefined,
+                "paddingTop": undefined,
               },
             ]
           }
+          textAlign="center"
           value="30"
         />
       </View>
@@ -257,7 +263,7 @@ exports[`renders TimePicker 1`] = `
             "borderColor": "rgba(121, 116, 126, 1)",
             "borderRadius": 8,
             "height": 72,
-            "marginBottom": 24,
+            "marginBottom": 16,
           },
         ]
       }

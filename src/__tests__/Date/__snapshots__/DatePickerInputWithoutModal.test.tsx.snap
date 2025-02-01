@@ -212,8 +212,7 @@ exports[`renders DatePickerInput 1`] = `
           onChange={[Function]}
           onChangeText={[Function]}
           onFocus={[Function]}
-          placeholder=" "
-          placeholderTextColor="rgba(73, 69, 79, 1)"
+          placeholderTextColor="transparent"
           selectionColor="rgba(103, 80, 164, 1)"
           style={
             [
