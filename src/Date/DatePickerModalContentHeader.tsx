@@ -140,7 +140,6 @@ export function HeaderContentSingle({
     return new Intl.DateTimeFormat(locale, {
       month: 'short',
       day: 'numeric',
-      timeZone: 'UTC',
     })
   }, [locale])
 
@@ -175,7 +174,6 @@ export function HeaderContentMulti({
     return new Intl.DateTimeFormat(locale, {
       month: 'short',
       day: 'numeric',
-      timeZone: 'UTC',
     })
   }, [locale])
 
@@ -218,8 +216,7 @@ export function HeaderContentRange({
   const formatter = useMemo(() => {
     return new Intl.DateTimeFormat(locale, {
       month: 'short',
-      day: 'numeric',
-      timeZone: 'UTC',
+      day: 'numeric'
     })
   }, [locale])
 
