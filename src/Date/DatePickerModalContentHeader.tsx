@@ -216,7 +216,7 @@ export function HeaderContentRange({
   const formatter = useMemo(() => {
     return new Intl.DateTimeFormat(locale, {
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
     })
   }, [locale])
 
