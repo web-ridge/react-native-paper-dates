@@ -26,12 +26,18 @@ export default function AutoSizer({
     [layout, setLayout]
   )
 
+  const isLayoutInitialized = layout && layout.height > 0 && layout.width > 0
+
   return (
     <View
       onLayout={onLayout}
-      style={[sharedStyles.overflowHidden, sharedStyles.root, layout && layout]}
+      style={[
+        sharedStyles.overflowHidden,
+        sharedStyles.root,
+        isLayoutInitialized && layout,
+      ]}
     >
-      {layout ? children(layout) : null}
+      {isLayoutInitialized ? children(layout) : null}
     </View>
   )
 }
