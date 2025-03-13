@@ -105,7 +105,7 @@ function SwiperInner({
       const contentOffset = e.nativeEvent.contentOffset
       const viewSize = e.nativeEvent.layoutMeasurement
       const newIndex = isHorizontal
-        ? Math.floor(contentOffset.x / viewSize.width)
+        ? Math.round(contentOffset.x / viewSize.width)
         : getIndexFromVerticalOffset(
             contentOffset.y - beginOffset,
             startWeekOnMonday
