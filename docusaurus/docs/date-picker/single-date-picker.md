@@ -146,12 +146,10 @@ Flag indicating if the component should be enabled or not. Defaults to `true`.
 Flag indicating if the status bar padding should be enabled or not. Defaults to `false`.
 
 **presentationStyle**
-`Type: 'fullScreen' | 'pageSheet' | 'formSheet' | 'overFullScreen'`
+`Type: `'overFullScreen' | 'pageSheet' | undefined`
 Determines the visual presentation style of the date picker modal. This prop allows you to define how the modal appears on the screen when it is displayed.
 
-- `'fullScreen'`: Presents the modal as a full-screen overlay.
-- `'pageSheet'`: Displays the modal as a card-style sheet that covers a portion of the screen.
-- `'formSheet'`: Renders the modal as a smaller form-style sheet.
 - `'overFullScreen'`: Overlays the modal on top of the content, allowing interaction with the underlying content.
+- `'pageSheet'`: Displays the modal as a card-style sheet that covers a portion of the screen.
 
 For example, if you set `presentationStyle` to `'pageSheet'`, the modal will be presented as a card-like sheet.
