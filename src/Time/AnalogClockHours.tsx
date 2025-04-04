@@ -1,8 +1,8 @@
-import { View, StyleSheet } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import { circleSize } from './timeUtils'
 import { useTextColorOnPrimary } from '../shared/utils'
-import React, { memo } from 'react'
+import { memo } from 'react'
 
 function AnalogClockHours({
   is24Hour,

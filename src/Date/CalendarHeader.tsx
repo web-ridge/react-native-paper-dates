@@ -4,7 +4,7 @@ import DayNames, { dayNamesHeight } from './DayNames'
 import type { DisableWeekDaysType } from './dateUtils'
 import { getTranslation } from '../translations/utils'
 import { sharedStyles } from '../shared/styles'
-import React, { memo } from 'react'
+import { memo } from 'react'
 
 const buttonContainerHeight = 56
 const buttonContainerMarginTop = 4

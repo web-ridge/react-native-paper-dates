@@ -1,8 +1,8 @@
 import {
-  View,
   StyleSheet,
-  useWindowDimensions,
   TextInput as TextInputNative,
+  useWindowDimensions,
+  View,
 } from 'react-native'
 import { MD2Theme, Text, useTheme } from 'react-native-paper'
 
@@ -19,7 +19,6 @@ import { useLatest } from '../shared/utils'
 import Color from 'color'
 import { getTranslation } from '../translations/utils'
 import { memo, useCallback, useRef } from 'react'
-import React from 'react'
 import { sharedStyles } from '../shared/styles'
 
 function TimeInputs({

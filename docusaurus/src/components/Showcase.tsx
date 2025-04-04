@@ -1,19 +1,17 @@
-import React from 'react';
+import color from 'color'
 
-import color from 'color';
-
-import AppStoreIcon from './AppStoreIcon';
-import GithubIcon from './GithubIcon';
-import GooglePlayIcon from './GooglePlayIcon';
+import AppStoreIcon from './AppStoreIcon'
+import GithubIcon from './GithubIcon'
+import GooglePlayIcon from './GooglePlayIcon'
 
 type Data = {
-  color: string;
-  name: string;
-  image: string;
-  android?: string;
-  ios?: string;
-  github?: string;
-};
+  color: string
+  name: string
+  image: string
+  android?: string
+  ios?: string
+  github?: string
+}
 
 const data: Data[] = [
   {
@@ -24,15 +22,15 @@ const data: Data[] = [
       'https://play.google.com/store/apps/details?id=com.bitzllc.bluebird',
     ios: 'https://apps.apple.com/us/app/bluebirding/id1553837668',
   },
-];
+]
 
-const getOpacity = (item?: string) => (item ? 1 : 0.4);
+const getOpacity = (item?: string) => (item ? 1 : 0.4)
 
 export default function Showcase() {
   return (
     <div className="showcase-gallery">
       {data.map((item) => {
-        const tintColor = color(item.color).isLight() ? '#000000' : '#FFFFFF';
+        const tintColor = color(item.color).isLight() ? '#000000' : '#FFFFFF'
         return (
           <div key={item.image}>
             <div className="showcase-image-container">
@@ -80,8 +78,8 @@ export default function Showcase() {
               </div>
             </div>
           </div>
-        );
+        )
       })}
     </div>
-  );
+  )
 }

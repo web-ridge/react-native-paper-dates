@@ -1,5 +1,3 @@
-import * as React from 'react'
-
 import renderer from 'react-test-renderer'
 import YearPicker from '../../Date/YearPicker'
 

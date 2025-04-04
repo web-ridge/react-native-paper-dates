@@ -1,5 +1,3 @@
-import * as React from 'react'
-
 import renderer from 'react-test-renderer'
 import DatePickerInput from '../../Date/DatePickerInput'
 import { SafeAreaProvider } from 'react-native-safe-area-context'

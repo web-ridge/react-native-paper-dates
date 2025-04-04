@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import { memo } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { MD2Theme, Text, useTheme } from 'react-native-paper'
 

@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native'
 import DayName from './DayName'
 import { useTheme } from 'react-native-paper'
 import { DisableWeekDaysType, showWeekDay } from './dateUtils'
-import React, { memo, useMemo } from 'react'
+import { memo, useMemo } from 'react'
 
 export const dayNamesHeight = 44
 

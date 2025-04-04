@@ -1,10 +1,10 @@
 import {
   Modal,
+  Platform,
   StyleSheet,
   TouchableWithoutFeedback,
   useWindowDimensions,
   View,
-  Platform,
 } from 'react-native'
 import { useTheme } from 'react-native-paper'
 import DatePickerModalContent, {
@@ -12,7 +12,7 @@ import DatePickerModalContent, {
   DatePickerModalContentRangeProps,
   DatePickerModalContentSingleProps,
 } from './DatePickerModalContent'
-import React, { memo } from 'react'
+import { memo } from 'react'
 import { sharedStyles } from '../shared/styles'
 import { supportedOrientations } from '../shared/utils'
 

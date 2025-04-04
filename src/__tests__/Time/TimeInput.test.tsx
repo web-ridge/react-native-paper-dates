@@ -1,5 +1,3 @@
-import * as React from 'react'
-
 import renderer from 'react-test-renderer'
 import TimeInput from '../../Time/TimeInput'
 import { clockTypes } from '../../Time/timeUtils'

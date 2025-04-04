@@ -1,8 +1,8 @@
 import {
-  View,
+  Keyboard,
   StyleSheet,
   TextInput as TextInputNative,
-  Keyboard,
+  View,
 } from 'react-native'
 
 import type { ModeType, ValidRangeType } from './Calendar'
@@ -10,7 +10,6 @@ import type { LocalState } from './DatePickerModalContent'
 
 import DatePickerInputWithoutModal from './DatePickerInputWithoutModal'
 import { memo, useCallback, useEffect, useRef } from 'react'
-import React from 'react'
 import { sharedStyles } from '../shared/styles'
 
 function CalendarEdit({

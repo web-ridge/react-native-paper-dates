@@ -1,5 +1,3 @@
-import * as React from 'react'
-
 import renderer from 'react-test-renderer'
 import AutoSizer from '../../Date/AutoSizer'
 

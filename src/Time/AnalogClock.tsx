@@ -23,7 +23,6 @@ import AnimatedClockSwitcher from './AnimatedClockSwitcher'
 import AnalogClockMinutes from './AnalogClockMinutes'
 import { DisplayModeContext } from '../contexts/DisplayModeContext'
 import { memo, useCallback, useContext, useRef } from 'react'
-import React from 'react'
 
 function returnTrue() {
   return true

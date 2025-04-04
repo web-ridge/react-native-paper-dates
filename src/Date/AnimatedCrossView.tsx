@@ -1,4 +1,3 @@
-import React from 'react'
 import { useEffect, useRef } from 'react'
 import { Animated, StyleSheet, View } from 'react-native'
 import { useTheme } from 'react-native-paper'

@@ -1,11 +1,11 @@
-import { View, StyleSheet } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { IconButton, MD2Theme, Text, useTheme } from 'react-native-paper'
 import type { ModeType } from './Calendar'
 import type { LocalState } from './DatePickerModalContent'
 import { useHeaderTextColor } from '../shared/utils'
 import Color from 'color'
 import { getTranslation } from '../translations/utils'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { sharedStyles } from '../shared/styles'
 
 export interface HeaderPickProps {

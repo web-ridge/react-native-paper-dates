@@ -7,7 +7,10 @@ import {
   useWindowDimensions,
   useColorScheme,
 } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import {
+  SafeAreaProvider,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context'
 import {
   Button,
   Text,
@@ -57,7 +60,7 @@ import {
   sv,
 } from 'react-native-paper-dates'
 import { useCallback, useMemo, useState } from 'react'
-import React from 'react'
+
 import { StatusBar } from 'expo-status-bar'
 
 const presentationStyles = ['overFullScreen', 'pageSheet'] as const
@@ -95,14 +98,18 @@ locales.forEach((locale) => {
   registerTranslation(locale[0], locale[1])
 })
 
-export default function Example() {
-  /** Hooks. */
-  const colorScheme = useColorScheme()
+function Example({
+  materialYouEnabled,
+  setMaterialYouEnabled,
+}: {
+  materialYouEnabled: boolean
+  setMaterialYouEnabled: (enabled: boolean) => void
+}) {
   const theme = useTheme()
   const insets = useSafeAreaInsets()
 
   /** State variables. */
-  const [materialYouEnabled, setMaterialYouEnabled] = useState(true)
+
   const [inputDate, setInputDate] = useState<Date | undefined>(undefined)
   const [date, setDate] = useState<Date | undefined>(undefined)
   const [dates, setDates] = useState<Date[] | undefined>()
@@ -121,11 +128,10 @@ export default function Example() {
   const [rangeOpen, setRangeOpen] = useState(false)
   const [singleOpen, setSingleOpen] = useState(false)
   const [multiOpen, setMultiOpen] = useState(false)
+  const maxFontSizeMultiplier = 1.5
 
   /** Constants. */
-  const m3Theme = colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme
-  const m2Theme = colorScheme === 'dark' ? MD2DarkTheme : MD2LightTheme
-  const maxFontSizeMultiplier = 1.5
+
   const dateFormatter = useMemo(
     () =>
       new Intl.DateTimeFormat(locale, {
@@ -198,8 +204,7 @@ export default function Example() {
   const isLarge = dimensions.width > 600
 
   return (
-    <PaperProvider theme={materialYouEnabled ? m3Theme : m2Theme}>
-      <StatusBar />
+    <>
       <ScrollView
         style={{ backgroundColor: theme.colors.background }}
         contentContainerStyle={[
@@ -210,10 +215,7 @@ export default function Example() {
         <View style={styles.contentContainer}>
           <View style={isLarge && styles.surface}>
             <View style={styles.row}>
-              <Image
-                source={require('../assets/images/schedule.png')}
-                style={styles.logo}
-              />
+              <Image source={require('./schedule.png')} style={styles.logo} />
               <View style={styles.column}>
                 <Text
                   maxFontSizeMultiplier={maxFontSizeMultiplier}
@@ -573,7 +575,27 @@ export default function Example() {
         hours={time.hours}
         minutes={time.minutes}
       />
-    </PaperProvider>
+    </>
+  )
+}
+
+export default function App() {
+  const colorScheme = useColorScheme()
+  const [materialYouEnabled, setMaterialYouEnabled] = useState(true)
+  const m3Theme = colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme
+  const m2Theme = colorScheme === 'dark' ? MD2DarkTheme : MD2LightTheme
+
+  return (
+    <SafeAreaProvider>
+      <PaperProvider theme={materialYouEnabled ? m3Theme : m2Theme}>
+        <StatusBar style="auto" />
+
+        <Example
+          materialYouEnabled={materialYouEnabled}
+          setMaterialYouEnabled={setMaterialYouEnabled}
+        />
+      </PaperProvider>
+    </SafeAreaProvider>
   )
 }
 

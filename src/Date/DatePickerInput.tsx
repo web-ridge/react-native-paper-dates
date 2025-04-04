@@ -5,7 +5,6 @@ import type { DatePickerInputProps } from './DatePickerInput.shared'
 import DatePickerInputWithoutModal from './DatePickerInputWithoutModal'
 import { Platform, StyleProp, ViewStyle } from 'react-native'
 import { forwardRef, useCallback, useState } from 'react'
-import React from 'react'
 
 function DatePickerInput(
   {

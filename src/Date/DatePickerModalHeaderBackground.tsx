@@ -1,4 +1,3 @@
-import React from 'react'
 import { Animated, StyleSheet } from 'react-native'
 import { useHeaderBackgroundColor } from '../shared/utils'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'

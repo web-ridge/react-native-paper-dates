@@ -1,28 +1,28 @@
 import { StyleSheet, View } from 'react-native'
 import {
-  Text,
-  useTheme,
-  TouchableRipple,
-  MD2Theme,
   Icon,
+  MD2Theme,
+  Text,
+  TouchableRipple,
+  useTheme,
 } from 'react-native-paper'
 import Day, { EmptyDay } from './Day'
 
 import {
   addMonths,
   areDatesOnSameDay,
+  beginOffset,
   daySize,
   DisableWeekDaysType,
+  estimatedMonthHeight,
   getDaysInMonth,
   getFirstDayOfMonth,
-  getRealIndex,
   getGridCount,
-  isDateBetween,
+  getRealIndex,
   gridCounts,
+  isDateBetween,
   showWeekDay,
   startAtIndex,
-  beginOffset,
-  estimatedMonthHeight,
   useRangeChecker,
 } from './dateUtils'
 import { getCalendarHeaderHeight } from './CalendarHeader'
@@ -35,7 +35,6 @@ import type {
 import { dayNamesHeight } from './DayNames'
 import { useTextColorOnPrimary } from '../shared/utils'
 import { memo, useMemo } from 'react'
-import React from 'react'
 import { sharedStyles } from '../shared/styles'
 
 interface BaseMonthProps {

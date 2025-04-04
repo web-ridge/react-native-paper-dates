@@ -1,9 +1,8 @@
-import * as React from 'react'
-
 import renderer from 'react-test-renderer'
 import TimeInputs from '../../Time/TimeInputs'
 import en from '../../translations/en'
 import { registerTranslation } from '../../translations/utils'
+
 registerTranslation('en', en)
 
 it('renders TimeInputs', () => {

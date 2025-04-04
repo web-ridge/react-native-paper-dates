@@ -1,12 +1,12 @@
 import {
+  Animated,
+  Keyboard,
+  KeyboardAvoidingView,
   Modal,
   StyleSheet,
-  View,
   Text,
-  Animated,
   TouchableWithoutFeedback,
-  KeyboardAvoidingView,
-  Keyboard,
+  View,
 } from 'react-native'
 
 import {

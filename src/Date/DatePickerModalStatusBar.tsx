@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import { memo } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useHeaderBackgroundColor } from '../shared/utils'
 import Color from 'color'

@@ -1,10 +1,9 @@
-import { View, StyleSheet } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { MD2Theme, Text, TouchableRipple, useTheme } from 'react-native-paper'
 import { useContext, useMemo } from 'react'
 import Color from 'color'
 import { inputTypes, PossibleInputTypes, useSwitchColors } from './timeUtils'
 import { DisplayModeContext } from '../contexts/DisplayModeContext'
-import React from 'react'
 import { sharedStyles } from '../shared/styles'
 
 export default function AmPmSwitcher({

@@ -1,11 +1,11 @@
 import {
-  View,
+  Platform,
+  StyleSheet,
   TextInput,
   TextInputProps,
-  StyleSheet,
-  Platform,
+  View,
 } from 'react-native'
-import { useTheme, TouchableRipple, MD2Theme } from 'react-native-paper'
+import { MD2Theme, TouchableRipple, useTheme } from 'react-native-paper'
 
 import Color from 'color'
 import {
@@ -15,7 +15,6 @@ import {
   useInputColors,
 } from './timeUtils'
 import { forwardRef, useEffect, useState } from 'react'
-import React from 'react'
 import { sharedStyles } from '../shared/styles'
 
 interface TimeInputProps
@@ -91,6 +90,7 @@ function TimeInput(
         ref={ref}
         textAlign="center"
         style={[
+          styles.input,
           // eslint-disable-next-line react-native/no-inline-styles
           {
             color,
@@ -104,6 +104,7 @@ function TimeInput(
                 : undefined,
             paddingTop: Platform.OS === 'android' ? 10 : undefined,
             paddingBottom: Platform.OS === 'android' ? 0 : undefined,
+            textAlign: 'center',
           },
         ]}
         maxFontSizeMultiplier={1.5}
@@ -144,6 +145,9 @@ const styles = StyleSheet.create({
   root: {
     alignItems: 'center',
     justifyContent: 'center',
+    width: 96,
+  },
+  input: {
     width: 96,
   },
 })

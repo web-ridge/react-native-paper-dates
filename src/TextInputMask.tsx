@@ -1,5 +1,10 @@
-import React, { ComponentProps, ReactNode, useEffect, useState } from 'react'
-import { forwardRef } from 'react'
+import {
+  ComponentProps,
+  forwardRef,
+  ReactNode,
+  useEffect,
+  useState,
+} from 'react'
 import { TextInput } from 'react-native-paper'
 
 const splitCharacters = ['-', '/', '.', '年', ' ']

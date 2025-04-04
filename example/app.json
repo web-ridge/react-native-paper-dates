@@ -1,10 +1,17 @@
 {
+  "name": "react-native-paper-dates-example",
+  "displayName": "PaperDates Example",
   "expo": {
     "name": "react-native-paper-dates-example",
     "slug": "react-native-paper-dates-example",
     "description": "Example app for react-native-paper-dates",
+    "privacy": "public",
     "version": "1.0.0",
-    "scheme": "react-native-paper-dates",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -12,23 +19,14 @@
       "translucent": true
     },
     "web": {
-      "bundler": "metro",
-      "favicon": "./assets/images/favicon.png",
+      "favicon": "./favicon.png",
       "name": "React Native Paper Dates",
       "shortName": "PaperDates",
-      "description": "Example app for react-native-paper-dates",
-      "output": "static"
+      "description": "Example app for react-native-paper-dates"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
-    "userInterfaceStyle": "automatic",
-    "plugins": [
-      "expo-router"
-    ],
-    "newArchEnabled": true,
-    "experiments": {
-      "typedRoutes": true
-    }
+    "userInterfaceStyle": "automatic"
   }
 }

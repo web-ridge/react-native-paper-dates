@@ -1,8 +1,6 @@
-import React from 'react';
-
 type Props = {
-  color: string;
-};
+  color: string
+}
 
 const GooglePlayIcon = ({ color }: Props) => (
   <svg width="20px" height="23px" viewBox="0 0 20 23">
@@ -21,6 +19,6 @@ const GooglePlayIcon = ({ color }: Props) => (
       </g>
     </g>
   </svg>
-);
+)
 
-export default GooglePlayIcon;
+export default GooglePlayIcon

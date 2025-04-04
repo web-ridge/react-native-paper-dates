@@ -1,4 +1,3 @@
-import React from 'react'
 import { useCallback, useState } from 'react'
 import { LayoutChangeEvent, View } from 'react-native'
 import { sharedStyles } from '../shared/styles'

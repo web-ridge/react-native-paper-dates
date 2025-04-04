@@ -1,8 +1,6 @@
-import React from 'react';
-
 type Props = {
-  color: string;
-};
+  color: string
+}
 
 const AppStoreIcon = ({ color }: Props) => (
   <svg width="24px" height="23px" viewBox="-4 0 20 23">
@@ -24,6 +22,6 @@ const AppStoreIcon = ({ color }: Props) => (
       </g>
     </g>
   </svg>
-);
+)
 
-export default AppStoreIcon;
+export default AppStoreIcon

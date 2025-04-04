@@ -9,14 +9,14 @@ import { beginOffset, estimatedMonthHeight, totalMonths } from './dateUtils'
 import { useLatest } from '../shared/utils'
 import { RenderProps, SwiperProps, useYearChange } from './SwiperUtils'
 import AutoSizer from './AutoSizer'
-import React, {
+import {
   memo,
+  UIEvent,
   useCallback,
   useEffect,
   useLayoutEffect,
   useRef,
   useState,
-  UIEvent,
 } from 'react'
 import { sharedStyles } from '../shared/styles'
 

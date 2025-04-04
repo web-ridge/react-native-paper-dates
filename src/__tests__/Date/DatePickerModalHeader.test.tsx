@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 import renderer from 'react-test-renderer'

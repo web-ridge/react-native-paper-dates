@@ -17,7 +17,6 @@ import { SwiperProps, useYearChange } from './SwiperUtils'
 import { beginOffset, estimatedMonthHeight, totalMonths } from './dateUtils'
 import AutoSizer from './AutoSizer'
 import { memo, useCallback, useRef, useState } from 'react'
-import React from 'react'
 import { sharedStyles } from '../shared/styles'
 
 function getVisibleArray(

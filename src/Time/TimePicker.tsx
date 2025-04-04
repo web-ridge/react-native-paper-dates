@@ -1,6 +1,7 @@
-import { View, StyleSheet, useWindowDimensions } from 'react-native'
-import React, { memo } from 'react'
+import { StyleSheet, useWindowDimensions, View } from 'react-native'
+
 import {
+  circleSize,
   inputTypes,
   PossibleClockTypes,
   PossibleInputTypes,
@@ -9,10 +10,9 @@ import {
 } from './timeUtils'
 
 import AnalogClock from './AnalogClock'
-import { circleSize } from './timeUtils'
 import TimeInputs from './TimeInputs'
 import { DisplayModeContext } from '../contexts/DisplayModeContext'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 
 type onChangeFunc = ({
   hours,

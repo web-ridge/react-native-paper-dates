@@ -1,4 +1,3 @@
-import React from 'react'
 import { Animated, StyleSheet } from 'react-native'
 import { Appbar, Button, useTheme } from 'react-native-paper'
 import { useHeaderTextColor } from '../shared/utils'

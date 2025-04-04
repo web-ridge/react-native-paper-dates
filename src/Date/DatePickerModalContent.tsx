@@ -17,7 +17,7 @@ import CalendarEdit from './CalendarEdit'
 import DatePickerModalHeaderBackground from './DatePickerModalHeaderBackground'
 import { useTheme } from 'react-native-paper'
 import DatePickerModalStatusBar from './DatePickerModalStatusBar'
-import React, { memo, useCallback, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 
 export type LocalState = {
   startDate: CalendarDate

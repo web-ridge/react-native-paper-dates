@@ -1,9 +1,9 @@
 import TextInputWithMask from '../TextInputMask'
 import { HelperText, useTheme } from 'react-native-paper'
-import { View, StyleSheet } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import useDateInput from './inputUtils'
 import type { DatePickerInputProps } from './DatePickerInput.shared'
-import React, { forwardRef, ReactNode } from 'react'
+import { forwardRef, ReactNode } from 'react'
 
 function DatePickerInputWithoutModal(
   {

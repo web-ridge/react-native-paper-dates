@@ -61,12 +61,16 @@ exports[`renders TimePicker 1`] = `
           style={
             [
               {
+                "width": 96,
+              },
+              {
                 "color": "rgba(28, 27, 31, 1)",
                 "fontFamily": "System",
                 "fontSize": 57,
                 "lineHeight": undefined,
                 "paddingBottom": undefined,
                 "paddingTop": undefined,
+                "textAlign": "center",
               },
             ]
           }
@@ -204,12 +208,16 @@ exports[`renders TimePicker 1`] = `
           style={
             [
               {
+                "width": 96,
+              },
+              {
                 "color": "rgba(28, 27, 31, 1)",
                 "fontFamily": "System",
                 "fontSize": 57,
                 "lineHeight": undefined,
                 "paddingBottom": undefined,
                 "paddingTop": undefined,
+                "textAlign": "center",
               },
             ]
           }

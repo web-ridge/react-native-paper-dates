@@ -1,8 +1,7 @@
-import { FlatList, StyleSheet, View, ScrollView } from 'react-native'
+import { FlatList, ScrollView, StyleSheet, View } from 'react-native'
 import { MD2Theme, Text, TouchableRipple, useTheme } from 'react-native-paper'
 import { range } from '../shared/utils'
 import { memo, useEffect, useRef } from 'react'
-import React from 'react'
 import { sharedStyles } from '../shared/styles'
 
 const ITEM_HEIGHT = 62

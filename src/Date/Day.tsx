@@ -5,7 +5,6 @@ import { daySize } from './dateUtils'
 
 import type { PaperTheme } from '../shared/utils'
 import { memo, useCallback } from 'react'
-import React from 'react'
 
 function EmptyDayPure() {
   return <View style={styles.empty} />

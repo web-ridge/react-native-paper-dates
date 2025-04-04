@@ -1,6 +1,6 @@
 import { Animated, StyleSheet, View } from 'react-native'
 import { clockTypes, PossibleClockTypes } from './timeUtils'
-import React, { ReactElement, useEffect, useRef } from 'react'
+import { ReactElement, useEffect, useRef } from 'react'
 import AnalogClockHours from './AnalogClockHours'
 import AnalogClockMinutes from './AnalogClockMinutes'
 

@@ -1,9 +1,8 @@
-import * as React from 'react'
-
 import renderer from 'react-test-renderer'
 import TimePicker from '../../Time/TimePicker'
 import en from '../../translations/en'
 import { registerTranslation } from '../../translations/utils'
+
 registerTranslation('en', en)
 
 it('renders TimePicker', () => {
