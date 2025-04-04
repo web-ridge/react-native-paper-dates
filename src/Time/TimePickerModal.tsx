@@ -26,7 +26,7 @@ import {
   PossibleInputTypes,
   reverseInputTypes,
 } from './timeUtils'
-import React, { memo, useCallback, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import { sharedStyles } from '../shared/styles'
 import { supportedOrientations } from '../shared/utils'
 
@@ -192,6 +192,11 @@ export function TimePickerModal({
               </View>
               <View style={styles.bottom}>
                 <IconButton
+                  iconColor={
+                    theme?.isV3
+                      ? theme.colors.onSurfaceVariant
+                      : (theme as any as MD2Theme).colors.text
+                  }
                   icon={getTimeInputTypeIcon(inputType, {
                     keyboard: keyboardIcon,
                     picker: clockIcon,
