@@ -194,7 +194,7 @@ export function TimePickerModal({
                 <IconButton
                   iconColor={
                     theme?.isV3
-                      ? theme.colors.onSurfaceVariant
+                      ? theme.colors.onBackground
                       : (theme as any as MD2Theme).colors.text
                   }
                   icon={getTimeInputTypeIcon(inputType, {
