@@ -74,6 +74,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   buttonLabel: {
-    flexGrow: 1
+    flexGrow: 1,
   },
 })
