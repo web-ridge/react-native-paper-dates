@@ -31,8 +31,8 @@ exports[`renders TimePicker 1`] = `
         style={
           [
             {
-              "alignItems": "center",
               "justifyContent": "center",
+              "paddingLeft": 10,
               "width": 96,
             },
             {
@@ -180,8 +180,8 @@ exports[`renders TimePicker 1`] = `
         style={
           [
             {
-              "alignItems": "center",
               "justifyContent": "center",
+              "paddingLeft": 10,
               "width": 96,
             },
             {

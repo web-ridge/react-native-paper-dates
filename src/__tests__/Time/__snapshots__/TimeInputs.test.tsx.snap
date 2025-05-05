@@ -23,8 +23,8 @@ exports[`renders TimeInputs 1`] = `
       style={
         [
           {
-            "alignItems": "center",
             "justifyContent": "center",
+            "paddingLeft": 10,
             "width": 96,
           },
           {
@@ -172,8 +172,8 @@ exports[`renders TimeInputs 1`] = `
       style={
         [
           {
-            "alignItems": "center",
             "justifyContent": "center",
+            "paddingLeft": 10,
             "width": 96,
           },
           {

@@ -143,8 +143,8 @@ function TimeInput(
 
 const styles = StyleSheet.create({
   root: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: "center",
+    paddingLeft: 10,
     width: 96,
   },
   input: {
