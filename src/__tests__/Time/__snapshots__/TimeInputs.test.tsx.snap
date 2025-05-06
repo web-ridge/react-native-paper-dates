@@ -24,7 +24,6 @@ exports[`renders TimeInputs 1`] = `
         [
           {
             "justifyContent": "center",
-            "paddingLeft": 10,
             "width": 96,
           },
           {
@@ -33,6 +32,7 @@ exports[`renders TimeInputs 1`] = `
             "borderRadius": 8,
             "borderWidth": 0,
             "height": 72,
+            "paddingLeft": 0,
           },
         ]
       }
@@ -173,7 +173,6 @@ exports[`renders TimeInputs 1`] = `
         [
           {
             "justifyContent": "center",
-            "paddingLeft": 10,
             "width": 96,
           },
           {
@@ -182,6 +181,7 @@ exports[`renders TimeInputs 1`] = `
             "borderRadius": 8,
             "borderWidth": 0,
             "height": 72,
+            "paddingLeft": 0,
           },
         ]
       }

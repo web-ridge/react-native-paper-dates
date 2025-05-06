@@ -83,6 +83,7 @@ function TimeInput(
               : undefined,
           borderWidth: theme.isV3 && highlighted ? 2 : 0,
           height: inputType === inputTypes.keyboard ? 72 : 80,
+          paddingLeft: (Platform.OS === 'android' || Platform.OS === 'ios') ? 0 : 10,
         },
       ]}
     >
@@ -144,7 +145,6 @@ function TimeInput(
 const styles = StyleSheet.create({
   root: {
     justifyContent: "center",
-    paddingLeft: 10,
     width: 96,
   },
   input: {

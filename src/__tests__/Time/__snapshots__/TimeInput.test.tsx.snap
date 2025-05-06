@@ -6,7 +6,6 @@ exports[`renders TimeInput 1`] = `
     [
       {
         "justifyContent": "center",
-        "paddingLeft": 10,
         "width": 96,
       },
       {
@@ -15,6 +14,7 @@ exports[`renders TimeInput 1`] = `
         "borderRadius": 8,
         "borderWidth": 2,
         "height": 80,
+        "paddingLeft": 0,
       },
     ]
   }
