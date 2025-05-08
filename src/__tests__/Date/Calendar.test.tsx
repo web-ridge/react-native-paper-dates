@@ -1,21 +1,14 @@
-import renderer from 'react-test-renderer'
+import { render } from '@testing-library/react-native'
 import Calendar from '../../Date/Calendar'
 
 it('renders Calendar', () => {
-  const tree = renderer
-    .create(
-      <Calendar
-        locale="en"
-        mode={'single'}
-        startDate={new Date('01/01/2022')}
-        endDate={new Date('01/01/2022')}
-        date={new Date('01/01/2022')}
-        onChange={() => null}
-        dates={[]}
-        dateMode={'start'}
-      />
-    )
-    .toJSON()
-
-  expect(tree).toMatchSnapshot()
+  const { toJSON } = render(
+    <Calendar
+      locale="en"
+      mode="single"
+      date={new Date()}
+      onChange={() => null}
+    />
+  )
+  expect(toJSON()).toMatchSnapshot()
 })

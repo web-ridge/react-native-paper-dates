@@ -1,3 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders AutoSizer 1`] = `null`;
+exports[`renders AutoSizer 1`] = `
+<View
+  onLayout={[Function]}
+  style={
+    [
+      {
+        "overflow": "hidden",
+      },
+      {
+        "flex": 1,
+      },
+      null,
+    ]
+  }
+/>
+`;

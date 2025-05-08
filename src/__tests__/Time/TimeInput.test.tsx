@@ -1,19 +1,17 @@
-import renderer from 'react-test-renderer'
+import { render } from '@testing-library/react-native'
 import TimeInput from '../../Time/TimeInput'
 import { clockTypes } from '../../Time/timeUtils'
 
 it('renders TimeInput', () => {
-  const tree = renderer
-    .create(
-      <TimeInput
-        value={12}
-        clockType={clockTypes.hours}
-        pressed
-        inputType={'picker'}
-        onChanged={() => null}
-      />
-    )
-    .toJSON()
+  const { toJSON } = render(
+    <TimeInput
+      value={12}
+      clockType={clockTypes.hours}
+      pressed
+      inputType={'picker'}
+      onChanged={() => null}
+    />
+  )
 
-  expect(tree).toMatchSnapshot()
+  expect(toJSON()).toMatchSnapshot()
 })

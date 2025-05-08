@@ -1,3 +1,48 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders collapsed AnimatedCrossView 1`] = `null`;
+exports[`renders AnimatedCrossView 1`] = `
+<View
+  style={
+    {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    collapsable={false}
+    pointerEvents="none"
+    style={
+      {
+        "flex": 1,
+        "opacity": 0,
+        "transform": [
+          {
+            "scaleY": 0.85,
+          },
+          {
+            "scaleX": 0.95,
+          },
+        ],
+      }
+    }
+  />
+  <View
+    collapsable={false}
+    pointerEvents="auto"
+    style={
+      {
+        "backgroundColor": "rgba(255, 251, 254, 1)",
+        "left": 0,
+        "opacity": 1,
+        "position": "absolute",
+        "right": 0,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      }
+    }
+  />
+</View>
+`;

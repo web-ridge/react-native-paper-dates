@@ -1,18 +1,15 @@
-import renderer from 'react-test-renderer'
+import { render } from '@testing-library/react-native'
 import CalendarHeader from '../../Date/CalendarHeader'
 
 it('renders CalendarHeader', () => {
-  const tree = renderer
-    .create(
-      <CalendarHeader
-        locale={'en'}
-        onPrev={() => null}
-        onNext={() => null}
-        scrollMode={'vertical'}
-        startWeekOnMonday={false}
-      />
-    )
-    .toJSON()
-
-  expect(tree).toMatchSnapshot()
+  const { toJSON } = render(
+    <CalendarHeader
+      locale="en"
+      onPrev={() => null}
+      onNext={() => null}
+      scrollMode="vertical"
+      startWeekOnMonday={false}
+    />
+  )
+  expect(toJSON()).toMatchSnapshot()
 })
