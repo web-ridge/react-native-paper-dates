@@ -1,8 +1,7 @@
-import renderer from 'react-test-renderer'
+import { render } from '@testing-library/react-native'
 import DayName from '../../Date/DayName'
 
 it('renders DayName', () => {
-  const tree = renderer.create(<DayName label={'Monday'} />).toJSON()
-
-  expect(tree).toMatchSnapshot()
+  const { toJSON } = render(<DayName label="Monday" />)
+  expect(toJSON()).toMatchSnapshot()
 })

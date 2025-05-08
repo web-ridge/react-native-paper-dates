@@ -1,18 +1,14 @@
-import renderer from 'react-test-renderer'
+import { render } from '@testing-library/react-native'
 import DatePickerInputWithoutModal from '../../Date/DatePickerInputWithoutModal'
 
-it('renders DatePickerInput', () => {
-  const tree = renderer
-    .create(
-      <DatePickerInputWithoutModal
-        locale={'en'}
-        value={new Date('12/26/2022')}
-        onChange={() => null}
-        inputMode="start"
-        autoComplete={'birthdate-full'}
-      />
-    )
-    .toJSON()
-
-  expect(tree).toMatchSnapshot()
+it('renders DatePickerInputWithoutModal', () => {
+  const { toJSON } = render(
+    <DatePickerInputWithoutModal
+      locale="en"
+      value={new Date()}
+      onChange={() => null}
+      inputMode="start"
+    />
+  )
+  expect(toJSON()).toMatchSnapshot()
 })

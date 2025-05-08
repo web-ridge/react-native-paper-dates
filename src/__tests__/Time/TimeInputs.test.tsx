@@ -1,4 +1,4 @@
-import renderer from 'react-test-renderer'
+import { render } from '@testing-library/react-native'
 import TimeInputs from '../../Time/TimeInputs'
 import en from '../../translations/en'
 import { registerTranslation } from '../../translations/utils'
@@ -6,20 +6,18 @@ import { registerTranslation } from '../../translations/utils'
 registerTranslation('en', en)
 
 it('renders TimeInputs', () => {
-  const tree = renderer
-    .create(
-      <TimeInputs
-        inputType="keyboard"
-        hours={12}
-        minutes={45}
-        is24Hour
-        locale="en"
-        onChange={() => null}
-        onFocusInput={() => null}
-        focused="hours"
-      />
-    )
-    .toJSON()
+  const { toJSON } = render(
+    <TimeInputs
+      inputType="keyboard"
+      hours={12}
+      minutes={45}
+      is24Hour
+      locale="en"
+      onChange={() => null}
+      onFocusInput={() => null}
+      focused="hours"
+    />
+  )
 
-  expect(tree).toMatchSnapshot()
+  expect(toJSON()).toMatchSnapshot()
 })

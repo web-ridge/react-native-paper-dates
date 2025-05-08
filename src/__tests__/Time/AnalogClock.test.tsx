@@ -1,19 +1,17 @@
-import renderer from 'react-test-renderer'
+import { render } from '@testing-library/react-native'
 
 import AnalogClock from '../../Time/AnalogClock'
 
 it('renders AnalogClock', () => {
-  const tree = renderer
-    .create(
-      <AnalogClock
-        hours={12}
-        minutes={30}
-        focused="hours"
-        is24Hour={false}
-        onChange={() => null}
-      />
-    )
-    .toJSON()
+  const { toJSON } = render(
+    <AnalogClock
+      hours={12}
+      minutes={30}
+      focused="hours"
+      is24Hour={false}
+      onChange={() => null}
+    />
+  )
 
-  expect(tree).toMatchSnapshot()
+  expect(toJSON()).toMatchSnapshot()
 })

@@ -1,17 +1,15 @@
-import renderer from 'react-test-renderer'
+import { render } from '@testing-library/react-native'
 import { inputTypes } from '../../Time/timeUtils'
 import AmPmSwitcher from '../../Time/AmPmSwitcher'
 
 it('renders AmPmSwitcher', () => {
-  const tree = renderer
-    .create(
-      <AmPmSwitcher
-        hours={12}
-        onChange={() => null}
-        inputType={inputTypes.keyboard}
-      />
-    )
-    .toJSON()
+  const { toJSON } = render(
+    <AmPmSwitcher
+      hours={12}
+      onChange={() => null}
+      inputType={inputTypes.keyboard}
+    />
+  )
 
-  expect(tree).toMatchSnapshot()
+  expect(toJSON()).toMatchSnapshot()
 })

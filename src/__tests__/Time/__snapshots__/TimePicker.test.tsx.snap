@@ -284,12 +284,17 @@ exports[`renders TimePicker 1`] = `
           {
             "busy": undefined,
             "checked": undefined,
-            "disabled": false,
+            "disabled": true,
             "expanded": undefined,
             "selected": undefined,
           }
         }
-        accessibilityTraits="button"
+        accessibilityTraits={
+          [
+            "button",
+            "disabled",
+          ]
+        }
         accessibilityValue={
           {
             "max": undefined,
@@ -328,7 +333,7 @@ exports[`renders TimePicker 1`] = `
                 "justifyContent": "center",
               },
               {
-                "backgroundColor": "rgba(255, 251, 254, 1)",
+                "backgroundColor": "rgba(234, 221, 255, 1)",
               },
             ]
           }
@@ -388,17 +393,12 @@ exports[`renders TimePicker 1`] = `
           {
             "busy": undefined,
             "checked": undefined,
-            "disabled": true,
+            "disabled": false,
             "expanded": undefined,
             "selected": undefined,
           }
         }
-        accessibilityTraits={
-          [
-            "button",
-            "disabled",
-          ]
-        }
+        accessibilityTraits="button"
         accessibilityValue={
           {
             "max": undefined,
@@ -437,7 +437,7 @@ exports[`renders TimePicker 1`] = `
                 "justifyContent": "center",
               },
               {
-                "backgroundColor": "rgba(234, 221, 255, 1)",
+                "backgroundColor": "rgba(255, 251, 254, 1)",
               },
             ]
           }

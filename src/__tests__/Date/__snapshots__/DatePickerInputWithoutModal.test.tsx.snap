@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders DatePickerInput 1`] = `
+exports[`renders DatePickerInputWithoutModal 1`] = `
 <View
   style={
     {
@@ -41,20 +41,28 @@ exports[`renders DatePickerInput 1`] = `
       <View
         collapsable={false}
         style={
-          {
-            "backgroundColor": "rgba(73, 69, 79, 1)",
-            "bottom": 0,
-            "height": 1,
-            "left": 0,
-            "position": "absolute",
-            "right": 0,
-            "transform": [
-              {
-                "scaleY": 0.5,
-              },
-            ],
-            "zIndex": 1,
-          }
+          [
+            {
+              "bottom": 0,
+              "height": 2,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "zIndex": 1,
+            },
+            {
+              "height": 1,
+            },
+            {
+              "backgroundColor": "rgba(73, 69, 79, 1)",
+              "transform": [
+                {
+                  "scaleY": 0.5,
+                },
+              ],
+            },
+            undefined,
+          ]
         }
         testID="text-input-underline"
       />
@@ -87,6 +95,9 @@ exports[`renders DatePickerInput 1`] = `
               {
                 "overflow": "hidden",
               },
+              {
+                "zIndex": 3,
+              },
             ]
           }
         >
@@ -107,7 +118,6 @@ exports[`renders DatePickerInput 1`] = `
                   },
                 ],
                 "width": 750,
-                "zIndex": 3,
               }
             }
           >
@@ -200,7 +210,6 @@ exports[`renders DatePickerInput 1`] = `
           </View>
         </View>
         <TextInput
-          autoComplete="birthdate-full"
           cursorColor="rgba(103, 80, 164, 1)"
           editable={true}
           keyboardAppearance="default"
@@ -238,7 +247,7 @@ exports[`renders DatePickerInput 1`] = `
                 "textAlign": "left",
                 "textAlignVertical": "center",
               },
-              false,
+              undefined,
               [
                 {},
               ],
@@ -247,7 +256,7 @@ exports[`renders DatePickerInput 1`] = `
           }
           testID="text-input-flat"
           underlineColorAndroid="transparent"
-          value="12/26/2022"
+          value="05/08/2025"
         />
       </View>
     </View>

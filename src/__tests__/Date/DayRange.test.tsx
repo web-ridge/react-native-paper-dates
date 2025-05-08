@@ -1,10 +1,9 @@
-import renderer from 'react-test-renderer'
+import { render } from '@testing-library/react-native'
 import DayRange from '../../Date/DayRange'
 
 it('renders DayRange', () => {
-  const tree = renderer
-    .create(<DayRange inRange leftCrop rightCrop selectColor={'blue'} />)
-    .toJSON()
-
-  expect(tree).toMatchSnapshot()
+  const { toJSON } = render(
+    <DayRange inRange leftCrop rightCrop selectColor="blue" />
+  )
+  expect(toJSON()).toMatchSnapshot()
 })

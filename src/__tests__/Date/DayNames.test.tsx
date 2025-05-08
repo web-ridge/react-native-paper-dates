@@ -1,10 +1,7 @@
-import renderer from 'react-test-renderer'
+import { render } from '@testing-library/react-native'
 import DayNames from '../../Date/DayNames'
 
 it('renders DayNames', () => {
-  const tree = renderer
-    .create(<DayNames locale={'en'} startWeekOnMonday={false} />)
-    .toJSON()
-
-  expect(tree).toMatchSnapshot()
+  const { toJSON } = render(<DayNames locale="en" startWeekOnMonday={false} />)
+  expect(toJSON()).toMatchSnapshot()
 })

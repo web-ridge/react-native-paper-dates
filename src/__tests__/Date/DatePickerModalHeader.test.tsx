@@ -1,20 +1,17 @@
+import { render } from '@testing-library/react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-
-import renderer from 'react-test-renderer'
 import DatePickerModalHeader from '../../Date/DatePickerModalHeader'
 
 it('renders DatePickerModalHeader', () => {
-  const tree = renderer
-    .create(
-      <SafeAreaProvider>
-        <DatePickerModalHeader
-          locale={'en'}
-          onSave={() => null}
-          onDismiss={() => null}
-        />
-      </SafeAreaProvider>
-    )
-    .toJSON()
-
-  expect(tree).toMatchSnapshot()
+  const { toJSON } = render(
+    <SafeAreaProvider>
+      <DatePickerModalHeader
+        locale="en"
+        onSave={() => null}
+        onDismiss={() => null}
+        saveLabel="Save"
+      />
+    </SafeAreaProvider>
+  )
+  expect(toJSON()).toMatchSnapshot()
 })
