@@ -7,8 +7,8 @@ const enGB: TranslationsType = {
   selectRange: 'Select period',
   notAccordingToDateFormat: (inputFormat) =>
     `Date format must be ${inputFormat}`,
-  mustBeHigherThan: (date) => `Must be later then ${date}`,
-  mustBeLowerThan: (date) => `Must be earlier then ${date}`,
+  mustBeHigherThan: (date) => `Must be later than ${date}`,
+  mustBeLowerThan: (date) => `Must be earlier than ${date}`,
   mustBeBetween: (startDate, endDate) =>
     `Must be between ${startDate} - ${endDate}`,
   dateIsDisabled: 'Day is not allowed',
