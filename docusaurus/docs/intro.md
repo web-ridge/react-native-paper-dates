@@ -56,8 +56,8 @@ registerTranslation('pl', {
   selectRange: 'Select period',
   notAccordingToDateFormat: (inputFormat) =>
     `Date format must be ${inputFormat}`,
-  mustBeHigherThan: (date) => `Must be later then ${date}`,
-  mustBeLowerThan: (date) => `Must be earlier then ${date}`,
+  mustBeHigherThan: (date) => `Must be later than ${date}`,
+  mustBeLowerThan: (date) => `Must be earlier than ${date}`,
   mustBeBetween: (startDate, endDate) =>
     `Must be between ${startDate} - ${endDate}`,
   dateIsDisabled: 'Day is not allowed',
@@ -66,6 +66,35 @@ registerTranslation('pl', {
   typeInDate: 'Type in date',
   pickDateFromCalendar: 'Pick date from calendar',
   close: 'Close',
+})
+```
+
+### Dynamic
+
+React-Native-Paper-Dates also provides the ability to register dynamically resolved translations. This allows you to use a different translation provider to resolve the translations. For example:
+
+```javascript
+import { translate } from 'YOUR_TRANSLATION_PROVIDER'
+import { registerTranslation } from 'react-native-paper-dates'
+registerTranslation('dynamic', () => {
+  return {
+    save: translate('Save'),
+    selectSingle: translate('Select date'),
+    selectMultiple: translate('Select dates'),
+    selectRange: translate('Select period'),
+    notAccordingToDateFormat: (inputFormat) =>
+      translate(`Date format must be ${inputFormat}`),
+    mustBeHigherThan: (date) => translate(`Must be later than ${date}`),
+    mustBeLowerThan: (date) => translate(`Must be earlier than ${date}`),
+    mustBeBetween: (startDate, endDate) =>
+      translate(`Must be between ${startDate} - ${endDate}`),
+    dateIsDisabled: translate('Day is not allowed'),
+    previous: translate('Previous'),
+    next: translate('Next'),
+    typeInDate: translate('Type in date'),
+    pickDateFromCalendar: translate('Pick date from calendar'),
+    close: translate('Close'),
+  }
 })
 ```
 

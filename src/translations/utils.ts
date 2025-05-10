@@ -17,7 +17,14 @@ export type TranslationsType = {
   minute: string
 }
 
-let translationsPerLocale: Record<string, TranslationsType> = {}
+export type TranslationResolver = (
+  locale: string | undefined
+) => TranslationsType
+
+let translationsPerLocale: Record<
+  string,
+  TranslationsType | TranslationResolver
+> = {}
 
 export function getTranslation<K extends keyof TranslationsType>(
   locale: string | undefined,
@@ -32,7 +39,10 @@ export function getTranslation<K extends keyof TranslationsType>(
     )
     return fallback || key
   }
-  const translation = translationsPerLocale[l][key]
+  const translation: TranslationsType[K] =
+    typeof translationForLocale === 'function'
+      ? translationForLocale(locale)[key]
+      : translationForLocale[key]
   if (!translation) {
     console.warn(
       `[react-native-paper-dates] The locale ${locale} is registered, but ${key} is missing`
@@ -43,7 +53,7 @@ export function getTranslation<K extends keyof TranslationsType>(
 
 export function registerTranslation(
   locale: string,
-  translations: TranslationsType
+  translations: TranslationsType | TranslationResolver
 ) {
   translationsPerLocale[locale] = translations
 }
