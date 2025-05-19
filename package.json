@@ -32,7 +32,7 @@
     "pods": "cd example && pod-install --quiet",
     "bootstrap": "yarn example && yarn && yarn pods",
     "prepack": "bob build",
-    "build-example": "cd example && npx expo export --platform web"
+    "build-example": "cd example && npx expo export:web"
   },
   "keywords": [
     "react-native",
