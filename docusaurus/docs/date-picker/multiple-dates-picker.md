@@ -125,11 +125,11 @@ The animation used when opening the component. Defaults to `'slide'` on ios/andr
 
 **startYear**  
 `Type: number | undefined`  
-The start year when the component is rendered. Defaults to `1800`.
+The start year when the component is rendered. Defaults to `DEFAULT_START_YEAR` (1800).
 
 **endYear**  
 `Type: number | undefined`  
-The end year when the component is rendered. Defaults to `2200`.
+The end year when the component is rendered. Defaults to `DEFAULT_END_YEAR` (2200).
 
 **startWeekOnMonday**  
 `Type: boolean | undefined`  

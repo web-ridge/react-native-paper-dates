@@ -551,10 +551,12 @@ function Example({
         onDismiss={onDismissSingle}
         date={date}
         onConfirm={onChangeSingle}
-        validRange={{
-          startDate: pastDate,
-          disabledDates: [futureDate],
-        }}
+        // validRange={{
+        //   startDate: pastDate,
+        //   disabledDates: [futureDate],
+        // }}
+        startYear={1600}
+        endYear={2400}
         presentationStyle={presentationStyle}
       />
       <DatePickerModal

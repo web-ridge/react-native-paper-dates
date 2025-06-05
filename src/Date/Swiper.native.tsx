@@ -13,7 +13,7 @@ import {
   montHeaderHeight,
 } from './Month'
 
-import { SwiperProps, useYearChange } from './SwiperUtils'
+import { SwiperProps, useYearChange, isIndexWithinRange } from './SwiperUtils'
 import { beginOffset, estimatedMonthHeight, totalMonths } from './dateUtils'
 import AutoSizer from './AutoSizer'
 import { memo, useCallback, useRef, useState } from 'react'
@@ -49,6 +49,8 @@ function SwiperInner({
   width,
   height,
   startWeekOnMonday,
+  startYear,
+  endYear,
 }: SwiperProps & { width: number; height: number }) {
   const idx = useRef<number>(initialIndex)
   const isHorizontal = scrollMode === 'horizontal'
@@ -60,6 +62,10 @@ function SwiperInner({
 
   const scrollTo = useCallback(
     (index: number, animated: boolean) => {
+      if (!isIndexWithinRange(index, startYear, endYear)) {
+        return
+      }
+
       idx.current = index
       setVisibleIndexes(getVisibleArray(index, { isHorizontal, height }))
 
@@ -84,16 +90,30 @@ function SwiperInner({
         })
       }
     },
-    [parentRef, isHorizontal, width, height, startWeekOnMonday]
+    [
+      parentRef,
+      isHorizontal,
+      width,
+      height,
+      startWeekOnMonday,
+      startYear,
+      endYear,
+    ]
   )
 
   const onPrev = useCallback(() => {
-    scrollTo(idx.current - 1, true)
-  }, [scrollTo, idx])
+    const newIndex = idx.current - 1
+    if (isIndexWithinRange(newIndex, startYear, endYear)) {
+      scrollTo(newIndex, true)
+    }
+  }, [scrollTo, idx, startYear, endYear])
 
   const onNext = useCallback(() => {
-    scrollTo(idx.current + 1, true)
-  }, [scrollTo, idx])
+    const newIndex = idx.current + 1
+    if (isIndexWithinRange(newIndex, startYear, endYear)) {
+      scrollTo(newIndex, true)
+    }
+  }, [scrollTo, idx, startYear, endYear])
 
   const scrollToInitial = useCallback(() => {
     scrollTo(idx.current, false)
@@ -114,12 +134,16 @@ function SwiperInner({
         return
       }
 
+      if (!isIndexWithinRange(newIndex, startYear, endYear)) {
+        return
+      }
+
       if (idx.current !== newIndex) {
         idx.current = newIndex
         setVisibleIndexes(getVisibleArray(newIndex, { isHorizontal, height }))
       }
     },
-    [idx, height, isHorizontal, startWeekOnMonday]
+    [idx, height, isHorizontal, startWeekOnMonday, startYear, endYear]
   )
 
   const renderProps = {
@@ -130,7 +154,7 @@ function SwiperInner({
 
   useYearChange(
     (newIndex) => {
-      if (newIndex) {
+      if (newIndex && isIndexWithinRange(newIndex, startYear, endYear)) {
         scrollTo(newIndex, false)
       }
     },

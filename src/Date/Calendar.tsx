@@ -16,6 +16,7 @@ import Color from 'color'
 import { useTheme } from 'react-native-paper'
 import { darkenBy, lightenBy, useLatest } from '../shared/utils'
 import { sharedStyles } from '../shared/styles'
+import { DEFAULT_START_YEAR, DEFAULT_END_YEAR } from './constants'
 
 export type ModeType = 'single' | 'range' | 'multiple'
 
@@ -178,6 +179,8 @@ function Calendar(
         selectedYear={selectedYear}
         scrollMode={scrollMode}
         startWeekOnMonday={startWeekOnMonday || false}
+        startYear={startYear}
+        endYear={endYear}
         renderItem={({ index }) => (
           <Month
             locale={locale}
@@ -216,8 +219,8 @@ function Calendar(
           selectedYear={selectedYear}
           selectingYear={selectingYear}
           onPressYear={onPressYear}
-          startYear={startYear || 1800}
-          endYear={endYear || 2200}
+          startYear={startYear || DEFAULT_START_YEAR}
+          endYear={endYear || DEFAULT_END_YEAR}
         />
       ) : null}
     </View>

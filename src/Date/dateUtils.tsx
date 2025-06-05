@@ -170,7 +170,7 @@ export function isLeapYear({ year }: { year: number }) {
 
 export const daySize = 46
 export const estimatedMonthHeight = 360
-export const startAtIndex = 1200
+export const startAtIndex = 2800
 export const totalMonths = startAtIndex * 2
 export const beginOffset = estimatedMonthHeight * startAtIndex
 export const gridCounts = new Array<number | undefined>(totalMonths)
