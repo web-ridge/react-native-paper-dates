@@ -14,7 +14,11 @@ import {
 } from './Month'
 
 import { SwiperProps, useYearChange, isIndexWithinRange } from './SwiperUtils'
-import { beginOffset, estimatedMonthHeight, totalMonths } from './dateUtils'
+import {
+  estimatedMonthHeight,
+  getTotalMonths,
+  getBeginOffset,
+} from './dateUtils'
 import AutoSizer from './AutoSizer'
 import { memo, useCallback, useRef, useState } from 'react'
 import { sharedStyles } from '../shared/styles'
@@ -74,7 +78,7 @@ function SwiperInner({
       }
       const offset = isHorizontal
         ? getHorizontalMonthOffset(index, width)
-        : getVerticalMonthsOffset(index, startWeekOnMonday) - montHeaderHeight
+        : getVerticalMonthsOffset(index, startWeekOnMonday, startYear, endYear) - montHeaderHeight
 
       if (isHorizontal) {
         parentRef.current.scrollTo({
@@ -123,11 +127,14 @@ function SwiperInner({
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
       const contentOffset = e.nativeEvent.contentOffset
       const viewSize = e.nativeEvent.layoutMeasurement
+      const dynamicBeginOffset = getBeginOffset(startYear, endYear)
       const newIndex = isHorizontal
         ? Math.round(contentOffset.x / viewSize.width)
         : getIndexFromVerticalOffset(
-            contentOffset.y - beginOffset,
-            startWeekOnMonday
+            contentOffset.y - dynamicBeginOffset,
+            startWeekOnMonday,
+            startYear,
+            endYear
           )
 
       if (newIndex === 0) {
@@ -161,6 +168,8 @@ function SwiperInner({
     {
       selectedYear,
       currentIndexRef: idx,
+      startYear,
+      endYear,
     }
   )
 
@@ -186,8 +195,8 @@ function SwiperInner({
             {
               height: isHorizontal
                 ? height
-                : estimatedMonthHeight * totalMonths,
-              width: isHorizontal ? width * totalMonths : width,
+                : estimatedMonthHeight * getTotalMonths(startYear, endYear),
+              width: isHorizontal ? width * getTotalMonths(startYear, endYear) : width,
             },
           ]}
         >
@@ -201,7 +210,9 @@ function SwiperInner({
                       ? 0
                       : getVerticalMonthsOffset(
                           visibleIndexes[vi],
-                          startWeekOnMonday
+                          startWeekOnMonday,
+                          startYear,
+                          endYear
                         ),
                     left: isHorizontal
                       ? getHorizontalMonthOffset(visibleIndexes[vi], width)
@@ -215,7 +226,9 @@ function SwiperInner({
                       : getMonthHeight(
                           scrollMode,
                           visibleIndexes[vi],
-                          startWeekOnMonday
+                          startWeekOnMonday,
+                          startYear,
+                          endYear
                         ),
                   }}
                 >

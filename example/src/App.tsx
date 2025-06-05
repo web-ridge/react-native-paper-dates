@@ -555,7 +555,7 @@ function Example({
         //   startDate: pastDate,
         //   disabledDates: [futureDate],
         // }}
-        startYear={1600}
+        startYear={1200}
         endYear={2400}
         presentationStyle={presentationStyle}
       />

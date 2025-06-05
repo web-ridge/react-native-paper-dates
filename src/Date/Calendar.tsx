@@ -175,7 +175,7 @@ function Calendar(
   return (
     <View style={sharedStyles.root}>
       <Swiper
-        initialIndex={getInitialIndex(firstDate)}
+        initialIndex={getInitialIndex(firstDate, startYear, endYear)}
         selectedYear={selectedYear}
         scrollMode={scrollMode}
         startWeekOnMonday={startWeekOnMonday || false}
@@ -201,6 +201,8 @@ function Calendar(
             roundness={theme.roundness}
             disableWeekDays={disableWeekDays}
             startWeekOnMonday={startWeekOnMonday || false}
+            startYear={startYear}
+            endYear={endYear}
           />
         )}
         renderHeader={({ onPrev, onNext }) => (

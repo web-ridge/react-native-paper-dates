@@ -11,18 +11,18 @@ import Day, { EmptyDay } from './Day'
 import {
   addMonths,
   areDatesOnSameDay,
-  beginOffset,
   daySize,
-  DisableWeekDaysType,
   estimatedMonthHeight,
-  getDaysInMonth,
   getFirstDayOfMonth,
   getGridCount,
   getRealIndex,
-  gridCounts,
+  getStartAtIndex,
+  getTotalMonths,
+  createGridCounts,
+  DisableWeekDaysType,
+  getDaysInMonth,
   isDateBetween,
   showWeekDay,
-  startAtIndex,
   useRangeChecker,
 } from './dateUtils'
 import { getCalendarHeaderHeight } from './CalendarHeader'
@@ -51,6 +51,8 @@ interface BaseMonthProps {
   roundness: number
   validRange?: ValidRangeType
   startWeekOnMonday: boolean
+  startYear?: number
+  endYear?: number
   // some of these should be required in final implementation
   startDate?: CalendarDate
   endDate?: CalendarDate
@@ -76,29 +78,31 @@ interface MonthMultiProps extends BaseMonthProps {
 
 function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
   const {
-    index,
+    locale,
     mode,
-    date,
-    dates,
-    startDate,
-    endDate,
+    index,
     onPressYear,
     selectingYear,
     onPressDate,
-    scrollMode,
     primaryColor,
     selectColor,
     roundness,
-    disableWeekDays,
-    locale,
     validRange,
+    disableWeekDays,
+    scrollMode,
+    startDate,
+    endDate,
+    date,
+    dates,
     startWeekOnMonday,
+    startYear,
+    endYear,
   } = props
   const isHorizontal = scrollMode === 'horizontal'
 
   const theme = useTheme()
   const textColorOnPrimary = useTextColorOnPrimary()
-  const realIndex = getRealIndex(index)
+  const realIndex = getRealIndex(index, startYear, endYear)
   const { isDisabled, isWithinValidRange } = useRangeChecker(validRange)
 
   const { monthName, month, year } = useMemo(() => {
@@ -118,129 +122,131 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
     const dayOfWeek = getFirstDayOfMonth({ year, month, startWeekOnMonday })
     const emptyDays = dayOfWeek
 
-    return monthGrid(index, startWeekOnMonday).map(({ days, weekGrid }) => {
-      return {
-        weekIndex: weekGrid,
-        generatedDays: days.map((_, dayIndex) => {
-          const isFirstWeek = weekGrid === 0
-          const realDayIndex = emptyDays - dayIndex
-          const beforeWeekDay = isFirstWeek && realDayIndex > 0
-          const dayOfMonth = weekGrid * 7 + dayIndex - emptyDays + 1
-          const afterWeekDay = dayOfMonth > daysInMonth
+    return monthGrid(index, startWeekOnMonday, startYear, endYear).map(
+      ({ days, weekGrid }) => {
+        return {
+          weekIndex: weekGrid,
+          generatedDays: days.map((_, dayIndex) => {
+            const isFirstWeek = weekGrid === 0
+            const realDayIndex = emptyDays - dayIndex
+            const beforeWeekDay = isFirstWeek && realDayIndex > 0
+            const dayOfMonth = weekGrid * 7 + dayIndex - emptyDays + 1
+            const afterWeekDay = dayOfMonth > daysInMonth
 
-          const day = new Date(year, month, dayOfMonth)
-          const isToday = areDatesOnSameDay(day, today)
+            const day = new Date(year, month, dayOfMonth)
+            const isToday = areDatesOnSameDay(day, today)
 
-          let inRange = false
-          let disabled = isDisabled(day)
-          let selected = false
+            let inRange = false
+            let disabled = isDisabled(day)
+            let selected = false
 
-          let leftCrop = dayOfMonth === 1
-          let rightCrop = dayOfMonth === daysInMonth
+            let leftCrop = dayOfMonth === 1
+            let rightCrop = dayOfMonth === daysInMonth
 
-          const isFirstDayOfMonth = dayOfMonth === 1
-          const isLastDayOfMonth = dayOfMonth === daysInMonth
+            const isFirstDayOfMonth = dayOfMonth === 1
+            const isLastDayOfMonth = dayOfMonth === daysInMonth
 
-          if (mode === 'range') {
-            const selectedStartDay = areDatesOnSameDay(day, startDate)
-            const selectedEndDay = areDatesOnSameDay(day, endDate)
-            selected = selectedStartDay || selectedEndDay
-            inRange = isDateBetween(day, {
-              startDate,
-              endDate,
-            })
-            if (selectedStartDay) {
-              leftCrop = true
-            }
-            if (selectedEndDay) {
-              rightCrop = true
-            }
-            if (dayIndex === 0 && !selectedStartDay) {
-              leftCrop = false
-            }
-
-            if (dayIndex === 6 && !selectedEndDay) {
-              rightCrop = false
-            }
-
-            if (
-              (isFirstDayOfMonth && selectedEndDay) ||
-              (isLastDayOfMonth && selectedStartDay)
-            ) {
-              inRange = false
-            }
-          } else if (mode === 'multiple') {
-            const safeDates = dates || []
-            selected = safeDates.some((d) => areDatesOnSameDay(day, d))
-
-            const yesterday = new Date(year, month, dayOfMonth - 1)
-            const tomorrow = new Date(year, month, dayOfMonth + 1)
-
-            const yesterdaySelected = safeDates.some((d) =>
-              areDatesOnSameDay(d, yesterday)
-            )
-            const tomorrowSelected = safeDates.some((d) =>
-              areDatesOnSameDay(d, tomorrow)
-            )
-
-            if (selected) {
-              if (tomorrowSelected && yesterdaySelected) {
-                inRange = true
-              }
-              if (tomorrowSelected && !yesterdaySelected) {
-                inRange = true
+            if (mode === 'range') {
+              const selectedStartDay = areDatesOnSameDay(day, startDate)
+              const selectedEndDay = areDatesOnSameDay(day, endDate)
+              selected = selectedStartDay || selectedEndDay
+              inRange = isDateBetween(day, {
+                startDate,
+                endDate,
+              })
+              if (selectedStartDay) {
                 leftCrop = true
               }
-
-              if (yesterdaySelected && !tomorrowSelected) {
-                inRange = true
+              if (selectedEndDay) {
                 rightCrop = true
               }
+              if (dayIndex === 0 && !selectedStartDay) {
+                leftCrop = false
+              }
 
-              if (isFirstDayOfMonth && !tomorrowSelected) {
+              if (dayIndex === 6 && !selectedEndDay) {
+                rightCrop = false
+              }
+
+              if (
+                (isFirstDayOfMonth && selectedEndDay) ||
+                (isLastDayOfMonth && selectedStartDay)
+              ) {
                 inRange = false
               }
+            } else if (mode === 'multiple') {
+              const safeDates = dates || []
+              selected = safeDates.some((d) => areDatesOnSameDay(day, d))
 
-              if (isLastDayOfMonth && !yesterdaySelected) {
-                inRange = false
-              }
+              const yesterday = new Date(year, month, dayOfMonth - 1)
+              const tomorrow = new Date(year, month, dayOfMonth + 1)
 
-              if (inRange && !leftCrop && !rightCrop) {
-                selected = false
+              const yesterdaySelected = safeDates.some((d) =>
+                areDatesOnSameDay(d, yesterday)
+              )
+              const tomorrowSelected = safeDates.some((d) =>
+                areDatesOnSameDay(d, tomorrow)
+              )
+
+              if (selected) {
+                if (tomorrowSelected && yesterdaySelected) {
+                  inRange = true
+                }
+                if (tomorrowSelected && !yesterdaySelected) {
+                  inRange = true
+                  leftCrop = true
+                }
+
+                if (yesterdaySelected && !tomorrowSelected) {
+                  inRange = true
+                  rightCrop = true
+                }
+
+                if (isFirstDayOfMonth && !tomorrowSelected) {
+                  inRange = false
+                }
+
+                if (isLastDayOfMonth && !yesterdaySelected) {
+                  inRange = false
+                }
+
+                if (inRange && !leftCrop && !rightCrop) {
+                  selected = false
+                }
               }
+            } else if (mode === 'single') {
+              selected = areDatesOnSameDay(day, date)
             }
-          } else if (mode === 'single') {
-            selected = areDatesOnSameDay(day, date)
-          }
 
-          const isWithinOptionalValidRange = isWithinValidRange(day)
+            const isWithinOptionalValidRange = isWithinValidRange(day)
 
-          if (inRange && !disabled) {
-            disabled = false
-          }
+            if (inRange && !disabled) {
+              disabled = false
+            }
 
-          if (!isWithinOptionalValidRange) {
-            disabled = true
-          }
+            if (!isWithinOptionalValidRange) {
+              disabled = true
+            }
 
-          return {
-            beforeWeekDay,
-            afterWeekDay,
-            year,
-            month,
-            dayOfMonth,
-            dayIndex,
-            mode,
-            selected,
-            inRange,
-            leftCrop,
-            rightCrop,
-            isToday,
-            disabled,
-          }
-        }),
+            return {
+              beforeWeekDay,
+              afterWeekDay,
+              year,
+              month,
+              dayOfMonth,
+              dayIndex,
+              mode,
+              selected,
+              inRange,
+              leftCrop,
+              rightCrop,
+              isToday,
+              disabled,
+            }
+          }),
+        }
       }
-    })
+    )
   }, [
     year,
     month,
@@ -253,6 +259,8 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
     dates,
     date,
     startWeekOnMonday,
+    startYear,
+    endYear,
   ])
 
   let textFont = theme?.isV3
@@ -269,7 +277,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
 
   return (
     <View
-      style={{ height: getMonthHeight(scrollMode, index, startWeekOnMonday) }}
+      style={{ height: getMonthHeight(scrollMode, index, startWeekOnMonday, startYear, endYear) }}
     >
       <View
         style={[
@@ -398,8 +406,13 @@ const styles = StyleSheet.create({
   },
 })
 
-const monthGrid = (index: number, startWeekOnMonday: boolean) => {
-  return Array(getGridCount(index, startWeekOnMonday))
+const monthGrid = (
+  index: number,
+  startWeekOnMonday: boolean,
+  startYear?: number,
+  endYear?: number
+) => {
+  return Array(getGridCount(index, startWeekOnMonday, startYear, endYear))
     .fill(null)
     .map((_, weekGrid) => {
       const days = Array(7).fill(null)
@@ -407,28 +420,45 @@ const monthGrid = (index: number, startWeekOnMonday: boolean) => {
     })
 }
 
-function getIndexCount(index: number): number {
-  if (index > startAtIndex) {
-    return index - startAtIndex
+function getIndexCount(
+  index: number,
+  startYear?: number,
+  endYear?: number
+): number {
+  const dynamicStartAtIndex = getStartAtIndex(startYear, endYear)
+  if (index > dynamicStartAtIndex) {
+    return index - dynamicStartAtIndex
   }
 
-  return -(startAtIndex - index)
+  return -(dynamicStartAtIndex - index)
 }
 
-function weeksOffset(index: number, startWeekOnMonday: boolean): number {
-  if (index === startAtIndex) {
+function weeksOffset(
+  index: number,
+  startWeekOnMonday: boolean,
+  startYear?: number,
+  endYear?: number
+): number {
+  const dynamicStartAtIndex = getStartAtIndex(startYear, endYear)
+  const dynamicGridCounts = createGridCounts(getTotalMonths(startYear, endYear))
+  
+  if (index === dynamicStartAtIndex) {
     return 0
   }
   let off = 0
-  if (index > startAtIndex) {
-    for (let i = 0; i < index - startAtIndex; i++) {
-      const cIndex = startAtIndex + i
-      off += gridCounts[cIndex] || getGridCount(cIndex, startWeekOnMonday)
+  if (index > dynamicStartAtIndex) {
+    for (let i = 0; i < index - dynamicStartAtIndex; i++) {
+      const cIndex = dynamicStartAtIndex + i
+      off +=
+        dynamicGridCounts[cIndex] ||
+        getGridCount(cIndex, startWeekOnMonday, startYear, endYear)
     }
   } else {
-    for (let i = 0; i < startAtIndex - index; i++) {
-      const cIndex = startAtIndex - i - 1
-      off -= gridCounts[cIndex] || getGridCount(cIndex, startWeekOnMonday)
+    for (let i = 0; i < dynamicStartAtIndex - index; i++) {
+      const cIndex = dynamicStartAtIndex - i - 1
+      off -=
+        dynamicGridCounts[cIndex] ||
+        getGridCount(cIndex, startWeekOnMonday, startYear, endYear)
     }
   }
   return off
@@ -436,19 +466,31 @@ function weeksOffset(index: number, startWeekOnMonday: boolean): number {
 
 export function getIndexFromHorizontalOffset(
   offset: number,
-  width: number
+  width: number,
+  startYear?: number,
+  endYear?: number
 ): number {
-  return startAtIndex + Math.floor(offset / width)
+  const dynamicStartAtIndex = getStartAtIndex(startYear, endYear)
+  return dynamicStartAtIndex + Math.floor(offset / width)
 }
 
 export function getIndexFromVerticalOffset(
   offset: number,
-  startWeekOnMonday: boolean
+  startWeekOnMonday: boolean,
+  startYear?: number,
+  endYear?: number
 ): number {
-  let estimatedIndex = startAtIndex + Math.ceil(offset / estimatedMonthHeight)
+  const dynamicStartAtIndex = getStartAtIndex(startYear, endYear)
+  const dynamicBeginOffset = estimatedMonthHeight * dynamicStartAtIndex
+  let estimatedIndex = dynamicStartAtIndex + Math.ceil(offset / estimatedMonthHeight)
 
-  const realOffset = getVerticalMonthsOffset(estimatedIndex, startWeekOnMonday)
-  const difference = (realOffset - beginOffset - offset) / estimatedMonthHeight
+  const realOffset = getVerticalMonthsOffset(
+    estimatedIndex,
+    startWeekOnMonday,
+    startYear,
+    endYear
+  )
+  const difference = (realOffset - dynamicBeginOffset - offset) / estimatedMonthHeight
   if (difference >= 1 || difference <= -1) {
     estimatedIndex -= Math.floor(difference)
   }
@@ -464,23 +506,28 @@ export function getHorizontalMonthOffset(index: number, width: number) {
 
 export function getVerticalMonthsOffset(
   index: number,
-  startWeekOnMonday: boolean
+  startWeekOnMonday: boolean,
+  startYear?: number,
+  endYear?: number
 ) {
-  const count = getIndexCount(index)
-  const ob = weeksOffset(index, startWeekOnMonday)
+  const count = getIndexCount(index, startYear, endYear)
+  const ob = weeksOffset(index, startWeekOnMonday, startYear, endYear)
   const monthsHeight = weekSize * ob
   const c = monthsHeight + count * (dayNamesHeight + montHeaderHeight)
+  const dynamicBeginOffset = estimatedMonthHeight * getStartAtIndex(startYear, endYear)
 
-  return (c || 0) + beginOffset
+  return (c || 0) + dynamicBeginOffset
 }
 
 export function getMonthHeight(
   scrollMode: 'horizontal' | 'vertical',
   index: number,
-  startWeekOnMonday: boolean
+  startWeekOnMonday: boolean,
+  startYear?: number,
+  endYear?: number
 ): number {
   const calendarHeight = getCalendarHeaderHeight(scrollMode)
-  const gc = getGridCount(index, startWeekOnMonday)
+  const gc = getGridCount(index, startWeekOnMonday, startYear, endYear)
 
   const currentMonthHeight = weekSize * gc
   const extraHeight =

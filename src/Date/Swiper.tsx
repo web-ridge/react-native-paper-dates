@@ -26,6 +26,7 @@ import {
   useState,
 } from 'react'
 import { sharedStyles } from '../shared/styles'
+import { getTotalMonths } from './dateUtils'
 
 const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect
@@ -82,6 +83,8 @@ function Swiper({
     {
       selectedYear,
       currentIndexRef: indexRef,
+      startYear,
+      endYear,
     }
   )
 
