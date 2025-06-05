@@ -50,11 +50,11 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.0",
     "@react-native-community/eslint-config": "^3.2.0",
-    "@react-native-vector-icons/common": "^12.0.0",
-    "@react-native-vector-icons/material-design-icons": "^12.0.0",
-    "@react-native/babel-preset": "^0.79.3",
+    "@react-native-vector-icons/common": "^11.0.0",
+    "@react-native-vector-icons/material-design-icons": "^7.4.47",
+    "@react-native/babel-preset": "^0.79.2",
     "@release-it/conventional-changelog": "^10.0.1",
     "@testing-library/react-native": "^13.2.0",
     "@types/color": "^4.2.0",
@@ -63,25 +63,25 @@
     "@types/react-native-vector-icons": "^6.4.18",
     "@types/react-test-renderer": "~19.0.0",
     "babel-loader": "^10.0.0",
-    "caniuse-lite": "^1.0.30001721",
-    "commitlint": "^19.8.1",
+    "caniuse-lite": "^1.0.30001716",
+    "commitlint": "^19.8.0",
     "eslint": "^8.57.1",
-    "eslint-config-prettier": "^10.1.5",
-    "eslint-plugin-prettier": "^5.4.1",
-    "eslint-plugin-testing-library": "^7.4.0",
+    "eslint-config-prettier": "^10.1.2",
+    "eslint-plugin-prettier": "^5.2.6",
+    "eslint-plugin-testing-library": "^7.1.1",
     "husky": "^9.1.7",
     "jest": "^29.7.0",
     "metro-react-native-babel-preset": "^0.77.0",
     "pod-install": "^0.3.9",
     "prettier": "^3.5.3",
     "react": "~19.0.0",
-    "react-native": "^0.79.3",
-    "react-native-builder-bob": "^0.40.11",
-    "react-native-paper": "^5.14.5",
-    "react-native-safe-area-context": "^5.4.1",
+    "react-native": "^0.79.2",
+    "react-native-builder-bob": "^0.40.0",
+    "react-native-paper": "^5.14.0",
+    "react-native-safe-area-context": "^5.4.0",
     "react-native-vector-icons": "^10.2.0",
     "react-test-renderer": "~19.0.0",
-    "release-it": "^19.0.3",
+    "release-it": "^19.0.1",
     "typescript": "~5.8.3"
   },
   "peerDependencies": {
@@ -170,6 +170,6 @@
     ]
   },
   "dependencies": {
-    "color": "^5.0.0"
+    "color": "^4.2.3"
   }
 }

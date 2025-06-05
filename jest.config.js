@@ -7,7 +7,7 @@ module.exports = {
     '<rootDir>/lib/',
   ],
   transformIgnorePatterns: [
-    'node_modules/(?!(@react-native|react-native(-.*)?|color|color-string|color-name|color-convert)/)',
+    'node_modules/(?!(@react-native|react-native(-.*)?)/)',
   ],
   setupFiles: ['<rootDir>/testSetup.js'],
   collectCoverage: true,
