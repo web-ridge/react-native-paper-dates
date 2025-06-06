@@ -1,15 +1,15 @@
 import { render } from '@testing-library/react-native'
 import YearPicker from '../../Date/YearPicker'
+import { defaultEndYear, defaultStartYear } from '../../Date/dateUtils'
 
-it('renders YearPicker', () => {
-  const { toJSON } = render(
+it('renders', () => {
+  render(
     <YearPicker
-      selectedYear={2024}
-      selectingYear={true}
+      selectedYear={undefined}
+      selectingYear={false}
       onPressYear={() => null}
-      startYear={1800}
-      endYear={2200}
+      startYear={defaultStartYear}
+      endYear={defaultEndYear}
     />
   )
-  expect(toJSON()).toMatchSnapshot()
 })

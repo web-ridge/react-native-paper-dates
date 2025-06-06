@@ -7,7 +7,14 @@ import {
 } from './Month'
 import { beginOffset, estimatedMonthHeight, totalMonths } from './dateUtils'
 import { useLatest } from '../shared/utils'
-import { RenderProps, SwiperProps, useYearChange } from './SwiperUtils'
+import {
+  RenderProps,
+  SwiperProps,
+  useYearChange,
+  isIndexWithinRange,
+  getMinIndex,
+  getMaxIndex,
+} from './SwiperUtils'
 import AutoSizer from './AutoSizer'
 import {
   memo,
@@ -31,18 +38,34 @@ function Swiper({
   selectedYear,
   initialIndex,
   startWeekOnMonday,
+  startYear,
+  endYear,
 }: SwiperProps) {
   const isHorizontal = scrollMode === 'horizontal'
 
   const [index, setIndex] = useState(initialIndex)
 
   const onPrev = useCallback(() => {
-    setIndex((prev) => prev - 1)
-  }, [setIndex])
+    setIndex((prev) => {
+      const newIndex = prev - 1
+      // Check if the new index is within allowed range
+      if (isIndexWithinRange(newIndex, startYear, endYear)) {
+        return newIndex
+      }
+      return prev // Don't change if outside range
+    })
+  }, [setIndex, startYear, endYear])
 
   const onNext = useCallback(() => {
-    setIndex((prev) => prev + 1)
-  }, [setIndex])
+    setIndex((prev) => {
+      const newIndex = prev + 1
+      // Check if the new index is within allowed range
+      if (isIndexWithinRange(newIndex, startYear, endYear)) {
+        return newIndex
+      }
+      return prev // Don't change if outside range
+    })
+  }, [setIndex, startYear, endYear])
 
   const renderProps = {
     index,
@@ -52,13 +75,15 @@ function Swiper({
   const indexRef = useLatest(index)
   useYearChange(
     (newIndex) => {
-      if (newIndex) {
+      if (newIndex && isIndexWithinRange(newIndex, startYear, endYear)) {
         setIndex(newIndex)
       }
     },
     {
       selectedYear,
       currentIndexRef: indexRef,
+      startYear,
+      endYear,
     }
   )
 
@@ -79,6 +104,8 @@ function Swiper({
               estimatedHeight={estimatedMonthHeight}
               renderItem={renderItem}
               startWeekOnMonday={startWeekOnMonday}
+              startYear={startYear}
+              endYear={endYear}
             />
           )}
         </AutoSizer>
@@ -97,6 +124,8 @@ function VerticalScroller({
   estimatedHeight,
   renderItem,
   startWeekOnMonday,
+  startYear,
+  endYear,
 }: {
   renderItem: (renderProps: RenderProps) => any
   width: number
@@ -104,12 +133,26 @@ function VerticalScroller({
   initialIndex: number
   estimatedHeight: number
   startWeekOnMonday: boolean
+  startYear?: number
+  endYear?: number
 }) {
+  // Ensure initial index is within allowed range
+  const constrainedInitialIndex = isIndexWithinRange(
+    initialIndex,
+    startYear,
+    endYear
+  )
+    ? initialIndex
+    : Math.max(
+        Math.min(initialIndex, getMaxIndex(endYear)),
+        getMinIndex(startYear)
+      )
+
   const [visibleIndexes, setVisibleIndexes] = useState<number[]>(
-    visibleArray(initialIndex)
+    visibleArray(constrainedInitialIndex)
   )
 
-  const idx = useRef<number>(initialIndex)
+  const idx = useRef<number>(constrainedInitialIndex)
   const parentRef = useRef<HTMLDivElement | null>(null)
 
   useIsomorphicLayoutEffect(() => {
@@ -137,12 +180,17 @@ function VerticalScroller({
       const offset = top - beginOffset
       const index = getIndexFromVerticalOffset(offset, startWeekOnMonday)
 
+      // Check if the new index is within allowed range
+      if (!isIndexWithinRange(index, startYear, endYear)) {
+        return
+      }
+
       if (idx.current !== index) {
         idx.current = index
         setVisibleIndexesThrottled(visibleArray(index))
       }
     },
-    [setVisibleIndexesThrottled, startWeekOnMonday]
+    [setVisibleIndexesThrottled, startWeekOnMonday, startYear, endYear]
   )
 
   return (

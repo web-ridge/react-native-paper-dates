@@ -170,19 +170,61 @@ export function isLeapYear({ year }: { year: number }) {
 
 export const daySize = 46
 export const estimatedMonthHeight = 360
-export const startAtIndex = 1200
+export const defaultStartYear = 1800
+export const defaultEndYear = 2200
+
+// Dynamic calculation functions to replace fixed constants
+export function getStartAtIndex(startYear?: number, _endYear?: number): number {
+  const start = startYear || 1800
+  const today = new Date()
+  const currentYear = today.getFullYear()
+
+  // Calculate months from start year to current year
+  const monthsFromStart = (currentYear - start) * 12 + today.getMonth()
+
+  // Ensure we have enough buffer for the range
+  return Math.max(monthsFromStart, 0)
+}
+
+export function getTotalMonths(startYear?: number, endYear?: number): number {
+  const start = startYear || 1800
+  const end = endYear || 2200
+  return (end - start + 1) * 12
+}
+
+export function getBeginOffset(startYear?: number, endYear?: number): number {
+  return estimatedMonthHeight * getStartAtIndex(startYear, endYear)
+}
+
+// Keep the old constants for backward compatibility but make them dynamic
+export const startAtIndex = 2800
 export const totalMonths = startAtIndex * 2
 export const beginOffset = estimatedMonthHeight * startAtIndex
+
+// Create a dynamic grid counts array
+export function createGridCounts(count: number): Array<number | undefined> {
+  return new Array<number | undefined>(count)
+}
+
 export const gridCounts = new Array<number | undefined>(totalMonths)
 
-export function getGridCount(index: number, startWeekOnMonday: boolean) {
-  const cHeight = gridCounts[index]
+export function getGridCount(
+  index: number,
+  startWeekOnMonday: boolean,
+  startYear?: number,
+  endYear?: number
+) {
+  const dynamicGridCounts = createGridCounts(getTotalMonths(startYear, endYear))
+  const cHeight = dynamicGridCounts[index]
   if (cHeight) {
     return cHeight
   }
-  const monthDate = addMonths(new Date(), getRealIndex(index))
+  const monthDate = addMonths(
+    new Date(),
+    getRealIndex(index, startYear, endYear)
+  )
   const h = getGridCountForDate(monthDate, startWeekOnMonday)
-  gridCounts[index] = h
+  dynamicGridCounts[index] = h
   return h
 }
 
@@ -194,19 +236,28 @@ export function getGridCountForDate(date: Date, startWeekOnMonday: boolean) {
   return Math.ceil((daysInMonth + dayOfWeek) / 7)
 }
 
-export function getRealIndex(index: number) {
-  return index - startAtIndex
+export function getRealIndex(
+  index: number,
+  startYear?: number,
+  endYear?: number
+) {
+  return index - getStartAtIndex(startYear, endYear)
 }
 
-export function getInitialIndex(date: Date | undefined) {
+export function getInitialIndex(
+  date: Date | undefined,
+  startYear?: number,
+  endYear?: number
+) {
+  const dynamicStartAtIndex = getStartAtIndex(startYear, endYear)
   if (!date) {
-    return startAtIndex
+    return dynamicStartAtIndex
   }
 
   const today = new Date()
   const months = differenceInMonths(today, date)
 
-  return startAtIndex + months
+  return dynamicStartAtIndex + months
 }
 
 export function useInputFormatter({ locale }: { locale: string | undefined }) {
