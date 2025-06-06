@@ -129,7 +129,7 @@ The start year when the component is rendered. Defaults to `1800`.
 
 **endYear**  
 `Type: number | undefined`  
-The end year when the component is rendered. Defaults to  `2200`.
+The end year when the component is rendered. Defaults to `2200`.
 
 **startWeekOnMonday**  
 `Type: boolean | undefined`  
