@@ -78,7 +78,12 @@ function SwiperInner({
       }
       const offset = isHorizontal
         ? getHorizontalMonthOffset(index, width)
-        : getVerticalMonthsOffset(index, startWeekOnMonday, startYear, endYear) - montHeaderHeight
+        : getVerticalMonthsOffset(
+            index,
+            startWeekOnMonday,
+            startYear,
+            endYear
+          ) - montHeaderHeight
 
       if (isHorizontal) {
         parentRef.current.scrollTo({
@@ -196,7 +201,9 @@ function SwiperInner({
               height: isHorizontal
                 ? height
                 : estimatedMonthHeight * getTotalMonths(startYear, endYear),
-              width: isHorizontal ? width * getTotalMonths(startYear, endYear) : width,
+              width: isHorizontal
+                ? width * getTotalMonths(startYear, endYear)
+                : width,
             },
           ]}
         >

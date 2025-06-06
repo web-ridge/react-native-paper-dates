@@ -26,7 +26,6 @@ import {
   useState,
 } from 'react'
 import { sharedStyles } from '../shared/styles'
-import { getTotalMonths } from './dateUtils'
 
 const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect
@@ -138,10 +137,14 @@ function VerticalScroller({
   endYear?: number
 }) {
   // Ensure initial index is within allowed range
-  const constrainedInitialIndex = isIndexWithinRange(initialIndex, startYear, endYear) 
-    ? initialIndex 
+  const constrainedInitialIndex = isIndexWithinRange(
+    initialIndex,
+    startYear,
+    endYear
+  )
+    ? initialIndex
     : Math.max(
-        Math.min(initialIndex, getMaxIndex(endYear)), 
+        Math.min(initialIndex, getMaxIndex(endYear)),
         getMinIndex(startYear)
       )
 

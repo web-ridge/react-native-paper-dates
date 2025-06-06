@@ -277,7 +277,15 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
 
   return (
     <View
-      style={{ height: getMonthHeight(scrollMode, index, startWeekOnMonday, startYear, endYear) }}
+      style={{
+        height: getMonthHeight(
+          scrollMode,
+          index,
+          startWeekOnMonday,
+          startYear,
+          endYear
+        ),
+      }}
     >
       <View
         style={[
@@ -441,7 +449,7 @@ function weeksOffset(
 ): number {
   const dynamicStartAtIndex = getStartAtIndex(startYear, endYear)
   const dynamicGridCounts = createGridCounts(getTotalMonths(startYear, endYear))
-  
+
   if (index === dynamicStartAtIndex) {
     return 0
   }
@@ -482,7 +490,8 @@ export function getIndexFromVerticalOffset(
 ): number {
   const dynamicStartAtIndex = getStartAtIndex(startYear, endYear)
   const dynamicBeginOffset = estimatedMonthHeight * dynamicStartAtIndex
-  let estimatedIndex = dynamicStartAtIndex + Math.ceil(offset / estimatedMonthHeight)
+  let estimatedIndex =
+    dynamicStartAtIndex + Math.ceil(offset / estimatedMonthHeight)
 
   const realOffset = getVerticalMonthsOffset(
     estimatedIndex,
@@ -490,7 +499,8 @@ export function getIndexFromVerticalOffset(
     startYear,
     endYear
   )
-  const difference = (realOffset - dynamicBeginOffset - offset) / estimatedMonthHeight
+  const difference =
+    (realOffset - dynamicBeginOffset - offset) / estimatedMonthHeight
   if (difference >= 1 || difference <= -1) {
     estimatedIndex -= Math.floor(difference)
   }
@@ -514,7 +524,8 @@ export function getVerticalMonthsOffset(
   const ob = weeksOffset(index, startWeekOnMonday, startYear, endYear)
   const monthsHeight = weekSize * ob
   const c = monthsHeight + count * (dayNamesHeight + montHeaderHeight)
-  const dynamicBeginOffset = estimatedMonthHeight * getStartAtIndex(startYear, endYear)
+  const dynamicBeginOffset =
+    estimatedMonthHeight * getStartAtIndex(startYear, endYear)
 
   return (c || 0) + dynamicBeginOffset
 }

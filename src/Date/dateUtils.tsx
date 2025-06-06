@@ -202,10 +202,8 @@ export const totalMonths = startAtIndex * 2
 export const beginOffset = estimatedMonthHeight * startAtIndex
 
 // Create a dynamic grid counts array
-export function createGridCounts(
-  totalMonths: number
-): Array<number | undefined> {
-  return new Array<number | undefined>(totalMonths)
+export function createGridCounts(count: number): Array<number | undefined> {
+  return new Array<number | undefined>(count)
 }
 
 export const gridCounts = new Array<number | undefined>(totalMonths)
