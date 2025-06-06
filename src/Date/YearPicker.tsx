@@ -3,7 +3,7 @@ import { MD2Theme, Text, TouchableRipple, useTheme } from 'react-native-paper'
 import { range } from '../shared/utils'
 import { memo, useEffect, useRef } from 'react'
 import { sharedStyles } from '../shared/styles'
-import { DEFAULT_START_YEAR, DEFAULT_END_YEAR } from './constants'
+import { defaultStartYear, defaultEndYear } from './dateUtils'
 
 const ITEM_HEIGHT = 62
 
@@ -24,8 +24,8 @@ export default function YearPicker({
 
   const flatList = useRef<FlatList<number> | null>(null)
   const years = range(
-    isNaN(startYear) ? DEFAULT_START_YEAR : startYear,
-    isNaN(endYear) ? DEFAULT_END_YEAR : endYear
+    isNaN(startYear) ? defaultStartYear : startYear,
+    isNaN(endYear) ? defaultEndYear : endYear
   )
 
   // scroll to selected year
@@ -151,4 +151,3 @@ const styles = StyleSheet.create({
   },
 })
 const Year = memo(YearPure)
-

@@ -7,7 +7,7 @@ import {
   getStartAtIndex,
   getTotalMonths,
 } from './dateUtils'
-import { DEFAULT_START_YEAR, DEFAULT_END_YEAR } from './constants'
+import { defaultStartYear, defaultEndYear } from './dateUtils'
 
 export type RenderProps = {
   index: number
@@ -37,7 +37,7 @@ export function getMinIndex(startYear?: number, endYear?: number): number {
   const dynamicStartAtIndex = getStartAtIndex(startYear, endYear)
   const minIndex = dynamicStartAtIndex + months
   const totalMonths = getTotalMonths(startYear, endYear)
-  
+
   // Allow any valid index within the dynamic range, no hard minimum
   return Math.max(0, Math.min(minIndex, totalMonths - 1))
 }
@@ -46,14 +46,14 @@ export function getMinIndex(startYear?: number, endYear?: number): number {
 export function getMaxIndex(startYear?: number, endYear?: number): number {
   const dynamicStartAtIndex = getStartAtIndex(startYear, endYear)
   const totalMonths = getTotalMonths(startYear, endYear)
-  
+
   if (!endYear) return totalMonths - 1
 
   const today = new Date()
   const endDate = new Date(endYear, 11, 31) // December 31st of endYear
   const months = differenceInMonths(today, endDate)
   const maxIndex = dynamicStartAtIndex + months
-  
+
   // Allow any valid index within the dynamic range
   return Math.max(0, Math.min(maxIndex, totalMonths - 1))
 }
@@ -64,8 +64,8 @@ export function isIndexWithinRange(
   startYear?: number,
   endYear?: number
 ): boolean {
-  const minIndex = getMinIndex(startYear || DEFAULT_START_YEAR, endYear)
-  const maxIndex = getMaxIndex(startYear, endYear || DEFAULT_END_YEAR)
+  const minIndex = getMinIndex(startYear || defaultStartYear, endYear)
+  const maxIndex = getMaxIndex(startYear, endYear || defaultEndYear)
   return index >= minIndex && index <= maxIndex
 }
 

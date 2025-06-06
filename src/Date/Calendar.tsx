@@ -16,7 +16,7 @@ import Color from 'color'
 import { useTheme } from 'react-native-paper'
 import { darkenBy, lightenBy, useLatest } from '../shared/utils'
 import { sharedStyles } from '../shared/styles'
-import { DEFAULT_START_YEAR, DEFAULT_END_YEAR } from './constants'
+import { defaultStartYear, defaultEndYear } from './dateUtils'
 
 export type ModeType = 'single' | 'range' | 'multiple'
 
@@ -221,8 +221,8 @@ function Calendar(
           selectedYear={selectedYear}
           selectingYear={selectingYear}
           onPressYear={onPressYear}
-          startYear={startYear || DEFAULT_START_YEAR}
-          endYear={endYear || DEFAULT_END_YEAR}
+          startYear={startYear || defaultStartYear}
+          endYear={endYear || defaultEndYear}
         />
       ) : null}
     </View>

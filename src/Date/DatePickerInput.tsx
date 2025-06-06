@@ -5,7 +5,7 @@ import type { DatePickerInputProps } from './DatePickerInput.shared'
 import DatePickerInputWithoutModal from './DatePickerInputWithoutModal'
 import { Platform, StyleProp, ViewStyle } from 'react-native'
 import { forwardRef, useCallback, useState } from 'react'
-import { DEFAULT_START_YEAR, DEFAULT_END_YEAR } from './constants'
+import { defaultStartYear, defaultEndYear } from './dateUtils'
 
 function DatePickerInput(
   {
@@ -79,8 +79,8 @@ function DatePickerInput(
             saveLabel={saveLabel}
             saveLabelDisabled={saveLabelDisabled ?? false}
             uppercase={uppercase}
-            startYear={startYear ?? DEFAULT_START_YEAR}
-            endYear={endYear ?? DEFAULT_END_YEAR}
+            startYear={startYear ?? defaultStartYear}
+            endYear={endYear ?? defaultEndYear}
             inputEnabled={inputEnabled}
             disableStatusBarPadding={disableStatusBarPadding ?? false}
             animationType={animationType}

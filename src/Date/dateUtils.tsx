@@ -170,6 +170,8 @@ export function isLeapYear({ year }: { year: number }) {
 
 export const daySize = 46
 export const estimatedMonthHeight = 360
+export const defaultStartYear = 1800
+export const defaultEndYear = 2200
 
 // Dynamic calculation functions to replace fixed constants
 export function getStartAtIndex(startYear?: number, _endYear?: number): number {

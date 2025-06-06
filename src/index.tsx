@@ -8,13 +8,6 @@ export { default as DatePickerInput } from './Date/DatePickerInput'
 export type { TranslationsType } from './translations/utils'
 export { registerTranslation, getTranslation } from './translations/utils'
 
-// Export default year range constants
-export {
-  DEFAULT_YEAR_RANGE,
-  DEFAULT_START_YEAR,
-  DEFAULT_END_YEAR,
-} from './Date/constants'
-
 export { default as ar } from './translations/ar'
 export { default as ca } from './translations/ca'
 export { default as de } from './translations/de'
