@@ -11,6 +11,7 @@ function DatePickerInput(
   {
     withModal = true,
     calendarIcon = 'calendar',
+    disableCalendarIcon = false,
     animationType = Platform.select({ web: 'none', default: 'slide' }),
     presentationStyle = 'overFullScreen',
     ...rest
@@ -44,7 +45,7 @@ function DatePickerInput(
             icon={calendarIcon}
             color={rest.iconColor ?? undefined}
             forceTextInputFocus={false}
-            disabled={rest.disabled}
+            disabled={rest.disabled || disableCalendarIcon}
             onPress={() => setVisible(true)}
             style={rest.iconStyle as StyleProp<ViewStyle>}
             testID={`${rest.testID || 'date-picker'}-icon-button`}

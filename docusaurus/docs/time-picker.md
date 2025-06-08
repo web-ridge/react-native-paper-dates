@@ -54,66 +54,66 @@ View an interactive [Expo snack](https://snack.expo.dev/@fitzwabs/react-native-p
 
 ## Props
 
-**locale (Required)**  
-`Type: String`  
-A locale can be composed of both a base language, the country (territory) of use, and possibly codeset (which is usually assumed). For example, German is de.
-
-**visible (Required)**  
-`Type: boolean`  
-Flag indicating if the component should be displayed.
-
-**onDismiss (Required)**  
-`Type: Function`  
-The action to take when the component is closed.
-
-**onConfirm (Required)**  
-`Type: Function`  
-The action to take when the date is selected.
-
-**hours**  
-`Type: number | undefined`  
-The hours values used to populate the component. Defaults to the current hour.
-
-**minutes**  
-`Type: number | undefined`  
-The minutes values used to populate the component. Defaults to the current minutes.
-
-**label**  
+**animationType**  
 `Type: String | undefined`  
-The label used as the header in the component. Defaults to `'Select time'`.
-
-**uppercase**  
-`Type: boolean | undefined`  
-Flag indicating if the text in the component should be uppercase. Defaults to `true`.
+The animation used when opening the component. Defaults to `'slide'` on ios/android and `'none'` on web.
 
 **cancelLabel**  
 `Type: String | undefined`  
 The label that will close the component. Defaults to `'Cancel'`.
 
-**confirmLabel**  
-`Type: String | undefined`  
-The label that will confirm the component selection. Defaults to `'Ok'`.
-
-**animationType**  
-`Type: String | undefined`  
-The animation used when opening the component. Defaults to `'slide'` on ios/android and `'none'` on web.
-
-**keyboardIcon**  
-`Type: string | undefined`  
-The icon used to toggle between the OS input. Defaults to `keyboard-outline`. You can pass the name of an icon from [MaterialCommunityIcons](https://materialdesignicons.com/).
-
 **clockIcon**  
 `Type: string | undefined`  
 The icon used to toggle between time picker and input. Defaults to `clock-outline`. You can pass the name of an icon from [MaterialCommunityIcons](https://materialdesignicons.com/).
 
-**use24HourClock**
-`Type: boolean | undefined`
-Flag indicating if the time input should use the 24 hours clock. Defaults to the system clock.
+**confirmLabel**  
+`Type: String | undefined`  
+The label that will confirm the component selection. Defaults to `'Ok'`.
+
+**defaultInputType**
+`Type: 'picker' | 'keyboard'`
+Which input type to use by default. Defaults to the clock-face picker.
+
+**hours**  
+`Type: number | undefined`  
+The hours values used to populate the component. Defaults to the current hour.
 
 **inputFontSize**
 `Type: number | undefined`
 Font size of the time input. Defaults to 57. Useful when using a custom font.
 
-**defaultInputType**
-`Type: 'picker' | 'keyboard'`
-Which input type to use by default. Defaults to the clock-face picker.
+**keyboardIcon**  
+`Type: string | undefined`  
+The icon used to toggle between the OS input. Defaults to `keyboard-outline`. You can pass the name of an icon from [MaterialCommunityIcons](https://materialdesignicons.com/).
+
+**label**  
+`Type: String | undefined`  
+The label used as the header in the component. Defaults to `'Select time'`.
+
+**locale (Required)**  
+`Type: String`  
+A locale can be composed of both a base language, the country (territory) of use, and possibly codeset (which is usually assumed). For example, German is de.
+
+**minutes**  
+`Type: number | undefined`  
+The minutes values used to populate the component. Defaults to the current minutes.
+
+**onConfirm (Required)**  
+`Type: Function`  
+The action to take when the date is selected.
+
+**onDismiss (Required)**  
+`Type: Function`  
+The action to take when the component is closed.
+
+**uppercase**  
+`Type: boolean | undefined`  
+Flag indicating if the text in the component should be uppercase. Defaults to `true`.
+
+**use24HourClock**
+`Type: boolean | undefined`
+Flag indicating if the time input should use the 24 hours clock. Defaults to the system clock.
+
+**visible (Required)**  
+`Type: boolean`  
+Flag indicating if the component should be displayed.
