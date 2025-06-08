@@ -14,6 +14,7 @@ export type DatePickerInputProps = {
   hasError?: boolean
   onValidationError?: ((error: string | null) => void) | undefined
   calendarIcon?: string
+  disableCalendarIcon?: boolean
   iconSize?: number
   iconStyle?: CSSProperties
   iconColor?: string

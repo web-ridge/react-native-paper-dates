@@ -39,57 +39,21 @@ View an interactive [Expo snack](https://snack.expo.dev/@fitzwabs/react-native-p
 
 ## Props
 
-**locale (Required)**  
-`Type: String`  
-A locale can be composed of both a base language, the country (territory) of use, and possibly codeset (which is usually assumed). For example, German is de.
+**animationType**  
+`Type: 'slide' | 'fade' | 'none' | undefined`  
+The animation used when opening the date picker modal. Defaults to `'slide'`.
 
-**label (Required)**  
-`Type: String`  
-The label used to display in the component.
-
-**value (Required)**  
-`Type: Date | undefined`  
-The value used to populate the component.
-
-**inputMode (Required)**  
-`Type: String`  
-The type of input needed for the the picker component.
-
-**onChange**  
-`Type: Function`  
-Callback event when the component date mask length matches the text input length.
-
-**onChangeText**  
-`Type: Function`  
-Callback event when the component text input changes.
-
-**mode**  
-`Type: 'flat' | 'outlined'`  
-See [react-native-paper text-input](https://callstack.github.io/react-native-paper/text-input.html#mode).
-
-**iconSize**  
-`Type: Number`  
-Specifies the size of the icon in pixels.
-
-**iconColor**  
-`Type: String`  
-Sets the color of the icon.
-
-**iconStyle**  
-`Type: React.CSSProperties`  
-Defines the CSS styles for the icon element.
-
-**validRange**  
-`Type: {
-  startDate: Date | undefined,
-  endDate: Date | undefined,
-  disabledDates: Date[] | undefined
-}`  
-Limits which dates the user can navigate to and where events can go. Dates outside of the valid range will be grayed-out.
-
-**withDateFormatInLabel**
+**disableCalendarIcon**  
 `Type: boolean | undefined`  
-Flag indicating if the date format should be inside the components label.
+Flag indicating if the calendar icon should be disabled. When set to `true`, the calendar icon will be disabled and users won't be able to click it to open the date picker modal. Defaults to `false`.
+
+**disableStatusBarPadding**  
+`Type: boolean | undefined`  
+Flag indicating if the status bar padding should be enabled or not. Defaults to `false`.
+
+**endYear**  
+`Type: number | undefined`  
+The end year when the component is rendered. Defaults to `2200`.
 
 **hasError**  
 `Type: boolean | undefined`  
@@ -99,37 +63,49 @@ Flag indicating if the the component should display error styles.
 `Type: boolean | undefined`  
 Flag indicating if the the component should hide error styles along with the `helperText` component displaying the error message.
 
-**onValidationError**  
-`Type: Function | undefined`  
-Callback used to return any error messages from the components validation.
+**iconColor**  
+`Type: String`  
+Sets the color of the icon.
 
-**saveLabelDisabled**  
-`Type: boolean | undefined`  
-Flag indicating if the save label should be disabled and unable to receive events. Defaults to `false`.
+**iconSize**  
+`Type: Number`  
+Specifies the size of the icon in pixels.
 
-**uppercase**  
-`Type: boolean | undefined`  
-Flag indicating if the text in the component should be uppercase. Defaults to `true`.
-
-**startYear**  
-`Type: number | undefined`  
-The start year when the component is rendered. Defaults to `1800`.
-
-**endYear**  
-`Type: number | undefined`  
-The end year when the component is rendered. Defaults to `2200`.
-
-**startWeekOnMonday**  
-`Type: boolean | undefined`  
-Flag indicating if calendar grid sould show monday as the first column. Defaults to `false`.
+**iconStyle**  
+`Type: React.CSSProperties`  
+Defines the CSS styles for the icon element.
 
 **inputEnabled**  
 `Type: boolean | undefined`  
 Flag indicating if the component should be enabled or not. Behavior similarly to `disabled`. Defaults to `true`.
 
-**disableStatusBarPadding**  
-`Type: boolean | undefined`  
-Flag indicating if the status bar padding should be enabled or not. Defaults to `false`.
+**inputMode (Required)**  
+`Type: String`  
+The type of input needed for the the picker component.
+
+**label (Required)**  
+`Type: String`  
+The label used to display in the component.
+
+**locale (Required)**  
+`Type: String`  
+A locale can be composed of both a base language, the country (territory) of use, and possibly codeset (which is usually assumed). For example, German is de.
+
+**mode**  
+`Type: 'flat' | 'outlined'`  
+See [react-native-paper text-input](https://callstack.github.io/react-native-paper/text-input.html#mode).
+
+**onChange**  
+`Type: Function`  
+Callback event when the component date mask length matches the text input length.
+
+**onChangeText**  
+`Type: Function`  
+Callback event when the component text input changes.
+
+**onValidationError**  
+`Type: Function | undefined`  
+Callback used to return any error messages from the components validation.
 
 **presentationStyle**
 `Type: 'fullScreen' | 'pageSheet' | 'formSheet' | 'overFullScreen'`
@@ -140,10 +116,38 @@ Determines the visual presentation style of the date picker modal. This prop all
 - `'formSheet'`: Renders the modal as a smaller form-style sheet.
 - `'overFullScreen'`: Overlays the modal on top of the content, allowing interaction with the underlying content.
 
-**animationType**  
-`Type: 'slide' | 'fade' | 'none' | undefined`  
-The animation used when opening the date picker modal. Defaults to `'slide'`.
-
 For example, if you set `presentationStyle` to `'pageSheet'`, the modal will be presented as a card-like sheet.
+
+**saveLabelDisabled**  
+`Type: boolean | undefined`  
+Flag indicating if the save label should be disabled and unable to receive events. Defaults to `false`.
+
+**startWeekOnMonday**  
+`Type: boolean | undefined`  
+Flag indicating if calendar grid sould show monday as the first column. Defaults to `false`.
+
+**startYear**  
+`Type: number | undefined`  
+The start year when the component is rendered. Defaults to `1800`.
+
+**uppercase**  
+`Type: boolean | undefined`  
+Flag indicating if the text in the component should be uppercase. Defaults to `true`.
+
+**validRange**  
+`Type: {
+  startDate: Date | undefined,
+  endDate: Date | undefined,
+  disabledDates: Date[] | undefined
+}`  
+Limits which dates the user can navigate to and where events can go. Dates outside of the valid range will be grayed-out.
+
+**value (Required)**  
+`Type: Date | undefined`  
+The value used to populate the component.
+
+**withDateFormatInLabel**
+`Type: boolean | undefined`  
+Flag indicating if the date format should be inside the components label.
 
 - Other [react-native TextInput props](https://reactnative.dev/docs/textinput#props).\*

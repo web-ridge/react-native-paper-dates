@@ -55,6 +55,42 @@ View an interactive [Expo snack](https://snack.expo.dev/@fitzwabs/react-native-p
 
 ## Props
 
+**animationType**  
+`Type: String | undefined`  
+The animation used when opening the component. Defaults to `'slide'` on ios/android and `'none'` on web.
+
+**calendarIcon**  
+`Type: string | undefined`  
+The edit icon used to toggle between input and calendar. Defaults to `calendar`. You can pass the name of an icon from [MaterialCommunityIcons](https://materialdesignicons.com/).
+
+**closeIcon**  
+`Type: string | undefined`  
+The icon used to close the component. Defaults to `close`. You can pass the name of an icon from [MaterialCommunityIcons](https://materialdesignicons.com/).
+
+**dates (Required)**  
+`Type: Date[]`  
+The date values used to populate the component.
+
+**disableStatusBarPadding**  
+`Type: boolean | undefined`  
+Flag indicating if the status bar padding should be enabled or not. Defaults to `false`.
+
+**editIcon**  
+`Type: string | undefined`  
+The edit icon used to toggle between calendar and input. Defaults to `pencil`. You can pass the name of an icon from [MaterialCommunityIcons](https://materialdesignicons.com/).
+
+**endLabel**  
+`Type: String | undefined`  
+The label used as the suffix to the ending date in the component. Defaults to `'To'`.
+
+**endYear**  
+`Type: number | undefined`  
+The end year when the component is rendered. Defaults to `2200`.
+
+**label**  
+`Type: String | undefined`  
+The label used as the header in the component. Defaults to `'Select date'`.
+
 **locale (Required)**  
 `Type: String`  
 A locale can be composed of both a base language, the country (territory) of use, and possibly codeset (which is usually assumed). For example, German is de.
@@ -63,37 +99,21 @@ A locale can be composed of both a base language, the country (territory) of use
 `Type: 'single' | 'multiple' | 'range'`  
 The selection type for the date picker. For this example it is `"multiple"`.
 
-**visible (Required)**  
-`Type: boolean`  
-Flag indicating if the component should be displayed.
+**moreLabel**  
+`Type: String | undefined`  
+The label used display when multiple dates have been selected in the component. Defaults to `'More'`.
 
-**onDismiss (Required)**  
+**onChange**  
 `Type: Function`  
-The action to take when the component is closed.
-
-**dates (Required)**  
-`Type: Date[]`  
-The date values used to populate the component.
+Event handler when the component changes.
 
 **onConfirm (Required)**  
 `Type: Function`  
 The action to take when the date is selected.
 
-**moreLabel**  
-`Type: String | undefined`  
-The label used display when multiple dates have been selected in the component. Defaults to `'More'`.
-
-**validRange**  
-`Type: {
-  startDate: Date | undefined,
-  endDate: Date | undefined,
-  disabledDates: Date[] | undefined
-}`  
-Limits which dates the user can navigate to and where events can go. Dates outside of the valid range will be grayed-out.
-
-**onChange**  
+**onDismiss (Required)**  
 `Type: Function`  
-Event handler when the component changes.
+The action to take when the component is closed.
 
 **saveLabel**  
 `Type: String | undefined`  
@@ -103,53 +123,33 @@ The label used confirm a date selection. Defaults to `'Save'`.
 `Type: boolean | undefined`  
 Flag indicating if the save label should be disabled and unable to receive events. Defaults to `false`.
 
-**uppercase**  
-`Type: boolean | undefined`  
-Flag indicating if the text in the component should be uppercase. Defaults to `true`.
-
-**label**  
-`Type: String | undefined`  
-The label used as the header in the component. Defaults to `'Select date'`.
-
 **startLabel**  
 `Type: String | undefined`  
 The label used as the prefix to the starting date in the component. Defaults to `'From'`.
-
-**endLabel**  
-`Type: String | undefined`  
-The label used as the suffix to the ending date in the component. Defaults to `'To'`.
-
-**animationType**  
-`Type: String | undefined`  
-The animation used when opening the component. Defaults to `'slide'` on ios/android and `'none'` on web.
-
-**startYear**  
-`Type: number | undefined`  
-The start year when the component is rendered. Defaults to `1800`.
-
-**endYear**  
-`Type: number | undefined`  
-The end year when the component is rendered. Defaults to `2200`.
 
 **startWeekOnMonday**  
 `Type: boolean | undefined`  
 Flag indicating if calendar grid sould show monday as the first column. Defaults to `false`.
 
-**closeIcon**  
-`Type: string | undefined`  
-The icon used to close the component. Defaults to `close`. You can pass the name of an icon from [MaterialCommunityIcons](https://materialdesignicons.com/).
+**startYear**  
+`Type: number | undefined`  
+The start year when the component is rendered. Defaults to `1800`.
 
-**editIcon**  
-`Type: string | undefined`  
-The edit icon used to toggle between calendar and input. Defaults to `pencil`. You can pass the name of an icon from [MaterialCommunityIcons](https://materialdesignicons.com/).
-
-**calendarIcon**  
-`Type: string | undefined`  
-The edit icon used to toggle between input and calendar. Defaults to `calendar`. You can pass the name of an icon from [MaterialCommunityIcons](https://materialdesignicons.com/).
-
-**disableStatusBarPadding**  
+**uppercase**  
 `Type: boolean | undefined`  
-Flag indicating if the status bar padding should be enabled or not. Defaults to `false`.
+Flag indicating if the text in the component should be uppercase. Defaults to `true`.
+
+**validRange**  
+`Type: {
+  startDate: Date | undefined,
+  endDate: Date | undefined,
+  disabledDates: Date[] | undefined
+}`  
+Limits which dates the user can navigate to and where events can go. Dates outside of the valid range will be grayed-out.
+
+**visible (Required)**  
+`Type: boolean`  
+Flag indicating if the component should be displayed.
 
 **presentationStyle**
 `Type: 'fullScreen' | 'pageSheet' | 'formSheet' | 'overFullScreen'`
