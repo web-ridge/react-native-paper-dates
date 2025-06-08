@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.7.0">
 <title data-rh="true">Single Date Picker | Paper Dates</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://web-ridge.github.io/react-native-paper-dates/docs/date-picker/single-date-picker"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Single Date Picker | Paper Dates"><meta data-rh="true" name="description" content="The single date picker provides a modal allowing only a single date selection."><meta data-rh="true" property="og:description" content="The single date picker provides a modal allowing only a single date selection."><link data-rh="true" rel="icon" href="/react-native-paper-dates/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://web-ridge.github.io/react-native-paper-dates/docs/date-picker/single-date-picker"><link data-rh="true" rel="alternate" href="https://web-ridge.github.io/react-native-paper-dates/docs/date-picker/single-date-picker" hreflang="en"><link data-rh="true" rel="alternate" href="https://web-ridge.github.io/react-native-paper-dates/docs/date-picker/single-date-picker" hreflang="x-default"><link rel="stylesheet" href="/react-native-paper-dates/assets/css/styles.b7b1dece.css">
-<script src="/react-native-paper-dates/assets/js/runtime~main.948ce595.js" defer="defer"></script>
+<script src="/react-native-paper-dates/assets/js/runtime~main.339a0b72.js" defer="defer"></script>
 <script src="/react-native-paper-dates/assets/js/main.50255e73.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -15,69 +15,69 @@
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="live-example">Live Example<a href="#live-example" class="hash-link" aria-label="Direct link to Live Example" title="Direct link to Live Example">​</a></h2>
 <p>View an interactive <a href="https://snack.expo.dev/@fitzwabs/react-native-paper-dates-single-picker" target="_blank" rel="noopener noreferrer">Expo snack</a>.</p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="props">Props<a href="#props" class="hash-link" aria-label="Direct link to Props" title="Direct link to Props">​</a></h2>
+<p><strong>animationType</strong><br>
+<code>Type: String | undefined</code><br>
+<!-- -->The animation used when opening the component. Defaults to <code>&#x27;slide&#x27;</code> on ios/android and <code>&#x27;none&#x27;</code> on web.</p>
+<p><strong>calendarIcon</strong><br>
+<code>Type: string | undefined</code><br>
+<!-- -->The edit icon used to toggle between input and calendar. Defaults to <code>calendar</code>. You can pass the name of an icon from <a href="https://materialdesignicons.com/" target="_blank" rel="noopener noreferrer">MaterialCommunityIcons</a>.</p>
+<p><strong>closeIcon</strong><br>
+<code>Type: string | undefined</code><br>
+<!-- -->The icon used to close the component. Defaults to <code>close</code>. You can pass the name of an icon from <a href="https://materialdesignicons.com/" target="_blank" rel="noopener noreferrer">MaterialCommunityIcons</a>.</p>
+<p><strong>date (Required)</strong><br>
+<code>Type: Date</code><br>
+<!-- -->The date value used to populate the component.</p>
+<p><strong>disableStatusBarPadding</strong><br>
+<code>Type: boolean | undefined</code><br>
+<!-- -->Flag indicating if the status bar padding should be enabled or not. Defaults to <code>false</code>.</p>
+<p><strong>editIcon</strong><br>
+<code>Type: string | undefined</code><br>
+<!-- -->The edit icon used to toggle between calendar and input. Defaults to <code>pencil</code>. You can pass the name of an icon from <a href="https://materialdesignicons.com/" target="_blank" rel="noopener noreferrer">MaterialCommunityIcons</a>.</p>
+<p><strong>endYear</strong><br>
+<code>Type: number | undefined</code><br>
+<!-- -->The end year when the component is rendered. Defaults to <code>2200</code>.</p>
+<p><strong>inputEnabled</strong><br>
+<code>Type: boolean | undefined</code><br>
+<!-- -->Flag indicating if the component should be enabled or not. Defaults to <code>true</code>.</p>
+<p><strong>label</strong><br>
+<code>Type: String | undefined</code><br>
+<!-- -->The label used as the header in the component. Defaults to <code>&#x27;Select date&#x27;</code>.</p>
 <p><strong>locale (Required)</strong><br>
 <code>Type: String</code><br>
 <!-- -->A locale can be composed of both a base language, the country (territory) of use, and possibly codeset (which is usually assumed). For example, German is de.</p>
 <p><strong>mode (Required)</strong><br>
 <code>Type: &#x27;single&#x27; | &#x27;multiple&#x27; | &#x27;range&#x27;</code><br>
 <!-- -->The selection type for the date picker. For this example it is <code>&quot;single&quot;</code>.</p>
-<p><strong>visible (Required)</strong><br>
-<code>Type: boolean</code><br>
-<!-- -->Flag indicating if the component should be displayed.</p>
-<p><strong>onDismiss (Required)</strong><br>
-<code>Type: Function</code><br>
-<!-- -->The action to take when the component is closed.</p>
-<p><strong>date (Required)</strong><br>
-<code>Type: Date</code><br>
-<!-- -->The date value used to populate the component.</p>
-<p><strong>onConfirm (Required)</strong><br>
-<code>Type: Function</code><br>
-<!-- -->The action to take when the date is selected.</p>
-<p><strong>validRange</strong><br>
-<code>Type: {   startDate: Date | undefined,   endDate: Date | undefined,   disabledDates: Date[] | undefined }</code><br>
-<!-- -->Limits which dates the user can navigate to and where events can go. Dates outside of the valid range will be grayed-out.</p>
 <p><strong>onChange</strong><br>
 <code>Type: Function</code><br>
 <!-- -->Event handler when the component changes.</p>
+<p><strong>onConfirm (Required)</strong><br>
+<code>Type: Function</code><br>
+<!-- -->The action to take when the date is selected.</p>
+<p><strong>onDismiss (Required)</strong><br>
+<code>Type: Function</code><br>
+<!-- -->The action to take when the component is closed.</p>
 <p><strong>saveLabel</strong><br>
 <code>Type: String | undefined</code><br>
 <!-- -->The label used confirm a date selection. Defaults to <code>&#x27;Save&#x27;</code>.</p>
 <p><strong>saveLabelDisabled</strong><br>
 <code>Type: boolean | undefined</code><br>
 <!-- -->Flag indicating if the save label should be disabled and unable to receive events. Defaults to <code>false</code>.</p>
-<p><strong>uppercase</strong><br>
-<code>Type: boolean | undefined</code><br>
-<!-- -->Flag indicating if the text in the component should be uppercase. Defaults to <code>true</code>.</p>
-<p><strong>label</strong><br>
-<code>Type: String | undefined</code><br>
-<!-- -->The label used as the header in the component. Defaults to <code>&#x27;Select date&#x27;</code>.</p>
-<p><strong>animationType</strong><br>
-<code>Type: String | undefined</code><br>
-<!-- -->The animation used when opening the component. Defaults to <code>&#x27;slide&#x27;</code> on ios/android and <code>&#x27;none&#x27;</code> on web.</p>
-<p><strong>startYear</strong><br>
-<code>Type: number | undefined</code><br>
-<!-- -->The start year when the component is rendered. Defaults to <code>1800</code>.</p>
-<p><strong>endYear</strong><br>
-<code>Type: number | undefined</code><br>
-<!-- -->The end year when the component is rendered. Defaults to <code>2200</code>.</p>
 <p><strong>startWeekOnMonday</strong><br>
 <code>Type: boolean | undefined</code><br>
 <!-- -->Flag indicating if calendar grid sould show monday as the first column. Defaults to <code>false</code>.</p>
-<p><strong>closeIcon</strong><br>
-<code>Type: string | undefined</code><br>
-<!-- -->The icon used to close the component. Defaults to <code>close</code>. You can pass the name of an icon from <a href="https://materialdesignicons.com/" target="_blank" rel="noopener noreferrer">MaterialCommunityIcons</a>.</p>
-<p><strong>editIcon</strong><br>
-<code>Type: string | undefined</code><br>
-<!-- -->The edit icon used to toggle between calendar and input. Defaults to <code>pencil</code>. You can pass the name of an icon from <a href="https://materialdesignicons.com/" target="_blank" rel="noopener noreferrer">MaterialCommunityIcons</a>.</p>
-<p><strong>calendarIcon</strong><br>
-<code>Type: string | undefined</code><br>
-<!-- -->The edit icon used to toggle between input and calendar. Defaults to <code>calendar</code>. You can pass the name of an icon from <a href="https://materialdesignicons.com/" target="_blank" rel="noopener noreferrer">MaterialCommunityIcons</a>.</p>
-<p><strong>inputEnabled</strong><br>
+<p><strong>startYear</strong><br>
+<code>Type: number | undefined</code><br>
+<!-- -->The start year when the component is rendered. Defaults to <code>1800</code>.</p>
+<p><strong>uppercase</strong><br>
 <code>Type: boolean | undefined</code><br>
-<!-- -->Flag indicating if the component should be enabled or not. Defaults to <code>true</code>.</p>
-<p><strong>disableStatusBarPadding</strong><br>
-<code>Type: boolean | undefined</code><br>
-<!-- -->Flag indicating if the status bar padding should be enabled or not. Defaults to <code>false</code>.</p>
+<!-- -->Flag indicating if the text in the component should be uppercase. Defaults to <code>true</code>.</p>
+<p><strong>validRange</strong><br>
+<code>Type: {   startDate: Date | undefined,   endDate: Date | undefined,   disabledDates: Date[] | undefined }</code><br>
+<!-- -->Limits which dates the user can navigate to and where events can go. Dates outside of the valid range will be grayed-out.</p>
+<p><strong>visible (Required)</strong><br>
+<code>Type: boolean</code><br>
+<!-- -->Flag indicating if the component should be displayed.</p>
 <p><strong>presentationStyle</strong>
 <code>Type: </code>&#x27;overFullScreen&#x27; | &#x27;pageSheet&#x27; | undefined`
 Determines the visual presentation style of the date picker modal. This prop allows you to define how the modal appears on the screen when it is displayed.</p>
