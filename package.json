@@ -1,59 +1,21 @@
 {
-  "name": "react-native-paper-dates",
-  "version": "0.22.45",
-  "description": "Performant Date Picker for React Native Paper",
-  "main": "lib/commonjs/index",
-  "module": "lib/module/index",
-  "types": "lib/typescript/index.d.ts",
-  "react-native": "src/index",
-  "source": "src/index",
-  "files": [
-    "src",
-    "lib",
-    "android",
-    "ios",
-    "cpp",
-    "react-native-paper-dates.podspec",
-    "!lib/typescript/example",
-    "!android/build",
-    "!ios/build",
-    "!**/__tests__",
-    "!**/__fixtures__",
-    "!**/__mocks__"
-  ],
-  "scripts": {
-    "test": "jest --config=jest.config.js --watchAll=false",
-    "test-watch": "jest --config=jest.config.js --watchAll",
-    "typecheck": "tsc --noEmit",
-    "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "prepare": "husky install && bob build",
-    "release": "release-it --ci --github.autoGenerate",
-    "example": "yarn --cwd example",
-    "pods": "cd example && pod-install --quiet",
-    "bootstrap": "yarn example && yarn && yarn pods",
-    "prepack": "bob build",
-    "build-example": "cd example && npx expo export:web"
-  },
-  "keywords": [
-    "react-native",
-    "ios",
-    "android"
-  ],
-  "repository": "https://github.com/web-ridge/react-native-paper-dates",
   "author": "Richard Lindhout <info@webridge.nl> (https://github.com/web-ridge)",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/web-ridge/react-native-paper-dates/issues"
   },
-  "homepage": "https://github.com/web-ridge/react-native-paper-dates#readme",
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   },
+  "dependencies": {
+    "color": "^4.2.3"
+  },
+  "description": "Performant Date Picker for React Native Paper",
   "devDependencies": {
     "@commitlint/config-conventional": "^19.8.0",
     "@react-native-community/eslint-config": "^3.2.0",
-    "@react-native-vector-icons/common": "^11.0.0",
-    "@react-native-vector-icons/material-design-icons": "^7.4.47",
+    "@react-native-vector-icons/material-design-icons": "^12.0.0",
     "@react-native/babel-preset": "^0.79.2",
     "@release-it/conventional-changelog": "^10.0.1",
     "@testing-library/react-native": "^13.2.0",
@@ -79,44 +41,9 @@
     "react-native-builder-bob": "^0.40.0",
     "react-native-paper": "^5.14.0",
     "react-native-safe-area-context": "^5.4.0",
-    "react-native-vector-icons": "^10.2.0",
     "react-test-renderer": "~19.0.0",
     "release-it": "^19.0.1",
     "typescript": "~5.8.3"
-  },
-  "peerDependencies": {
-    "react": "*",
-    "react-native": "*",
-    "react-native-paper": "*",
-    "react-native-safe-area-context": "*"
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "yarn lint && yarn typecheck"
-    }
-  },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
-  },
-  "release-it": {
-    "git": {
-      "commitMessage": "chore: release ${version}",
-      "tagName": "v${version}"
-    },
-    "npm": {
-      "publish": true
-    },
-    "github": {
-      "release": true
-    },
-    "plugins": {
-      "@release-it/conventional-changelog": {
-        "preset": "angular"
-      }
-    }
   },
   "eslintConfig": {
     "root": true,
@@ -147,6 +74,42 @@
     "docusaurus",
     "coverage"
   ],
+  "files": [
+    "src",
+    "lib",
+    "android",
+    "ios",
+    "cpp",
+    "react-native-paper-dates.podspec",
+    "!lib/typescript/example",
+    "!android/build",
+    "!ios/build",
+    "!**/__tests__",
+    "!**/__fixtures__",
+    "!**/__mocks__"
+  ],
+  "homepage": "https://github.com/web-ridge/react-native-paper-dates#readme",
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "yarn lint && yarn typecheck"
+    }
+  },
+  "keywords": [
+    "react-native",
+    "ios",
+    "android"
+  ],
+  "license": "MIT",
+  "main": "lib/commonjs/index",
+  "module": "lib/module/index",
+  "name": "react-native-paper-dates",
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*",
+    "react-native-paper": "*",
+    "react-native-safe-area-context": "*"
+  },
   "prettier": {
     "quoteProps": "consistent",
     "singleQuote": true,
@@ -155,6 +118,10 @@
     "useTabs": false,
     "semi": false
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "react-native": "src/index",
   "react-native-builder-bob": {
     "source": "src",
     "output": "lib",
@@ -170,7 +137,38 @@
       ]
     ]
   },
-  "dependencies": {
-    "color": "^4.2.3"
-  }
+  "release-it": {
+    "git": {
+      "commitMessage": "chore: release ${version}",
+      "tagName": "v${version}"
+    },
+    "npm": {
+      "publish": true
+    },
+    "github": {
+      "release": true
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": "angular"
+      }
+    }
+  },
+  "repository": "https://github.com/web-ridge/react-native-paper-dates",
+  "scripts": {
+    "test": "jest --config=jest.config.js --watchAll=false",
+    "test-watch": "jest --config=jest.config.js --watchAll",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "prepare": "husky install && bob build",
+    "release": "release-it --ci --github.autoGenerate",
+    "example": "yarn --cwd example",
+    "pods": "cd example && pod-install --quiet",
+    "bootstrap": "yarn example && yarn && yarn pods",
+    "prepack": "bob build",
+    "build-example": "cd example && npx expo export:web"
+  },
+  "source": "src/index",
+  "types": "lib/typescript/index.d.ts",
+  "version": "0.22.45"
 }

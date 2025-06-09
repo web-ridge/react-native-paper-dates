@@ -1,19 +1,9 @@
 {
-  "name": "react-native-paper-dates-example",
-  "description": "Example app for react-native-paper-dates",
-  "version": "1.0.0",
-  "private": true,
-  "main": "index.js",
-  "scripts": {
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
-    "start": "expo start",
-    "test": "jest"
-  },
   "dependencies": {
-    "crypto-browserify": "^3.12.1",
-    "expo": "^53.0.10",
+    "@expo/vector-icons": "^14.0.0",
+    "expo": "^53.0.11",
+    "expo-crypto": "^14.1.5",
+    "expo-font": "^13.3.1",
     "expo-splash-screen": "~0.30.9",
     "expo-status-bar": "~2.2.3",
     "react": "19.0.0",
@@ -21,9 +11,9 @@
     "react-native": "0.79.3",
     "react-native-paper": "^5.14.5",
     "react-native-safe-area-context": "^5.4.1",
-    "react-native-web": "~0.20.0",
-    "stream-browserify": "^3.0.0"
+    "react-native-web": "~0.20.0"
   },
+  "description": "Example app for react-native-paper-dates",
   "devDependencies": {
     "@babel/core": "^7.27.4",
     "@expo/webpack-config": "^19.0.1",
@@ -45,5 +35,16 @@
         "react-native-safe-area-context"
       ]
     }
-  }
+  },
+  "main": "index.js",
+  "name": "react-native-paper-dates-example",
+  "private": true,
+  "scripts": {
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "start": "expo start",
+    "test": "jest"
+  },
+  "version": "1.0.0"
 }
