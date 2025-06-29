@@ -170,5 +170,5 @@
   },
   "source": "src/index",
   "types": "lib/typescript/index.d.ts",
-  "version": "0.22.46"
+  "version": "0.22.47"
 }
