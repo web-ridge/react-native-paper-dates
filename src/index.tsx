@@ -1,6 +1,6 @@
 export { default as Calendar } from './Date/Calendar'
 export { default as DatePickerModal } from './Date/DatePickerModal'
-export type { 
+export type {
   DatePickerModalSingleProps,
   DatePickerModalMultiProps,
   DatePickerModalRangeProps,
