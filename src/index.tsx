@@ -3,7 +3,7 @@ export { default as DatePickerModal } from './Date/DatePickerModal'
 export type { 
   DatePickerModalSingleProps,
   DatePickerModalMultiProps,
-  DatePickerModalRangeProps
+  DatePickerModalRangeProps,
 } from './Date/DatePickerModal'
 export { default as DatePickerModalContent } from './Date/DatePickerModalContent'
 export { default as TimePickerModal } from './Time/TimePickerModal'
