@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.34,
     shadowRadius: 6.27,
     elevation: 3,
-    minWidth: 287,
+    minWidth: 328,
     paddingVertical: 8,
   },
   timePickerContainer: {
