@@ -5,6 +5,7 @@ const ukUA: TranslationsType = {
   selectSingle: 'Оберіть дату',
   selectMultiple: 'Оберіть дати',
   selectRange: 'Оберіть період',
+  selectMonth: 'Оберіть місяць',
   notAccordingToDateFormat: (inputFormat: string) =>
     `Формат дати має бути ${inputFormat}`,
   mustBeHigherThan: (date: string) => `Має бути пізніше ніж ${date}`,

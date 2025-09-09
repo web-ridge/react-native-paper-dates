@@ -27,6 +27,7 @@ function CalendarHeader({
   onPrev,
   onNext,
   disableWeekDays,
+  hideDays,
   locale,
   startWeekOnMonday,
 }: {
@@ -35,13 +36,14 @@ function CalendarHeader({
   onPrev: () => any
   onNext: () => any
   disableWeekDays?: DisableWeekDaysType
+  hideDays: boolean
   startWeekOnMonday: boolean
 }) {
   const isHorizontal = scrollMode === 'horizontal'
 
   const theme = useTheme()
 
-  return (
+  return isHorizontal || !hideDays ? (
     <View style={styles.datePickerHeader} pointerEvents={'box-none'}>
       {isHorizontal ? (
         <View style={styles.buttonContainer} pointerEvents={'box-none'}>
@@ -62,13 +64,15 @@ function CalendarHeader({
           </View>
         </View>
       ) : null}
-      <DayNames
-        disableWeekDays={disableWeekDays}
-        locale={locale}
-        startWeekOnMonday={startWeekOnMonday}
-      />
+      {hideDays ? null : (
+        <DayNames
+          disableWeekDays={disableWeekDays}
+          locale={locale}
+          startWeekOnMonday={startWeekOnMonday}
+        />
+      )}
     </View>
-  )
+  ) : null
 }
 
 const styles = StyleSheet.create({

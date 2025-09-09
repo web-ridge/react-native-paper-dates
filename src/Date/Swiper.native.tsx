@@ -53,6 +53,7 @@ function SwiperInner({
   width,
   height,
   startWeekOnMonday,
+  yearOnly,
   startYear,
   endYear,
 }: SwiperProps & { width: number; height: number }) {
@@ -111,14 +112,14 @@ function SwiperInner({
   )
 
   const onPrev = useCallback(() => {
-    const newIndex = idx.current - 1
+    const newIndex = idx.current - (yearOnly ? 12 : 1)
     if (isIndexWithinRange(newIndex, startYear, endYear)) {
       scrollTo(newIndex, true)
     }
   }, [scrollTo, idx, startYear, endYear])
 
   const onNext = useCallback(() => {
-    const newIndex = idx.current + 1
+    const newIndex = idx.current + (yearOnly ? 12 : 1)
     if (isIndexWithinRange(newIndex, startYear, endYear)) {
       scrollTo(newIndex, true)
     }

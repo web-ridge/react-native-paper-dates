@@ -1,12 +1,15 @@
 import { render } from '@testing-library/react-native'
 import Calendar from '../../Date/Calendar'
 
+// 7th of August, 2025
+const fixedDate = new Date(2025, 7, 7)
+
 it('renders Calendar', () => {
   const { toJSON } = render(
     <Calendar
       locale="en"
       mode="single"
-      date={new Date()}
+      date={fixedDate}
       onChange={() => null}
     />
   )

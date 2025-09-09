@@ -8,6 +8,7 @@ it('renders CalendarHeader', () => {
       onPrev={() => null}
       onNext={() => null}
       scrollMode="vertical"
+      hideDays={false}
       startWeekOnMonday={false}
     />
   )

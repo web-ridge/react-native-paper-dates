@@ -5,6 +5,7 @@ const hi: TranslationsType = {
   selectSingle: 'तारीख़ चुनें',
   selectMultiple: 'तारीख़ें चुनें',
   selectRange: 'अवधि चुनें',
+  selectMonth: 'एक महीने का चयन करें',
   notAccordingToDateFormat: (inputFormat) =>
     `तारीख़ का प्रारूप ${inputFormat} होना चाहिए`,
   mustBeHigherThan: (date) => `${date} के बाद होना चाहिए`,

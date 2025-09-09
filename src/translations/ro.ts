@@ -5,6 +5,7 @@ const ro: TranslationsType = {
   selectSingle: 'Selectează data',
   selectMultiple: 'Selectează datele',
   selectRange: 'Selectează perioada',
+  selectMonth: 'Selectează lună',
   notAccordingToDateFormat: (inputFormat) =>
     `Formatul datei trebuie să fie ${inputFormat}`,
   mustBeHigherThan: (date) => `Trebuie să fie mai târziu de ${date}`,

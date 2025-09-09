@@ -5,6 +5,7 @@ const ru: TranslationsType = {
   selectSingle: 'Выбор даты',
   selectMultiple: 'Выбор дат',
   selectRange: 'Выбор диапазона',
+  selectMonth: 'Выбор месяц',
   notAccordingToDateFormat: (inputFormat) =>
     `Формат даты должен быть ${inputFormat}`,
   mustBeHigherThan: (date) => `Должен быть позже, чем ${date}`,

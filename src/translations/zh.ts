@@ -5,6 +5,7 @@ const zh: TranslationsType = {
   selectSingle: '选择日期',
   selectMultiple: '选择多个日期',
   selectRange: '选择期间',
+  selectMonth: '选择月份',
   notAccordingToDateFormat: (inputFormat) => `日期格式必须是 ${inputFormat}`,
   mustBeHigherThan: (date) => `必须晚于 ${date}`,
   mustBeLowerThan: (date) => `必须早于 ${date}`,

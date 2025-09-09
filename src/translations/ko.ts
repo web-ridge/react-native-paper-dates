@@ -5,6 +5,7 @@ const ko: TranslationsType = {
   selectSingle: '날짜 선택',
   selectMultiple: '여러 날짜 선택',
   selectRange: '기간 선택',
+  selectMonth: '월을 선택하세요',
   notAccordingToDateFormat: (inputFormat) =>
     `날짜 형식은 ${inputFormat}가 되어야 합니다`,
   mustBeHigherThan: (date) => `${date} 보다 커야 합니다`,

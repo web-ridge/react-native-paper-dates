@@ -5,6 +5,7 @@ const enGB: TranslationsType = {
   selectSingle: 'Select date',
   selectMultiple: 'Select dates',
   selectRange: 'Select period',
+  selectMonth: 'Select month',
   notAccordingToDateFormat: (inputFormat) =>
     `Date format must be ${inputFormat}`,
   mustBeHigherThan: (date) => `Must be later than ${date}`,
