@@ -6,23 +6,19 @@ import {
   TouchableRipple,
   useTheme,
 } from 'react-native-paper'
-import Day, { EmptyDay } from './Day'
+import Mon from './Mon'
 
 import {
   addMonths,
-  areDatesOnSameDay,
+  areDatesInSameMonth,
   daySize,
   estimatedMonthHeight,
-  getFirstDayOfMonth,
   getGridCount,
   getRealIndex,
   getStartAtIndex,
   getTotalMonths,
   createGridCounts,
   DisableWeekDaysType,
-  getDaysInMonth,
-  isDateBetween,
-  showWeekDay,
   useRangeChecker,
 } from './dateUtils'
 import { getCalendarHeaderHeight } from './CalendarHeader'
@@ -37,7 +33,7 @@ import { useTextColorOnPrimary } from '../shared/utils'
 import { memo, useMemo } from 'react'
 import { sharedStyles } from '../shared/styles'
 
-interface BaseMonthProps {
+interface BaseYearProps {
   locale: undefined | string
   scrollMode: 'horizontal' | 'vertical'
   disableWeekDays?: DisableWeekDaysType
@@ -60,23 +56,12 @@ interface BaseMonthProps {
   dates?: CalendarDates
 }
 
-interface MonthRangeProps extends BaseMonthProps {
-  mode: 'range'
-  startDate: CalendarDate
-  endDate: CalendarDate
-}
-
-interface MonthSingleProps extends BaseMonthProps {
-  mode: 'single'
+interface YearMonthProps extends BaseYearProps {
+  mode: 'month'
   date: CalendarDate
 }
 
-interface MonthMultiProps extends BaseMonthProps {
-  mode: 'multiple'
-  dates: CalendarDates
-}
-
-function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps ) {
+function Year(props: YearMonthProps ) {
   const {
     locale,
     mode,
@@ -88,7 +73,6 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps ) {
     selectColor,
     roundness,
     validRange,
-    disableWeekDays,
     scrollMode,
     startDate,
     endDate,
@@ -105,118 +89,40 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps ) {
   const realIndex = getRealIndex(index, startYear, endYear)
   const { isDisabled, isWithinValidRange } = useRangeChecker(validRange)
 
-  const { monthName, month, year } = useMemo(() => {
+  const { month, year } = useMemo(() => {
     const md = addMonths(new Date(), realIndex)
     const y = md.getFullYear()
     const m = md.getMonth()
-    const formatter = new Intl.DateTimeFormat(locale, {
-      month: 'long',
-    })
-    return { monthName: formatter.format(md), month: m, year: y }
-  }, [realIndex, locale])
+    return { month: m, year: y }
+  }, [realIndex])
 
   const grid = useMemo(() => {
     const today = new Date()
 
-    const daysInMonth = getDaysInMonth({ year, month })
-    const dayOfWeek = getFirstDayOfMonth({ year, month, startWeekOnMonday })
-    const emptyDays = dayOfWeek
+    const formatter = new Intl.DateTimeFormat(locale, {
+      month: 'short',
+    })
 
-    return monthGrid(index, startWeekOnMonday, startYear, endYear).map(
-      ({ days, weekGrid }) => {
+    return yearGrid().map(
+      ({ months, monthGrid }) => {
         return {
-          weekIndex: weekGrid,
-          generatedDays: days.map((_, dayIndex) => {
-            const isFirstWeek = weekGrid === 0
-            const realDayIndex = emptyDays - dayIndex
-            const beforeWeekDay = isFirstWeek && realDayIndex > 0
-            const dayOfMonth = weekGrid * 7 + dayIndex - emptyDays + 1
-            const afterWeekDay = dayOfMonth > daysInMonth
+          monthIndex: monthGrid,
+          generatedMonths: months.map((_, index) => {
+            const monthOfYear = monthGrid * 3 + index
 
-            const day = new Date(year, month, dayOfMonth)
-            const isToday = areDatesOnSameDay(day, today)
+            const day = new Date(year, monthOfYear, 1)
+            const thisMonth = areDatesInSameMonth(day, today)
+
+            const monthLabel = formatter.format(day)
 
             let inRange = false
             let disabled = isDisabled(day)
             let selected = false
 
-            let leftCrop = dayOfMonth === 1
-            let rightCrop = dayOfMonth === daysInMonth
+            let leftCrop = monthOfYear === 1
+            let rightCrop = monthOfYear === 12
 
-            const isFirstDayOfMonth = dayOfMonth === 1
-            const isLastDayOfMonth = dayOfMonth === daysInMonth
-
-            if (mode === 'range') {
-              const selectedStartDay = areDatesOnSameDay(day, startDate)
-              const selectedEndDay = areDatesOnSameDay(day, endDate)
-              selected = selectedStartDay || selectedEndDay
-              inRange = isDateBetween(day, {
-                startDate,
-                endDate,
-              })
-              if (selectedStartDay) {
-                leftCrop = true
-              }
-              if (selectedEndDay) {
-                rightCrop = true
-              }
-              if (dayIndex === 0 && !selectedStartDay) {
-                leftCrop = false
-              }
-
-              if (dayIndex === 6 && !selectedEndDay) {
-                rightCrop = false
-              }
-
-              if (
-                (isFirstDayOfMonth && selectedEndDay) ||
-                (isLastDayOfMonth && selectedStartDay)
-              ) {
-                inRange = false
-              }
-            } else if (mode === 'multiple') {
-              const safeDates = dates || []
-              selected = safeDates.some((d) => areDatesOnSameDay(day, d))
-
-              const yesterday = new Date(year, month, dayOfMonth - 1)
-              const tomorrow = new Date(year, month, dayOfMonth + 1)
-
-              const yesterdaySelected = safeDates.some((d) =>
-                areDatesOnSameDay(d, yesterday)
-              )
-              const tomorrowSelected = safeDates.some((d) =>
-                areDatesOnSameDay(d, tomorrow)
-              )
-
-              if (selected) {
-                if (tomorrowSelected && yesterdaySelected) {
-                  inRange = true
-                }
-                if (tomorrowSelected && !yesterdaySelected) {
-                  inRange = true
-                  leftCrop = true
-                }
-
-                if (yesterdaySelected && !tomorrowSelected) {
-                  inRange = true
-                  rightCrop = true
-                }
-
-                if (isFirstDayOfMonth && !tomorrowSelected) {
-                  inRange = false
-                }
-
-                if (isLastDayOfMonth && !yesterdaySelected) {
-                  inRange = false
-                }
-
-                if (inRange && !leftCrop && !rightCrop) {
-                  selected = false
-                }
-              }
-            } else if (mode === 'single') {
-              selected = areDatesOnSameDay(day, date)
-            }
+            selected = areDatesInSameMonth(day, date)
 
             const isWithinOptionalValidRange = isWithinValidRange(day)
 
@@ -229,18 +135,16 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps ) {
             }
 
             return {
-              beforeWeekDay,
-              afterWeekDay,
               year,
-              month,
-              dayOfMonth,
-              dayIndex,
+              monthOfYear,
+              monthLabel,
+              index,
               mode,
               selected,
               inRange,
               leftCrop,
               rightCrop,
-              isToday,
+              thisMonth,
               disabled,
             }
           }),
@@ -261,6 +165,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps ) {
     startWeekOnMonday,
     startYear,
     endYear,
+    locale,
   ])
 
   let textFont = theme?.isV3
@@ -302,7 +207,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps ) {
           disabled={!isHorizontal}
           onPress={isHorizontal ? () => onPressYear(year) : undefined}
           accessibilityRole="button"
-          accessibilityLabel={`${monthName} ${year}`}
+          accessibilityLabel={`${year}`}
           style={[
             styles.yearButton,
             {
@@ -331,7 +236,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps ) {
               ]}
               selectable={false}
             >
-              {monthName} {year}
+              {year}
             </Text>
             <View
               style={[
@@ -344,26 +249,22 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps ) {
           </View>
         </TouchableRipple>
       </View>
-      {grid.map(({ weekIndex, generatedDays }) => (
-        <View style={styles.week} key={weekIndex}>
-          {generatedDays
-            .filter((gd) => showWeekDay(gd.dayIndex, disableWeekDays))
-            .map((gd) =>
-              gd.beforeWeekDay || gd.afterWeekDay ? (
-                <EmptyDay key={gd.dayIndex} />
-              ) : (
-                <Day
-                  key={gd.dayIndex}
+      {grid.map(({ monthIndex, generatedMonths }) => (
+        <View style={styles.month} key={monthIndex}>
+          {generatedMonths
+            .map((gd) => (
+                <Mon
+                  key={gd.index}
                   theme={theme}
-                  day={gd.dayOfMonth}
-                  month={gd.month}
+                  month={gd.monthOfYear}
+                  label={gd.monthLabel}
                   year={gd.year}
                   selected={gd.selected}
                   inRange={gd.inRange}
                   leftCrop={gd.leftCrop}
                   rightCrop={gd.rightCrop}
                   onPressDate={onPressDate}
-                  isToday={gd.isToday}
+                  thisMonth={gd.thisMonth}
                   selectColor={selectColor}
                   primaryColor={primaryColor}
                   disabled={gd.disabled}
@@ -398,7 +299,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     opacity: 0.7,
   },
-  week: {
+  month: {
     flexDirection: 'row',
     marginBottom: weekMargin,
     height: daySize,
@@ -414,17 +315,12 @@ const styles = StyleSheet.create({
   },
 })
 
-const monthGrid = (
-  index: number,
-  startWeekOnMonday: boolean,
-  startYear?: number,
-  endYear?: number
-) => {
-  return Array(getGridCount(index, startWeekOnMonday, startYear, endYear))
+const yearGrid = () => {
+  return Array(4)
     .fill(null)
-    .map((_, weekGrid) => {
-      const days = Array(7).fill(null)
-      return { weekGrid, days }
+    .map((_, monthGrid) => {
+      const months = Array(3).fill(null)
+      return { monthGrid, months }
     })
 }
 
@@ -547,4 +443,4 @@ export function getMonthHeight(
   return c || 0
 }
 
-export default memo(Month)
+export default memo(Year)

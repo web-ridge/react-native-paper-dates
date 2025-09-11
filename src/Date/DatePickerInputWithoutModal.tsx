@@ -25,6 +25,7 @@ function DatePickerInputWithoutModal(
     uppercase,
     startYear,
     endYear,
+    monthOnly = false,
     onChangeText,
     inputEnabled,
     disableStatusBarPadding,
@@ -41,6 +42,7 @@ function DatePickerInputWithoutModal(
       uppercase: DatePickerInputProps['uppercase']
       startYear: DatePickerInputProps['startYear']
       endYear: DatePickerInputProps['endYear']
+      monthOnly: DatePickerInputProps['monthOnly']
       inputEnabled: DatePickerInputProps['inputEnabled']
       disableStatusBarPadding: DatePickerInputProps['disableStatusBarPadding']
       startWeekOnMonday?: DatePickerInputProps['startWeekOnMonday']
@@ -50,6 +52,7 @@ function DatePickerInputWithoutModal(
   ref: any
 ) {
   const theme = useTheme()
+
   const {
     formattedValue,
     inputFormat,
@@ -60,6 +63,7 @@ function DatePickerInputWithoutModal(
     value,
     validRange,
     inputMode,
+    monthOnly,
     onChange,
     onValidationError,
   })
@@ -117,6 +121,7 @@ function DatePickerInputWithoutModal(
         uppercase,
         startYear,
         endYear,
+        monthOnly,
         inputEnabled,
         disableStatusBarPadding,
         startWeekOnMonday,

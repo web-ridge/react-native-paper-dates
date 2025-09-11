@@ -23,6 +23,7 @@ export type DatePickerInputProps = {
   uppercase?: boolean
   startYear?: number
   endYear?: number
+  monthOnly?: boolean
   onChangeText?: (text: string | undefined) => void
   inputEnabled?: boolean
   disableStatusBarPadding?: boolean

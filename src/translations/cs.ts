@@ -5,6 +5,7 @@ const cs: TranslationsType = {
   selectSingle: 'Vyberte datum',
   selectMultiple: 'Vyberte data',
   selectRange: 'Vyberte období',
+  selectMonth: 'Vyberte měsíc',
   notAccordingToDateFormat: (inputFormat) =>
     `Formát data musí být ${inputFormat}`,
   mustBeHigherThan: (date) => `Musí to být později ${date}`,
