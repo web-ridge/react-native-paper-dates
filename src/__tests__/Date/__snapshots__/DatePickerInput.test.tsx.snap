@@ -258,7 +258,7 @@ exports[`renders DatePickerInput 1`] = `
             }
             testID="text-input-flat"
             underlineColorAndroid="transparent"
-            value="09/05/2025"
+            value="12/15/2025"
           />
         </View>
         <View
