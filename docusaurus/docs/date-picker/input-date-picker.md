@@ -51,6 +51,10 @@ Flag indicating if the calendar icon should be disabled. When set to `true`, the
 `Type: boolean | undefined`  
 Flag indicating if the status bar padding should be enabled or not. Defaults to `false`.
 
+**disableStatusBar**  
+`Type: boolean | undefined`  
+Flag indicating if the date picker modal should avoid manipulating the status bar. When set to `true`, the modal will not modify the status bar's appearance or translucency. Defaults to `false`.
+
 **endYear**  
 `Type: number | undefined`  
 The end year when the component is rendered. Defaults to `2200`.

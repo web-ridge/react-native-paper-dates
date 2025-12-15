@@ -26,6 +26,7 @@ export type DatePickerInputProps = {
   onChangeText?: (text: string | undefined) => void
   inputEnabled?: boolean
   disableStatusBarPadding?: boolean
+  disableStatusBar?: boolean
   animationType?: 'slide' | 'fade' | 'none'
   presentationStyle?: 'pageSheet' | 'overFullScreen'
   startWeekOnMonday?: boolean
