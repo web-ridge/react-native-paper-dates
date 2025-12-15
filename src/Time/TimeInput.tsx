@@ -102,7 +102,7 @@ function TimeInput(
               Platform.OS === 'android'
                 ? Math.max(inputFontSize, 48)
                 : undefined,
-            paddingTop: Platform.OS === 'android' ? 10 : undefined,
+            paddingTop: Platform.OS === 'android' ? 0 : undefined,
             paddingBottom: Platform.OS === 'android' ? 0 : undefined,
             textAlign: 'center',
           },
