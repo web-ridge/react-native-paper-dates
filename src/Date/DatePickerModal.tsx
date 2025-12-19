@@ -73,7 +73,7 @@ export function DatePickerModal(
         onRequestClose={rest.onDismiss}
         presentationStyle={isPageSheet ? 'pageSheet' : 'overFullScreen'}
         supportedOrientations={supportedOrientations}
-        statusBarTranslucent={true}
+        statusBarTranslucent={!disableStatusBar}
       >
         <TouchableWithoutFeedback onPress={rest.onDismiss}>
           <View

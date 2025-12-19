@@ -65,6 +65,7 @@ function DatePickerInput(
         endYear,
         inputEnabled,
         disableStatusBarPadding,
+        disableStatusBar,
         startWeekOnMonday,
       }) =>
         withModal ? (
@@ -84,6 +85,7 @@ function DatePickerInput(
             endYear={endYear ?? defaultEndYear}
             inputEnabled={inputEnabled}
             disableStatusBarPadding={disableStatusBarPadding ?? false}
+            disableStatusBar={disableStatusBar}
             animationType={animationType}
             presentationStyle={presentationStyle}
             label={rest.label as any}

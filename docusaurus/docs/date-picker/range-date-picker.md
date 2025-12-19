@@ -74,6 +74,10 @@ The icon used to close the component. Defaults to `close`. You can pass the name
 `Type: boolean | undefined`  
 Flag indicating if the status bar padding should be enabled or not. Defaults to `false`.
 
+**disableStatusBar**  
+`Type: boolean | undefined`  
+Flag indicating if the date picker modal should avoid manipulating the status bar. When set to `true`, the modal will not modify the status bar's appearance or translucency. Defaults to `false`.
+
 **editIcon**  
 `Type: string | undefined`  
 The edit icon used to toggle between calendar and input. Defaults to `pencil`. You can pass the name of an icon from [MaterialCommunityIcons](https://materialdesignicons.com/).
