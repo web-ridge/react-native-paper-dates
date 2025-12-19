@@ -5,6 +5,7 @@ const tr: TranslationsType = {
   selectSingle: 'Tarih seç',
   selectMultiple: 'Tarihleri seç',
   selectRange: 'Periyot seç',
+  selectMonth: 'Bir ay seç',
   notAccordingToDateFormat: (inputFormat) =>
     `Tarih formatı ${inputFormat} olmalı`,
   mustBeHigherThan: (date) => `${date} tarihinden sonra olmalı`,

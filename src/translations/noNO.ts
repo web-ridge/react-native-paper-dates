@@ -5,6 +5,7 @@ const noNO: TranslationsType = {
   selectSingle: 'Velg dato',
   selectMultiple: 'Velg datoer',
   selectRange: 'Velg periode',
+  selectMonth: 'Velg en måned',
   notAccordingToDateFormat: (inputFormat) =>
     `Datoformatet må være ${inputFormat}`,
   mustBeHigherThan: (date) => `Må være senere enn ${date}`,
