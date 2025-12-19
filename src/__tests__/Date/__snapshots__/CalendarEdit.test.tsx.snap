@@ -12,7 +12,6 @@ exports[`renders CalendarEdit 1`] = `
     style={
       {
         "alignItems": "flex-start",
-        "flex": 1,
         "flexGrow": 1,
         "justifyContent": "center",
         "width": "100%",
@@ -265,7 +264,7 @@ exports[`renders CalendarEdit 1`] = `
             }
             testID="text-input-flat"
             underlineColorAndroid="transparent"
-            value="12/15/2025"
+            value="12/19/2025"
             withModal={false}
           />
         </View>
