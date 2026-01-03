@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`renders DatePickerInput 1`] = `
 [
@@ -257,7 +257,7 @@ exports[`renders DatePickerInput 1`] = `
             }
             testID="text-input-flat"
             underlineColorAndroid="transparent"
-            value="12/19/2025"
+            value="01/03/2026"
           />
         </View>
         <View

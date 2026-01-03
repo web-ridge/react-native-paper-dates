@@ -44,7 +44,7 @@ export default function DatePickerModalHeader(
             testID="react-native-paper-dates-close"
           />
           <Button
-            textColor={theme.isV3 ? theme.colors.primary : color}
+            textColor={theme.isV3 ? theme.colors.onPrimary : color}
             onPress={props.onSave}
             disabled={props.saveLabelDisabled ?? false}
             uppercase={props.uppercase ?? true}
