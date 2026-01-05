@@ -14,6 +14,7 @@ export { registerTranslation, getTranslation } from './translations/utils'
 
 export { default as ar } from './translations/ar'
 export { default as ca } from './translations/ca'
+export { default as da } from './translations/da'
 export { default as de } from './translations/de'
 export { default as en } from './translations/en'
 export { default as enGB } from './translations/enGB'

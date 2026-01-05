@@ -33,6 +33,7 @@ import {
   TranslationsType,
   ar,
   ca,
+  da,
   de,
   en,
   enGB,
@@ -68,6 +69,7 @@ const presentationStyles = ['overFullScreen', 'pageSheet'] as const
 const locales: [string, TranslationsType][] = [
   ['ar', ar],
   ['ca', ca],
+  ['da', da],
   ['de', de],
   ['en', en],
   ['en-GB', enGB],

@@ -1,4 +1,5 @@
 {
+  "version": "0.22.54",
   "author": "Richard Lindhout <info@webridge.nl> (https://github.com/web-ridge)",
   "bugs": {
     "url": "https://github.com/web-ridge/react-native-paper-dates/issues"
@@ -169,6 +170,5 @@
     "build-example": "cd example && npx expo export:web"
   },
   "source": "src/index",
-  "types": "lib/typescript/index.d.ts",
-  "version": "0.22.52"
+  "types": "lib/typescript/index.d.ts"
 }
