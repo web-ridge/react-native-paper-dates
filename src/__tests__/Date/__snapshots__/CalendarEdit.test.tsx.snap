@@ -264,7 +264,7 @@ exports[`renders CalendarEdit 1`] = `
             }
             testID="text-input-flat"
             underlineColorAndroid="transparent"
-            value="12/19/2025"
+            value="01/05/2026"
             withModal={false}
           />
         </View>
