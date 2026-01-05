@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.7.0">
 <title data-rh="true">Input Date Picker | Paper Dates</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://web-ridge.github.io/react-native-paper-dates/docs/date-picker/input-date-picker"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Input Date Picker | Paper Dates"><meta data-rh="true" name="description" content="The input date picker provides a text field allowing for a date to be input or the date picker to be opened and selected."><meta data-rh="true" property="og:description" content="The input date picker provides a text field allowing for a date to be input or the date picker to be opened and selected."><link data-rh="true" rel="icon" href="/react-native-paper-dates/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://web-ridge.github.io/react-native-paper-dates/docs/date-picker/input-date-picker"><link data-rh="true" rel="alternate" href="https://web-ridge.github.io/react-native-paper-dates/docs/date-picker/input-date-picker" hreflang="en"><link data-rh="true" rel="alternate" href="https://web-ridge.github.io/react-native-paper-dates/docs/date-picker/input-date-picker" hreflang="x-default"><link rel="stylesheet" href="/react-native-paper-dates/assets/css/styles.b7b1dece.css">
-<script src="/react-native-paper-dates/assets/js/runtime~main.72a01c88.js" defer="defer"></script>
+<script src="/react-native-paper-dates/assets/js/runtime~main.47d12053.js" defer="defer"></script>
 <script src="/react-native-paper-dates/assets/js/main.c0b9b4de.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -70,15 +70,15 @@
 <code>Type: Function | undefined</code><br>
 <!-- -->Callback used to return any error messages from the components validation.</p>
 <p><strong>presentationStyle</strong>
-<code>Type: &#x27;fullScreen&#x27; | &#x27;pageSheet&#x27; | &#x27;formSheet&#x27; | &#x27;overFullScreen&#x27;</code>
-Determines the visual presentation style of the date picker modal. This prop allows you to define how the modal appears on the screen when it is displayed.</p>
+<code>Type: &#x27;overFullScreen&#x27; | &#x27;pageSheet&#x27; | &#x27;formSheet&#x27; | undefined</code>
+Determines the visual presentation style of the date picker modal on iOS. This prop allows you to define how the modal appears on the screen when it is displayed.</p>
 <ul>
-<li><code>&#x27;fullScreen&#x27;</code>: Presents the modal as a full-screen overlay.</li>
-<li><code>&#x27;pageSheet&#x27;</code>: Displays the modal as a card-style sheet that covers a portion of the screen.</li>
-<li><code>&#x27;formSheet&#x27;</code>: Renders the modal as a smaller form-style sheet.</li>
-<li><code>&#x27;overFullScreen&#x27;</code>: Overlays the modal on top of the content, allowing interaction with the underlying content.</li>
+<li><code>&#x27;overFullScreen&#x27;</code>: Overlays the modal on top of the content, allowing interaction with the underlying content. (Default)</li>
+<li><code>&#x27;pageSheet&#x27;</code>: Displays the modal as a card-style sheet. <strong>On iPad (width and height &gt; 650pt), automatically uses <code>formSheet</code> for better fit.</strong></li>
+<li><code>&#x27;formSheet&#x27;</code>: Displays the modal as a centered form sheet. On iPad, this is ~540x620pt, providing optimal fit for the date picker content.</li>
 </ul>
-<p>For example, if you set <code>presentationStyle</code> to <code>&#x27;pageSheet&#x27;</code>, the modal will be presented as a card-like sheet.</p>
+<p><strong>Smart Detection</strong>: When using <code>pageSheet</code> or <code>formSheet</code> on iOS devices with both width and height &gt; 650pt (iPad in any orientation), the library automatically uses <code>formSheet</code> presentation to avoid excessive whitespace around the calendar. On smaller iOS devices (iPhone), it uses <code>pageSheet</code> as specified.</p>
+<p>For example, if you set <code>presentationStyle</code> to <code>&#x27;pageSheet&#x27;</code> on iPad, the modal will automatically use <code>formSheet</code> for a better visual fit.</p>
 <p><strong>saveLabelDisabled</strong><br>
 <code>Type: boolean | undefined</code><br>
 <!-- -->Flag indicating if the save label should be disabled and unable to receive events. Defaults to <code>false</code>.</p>
