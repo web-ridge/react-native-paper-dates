@@ -1,6 +1,8 @@
 import { render } from '@testing-library/react-native'
 import TextInputWithMask from '../TextInputMask'
 
+const noop = () => null
+
 describe('TextInputMask', () => {
   it('should set maxLength based on mask length for standard format', () => {
     const { getByTestId } = render(
@@ -9,7 +11,7 @@ describe('TextInputMask', () => {
         value=""
         mask="MM/DD/YYYY"
         inputButton={null}
-        onChangeText={() => null}
+        onChangeText={noop}
       />
     )
     const input = getByTestId('date-input')
@@ -23,7 +25,7 @@ describe('TextInputMask', () => {
         value=""
         mask="DD. MM. YYYY"
         inputButton={null}
-        onChangeText={() => null}
+        onChangeText={noop}
       />
     )
     const input = getByTestId('date-input')
@@ -37,7 +39,7 @@ describe('TextInputMask', () => {
         value=""
         mask="YYYY. MM. DD."
         inputButton={null}
-        onChangeText={() => null}
+        onChangeText={noop}
       />
     )
     const input = getByTestId('date-input')
@@ -51,7 +53,7 @@ describe('TextInputMask', () => {
         value=""
         mask="DD.MM.YYYY"
         inputButton={null}
-        onChangeText={() => null}
+        onChangeText={noop}
       />
     )
     const input = getByTestId('date-input')
