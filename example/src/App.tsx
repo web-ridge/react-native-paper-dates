@@ -65,7 +65,7 @@ import { useCallback, useMemo, useState } from 'react'
 
 import { StatusBar } from 'expo-status-bar'
 
-const presentationStyles = ['overFullScreen', 'pageSheet'] as const
+const presentationStyles = ['overFullScreen', 'pageSheet', 'formSheet'] as const
 const locales: [string, TranslationsType][] = [
   ['ar', ar],
   ['ca', ca],

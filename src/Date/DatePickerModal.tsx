@@ -22,7 +22,7 @@ interface DatePickerModalProps {
   disableStatusBar?: boolean
   disableStatusBarPadding?: boolean
   inputEnabled?: boolean
-  presentationStyle?: 'pageSheet' | 'overFullScreen'
+  presentationStyle?: 'pageSheet' | 'formSheet' | 'overFullScreen'
 }
 
 export interface DatePickerModalSingleProps
@@ -60,6 +60,8 @@ export function DatePickerModal(
       default: 'slide',
     })
   const isPageSheet = presentationStyle === 'pageSheet' && Platform.OS === 'ios'
+  const isFormSheet = presentationStyle === 'formSheet' && Platform.OS === 'ios'
+  const isSheet = isPageSheet || isFormSheet
 
   const theme = useTheme()
   const dimensions = useWindowDimensions()
@@ -68,10 +70,12 @@ export function DatePickerModal(
     <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
       <Modal
         animationType={animationTypeCalculated}
-        transparent={!isPageSheet}
+        transparent={!isSheet}
         visible={visible}
         onRequestClose={rest.onDismiss}
-        presentationStyle={isPageSheet ? 'pageSheet' : 'overFullScreen'}
+        presentationStyle={
+          isFormSheet ? 'formSheet' : isPageSheet ? 'pageSheet' : 'overFullScreen'
+        }
         supportedOrientations={supportedOrientations}
         statusBarTranslucent={!disableStatusBar}
       >
@@ -100,7 +104,7 @@ export function DatePickerModal(
               inputEnabled={inputEnabled}
               disableSafeTop={disableStatusBarPadding}
               disableStatusBar={disableStatusBar}
-              statusBarOnTopOfBackdrop={isPageSheet || statusBarOnTopOfBackdrop}
+              statusBarOnTopOfBackdrop={isSheet || statusBarOnTopOfBackdrop}
               withDateFormatInLabel={props.withDateFormatInLabel}
               placeholder={props.placeholder}
             />
