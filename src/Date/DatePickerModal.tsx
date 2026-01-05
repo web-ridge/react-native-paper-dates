@@ -59,12 +59,22 @@ export function DatePickerModal(
       web: 'none',
       default: 'slide',
     })
-  const isPageSheet = presentationStyle === 'pageSheet' && Platform.OS === 'ios'
-  const isFormSheet = presentationStyle === 'formSheet' && Platform.OS === 'ios'
-  const isSheet = isPageSheet || isFormSheet
 
   const theme = useTheme()
   const dimensions = useWindowDimensions()
+
+  // Automatically use formSheet on iPad for better fit
+  // iPad detection: width > 650 AND height > 650 (works in both orientations)
+  // - iPad portrait: 744x1133, landscape: 1133x744 (both > 650)
+  // - iPhone landscape: 932x430 (height < 650, so excluded)
+  // pageSheet on iPad is ~540pt wide, but calendar is max 400pt, causing centering
+  // formSheet at ~540x620pt provides a better fit for the date picker
+  const shouldUseSheet =
+    Platform.OS === 'ios' &&
+    (presentationStyle === 'pageSheet' || presentationStyle === 'formSheet')
+  const useFormSheet =
+    shouldUseSheet && dimensions.width > 650 && dimensions.height > 650
+  const isSheet = shouldUseSheet
 
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
@@ -74,7 +84,7 @@ export function DatePickerModal(
         visible={visible}
         onRequestClose={rest.onDismiss}
         presentationStyle={
-          isFormSheet ? 'formSheet' : isPageSheet ? 'pageSheet' : 'overFullScreen'
+          useFormSheet ? 'formSheet' : shouldUseSheet ? 'pageSheet' : 'overFullScreen'
         }
         supportedOrientations={supportedOrientations}
         statusBarTranslucent={!disableStatusBar}
