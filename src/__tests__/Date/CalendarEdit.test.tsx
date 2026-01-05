@@ -2,14 +2,15 @@ import { render } from '@testing-library/react-native'
 import CalendarEdit from '../../Date/CalendarEdit'
 
 it('renders CalendarEdit', () => {
+  const fixedDate = new Date('2025-01-15')
   const { toJSON } = render(
     <CalendarEdit
       mode="single"
       state={{
-        startDate: new Date(),
-        endDate: new Date(),
-        date: new Date(),
-        dates: [new Date()],
+        startDate: fixedDate,
+        endDate: fixedDate,
+        date: fixedDate,
+        dates: [fixedDate],
       }}
       collapsed={false}
       onChange={() => null}
