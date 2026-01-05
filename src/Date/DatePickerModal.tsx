@@ -106,7 +106,11 @@ export function DatePickerModal(
             style={[
               styles.modalContent,
               { backgroundColor: theme.colors.surface },
-              dimensions.width > 650 ? styles.modalContentBig : null,
+              dimensions.width > 650
+                ? useFormSheet
+                  ? styles.modalContentFormSheet
+                  : styles.modalContentBig
+                : null,
             ]}
           >
             <DatePickerModalContent
@@ -132,6 +136,13 @@ const styles = StyleSheet.create({
   },
   modalContentBig: {
     maxWidth: 400,
+    maxHeight: 600,
+    borderRadius: 10,
+    width: '100%',
+    overflow: 'hidden',
+  },
+  modalContentFormSheet: {
+    maxWidth: 520,
     maxHeight: 600,
     borderRadius: 10,
     width: '100%',
