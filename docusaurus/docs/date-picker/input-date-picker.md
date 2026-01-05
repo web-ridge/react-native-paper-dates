@@ -112,15 +112,16 @@ Callback event when the component text input changes.
 Callback used to return any error messages from the components validation.
 
 **presentationStyle**
-`Type: 'fullScreen' | 'pageSheet' | 'formSheet' | 'overFullScreen'`
-Determines the visual presentation style of the date picker modal. This prop allows you to define how the modal appears on the screen when it is displayed.
+`Type: 'overFullScreen' | 'pageSheet' | 'formSheet' | undefined`
+Determines the visual presentation style of the date picker modal on iOS. This prop allows you to define how the modal appears on the screen when it is displayed.
 
-- `'fullScreen'`: Presents the modal as a full-screen overlay.
-- `'pageSheet'`: Displays the modal as a card-style sheet that covers a portion of the screen.
-- `'formSheet'`: Renders the modal as a smaller form-style sheet.
-- `'overFullScreen'`: Overlays the modal on top of the content, allowing interaction with the underlying content.
+- `'overFullScreen'`: Overlays the modal on top of the content, allowing interaction with the underlying content. (Default)
+- `'pageSheet'`: Displays the modal as a card-style sheet. **On iPad (width and height > 650pt), automatically uses `formSheet` for better fit.**
+- `'formSheet'`: Displays the modal as a centered form sheet. On iPad, this is ~540x620pt, providing optimal fit for the date picker content.
 
-For example, if you set `presentationStyle` to `'pageSheet'`, the modal will be presented as a card-like sheet.
+**Smart Detection**: When using `pageSheet` or `formSheet` on iOS devices with both width and height > 650pt (iPad in any orientation), the library automatically uses `formSheet` presentation to avoid excessive whitespace around the calendar. On smaller iOS devices (iPhone), it uses `pageSheet` as specified.
+
+For example, if you set `presentationStyle` to `'pageSheet'` on iPad, the modal will automatically use `formSheet` for a better visual fit.
 
 **saveLabelDisabled**  
 `Type: boolean | undefined`  

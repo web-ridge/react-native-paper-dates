@@ -22,7 +22,7 @@ interface DatePickerModalProps {
   disableStatusBar?: boolean
   disableStatusBarPadding?: boolean
   inputEnabled?: boolean
-  presentationStyle?: 'pageSheet' | 'overFullScreen'
+  presentationStyle?: 'pageSheet' | 'formSheet' | 'overFullScreen'
 }
 
 export interface DatePickerModalSingleProps
@@ -59,19 +59,33 @@ export function DatePickerModal(
       web: 'none',
       default: 'slide',
     })
-  const isPageSheet = presentationStyle === 'pageSheet' && Platform.OS === 'ios'
 
   const theme = useTheme()
   const dimensions = useWindowDimensions()
+
+  // Automatically use formSheet on iPad for better fit
+  // iPad detection: width > 650 AND height > 650 (works in both orientations)
+  // - iPad portrait: 744x1133, landscape: 1133x744 (both > 650)
+  // - iPhone landscape: 932x430 (height < 650, so excluded)
+  // pageSheet on iPad is ~540pt wide, but calendar is max 400pt, causing centering
+  // formSheet at ~540x620pt provides a better fit for the date picker
+  const shouldUseSheet =
+    Platform.OS === 'ios' &&
+    (presentationStyle === 'pageSheet' || presentationStyle === 'formSheet')
+  const useFormSheet =
+    shouldUseSheet && dimensions.width > 650 && dimensions.height > 650
+  const isSheet = shouldUseSheet
 
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
       <Modal
         animationType={animationTypeCalculated}
-        transparent={!isPageSheet}
+        transparent={!isSheet}
         visible={visible}
         onRequestClose={rest.onDismiss}
-        presentationStyle={isPageSheet ? 'pageSheet' : 'overFullScreen'}
+        presentationStyle={
+          useFormSheet ? 'formSheet' : shouldUseSheet ? 'pageSheet' : 'overFullScreen'
+        }
         supportedOrientations={supportedOrientations}
         statusBarTranslucent={!disableStatusBar}
       >
@@ -92,7 +106,11 @@ export function DatePickerModal(
             style={[
               styles.modalContent,
               { backgroundColor: theme.colors.surface },
-              dimensions.width > 650 ? styles.modalContentBig : null,
+              dimensions.width > 650
+                ? useFormSheet
+                  ? styles.modalContentFormSheet
+                  : styles.modalContentBig
+                : null,
             ]}
           >
             <DatePickerModalContent
@@ -100,7 +118,7 @@ export function DatePickerModal(
               inputEnabled={inputEnabled}
               disableSafeTop={disableStatusBarPadding}
               disableStatusBar={disableStatusBar}
-              statusBarOnTopOfBackdrop={isPageSheet || statusBarOnTopOfBackdrop}
+              statusBarOnTopOfBackdrop={isSheet || statusBarOnTopOfBackdrop}
               withDateFormatInLabel={props.withDateFormatInLabel}
               placeholder={props.placeholder}
             />
@@ -118,6 +136,13 @@ const styles = StyleSheet.create({
   },
   modalContentBig: {
     maxWidth: 400,
+    maxHeight: 600,
+    borderRadius: 10,
+    width: '100%',
+    overflow: 'hidden',
+  },
+  modalContentFormSheet: {
+    maxWidth: 520,
     maxHeight: 600,
     borderRadius: 10,
     width: '100%',
