@@ -84,7 +84,11 @@ export function DatePickerModal(
         visible={visible}
         onRequestClose={rest.onDismiss}
         presentationStyle={
-          useFormSheet ? 'formSheet' : shouldUseSheet ? 'pageSheet' : 'overFullScreen'
+          useFormSheet
+            ? 'formSheet'
+            : shouldUseSheet
+              ? 'pageSheet'
+              : 'overFullScreen'
         }
         supportedOrientations={supportedOrientations}
         statusBarTranslucent={!disableStatusBar}
