@@ -1,10 +1,12 @@
 # Bun Migration Analysis for react-native-paper-dates
 
+> **Note**: This analysis was conducted in a GitHub Actions CI environment (AMD EPYC 7763, Ubuntu). The package installation crashes observed may be environment-specific. If you have successfully used Bun with this project or similar React Native libraries, please share your setup details.
+
 ## Executive Summary
 
 **Migration Status: PARTIALLY FEASIBLE** ⚠️
 
-Bun can be used for **script running and task execution** in this React Native library, but **full migration of package management is NOT currently recommended** due to critical compatibility issues.
+Bun can be used for **script running and task execution** in this React Native library, but **full migration of package management is NOT currently recommended** due to critical compatibility issues in testing environments.
 
 ## Current State
 
@@ -19,21 +21,25 @@ The project currently uses:
 
 ### ✅ What Works with Bun
 
-1. **Script Execution**: Bun can successfully run npm scripts from package.json
-   - `bun run typecheck` ✅
-   - `bun run lint` ✅
-   - `bun run test` ✅ (delegates to Jest)
+1. **Script Execution**: Bun can successfully run npm scripts from package.json (when dependencies are installed via Yarn)
+   - `bun run typecheck` ✅ (Verified working)
+   - `bun run lint` ✅ (Verified working)
+   - `bun run test` ✅ (Delegates to Jest, verified working)
    - Performance is comparable to Yarn for script execution
 
 2. **Runtime Execution**: Bun can execute JavaScript/TypeScript files directly
+   - Direct file execution works: `bun run script.ts` ✅
+
+**Note**: These work-arounds require using Yarn for `yarn install` and then Bun only for running scripts, which adds complexity without meaningful benefits.
 
 ### ❌ What Doesn't Work with Bun
 
-1. **Package Installation**: `bun install` crashes with segmentation faults
+1. **Package Installation**: `bun install` crashes with segmentation faults (tested in CI environment)
    - Error: "Assertion failure: Expected metadata to be set"
-   - Crash occurs even with simple React Native dependencies
+   - Crash occurs even with simple dependencies (e.g., `lodash`)
+   - Affects React Native packages: `react-native`, `react-native-paper`, etc.
    - Affects both the main library and example app
-   - This is a **blocking issue** for Bun v1.3.5
+   - This is a **blocking issue** for Bun v1.3.5 in this environment
 
 2. **React Native Compatibility**: Known issues with React Native ecosystem
    - Metro bundler integration is not fully supported
@@ -137,9 +143,22 @@ Instead of Bun, consider:
 
 ## Conclusion
 
-**Migration to Bun is NOT feasible for this React Native library at this time.**
+**Migration to Bun is NOT feasible for this React Native library at this time** based on testing in CI environments.
 
 The critical package installation bugs, combined with immature React Native ecosystem support, make this a high-risk migration with minimal benefits. The project should **continue using Yarn** and revisit this decision in 6-12 months when Bun's React Native support matures.
+
+### Environment-Specific Considerations
+
+The package installation crashes observed during testing occurred in:
+- **Environment**: GitHub Actions (Ubuntu, AMD EPYC 7763 64-Core Processor)
+- **Bun Version**: 1.3.5 (latest stable as of January 2026)
+- **Crash Type**: Segmentation fault with "Assertion failure: Expected metadata to be set"
+
+**If you're able to successfully use Bun with this project:**
+- Different CPU architectures (e.g., ARM-based Macs) may have different results
+- Local development environments vs CI environments may behave differently
+- Specific Bun configurations or flags might work around the issues
+- Please share your setup (OS, CPU, Bun version, any special configs) to help improve this analysis
 
 ### Action Items
 
@@ -158,7 +177,8 @@ The critical package installation bugs, combined with immature React Native ecos
 
 ---
 
-**Date**: January 2026  
-**Bun Version Tested**: 1.3.5  
+**Date**: January 2026 (Re-verified January 8, 2026)  
+**Bun Version Tested**: 1.3.5 (latest stable)  
 **React Native Version**: 0.79.2  
-**Recommendation**: Stay with Yarn, revisit in 6-12 months
+**Test Environment**: GitHub Actions CI (AMD EPYC 7763, Ubuntu)  
+**Recommendation**: Stay with Yarn, revisit in 6-12 months or when tested on your specific environment
