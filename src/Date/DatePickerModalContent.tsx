@@ -72,11 +72,23 @@ export interface DatePickerModalContentMultiProps
   onConfirm: MultiConfirm
 }
 
+export interface DatePickerModalContentMonthProps
+  extends HeaderPickProps,
+    BaseCalendarProps,
+    DatePickerModalContentBaseProps {
+  mode: 'month'
+  date?: CalendarDate
+  onChange?: SingleChange
+  onConfirm: SingleChange
+  dateMode?: 'start' | 'end'
+}
+
 export function DatePickerModalContent(
   props:
     | DatePickerModalContentRangeProps
     | DatePickerModalContentSingleProps
     | DatePickerModalContentMultiProps
+    | DatePickerModalContentMonthProps
 ) {
   const {
     mode,
@@ -138,6 +150,10 @@ export function DatePickerModalContent(
     } else if (mode === 'multiple') {
       ;(onConfirm as DatePickerModalContentMultiProps['onConfirm'])({
         dates: state.dates || [],
+      })
+    } else if (mode === 'month') {
+      ;(onConfirm as DatePickerModalContentMonthProps['onConfirm'])({
+        date: state.date,
       })
     }
   }, [state, mode, onConfirm])

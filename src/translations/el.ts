@@ -5,6 +5,7 @@ const el: TranslationsType = {
   selectSingle: 'Επιλέξτε ημερομηνία',
   selectMultiple: 'Επιλέξτε ημερομηνίες',
   selectRange: 'Επιλέξτε περίοδο',
+  selectMonth: 'Επιλέξτε έναν μήνα',
   notAccordingToDateFormat: (inputFormat) =>
     `Η μορφή ημερομηνίας πρέπει να είναι ${inputFormat}`,
   mustBeHigherThan: (date) => `Πρέπει να είναι αργότερα${date}`,
