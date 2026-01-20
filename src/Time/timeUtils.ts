@@ -1,6 +1,5 @@
-import Color from 'color'
 import { useMemo } from 'react'
-import { MD2Theme, useTheme } from 'react-native-paper'
+import { useTheme } from 'react-native-paper'
 
 export const circleSize = 256
 
@@ -159,37 +158,25 @@ export function useSwitchColors(highlighted: boolean) {
   const backgroundColor = useMemo<string>(() => {
     if (theme.dark) {
       if (highlighted) {
-        return theme.isV3
-          ? theme.colors.tertiaryContainer
-          : Color(theme.colors.primary).hex()
+        return theme.colors.tertiaryContainer
       }
       return theme.colors.backdrop
     }
 
     if (highlighted) {
-      if (theme.isV3) {
-        return theme.colors.primaryContainer
-      }
-
-      return Color(theme.colors.primary).lighten(1).hex()
+      return theme.colors.primaryContainer
     }
     return theme.colors.surface
   }, [highlighted, theme])
 
   const color = useMemo<string>(() => {
     if (highlighted && !theme.dark) {
-      return theme.isV3 ? theme.colors.onSurfaceVariant : theme.colors.primary
+      return theme.colors.onSurfaceVariant
     }
     if (highlighted && theme.dark) {
-      return theme.isV3
-        ? theme.colors.onTertiaryContainer
-        : theme.colors.background
+      return theme.colors.onTertiaryContainer
     }
-    if (theme.isV3) {
-      return theme.colors.onSurfaceVariant
-    } else {
-      return (theme as any as MD2Theme).colors.placeholder
-    }
+    return theme.colors.onSurfaceVariant
   }, [highlighted, theme])
 
   return { backgroundColor, color }
@@ -200,47 +187,23 @@ export function useInputColors(highlighted: boolean) {
   const backgroundColor = useMemo<string>(() => {
     if (theme.dark) {
       if (highlighted) {
-        return theme.isV3
-          ? theme.colors.primaryContainer
-          : Color(theme.colors.primary).hex()
+        return theme.colors.primaryContainer
       }
-      return theme.isV3
-        ? theme.colors.surfaceVariant
-        : Color(theme.colors.surface).lighten(1.4).hex()
+      return theme.colors.surfaceVariant
     }
 
     if (highlighted) {
-      if (theme.isV3) {
-        return theme.colors.secondaryContainer
-      }
-      return Color(theme.colors.primary).lighten(1).hex()
+      return theme.colors.secondaryContainer
     }
-    if (theme.isV3) {
-      return theme.colors.surfaceVariant
-    }
-    return Color(theme.colors.surface).darken(0.1).hex()
+    return theme.colors.surfaceVariant
   }, [highlighted, theme])
 
   const color = useMemo<string>(() => {
-    if (theme.isV3) {
-      if (!highlighted) {
-        return theme.isV3 ? theme.colors.onSurface : theme.colors.onBackground
-      }
-      return theme.isV3
-        ? theme.colors.onPrimaryContainer
-        : theme.colors.onBackground
-    } else {
-      const t = theme as any as MD2Theme
-      if (highlighted && !theme.dark) {
-        const primary = Color(t.colors.primary)
-        const background = Color(backgroundColor)
-        return background.isDark() && primary.isDark()
-          ? '#ffffffff'
-          : t.colors.primary
-      }
-      return (theme as any as MD2Theme).colors.text
+    if (!highlighted) {
+      return theme.colors.onSurface
     }
-  }, [highlighted, theme, backgroundColor])
+    return theme.colors.onPrimaryContainer
+  }, [highlighted, theme])
 
   return { backgroundColor, color }
 }

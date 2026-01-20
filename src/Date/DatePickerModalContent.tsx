@@ -15,7 +15,6 @@ import DatePickerModalContentHeader, {
 } from './DatePickerModalContentHeader'
 import CalendarEdit from './CalendarEdit'
 import DatePickerModalHeaderBackground from './DatePickerModalHeaderBackground'
-import { useTheme } from 'react-native-paper'
 import DatePickerModalStatusBar from './DatePickerModalStatusBar'
 import { memo, useCallback, useEffect, useState } from 'react'
 
@@ -94,9 +93,8 @@ export function DatePickerModalContent(
     statusBarOnTopOfBackdrop,
     startWeekOnMonday,
   } = props
-  const theme = useTheme()
   const anyProps = props as any
-  const defaultUppercase = !theme.isV3
+  const defaultUppercase = false
 
   // use local state to add only onConfirm state changes
   const [state, setState] = useState<LocalState>({

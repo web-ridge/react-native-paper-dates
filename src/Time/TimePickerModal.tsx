@@ -9,13 +9,7 @@ import {
   View,
 } from 'react-native'
 
-import {
-  Button,
-  IconButton,
-  MD2Theme,
-  overlay,
-  useTheme,
-} from 'react-native-paper'
+import { Button, IconButton, useTheme } from 'react-native-paper'
 
 import TimePicker from './TimePicker'
 import {
@@ -102,29 +96,17 @@ export function TimePickerModal({
     [setFocused, setLocalHours, setLocalMinutes]
   )
 
-  const defaultUppercase = !theme.isV3
-  const uppercase = _uppercase ?? defaultUppercase
-  let textFont
+  const uppercase = _uppercase ?? false
+  const textFont = theme.fonts.labelMedium
   let labelText = label
-
-  if (theme.isV3) {
-    textFont = theme.fonts.labelMedium
-  } else {
-    textFont = (theme as any as MD2Theme)?.fonts.medium
-  }
 
   if (inputType === inputTypes.keyboard && !label) {
     labelText = 'Enter time'
   }
 
-  let color
-  if (theme.isV3) {
-    color = theme.dark ? theme.colors.elevation.level3 : theme.colors.surface
-  } else {
-    color = theme.dark
-      ? overlay(10, theme.colors.surface)
-      : theme.colors.surface
-  }
+  const color = theme.dark
+    ? theme.colors.elevation.level3
+    : theme.colors.surface
 
   return (
     <Modal
@@ -157,7 +139,7 @@ export function TimePickerModal({
                 // eslint-disable-next-line react-native/no-inline-styles
                 {
                   backgroundColor: color,
-                  borderRadius: theme.isV3 ? 28 : undefined,
+                  borderRadius: 28,
                 },
               ]}
             >
@@ -168,9 +150,7 @@ export function TimePickerModal({
                     styles.label,
                     {
                       ...textFont,
-                      color: theme?.isV3
-                        ? theme.colors.onSurfaceVariant
-                        : (theme as any as MD2Theme).colors.text,
+                      color: theme.colors.onSurfaceVariant,
                     },
                   ]}
                 >
@@ -192,11 +172,7 @@ export function TimePickerModal({
               </View>
               <View style={styles.bottom}>
                 <IconButton
-                  iconColor={
-                    theme?.isV3
-                      ? theme.colors.onBackground
-                      : (theme as any as MD2Theme).colors.text
-                  }
+                  iconColor={theme.colors.onBackground}
                   icon={getTimeInputTypeIcon(inputType, {
                     keyboard: keyboardIcon,
                     picker: clockIcon,

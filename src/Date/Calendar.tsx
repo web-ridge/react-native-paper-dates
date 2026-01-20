@@ -10,11 +10,10 @@ import {
 } from './dateUtils'
 
 import CalendarHeader from './CalendarHeader'
-import { memo, useCallback, useMemo, useState } from 'react'
+import { memo, useCallback, useState } from 'react'
 import YearPicker from './YearPicker'
-import Color from 'color'
 import { useTheme } from 'react-native-paper'
-import { darkenBy, lightenBy, useLatest } from '../shared/utils'
+import { useLatest } from '../shared/utils'
 import { sharedStyles } from '../shared/styles'
 import { defaultStartYear, defaultEndYear } from './dateUtils'
 
@@ -162,15 +161,7 @@ function Calendar(
     [mode, dateMode, onChangeRef, startDateRef, endDateRef, datesRef]
   )
 
-  const selectColor = useMemo<string>(() => {
-    if (theme.isV3) {
-      return theme.colors.primaryContainer
-    }
-    if (theme.dark) {
-      return darkenBy(Color(theme.colors.primary), 0.1).hex()
-    }
-    return lightenBy(Color(theme.colors.primary), 0.9).hex()
-  }, [theme])
+  const selectColor = theme.colors.primaryContainer
 
   return (
     <View style={sharedStyles.root}>

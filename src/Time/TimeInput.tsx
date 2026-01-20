@@ -5,7 +5,7 @@ import {
   TextInputProps,
   View,
 } from 'react-native'
-import { MD2Theme, TouchableRipple, useTheme } from 'react-native-paper'
+import { TouchableRipple, useTheme } from 'react-native-paper'
 
 import Color from 'color'
 import {
@@ -77,11 +77,10 @@ function TimeInput(
         {
           backgroundColor,
           borderRadius: theme.roundness * 2,
-          borderColor:
-            theme.isV3 && highlighted
-              ? theme.colors.onPrimaryContainer
-              : undefined,
-          borderWidth: theme.isV3 && highlighted ? 2 : 0,
+          borderColor: highlighted
+            ? theme.colors.onPrimaryContainer
+            : undefined,
+          borderWidth: highlighted ? 2 : 0,
           height: inputType === inputTypes.keyboard ? 72 : 80,
         },
       ]}
@@ -94,9 +93,7 @@ function TimeInput(
           // eslint-disable-next-line react-native/no-inline-styles
           {
             color,
-            fontFamily: theme?.isV3
-              ? theme.fonts.titleMedium.fontFamily
-              : (theme as any as MD2Theme).fonts.medium.fontFamily,
+            fontFamily: theme.fonts.titleMedium.fontFamily,
             fontSize: inputFontSize,
             lineHeight:
               Platform.OS === 'android'
