@@ -4,7 +4,7 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native'
-import { MD2Theme, Text, useTheme } from 'react-native-paper'
+import { Text, useTheme } from 'react-native-paper'
 
 import {
   clockTypes,
@@ -129,9 +129,7 @@ function TimeInputs({
           style={[
             styles.dot,
             {
-              backgroundColor: theme?.isV3
-                ? theme.colors.onSurface
-                : (theme as any as MD2Theme).colors.text,
+              backgroundColor: theme.colors.onSurface,
             },
           ]}
         />
@@ -140,9 +138,7 @@ function TimeInputs({
           style={[
             styles.dot,
             {
-              backgroundColor: theme?.isV3
-                ? theme.colors.onSurface
-                : (theme as any as MD2Theme).colors.text,
+              backgroundColor: theme.colors.onSurface,
             },
           ]}
         />

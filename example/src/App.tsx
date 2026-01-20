@@ -22,8 +22,6 @@ import {
   Provider as PaperProvider,
   MD3DarkTheme,
   MD3LightTheme,
-  MD2DarkTheme,
-  MD2LightTheme,
 } from 'react-native-paper'
 import {
   DatePickerModal,
@@ -102,13 +100,7 @@ locales.forEach((locale) => {
   registerTranslation(locale[0], locale[1])
 })
 
-function Example({
-  materialYouEnabled,
-  setMaterialYouEnabled,
-}: {
-  materialYouEnabled: boolean
-  setMaterialYouEnabled: (enabled: boolean) => void
-}) {
+function Example() {
   const theme = useTheme()
   const insets = useSafeAreaInsets()
 
@@ -294,32 +286,6 @@ function Example({
                 View documentation
               </Button>
             </View>
-            <Divider style={styles.marginVerticalEight} />
-            <Text
-              maxFontSizeMultiplier={maxFontSizeMultiplier}
-              style={[styles.marginVerticalEight, styles.bold]}
-            >
-              Material theme
-            </Text>
-            <View style={styles.chipContainer}>
-              <Chip
-                compact
-                selected={materialYouEnabled}
-                onPress={() => setMaterialYouEnabled(true)}
-                style={styles.chip}
-              >
-                Material You
-              </Chip>
-              <Chip
-                compact
-                selected={!materialYouEnabled}
-                onPress={() => setMaterialYouEnabled(false)}
-                style={styles.chip}
-              >
-                Material Design 2
-              </Chip>
-            </View>
-
             <Divider style={styles.marginVerticalEight} />
             <Text
               maxFontSizeMultiplier={maxFontSizeMultiplier}
@@ -585,19 +551,14 @@ function Example({
 
 export default function App() {
   const colorScheme = useColorScheme()
-  const [materialYouEnabled, setMaterialYouEnabled] = useState(true)
-  const m3Theme = colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme
-  const m2Theme = colorScheme === 'dark' ? MD2DarkTheme : MD2LightTheme
+  const theme = colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme
 
   return (
     <SafeAreaProvider>
-      <PaperProvider theme={materialYouEnabled ? m3Theme : m2Theme}>
+      <PaperProvider theme={theme}>
         <StatusBar style="auto" />
 
-        <Example
-          materialYouEnabled={materialYouEnabled}
-          setMaterialYouEnabled={setMaterialYouEnabled}
-        />
+        <Example />
       </PaperProvider>
     </SafeAreaProvider>
   )

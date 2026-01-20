@@ -1,11 +1,5 @@
 import { StyleSheet, View } from 'react-native'
-import {
-  Icon,
-  MD2Theme,
-  Text,
-  TouchableRipple,
-  useTheme,
-} from 'react-native-paper'
+import { Icon, Text, TouchableRipple, useTheme } from 'react-native-paper'
 import Day, { EmptyDay } from './Day'
 
 import {
@@ -263,17 +257,11 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
     endYear,
   ])
 
-  let textFont = theme?.isV3
-    ? theme.fonts.titleSmall
-    : (theme as any as MD2Theme).fonts.medium
+  const textFont = theme.fonts.titleSmall
 
-  const iconColor = theme.isV3
-    ? theme.colors.onSurfaceVariant
-    : theme.colors.onSurface
+  const iconColor = theme.colors.onSurfaceVariant
 
-  const iconSourceV3 = selectingYear ? 'menu-up' : 'menu-down'
-  const iconSourceV2 = selectingYear ? 'chevron-up' : 'chevron-down'
-  const iconSource = theme.isV3 ? iconSourceV3 : iconSourceV2
+  const iconSource = selectingYear ? 'menu-up' : 'menu-down'
 
   return (
     <View
@@ -324,9 +312,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
                 styles.monthLabel,
                 {
                   ...textFont,
-                  color: theme.isV3
-                    ? theme.colors.onSurfaceVariant
-                    : theme.colors.onSurface,
+                  color: theme.colors.onSurfaceVariant,
                 },
               ]}
               selectable={false}

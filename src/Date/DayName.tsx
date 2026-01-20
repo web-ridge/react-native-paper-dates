@@ -1,13 +1,11 @@
 import { memo } from 'react'
 import { StyleSheet, View } from 'react-native'
-import { MD2Theme, Text, useTheme } from 'react-native-paper'
+import { Text, useTheme } from 'react-native-paper'
 
 function DayName({ label }: { label: string }) {
   const theme = useTheme()
 
-  let textFont = theme?.isV3
-    ? theme.fonts.bodySmall
-    : (theme as any as MD2Theme).fonts.medium
+  const textFont = theme.fonts.bodySmall
 
   return (
     <View style={styles.dayName}>

@@ -1,4 +1,4 @@
-import { MD2Theme, Text, TouchableRipple } from 'react-native-paper'
+import { Text, TouchableRipple } from 'react-native-paper'
 import { StyleSheet, View } from 'react-native'
 import DayRange from './DayRange'
 import { daySize } from './dateUtils'
@@ -41,54 +41,33 @@ function Day(props: {
     selectColor,
     isToday,
     disabled,
-    textColorOnPrimary,
     theme,
   } = props
-  const borderColorFallback = theme.dark ? '#fff' : '#000'
-  const selectedOrInRangeDarkMode = selected || (inRange && theme.dark)
-  const v2BorderColor = selectedOrInRangeDarkMode
-    ? textColorOnPrimary
-    : borderColorFallback
-  const borderColor = theme.isV3 ? theme.colors.primary : v2BorderColor
+  const borderColor = theme.colors.primary
 
   const onPress = useCallback(() => {
     onPressDate(new Date(year, month, day))
   }, [onPressDate, year, month, day])
 
-  // TODO: check if this can be simplified
-  // converted with Chat-GPT for now from enormous conditional to if-else
+  // Determine text colors for M3
   let baseTextColor
   let finalTextColor
 
-  if (theme.isV3) {
-    // Theme V3 specific logic for base text color
-    if (selected) {
-      baseTextColor = theme.colors.onPrimary
-    } else if (inRange && theme.dark) {
-      baseTextColor = theme.colors.onPrimaryContainer
-    } else {
-      baseTextColor = theme.colors.onSurface
-    }
-
-    // Theme V3 specific logic for final text color
-    if (isToday) {
-      finalTextColor = selected ? baseTextColor : theme.colors.primary
-    } else {
-      finalTextColor = baseTextColor
-    }
+  if (selected) {
+    baseTextColor = theme.colors.onPrimary
+  } else if (inRange && theme.dark) {
+    baseTextColor = theme.colors.onPrimaryContainer
   } else {
-    // Logic for themes other than V3
-    if (selected || (inRange && theme.dark)) {
-      baseTextColor = textColorOnPrimary
-    }
-    // Since there's no additional logic provided for non-V3 themes in the step 2,
-    // the final text color for non-V3 themes will simply be the base text color.
+    baseTextColor = theme.colors.onSurface
+  }
+
+  if (isToday) {
+    finalTextColor = selected ? baseTextColor : theme.colors.primary
+  } else {
     finalTextColor = baseTextColor
   }
 
-  let textFont = theme?.isV3
-    ? theme.fonts.bodySmall
-    : (theme as any as MD2Theme).fonts.medium
+  const textFont = theme.fonts.bodySmall
 
   return (
     <View style={[styles.root, disabled && styles.disabled]}>

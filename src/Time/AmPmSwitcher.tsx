@@ -1,7 +1,6 @@
 import { StyleSheet, View } from 'react-native'
-import { MD2Theme, Text, TouchableRipple, useTheme } from 'react-native-paper'
-import { useContext, useMemo } from 'react'
-import Color from 'color'
+import { Text, TouchableRipple, useTheme } from 'react-native-paper'
+import { useContext } from 'react'
 import { inputTypes, PossibleInputTypes, useSwitchColors } from './timeUtils'
 import { DisplayModeContext } from '../contexts/DisplayModeContext'
 import { sharedStyles } from '../shared/styles'
@@ -19,18 +18,7 @@ export default function AmPmSwitcher({
 
   const { setMode, mode } = useContext(DisplayModeContext)
 
-  const backgroundColor = useMemo<string>(() => {
-    if (theme.isV3) {
-      return theme.colors.outline
-    }
-    return Color(
-      theme.dark
-        ? Color(theme.colors.surface).lighten(1.2).hex()
-        : theme.colors.surface
-    )
-      .darken(0.1)
-      .hex()
-  }, [theme])
+  const backgroundColor = theme.colors.outline
 
   const isAM = mode === 'AM'
 
@@ -89,9 +77,7 @@ function SwitchButton({
 
   const { backgroundColor, color } = useSwitchColors(selected)
 
-  let textFont = theme?.isV3
-    ? theme.fonts.titleMedium
-    : (theme as any as MD2Theme).fonts.medium
+  const textFont = theme.fonts.titleMedium
 
   return (
     <TouchableRipple
