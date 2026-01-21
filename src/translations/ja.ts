@@ -5,6 +5,7 @@ const ja: TranslationsType = {
   selectSingle: '日付を選択',
   selectMultiple: '日付を選択',
   selectRange: '期間を選択',
+  selectMonth: '月を選択',
   notAccordingToDateFormat: (inputFormat) =>
     `形式が無効です。使用：${inputFormat}`,
   mustBeHigherThan: (date) => `${date}より後にする必要があります`,

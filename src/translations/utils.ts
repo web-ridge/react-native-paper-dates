@@ -2,6 +2,7 @@ export type TranslationsType = {
   selectSingle: string
   selectMultiple: string
   selectRange: string
+  selectMonth: string
   save: string
   notAccordingToDateFormat: (inputFormat: string) => string
   mustBeHigherThan: (date: string) => string

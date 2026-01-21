@@ -5,6 +5,7 @@ const he: TranslationsType = {
   selectSingle: 'בחר תאריך',
   selectMultiple: 'בחר תאריכים',
   selectRange: 'בחר טווח',
+  selectMonth: 'בחר חודש',
   notAccordingToDateFormat: (inputFormat) =>
     `פורמט של תאריך צריך להיות ${inputFormat}`,
   mustBeHigherThan: (date) => `חייב להיות אחרי ${date}`,

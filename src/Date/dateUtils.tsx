@@ -122,6 +122,17 @@ export function areDatesOnSameDay(a: Date, b?: Date | null | undefined) {
   )
 }
 
+export function areDatesInSameMonth(a: Date, b?: Date | null | undefined) {
+  if (!b) {
+    return false
+  }
+
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth()
+  )
+}
+
 export function isDateBetween(
   date: Date,
   {
@@ -260,9 +271,12 @@ export function getInitialIndex(
   return dynamicStartAtIndex + months
 }
 
-export function useInputFormatter({ locale }: { locale: string | undefined }) {
+export function useInputFormatter({ locale, monthOnly }: { locale: string | undefined, monthOnly: boolean | undefined }) {
   return useMemo(() => {
-    return new Intl.DateTimeFormat(locale, {
+    return new Intl.DateTimeFormat(locale, monthOnly ? {
+      month: '2-digit',
+      year: 'numeric',
+    } : {
       month: '2-digit',
       day: '2-digit',
       year: 'numeric',
