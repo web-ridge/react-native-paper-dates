@@ -40,9 +40,7 @@ interface DatePickerModalContentBaseProps {
 }
 
 export interface DatePickerModalContentRangeProps
-  extends HeaderPickProps,
-    BaseCalendarProps,
-    DatePickerModalContentBaseProps {
+  extends HeaderPickProps, BaseCalendarProps, DatePickerModalContentBaseProps {
   mode: 'range'
   startDate: CalendarDate
   endDate: CalendarDate
@@ -51,9 +49,7 @@ export interface DatePickerModalContentRangeProps
 }
 
 export interface DatePickerModalContentSingleProps
-  extends HeaderPickProps,
-    BaseCalendarProps,
-    DatePickerModalContentBaseProps {
+  extends HeaderPickProps, BaseCalendarProps, DatePickerModalContentBaseProps {
   mode: 'single'
   date?: CalendarDate
   onChange?: SingleChange
@@ -62,9 +58,7 @@ export interface DatePickerModalContentSingleProps
 }
 
 export interface DatePickerModalContentMultiProps
-  extends HeaderPickProps,
-    BaseCalendarProps,
-    DatePickerModalContentBaseProps {
+  extends HeaderPickProps, BaseCalendarProps, DatePickerModalContentBaseProps {
   mode: 'multiple'
   dates?: CalendarDates
   onChange?: MultiChange
