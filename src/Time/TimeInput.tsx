@@ -17,8 +17,10 @@ import {
 import { forwardRef, useEffect, useState } from 'react'
 import { sharedStyles } from '../shared/styles'
 
-interface TimeInputProps
-  extends Omit<Omit<Omit<TextInputProps, 'value'>, 'onFocus'>, 'onPress'> {
+interface TimeInputProps extends Omit<
+  Omit<Omit<TextInputProps, 'value'>, 'onFocus'>,
+  'onPress'
+> {
   value: number
   clockType: PossibleClockTypes
   onPress?: (type: PossibleClockTypes) => any

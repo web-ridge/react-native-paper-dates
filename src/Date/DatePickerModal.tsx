@@ -26,16 +26,13 @@ interface DatePickerModalProps {
 }
 
 export interface DatePickerModalSingleProps
-  extends DatePickerModalContentSingleProps,
-    DatePickerModalProps {}
+  extends DatePickerModalContentSingleProps, DatePickerModalProps {}
 
 export interface DatePickerModalMultiProps
-  extends DatePickerModalContentMultiProps,
-    DatePickerModalProps {}
+  extends DatePickerModalContentMultiProps, DatePickerModalProps {}
 
 export interface DatePickerModalRangeProps
-  extends DatePickerModalContentRangeProps,
-    DatePickerModalProps {}
+  extends DatePickerModalContentRangeProps, DatePickerModalProps {}
 
 export function DatePickerModal(
   props:

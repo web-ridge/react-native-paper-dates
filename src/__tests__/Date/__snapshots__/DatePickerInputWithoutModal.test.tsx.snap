@@ -40,28 +40,20 @@ exports[`renders DatePickerInputWithoutModal 1`] = `
       <View
         collapsable={false}
         style={
-          [
-            {
-              "bottom": 0,
-              "height": 2,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "zIndex": 1,
-            },
-            {
-              "height": 1,
-            },
-            {
-              "backgroundColor": "rgba(73, 69, 79, 1)",
-              "transform": [
-                {
-                  "scaleY": 0.5,
-                },
-              ],
-            },
-            undefined,
-          ]
+          {
+            "backgroundColor": "rgba(73, 69, 79, 1)",
+            "bottom": 0,
+            "height": 1,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "transform": [
+              {
+                "scaleY": 0.5,
+              },
+            ],
+            "zIndex": 1,
+          }
         }
         testID="text-input-underline"
       />
