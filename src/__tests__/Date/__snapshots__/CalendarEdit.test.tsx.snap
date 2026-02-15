@@ -31,50 +31,45 @@ exports[`renders CalendarEdit 1`] = `
     >
       <View
         style={
-          [
-            {
-              "backgroundColor": "rgba(231, 224, 236, 1)",
-              "borderTopLeftRadius": 4,
-              "borderTopRightRadius": 4,
-            },
-            {
-              "flexGrow": 1,
-              "width": "100%",
-            },
-          ]
+          {
+            "flexGrow": 1,
+            "width": "100%",
+          }
         }
       >
         <View
-          collapsable={false}
+          pointerEvents="none"
           style={
-            {
-              "backgroundColor": "rgba(73, 69, 79, 1)",
-              "bottom": 0,
-              "height": 1,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "transform": [
-                {
-                  "scaleY": 0.5,
-                },
-              ],
-              "zIndex": 1,
-            }
+            [
+              {
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 6,
+              },
+              false,
+              {
+                "backgroundColor": "rgba(255, 251, 254, 1)",
+                "borderColor": "rgba(121, 116, 126, 1)",
+                "borderRadius": 4,
+                "borderWidth": 1,
+              },
+              undefined,
+            ]
           }
-          testID="text-input-underline"
+          testID="text-input-outline"
         />
         <View
-          onLayout={[Function]}
           style={
             [
               {
                 "flexGrow": 1,
                 "paddingBottom": 0,
-                "paddingTop": 0,
               },
               {
                 "minHeight": 56,
+                "paddingTop": 8,
               },
             ]
           }
@@ -112,7 +107,7 @@ exports[`renders CalendarEdit 1`] = `
                   "top": 0,
                   "transform": [
                     {
-                      "translateX": 4,
+                      "translateX": 3,
                     },
                   ],
                   "width": 750,
@@ -130,6 +125,46 @@ exports[`renders CalendarEdit 1`] = `
                   collapsable={false}
                   maxFontSizeMultiplier={1.5}
                   numberOfLines={1}
+                  style={
+                    {
+                      "backgroundColor": "rgba(255, 251, 254, 1)",
+                      "color": "transparent",
+                      "fontFamily": "System",
+                      "fontSize": 16,
+                      "fontWeight": undefined,
+                      "height": 0,
+                      "left": 8,
+                      "letterSpacing": 0.15,
+                      "lineHeight": undefined,
+                      "opacity": 1,
+                      "paddingHorizontal": 0,
+                      "position": "absolute",
+                      "textAlign": "left",
+                      "top": 33,
+                      "transform": [
+                        {
+                          "translateX": 0,
+                        },
+                        {
+                          "translateY": -26,
+                        },
+                        {
+                          "scale": 0.75,
+                        },
+                        {
+                          "scaleY": 0.2,
+                        },
+                      ],
+                      "width": -16,
+                      "writingDirection": "ltr",
+                    }
+                  }
+                  testID="text-input-outlined-label-background"
+                />
+                <Text
+                  collapsable={false}
+                  maxFontSizeMultiplier={1.5}
+                  numberOfLines={1}
                   onLayout={[Function]}
                   onTextLayout={[Function]}
                   style={
@@ -143,17 +178,16 @@ exports[`renders CalendarEdit 1`] = `
                       "lineHeight": undefined,
                       "maxWidth": 97.33333333333333,
                       "opacity": 0,
-                      "paddingLeft": 16,
-                      "paddingRight": 16,
+                      "paddingHorizontal": 16,
                       "position": "absolute",
                       "textAlign": "left",
-                      "top": 30,
+                      "top": 32,
                       "transform": [
                         {
                           "translateX": 0,
                         },
                         {
-                          "translateY": -12,
+                          "translateY": -26,
                         },
                         {
                           "scale": 0.75,
@@ -162,7 +196,7 @@ exports[`renders CalendarEdit 1`] = `
                       "writingDirection": "ltr",
                     }
                   }
-                  testID="text-input-flat-label-active"
+                  testID="text-input-outlined-label-active"
                 >
                   MM/DD/YYYY
                 </Text>
@@ -181,17 +215,16 @@ exports[`renders CalendarEdit 1`] = `
                       "lineHeight": undefined,
                       "maxWidth": 97.33333333333333,
                       "opacity": 0,
-                      "paddingLeft": 16,
-                      "paddingRight": 16,
+                      "paddingHorizontal": 16,
                       "position": "absolute",
                       "textAlign": "left",
-                      "top": 30,
+                      "top": 32,
                       "transform": [
                         {
                           "translateX": 0,
                         },
                         {
-                          "translateY": -12,
+                          "translateY": -26,
                         },
                         {
                           "scale": 0.75,
@@ -200,7 +233,7 @@ exports[`renders CalendarEdit 1`] = `
                       "writingDirection": "ltr",
                     }
                   }
-                  testID="text-input-flat-label-inactive"
+                  testID="text-input-outlined-label-inactive"
                 >
                   MM/DD/YYYY
                 </Text>
@@ -220,6 +253,7 @@ exports[`renders CalendarEdit 1`] = `
             onChange={[Function]}
             onChangeText={[Function]}
             onFocus={[Function]}
+            onLayout={[Function]}
             onSubmitEditing={[Function]}
             placeholderTextColor="transparent"
             selectionColor="rgba(103, 80, 164, 1)"
@@ -229,10 +263,12 @@ exports[`renders CalendarEdit 1`] = `
                   "flexGrow": 1,
                   "margin": 0,
                 },
-                {},
                 {
-                  "paddingBottom": 4,
-                  "paddingTop": 24,
+                  "height": 48,
+                },
+                {
+                  "paddingBottom": 0,
+                  "paddingTop": 0,
                 },
                 {
                   "color": "rgba(28, 27, 31, 1)",
@@ -242,8 +278,7 @@ exports[`renders CalendarEdit 1`] = `
                   "letterSpacing": 0.15,
                   "lineHeight": undefined,
                   "minWidth": 65,
-                  "paddingLeft": 16,
-                  "paddingRight": 16,
+                  "paddingHorizontal": 16,
                   "textAlign": "left",
                   "textAlignVertical": "center",
                 },
@@ -254,7 +289,7 @@ exports[`renders CalendarEdit 1`] = `
                 undefined,
               ]
             }
-            testID="text-input-flat"
+            testID="text-input-outlined"
             underlineColorAndroid="transparent"
             value="01/15/2025"
             withModal={false}

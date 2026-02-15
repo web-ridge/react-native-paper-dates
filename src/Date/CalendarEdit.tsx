@@ -87,6 +87,7 @@ function CalendarEdit({
         <DatePickerInputWithoutModal
           inputMode="start"
           ref={dateInput}
+          mode="outlined"
           label={label}
           value={state.date}
           onChange={(date) => onChange({ ...state, date })}
@@ -105,6 +106,7 @@ function CalendarEdit({
           <DatePickerInputWithoutModal
             inputMode="start"
             ref={startInput}
+            mode="outlined"
             label={startLabel}
             value={state.startDate}
             onChange={(startDate) => onChange({ ...state, startDate })}
@@ -122,6 +124,7 @@ function CalendarEdit({
           <DatePickerInputWithoutModal
             inputMode="end"
             ref={endInput}
+            mode="outlined"
             label={endLabel}
             value={state.endDate}
             onChange={(endDate) => onChange({ ...state, endDate })}
