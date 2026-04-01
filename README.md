@@ -36,6 +36,11 @@
 Check out the official docs: [web-ridge.github.io/react-native-paper-dates](https://web-ridge.github.io/react-native-paper-dates/)
 
 
+## Contributing
+
+Interested in contributing? Check out the [Development Guide](./DEVELOPMENT.md) for setup instructions and best practices.
+
+
 ## Maintainers
 
 [RichardLindhout](https://twitter.com/RichardLindhout) from [web_ridge](https://twitter.com/web_ridge)   
