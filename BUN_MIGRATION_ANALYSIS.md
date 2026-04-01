@@ -1,12 +1,14 @@
 # Bun Migration Analysis for react-native-paper-dates
 
+> **Update (April 1, 2026)**: Re-tested with Bun v1.3.11 (latest stable). Package installation still fails with HTTPError and segmentation faults in CI environment. Issues persist despite 6 minor version updates since initial testing.
+
 > **Note**: This analysis was conducted in a GitHub Actions CI environment (AMD EPYC 7763, Ubuntu). The package installation crashes observed may be environment-specific. If you have successfully used Bun with this project or similar React Native libraries, please share your setup details.
 
 ## Executive Summary
 
-**Migration Status: PARTIALLY FEASIBLE** ⚠️
+**Migration Status: NOT FEASIBLE** ❌
 
-Bun can be used for **script running and task execution** in this React Native library, but **full migration of package management is NOT currently recommended** due to critical compatibility issues in testing environments.
+Bun can be used for **script running and task execution** in this React Native library, but **full migration of package management is NOT currently recommended** due to persistent critical compatibility issues in testing environments.
 
 ## Current State
 
@@ -34,12 +36,13 @@ The project currently uses:
 
 ### ❌ What Doesn't Work with Bun
 
-1. **Package Installation**: `bun install` crashes with segmentation faults (tested in CI environment)
-   - Error: "Assertion failure: Expected metadata to be set"
-   - Crash occurs even with simple dependencies (e.g., `lodash`)
+1. **Package Installation**: `bun install` continues to fail (tested in CI environment)
+   - **Bun v1.3.5 (Jan 2026)**: "Assertion failure: Expected metadata to be set" + segmentation fault
+   - **Bun v1.3.11 (Apr 2026)**: "HTTPError downloading package manifest" + "Unterminated string literal" parsing errors + segmentation faults
+   - Crash occurs even with simple dependencies (e.g., `lodash`, `react`)
    - Affects React Native packages: `react-native`, `react-native-paper`, etc.
    - Affects both the main library and example app
-   - This is a **blocking issue** for Bun v1.3.5 in this environment
+   - **Issue persists across 6 minor version updates** - indicates fundamental compatibility problem in this environment
 
 2. **React Native Compatibility**: Known issues with React Native ecosystem
    - Metro bundler integration is not fully supported
@@ -91,25 +94,27 @@ If using Bun only for script execution (keeping Yarn for package management):
 
 **Do NOT migrate to Bun at this time** because:
 
-1. **Critical bugs**: Package installation is completely broken
+1. **Critical bugs persist**: Package installation remains broken across multiple versions (1.3.5 → 1.3.11)
 2. **React Native ecosystem**: Not production-ready for RN libraries
 3. **Risk vs. Reward**: No meaningful benefits, significant risks
 4. **Community maturity**: Limited RN library examples using Bun
 5. **Tooling gaps**: Builder-bob, Metro, and native tooling aren't optimized for Bun
+6. **No improvement trend**: Issues persist over 3 months and 6 minor versions
 
-### Medium Term (6-12 months) ⚠️ MONITOR
+### Medium Term (12+ months) ⚠️ MONITOR
 
 **Re-evaluate when:**
 
-1. Bun reaches v2.0+ with stable React Native support
+1. Bun reaches v2.0+ with **proven** React Native support in CI environments
 2. `react-native-builder-bob` officially supports Bun
-3. Community adoption shows successful RN library migrations
-4. Package installation bugs are resolved
+3. Community adoption shows successful RN library migrations **in CI/CD**
+4. Package installation bugs are **demonstrably resolved** (not just claimed)
 5. Clear documentation exists for RN library + Bun workflows
+6. At least 3-6 months of stable releases without regression
 
 **What to monitor:**
 - Bun changelog for React Native improvements
-- RN community adoption trends
+- RN community adoption trends (especially library maintainers)
 - react-native-builder-bob Bun support
 - Expo + Bun compatibility improvements
 
@@ -143,16 +148,23 @@ Instead of Bun, consider:
 
 ## Conclusion
 
-**Migration to Bun is NOT feasible for this React Native library at this time** based on testing in CI environments.
+**Migration to Bun is NOT feasible for this React Native library** based on testing in CI environments over 3 months.
 
-The critical package installation bugs, combined with immature React Native ecosystem support, make this a high-risk migration with minimal benefits. The project should **continue using Yarn** and revisit this decision in 6-12 months when Bun's React Native support matures.
+The critical package installation bugs persist across multiple Bun versions (1.3.5 → 1.3.11), combined with immature React Native ecosystem support, make this a high-risk migration with no meaningful benefits. The project should **continue using Yarn**.
+
+### Persistent Issues (January - April 2026)
+
+The package installation crashes observed during testing occurred across multiple Bun versions:
+
+| Test Date | Bun Version | Environment | Error Type |
+|-----------|-------------|-------------|------------|
+| Jan 7, 2026 | 1.3.5 | GitHub Actions CI (AMD EPYC 7763) | Segmentation fault: "Assertion failure: Expected metadata to be set" |
+| Jan 8, 2026 | 1.3.5 | GitHub Actions CI (AMD EPYC 7763) | Same as above - re-verified |
+| Apr 1, 2026 | 1.3.11 | GitHub Actions CI (AMD EPYC 7763) | HTTPError + parsing errors + segmentation faults |
+
+**Pattern**: Issues persist and evolve across 6 minor version updates, indicating fundamental compatibility problems in this environment.
 
 ### Environment-Specific Considerations
-
-The package installation crashes observed during testing occurred in:
-- **Environment**: GitHub Actions (Ubuntu, AMD EPYC 7763 64-Core Processor)
-- **Bun Version**: 1.3.5 (latest stable as of January 2026)
-- **Crash Type**: Segmentation fault with "Assertion failure: Expected metadata to be set"
 
 **If you're able to successfully use Bun with this project:**
 - Different CPU architectures (e.g., ARM-based Macs) may have different results
@@ -177,8 +189,16 @@ The package installation crashes observed during testing occurred in:
 
 ---
 
-**Date**: January 2026 (Re-verified January 8, 2026)  
-**Bun Version Tested**: 1.3.5 (latest stable)  
+## Version History
+
+- **April 1, 2026**: Re-tested with Bun v1.3.11 - package installation still fails with different errors (HTTPError, parsing errors, segfaults). Issues persist.
+- **January 8, 2026**: Re-verified with Bun v1.3.5 - added environment context, clarified issues are environment-specific
+- **January 7, 2026**: Initial analysis with Bun v1.3.5
+
+---
+
+**Last Updated**: April 1, 2026  
+**Bun Versions Tested**: 1.3.5, 1.3.11  
 **React Native Version**: 0.79.2  
 **Test Environment**: GitHub Actions CI (AMD EPYC 7763, Ubuntu)  
-**Recommendation**: Stay with Yarn, revisit in 6-12 months or when tested on your specific environment
+**Recommendation**: Stay with Yarn. Bun issues persist across multiple versions. Re-evaluate only if significant ecosystem improvements are announced.
