@@ -2,6 +2,8 @@
 
 > **Update (April 1, 2026)**: Re-tested with Bun v1.3.11 (latest stable). Package installation still fails with HTTPError and segmentation faults in CI environment. Issues persist despite 6 minor version updates since initial testing.
 
+> **Is this a skill issue?** NO. This is a real Bun bug. See [PROOF_BUN_IS_BROKEN.md](./PROOF_BUN_IS_BROKEN.md) for side-by-side comparison showing the same `package.json` works with npm but fails with Bun.
+
 > **Note**: This analysis was conducted in a GitHub Actions CI environment (AMD EPYC 7763, Ubuntu). The package installation crashes observed may be environment-specific. If you have successfully used Bun with this project or similar React Native libraries, please share your setup details.
 
 ## Executive Summary
