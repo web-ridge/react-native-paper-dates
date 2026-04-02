@@ -272,13 +272,13 @@ export function useInputFormatter({ locale }: { locale: string | undefined }) {
 
 export function getStartOfDay(d: Date): Date {
   const startOfDay = new Date(d)
-  startOfDay.setUTCHours(0, 0, 0, 0)
+  startOfDay.setHours(0, 0, 0, 0)
   return startOfDay
 }
 
 export function getEndOfDay(d: Date): Date {
   const endOfDay = new Date(d)
-  endOfDay.setUTCHours(23, 59, 59, 999)
+  endOfDay.setHours(23, 59, 59, 999)
   return endOfDay
 }
 
