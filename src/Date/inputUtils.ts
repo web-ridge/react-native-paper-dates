@@ -8,6 +8,7 @@ export default function useDateInput({
   value,
   validRange,
   inputMode,
+  monthOnly,
   onChange,
   onValidationError,
 }: {
@@ -16,9 +17,10 @@ export default function useDateInput({
   value: Date | undefined
   validRange: ValidRangeType | undefined
   inputMode: 'start' | 'end'
+  monthOnly: boolean | undefined
   onValidationError?: ((error: string | null) => void) | undefined
 }) {
-  const formatter = useInputFormatter({ locale })
+  const formatter = useInputFormatter({ locale, monthOnly })
   const inputFormat = useInputFormat({ formatter, locale })
   const formattedValue = value ? formatter.format(value) : ''
 

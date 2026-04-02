@@ -23,6 +23,7 @@ export type SwiperProps = {
   renderFooter?: (renderProps: RenderProps) => any
   selectedYear: number | undefined
   startWeekOnMonday: boolean
+  yearOnly: boolean
   startYear?: number
   endYear?: number
 }

@@ -5,6 +5,7 @@ const nl: TranslationsType = {
   selectSingle: 'Selecteer datum',
   selectMultiple: 'Selecteer datums',
   selectRange: 'Selecteer periode',
+  selectMonth: 'Selecteer een maand',
   notAccordingToDateFormat: (inputFormat) =>
     `Datumformaat moet ${inputFormat} zijn`,
   mustBeHigherThan: (date) => `Moet later dan ${date}`,

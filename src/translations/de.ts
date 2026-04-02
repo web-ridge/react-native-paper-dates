@@ -5,6 +5,7 @@ const de: TranslationsType = {
   selectSingle: 'Wähle Datum',
   selectMultiple: 'Wähle Daten',
   selectRange: 'Wähle Zeitspanne',
+  selectMonth: 'Wähle einen Monat aus',
   notAccordingToDateFormat: (inputFormat) =>
     `Das Format sollte ${inputFormat} sein`,
   mustBeHigherThan: (date) => `Muss nach dem ${date} sein`,
