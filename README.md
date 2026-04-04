@@ -43,10 +43,12 @@ Check out the official docs: [web-ridge.github.io/react-native-paper-dates](http
 
 
 ### Checkout our other libraries
-- Simple cross platform navigation library for React Native (web): [react-native-ridge-navigation](https://github.com/web-ridge/react-native-ridge-navigation)
-- Simple form library for React Native with great UX for developer and end-user: [react-native-use-form](https://github.com/web-ridge/react-native-use-form)
+
+- Great form library for React Native with great UX for developer and end-user: [react-native-use-form](https://github.com/web-ridge/react-native-use-form)
+
 - Smooth and fast cross platform Material Design Tabs for React Native Paper: [react-native-paper-tabs](https://github.com/web-ridge/react-native-paper-tabs)
-- Simple translations in React (Native): [react-ridge-translations](https://github.com/web-ridge/react-ridge-translations)
+
+- Simple cross platform navigation library for React Native (web): [react-native-ridge-navigation](https://github.com/web-ridge/react-native-ridge-navigation)
 
 ## License
 
