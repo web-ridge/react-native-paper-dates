@@ -145,7 +145,8 @@
     },
     "npm": {
       "publish": true,
-      "skipChecks": true
+      "skipChecks": true,
+      "publishArgs": ["--provenance", "--access", "public"]
     },
     "github": {
       "release": true
@@ -158,7 +159,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/web-ridge/react-native-paper-dates.git"
+    "url": "git+https://github.com/web-ridge/react-native-paper-dates.git"
   },
   "scripts": {
     "test": "jest --config=jest.config.js --watchAll=false",
