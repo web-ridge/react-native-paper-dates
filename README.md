@@ -53,4 +53,4 @@ Check out the official docs: [web-ridge.github.io/react-native-paper-dates](http
 
 ## License
 
-MIT 
+MIT
