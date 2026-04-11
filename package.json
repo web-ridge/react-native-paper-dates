@@ -144,8 +144,7 @@
       "tagName": "v${version}"
     },
     "npm": {
-      "publish": true,
-      "skipChecks": true
+      "publish": true
     },
     "github": {
       "release": true
@@ -156,16 +155,13 @@
       }
     }
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/web-ridge/react-native-paper-dates.git"
-  },
+  "repository": "https://github.com/web-ridge/react-native-paper-dates",
   "scripts": {
     "test": "jest --config=jest.config.js --watchAll=false",
     "test-watch": "jest --config=jest.config.js --watchAll",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "prepare": "husky && bob build",
+    "prepare": "husky install && bob build",
     "release": "release-it --ci --github.autoGenerate",
     "example": "yarn --cwd example",
     "pods": "cd example && pod-install --quiet",
