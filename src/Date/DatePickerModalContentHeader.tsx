@@ -50,6 +50,9 @@ function getLabel(
   if (mode === 'single') {
     return getTranslation(locale, 'selectSingle')
   }
+  if (mode === 'month') {
+    return getTranslation(locale, 'selectMonth')
+  }
   return '...?'
 }
 
@@ -98,6 +101,9 @@ export default function DatePickerModalContentHeader(
               moreLabel={moreLabel}
             />
           ) : null}
+          {mode === 'month' ? (
+            <HeaderContentMonth {...props} color={color} />
+          ) : null}
         </View>
       </View>
       <View style={sharedStyles.root} />
@@ -132,6 +138,38 @@ export function HeaderContentSingle({
     return new Intl.DateTimeFormat(locale, {
       month: 'short',
       day: 'numeric',
+    })
+  }, [locale])
+
+  return (
+    <Text
+      maxFontSizeMultiplier={1.5}
+      style={[styles.text, { color: dateColor }]}
+    >
+      {state.date ? formatter.format(state.date) : emptyLabel}
+    </Text>
+  )
+}
+
+export function HeaderContentMonth({
+  state,
+  emptyLabel = ' ',
+  color,
+  locale,
+}: HeaderContentProps & { color: string }) {
+  const theme = useTheme()
+
+  const lighterColor = Color(color).fade(0.5).rgb().toString()
+  const dateColor = state.date
+    ? theme.isV3
+      ? theme.colors.onSurface
+      : color
+    : lighterColor
+
+  const formatter = useMemo(() => {
+    return new Intl.DateTimeFormat(locale, {
+      year: 'numeric',
+      month: 'short',
     })
   }, [locale])
 

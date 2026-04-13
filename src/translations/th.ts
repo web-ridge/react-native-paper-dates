@@ -5,6 +5,7 @@ const th: TranslationsType = {
   selectSingle: 'เลือกวันที่',
   selectMultiple: 'เลือกวันที่',
   selectRange: 'เลือกช่วงวันที่',
+  selectMonth: 'เลือกเดือน',
   notAccordingToDateFormat: (inputFormat) =>
     `รูปแบบวันที่จะต้องเป็น ${inputFormat}`,
   mustBeHigherThan: (date) => `ต้องอยู่ภายหลังวันที่ ${date}`,
