@@ -1,4 +1,5 @@
 import { View } from 'react-native'
+import { useTheme } from 'react-native-paper'
 import {
   getIndexFromVerticalOffset,
   getMonthHeight,
@@ -161,6 +162,7 @@ function VerticalScroller({
     visibleArray(constrainedInitialIndex)
   )
 
+  const theme = useTheme()
   const idx = useRef<number>(constrainedInitialIndex)
   const parentRef = useRef<HTMLDivElement | null>(null)
 
@@ -229,6 +231,7 @@ function VerticalScroller({
         height,
         width,
         overflow: 'auto',
+        colorScheme: theme.dark ? 'dark' : 'light',
       }}
       onScroll={onScroll}
     >
