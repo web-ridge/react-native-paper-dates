@@ -111,6 +111,7 @@ export default function DatePickerModalContentHeader(
           }
           iconColor={theme.colors.onSurface}
           onPress={onToggle}
+          testID="react-native-paper-dates-toggle-edit"
         />
       ) : null}
     </View>

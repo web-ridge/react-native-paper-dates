@@ -51,6 +51,7 @@ function CalendarHeader({
               icon="chevron-left"
               accessibilityLabel={getTranslation(locale, 'previous')}
               onPress={onPrev}
+              testID="react-native-paper-dates-prev-month"
             />
           </View>
           <View style={{ backgroundColor: theme.colors.surface }}>
@@ -58,6 +59,7 @@ function CalendarHeader({
               icon="chevron-right"
               accessibilityLabel={getTranslation(locale, 'next')}
               onPress={onNext}
+              testID="react-native-paper-dates-next-month"
             />
           </View>
         </View>
