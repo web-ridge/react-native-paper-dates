@@ -58,6 +58,21 @@ html.rp-dark .pd-demo {
   max-width: 360px;
 }
 
+/*
+ * TimePicker uses window width > height for landscape. Docs viewports are
+ * wide, so without this the clock sits beside the inputs and gets clipped.
+ */
+.pd-demo__time-picker-host > div {
+  flex-direction: column !important;
+  width: 100% !important;
+  max-width: 100%;
+  align-items: center !important;
+}
+
+.pd-demo__time-picker-host > div > div:first-child {
+  flex: 0 0 auto !important;
+}
+
 .pd-demo__surface {
   width: 100%;
   background: var(--paper-surface, #fff);

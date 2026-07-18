@@ -236,7 +236,14 @@ function TimePickerInner() {
       >
         Select time
       </Text>
-      <View style={{ paddingHorizontal: 24, paddingTop: 8 }}>
+      {/*
+        TimePicker switches to landscape when the window is wider than tall.
+        On docs pages that clips inside .pd-demo; force portrait via CSS host.
+      */}
+      <div
+        className="pd-demo__time-picker-host"
+        style={{ paddingInline: 24, paddingTop: 8 }}
+      >
         <TimePicker
           locale={LOCALE}
           inputType="picker"
@@ -246,7 +253,7 @@ function TimePickerInner() {
           onChange={onChange}
           onFocusInput={setFocused}
         />
-      </View>
+      </div>
       <View
         style={{
           flexDirection: 'row',
