@@ -1,0 +1,33 @@
+[
+  {
+    "type": "section-header",
+    "label": "Getting started"
+  },
+  "introduction",
+  "installation",
+  "localization",
+  "tips",
+  {
+    "type": "divider"
+  },
+  {
+    "type": "section-header",
+    "label": "Components"
+  },
+  {
+    "type": "dir",
+    "name": "date-picker",
+    "label": "Date Picker",
+    "collapsed": false
+  },
+  "time-picker",
+  {
+    "type": "divider"
+  },
+  {
+    "type": "section-header",
+    "label": "More"
+  },
+  "showcase",
+  "contributing"
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "type": "file",
+    "name": "single-date-picker",
+    "label": "Single"
+  },
+  {
+    "type": "file",
+    "name": "range-date-picker",
+    "label": "Range"
+  },
+  {
+    "type": "file",
+    "name": "multiple-dates-picker",
+    "label": "Multiple"
+  },
+  {
+    "type": "file",
+    "name": "input-date-picker",
+    "label": "Input"
+  }
+]

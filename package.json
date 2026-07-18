@@ -72,7 +72,7 @@
     "lib/",
     "example/node_modules",
     "example/dist",
-    "docusaurus",
+    "website",
     "coverage"
   ],
   "files": [
