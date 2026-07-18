@@ -1,33 +1,33 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Flex:opsz,wght@8..144,400;8..144,500;8..144,700&display=swap');
 
 /**
- * Site-wide Material Design 3 tokens (seeded from Paper Dates logo green).
+ * Site-wide Material Design 3 tokens (slate seed).
  * Aligns docs chrome with https://m3.material.io/ patterns.
  */
 
 :root {
-  --paper-primary: #006e2c;
-  --paper-primary-container: #96f7a9;
+  --paper-primary: #3f5f90;
+  --paper-primary-container: #d6e3ff;
   --paper-on-primary: #ffffff;
-  --paper-on-primary-container: #002109;
-  --paper-secondary: #506352;
-  --paper-secondary-container: #d2e8d3;
-  --paper-surface: #f7fbf2;
-  --paper-surface-variant: #ebefe6;
-  --paper-on-surface: #181d18;
-  --paper-on-surface-variant: #414941;
-  --paper-outline: #717a70;
-  --paper-outline-variant: #c1c9bf;
-  --paper-background: #f7fbf2;
+  --paper-on-primary-container: #001b3d;
+  --paper-secondary: #565e71;
+  --paper-secondary-container: #dae2f9;
+  --paper-surface: #f9f9fc;
+  --paper-surface-variant: #edeef1;
+  --paper-on-surface: #1a1c1e;
+  --paper-on-surface-variant: #43474e;
+  --paper-outline: #73777f;
+  --paper-outline-variant: #c3c6cf;
+  --paper-background: #f9f9fc;
 
-  --rp-c-brand: #006e2c;
-  --rp-c-brand-light: #258742;
-  --rp-c-brand-lighter: #96f7a9;
-  --rp-c-brand-dark: #005320;
-  --rp-c-brand-darker: #003915;
-  --rp-c-brand-tint: rgba(0, 110, 44, 0.1);
+  --rp-c-brand: #3f5f90;
+  --rp-c-brand-light: #5675a6;
+  --rp-c-brand-lighter: #d6e3ff;
+  --rp-c-brand-dark: #254777;
+  --rp-c-brand-darker: #04305f;
+  --rp-c-brand-tint: rgba(63, 95, 144, 0.1);
 
-  --rp-home-hero-secondary-color: #006e2c;
+  --rp-home-hero-secondary-color: #3f5f90;
 
   --rp-font-family: 'Roboto', system-ui, sans-serif;
   --rp-font-family-base: 'Roboto', system-ui, sans-serif;
@@ -35,73 +35,73 @@
 
 html:not(.dark),
 html:not(.rp-dark) {
-  --rp-c-bg: #f7fbf2;
-  --rp-c-bg-soft: #f1f5ec;
-  --rp-c-bg-mute: #ebefe6;
-  --rp-c-bg-alt: #f7fbf2;
+  --rp-c-bg: #f9f9fc;
+  --rp-c-bg-soft: #f3f3f6;
+  --rp-c-bg-mute: #edeef1;
+  --rp-c-bg-alt: #f9f9fc;
 
-  --rp-c-divider: rgba(113, 122, 112, 0.4);
-  --rp-c-divider-light: rgba(113, 122, 112, 0.2);
+  --rp-c-divider: rgba(115, 119, 127, 0.4);
+  --rp-c-divider-light: rgba(115, 119, 127, 0.2);
 
-  --rp-c-text-0: #181d18;
-  --rp-c-text-1: #181d18;
-  --rp-c-text-2: #414941;
-  --rp-c-text-3: rgba(24, 29, 24, 0.45);
-  --rp-c-text-4: rgba(24, 29, 24, 0.25);
+  --rp-c-text-0: #1a1c1e;
+  --rp-c-text-1: #1a1c1e;
+  --rp-c-text-2: #43474e;
+  --rp-c-text-3: rgba(26, 28, 30, 0.45);
+  --rp-c-text-4: rgba(26, 28, 30, 0.25);
 
-  --rp-c-text-code: #005320;
-  --rp-c-text-code-bg: rgba(0, 110, 44, 0.08);
-  --rp-c-text-code-border: rgba(0, 110, 44, 0.14);
+  --rp-c-text-code: #254777;
+  --rp-c-text-code-bg: rgba(63, 95, 144, 0.08);
+  --rp-c-text-code-border: rgba(63, 95, 144, 0.14);
 
-  --rp-c-link: #006e2c;
+  --rp-c-link: #3f5f90;
 
-  --rp-home-background-bg: #f7fbf2;
+  --rp-home-background-bg: #f9f9fc;
 }
 
 html.dark,
 html.rp-dark {
-  --paper-primary: #7ada8f;
-  --paper-primary-container: #005320;
-  --paper-on-primary: #003915;
-  --paper-on-primary-container: #96f7a9;
-  --paper-secondary: #b6ccb7;
-  --paper-secondary-container: #384b3b;
-  --paper-surface: #101510;
-  --paper-surface-variant: #1c211c;
-  --paper-on-surface: #e0e4db;
-  --paper-on-surface-variant: #c1c9bf;
-  --paper-outline: #8b9389;
-  --paper-outline-variant: #414941;
-  --paper-background: #101510;
+  --paper-primary: #a9c7ff;
+  --paper-primary-container: #254777;
+  --paper-on-primary: #04305f;
+  --paper-on-primary-container: #d6e3ff;
+  --paper-secondary: #bec6dc;
+  --paper-secondary-container: #3e4758;
+  --paper-surface: #111418;
+  --paper-surface-variant: #1e2022;
+  --paper-on-surface: #e2e2e5;
+  --paper-on-surface-variant: #c3c6cf;
+  --paper-outline: #8d9199;
+  --paper-outline-variant: #43474e;
+  --paper-background: #111418;
 
-  --rp-c-brand: #7ada8f;
-  --rp-c-brand-light: #96f7a9;
-  --rp-c-brand-lighter: #005320;
-  --rp-c-brand-dark: #5cbf74;
-  --rp-c-brand-darker: #3ea85a;
-  --rp-c-brand-tint: rgba(122, 218, 143, 0.14);
+  --rp-c-brand: #a9c7ff;
+  --rp-c-brand-light: #d6e3ff;
+  --rp-c-brand-lighter: #254777;
+  --rp-c-brand-dark: #8fb3ef;
+  --rp-c-brand-darker: #759fdf;
+  --rp-c-brand-tint: rgba(169, 199, 255, 0.14);
 
-  --rp-c-bg: #101510;
-  --rp-c-bg-soft: #181d18;
-  --rp-c-bg-mute: #1c211c;
-  --rp-c-bg-alt: #0b100c;
+  --rp-c-bg: #111418;
+  --rp-c-bg-soft: #1a1c1e;
+  --rp-c-bg-mute: #1e2022;
+  --rp-c-bg-alt: #0c0e12;
 
-  --rp-c-divider: rgba(139, 147, 137, 0.4);
-  --rp-c-divider-light: rgba(139, 147, 137, 0.22);
+  --rp-c-divider: rgba(141, 145, 153, 0.4);
+  --rp-c-divider-light: rgba(141, 145, 153, 0.22);
 
-  --rp-c-text-0: #e0e4db;
-  --rp-c-text-1: #e0e4db;
-  --rp-c-text-2: #c1c9bf;
-  --rp-c-text-3: rgba(224, 228, 219, 0.45);
-  --rp-c-text-4: rgba(224, 228, 219, 0.25);
+  --rp-c-text-0: #e2e2e5;
+  --rp-c-text-1: #e2e2e5;
+  --rp-c-text-2: #c3c6cf;
+  --rp-c-text-3: rgba(226, 226, 229, 0.45);
+  --rp-c-text-4: rgba(226, 226, 229, 0.25);
 
-  --rp-c-text-code: #7ada8f;
-  --rp-c-text-code-bg: rgba(122, 218, 143, 0.1);
-  --rp-c-text-code-border: rgba(122, 218, 143, 0.16);
+  --rp-c-text-code: #a9c7ff;
+  --rp-c-text-code-bg: rgba(169, 199, 255, 0.1);
+  --rp-c-text-code-border: rgba(169, 199, 255, 0.16);
 
-  --rp-c-link: #7ada8f;
+  --rp-c-link: #a9c7ff;
 
-  --rp-home-background-bg: #101510;
+  --rp-home-background-bg: #111418;
 }
 
 .rp-doc,

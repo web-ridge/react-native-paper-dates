@@ -1,0 +1,182 @@
+import { MultipleDatesDemo } from '../../../components/demos'
+
+# Multiple Dates Picker
+
+The multiple dates picker provides a modal allowing for multiple dates selection.
+
+## Preview
+
+<MultipleDatesDemo className="pd-demo--page" />
+
+## Usage
+
+```jsx
+import React from "react";
+import { View, Text } from "react-native";
+import { Button } from 'react-native-paper';
+import { DatePickerModal } from 'react-native-paper-dates';
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
+export default function App() {
+  const [dates, setDates] = React.useState();
+  const [open, setOpen] = React.useState(false);
+
+  const onDismiss = React.useCallback(() => {
+    setOpen(false);
+  }, [setOpen]);
+
+  const onConfirm = React.useCallback((params) => {
+    setOpen(false);
+    setDates(params.dates);
+    console.log('[on-change-multi]', params);
+  }, []);
+
+  return (
+    <SafeAreaProvider>
+      <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
+        <Button onPress={() => setOpen(true)} uppercase={false} mode="outlined">
+          Pick multiple dates
+        </Button>
+        <DatePickerModal
+          locale="en"
+          mode="multiple"
+          visible={open}
+          onDismiss={onDismiss}
+          dates={dates}
+          onConfirm={onConfirm}
+        />
+      </View>
+    </SafeAreaProvider>
+  )
+}
+```
+
+## Live Example
+
+View an interactive [Expo snack](https://snack.expo.dev/@fitzwabs/react-native-paper-dates-multiple-picker).
+
+## Props
+
+**animationType**  
+`Type: 'slide' | 'fade' | 'none' | undefined`  
+The animation used when opening the component. Defaults to `'slide'` on iOS/Android and `'none'` on web.
+
+**calendarIcon**  
+`Type: string | undefined`  
+Icon name from [MaterialCommunityIcons](https://materialdesignicons.com/). Defaults to `'calendar-blank'`. (Edit toggle is disabled in multiple mode.)
+
+**closeIcon**  
+`Type: string | undefined`  
+The icon used to close the modal. Defaults to `'close'`. Pass a name from [MaterialCommunityIcons](https://materialdesignicons.com/).
+
+**dates**  
+`Type: Date[] | undefined | null`  
+The currently selected dates.
+
+**disableStatusBar**  
+`Type: boolean | undefined`  
+When `true`, the modal does not modify the status bar appearance or translucency. Defaults to `false`.
+
+**disableStatusBarPadding**  
+`Type: boolean | undefined`  
+When `true`, skips safe-area top padding for the status bar. Defaults to `false`.
+
+**disableWeekDays**  
+`Type: number[] | undefined`  
+Weekday indexes to hide from the calendar grid (for example `[0, 6]` to hide Sunday and Saturday).
+
+**editIcon**  
+`Type: string | undefined`  
+Icon name from [MaterialCommunityIcons](https://materialdesignicons.com/). Defaults to `'pencil-outline'`. (Edit toggle is disabled in multiple mode.)
+
+**emptyLabel**  
+`Type: string | undefined`  
+Text shown in the header when no dates are selected. Defaults to a single space.
+
+**endYear**  
+`Type: number | undefined`  
+The last year available in the year picker. Defaults to `2200`.
+
+**inputEnabled**  
+`Type: boolean | undefined`  
+Whether text inputs are editable when editing is available. Defaults to `true`.
+
+**label**  
+`Type: string | undefined`  
+Header label. Defaults to the locale translation for `selectMultiple` (English: `'Select dates'`).
+
+**locale (Required)**  
+`Type: string`  
+Locale used for formatting and translations (for example `'en'` or `'de'`).
+
+**mode (Required)**  
+`Type: 'single' | 'multiple' | 'range'`  
+Selection mode. Use `'multiple'` for this picker.
+
+**moreLabel**  
+`Type: string | undefined`  
+Suffix used when more than one date is selected (for example `Jan 1 (+ 2 more)`). Defaults to `'more'`.
+
+**onChange**  
+`Type: (params: { dates: Date[] | undefined | null, datePressed: Date, change: 'added' | 'removed' }) => void`  
+Called whenever a date is added or removed inside the modal.
+
+**onConfirm (Required)**  
+`Type: (params: { dates: Date[] }) => void`  
+Called when the user confirms the selection.
+
+**onDismiss (Required)**  
+`Type: () => void`  
+Called when the modal is dismissed.
+
+**placeholder**  
+`Type: string | undefined`  
+Placeholder text for edit inputs when editing is enabled.
+
+**presentationStyle**  
+`Type: 'overFullScreen' | 'pageSheet' | 'formSheet' | undefined`  
+iOS modal presentation style. Defaults to `'overFullScreen'`.
+
+- `'overFullScreen'`: Full-screen overlay (default).
+- `'pageSheet'`: Card-style sheet. On iPad (width and height > 650pt), automatically uses `formSheet` for a better fit.
+- `'formSheet'`: Centered form sheet (~540×620pt on iPad).
+
+**saveLabel**  
+`Type: string | undefined`  
+Confirm button label. Defaults to the locale translation for `save` (English: `'Save'`).
+
+**saveLabelDisabled**  
+`Type: boolean | undefined`  
+Disables the confirm button. Defaults to `false`.
+
+**startWeekOnMonday**  
+`Type: boolean | undefined`  
+When `true`, the calendar grid starts on Monday. Defaults to `false`.
+
+**startYear**  
+`Type: number | undefined`  
+The first year available in the year picker. Defaults to `1800`.
+
+**statusBarOnTopOfBackdrop**  
+`Type: boolean | undefined`  
+When `true`, renders the status bar on top of the modal backdrop (also applied automatically for sheet presentations).
+
+**uppercase**  
+`Type: boolean | undefined`  
+Whether header and action labels are uppercased. Defaults to `false`.
+
+**validRange**  
+`Type: {
+  startDate?: Date,
+  endDate?: Date,
+  disabledDates?: Date[]
+}`  
+Limits which dates can be selected. Dates outside the range are grayed out.
+
+**visible (Required)**  
+`Type: boolean`  
+Whether the modal is shown.
+
+**withDateFormatInLabel**  
+`Type: boolean | undefined`  
+When `true`, appends the expected date format to labels in the edit view.

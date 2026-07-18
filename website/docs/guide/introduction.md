@@ -20,4 +20,4 @@
 
 1. [Install the library](./installation)
 2. [Register a translation](./localization)
-3. Pick a component from the sidebar and try the live Expo snack on each page
+3. Pick a component from the sidebar — each page has a live preview so you can see the UI immediately

@@ -46,45 +46,74 @@ const MODES = [
     name: 'Single date',
     detail: 'One day, calendar or input — matching Material date pickers.',
     href: '/guide/date-picker/single-date-picker',
-    icon: 'today',
   },
   {
     name: 'Date range',
     detail: 'Start and end selection with tonal range highlighting.',
     href: '/guide/date-picker/range-date-picker',
-    icon: 'date_range',
   },
   {
     name: 'Multiple dates',
     detail: 'Toggle many days in a single Material flow.',
     href: '/guide/date-picker/multiple-dates-picker',
-    icon: 'event_available',
   },
   {
     name: 'Input date',
     detail: 'Text field with calendar affordance for typed or picked dates.',
     href: '/guide/date-picker/input-date-picker',
-    icon: 'edit_calendar',
   },
   {
     name: 'Time picker',
     detail: 'Clock and input modes aligned with Material time pickers.',
     href: '/guide/time-picker',
-    icon: 'schedule',
   },
 ] as const
 
 const CLOCK_HOURS = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] as const
 const ACTIVE_HOUR = 6
 
-const PLATFORMS = [
-  'Android',
-  'iOS',
-  'Web',
-  'Expo',
-  'TypeScript',
-  '30+ locales',
-] as const
+type LocaleEntry = {
+  code: string
+  name: string
+  sample: string
+  rtl?: boolean
+}
+
+const LOCALES: LocaleEntry[] = [
+  { code: 'ar', name: 'العربية', sample: 'حدد تاريخ', rtl: true },
+  { code: 'ca', name: 'Català', sample: 'Seleccionar data' },
+  { code: 'cs', name: 'Čeština', sample: 'Vyberte datum' },
+  { code: 'da', name: 'Dansk', sample: 'Vælg dato' },
+  { code: 'de', name: 'Deutsch', sample: 'Wähle Datum' },
+  { code: 'el', name: 'Ελληνικά', sample: 'Επιλέξτε ημερομηνία' },
+  { code: 'en', name: 'English', sample: 'Select date' },
+  { code: 'en-GB', name: 'English (UK)', sample: 'Select date' },
+  { code: 'es', name: 'Español', sample: 'Seleccionar fecha' },
+  { code: 'fi', name: 'Suomi', sample: 'Valitse päivämäärä' },
+  { code: 'fr', name: 'Français', sample: 'Sélectionner une date' },
+  { code: 'he', name: 'עברית', sample: 'בחר תאריך', rtl: true },
+  { code: 'hi', name: 'हिन्दी', sample: 'तारीख़ चुनें' },
+  { code: 'id', name: 'Indonesia', sample: 'Pilih tanggal' },
+  { code: 'it', name: 'Italiano', sample: 'Seleziona la data' },
+  { code: 'ja', name: '日本語', sample: '日付を選択' },
+  { code: 'ko', name: '한국어', sample: '날짜 선택' },
+  { code: 'nl', name: 'Nederlands', sample: 'Selecteer datum' },
+  { code: 'no-NO', name: 'Norsk', sample: 'Velg dato' },
+  { code: 'pl', name: 'Polski', sample: 'Wybierz datę' },
+  { code: 'pt', name: 'Português', sample: 'Selecione a data' },
+  { code: 'ro', name: 'Română', sample: 'Selectează data' },
+  { code: 'ru', name: 'Русский', sample: 'Выбор даты' },
+  { code: 'sv', name: 'Svenska', sample: 'Välj datum' },
+  { code: 'th', name: 'ไทย', sample: 'เลือกวันที่' },
+  { code: 'tr', name: 'Türkçe', sample: 'Tarih seç' },
+  { code: 'uk-UA', name: 'Українська', sample: 'Оберіть дату' },
+  { code: 'zh', name: '简体中文', sample: '选择日期' },
+  { code: 'zh-TW', name: '繁體中文', sample: '選擇日期' },
+]
+
+const LOCALE_SPOTLIGHT = (
+  ['ar', 'en', 'fr', 'ja', 'ko', 'ru', 'th', 'zh'] as const
+).map((code) => LOCALES.find((locale) => locale.code === code)!)
 
 export function HomeLanding() {
   const [pkg, setPkg] =
@@ -267,11 +296,54 @@ export function HomeLanding() {
         </div>
       </section>
 
-      <section className="pd-strip" aria-label="Supported platforms">
-        <p className="pd-strip__label">Built for every React Native surface</p>
-        <ul className="pd-strip__list">
-          {PLATFORMS.map((item) => (
-            <li key={item}>{item}</li>
+      <section className="pd-locales" aria-labelledby="pd-locales-title">
+        <div className="pd-section-head">
+          <p className="pd-kicker">Localization</p>
+          <h2 id="pd-locales-title" className="pd-headline">
+            Dates that speak your users&apos; language
+          </h2>
+          <p className="pd-body">
+            {LOCALES.length} built-in locales — register one and picker labels,
+            ranges, and validation follow.
+          </p>
+          <a
+            className="pd-btn pd-btn--ghost pd-locales__cta"
+            href={withBase('/guide/localization')}
+          >
+            Localization guide
+          </a>
+        </div>
+
+        <div className="pd-locales__spotlight" aria-hidden="true">
+          {LOCALE_SPOTLIGHT.map((locale, index) => (
+            <span
+              key={locale.code}
+              className="pd-locales__spotlight-item"
+              style={{ animationDelay: `${index * 70}ms` }}
+            >
+              {locale.sample}
+            </span>
+          ))}
+        </div>
+
+        <ul className="pd-locales__grid">
+          {LOCALES.map((locale, index) => (
+            <li
+              key={locale.code}
+              className="pd-locales__item"
+              style={{ animationDelay: `${40 + index * 18}ms` }}
+            >
+              <span className="pd-locales__code">{locale.code}</span>
+              <span className="pd-locales__name" lang={locale.code}>
+                {locale.name}
+              </span>
+              <span
+                className="pd-locales__sample"
+                dir={locale.rtl ? 'rtl' : undefined}
+              >
+                {locale.sample}
+              </span>
+            </li>
           ))}
         </ul>
       </section>
@@ -289,15 +361,13 @@ export function HomeLanding() {
             platforms.
           </p>
         </div>
-        <ul className="pd-bento">
+        <ul className="pd-modes-grid">
           {MODES.map((mode) => (
             <li key={mode.name}>
-              <a className="pd-bento__cell" href={withBase(mode.href)}>
-                <span className="pd-bento__icon" aria-hidden="true">
-                  <ModeIcon name={mode.icon} />
-                </span>
-                <span className="pd-bento__title">{mode.name}</span>
-                <span className="pd-bento__detail">{mode.detail}</span>
+              <a className="pd-mode-card" href={withBase(mode.href)}>
+                <span className="pd-mode-card__title">{mode.name}</span>
+                <span className="pd-mode-card__detail">{mode.detail}</span>
+                <span className="pd-mode-card__cta">View docs →</span>
               </a>
             </li>
           ))}
@@ -322,7 +392,7 @@ export function HomeLanding() {
               <span className="pd-stat__label">Design system</span>
             </div>
             <div className="pd-stat">
-              <span className="pd-stat__value">30+</span>
+              <span className="pd-stat__value">{LOCALES.length}</span>
               <span className="pd-stat__label">Locales</span>
             </div>
             <div className="pd-stat">
@@ -380,57 +450,6 @@ function ChevronRightIcon() {
       <path
         fill="currentColor"
         d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
-      />
-    </svg>
-  )
-}
-
-function ModeIcon({ name }: { name: (typeof MODES)[number]['icon'] }) {
-  if (name === 'today') {
-    return (
-      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
-        <path
-          fill="currentColor"
-          d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"
-        />
-      </svg>
-    )
-  }
-  if (name === 'date_range') {
-    return (
-      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
-        <path
-          fill="currentColor"
-          d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
-        />
-      </svg>
-    )
-  }
-  if (name === 'event_available') {
-    return (
-      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
-        <path
-          fill="currentColor"
-          d="M16.53 11.06 15.47 10l-4.88 4.88-2.12-2.12-1.06 1.06L10.59 17l5.94-5.94zM19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"
-        />
-      </svg>
-    )
-  }
-  if (name === 'edit_calendar') {
-    return (
-      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
-        <path
-          fill="currentColor"
-          d="M12 22H5c-1.11 0-2-.9-2-2L3.01 6c0-1.1.88-2 1.99-2h1V2h2v2h8V2h2v2h1c1.1 0 2 .9 2 2v6h-2v-2H5v10h7v2zm10.13-8.83-1.41-1.41c-.2-.2-.51-.2-.71 0l-.72.72 2.12 2.12.72-.72c.2-.2.2-.51 0-.71zm-.71 3.54-9.18 9.18H10v-2.12l9.18-9.18 2.12 2.12z"
-        />
-      </svg>
-    )
-  }
-  return (
-    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
-      <path
-        fill="currentColor"
-        d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"
       />
     </svg>
   )
