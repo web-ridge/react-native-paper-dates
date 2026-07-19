@@ -1,4 +1,6 @@
 name: Deploy to GitHub Pages
+permissions:
+  contents: write
 defaults:
   run:
     shell: bash
