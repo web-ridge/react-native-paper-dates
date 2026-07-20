@@ -5,6 +5,7 @@ const id: TranslationsType = {
   selectSingle: 'Pilih tanggal',
   selectMultiple: 'Pilih tanggal',
   selectRange: 'Pilih periode',
+  selectMonth: 'Pilih bulan',
   notAccordingToDateFormat: (inputFormat) =>
     `Format tanggal harus ${inputFormat}`,
   mustBeHigherThan: (date) => `Harus lebih besar dari ${date}`,

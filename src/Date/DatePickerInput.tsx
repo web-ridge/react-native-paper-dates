@@ -14,6 +14,7 @@ function DatePickerInput(
     disableCalendarIcon = false,
     animationType = Platform.select({ web: 'none', default: 'slide' }),
     presentationStyle = 'overFullScreen',
+    monthOnly = false,
     ...rest
   }: DatePickerInputProps,
   ref: any
@@ -37,6 +38,7 @@ function DatePickerInput(
   return (
     <DatePickerInputWithoutModal
       ref={ref}
+      monthOnly={monthOnly}
       {...rest}
       inputButton={
         withModal ? (
@@ -71,7 +73,7 @@ function DatePickerInput(
         withModal ? (
           <DatePickerModal
             date={value}
-            mode="single"
+            mode={monthOnly ? 'month' : 'single'}
             visible={visible}
             onDismiss={onDismiss}
             onConfirm={onInnerConfirm}

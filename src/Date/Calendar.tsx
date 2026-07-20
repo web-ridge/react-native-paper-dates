@@ -1,6 +1,7 @@
 import { View } from 'react-native'
 import Swiper from './Swiper'
 import Month from './Month'
+import Year from './Year'
 import {
   areDatesOnSameDay,
   dateToUnix,
@@ -17,7 +18,7 @@ import { useLatest } from '../shared/utils'
 import { sharedStyles } from '../shared/styles'
 import { defaultStartYear, defaultEndYear } from './dateUtils'
 
-export type ModeType = 'single' | 'range' | 'multiple'
+export type ModeType = 'single' | 'range' | 'multiple' | 'month'
 
 export type ScrollModeType = 'horizontal' | 'vertical'
 
@@ -79,8 +80,14 @@ export interface CalendarMultiProps extends BaseCalendarProps {
   onChange: MultiChange
 }
 
+export interface CalendarMonthProps extends BaseCalendarProps {
+  mode: 'month'
+  date: CalendarDate
+  onChange: SingleChange
+}
+
 function Calendar(
-  props: CalendarSingleProps | CalendarRangeProps | CalendarMultiProps
+  props: CalendarSingleProps | CalendarRangeProps | CalendarMultiProps | CalendarMonthProps
 ) {
   const {
     locale,
@@ -127,7 +134,7 @@ function Calendar(
 
   const onPressDate = useCallback(
     (d: Date) => {
-      if (mode === 'single') {
+      if (mode === 'single' || mode === 'month') {
         ;(onChangeRef.current as SingleChange)({
           date: dateMode === 'start' ? d : getEndOfDay(d),
         })
@@ -165,48 +172,97 @@ function Calendar(
 
   return (
     <View style={sharedStyles.root}>
-      <Swiper
-        initialIndex={getInitialIndex(firstDate, startYear, endYear)}
-        selectedYear={selectedYear}
-        scrollMode={scrollMode}
-        startWeekOnMonday={startWeekOnMonday || false}
-        startYear={startYear}
-        endYear={endYear}
-        renderItem={({ index }) => (
-          <Month
-            locale={locale}
-            mode={mode}
-            key={index}
-            validRange={validRange}
-            index={index}
-            startDate={startDate}
-            endDate={endDate}
-            date={date}
-            dates={dates}
-            onPressYear={onPressYear}
-            selectingYear={selectingYear}
-            onPressDate={onPressDate}
-            scrollMode={scrollMode}
-            primaryColor={theme.colors.primary}
-            selectColor={selectColor}
-            roundness={theme.roundness}
-            disableWeekDays={disableWeekDays}
-            startWeekOnMonday={startWeekOnMonday || false}
-            startYear={startYear}
-            endYear={endYear}
-          />
-        )}
-        renderHeader={({ onPrev, onNext }) => (
-          <CalendarHeader
-            locale={locale}
-            onPrev={onPrev}
-            onNext={onNext}
-            scrollMode={scrollMode}
-            disableWeekDays={disableWeekDays}
-            startWeekOnMonday={startWeekOnMonday || false}
-          />
-        )}
-      />
+      {mode === 'month' ? (
+        <Swiper
+          initialIndex={getInitialIndex(firstDate, startYear, endYear)}
+          selectedYear={selectedYear}
+          scrollMode={scrollMode}
+          startWeekOnMonday={startWeekOnMonday || false}
+          yearOnly={true}
+          startYear={startYear}
+          endYear={endYear}
+          renderItem={({ index }) => (
+            <Year
+              locale={locale}
+              mode={mode}
+              key={index}
+              validRange={validRange}
+              index={index}
+              startDate={startDate}
+              endDate={endDate}
+              date={date}
+              dates={dates}
+              onPressYear={onPressYear}
+              selectingYear={selectingYear}
+              onPressDate={onPressDate}
+              scrollMode={scrollMode}
+              primaryColor={theme.colors.primary}
+              selectColor={selectColor}
+              roundness={theme.roundness}
+              disableWeekDays={disableWeekDays}
+              startWeekOnMonday={startWeekOnMonday || false}
+              startYear={startYear}
+              endYear={endYear}
+            />
+          )}
+          renderHeader={({ onPrev, onNext }) => (
+            <CalendarHeader
+              locale={locale}
+              onPrev={onPrev}
+              onNext={onNext}
+              scrollMode={scrollMode}
+              disableWeekDays={disableWeekDays}
+              startWeekOnMonday={startWeekOnMonday || false}
+              hideDays={true}
+            />
+          )}
+        />
+      ) : (
+        <Swiper
+          initialIndex={getInitialIndex(firstDate, startYear, endYear)}
+          selectedYear={selectedYear}
+          scrollMode={scrollMode}
+          startWeekOnMonday={startWeekOnMonday || false}
+          yearOnly={false}
+          startYear={startYear}
+          endYear={endYear}
+          renderItem={({ index }) => (
+            <Month
+              locale={locale}
+              mode={mode}
+              key={index}
+              validRange={validRange}
+              index={index}
+              startDate={startDate}
+              endDate={endDate}
+              date={date}
+              dates={dates}
+              onPressYear={onPressYear}
+              selectingYear={selectingYear}
+              onPressDate={onPressDate}
+              scrollMode={scrollMode}
+              primaryColor={theme.colors.primary}
+              selectColor={selectColor}
+              roundness={theme.roundness}
+              disableWeekDays={disableWeekDays}
+              startWeekOnMonday={startWeekOnMonday || false}
+              startYear={startYear}
+              endYear={endYear}
+            />
+          )}
+          renderHeader={({ onPrev, onNext }) => (
+            <CalendarHeader
+              locale={locale}
+              onPrev={onPrev}
+              onNext={onNext}
+              scrollMode={scrollMode}
+              disableWeekDays={disableWeekDays}
+              startWeekOnMonday={startWeekOnMonday || false}
+              hideDays={false}
+            />
+          )}
+        />
+      )}
       {scrollMode === 'horizontal' ? (
         <YearPicker
           selectedYear={selectedYear}

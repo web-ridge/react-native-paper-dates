@@ -43,6 +43,7 @@ function Swiper({
   selectedYear,
   initialIndex,
   startWeekOnMonday,
+  yearOnly,
   startYear,
   endYear,
 }: SwiperProps) {
@@ -52,7 +53,7 @@ function Swiper({
 
   const onPrev = useCallback(() => {
     setIndex((prev) => {
-      const newIndex = prev - 1
+      const newIndex = prev - (yearOnly ? 12 : 1)
       // Check if the new index is within allowed range
       if (isIndexWithinRange(newIndex, startYear, endYear)) {
         return newIndex
@@ -63,7 +64,7 @@ function Swiper({
 
   const onNext = useCallback(() => {
     setIndex((prev) => {
-      const newIndex = prev + 1
+      const newIndex = prev + (yearOnly ? 12 : 1)
       // Check if the new index is within allowed range
       if (isIndexWithinRange(newIndex, startYear, endYear)) {
         return newIndex

@@ -5,6 +5,7 @@ const sv: TranslationsType = {
   selectSingle: 'Välj datum',
   selectMultiple: 'Välj datum',
   selectRange: 'Välj period',
+  selectMonth: 'Välj månad',
   notAccordingToDateFormat: (inputFormat) =>
     `Datum måste vara i formatet ${inputFormat}`,
   mustBeHigherThan: (date) => `Måste vara efter ${date}`,
