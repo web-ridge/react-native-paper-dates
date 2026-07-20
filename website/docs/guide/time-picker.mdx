@@ -1,0 +1,121 @@
+import { TimePickerDemo } from '../../components/demos'
+
+# Time Picker
+
+The time picker provides a modal allowing the selection or input of a time.
+
+## Preview
+
+<TimePickerDemo className="pd-demo--page" />
+
+## Usage
+
+```jsx
+import React from "react";
+import { View, Text } from "react-native";
+import { Button } from 'react-native-paper';
+import { TimePickerModal } from 'react-native-paper-dates';
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
+export default function App() {
+  const [visible, setVisible] = React.useState(false)
+  const onDismiss = React.useCallback(() => {
+    setVisible(false)
+  }, [setVisible])
+
+  const onConfirm = React.useCallback(
+    ({ hours, minutes }) => {
+      setVisible(false);
+      console.log({ hours, minutes });
+    },
+    [setVisible]
+  );
+
+  return (
+    <SafeAreaProvider>
+      <View style={{justifyContent: 'center', flex: 1, alignItems: 'center'}}>
+        <Button onPress={() => setVisible(true)} uppercase={false} mode="outlined">
+          Pick time
+        </Button>
+        <TimePickerModal
+          visible={visible}
+          onDismiss={onDismiss}
+          onConfirm={onConfirm}
+          hours={12}
+          minutes={14}
+        />
+      </View>
+    </SafeAreaProvider>
+  );
+}
+```
+
+## Live Example
+
+View an interactive [Expo snack](https://snack.expo.dev/@fitzwabs/react-native-paper-dates-time-picker).
+
+## Props
+
+**animationType**  
+`Type: 'slide' | 'fade' | 'none' | undefined`  
+The animation used when opening the modal. Defaults to `'none'`.
+
+**cancelLabel**  
+`Type: string | undefined`  
+Dismiss button label. Defaults to `'Cancel'`.
+
+**clockIcon**  
+`Type: string | undefined`  
+Icon used to switch back to the clock face. Defaults to `'clock-outline'`. Pass a name from [MaterialCommunityIcons](https://materialdesignicons.com/).
+
+**confirmLabel**  
+`Type: string | undefined`  
+Confirm button label. Defaults to `'Ok'`.
+
+**defaultInputType**  
+`Type: 'picker' | 'keyboard' | undefined`  
+Initial input mode. Defaults to `'picker'` (clock face).
+
+**hours**  
+`Type: number | undefined`  
+Initial hours value. Defaults to the current hour.
+
+**inputFontSize**  
+`Type: number | undefined`  
+Font size of the time input. Defaults to `57`. Useful when using a custom font.
+
+**keyboardIcon**  
+`Type: string | undefined`  
+Icon used to switch to keyboard input. Defaults to `'keyboard-outline'`. Pass a name from [MaterialCommunityIcons](https://materialdesignicons.com/).
+
+**label**  
+`Type: string | undefined`  
+Header label. Defaults to `'Select time'` (or `'Enter time'` when using keyboard input with no label).
+
+**locale**  
+`Type: string | undefined`  
+Locale used for time formatting (for example `'en'` or `'de'`).
+
+**minutes**  
+`Type: number | undefined`  
+Initial minutes value. Defaults to the current minutes.
+
+**onConfirm (Required)**  
+`Type: (params: { hours: number, minutes: number }) => void`  
+Called when the user confirms the selected time.
+
+**onDismiss (Required)**  
+`Type: () => void`  
+Called when the modal is dismissed.
+
+**uppercase**  
+`Type: boolean | undefined`  
+Whether labels and action buttons are uppercased. Defaults to `false`.
+
+**use24HourClock**  
+`Type: boolean | undefined`  
+When set, forces 24-hour or 12-hour display. Defaults to the system clock preference.
+
+**visible (Required)**  
+`Type: boolean`  
+Whether the modal is shown.

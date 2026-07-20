@@ -1,0 +1,167 @@
+import { InputDateDemo } from '../../../components/demos'
+
+# Input Date Picker
+
+The input date picker provides a text field allowing for a date to be input or the date picker to be opened and selected.
+
+## Preview
+
+<InputDateDemo className="pd-demo--page" />
+
+## Usage
+
+```jsx
+import React from "react";
+import { View, Text } from "react-native";
+import { DatePickerInput } from 'react-native-paper-dates';
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
+export default function App() {
+  const [inputDate, setInputDate] = React.useState(undefined)
+
+  return (
+    <SafeAreaProvider>
+      <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
+        <DatePickerInput
+          locale="en"
+          label="Birthdate"
+          value={inputDate}
+          onChange={(d) => setInputDate(d)}
+          inputMode="start"
+        />
+      </View>
+    </SafeAreaProvider>
+  )
+}
+```
+
+## Live Example
+
+View an interactive [Expo snack](https://snack.expo.dev/@fitzwabs/react-native-paper-dates-input).
+
+## Props
+
+**animationType**  
+`Type: 'slide' | 'fade' | 'none' | undefined`  
+The animation used when opening the date picker modal. Defaults to `'slide'` on iOS/Android and `'none'` on web.
+
+**calendarIcon**  
+`Type: string | undefined`  
+Icon shown on the text field to open the modal. Defaults to `'calendar'`. Pass a name from [MaterialCommunityIcons](https://materialdesignicons.com/).
+
+**disableCalendarIcon**  
+`Type: boolean | undefined`  
+When `true`, the calendar icon is disabled and cannot open the modal. Defaults to `false`.
+
+**disableStatusBar**  
+`Type: boolean | undefined`  
+When `true`, the modal does not modify the status bar appearance or translucency. Defaults to `false`.
+
+**disableStatusBarPadding**  
+`Type: boolean | undefined`  
+When `true`, skips safe-area top padding for the status bar in the modal. Defaults to `false`.
+
+**endYear**  
+`Type: number | undefined`  
+The last year available in the year picker. Defaults to `2200`.
+
+**hasError**  
+`Type: boolean | undefined`  
+Forces error styles on the input.
+
+**hideValidationErrors**  
+`Type: boolean | undefined`  
+Hides built-in validation error styles and helper text.
+
+**iconColor**  
+`Type: string | undefined`  
+Color of the calendar icon.
+
+**iconSize**  
+`Type: number | undefined`  
+Size of the calendar icon in pixels. Defaults to `24`.
+
+**iconStyle**  
+`Type: StyleProp<ViewStyle> | undefined`  
+Style applied to the calendar icon.
+
+**inputEnabled**  
+`Type: boolean | undefined`  
+Whether the text field is editable. Behaves similarly to `disabled`. Defaults to `true`.
+
+**inputMode (Required)**  
+`Type: 'start' | 'end'`  
+Whether the value should be treated as a start-of-day or end-of-day date.
+
+**label**  
+`Type: string | undefined`  
+Label displayed on the text field.
+
+**locale (Required)**  
+`Type: string`  
+Locale used for formatting, masking, and translations (for example `'en'` or `'de'`).
+
+**mode**  
+`Type: 'flat' | 'outlined'`  
+See [react-native-paper TextInput](https://callstack.github.io/react-native-paper/docs/components/TextInput#mode).
+
+**onChange**  
+`Type: (date: Date | undefined) => void`  
+Called when a valid date is entered or confirmed from the modal.
+
+**onChangeText**  
+`Type: (text: string | undefined) => void`  
+Called when the underlying text input value changes.
+
+**onValidationError**  
+`Type: ((error: string | null) => void) | undefined`  
+Called with validation error messages, or `null` when valid.
+
+**presentationStyle**  
+`Type: 'pageSheet' | 'overFullScreen' | undefined`  
+iOS modal presentation style. Defaults to `'overFullScreen'`.
+
+- `'overFullScreen'`: Full-screen overlay (default).
+- `'pageSheet'`: Card-style sheet. On iPad (width and height > 650pt), `DatePickerModal` automatically uses `formSheet` for a better fit.
+
+**saveLabel**  
+`Type: string | undefined`  
+Confirm button label in the modal. Defaults to the locale translation for `save` (English: `'Save'`).
+
+**saveLabelDisabled**  
+`Type: boolean | undefined`  
+Disables the confirm button in the modal. Defaults to `false`.
+
+**startWeekOnMonday**  
+`Type: boolean | undefined`  
+When `true`, the calendar grid starts on Monday. Defaults to `false`.
+
+**startYear**  
+`Type: number | undefined`  
+The first year available in the year picker. Defaults to `1800`.
+
+**uppercase**  
+`Type: boolean | undefined`  
+Whether modal action labels are uppercased. Defaults to `false`.
+
+**validRange**  
+`Type: {
+  startDate?: Date,
+  endDate?: Date,
+  disabledDates?: Date[]
+}`  
+Limits which dates can be selected. Dates outside the range are grayed out.
+
+**value (Required)**  
+`Type: Date | undefined`  
+The current date value.
+
+**withDateFormatInLabel**  
+`Type: boolean | undefined`  
+When `true`, appends the expected date format to the label. Defaults to `true`.
+
+**withModal**  
+`Type: boolean | undefined`  
+When `false`, hides the calendar icon and modal. Defaults to `true`.
+
+Also accepts other [react-native-paper TextInput](https://callstack.github.io/react-native-paper/docs/components/TextInput) props (except `value`, `onChange`, `onChangeText`, and `inputMode`).

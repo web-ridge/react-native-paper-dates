@@ -1,55 +1,34 @@
+# React Native Paper Dates
 
-<img align="left" width="56" height="56" src="https://user-images.githubusercontent.com/6492229/98982291-70b42480-251f-11eb-8d67-4b0b1b6e917b.png"> react-native-paper-dates
----
-<br>
-
-<p float="left">
-<img src="https://badgen.net/bundlephobia/minzip/react-native-paper-dates" />
-<img src="https://badgen.net/npm/dy/react-native-paper-dates" />
-<img src="https://badgen.net/npm/types/react-native-paper-dates" />
-<img src="https://badgen.net/npm/license/react-native-paper-dates" />
-<img src="https://img.shields.io/badge/Runs%20with%20Expo-4630EB.svg?style=flat-square&logo=EXPO&labelColor=f3f3f3&logoColor=000" />
+<p>
+  <img alt="Minified zip" src="https://badgen.net/bundlephobia/minzip/react-native-paper-dates" />
+  <img alt="NPM downloads per year" src="https://badgen.net/npm/dy/react-native-paper-dates" />
+  <img alt="TypeScript types" src="https://badgen.net/npm/types/react-native-paper-dates" />
+  <img alt="License" src="https://badgen.net/npm/license/react-native-paper-dates" />
+  <img alt="Runs with Expo" src="https://img.shields.io/badge/Runs%20with%20Expo-4630EB.svg?style=flat-square&logo=EXPO&labelColor=f3f3f3&logoColor=000" />
 </p>
 
-<br>
+Cross-platform [Material Design](https://m3.material.io/) date and time pickers for [React Native Paper](https://reactnativepaper.com/).
 
-
-- Smooth and fast cross platform Material Design **date** picker and **time** picker for ([react-native-paper](https://callstack.github.io/react-native-paper/))
-- Tested on Android, iOS and the web
-- Compatible with Expo
-- Uses native Date.Intl API's (web / iOS / Android)
-- Small bundle size (because we use Intl implementation for each platform)
-- Simple API
-- Typesafe
-- Endless (virtual) scrolling
-- Performant
-- Great React Native Web support
-- Dependencies are [react-native-paper](https://callstack.github.io/react-native-paper/)
+- Single, range, multiple, and input date pickers
+- Time picker with clock face or keyboard input
+- Works on Android, iOS, and web (including Expo)
+- Uses the native `Intl` APIs for formatting and localization
+- Small bundle size and virtualized month scrolling
+- Built-in translations plus custom and dynamic locales
 
 ## Demo
-<img  width="400" src="https://github.com/web-ridge/react-native-paper-dates/assets/7604441/c1ae6c92-94a6-43f8-90b0-8f21c20fd4e9">
 
-[reactnativepaperdates.com](https://www.reactnativepaperdates.com/)
+Try the live demo at [reactnativepaperdates.com](https://www.reactnativepaperdates.com/).
 
+## Getting started
 
-## Documentation
-
-Check out the official docs: [web-ridge.github.io/react-native-paper-dates](https://web-ridge.github.io/react-native-paper-dates/)
-
+See the [documentation](https://web-ridge.github.io/react-native-paper-dates/) for installation and usage.
 
 ## Maintainers
 
-[RichardLindhout](https://twitter.com/RichardLindhout) from [web_ridge](https://twitter.com/web_ridge)   
-[Brandon Fitzwater](https://github.com/iM-GeeKy)
-
-
-### Checkout our other libraries
-
-- Great form library for React Native with great UX for developer and end-user: [react-native-use-form](https://github.com/web-ridge/react-native-use-form)
-
-- Smooth and fast cross platform Material Design Tabs for React Native Paper: [react-native-paper-tabs](https://github.com/web-ridge/react-native-paper-tabs)
-
-- Simple cross platform navigation library for React Native (web): [react-native-ridge-navigation](https://github.com/web-ridge/react-native-ridge-navigation)
+- [Richard Lindhout](https://twitter.com/RichardLindhout) ([web_ridge](https://twitter.com/web_ridge))
+- [Brandon Fitzwater](https://github.com/iM-GeeKy)
 
 ## License
 

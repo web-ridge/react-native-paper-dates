@@ -1,0 +1,16 @@
+[
+  {
+    "text": "Docs",
+    "link": "/guide/introduction",
+    "activeMatch": "/guide/"
+  },
+  {
+    "text": "Showcase",
+    "link": "/guide/showcase",
+    "activeMatch": "/guide/showcase"
+  },
+  {
+    "text": "Example",
+    "link": "https://www.reactnativepaperdates.com"
+  }
+]

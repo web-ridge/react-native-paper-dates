@@ -1,0 +1,108 @@
+/* Icon font is injected at runtime from PaperRoot (bundled asset URL). */
+
+.pd-demo {
+  width: 100%;
+  max-width: 400px;
+  margin-inline: auto;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--paper-surface, #fff);
+  border: 1px solid var(--paper-outline-variant, rgba(0, 0, 0, 0.12));
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+html.dark .pd-demo,
+html.rp-dark .pd-demo {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.pd-demo--compact {
+  max-width: none;
+  border-radius: 12px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.pd-demo--compact.pd-demo--date {
+  max-height: none;
+}
+
+.pd-demo--compact.pd-demo--input {
+  padding: 16px;
+}
+
+.pd-demo--compact.pd-demo--time {
+  max-height: none;
+}
+
+.pd-demo--loading {
+  min-height: 320px;
+  background: color-mix(in srgb, var(--paper-surface-variant, #ebefe6) 70%, transparent);
+}
+
+.pd-demo--page {
+  margin: 1.25rem 0 2rem;
+}
+
+.pd-demo--date {
+  max-width: 400px;
+}
+
+.pd-demo--input {
+  max-width: 360px;
+  padding: 20px;
+  overflow: visible;
+}
+
+.pd-demo--time {
+  max-width: 360px;
+}
+
+/*
+ * TimePicker uses window width > height for landscape. Docs viewports are
+ * wide, so without this the clock sits beside the inputs and gets clipped.
+ */
+.pd-demo__time-picker-host > div {
+  flex-direction: column !important;
+  width: 100% !important;
+  max-width: 100%;
+  align-items: center !important;
+}
+
+.pd-demo__time-picker-host > div > div:first-child {
+  flex: 0 0 auto !important;
+}
+
+.pd-demo__surface {
+  width: 100%;
+  background: var(--paper-surface, #fff);
+}
+
+.pd-demo__time-surface {
+  padding-bottom: 8px;
+  background: var(--paper-surface, #fff);
+}
+
+.pd-demo__time-label {
+  padding: 16px 24px 0;
+  font-family: Roboto, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  color: var(--paper-on-surface-variant, #414941);
+}
+
+.pd-demo__time-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 8px 16px 16px;
+}
+
+.pd-demo__time-actions span {
+  font-family: Roboto, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--paper-primary, #3f5f90);
+  padding: 10px 12px;
+}
