@@ -1,9 +1,9 @@
 import { render } from '@testing-library/react-native'
 import DatePickerInput from '../../Date/DatePickerInput'
 
-it('renders DatePickerInput', () => {
+it('renders DatePickerInput', async () => {
   const fixedDate = new Date('2025-01-15')
-  const { toJSON } = render(
+  const { toJSON } = await render(
     <DatePickerInput
       locale="en"
       value={fixedDate}

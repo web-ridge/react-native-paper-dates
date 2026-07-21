@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders AnalogClockMinutes 1`] = `
-[
+<>
   <View
     pointerEvents="none"
     style={
@@ -59,7 +59,7 @@ exports[`renders AnalogClockMinutes 1`] = `
         00
       </Text>
     </View>
-  </View>,
+  </View>
   <View
     pointerEvents="none"
     style={
@@ -117,7 +117,7 @@ exports[`renders AnalogClockMinutes 1`] = `
         5
       </Text>
     </View>
-  </View>,
+  </View>
   <View
     pointerEvents="none"
     style={
@@ -175,7 +175,7 @@ exports[`renders AnalogClockMinutes 1`] = `
         10
       </Text>
     </View>
-  </View>,
+  </View>
   <View
     pointerEvents="none"
     style={
@@ -233,7 +233,7 @@ exports[`renders AnalogClockMinutes 1`] = `
         15
       </Text>
     </View>
-  </View>,
+  </View>
   <View
     pointerEvents="none"
     style={
@@ -291,7 +291,7 @@ exports[`renders AnalogClockMinutes 1`] = `
         20
       </Text>
     </View>
-  </View>,
+  </View>
   <View
     pointerEvents="none"
     style={
@@ -349,7 +349,7 @@ exports[`renders AnalogClockMinutes 1`] = `
         25
       </Text>
     </View>
-  </View>,
+  </View>
   <View
     pointerEvents="none"
     style={
@@ -407,7 +407,7 @@ exports[`renders AnalogClockMinutes 1`] = `
         30
       </Text>
     </View>
-  </View>,
+  </View>
   <View
     pointerEvents="none"
     style={
@@ -465,7 +465,7 @@ exports[`renders AnalogClockMinutes 1`] = `
         35
       </Text>
     </View>
-  </View>,
+  </View>
   <View
     pointerEvents="none"
     style={
@@ -523,7 +523,7 @@ exports[`renders AnalogClockMinutes 1`] = `
         40
       </Text>
     </View>
-  </View>,
+  </View>
   <View
     pointerEvents="none"
     style={
@@ -583,7 +583,7 @@ exports[`renders AnalogClockMinutes 1`] = `
         45
       </Text>
     </View>
-  </View>,
+  </View>
   <View
     pointerEvents="none"
     style={
@@ -641,7 +641,7 @@ exports[`renders AnalogClockMinutes 1`] = `
         50
       </Text>
     </View>
-  </View>,
+  </View>
   <View
     pointerEvents="none"
     style={
@@ -699,6 +699,6 @@ exports[`renders AnalogClockMinutes 1`] = `
         55
       </Text>
     </View>
-  </View>,
-]
+  </View>
+</>
 `;

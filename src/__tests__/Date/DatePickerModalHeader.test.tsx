@@ -2,8 +2,8 @@ import { render } from '@testing-library/react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import DatePickerModalHeader from '../../Date/DatePickerModalHeader'
 
-it('renders DatePickerModalHeader', () => {
-  const { toJSON } = render(
+it('renders DatePickerModalHeader', async () => {
+  const { toJSON } = await render(
     <SafeAreaProvider>
       <DatePickerModalHeader
         locale="en"

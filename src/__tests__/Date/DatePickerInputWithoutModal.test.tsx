@@ -1,9 +1,9 @@
 import { render } from '@testing-library/react-native'
 import DatePickerInputWithoutModal from '../../Date/DatePickerInputWithoutModal'
 
-it('renders DatePickerInputWithoutModal', () => {
+it('renders DatePickerInputWithoutModal', async () => {
   const fixedDate = new Date('2025-01-15')
-  const { toJSON } = render(
+  const { toJSON } = await render(
     <DatePickerInputWithoutModal
       locale="en"
       value={fixedDate}

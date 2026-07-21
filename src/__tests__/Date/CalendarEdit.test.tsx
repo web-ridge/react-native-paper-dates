@@ -1,9 +1,9 @@
 import { render } from '@testing-library/react-native'
 import CalendarEdit from '../../Date/CalendarEdit'
 
-it('renders CalendarEdit', () => {
+it('renders CalendarEdit', async () => {
   const fixedDate = new Date('2025-01-15')
-  const { toJSON } = render(
+  const { toJSON } = await render(
     <CalendarEdit
       mode="single"
       state={{

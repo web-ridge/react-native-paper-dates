@@ -1,8 +1,8 @@
 import { render } from '@testing-library/react-native'
 import AnimatedCrossView from '../../Date/AnimatedCrossView'
 
-it('renders AnimatedCrossView', () => {
-  const { toJSON } = render(
+it('renders AnimatedCrossView', async () => {
+  const { toJSON } = await render(
     <AnimatedCrossView
       collapsed={false}
       calendar={<></>}
