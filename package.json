@@ -146,9 +146,7 @@
     "npm": {
       "publish": true,
       "skipChecks": true,
-      "publishArgs": [
-        "--registry=https://registry.npmjs.org"
-      ]
+      "publishArgs": ["--registry=https://registry.npmjs.org/"]
     },
     "github": {
       "release": true
