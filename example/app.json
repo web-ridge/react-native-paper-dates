@@ -16,6 +16,7 @@
       "translucent": true
     },
     "web": {
+      "bundler": "metro",
       "favicon": "./favicon.png",
       "name": "React Native Paper Dates",
       "shortName": "PaperDates",
@@ -24,6 +25,9 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "userInterfaceStyle": "automatic"
+    "userInterfaceStyle": "automatic",
+    "experiments": {
+      "onDemandFilesystem": false
+    }
   }
 }

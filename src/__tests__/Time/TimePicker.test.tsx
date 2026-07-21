@@ -5,8 +5,8 @@ import { registerTranslation } from '../../translations/utils'
 
 registerTranslation('en', en)
 
-it('renders TimePicker', () => {
-  const { toJSON } = render(
+it('renders TimePicker', async () => {
+  const { toJSON } = await render(
     <TimePicker
       locale="en"
       inputType="keyboard"

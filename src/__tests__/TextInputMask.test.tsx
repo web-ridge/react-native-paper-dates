@@ -4,8 +4,8 @@ import TextInputWithMask from '../TextInputMask'
 const noop = () => null
 
 describe('TextInputMask', () => {
-  it('should set maxLength based on mask length for standard format', () => {
-    const { getByTestId } = render(
+  it('should set maxLength based on mask length for standard format', async () => {
+    const { getByTestId } = await render(
       <TextInputWithMask
         testID="date-input"
         value=""
@@ -18,8 +18,8 @@ describe('TextInputMask', () => {
     expect(input.props.maxLength).toBe(10)
   })
 
-  it('should set maxLength based on mask length for Czech locale format', () => {
-    const { getByTestId } = render(
+  it('should set maxLength based on mask length for Czech locale format', async () => {
+    const { getByTestId } = await render(
       <TextInputWithMask
         testID="date-input"
         value=""
@@ -32,8 +32,8 @@ describe('TextInputMask', () => {
     expect(input.props.maxLength).toBe(12)
   })
 
-  it('should set maxLength based on mask length for Hungarian locale format', () => {
-    const { getByTestId } = render(
+  it('should set maxLength based on mask length for Hungarian locale format', async () => {
+    const { getByTestId } = await render(
       <TextInputWithMask
         testID="date-input"
         value=""
@@ -46,8 +46,8 @@ describe('TextInputMask', () => {
     expect(input.props.maxLength).toBe(13)
   })
 
-  it('should set maxLength based on mask length for German locale format', () => {
-    const { getByTestId } = render(
+  it('should set maxLength based on mask length for German locale format', async () => {
+    const { getByTestId } = await render(
       <TextInputWithMask
         testID="date-input"
         value=""

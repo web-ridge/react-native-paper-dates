@@ -5,8 +5,8 @@ import { registerTranslation } from '../../translations/utils'
 
 registerTranslation('en', en)
 
-it('renders TimeInputs', () => {
-  const { toJSON } = render(
+it('renders TimeInputs', async () => {
+  const { toJSON } = await render(
     <TimeInputs
       inputType="keyboard"
       hours={12}
