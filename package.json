@@ -1,5 +1,5 @@
 {
-  "version": "0.23.9",
+  "version": "0.23.10",
   "author": "Richard Lindhout <info@webridge.nl> (https://github.com/web-ridge)",
   "bugs": {
     "url": "https://github.com/web-ridge/react-native-paper-dates/issues"
@@ -143,7 +143,9 @@
     "npm": {
       "publish": true,
       "skipChecks": true,
-      "publishArgs": ["--registry=https://registry.npmjs.org/"]
+      "publishArgs": [
+        "--registry=https://registry.npmjs.org/"
+      ]
     },
     "github": {
       "release": true
