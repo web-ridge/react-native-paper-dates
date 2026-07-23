@@ -11,13 +11,10 @@ exports[`renders TimePicker 1`] = `
 >
   <View
     style={
-      [
-        {
-          "alignItems": "center",
-          "flexDirection": "row",
-        },
-        false,
-      ]
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+      }
     }
   >
     <View
@@ -333,7 +330,7 @@ exports[`renders TimePicker 1`] = `
                 "justifyContent": "center",
               },
               {
-                "backgroundColor": "rgba(234, 221, 255, 1)",
+                "backgroundColor": "rgba(255, 216, 228, 1)",
               },
             ]
           }
@@ -357,7 +354,7 @@ exports[`renders TimePicker 1`] = `
                 },
                 [
                   {
-                    "color": "rgba(73, 69, 79, 1)",
+                    "color": "rgba(49, 17, 29, 1)",
                     "fontFamily": "System",
                     "fontSize": 16,
                     "fontWeight": "500",
@@ -437,7 +434,7 @@ exports[`renders TimePicker 1`] = `
                 "justifyContent": "center",
               },
               {
-                "backgroundColor": "rgba(255, 251, 254, 1)",
+                "backgroundColor": "transparent",
               },
             ]
           }

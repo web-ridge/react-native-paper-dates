@@ -7,12 +7,11 @@ exports[`renders DayNames 1`] = `
     [
       {
         "alignItems": "center",
-        "backgroundColor": "#fff",
         "flexDirection": "row",
         "height": 44,
       },
       {
-        "backgroundColor": "rgba(255, 251, 254, 1)",
+        "backgroundColor": "rgb(238, 232, 244)",
       },
     ]
   }
@@ -45,10 +44,9 @@ exports[`renders DayNames 1`] = `
           [
             {
               "fontSize": 14,
-              "opacity": 0.7,
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(73, 69, 79, 1)",
               "fontFamily": "System",
               "fontSize": 12,
               "fontWeight": "400",
@@ -90,10 +88,9 @@ exports[`renders DayNames 1`] = `
           [
             {
               "fontSize": 14,
-              "opacity": 0.7,
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(73, 69, 79, 1)",
               "fontFamily": "System",
               "fontSize": 12,
               "fontWeight": "400",
@@ -135,10 +132,9 @@ exports[`renders DayNames 1`] = `
           [
             {
               "fontSize": 14,
-              "opacity": 0.7,
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(73, 69, 79, 1)",
               "fontFamily": "System",
               "fontSize": 12,
               "fontWeight": "400",
@@ -180,10 +176,9 @@ exports[`renders DayNames 1`] = `
           [
             {
               "fontSize": 14,
-              "opacity": 0.7,
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(73, 69, 79, 1)",
               "fontFamily": "System",
               "fontSize": 12,
               "fontWeight": "400",
@@ -225,10 +220,9 @@ exports[`renders DayNames 1`] = `
           [
             {
               "fontSize": 14,
-              "opacity": 0.7,
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(73, 69, 79, 1)",
               "fontFamily": "System",
               "fontSize": 12,
               "fontWeight": "400",
@@ -270,10 +264,9 @@ exports[`renders DayNames 1`] = `
           [
             {
               "fontSize": 14,
-              "opacity": 0.7,
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(73, 69, 79, 1)",
               "fontFamily": "System",
               "fontSize": 12,
               "fontWeight": "400",
@@ -315,10 +308,9 @@ exports[`renders DayNames 1`] = `
           [
             {
               "fontSize": 14,
-              "opacity": 0.7,
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(73, 69, 79, 1)",
               "fontFamily": "System",
               "fontSize": 12,
               "fontWeight": "400",

@@ -39,7 +39,10 @@ function DayNames({
 
   return (
     <View
-      style={[styles.dayNames, { backgroundColor: theme.colors.surface }]}
+      style={[
+        styles.dayNames,
+        { backgroundColor: theme.colors.elevation.level3 },
+      ]}
       pointerEvents="none"
     >
       {shortDayNames
@@ -53,7 +56,6 @@ function DayNames({
 const styles = StyleSheet.create({
   dayNames: {
     alignItems: 'center',
-    backgroundColor: '#fff',
     flexDirection: 'row',
     height: dayNamesHeight,
   },

@@ -26,7 +26,7 @@ export function useLatest<T>(value: T) {
 
 export function useHeaderBackgroundColor() {
   const theme = useTheme()
-  return theme.colors.surface
+  return theme.colors.elevation.level3
 }
 
 export function useHeaderTextColor() {

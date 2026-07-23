@@ -106,7 +106,7 @@ export function DatePickerModal(
           <View
             style={[
               styles.modalContent,
-              { backgroundColor: theme.colors.surface },
+              { backgroundColor: theme.colors.elevation.level3 },
               dimensions.width > 650
                 ? useFormSheet
                   ? styles.modalContentFormSheet

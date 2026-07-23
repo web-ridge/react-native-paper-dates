@@ -8,6 +8,7 @@ import { Text, useTheme } from 'react-native-paper'
 
 import {
   clockTypes,
+  inputTypes,
   PossibleClockTypes,
   PossibleInputTypes,
   toHourInputFormat,
@@ -52,6 +53,8 @@ function TimeInputs({
   const endInput = useRef<TextInputNative | null>(null)
   const dimensions = useWindowDimensions()
   const isLandscape = dimensions.width > dimensions.height
+  const useHorizontalAmPm =
+    !is24Hour && isLandscape && inputType === inputTypes.picker
   const minutesRef = useLatest(minutes)
 
   const onSubmitStartInput = useCallback(() => {
@@ -75,8 +78,8 @@ function TimeInputs({
     [onChange, minutesRef]
   )
 
-  return (
-    <View style={[styles.inputContainer, isLandscape && sharedStyles.root]}>
+  const hourMinuteRow = (
+    <View style={styles.inputContainer}>
       <View style={styles.column}>
         <TimeInput
           ref={startInput}
@@ -178,18 +181,37 @@ function TimeInputs({
           </Text>
         ) : null}
       </View>
-      {!is24Hour && (
+      {!is24Hour && !useHorizontalAmPm ? (
         <>
           <View style={styles.spaceBetweenInputsAndSwitcher} />
           <AmPmSwitcher
             hours={hours}
             onChange={onChangeHours}
             inputType={inputType}
+            direction="vertical"
           />
         </>
-      )}
+      ) : null}
     </View>
   )
+
+  if (useHorizontalAmPm) {
+    return (
+      <View style={styles.landscapeColumn}>
+        {hourMinuteRow}
+        <View style={styles.landscapeSwitcherSpacing}>
+          <AmPmSwitcher
+            hours={hours}
+            onChange={onChangeHours}
+            inputType={inputType}
+            direction="horizontal"
+          />
+        </View>
+      </View>
+    )
+  }
+
+  return hourMinuteRow
 }
 
 const styles = StyleSheet.create({
@@ -212,6 +234,13 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  landscapeColumn: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+  landscapeSwitcherSpacing: {
+    marginTop: 16,
   },
   spaceBetweenInputsAndSwitcher: {
     width: 12,

@@ -3,13 +3,10 @@
 exports[`renders TimeInputs 1`] = `
 <View
   style={
-    [
-      {
-        "alignItems": "center",
-        "flexDirection": "row",
-      },
-      false,
-    ]
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+    }
   }
 >
   <View

@@ -10,6 +10,7 @@ import type { LocalState } from './DatePickerModalContent'
 
 import DatePickerInputWithoutModal from './DatePickerInputWithoutModal'
 import { memo, useCallback, useEffect, useRef } from 'react'
+import { useTheme } from 'react-native-paper'
 import { sharedStyles } from '../shared/styles'
 
 function CalendarEdit({
@@ -39,9 +40,11 @@ function CalendarEdit({
   withDateFormatInLabel?: boolean
   placeholder?: string
 }) {
+  const theme = useTheme()
   const dateInput = useRef<TextInputNative | null>(null)
   const startInput = useRef<TextInputNative | null>(null)
   const endInput = useRef<TextInputNative | null>(null)
+  const inputStyle = { backgroundColor: theme.colors.elevation.level3 }
 
   // when switching views focus, or un-focus text input
   useEffect(() => {
@@ -99,6 +102,7 @@ function CalendarEdit({
           inputEnabled={inputEnabled}
           withDateFormatInLabel={withDateFormatInLabel}
           placeholder={placeholder}
+          style={inputStyle}
         />
       ) : null}
       {mode === 'range' ? (
@@ -119,6 +123,7 @@ function CalendarEdit({
             inputEnabled={inputEnabled}
             withDateFormatInLabel={withDateFormatInLabel}
             placeholder={placeholder}
+            style={inputStyle}
           />
           <View style={styles.separator} />
           <DatePickerInputWithoutModal
@@ -136,6 +141,7 @@ function CalendarEdit({
             inputEnabled={inputEnabled}
             withDateFormatInLabel={withDateFormatInLabel}
             placeholder={placeholder}
+            style={inputStyle}
           />
         </View>
       ) : null}

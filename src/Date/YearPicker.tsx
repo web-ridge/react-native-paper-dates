@@ -44,7 +44,7 @@ export default function YearPicker({
       style={[
         StyleSheet.absoluteFill,
         styles.root,
-        { backgroundColor: theme.colors.surface },
+        { backgroundColor: theme.colors.elevation.level3 },
         selectingYear ? sharedStyles.opacity1 : sharedStyles.opacity0,
       ]}
       pointerEvents={selectingYear ? 'auto' : 'none'}
