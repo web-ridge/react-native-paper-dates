@@ -1,4 +1,5 @@
-import { Animated, StyleSheet } from 'react-native'
+import { Animated } from 'react-native'
+import { Divider } from 'react-native-paper'
 import { useHeaderBackgroundColor } from '../shared/utils'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
@@ -12,22 +13,14 @@ export default function DatePickerModalHeaderBackground({
 
   return (
     <Animated.View
-      style={[
-        styles.animated,
-        {
-          backgroundColor,
-          paddingLeft: insets.left,
-          paddingRight: insets.right,
-        },
-      ]}
+      style={{
+        backgroundColor,
+        paddingLeft: insets.left,
+        paddingRight: insets.right,
+      }}
     >
       {children}
+      <Divider />
     </Animated.View>
   )
 }
-
-const styles = StyleSheet.create({
-  animated: {
-    elevation: 4,
-  },
-})
