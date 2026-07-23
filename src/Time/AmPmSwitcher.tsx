@@ -24,11 +24,7 @@ export default function AmPmSwitcher({
   const isHorizontal = direction === 'horizontal'
   const isAM = mode === 'AM'
 
-  const height = isHorizontal
-    ? 38
-    : inputType === inputTypes.keyboard
-      ? 72
-      : 80
+  const height = isHorizontal ? 38 : inputType === inputTypes.keyboard ? 72 : 80
 
   return (
     <View

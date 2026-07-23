@@ -87,14 +87,10 @@ function TimePicker({
   const inputsWidth =
     96 * 2 +
     24 +
-    (is24Hour || (isLandscape && inputType === inputTypes.picker)
-      ? 0
-      : 12 + 52)
+    (is24Hour || (isLandscape && inputType === inputTypes.picker) ? 0 : 12 + 52)
 
   const clockWidth =
-    inputType === inputTypes.picker
-      ? circleSize + (isLandscape ? 64 : 0)
-      : 0
+    inputType === inputTypes.picker ? circleSize + (isLandscape ? 64 : 0) : 0
 
   return (
     <DisplayModeContext.Provider

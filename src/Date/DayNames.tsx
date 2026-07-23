@@ -39,7 +39,10 @@ function DayNames({
 
   return (
     <View
-      style={[styles.dayNames, { backgroundColor: theme.colors.elevation.level3 }]}
+      style={[
+        styles.dayNames,
+        { backgroundColor: theme.colors.elevation.level3 },
+      ]}
       pointerEvents="none"
     >
       {shortDayNames
