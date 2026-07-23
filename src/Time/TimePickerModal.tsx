@@ -138,6 +138,10 @@ export function TimePickerModal({
                 {
                   backgroundColor: color,
                   borderRadius: 28,
+                  minWidth: inputType === inputTypes.picker ? 328 : 280,
+                  ...(inputType === inputTypes.keyboard
+                    ? { height: 252 }
+                    : null),
                 },
               ]}
             >
@@ -170,7 +174,7 @@ export function TimePickerModal({
               </View>
               <View style={styles.bottom}>
                 <IconButton
-                  iconColor={theme.colors.onBackground}
+                  iconColor={theme.colors.onSurface}
                   icon={getTimeInputTypeIcon(inputType, {
                     keyboard: keyboardIcon,
                     picker: clockIcon,
@@ -218,7 +222,8 @@ const styles = StyleSheet.create({
   bottom: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 8,
+    paddingHorizontal: 24,
+    paddingVertical: 8,
   },
   center: {
     justifyContent: 'center',
@@ -226,7 +231,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   inputTypeToggle: {
-    margin: 4,
+    margin: 0,
   },
   labelContainer: {
     justifyContent: 'flex-end',
@@ -247,8 +252,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.34,
     shadowRadius: 6.27,
     elevation: 3,
-    minWidth: 328,
     paddingVertical: 8,
+    justifyContent: 'space-between',
   },
   timePickerContainer: {
     paddingLeft: 24,

@@ -53,7 +53,6 @@ function DayNames({
 const styles = StyleSheet.create({
   dayNames: {
     alignItems: 'center',
-    backgroundColor: '#fff',
     flexDirection: 'row',
     height: dayNamesHeight,
   },

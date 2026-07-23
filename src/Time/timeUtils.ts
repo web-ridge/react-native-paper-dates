@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import { useTheme } from 'react-native-paper'
 
 export const circleSize = 256
@@ -155,55 +154,25 @@ export function getAngle(left: number, top: number, size: number) {
 
 export function useSwitchColors(highlighted: boolean) {
   const theme = useTheme()
-  const backgroundColor = useMemo<string>(() => {
-    if (theme.dark) {
-      if (highlighted) {
-        return theme.colors.tertiaryContainer
-      }
-      return theme.colors.backdrop
-    }
-
-    if (highlighted) {
-      return theme.colors.primaryContainer
-    }
-    return theme.colors.surface
-  }, [highlighted, theme])
-
-  const color = useMemo<string>(() => {
-    if (highlighted && !theme.dark) {
-      return theme.colors.onSurfaceVariant
-    }
-    if (highlighted && theme.dark) {
-      return theme.colors.onTertiaryContainer
-    }
-    return theme.colors.onSurfaceVariant
-  }, [highlighted, theme])
+  const backgroundColor = highlighted
+    ? theme.colors.tertiaryContainer
+    : 'transparent'
+  const color = highlighted
+    ? theme.colors.onTertiaryContainer
+    : theme.colors.onSurfaceVariant
 
   return { backgroundColor, color }
 }
 
 export function useInputColors(highlighted: boolean) {
   const theme = useTheme()
-  const backgroundColor = useMemo<string>(() => {
-    if (theme.dark) {
-      if (highlighted) {
-        return theme.colors.primaryContainer
-      }
-      return theme.colors.surfaceVariant
-    }
-
-    if (highlighted) {
-      return theme.colors.secondaryContainer
-    }
-    return theme.colors.surfaceVariant
-  }, [highlighted, theme])
-
-  const color = useMemo<string>(() => {
-    if (!highlighted) {
-      return theme.colors.onSurface
-    }
-    return theme.colors.onPrimaryContainer
-  }, [highlighted, theme])
+  // M3: primaryContainer / surfaceContainerHighest (Paper: surfaceVariant)
+  const backgroundColor = highlighted
+    ? theme.colors.primaryContainer
+    : theme.colors.surfaceVariant
+  const color = highlighted
+    ? theme.colors.onPrimaryContainer
+    : theme.colors.onSurface
 
   return { backgroundColor, color }
 }

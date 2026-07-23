@@ -13,7 +13,7 @@ function DayName({ label }: { label: string }) {
         maxFontSizeMultiplier={1.5}
         style={[
           styles.dayNameLabel,
-          { ...textFont, color: theme.colors.onSurface },
+          { ...textFont, color: theme.colors.onSurfaceVariant },
         ]}
         selectable={false}
       >
@@ -30,7 +30,6 @@ const styles = StyleSheet.create({
   },
   dayNameLabel: {
     fontSize: 14,
-    opacity: 0.7,
   },
 })
 

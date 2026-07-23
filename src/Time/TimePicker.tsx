@@ -84,6 +84,18 @@ function TimePicker({
     [onChange, hours, is24Hour]
   )
 
+  const inputsWidth =
+    96 * 2 +
+    24 +
+    (is24Hour || (isLandscape && inputType === inputTypes.picker)
+      ? 0
+      : 12 + 52)
+
+  const clockWidth =
+    inputType === inputTypes.picker
+      ? circleSize + (isLandscape ? 64 : 0)
+      : 0
+
   return (
     <DisplayModeContext.Provider
       value={{ mode: displayMode, setMode: setDisplayMode }}
@@ -91,18 +103,7 @@ function TimePicker({
       <View
         style={
           isLandscape
-            ? [
-                styles.rootLandscape,
-                {
-                  width:
-                    24 * 3 +
-                    96 * 2 +
-                    52 +
-                    (inputType === inputTypes.picker
-                      ? circleSize
-                      : -circleSize),
-                },
-              ]
+            ? [styles.rootLandscape, { width: inputsWidth + clockWidth }]
             : styles.rootPortrait
         }
       >
@@ -118,7 +119,12 @@ function TimePicker({
           locale={locale}
         />
         {inputType === inputTypes.picker ? (
-          <View style={styles.clockContainer}>
+          <View
+            style={[
+              styles.clockContainer,
+              isLandscape && styles.clockContainerLandscape,
+            ]}
+          >
             <AnalogClock
               hours={toHourInputFormat(hours, is24Hour)}
               minutes={minutes}
@@ -138,6 +144,11 @@ const styles = StyleSheet.create({
     paddingTop: 36,
     paddingLeft: 12,
     paddingRight: 12,
+  },
+  clockContainerLandscape: {
+    paddingTop: 0,
+    paddingLeft: 64,
+    paddingRight: 0,
   },
   rootLandscape: {
     flexDirection: 'row',

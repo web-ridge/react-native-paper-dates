@@ -10,7 +10,7 @@ exports[`renders TimeInput 1`] = `
         "width": 96,
       },
       {
-        "backgroundColor": "rgba(232, 222, 248, 1)",
+        "backgroundColor": "rgba(234, 221, 255, 1)",
         "borderColor": "rgba(33, 0, 93, 1)",
         "borderRadius": 8,
         "borderWidth": 2,

@@ -9,29 +9,38 @@ export default function AmPmSwitcher({
   onChange,
   hours,
   inputType,
+  direction = 'vertical',
 }: {
   hours: number
   onChange: (newHours: number) => any
   inputType: PossibleInputTypes
+  direction?: 'vertical' | 'horizontal'
 }) {
   const theme = useTheme()
 
   const { setMode, mode } = useContext(DisplayModeContext)
 
   const backgroundColor = theme.colors.outline
-
+  const isHorizontal = direction === 'horizontal'
   const isAM = mode === 'AM'
+
+  const height = isHorizontal
+    ? 38
+    : inputType === inputTypes.keyboard
+      ? 72
+      : 80
 
   return (
     <View
       style={[
-        styles.root,
+        isHorizontal ? styles.rootHorizontal : styles.rootVertical,
         // eslint-disable-next-line react-native/no-inline-styles
         {
           borderColor: backgroundColor,
           borderRadius: theme.roundness * 2,
-          height: inputType === inputTypes.keyboard ? 72 : 80,
-          marginBottom: inputType === 'keyboard' ? 16 : 0,
+          height,
+          marginBottom:
+            !isHorizontal && inputType === inputTypes.keyboard ? 16 : 0,
         },
       ]}
     >
@@ -46,7 +55,12 @@ export default function AmPmSwitcher({
         selected={isAM}
         disabled={isAM}
       />
-      <View style={[styles.switchSeparator, { backgroundColor }]} />
+      <View
+        style={[
+          isHorizontal ? styles.separatorHorizontal : styles.separatorVertical,
+          { backgroundColor },
+        ]}
+      />
       <SwitchButton
         label="PM"
         onPress={() => {
@@ -111,14 +125,24 @@ function SwitchButton({
 }
 
 const styles = StyleSheet.create({
-  root: {
+  rootVertical: {
     width: 52,
     borderWidth: 1,
     overflow: 'hidden',
   },
-  switchSeparator: {
+  rootHorizontal: {
+    width: 216,
+    flexDirection: 'row',
+    borderWidth: 1,
+    overflow: 'hidden',
+  },
+  separatorVertical: {
     height: 1,
     width: 52,
+  },
+  separatorHorizontal: {
+    width: 1,
+    alignSelf: 'stretch',
   },
   switchButtonInner: {
     flex: 1,

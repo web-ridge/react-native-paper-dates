@@ -29,10 +29,9 @@ exports[`renders DayName 1`] = `
         [
           {
             "fontSize": 14,
-            "opacity": 0.7,
           },
           {
-            "color": "rgba(28, 27, 31, 1)",
+            "color": "rgba(73, 69, 79, 1)",
             "fontFamily": "System",
             "fontSize": 12,
             "fontWeight": "400",
