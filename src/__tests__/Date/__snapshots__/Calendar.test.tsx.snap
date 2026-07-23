@@ -39,7 +39,7 @@ exports[`renders Calendar 1`] = `
           "zIndex": 100,
         },
         {
-          "backgroundColor": "rgba(255, 251, 254, 1)",
+          "backgroundColor": "rgb(238, 232, 244)",
         },
         {
           "opacity": 0,

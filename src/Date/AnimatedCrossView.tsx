@@ -58,7 +58,7 @@ export default function AnimatedCrossView({
         style={[
           styles.calendarEdit,
           {
-            backgroundColor: theme.colors.surface,
+            backgroundColor: theme.colors.elevation.level3,
             opacity: calendarOpacity.current.interpolate({
               inputRange: [0, 1],
               outputRange: [1, 0],

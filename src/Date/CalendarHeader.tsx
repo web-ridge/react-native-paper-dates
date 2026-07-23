@@ -46,7 +46,7 @@ function CalendarHeader({
       {isHorizontal ? (
         <View style={styles.buttonContainer} pointerEvents={'box-none'}>
           <View style={sharedStyles.root} pointerEvents={'box-none'} />
-          <View style={{ backgroundColor: theme.colors.surface }}>
+          <View style={{ backgroundColor: theme.colors.elevation.level3 }}>
             <IconButton
               icon="chevron-left"
               accessibilityLabel={getTranslation(locale, 'previous')}
@@ -54,7 +54,7 @@ function CalendarHeader({
               testID="react-native-paper-dates-prev-month"
             />
           </View>
-          <View style={{ backgroundColor: theme.colors.surface }}>
+          <View style={{ backgroundColor: theme.colors.elevation.level3 }}>
             <IconButton
               icon="chevron-right"
               accessibilityLabel={getTranslation(locale, 'next')}

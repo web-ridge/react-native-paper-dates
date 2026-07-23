@@ -31,7 +31,7 @@ exports[`renders AnimatedCrossView 1`] = `
     pointerEvents="auto"
     style={
       {
-        "backgroundColor": "rgba(255, 251, 254, 1)",
+        "backgroundColor": "rgb(238, 232, 244)",
         "left": 0,
         "opacity": 1,
         "position": "absolute",

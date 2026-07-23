@@ -24,7 +24,7 @@ exports[`renders CalendarHeader 1`] = `
           "height": 44,
         },
         {
-          "backgroundColor": "rgba(255, 251, 254, 1)",
+          "backgroundColor": "rgb(238, 232, 244)",
         },
       ]
     }

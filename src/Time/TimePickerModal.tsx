@@ -104,9 +104,7 @@ export function TimePickerModal({
     labelText = 'Enter time'
   }
 
-  const color = theme.dark
-    ? theme.colors.elevation.level3
-    : theme.colors.surface
+  const color = theme.colors.elevation.level3
 
   return (
     <Modal
