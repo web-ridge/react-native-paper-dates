@@ -138,14 +138,14 @@ const styles = StyleSheet.create({
   modalContentBig: {
     maxWidth: 400,
     maxHeight: 600,
-    borderRadius: 10,
+    borderRadius: 28,
     width: '100%',
     overflow: 'hidden',
   },
   modalContentFormSheet: {
     maxWidth: 520,
     maxHeight: 600,
-    borderRadius: 10,
+    borderRadius: 28,
     width: '100%',
     overflow: 'hidden',
   },
