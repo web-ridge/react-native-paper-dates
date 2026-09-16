@@ -1,4 +1,5 @@
 import { View } from 'react-native'
+import type { StyleProp, ViewStyle } from 'react-native'
 import Swiper from './Swiper'
 import Month from './Month'
 import {
@@ -11,6 +12,7 @@ import {
 
 import CalendarHeader from './CalendarHeader'
 import { memo, useCallback, useState } from 'react'
+import type { ReactNode } from 'react'
 import YearPicker from './YearPicker'
 import { useTheme } from 'react-native-paper'
 import { useLatest } from '../shared/utils'
@@ -27,6 +29,36 @@ export type ValidRangeType = {
   disabledDates?: Date[]
 }
 
+/**
+ * Where `dayContent` is anchored within a day. The anchor box matches the day
+ * circle (not the wider grid cell), so corner positions sit on the circle's
+ * bounding box.
+ */
+export type DayContentPosition =
+  | 'top'
+  | 'top-left'
+  | 'top-right'
+  | 'center'
+  | 'bottom'
+  | 'bottom-left'
+  | 'bottom-right'
+
+/**
+ * Renders custom content inside a day, e.g. a dot or a badge with the number
+ * of events on that date. The node is overlaid on the day and does not receive
+ * touches, so pressing it still selects the date. Use `dayContentPosition` and
+ * `dayContentStyle` to place it.
+ */
+export type DayContentRenderer = (params: {
+  date: Date
+  day: number
+  month: number
+  year: number
+  selected: boolean
+  isToday: boolean
+  disabled: boolean
+}) => ReactNode
+
 export type BaseCalendarProps = {
   locale: string
   disableWeekDays?: DisableWeekDaysType
@@ -40,6 +72,11 @@ export type BaseCalendarProps = {
   startDate?: CalendarDate
   endDate?: CalendarDate
   dateMode?: 'start' | 'end'
+  dayContent?: DayContentRenderer
+  /** Anchor for `dayContent`. Defaults to `'bottom'`. */
+  dayContentPosition?: DayContentPosition
+  /** Style for the `dayContent` overlay container (offsets, size, …). */
+  dayContentStyle?: StyleProp<ViewStyle>
 }
 
 export type CalendarDate = Date | undefined
@@ -96,6 +133,9 @@ function Calendar(
     validRange,
     dateMode,
     startWeekOnMonday,
+    dayContent,
+    dayContentPosition,
+    dayContentStyle,
   } = props
   const scrollMode =
     mode === 'range' || mode === 'multiple' ? 'vertical' : 'horizontal'
@@ -194,6 +234,9 @@ function Calendar(
             startWeekOnMonday={startWeekOnMonday || false}
             startYear={startYear}
             endYear={endYear}
+            dayContent={dayContent}
+            dayContentPosition={dayContentPosition}
+            dayContentStyle={dayContentStyle}
           />
         )}
         renderHeader={({ onPrev, onNext }) => (
