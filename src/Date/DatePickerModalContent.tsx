@@ -86,6 +86,9 @@ export function DatePickerModalContent(
     endYear,
     statusBarOnTopOfBackdrop,
     startWeekOnMonday,
+    dayContent,
+    dayContentPosition,
+    dayContentStyle,
   } = props
   const anyProps = props as any
   const defaultUppercase = false
@@ -190,6 +193,9 @@ export function DatePickerModalContent(
             startYear={startYear}
             endYear={endYear}
             startWeekOnMonday={startWeekOnMonday}
+            dayContent={dayContent}
+            dayContentPosition={dayContentPosition}
+            dayContentStyle={dayContentStyle}
           />
         }
         calendarEdit={

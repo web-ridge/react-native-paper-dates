@@ -1,9 +1,11 @@
 import { Text, TouchableRipple } from 'react-native-paper'
 import { StyleSheet, View } from 'react-native'
+import type { StyleProp, ViewStyle } from 'react-native'
 import DayRange from './DayRange'
 import { daySize } from './dateUtils'
 
 import type { PaperTheme } from '../shared/utils'
+import type { DayContentPosition, DayContentRenderer } from './Calendar'
 import { memo, useCallback } from 'react'
 
 function EmptyDayPure() {
@@ -27,6 +29,9 @@ function Day(props: {
   isToday: boolean
   disabled: boolean
   onPressDate: (date: Date) => any
+  dayContent?: DayContentRenderer
+  dayContentPosition?: DayContentPosition
+  dayContentStyle?: StyleProp<ViewStyle>
 }) {
   const {
     day,
@@ -42,6 +47,9 @@ function Day(props: {
     isToday,
     disabled,
     theme,
+    dayContent,
+    dayContentPosition,
+    dayContentStyle,
   } = props
   const borderColor = theme.colors.primary
 
@@ -111,6 +119,26 @@ function Day(props: {
           </Text>
         </View>
       </TouchableRipple>
+      {dayContent ? (
+        <View
+          style={[
+            styles.content,
+            contentPositions[dayContentPosition || 'bottom'],
+            dayContentStyle,
+          ]}
+          pointerEvents="none"
+        >
+          {dayContent({
+            date: new Date(year, month, day),
+            day,
+            month,
+            year,
+            selected,
+            isToday,
+            disabled,
+          })}
+        </View>
+      ) : null}
     </View>
   )
 }
@@ -121,6 +149,14 @@ const styles = StyleSheet.create({
     height: daySize,
     overflow: 'hidden',
     borderRadius: daySize / 2,
+  },
+  content: {
+    // Absolutely positioned without insets, so Yoga still honours the parent's
+    // centering and this box lines up with the day circle instead of the
+    // (wider) grid cell.
+    position: 'absolute',
+    width: daySize,
+    height: daySize,
   },
   day: {
     flexBasis: 0,
@@ -147,6 +183,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'relative',
   },
+})
+
+// Anchors for `dayContent`, applied to a box the size of the day circle.
+const contentPositions = StyleSheet.create({
+  'bottom': {
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    paddingBottom: 2,
+  },
+  'bottom-left': { justifyContent: 'flex-end', alignItems: 'flex-start' },
+  'bottom-right': { justifyContent: 'flex-end', alignItems: 'flex-end' },
+  'center': { justifyContent: 'center', alignItems: 'center' },
+  'top': { justifyContent: 'flex-start', alignItems: 'center', paddingTop: 2 },
+  'top-left': { justifyContent: 'flex-start', alignItems: 'flex-start' },
+  'top-right': { justifyContent: 'flex-start', alignItems: 'flex-end' },
 })
 
 export default memo(Day)

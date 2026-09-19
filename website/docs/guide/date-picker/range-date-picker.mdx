@@ -76,6 +76,41 @@ The icon used to switch back to the calendar from the input view. Defaults to `'
 `Type: string | undefined`  
 The icon used to close the modal. Defaults to `'close'`. Pass a name from [MaterialCommunityIcons](https://materialdesignicons.com/).
 
+**dayContent**  
+`Type: ((params: {
+  date: Date,
+  day: number,
+  month: number,
+  year: number,
+  selected: boolean,
+  isToday: boolean,
+  disabled: boolean
+}) => React.ReactNode) | undefined`  
+Renders custom content inside each day, for example a dot or a badge with the number of events on that date. Return `null` for days that need no content. The node is overlaid on the day and does not receive touches, so pressing it still selects the date.
+
+```jsx
+<DatePickerModal
+  locale="en"
+  mode="single"
+  visible={open}
+  onDismiss={onDismiss}
+  onConfirm={onConfirm}
+  dayContent={({ date }) =>
+    eventCounts[date.toDateString()] ? (
+      <Badge size={16}>{eventCounts[date.toDateString()]}</Badge>
+    ) : null
+  }
+/>
+```
+
+**dayContentPosition**  
+`Type: 'top' | 'top-left' | 'top-right' | 'center' | 'bottom' | 'bottom-left' | 'bottom-right' | undefined`  
+Where `dayContent` is anchored within the day. Defaults to `'bottom'`. The anchor box matches the day circle rather than the wider grid cell, so the corner values sit on the circle's bounding box.
+
+**dayContentStyle**  
+`Type: StyleProp<ViewStyle> | undefined`  
+Style for the `dayContent` overlay container. Useful to nudge the content past the day circle, for example `{ marginTop: -3, marginRight: -3 }` for a badge that overhangs the top-right corner.
+
 **disableStatusBar**  
 `Type: boolean | undefined`  
 When `true`, the modal does not modify the status bar appearance or translucency. Defaults to `false`.

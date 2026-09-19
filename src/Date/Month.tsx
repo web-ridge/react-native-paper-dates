@@ -20,9 +20,12 @@ import {
   useRangeChecker,
 } from './dateUtils'
 import { getCalendarHeaderHeight } from './CalendarHeader'
+import type { StyleProp, ViewStyle } from 'react-native'
 import type {
   CalendarDate,
   CalendarDates,
+  DayContentPosition,
+  DayContentRenderer,
   ModeType,
   ValidRangeType,
 } from './Calendar'
@@ -52,6 +55,9 @@ interface BaseMonthProps {
   endDate?: CalendarDate
   date?: CalendarDate
   dates?: CalendarDates
+  dayContent?: DayContentRenderer
+  dayContentPosition?: DayContentPosition
+  dayContentStyle?: StyleProp<ViewStyle>
 }
 
 interface MonthRangeProps extends BaseMonthProps {
@@ -91,6 +97,9 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
     startWeekOnMonday,
     startYear,
     endYear,
+    dayContent,
+    dayContentPosition,
+    dayContentStyle,
   } = props
   const isHorizontal = scrollMode === 'horizontal'
 
@@ -354,6 +363,9 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
                   primaryColor={primaryColor}
                   disabled={gd.disabled}
                   textColorOnPrimary={textColorOnPrimary}
+                  dayContent={dayContent}
+                  dayContentPosition={dayContentPosition}
+                  dayContentStyle={dayContentStyle}
                 />
               )
             )}
