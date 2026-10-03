@@ -1,3 +1,4 @@
+import { I18nManager, type ViewStyle } from 'react-native'
 import { useCallback, useMemo } from 'react'
 import { useLatest } from '../shared/utils'
 import type { ValidRangeType } from './Calendar'
@@ -9,6 +10,114 @@ export function showWeekDay(
   disableWeekDays?: DisableWeekDaysType
 ): boolean {
   return !(disableWeekDays && disableWeekDays.some((di) => di === dayIndex))
+}
+
+export function countVisibleWeekDays(
+  disableWeekDays?: DisableWeekDaysType
+): number {
+  let count = 0
+  for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
+    if (showWeekDay(dayIndex, disableWeekDays)) {
+      count += 1
+    }
+  }
+  return count || 7
+}
+
+/** Half-width of a 14px narrow weekday letter, used to line up month/arrows. */
+export const weekdayLetterHalfWidth = 4
+
+/** MD3 IconButton: 24px icon + 8px padding on each side. */
+export const md3IconButtonPadding = 8
+export const md3IconButtonLayoutSize = 24 + 2 * md3IconButtonPadding
+
+/** MD3 compact text Button: `compactLabel` horizontal margin. */
+export const md3CompactTextButtonPadding = 8
+
+/** Center a trailing IconButton (or the last button in a group) on the last weekday column. */
+export function lastWeekdayColumnIconStyle(
+  visibleWeekDayCount: number
+): ViewStyle {
+  return {
+    marginEnd: `${50 / visibleWeekDayCount}%`,
+    transform: [
+      {
+        translateX: I18nManager.isRTL
+          ? -md3IconButtonLayoutSize / 2
+          : md3IconButtonLayoutSize / 2,
+      },
+    ],
+  }
+}
+
+/** Line the leading edge of a text block up with the first weekday letter. */
+export function firstWeekdayColumnLeadingTextStyle(
+  visibleWeekDayCount: number
+): ViewStyle {
+  return {
+    marginStart: `${50 / visibleWeekDayCount}%`,
+    transform: [
+      {
+        translateX: I18nManager.isRTL
+          ? weekdayLetterHalfWidth
+          : -weekdayLetterHalfWidth,
+      },
+    ],
+  }
+}
+
+/**
+ * Line the leading edge of an IconButton glyph up with the first weekday letter.
+ * Compensates for MD3 IconButton padding so the 24px icon, not the hit target, matches.
+ */
+export function firstWeekdayColumnLeadingIconStyle(
+  visibleWeekDayCount: number
+): ViewStyle {
+  const offset = weekdayLetterHalfWidth + md3IconButtonPadding
+  return {
+    marginStart: `${50 / visibleWeekDayCount}%`,
+    transform: [
+      {
+        translateX: I18nManager.isRTL ? offset : -offset,
+      },
+    ],
+  }
+}
+
+/**
+ * Line the trailing edge of compact text-button label up with the last weekday letter.
+ * Compensates for MD3 compact label padding so the text, not the press overlay, matches.
+ */
+export function lastWeekdayColumnTrailingTextStyle(
+  visibleWeekDayCount: number
+): ViewStyle {
+  const offset = weekdayLetterHalfWidth + md3CompactTextButtonPadding
+  return {
+    marginEnd: `${50 / visibleWeekDayCount}%`,
+    transform: [
+      {
+        translateX: I18nManager.isRTL ? -offset : offset,
+      },
+    ],
+  }
+}
+
+/**
+ * Inset a full-width rule to the first and last weekday column centers.
+ * Pair with `weekdayLetterSpanExpandStyle` so the ends sit on the letters.
+ */
+export function weekdayLetterSpanStyle(
+  visibleWeekDayCount: number
+): ViewStyle {
+  return {
+    marginStart: `${50 / visibleWeekDayCount}%`,
+    marginEnd: `${50 / visibleWeekDayCount}%`,
+  }
+}
+
+/** Grow a spanned rule from column centers to the outer edges of the letters. */
+export const weekdayLetterSpanExpandStyle: ViewStyle = {
+  marginHorizontal: -weekdayLetterHalfWidth,
 }
 
 export function dateToUnix(d: Date): number {

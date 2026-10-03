@@ -20,8 +20,12 @@ import {
   getBeginOffset,
 } from './dateUtils'
 import AutoSizer from './AutoSizer'
-import { memo, useCallback, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { sharedStyles } from '../shared/styles'
+import {
+  getCalendarHeaderHeight,
+  verticalScrollbarGutter,
+} from './CalendarHeader'
 
 function getVisibleArray(
   i: number,
@@ -128,6 +132,12 @@ function SwiperInner({
     scrollTo(idx.current, false)
   }, [scrollTo])
 
+  // onLayout can run against the previous page width during rotation, before
+  // this size is committed. Sync once the new width and height are in place.
+  useEffect(() => {
+    scrollTo(idx.current, false)
+  }, [scrollTo])
+
   const onMomentumScrollEnd = useCallback(
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
       const contentOffset = e.nativeEvent.contentOffset
@@ -164,6 +174,20 @@ function SwiperInner({
     onNext,
   }
 
+  const needsMonthScroll =
+    isHorizontal &&
+    visibleIndexes.some(
+      (monthIndex) =>
+        getMonthHeight(
+          scrollMode,
+          monthIndex,
+          startWeekOnMonday,
+          startYear,
+          endYear
+        ) > height
+    )
+  const headerHeight = getCalendarHeaderHeight(scrollMode)
+
   useYearChange(
     (newIndex) => {
       if (newIndex && isIndexWithinRange(newIndex, startYear, endYear)) {
@@ -185,7 +209,9 @@ function SwiperInner({
         ref={parentRef}
         horizontal={isHorizontal}
         pagingEnabled={isHorizontal}
-        style={sharedStyles.root}
+        nestedScrollEnabled={isHorizontal}
+        directionalLockEnabled={isHorizontal}
+        style={[sharedStyles.root, sharedStyles.minHeightZero]}
         onMomentumScrollEnd={onMomentumScrollEnd}
         onScrollEndDrag={onMomentumScrollEnd}
         onLayout={scrollToInitial}
@@ -208,48 +234,77 @@ function SwiperInner({
           ]}
         >
           {visibleIndexes
-            ? new Array(visibleIndexes.length).fill(undefined).map((_, vi) => (
-                <View
-                  key={vi}
-                  // eslint-disable-next-line react-native/no-inline-styles
-                  style={{
-                    top: isHorizontal
-                      ? 0
-                      : getVerticalMonthsOffset(
-                          visibleIndexes[vi],
-                          startWeekOnMonday,
-                          startYear,
-                          endYear
-                        ),
-                    left: isHorizontal
-                      ? getHorizontalMonthOffset(visibleIndexes[vi], width)
-                      : 0,
-                    right: isHorizontal ? undefined : 0,
-                    bottom: isHorizontal ? 0 : undefined,
-                    position: 'absolute',
-                    width: isHorizontal ? width : undefined,
-                    height: isHorizontal
-                      ? undefined
-                      : getMonthHeight(
-                          scrollMode,
-                          visibleIndexes[vi],
-                          startWeekOnMonday,
-                          startYear,
-                          endYear
-                        ),
-                  }}
-                >
-                  {renderItem({
-                    index: visibleIndexes[vi],
-                    onPrev: onPrev,
-                    onNext: onNext,
-                  })}
-                </View>
-              ))
+            ? new Array(visibleIndexes.length).fill(undefined).map((_, vi) => {
+                const monthIndex = visibleIndexes[vi]
+                const monthHeight = getMonthHeight(
+                  scrollMode,
+                  monthIndex,
+                  startWeekOnMonday,
+                  startYear,
+                  endYear
+                )
+                // Horizontal paging does not scroll inside a month. When the
+                // month is taller than the dialog (phone landscape), scroll
+                // that page vertically so the last weeks stay reachable.
+                const scrollMonth = isHorizontal && monthHeight > height
+                return (
+                  <View
+                    key={vi}
+                    // eslint-disable-next-line react-native/no-inline-styles
+                    style={{
+                      top: isHorizontal
+                        ? 0
+                        : getVerticalMonthsOffset(
+                            monthIndex,
+                            startWeekOnMonday,
+                            startYear,
+                            endYear
+                          ),
+                      left: isHorizontal
+                        ? getHorizontalMonthOffset(monthIndex, width)
+                        : 0,
+                      right: isHorizontal ? undefined : 0,
+                      bottom: isHorizontal ? 0 : undefined,
+                      position: 'absolute',
+                      width: isHorizontal ? width : undefined,
+                      height: isHorizontal ? undefined : monthHeight,
+                    }}
+                  >
+                    {scrollMonth ? (
+                      <ScrollView
+                        nestedScrollEnabled
+                        directionalLockEnabled
+                        keyboardShouldPersistTaps="handled"
+                        scrollIndicatorInsets={{ top: headerHeight }}
+                        // Viewport is the dialog, not the month. A flex child
+                        // would grow with the month and clip instead of scroll.
+                        // eslint-disable-next-line react-native/no-inline-styles
+                        style={{ height }}
+                      >
+                        {renderItem({
+                          index: monthIndex,
+                          onPrev: onPrev,
+                          onNext: onNext,
+                        })}
+                      </ScrollView>
+                    ) : (
+                      renderItem({
+                        index: monthIndex,
+                        onPrev: onPrev,
+                        onNext: onNext,
+                      })
+                    )}
+                  </View>
+                )
+              })
             : null}
         </View>
       </ScrollView>
-      {renderHeader && renderHeader(renderProps)}
+      {renderHeader &&
+        renderHeader({
+          ...renderProps,
+          endInset: needsMonthScroll ? verticalScrollbarGutter : 0,
+        })}
       {renderFooter && renderFooter(renderProps)}
     </>
   )

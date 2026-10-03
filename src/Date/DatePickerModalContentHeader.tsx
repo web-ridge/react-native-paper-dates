@@ -7,6 +7,12 @@ import Color from 'color'
 import { getTranslation } from '../translations/utils'
 import { useMemo } from 'react'
 import { sharedStyles } from '../shared/styles'
+import {
+  countVisibleWeekDays,
+  firstWeekdayColumnLeadingTextStyle,
+  lastWeekdayColumnIconStyle,
+  type DisableWeekDaysType,
+} from './dateUtils'
 
 export interface HeaderPickProps {
   moreLabel?: string
@@ -31,6 +37,7 @@ export interface HeaderContentProps extends HeaderPickProps {
   collapsed: boolean
   onToggle: () => any
   locale: string | undefined
+  disableWeekDays?: DisableWeekDaysType
 }
 
 function getLabel(
@@ -65,6 +72,7 @@ export default function DatePickerModalContentHeader(
     editIcon,
     calendarIcon,
     allowEditing,
+    disableWeekDays,
   } = props
   const theme = useTheme()
   const label = getLabel(props.locale, props.mode, props.label)
@@ -74,10 +82,11 @@ export default function DatePickerModalContentHeader(
   const textFont = theme.fonts.labelMedium
   const finalCollapsedIcon = editIcon ?? 'pencil-outline'
   const finalExpandedIcon = calendarIcon ?? 'calendar-blank'
+  const visibleWeekDayCount = countVisibleWeekDays(disableWeekDays)
 
   return (
     <View style={styles.header}>
-      <View>
+      <View style={firstWeekdayColumnLeadingTextStyle(visibleWeekDayCount)}>
         <Text
           maxFontSizeMultiplier={1.5}
           style={[styles.label, { color: supportingTextColor, ...textFont }]}
@@ -112,6 +121,10 @@ export default function DatePickerModalContentHeader(
           iconColor={theme.colors.onSurface}
           onPress={onToggle}
           testID="react-native-paper-dates-toggle-edit"
+          style={[
+            styles.editButton,
+            lastWeekdayColumnIconStyle(visibleWeekDayCount),
+          ]}
         />
       ) : null}
     </View>
@@ -234,12 +247,15 @@ export function HeaderContentRange({
 }
 
 const styles = StyleSheet.create({
+  editButton: {
+    marginTop: 0,
+    marginBottom: 0,
+    marginStart: 0,
+  },
   header: {
     height: 75,
     alignItems: 'center',
     flexDirection: 'row',
-    paddingLeft: 24,
-    paddingRight: 12,
   },
   headerContentContainer: {
     flexDirection: 'row',
@@ -260,4 +276,5 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 25,
   },
+ 
 })

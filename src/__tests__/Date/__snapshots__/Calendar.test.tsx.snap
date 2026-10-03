@@ -3,12 +3,18 @@
 exports[`renders Calendar 1`] = `
 <View
   style={
-    {
-      "flex": 1,
-    }
+    [
+      {
+        "flex": 1,
+      },
+      {
+        "minHeight": 0,
+      },
+    ]
   }
 >
   <View
+    collapsable={false}
     onLayout={[Function]}
     style={
       [
@@ -18,7 +24,9 @@ exports[`renders Calendar 1`] = `
         {
           "flex": 1,
         },
-        null,
+        {
+          "minHeight": 0,
+        },
       ]
     }
   />

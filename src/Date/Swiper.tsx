@@ -1,4 +1,4 @@
-import { View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { useTheme } from 'react-native-paper'
 import {
   getIndexFromVerticalOffset,
@@ -31,6 +31,7 @@ import {
   useState,
 } from 'react'
 import { sharedStyles } from '../shared/styles'
+import { getCalendarHeaderHeight } from './CalendarHeader'
 
 const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect
@@ -94,26 +95,48 @@ function Swiper({
 
   return (
     <>
-      {renderHeader && renderHeader(renderProps)}
       {isHorizontal ? (
-        <View style={sharedStyles.root}>
+        <ScrollView
+          style={[sharedStyles.root, sharedStyles.minHeightZero]}
+          keyboardShouldPersistTaps="handled"
+          nestedScrollEnabled
+        >
+          {renderHeader ? (
+            <View
+              // Stick the week names inside the scrollport so they stay in the
+              // content box and do not paint over the vertical scrollbar.
+              pointerEvents="box-none"
+              // @ts-expect-error sticky is valid on web
+              style={{
+                position: 'sticky',
+                top: 0,
+                zIndex: 10,
+                marginBottom: -getCalendarHeaderHeight('horizontal'),
+              }}
+            >
+              {renderHeader({ ...renderProps, embedded: true })}
+            </View>
+          ) : null}
           {renderItem({ index, onPrev, onNext })}
-        </View>
+        </ScrollView>
       ) : (
-        <AutoSizer>
-          {({ width, height }) => (
-            <VerticalScroller
-              width={width}
-              height={height}
-              initialIndex={initialIndex}
-              estimatedHeight={estimatedMonthHeight}
-              renderItem={renderItem}
-              startWeekOnMonday={startWeekOnMonday}
-              startYear={startYear}
-              endYear={endYear}
-            />
-          )}
-        </AutoSizer>
+        <>
+          {renderHeader && renderHeader(renderProps)}
+          <AutoSizer>
+            {({ width, height }) => (
+              <VerticalScroller
+                width={width}
+                height={height}
+                initialIndex={initialIndex}
+                estimatedHeight={estimatedMonthHeight}
+                renderItem={renderItem}
+                startWeekOnMonday={startWeekOnMonday}
+                startYear={startYear}
+                endYear={endYear}
+              />
+            )}
+          </AutoSizer>
+        </>
       )}
       {renderFooter && renderFooter(renderProps)}
     </>

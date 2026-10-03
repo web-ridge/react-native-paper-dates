@@ -59,6 +59,11 @@ export function DatePickerModal(
 
   const theme = useTheme()
   const dimensions = useWindowDimensions()
+  // Tablet-sized in both axes. Phone landscape is wide but short (e.g. 932x430),
+  // so it must stay full-screen: a 400pt card would park Close/Save in the middle.
+  // Do not cap phone height with window dimensions — on Android that value is
+  // shorter than the translucent full-screen Modal, which centers a gap top/bottom.
+  const isLargeScreen = dimensions.width > 650 && dimensions.height > 650
 
   // Automatically use formSheet on iPad for better fit
   // iPad detection: width > 650 AND height > 650 (works in both orientations)
@@ -69,8 +74,7 @@ export function DatePickerModal(
   const shouldUseSheet =
     Platform.OS === 'ios' &&
     (presentationStyle === 'pageSheet' || presentationStyle === 'formSheet')
-  const useFormSheet =
-    shouldUseSheet && dimensions.width > 650 && dimensions.height > 650
+  const useFormSheet = shouldUseSheet && isLargeScreen
   const isSheet = shouldUseSheet
 
   return (
@@ -107,7 +111,7 @@ export function DatePickerModal(
             style={[
               styles.modalContent,
               { backgroundColor: theme.colors.elevation.level3 },
-              dimensions.width > 650
+              isLargeScreen
                 ? useFormSheet
                   ? styles.modalContentFormSheet
                   : styles.modalContentBig
@@ -134,6 +138,7 @@ const styles = StyleSheet.create({
   modalContent: {
     flex: 1,
     width: '100%',
+    minHeight: 0,
   },
   modalContentBig: {
     maxWidth: 400,

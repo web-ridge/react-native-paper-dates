@@ -17,6 +17,9 @@ import CalendarEdit from './CalendarEdit'
 import DatePickerModalHeaderBackground from './DatePickerModalHeaderBackground'
 import DatePickerModalStatusBar from './DatePickerModalStatusBar'
 import { memo, useCallback, useEffect, useState } from 'react'
+import { View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { sharedStyles } from '../shared/styles'
 
 export type LocalState = {
   startDate: CalendarDate
@@ -92,6 +95,7 @@ export function DatePickerModalContent(
   } = props
   const anyProps = props as any
   const defaultUppercase = false
+  const insets = useSafeAreaInsets()
 
   // use local state to add only onConfirm state changes
   const [state, setState] = useState<LocalState>({
@@ -143,7 +147,7 @@ export function DatePickerModalContent(
 
   return (
     <>
-      <DatePickerModalHeaderBackground>
+      <DatePickerModalHeaderBackground disableWeekDays={disableWeekDays}>
         <DatePickerModalStatusBar
           disableSafeTop={!!disableSafeTop}
           disableStatusBar={!!disableStatusBar}
@@ -157,6 +161,7 @@ export function DatePickerModalContent(
           saveLabelDisabled={props.saveLabelDisabled ?? false}
           uppercase={props.uppercase ?? defaultUppercase}
           closeIcon={props.closeIcon}
+          disableWeekDays={disableWeekDays}
         />
         <DatePickerModalContentHeader
           state={state}
@@ -174,47 +179,57 @@ export function DatePickerModalContent(
           editIcon={props?.editIcon}
           calendarIcon={props.calendarIcon}
           allowEditing={props.allowEditing ?? true}
+          disableWeekDays={disableWeekDays}
         />
       </DatePickerModalHeaderBackground>
-      <AnimatedCrossView
-        collapsed={collapsed}
-        calendar={
-          <Calendar
-            locale={locale}
-            mode={mode}
-            startDate={state.startDate}
-            endDate={state.endDate}
-            date={state.date}
-            onChange={onInnerChange}
-            disableWeekDays={disableWeekDays}
-            dates={state.dates}
-            validRange={validRange}
-            dateMode={dateMode}
-            startYear={startYear}
-            endYear={endYear}
-            startWeekOnMonday={startWeekOnMonday}
-            dayContent={dayContent}
-            dayContentPosition={dayContentPosition}
-            dayContentStyle={dayContentStyle}
-          />
-        }
-        calendarEdit={
-          <CalendarEdit
-            mode={mode}
-            state={state}
-            label={props.label}
-            startLabel={props.startLabel}
-            endLabel={props.endLabel}
-            collapsed={collapsed}
-            onChange={onInnerChange}
-            validRange={validRange}
-            locale={locale}
-            inputEnabled={props.inputEnabled}
-            withDateFormatInLabel={props.withDateFormatInLabel}
-            placeholder={props.placeholder}
-          />
-        }
-      />
+      <View
+        style={[
+          sharedStyles.root,
+          sharedStyles.minHeightZero,
+          { paddingLeft: insets.left, paddingRight: insets.right },
+        ]}
+      >
+        <AnimatedCrossView
+          collapsed={collapsed}
+          calendar={
+            <Calendar
+              locale={locale}
+              mode={mode}
+              startDate={state.startDate}
+              endDate={state.endDate}
+              date={state.date}
+              onChange={onInnerChange}
+              disableWeekDays={disableWeekDays}
+              dates={state.dates}
+              validRange={validRange}
+              dateMode={dateMode}
+              startYear={startYear}
+              endYear={endYear}
+              startWeekOnMonday={startWeekOnMonday}
+              dayContent={dayContent}
+              dayContentPosition={dayContentPosition}
+              dayContentStyle={dayContentStyle}
+            />
+          }
+          calendarEdit={
+            <CalendarEdit
+              mode={mode}
+              state={state}
+              label={props.label}
+              startLabel={props.startLabel}
+              endLabel={props.endLabel}
+              collapsed={collapsed}
+              onChange={onInnerChange}
+              validRange={validRange}
+              locale={locale}
+              inputEnabled={props.inputEnabled}
+              withDateFormatInLabel={props.withDateFormatInLabel}
+              placeholder={props.placeholder}
+              disableWeekDays={disableWeekDays}
+            />
+          }
+        />
+      </View>
     </>
   )
 }

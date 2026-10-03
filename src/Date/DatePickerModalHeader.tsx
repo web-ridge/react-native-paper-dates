@@ -1,8 +1,14 @@
-import { Animated, StyleSheet } from 'react-native'
-import { Appbar, Button, useTheme } from 'react-native-paper'
+import { StyleSheet, View } from 'react-native'
+import { Button, IconButton, useTheme } from 'react-native-paper'
 import { useHeaderTextColor } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { sharedStyles } from '../shared/styles'
+import {
+  countVisibleWeekDays,
+  firstWeekdayColumnLeadingIconStyle,
+  lastWeekdayColumnTrailingTextStyle,
+  type DisableWeekDaysType,
+} from './dateUtils'
 
 export interface DatePickerModalHeaderProps {
   saveLabel?: string
@@ -12,68 +18,65 @@ export interface DatePickerModalHeaderProps {
   onSave: () => void
   locale: string | undefined
   closeIcon?: string
+  disableWeekDays?: DisableWeekDaysType
 }
 
 export default function DatePickerModalHeader(
   props: DatePickerModalHeaderProps
 ) {
-  const { locale, closeIcon = 'close' } = props
+  const { locale, closeIcon = 'close', disableWeekDays } = props
   const saveLabel = props.saveLabel || getTranslation(locale, 'save')
   const color = useHeaderTextColor()
-  const insets = useSafeAreaInsets()
-
   const theme = useTheme()
+  const visibleWeekDayCount = countVisibleWeekDays(disableWeekDays)
 
   return (
-    <>
-      <Animated.View
+    <View style={styles.headerBar}>
+      <IconButton
+        icon={closeIcon}
+        accessibilityLabel={getTranslation(locale, 'close')}
+        onPress={props.onDismiss}
+        iconColor={color}
+        testID="react-native-paper-dates-close"
         style={[
-          styles.animated,
-          {
-            paddingLeft: insets.left,
-            paddingRight: insets.right,
-          },
+          styles.closeButton,
+          firstWeekdayColumnLeadingIconStyle(visibleWeekDayCount),
         ]}
-      >
-        <Appbar style={styles.appbarHeader}>
-          <Appbar.Action
-            icon={closeIcon}
-            accessibilityLabel={getTranslation(locale, 'close')}
-            onPress={props.onDismiss}
-            color={color}
-            testID="react-native-paper-dates-close"
-          />
-          <Button
-            textColor={theme.colors.primary}
-            onPress={props.onSave}
-            disabled={props.saveLabelDisabled ?? false}
-            uppercase={props.uppercase ?? true}
-            contentStyle={styles.buttonStyle}
-            mode="text"
-            labelStyle={styles.buttonLabel}
-            testID="react-native-paper-dates-save"
-          >
-            {saveLabel}
-          </Button>
-        </Appbar>
-      </Animated.View>
-    </>
+      />
+      <View style={sharedStyles.root} />
+      <View style={lastWeekdayColumnTrailingTextStyle(visibleWeekDayCount)}>
+        <Button
+          textColor={theme.colors.primary}
+          onPress={props.onSave}
+          disabled={props.saveLabelDisabled ?? false}
+          uppercase={props.uppercase ?? true}
+          compact
+          mode="text"
+          testID="react-native-paper-dates-save"
+          style={styles.saveButton}
+        >
+          {saveLabel}
+        </Button>
+      </View>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
-  animated: {
-    elevation: 4,
-  },
-  appbarHeader: {
-    elevation: 0,
-    backgroundColor: 'transparent',
+  headerBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
+    width: '100%',
+    paddingTop: 12,
   },
-  buttonStyle: {
-    paddingHorizontal: 8,
+  closeButton: {
+    marginTop: 0,
+    marginBottom: 0,
+    marginEnd: 0,
   },
-  buttonLabel: {
-    flexGrow: 1,
+  saveButton: {
+    marginVertical: 0,
+    marginEnd: 0,
   },
 })

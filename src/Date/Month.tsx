@@ -5,6 +5,7 @@ import Day, { EmptyDay } from './Day'
 import {
   addMonths,
   areDatesOnSameDay,
+  countVisibleWeekDays,
   daySize,
   estimatedMonthHeight,
   getFirstDayOfMonth,
@@ -18,6 +19,7 @@ import {
   isDateBetween,
   showWeekDay,
   useRangeChecker,
+  firstWeekdayColumnLeadingTextStyle,
 } from './dateUtils'
 import { getCalendarHeaderHeight } from './CalendarHeader'
 import type { StyleProp, ViewStyle } from 'react-native'
@@ -272,6 +274,8 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
 
   const iconSource = selectingYear ? 'menu-up' : 'menu-down'
 
+  const visibleWeekDayCount = countVisibleWeekDays(disableWeekDays)
+
   return (
     <View
       style={{
@@ -305,6 +309,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
             {
               borderRadius: roundness,
             },
+            firstWeekdayColumnLeadingTextStyle(visibleWeekDayCount),
           ]}
         >
           <View
@@ -403,10 +408,8 @@ const styles = StyleSheet.create({
   },
   yearButton: {
     alignSelf: 'flex-start',
-    marginLeft: 6,
   },
   yearButtonInner: {
-    paddingLeft: 16,
     flexDirection: 'row',
     alignItems: 'center',
   },

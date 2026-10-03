@@ -29,11 +29,12 @@ export default function AutoSizer({
 
   return (
     <View
+      collapsable={false}
       onLayout={onLayout}
       style={[
         sharedStyles.overflowHidden,
         sharedStyles.root,
-        isLayoutInitialized && layout,
+        sharedStyles.minHeightZero,
       ]}
     >
       {isLayoutInitialized ? children(layout) : null}
