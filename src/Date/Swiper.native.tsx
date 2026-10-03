@@ -22,10 +22,7 @@ import {
 import AutoSizer from './AutoSizer'
 import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { sharedStyles } from '../shared/styles'
-import {
-  getCalendarHeaderHeight,
-  verticalScrollbarGutter,
-} from './CalendarHeader'
+import { verticalScrollbarGutter } from './CalendarHeader'
 
 function getVisibleArray(
   i: number,
@@ -186,7 +183,6 @@ function SwiperInner({
           endYear
         ) > height
     )
-  const headerHeight = getCalendarHeaderHeight(scrollMode)
 
   useYearChange(
     (newIndex) => {
@@ -243,10 +239,8 @@ function SwiperInner({
                   startYear,
                   endYear
                 )
-                // Horizontal paging does not scroll inside a month. When the
-                // month is taller than the dialog (phone landscape), scroll
-                // that page vertically so the last weeks stay reachable.
-                const scrollMonth = isHorizontal && monthHeight > height
+                // Horizontal paging does not scroll inside a month. Bound the
+                // page to the dialog so the day grid can scroll in landscape.
                 return (
                   <View
                     key={vi}
@@ -264,36 +258,17 @@ function SwiperInner({
                         ? getHorizontalMonthOffset(monthIndex, width)
                         : 0,
                       right: isHorizontal ? undefined : 0,
-                      bottom: isHorizontal ? 0 : undefined,
                       position: 'absolute',
                       width: isHorizontal ? width : undefined,
-                      height: isHorizontal ? undefined : monthHeight,
+                      height: isHorizontal ? height : monthHeight,
+                      overflow: 'hidden',
                     }}
                   >
-                    {scrollMonth ? (
-                      <ScrollView
-                        nestedScrollEnabled
-                        directionalLockEnabled
-                        keyboardShouldPersistTaps="handled"
-                        scrollIndicatorInsets={{ top: headerHeight }}
-                        // Viewport is the dialog, not the month. A flex child
-                        // would grow with the month and clip instead of scroll.
-                        // eslint-disable-next-line react-native/no-inline-styles
-                        style={{ height }}
-                      >
-                        {renderItem({
-                          index: monthIndex,
-                          onPrev: onPrev,
-                          onNext: onNext,
-                        })}
-                      </ScrollView>
-                    ) : (
-                      renderItem({
-                        index: monthIndex,
-                        onPrev: onPrev,
-                        onNext: onNext,
-                      })
-                    )}
+                    {renderItem({
+                      index: monthIndex,
+                      onPrev: onPrev,
+                      onNext: onNext,
+                    })}
                   </View>
                 )
               })

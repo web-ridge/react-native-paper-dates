@@ -1,4 +1,3 @@
-import { ScrollView, View } from 'react-native'
 import { useTheme } from 'react-native-paper'
 import {
   getIndexFromVerticalOffset,
@@ -30,8 +29,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { sharedStyles } from '../shared/styles'
-import { getCalendarHeaderHeight } from './CalendarHeader'
+import { verticalScrollbarGutter } from './CalendarHeader'
 
 const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect
@@ -96,29 +94,33 @@ function Swiper({
   return (
     <>
       {isHorizontal ? (
-        <ScrollView
-          style={[sharedStyles.root, sharedStyles.minHeightZero]}
-          keyboardShouldPersistTaps="handled"
-          nestedScrollEnabled
-        >
-          {renderHeader ? (
-            <View
-              // Stick the week names inside the scrollport so they stay in the
-              // content box and do not paint over the vertical scrollbar.
-              pointerEvents="box-none"
-              // @ts-expect-error sticky is valid on web
-              style={{
-                position: 'sticky',
-                top: 0,
-                zIndex: 10,
-                marginBottom: -getCalendarHeaderHeight('horizontal'),
-              }}
-            >
-              {renderHeader({ ...renderProps, embedded: true })}
-            </View>
-          ) : null}
-          {renderItem({ index, onPrev, onNext })}
-        </ScrollView>
+        <AutoSizer>
+          {({ height }) => {
+            const overflow =
+              getMonthHeight(
+                'horizontal',
+                index,
+                startWeekOnMonday,
+                startYear,
+                endYear
+              ) > height
+            return (
+              <>
+                {renderItem({
+                  index,
+                  onPrev,
+                  onNext,
+                })}
+                {renderHeader
+                  ? renderHeader({
+                      ...renderProps,
+                      endInset: overflow ? verticalScrollbarGutter : 0,
+                    })
+                  : null}
+              </>
+            )
+          }}
+        </AutoSizer>
       ) : (
         <>
           {renderHeader && renderHeader(renderProps)}
