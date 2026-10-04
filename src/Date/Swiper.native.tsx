@@ -125,15 +125,12 @@ function SwiperInner({
     }
   }, [scrollTo, idx, startYear, endYear])
 
-  const scrollToInitial = useCallback(() => {
+  const scrollToCurrent = useCallback(() => {
     scrollTo(idx.current, false)
   }, [scrollTo])
 
   // onLayout can run against the previous page width during rotation, before
-  // this size is committed. Sync once the new width and height are in place.
-  useEffect(() => {
-    scrollTo(idx.current, false)
-  }, [scrollTo])
+  useEffect(scrollToCurrent, [scrollToCurrent])
 
   const onMomentumScrollEnd = useCallback(
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -210,7 +207,7 @@ function SwiperInner({
         style={[sharedStyles.root, sharedStyles.minHeightZero]}
         onMomentumScrollEnd={onMomentumScrollEnd}
         onScrollEndDrag={onMomentumScrollEnd}
-        onLayout={scrollToInitial}
+        onLayout={scrollToCurrent}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         decelerationRate="fast"

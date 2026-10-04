@@ -9,12 +9,8 @@ import type { ModeType, ValidRangeType } from './Calendar'
 import type { LocalState } from './DatePickerModalContent'
 
 import DatePickerInputWithoutModal from './DatePickerInputWithoutModal'
-import {
-  countVisibleWeekDays,
-  weekdayLetterSpanExpandStyle,
-  weekdayLetterSpanStyle,
-  type DisableWeekDaysType,
-} from './dateUtils'
+import type { DisableWeekDaysType } from './dateUtils'
+import { weekdaySpan, weekdaySpanOvershoot } from './weekdayColumns'
 import { memo, useCallback, useEffect, useRef } from 'react'
 import { useTheme } from 'react-native-paper'
 import { sharedStyles } from '../shared/styles'
@@ -49,7 +45,6 @@ function CalendarEdit({
   disableWeekDays?: DisableWeekDaysType
 }) {
   const theme = useTheme()
-  const visibleWeekDayCount = countVisibleWeekDays(disableWeekDays)
   const dateInput = useRef<TextInputNative | null>(null)
   const startInput = useRef<TextInputNative | null>(null)
   const endInput = useRef<TextInputNative | null>(null)
@@ -95,8 +90,8 @@ function CalendarEdit({
 
   return (
     <View style={styles.root}>
-      <View style={weekdayLetterSpanStyle(visibleWeekDayCount)}>
-        <View style={weekdayLetterSpanExpandStyle}>
+      <View style={weekdaySpan(disableWeekDays)}>
+        <View style={weekdaySpanOvershoot}>
           {mode === 'single' ? (
             <DatePickerInputWithoutModal
               inputMode="start"

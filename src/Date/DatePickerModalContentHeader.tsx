@@ -7,12 +7,11 @@ import Color from 'color'
 import { getTranslation } from '../translations/utils'
 import { useMemo } from 'react'
 import { sharedStyles } from '../shared/styles'
+import type { DisableWeekDaysType } from './dateUtils'
 import {
-  countVisibleWeekDays,
-  firstWeekdayColumnLeadingTextStyle,
-  lastWeekdayColumnIconStyle,
-  type DisableWeekDaysType,
-} from './dateUtils'
+  alignTextToFirstWeekday,
+  centerIconOnLastWeekday,
+} from './weekdayColumns'
 
 export interface HeaderPickProps {
   moreLabel?: string
@@ -82,11 +81,10 @@ export default function DatePickerModalContentHeader(
   const textFont = theme.fonts.labelMedium
   const finalCollapsedIcon = editIcon ?? 'pencil-outline'
   const finalExpandedIcon = calendarIcon ?? 'calendar-blank'
-  const visibleWeekDayCount = countVisibleWeekDays(disableWeekDays)
 
   return (
     <View style={styles.header}>
-      <View style={firstWeekdayColumnLeadingTextStyle(visibleWeekDayCount)}>
+      <View style={alignTextToFirstWeekday(disableWeekDays)}>
         <Text
           maxFontSizeMultiplier={1.5}
           style={[styles.label, { color: supportingTextColor, ...textFont }]}
@@ -121,10 +119,7 @@ export default function DatePickerModalContentHeader(
           iconColor={theme.colors.onSurface}
           onPress={onToggle}
           testID="react-native-paper-dates-toggle-edit"
-          style={[
-            styles.editButton,
-            lastWeekdayColumnIconStyle(visibleWeekDayCount),
-          ]}
+          style={[styles.editButton, centerIconOnLastWeekday(disableWeekDays)]}
         />
       ) : null}
     </View>
@@ -276,5 +271,4 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 25,
   },
- 
 })

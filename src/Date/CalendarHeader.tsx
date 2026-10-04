@@ -1,11 +1,8 @@
 import { Platform, StyleSheet, View } from 'react-native'
 import { IconButton, useTheme } from 'react-native-paper'
 import DayNames, { dayNamesHeight } from './DayNames'
-import {
-  countVisibleWeekDays,
-  lastWeekdayColumnIconStyle,
-  type DisableWeekDaysType,
-} from './dateUtils'
+import type { DisableWeekDaysType } from './dateUtils'
+import { centerIconOnLastWeekday } from './weekdayColumns'
 import { getTranslation } from '../translations/utils'
 import { sharedStyles } from '../shared/styles'
 import { memo } from 'react'
@@ -41,7 +38,6 @@ function CalendarHeader({
   locale,
   startWeekOnMonday,
   endInset = 0,
-  absolute = true,
 }: {
   locale: undefined | string
   scrollMode: 'horizontal' | 'vertical'
@@ -51,20 +47,17 @@ function CalendarHeader({
   startWeekOnMonday: boolean
   /** Shrink from the trailing edge so week names do not cover a vertical scrollbar. */
   endInset?: number
-  /** When false, the header is laid out in flow (e.g. sticky inside a ScrollView). */
-  absolute?: boolean
 }) {
   const isHorizontal = scrollMode === 'horizontal'
-  const visibleWeekDayCount = countVisibleWeekDays(disableWeekDays)
-
   const theme = useTheme()
-  const headerStyle = absolute
-    ? styles.datePickerHeader
-    : styles.datePickerHeaderInFlow
 
   return (
     <View
-      style={endInset ? [headerStyle, { right: endInset }] : headerStyle}
+      style={
+        endInset
+          ? [styles.datePickerHeader, { right: endInset }]
+          : styles.datePickerHeader
+      }
       pointerEvents={'box-none'}
     >
       {isHorizontal ? (
@@ -76,7 +69,7 @@ function CalendarHeader({
               {
                 backgroundColor: theme.colors.elevation.level3,
               },
-              lastWeekdayColumnIconStyle(visibleWeekDayCount),
+              centerIconOnLastWeekday(disableWeekDays),
             ]}
           >
             <IconButton
@@ -111,9 +104,6 @@ const styles = StyleSheet.create({
     top: 0,
     right: 0,
     left: 0,
-    zIndex: 10,
-  },
-  datePickerHeaderInFlow: {
     zIndex: 10,
   },
   buttonContainer: {

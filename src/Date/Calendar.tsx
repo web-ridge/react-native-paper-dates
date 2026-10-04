@@ -239,9 +239,8 @@ function Calendar(
             dayContentStyle={dayContentStyle}
           />
         )}
-        renderHeader={({ embedded, endInset, onPrev, onNext }) => (
+        renderHeader={({ endInset, onPrev, onNext }) => (
           <CalendarHeader
-            absolute={!embedded}
             disableWeekDays={disableWeekDays}
             endInset={endInset}
             locale={locale}

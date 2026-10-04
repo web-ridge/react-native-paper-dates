@@ -3,12 +3,11 @@ import { Button, IconButton, useTheme } from 'react-native-paper'
 import { useHeaderTextColor } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
 import { sharedStyles } from '../shared/styles'
+import type { DisableWeekDaysType } from './dateUtils'
 import {
-  countVisibleWeekDays,
-  firstWeekdayColumnLeadingIconStyle,
-  lastWeekdayColumnTrailingTextStyle,
-  type DisableWeekDaysType,
-} from './dateUtils'
+  alignIconToFirstWeekday,
+  alignTextToLastWeekday,
+} from './weekdayColumns'
 
 export interface DatePickerModalHeaderProps {
   saveLabel?: string
@@ -28,7 +27,6 @@ export default function DatePickerModalHeader(
   const saveLabel = props.saveLabel || getTranslation(locale, 'save')
   const color = useHeaderTextColor()
   const theme = useTheme()
-  const visibleWeekDayCount = countVisibleWeekDays(disableWeekDays)
 
   return (
     <View style={styles.headerBar}>
@@ -38,13 +36,10 @@ export default function DatePickerModalHeader(
         onPress={props.onDismiss}
         iconColor={color}
         testID="react-native-paper-dates-close"
-        style={[
-          styles.closeButton,
-          firstWeekdayColumnLeadingIconStyle(visibleWeekDayCount),
-        ]}
+        style={[styles.closeButton, alignIconToFirstWeekday(disableWeekDays)]}
       />
       <View style={sharedStyles.root} />
-      <View style={lastWeekdayColumnTrailingTextStyle(visibleWeekDayCount)}>
+      <View style={alignTextToLastWeekday(disableWeekDays)}>
         <Button
           textColor={theme.colors.primary}
           onPress={props.onSave}
@@ -66,7 +61,6 @@ const styles = StyleSheet.create({
   headerBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     width: '100%',
     paddingTop: 12,
   },

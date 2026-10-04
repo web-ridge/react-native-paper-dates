@@ -1,11 +1,10 @@
-import { ScrollView, StyleSheet, View } from 'react-native'
+import { Platform, ScrollView, StyleSheet, View } from 'react-native'
 import { Icon, Text, TouchableRipple, useTheme } from 'react-native-paper'
 import Day, { EmptyDay } from './Day'
 
 import {
   addMonths,
   areDatesOnSameDay,
-  countVisibleWeekDays,
   daySize,
   estimatedMonthHeight,
   getFirstDayOfMonth,
@@ -19,8 +18,8 @@ import {
   isDateBetween,
   showWeekDay,
   useRangeChecker,
-  firstWeekdayColumnLeadingTextStyle,
 } from './dateUtils'
+import { alignTextToFirstWeekday } from './weekdayColumns'
 import { getCalendarHeaderHeight } from './CalendarHeader'
 import type { StyleProp, ViewStyle } from 'react-native'
 import type {
@@ -104,10 +103,6 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
     dayContentStyle,
   } = props
   const isHorizontal = scrollMode === 'horizontal'
-  // Always wrap days in horizontal mode so portrait → landscape rotation
-  // resizes an existing nested ScrollView. Mounting one after the pager
-  // has laid out leaves the day grid clipped and unscrollable.
-  const scrollDays = isHorizontal
 
   const theme = useTheme()
   const textColorOnPrimary = useTextColorOnPrimary()
@@ -278,8 +273,6 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
 
   const iconSource = selectingYear ? 'menu-up' : 'menu-down'
 
-  const visibleWeekDayCount = countVisibleWeekDays(disableWeekDays)
-
   const weeks = grid.map(({ weekIndex, generatedDays }) => (
     <View style={styles.week} key={weekIndex}>
       {generatedDays
@@ -316,7 +309,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
   return (
     <View
       style={
-        scrollDays
+        isHorizontal
           ? styles.monthFill
           : {
               height: getMonthHeight(
@@ -350,7 +343,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
             {
               borderRadius: roundness,
             },
-            firstWeekdayColumnLeadingTextStyle(visibleWeekDayCount),
+            alignTextToFirstWeekday(disableWeekDays),
           ]}
         >
           <View
@@ -385,13 +378,19 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
           </View>
         </TouchableRipple>
       </View>
-      {scrollDays ? (
+      {isHorizontal ? (
         <ScrollView
           alwaysBounceVertical={false}
           directionalLockEnabled
           keyboardShouldPersistTaps="handled"
           nestedScrollEnabled
-          style={[sharedStyles.root, sharedStyles.minHeightZero]}
+          style={[
+            sharedStyles.root,
+            sharedStyles.minHeightZero,
+            Platform.OS === 'web'
+              ? ({ colorScheme: theme.dark ? 'dark' : 'light' } as ViewStyle)
+              : null,
+          ]}
           testID="react-native-paper-dates-month-days-scroll"
         >
           {weeks}

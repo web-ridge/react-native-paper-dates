@@ -1,18 +1,9 @@
-import {
-  Animated,
-  StyleSheet,
-  useWindowDimensions,
-  View,
-} from 'react-native'
+import { Animated, StyleSheet, useWindowDimensions, View } from 'react-native'
 import { Divider } from 'react-native-paper'
-import { useHeaderBackgroundColor } from '../shared/utils'
+import { useHeaderBackgroundColor, useIsLargeScreen } from '../shared/utils'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import {
-  countVisibleWeekDays,
-  weekdayLetterSpanExpandStyle,
-  weekdayLetterSpanStyle,
-  type DisableWeekDaysType,
-} from './dateUtils'
+import type { DisableWeekDaysType } from './dateUtils'
+import { weekdaySpan, weekdaySpanOvershoot } from './weekdayColumns'
 
 export default function DatePickerModalHeaderBackground({
   children,
@@ -24,27 +15,24 @@ export default function DatePickerModalHeaderBackground({
   const backgroundColor = useHeaderBackgroundColor()
   const insets = useSafeAreaInsets()
   const { width, height } = useWindowDimensions()
-  const visibleWeekDayCount = countVisibleWeekDays(disableWeekDays)
-  // Phone landscape only (e.g. 932x430). Tablets are >650 in both axes
-  // even when rotated, and the divider should stay edge-to-edge there.
-  const isPhoneLandscape =
-    width > height && !(width > 650 && height > 650)
+  const isLargeScreen = useIsLargeScreen()
+  const isPhoneLandscape = width > height && !isLargeScreen
 
   return (
     <Animated.View
-      style={{
-        backgroundColor,
-        paddingLeft: insets.left,
-        paddingRight: insets.right,
-        width: '100%',
-      }}
+      style={[
+        styles.background,
+        {
+          backgroundColor,
+          paddingLeft: insets.left,
+          paddingRight: insets.right,
+        },
+      ]}
     >
       {children}
       {isPhoneLandscape ? (
-        <View style={styles.dividerTrack}>
-          <View style={weekdayLetterSpanStyle(visibleWeekDayCount)}>
-            <Divider style={weekdayLetterSpanExpandStyle} />
-          </View>
+        <View style={weekdaySpan(disableWeekDays)}>
+          <Divider style={weekdaySpanOvershoot} />
         </View>
       ) : (
         <Divider />
@@ -54,7 +42,7 @@ export default function DatePickerModalHeaderBackground({
 }
 
 const styles = StyleSheet.create({
-  dividerTrack: {
+  background: {
     width: '100%',
   },
 })
