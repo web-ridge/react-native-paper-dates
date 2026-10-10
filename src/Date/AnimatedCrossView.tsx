@@ -27,10 +27,11 @@ export default function AnimatedCrossView({
   }, [collapsed])
 
   return (
-    <View style={sharedStyles.root}>
+    <View style={[sharedStyles.root, sharedStyles.minHeightZero]}>
       <Animated.View
         pointerEvents={collapsed ? 'auto' : 'none'}
         style={[
+          sharedStyles.minHeightZero,
           sharedStyles.root,
           {
             opacity: calendarOpacity.current,

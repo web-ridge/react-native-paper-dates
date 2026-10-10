@@ -3,9 +3,14 @@
 exports[`renders AnimatedCrossView 1`] = `
 <View
   style={
-    {
-      "flex": 1,
-    }
+    [
+      {
+        "flex": 1,
+      },
+      {
+        "minHeight": 0,
+      },
+    ]
   }
 >
   <View
@@ -14,6 +19,7 @@ exports[`renders AnimatedCrossView 1`] = `
     style={
       {
         "flex": 1,
+        "minHeight": 0,
         "opacity": 0,
         "transform": [
           {

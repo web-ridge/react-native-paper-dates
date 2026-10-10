@@ -1,4 +1,3 @@
-import { View } from 'react-native'
 import { useTheme } from 'react-native-paper'
 import {
   getIndexFromVerticalOffset,
@@ -30,7 +29,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { sharedStyles } from '../shared/styles'
+import { verticalScrollbarGutter } from './CalendarHeader'
 
 const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect
@@ -94,26 +93,52 @@ function Swiper({
 
   return (
     <>
-      {renderHeader && renderHeader(renderProps)}
       {isHorizontal ? (
-        <View style={sharedStyles.root}>
-          {renderItem({ index, onPrev, onNext })}
-        </View>
-      ) : (
         <AutoSizer>
-          {({ width, height }) => (
-            <VerticalScroller
-              width={width}
-              height={height}
-              initialIndex={initialIndex}
-              estimatedHeight={estimatedMonthHeight}
-              renderItem={renderItem}
-              startWeekOnMonday={startWeekOnMonday}
-              startYear={startYear}
-              endYear={endYear}
-            />
-          )}
+          {({ height }) => {
+            const overflow =
+              getMonthHeight(
+                'horizontal',
+                index,
+                startWeekOnMonday,
+                startYear,
+                endYear
+              ) > height
+            return (
+              <>
+                {renderItem({
+                  index,
+                  onPrev,
+                  onNext,
+                })}
+                {renderHeader
+                  ? renderHeader({
+                      ...renderProps,
+                      endInset: overflow ? verticalScrollbarGutter : 0,
+                    })
+                  : null}
+              </>
+            )
+          }}
         </AutoSizer>
+      ) : (
+        <>
+          {renderHeader && renderHeader(renderProps)}
+          <AutoSizer>
+            {({ width, height }) => (
+              <VerticalScroller
+                width={width}
+                height={height}
+                initialIndex={initialIndex}
+                estimatedHeight={estimatedMonthHeight}
+                renderItem={renderItem}
+                startWeekOnMonday={startWeekOnMonday}
+                startYear={startYear}
+                endYear={endYear}
+              />
+            )}
+          </AutoSizer>
+        </>
       )}
       {renderFooter && renderFooter(renderProps)}
     </>

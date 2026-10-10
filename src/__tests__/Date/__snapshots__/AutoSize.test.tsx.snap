@@ -2,6 +2,7 @@
 
 exports[`renders AutoSizer 1`] = `
 <View
+  collapsable={false}
   onLayout={[Function]}
   style={
     [
@@ -11,7 +12,9 @@ exports[`renders AutoSizer 1`] = `
       {
         "flex": 1,
       },
-      null,
+      {
+        "minHeight": 0,
+      },
     ]
   }
 />

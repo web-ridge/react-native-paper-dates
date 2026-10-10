@@ -4,6 +4,9 @@ export const sharedStyles = StyleSheet.create({
   flexDirectionRow: {
     flexDirection: 'row',
   },
+  minHeightZero: {
+    minHeight: 0,
+  },
   opacity0: {
     opacity: 0,
   },

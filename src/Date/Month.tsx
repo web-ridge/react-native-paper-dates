@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native'
+import { Platform, ScrollView, StyleSheet, View } from 'react-native'
 import { Icon, Text, TouchableRipple, useTheme } from 'react-native-paper'
 import Day, { EmptyDay } from './Day'
 
@@ -19,6 +19,7 @@ import {
   showWeekDay,
   useRangeChecker,
 } from './dateUtils'
+import { alignTextToFirstWeekday } from './weekdayColumns'
 import { getCalendarHeaderHeight } from './CalendarHeader'
 import type { StyleProp, ViewStyle } from 'react-native'
 import type {
@@ -272,17 +273,54 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
 
   const iconSource = selectingYear ? 'menu-up' : 'menu-down'
 
+  const weeks = grid.map(({ weekIndex, generatedDays }) => (
+    <View style={styles.week} key={weekIndex}>
+      {generatedDays
+        .filter((gd) => showWeekDay(gd.dayIndex, disableWeekDays))
+        .map((gd) =>
+          gd.beforeWeekDay || gd.afterWeekDay ? (
+            <EmptyDay key={gd.dayIndex} />
+          ) : (
+            <Day
+              key={gd.dayIndex}
+              theme={theme}
+              day={gd.dayOfMonth}
+              month={gd.month}
+              year={gd.year}
+              selected={gd.selected}
+              inRange={gd.inRange}
+              leftCrop={gd.leftCrop}
+              rightCrop={gd.rightCrop}
+              onPressDate={onPressDate}
+              isToday={gd.isToday}
+              selectColor={selectColor}
+              primaryColor={primaryColor}
+              disabled={gd.disabled}
+              textColorOnPrimary={textColorOnPrimary}
+              dayContent={dayContent}
+              dayContentPosition={dayContentPosition}
+              dayContentStyle={dayContentStyle}
+            />
+          )
+        )}
+    </View>
+  ))
+
   return (
     <View
-      style={{
-        height: getMonthHeight(
-          scrollMode,
-          index,
-          startWeekOnMonday,
-          startYear,
-          endYear
-        ),
-      }}
+      style={
+        isHorizontal
+          ? styles.monthFill
+          : {
+              height: getMonthHeight(
+                scrollMode,
+                index,
+                startWeekOnMonday,
+                startYear,
+                endYear
+              ),
+            }
+      }
     >
       <View
         style={[
@@ -305,6 +343,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
             {
               borderRadius: roundness,
             },
+            alignTextToFirstWeekday(disableWeekDays),
           ]}
         >
           <View
@@ -339,38 +378,26 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
           </View>
         </TouchableRipple>
       </View>
-      {grid.map(({ weekIndex, generatedDays }) => (
-        <View style={styles.week} key={weekIndex}>
-          {generatedDays
-            .filter((gd) => showWeekDay(gd.dayIndex, disableWeekDays))
-            .map((gd) =>
-              gd.beforeWeekDay || gd.afterWeekDay ? (
-                <EmptyDay key={gd.dayIndex} />
-              ) : (
-                <Day
-                  key={gd.dayIndex}
-                  theme={theme}
-                  day={gd.dayOfMonth}
-                  month={gd.month}
-                  year={gd.year}
-                  selected={gd.selected}
-                  inRange={gd.inRange}
-                  leftCrop={gd.leftCrop}
-                  rightCrop={gd.rightCrop}
-                  onPressDate={onPressDate}
-                  isToday={gd.isToday}
-                  selectColor={selectColor}
-                  primaryColor={primaryColor}
-                  disabled={gd.disabled}
-                  textColorOnPrimary={textColorOnPrimary}
-                  dayContent={dayContent}
-                  dayContentPosition={dayContentPosition}
-                  dayContentStyle={dayContentStyle}
-                />
-              )
-            )}
-        </View>
-      ))}
+      {isHorizontal ? (
+        <ScrollView
+          alwaysBounceVertical={false}
+          directionalLockEnabled
+          keyboardShouldPersistTaps="handled"
+          nestedScrollEnabled
+          style={[
+            sharedStyles.root,
+            sharedStyles.minHeightZero,
+            Platform.OS === 'web'
+              ? ({ colorScheme: theme.dark ? 'dark' : 'light' } as ViewStyle)
+              : null,
+          ]}
+          testID="react-native-paper-dates-month-days-scroll"
+        >
+          {weeks}
+        </ScrollView>
+      ) : (
+        weeks
+      )}
     </View>
   )
 }
@@ -386,6 +413,10 @@ export const monthHeaderSingleHeight =
 const styles = StyleSheet.create({
   iconWrapper: {
     padding: 8,
+  },
+  monthFill: {
+    flex: 1,
+    minHeight: 0,
   },
   monthHeader: {
     height: montHeaderHeight,
@@ -403,10 +434,8 @@ const styles = StyleSheet.create({
   },
   yearButton: {
     alignSelf: 'flex-start',
-    marginLeft: 6,
   },
   yearButtonInner: {
-    paddingLeft: 16,
     flexDirection: 'row',
     alignItems: 'center',
   },

@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import { useWindowDimensions } from 'react-native'
 import { DefaultTheme, MD3DarkTheme, useTheme } from 'react-native-paper'
 import Color from 'color'
 
@@ -22,6 +23,11 @@ export function useLatest<T>(value: T) {
   const ref = useRef(value)
   ref.current = value
   return ref
+}
+
+export function useIsLargeScreen() {
+  const { width, height } = useWindowDimensions()
+  return width > 650 && height > 650
 }
 
 export function useHeaderBackgroundColor() {

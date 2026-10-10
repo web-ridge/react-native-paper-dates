@@ -3,7 +3,6 @@ import {
   Platform,
   StyleSheet,
   TouchableWithoutFeedback,
-  useWindowDimensions,
   View,
 } from 'react-native'
 import { useTheme } from 'react-native-paper'
@@ -14,7 +13,7 @@ import DatePickerModalContent, {
 } from './DatePickerModalContent'
 import { memo } from 'react'
 import { sharedStyles } from '../shared/styles'
-import { supportedOrientations } from '../shared/utils'
+import { supportedOrientations, useIsLargeScreen } from '../shared/utils'
 
 interface DatePickerModalProps {
   visible: boolean
@@ -58,19 +57,11 @@ export function DatePickerModal(
     })
 
   const theme = useTheme()
-  const dimensions = useWindowDimensions()
-
-  // Automatically use formSheet on iPad for better fit
-  // iPad detection: width > 650 AND height > 650 (works in both orientations)
-  // - iPad portrait: 744x1133, landscape: 1133x744 (both > 650)
-  // - iPhone landscape: 932x430 (height < 650, so excluded)
-  // pageSheet on iPad is ~540pt wide, but calendar is max 400pt, causing centering
-  // formSheet at ~540x620pt provides a better fit for the date picker
+  const isLargeScreen = useIsLargeScreen()
   const shouldUseSheet =
     Platform.OS === 'ios' &&
     (presentationStyle === 'pageSheet' || presentationStyle === 'formSheet')
-  const useFormSheet =
-    shouldUseSheet && dimensions.width > 650 && dimensions.height > 650
+  const useFormSheet = shouldUseSheet && isLargeScreen
   const isSheet = shouldUseSheet
 
   return (
@@ -107,7 +98,7 @@ export function DatePickerModal(
             style={[
               styles.modalContent,
               { backgroundColor: theme.colors.elevation.level3 },
-              dimensions.width > 650
+              isLargeScreen
                 ? useFormSheet
                   ? styles.modalContentFormSheet
                   : styles.modalContentBig
@@ -134,6 +125,7 @@ const styles = StyleSheet.create({
   modalContent: {
     flex: 1,
     width: '100%',
+    minHeight: 0,
   },
   modalContentBig: {
     maxWidth: 400,

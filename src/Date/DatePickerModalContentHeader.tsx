@@ -7,6 +7,11 @@ import Color from 'color'
 import { getTranslation } from '../translations/utils'
 import { useMemo } from 'react'
 import { sharedStyles } from '../shared/styles'
+import type { DisableWeekDaysType } from './dateUtils'
+import {
+  alignTextToFirstWeekday,
+  centerIconOnLastWeekday,
+} from './weekdayColumns'
 
 export interface HeaderPickProps {
   moreLabel?: string
@@ -31,6 +36,7 @@ export interface HeaderContentProps extends HeaderPickProps {
   collapsed: boolean
   onToggle: () => any
   locale: string | undefined
+  disableWeekDays?: DisableWeekDaysType
 }
 
 function getLabel(
@@ -65,6 +71,7 @@ export default function DatePickerModalContentHeader(
     editIcon,
     calendarIcon,
     allowEditing,
+    disableWeekDays,
   } = props
   const theme = useTheme()
   const label = getLabel(props.locale, props.mode, props.label)
@@ -77,7 +84,7 @@ export default function DatePickerModalContentHeader(
 
   return (
     <View style={styles.header}>
-      <View>
+      <View style={alignTextToFirstWeekday(disableWeekDays)}>
         <Text
           maxFontSizeMultiplier={1.5}
           style={[styles.label, { color: supportingTextColor, ...textFont }]}
@@ -112,6 +119,7 @@ export default function DatePickerModalContentHeader(
           iconColor={theme.colors.onSurface}
           onPress={onToggle}
           testID="react-native-paper-dates-toggle-edit"
+          style={[styles.editButton, centerIconOnLastWeekday(disableWeekDays)]}
         />
       ) : null}
     </View>
@@ -234,12 +242,15 @@ export function HeaderContentRange({
 }
 
 const styles = StyleSheet.create({
+  editButton: {
+    marginTop: 0,
+    marginBottom: 0,
+    marginStart: 0,
+  },
   header: {
     height: 75,
     alignItems: 'center',
     flexDirection: 'row',
-    paddingLeft: 24,
-    paddingRight: 12,
   },
   headerContentContainer: {
     flexDirection: 'row',

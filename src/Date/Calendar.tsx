@@ -204,7 +204,7 @@ function Calendar(
   const selectColor = theme.colors.primaryContainer
 
   return (
-    <View style={sharedStyles.root}>
+    <View style={[sharedStyles.root, sharedStyles.minHeightZero]}>
       <Swiper
         initialIndex={getInitialIndex(firstDate, startYear, endYear)}
         selectedYear={selectedYear}
@@ -239,13 +239,14 @@ function Calendar(
             dayContentStyle={dayContentStyle}
           />
         )}
-        renderHeader={({ onPrev, onNext }) => (
+        renderHeader={({ endInset, onPrev, onNext }) => (
           <CalendarHeader
-            locale={locale}
-            onPrev={onPrev}
-            onNext={onNext}
-            scrollMode={scrollMode}
             disableWeekDays={disableWeekDays}
+            endInset={endInset}
+            locale={locale}
+            onNext={onNext}
+            onPrev={onPrev}
+            scrollMode={scrollMode}
             startWeekOnMonday={startWeekOnMonday || false}
           />
         )}

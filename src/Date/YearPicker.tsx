@@ -1,4 +1,11 @@
-import { FlatList, ScrollView, StyleSheet, View } from 'react-native'
+import {
+  FlatList,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import { Text, TouchableRipple, useTheme } from 'react-native-paper'
 import { range } from '../shared/utils'
 import { memo, useEffect, useRef } from 'react'
@@ -51,7 +58,12 @@ export default function YearPicker({
     >
       <FlatList<number>
         ref={flatList}
-        style={sharedStyles.root}
+        style={[
+          sharedStyles.root,
+          Platform.OS === 'web'
+            ? ({ colorScheme: theme.dark ? 'dark' : 'light' } as ViewStyle)
+            : null,
+        ]}
         data={years}
         renderScrollComponent={(sProps) => {
           return <ScrollView {...sProps} />

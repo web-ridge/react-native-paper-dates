@@ -10,6 +10,7 @@ import {
 import { defaultStartYear, defaultEndYear } from './dateUtils'
 
 export type RenderProps = {
+  endInset?: number
   index: number
   onNext: () => any
   onPrev: () => any
