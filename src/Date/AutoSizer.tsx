@@ -48,7 +48,7 @@ export default function AutoSizer({
     measured.width > 0 &&
     measured.height > 0
       ? measured
-      : initialLayout ?? null
+      : (initialLayout ?? null)
 
   return (
     <View
