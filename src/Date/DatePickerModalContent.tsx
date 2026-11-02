@@ -92,6 +92,7 @@ export function DatePickerModalContent(
     dayContent,
     dayContentPosition,
     dayContentStyle,
+    initialLayout,
   } = props
   const anyProps = props as any
   const defaultUppercase = false
@@ -209,6 +210,7 @@ export function DatePickerModalContent(
               dayContent={dayContent}
               dayContentPosition={dayContentPosition}
               dayContentStyle={dayContentStyle}
+              initialLayout={initialLayout}
             />
           }
           calendarEdit={
