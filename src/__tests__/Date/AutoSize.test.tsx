@@ -43,3 +43,28 @@ it('follows a later layout instead of keeping the first measured size', async ()
 
   expect(getByText('640x320')).toBeTruthy()
 })
+
+it('renders with initialLayout before the first layout, then follows the measured size', async () => {
+  const { getByText, root } = await render(
+    <AutoSizer initialLayout={{ width: 300, height: 400 }}>
+      {({ width, height }) => (
+        <Text>
+          {width}x{height}
+        </Text>
+      )}
+    </AutoSizer>
+  )
+
+  expect(getByText('300x400')).toBeTruthy()
+
+  const view = root!.queryAll((node) => node.type === 'View', {
+    includeSelf: true,
+  })[0]
+  await act(() => {
+    view.props.onLayout({
+      nativeEvent: { layout: { x: 0, y: 0, width: 320, height: 640 } },
+    })
+  })
+
+  expect(getByText('320x640')).toBeTruthy()
+})

@@ -13,8 +13,11 @@ type MeasuredLayout = WidthAndHeight & {
 
 export default function AutoSizer({
   children,
+  initialLayout,
 }: {
   children: ({ width, height }: WidthAndHeight) => any
+  /** Used until the first measurement, so children render on the first frame. */
+  initialLayout?: WidthAndHeight
 }) {
   const { width: windowWidth, height: windowHeight } = useWindowDimensions()
   const windowKey = `${windowWidth}x${windowHeight}`
@@ -45,7 +48,7 @@ export default function AutoSizer({
     measured.width > 0 &&
     measured.height > 0
       ? measured
-      : null
+      : (initialLayout ?? null)
 
   return (
     <View

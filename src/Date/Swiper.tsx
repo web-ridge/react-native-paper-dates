@@ -44,6 +44,7 @@ function Swiper({
   startWeekOnMonday,
   startYear,
   endYear,
+  initialLayout,
 }: SwiperProps) {
   const isHorizontal = scrollMode === 'horizontal'
 
@@ -94,7 +95,7 @@ function Swiper({
   return (
     <>
       {isHorizontal ? (
-        <AutoSizer>
+        <AutoSizer initialLayout={initialLayout}>
           {({ height }) => {
             const overflow =
               getMonthHeight(
@@ -124,7 +125,7 @@ function Swiper({
       ) : (
         <>
           {renderHeader && renderHeader(renderProps)}
-          <AutoSizer>
+          <AutoSizer initialLayout={initialLayout}>
             {({ width, height }) => (
               <VerticalScroller
                 width={width}

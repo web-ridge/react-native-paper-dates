@@ -26,6 +26,7 @@ export type SwiperProps = {
   startWeekOnMonday: boolean
   startYear?: number
   endYear?: number
+  initialLayout?: { width: number; height: number }
 }
 
 // Helper function to get the minimum allowed index based on startYear

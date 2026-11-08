@@ -17,7 +17,7 @@ import CalendarEdit from './CalendarEdit'
 import DatePickerModalHeaderBackground from './DatePickerModalHeaderBackground'
 import DatePickerModalStatusBar from './DatePickerModalStatusBar'
 import { memo, useCallback, useEffect, useState } from 'react'
-import { View } from 'react-native'
+import { LayoutChangeEvent, Platform, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { sharedStyles } from '../shared/styles'
 
@@ -40,6 +40,12 @@ interface DatePickerModalContentBaseProps {
   disableSafeTop?: boolean
   disableStatusBar?: boolean
   statusBarOnTopOfBackdrop?: boolean
+
+  /**
+   * Called with the calendar's measured size. `DatePickerModal` uses it to
+   * draw the calendar immediately the next time it opens.
+   */
+  onCalendarLayout?: (layout: { width: number; height: number }) => void
 }
 
 export interface DatePickerModalContentRangeProps
@@ -92,6 +98,8 @@ export function DatePickerModalContent(
     dayContent,
     dayContentPosition,
     dayContentStyle,
+    initialLayout,
+    onCalendarLayout,
   } = props
   const anyProps = props as any
   const defaultUppercase = false
@@ -145,6 +153,19 @@ export function DatePickerModalContent(
     setCollapsed((prev) => !prev)
   }, [setCollapsed])
 
+  // The calendar fills this view inside the inset padding. Not on web, where
+  // the range calendar's header sits above the part that sizes itself.
+  const onCalendarContainerLayout = useCallback(
+    (event: LayoutChangeEvent) => {
+      const { width, height } = event.nativeEvent.layout
+      const calendarWidth = width - insets.left - insets.right
+      if (onCalendarLayout && calendarWidth > 0 && height > 0) {
+        onCalendarLayout({ width: calendarWidth, height })
+      }
+    },
+    [onCalendarLayout, insets.left, insets.right]
+  )
+
   return (
     <>
       <DatePickerModalHeaderBackground disableWeekDays={disableWeekDays}>
@@ -188,6 +209,7 @@ export function DatePickerModalContent(
           sharedStyles.minHeightZero,
           { paddingLeft: insets.left, paddingRight: insets.right },
         ]}
+        onLayout={Platform.OS === 'web' ? undefined : onCalendarContainerLayout}
       >
         <AnimatedCrossView
           collapsed={collapsed}
@@ -209,6 +231,7 @@ export function DatePickerModalContent(
               dayContent={dayContent}
               dayContentPosition={dayContentPosition}
               dayContentStyle={dayContentStyle}
+              initialLayout={initialLayout}
             />
           }
           calendarEdit={

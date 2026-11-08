@@ -36,7 +36,7 @@ function getVisibleArray(
 
 function Swiper(props: SwiperProps) {
   return (
-    <AutoSizer>
+    <AutoSizer initialLayout={props.initialLayout}>
       {({ width, height }) => (
         <SwiperInner {...props} width={width} height={height} />
       )}
@@ -64,6 +64,26 @@ function SwiperInner({
   )
 
   const parentRef = useRef<ScrollView | null>(null)
+
+  // Start on the current month instead of at 0 (where no month is rendered)
+  // and then jumping there after mount. Later moves go through scrollTo.
+  const [initialContentOffset] = useState(() => {
+    if (!isIndexWithinRange(initialIndex, startYear, endYear)) {
+      return undefined
+    }
+    return isHorizontal
+      ? { x: getHorizontalMonthOffset(initialIndex, width), y: 0 }
+      : {
+          x: 0,
+          y:
+            getVerticalMonthsOffset(
+              initialIndex,
+              startWeekOnMonday,
+              startYear,
+              endYear
+            ) - montHeaderHeight,
+        }
+  })
 
   const scrollTo = useCallback(
     (index: number, animated: boolean) => {
@@ -208,6 +228,7 @@ function SwiperInner({
         onMomentumScrollEnd={onMomentumScrollEnd}
         onScrollEndDrag={onMomentumScrollEnd}
         onLayout={scrollToCurrent}
+        contentOffset={initialContentOffset}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         decelerationRate="fast"

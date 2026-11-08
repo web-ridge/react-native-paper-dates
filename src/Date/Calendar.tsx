@@ -77,6 +77,12 @@ export type BaseCalendarProps = {
   dayContentPosition?: DayContentPosition
   /** Style for the `dayContent` overlay container (offsets, size, …). */
   dayContentStyle?: StyleProp<ViewStyle>
+  /**
+   * Size of the calendar, if known before it is laid out (e.g. a fixed-size
+   * dialog). The calendar draws immediately at this size instead of rendering
+   * nothing until it has measured itself; the measured size replaces it.
+   */
+  initialLayout?: { width: number; height: number }
 }
 
 export type CalendarDate = Date | undefined
@@ -136,6 +142,7 @@ function Calendar(
     dayContent,
     dayContentPosition,
     dayContentStyle,
+    initialLayout,
   } = props
   const scrollMode =
     mode === 'range' || mode === 'multiple' ? 'vertical' : 'horizontal'
@@ -207,6 +214,7 @@ function Calendar(
     <View style={[sharedStyles.root, sharedStyles.minHeightZero]}>
       <Swiper
         initialIndex={getInitialIndex(firstDate, startYear, endYear)}
+        initialLayout={initialLayout}
         selectedYear={selectedYear}
         scrollMode={scrollMode}
         startWeekOnMonday={startWeekOnMonday || false}

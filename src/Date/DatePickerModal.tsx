@@ -3,6 +3,7 @@ import {
   Platform,
   StyleSheet,
   TouchableWithoutFeedback,
+  useWindowDimensions,
   View,
 } from 'react-native'
 import { useTheme } from 'react-native-paper'
@@ -11,7 +12,7 @@ import DatePickerModalContent, {
   DatePickerModalContentRangeProps,
   DatePickerModalContentSingleProps,
 } from './DatePickerModalContent'
-import { memo } from 'react'
+import { memo, useCallback, useMemo, useState } from 'react'
 import { sharedStyles } from '../shared/styles'
 import { supportedOrientations, useIsLargeScreen } from '../shared/utils'
 
@@ -55,6 +56,38 @@ export function DatePickerModal(
       web: 'none',
       default: 'slide',
     })
+
+  // The calendar unmounts when the modal closes. Keep its size from the last
+  // open, so the next open draws the month on the first frame instead of
+  // waiting for the calendar to measure itself. Only reused for the same window
+  // size, since rotating or resizing changes the layout.
+  const { width: windowWidth, height: windowHeight } = useWindowDimensions()
+  const windowKey = `${windowWidth}x${windowHeight}`
+  const [lastCalendarLayout, setLastCalendarLayout] = useState<{
+    windowKey: string
+    width: number
+    height: number
+  } | null>(null)
+  const onCalendarLayout = useCallback(
+    ({ width, height }: { width: number; height: number }) => {
+      setLastCalendarLayout((prev) =>
+        prev &&
+        prev.windowKey === windowKey &&
+        prev.width === width &&
+        prev.height === height
+          ? prev
+          : { windowKey, width, height }
+      )
+    },
+    [windowKey]
+  )
+  const rememberedCalendarLayout = useMemo(
+    () =>
+      lastCalendarLayout && lastCalendarLayout.windowKey === windowKey
+        ? { width: lastCalendarLayout.width, height: lastCalendarLayout.height }
+        : undefined,
+    [lastCalendarLayout, windowKey]
+  )
 
   const theme = useTheme()
   const isLargeScreen = useIsLargeScreen()
@@ -113,6 +146,8 @@ export function DatePickerModal(
               statusBarOnTopOfBackdrop={isSheet || statusBarOnTopOfBackdrop}
               withDateFormatInLabel={props.withDateFormatInLabel}
               placeholder={props.placeholder}
+              initialLayout={rest.initialLayout ?? rememberedCalendarLayout}
+              onCalendarLayout={onCalendarLayout}
             />
           </View>
         </View>
