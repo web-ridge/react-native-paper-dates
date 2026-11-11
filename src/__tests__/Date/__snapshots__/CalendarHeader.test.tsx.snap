@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`renders CalendarHeader 1`] = `
 <View
@@ -23,7 +23,7 @@ exports[`renders CalendarHeader 1`] = `
           "height": 44,
         },
         {
-          "backgroundColor": "rgb(238, 232, 244)",
+          "backgroundColor": "rgba(236, 230, 240, 1)",
         },
       ]
     }
@@ -45,7 +45,7 @@ exports[`renders CalendarHeader 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "fontFamily": "System",
               "fontWeight": "400",
               "letterSpacing": 0,
@@ -89,7 +89,7 @@ exports[`renders CalendarHeader 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "fontFamily": "System",
               "fontWeight": "400",
               "letterSpacing": 0,
@@ -133,7 +133,7 @@ exports[`renders CalendarHeader 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "fontFamily": "System",
               "fontWeight": "400",
               "letterSpacing": 0,
@@ -177,7 +177,7 @@ exports[`renders CalendarHeader 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "fontFamily": "System",
               "fontWeight": "400",
               "letterSpacing": 0,
@@ -221,7 +221,7 @@ exports[`renders CalendarHeader 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "fontFamily": "System",
               "fontWeight": "400",
               "letterSpacing": 0,
@@ -265,7 +265,7 @@ exports[`renders CalendarHeader 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "fontFamily": "System",
               "fontWeight": "400",
               "letterSpacing": 0,
@@ -309,7 +309,7 @@ exports[`renders CalendarHeader 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "fontFamily": "System",
               "fontWeight": "400",
               "letterSpacing": 0,

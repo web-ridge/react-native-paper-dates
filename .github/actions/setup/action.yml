@@ -1,5 +1,5 @@
 name: Setup
-description: Setup Node.js and install dependencies
+description: Setup Node.js, Bun, and install dependencies
 
 runs:
   using: composite
@@ -7,21 +7,15 @@ runs:
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
-        node-version-file: .nvmrc
+        node-version: 24
 
-    - name: Cache dependencies
-      id: yarn-cache
-      uses: actions/cache@v3
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v2
       with:
-        path: |
-          **/node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-yarn-
+        bun-version-file: package.json
 
     - name: Install dependencies
-      if: steps.yarn-cache.outputs.cache-hit != 'true'
       run: |
-        yarn install --cwd example --frozen-lockfile
-        yarn install --frozen-lockfile
+        bun install --frozen-lockfile --cwd example
+        bun install --frozen-lockfile
       shell: bash

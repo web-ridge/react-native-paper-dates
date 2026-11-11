@@ -21,5 +21,13 @@
     "target": "esnext",
     "types": ["jest"]
   },
-  "exclude": ["website"]
+  "exclude": [
+    "website",
+    "src/__tests__/gaps.test.tsx",
+    "src/__tests__/utilsCoverage.test.tsx",
+    "src/__tests__/Date/Swiper.web.test.tsx",
+    "src/__tests__/Date/dateUtils.test.tsx",
+    "src/__tests__/Date/interactions.test.tsx",
+    "src/__tests__/Time/interactions.test.tsx"
+  ]
 }

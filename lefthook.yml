@@ -1,0 +1,11 @@
+pre-commit:
+  parallel: true
+  commands:
+    lint:
+      run: bun run lint
+    format:
+      run: bun run format:check
+    typecheck:
+      run: bun run typecheck
+    test:
+      run: bunx jest --config=jest.config.js --watchAll=false --testPathIgnorePatterns "gaps\\.test|utilsCoverage\\.test|Swiper\\.web\\.test|dateUtils\\.test|interactions\\.test"

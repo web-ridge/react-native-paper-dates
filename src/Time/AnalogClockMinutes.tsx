@@ -25,8 +25,8 @@ function AnalogClockMinutes({ minutes }: { minutes: number }) {
             style={[
               styles.outerHourRoot,
               {
-                top: a[1] || 0,
-                left: a[0] || 0,
+                top: a[1],
+                left: a[0],
               },
             ]}
           >
@@ -65,18 +65,18 @@ function getMinuteNumbers(size: number, count: number) {
 }
 
 const styles = StyleSheet.create({
+  outerHourInner: { borderRadius: 24 },
   outerHourRoot: {
-    position: 'absolute',
-    justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 20,
-    width: 48,
+    borderRadius: 24,
     height: 48,
+    justifyContent: 'center',
     marginLeft: -24,
     marginTop: -24,
-    borderRadius: 24,
+    position: 'absolute',
+    width: 48,
+    zIndex: 20,
   },
-  outerHourInner: { borderRadius: 24 },
 })
 
 export default memo(AnalogClockMinutes)

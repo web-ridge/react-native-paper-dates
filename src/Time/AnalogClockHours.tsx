@@ -24,8 +24,8 @@ function AnalogClockHours({
           style={[
             styles.hourRoot,
             {
-              top: a[1] || 0,
-              left: a[0] || 0,
+              top: a[1],
+              left: a[0],
             },
           ]}
         >
@@ -56,8 +56,8 @@ function AnalogClockHours({
               style={[
                 styles.hourRoot,
                 {
-                  top: a[1] || 0,
-                  left: a[0] || 0,
+                  top: a[1],
+                  left: a[0],
                 },
               ]}
             >
@@ -87,15 +87,15 @@ const styles = StyleSheet.create({
     borderRadius: 24,
   },
   hourRoot: {
-    position: 'absolute',
-    justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 20,
-    width: 48,
+    borderRadius: 24,
     height: 48,
+    justifyContent: 'center',
     marginLeft: -24,
     marginTop: -24,
-    borderRadius: 24,
+    position: 'absolute',
+    width: 48,
+    zIndex: 20,
   },
 })
 

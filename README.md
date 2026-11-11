@@ -23,7 +23,9 @@ Try the live demo at [reactnativepaperdates.com](https://www.reactnativepaperdat
 
 ## Getting started
 
-See the [documentation](https://web-ridge.github.io/react-native-paper-dates/) for installation and usage.
+This library requires [React Native Paper 6](https://oss.callstack.com/react-native-paper/6.x/docs/guides/getting-started) (`>=6.0.0-alpha.0 <7`) and [react-native-reanimated](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started/) `>= 4.3.0`. Paper 5 is not supported.
+
+See the [documentation](https://web-ridge.github.io/react-native-paper-dates/) for installation and usage. If you are upgrading from Paper 5, see the [migration guide](https://web-ridge.github.io/react-native-paper-dates/guide/migration).
 
 ## Maintainers
 

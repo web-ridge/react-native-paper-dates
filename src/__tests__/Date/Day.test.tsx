@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react-native'
-import { MD3LightTheme, Text } from 'react-native-paper'
+import { LightTheme, Text } from 'react-native-paper'
 import Day from '../../Date/Day'
 import type { DayContentRenderer } from '../../Date/Calendar'
 
 const defaultProps = {
-  theme: MD3LightTheme,
+  theme: LightTheme,
   textColorOnPrimary: '#fff',
   day: 15,
   month: 0,

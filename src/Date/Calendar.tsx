@@ -15,7 +15,7 @@ import { memo, useCallback, useState } from 'react'
 import type { ReactNode } from 'react'
 import YearPicker from './YearPicker'
 import { useTheme } from 'react-native-paper'
-import { useLatest } from '../shared/utils'
+import { themeColor, useLatest } from '../shared/utils'
 import { sharedStyles } from '../shared/styles'
 import { defaultStartYear, defaultEndYear } from './dateUtils'
 
@@ -235,9 +235,9 @@ function Calendar(
             selectingYear={selectingYear}
             onPressDate={onPressDate}
             scrollMode={scrollMode}
-            primaryColor={theme.colors.primary}
-            selectColor={selectColor}
-            roundness={theme.roundness}
+            primaryColor={themeColor(theme.colors.primary)}
+            selectColor={themeColor(selectColor)}
+            roundness={theme.shapes.corner.extraSmall}
             disableWeekDays={disableWeekDays}
             startWeekOnMonday={startWeekOnMonday || false}
             startYear={startYear}

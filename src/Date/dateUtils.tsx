@@ -214,18 +214,11 @@ export function getGridCount(
   startYear?: number,
   endYear?: number
 ) {
-  const dynamicGridCounts = createGridCounts(getTotalMonths(startYear, endYear))
-  const cHeight = dynamicGridCounts[index]
-  if (cHeight) {
-    return cHeight
-  }
   const monthDate = addMonths(
     new Date(),
     getRealIndex(index, startYear, endYear)
   )
-  const h = getGridCountForDate(monthDate, startWeekOnMonday)
-  dynamicGridCounts[index] = h
-  return h
+  return getGridCountForDate(monthDate, startWeekOnMonday)
 }
 
 export function getGridCountForDate(date: Date, startWeekOnMonday: boolean) {

@@ -1,9 +1,5 @@
-import {
-  Keyboard,
-  StyleSheet,
-  TextInput as TextInputNative,
-  View,
-} from 'react-native'
+import { Keyboard, StyleSheet, View } from 'react-native'
+import type { TextInputInstance } from 'react-native'
 
 import type { ModeType, ValidRangeType } from './Calendar'
 import type { LocalState } from './DatePickerModalContent'
@@ -45,9 +41,9 @@ function CalendarEdit({
   disableWeekDays?: DisableWeekDaysType
 }) {
   const theme = useTheme()
-  const dateInput = useRef<TextInputNative | null>(null)
-  const startInput = useRef<TextInputNative | null>(null)
-  const endInput = useRef<TextInputNative | null>(null)
+  const dateInput = useRef<TextInputInstance | null>(null)
+  const startInput = useRef<TextInputInstance | null>(null)
+  const endInput = useRef<TextInputInstance | null>(null)
   const inputStyle = { backgroundColor: theme.colors.elevation.level3 }
 
   // when switching views focus, or un-focus text input
@@ -59,13 +55,13 @@ function CalendarEdit({
 
     const inputsToFocus = [dateInput.current, startInput.current].filter(
       (n) => n
-    ) as TextInputNative[]
+    ) as TextInputInstance[]
 
     const inputsToBlur = [
       dateInput.current,
       startInput.current,
       endInput.current,
-    ].filter((n) => n) as TextInputNative[]
+    ].filter((n) => n) as TextInputInstance[]
 
     if (collapsed) {
       inputsToBlur.forEach((ip) => ip.blur())
@@ -96,7 +92,7 @@ function CalendarEdit({
             <DatePickerInputWithoutModal
               inputMode="start"
               ref={dateInput}
-              mode="outlined"
+              variant="outlined"
               label={label}
               value={state.date}
               onChange={(date) => onChange({ ...state, date })}
@@ -117,7 +113,7 @@ function CalendarEdit({
                 <DatePickerInputWithoutModal
                   inputMode="start"
                   ref={startInput}
-                  mode="outlined"
+                  variant="outlined"
                   label={startLabel}
                   value={state.startDate}
                   onChange={(startDate) => onChange({ ...state, startDate })}
@@ -138,7 +134,7 @@ function CalendarEdit({
                 <DatePickerInputWithoutModal
                   inputMode="end"
                   ref={endInput}
-                  mode="outlined"
+                  variant="outlined"
                   label={endLabel}
                   value={state.endDate}
                   onChange={(endDate) => onChange({ ...state, endDate })}

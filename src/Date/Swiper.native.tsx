@@ -5,6 +5,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
+import type { ScrollViewInstance } from 'react-native'
 import {
   getHorizontalMonthOffset,
   getIndexFromVerticalOffset,
@@ -63,7 +64,7 @@ function SwiperInner({
     getVisibleArray(initialIndex, { isHorizontal, height })
   )
 
-  const parentRef = useRef<ScrollView | null>(null)
+  const parentRef = useRef<ScrollViewInstance | null>(null)
 
   // Start on the current month instead of at 0 (where no month is rendered)
   // and then jumping there after mount. Later moves go through scrollTo.
@@ -94,9 +95,6 @@ function SwiperInner({
       idx.current = index
       setVisibleIndexes(getVisibleArray(index, { isHorizontal, height }))
 
-      if (!parentRef.current) {
-        return
-      }
       const offset = isHorizontal
         ? getHorizontalMonthOffset(index, width)
         : getVerticalMonthsOffset(
@@ -106,14 +104,15 @@ function SwiperInner({
             endYear
           ) - montHeaderHeight
 
+      const scroller = parentRef.current!
       if (isHorizontal) {
-        parentRef.current.scrollTo({
+        scroller.scrollTo({
           y: 0,
           x: offset,
           animated,
         })
       } else {
-        parentRef.current.scrollTo({
+        scroller.scrollTo({
           y: offset,
           x: 0,
           animated,
@@ -247,50 +246,48 @@ function SwiperInner({
             },
           ]}
         >
-          {visibleIndexes
-            ? new Array(visibleIndexes.length).fill(undefined).map((_, vi) => {
-                const monthIndex = visibleIndexes[vi]
-                const monthHeight = getMonthHeight(
-                  scrollMode,
-                  monthIndex,
-                  startWeekOnMonday,
-                  startYear,
-                  endYear
-                )
-                // Horizontal paging does not scroll inside a month. Bound the
-                // page to the dialog so the day grid can scroll in landscape.
-                return (
-                  <View
-                    key={vi}
-                    // eslint-disable-next-line react-native/no-inline-styles
-                    style={{
-                      top: isHorizontal
-                        ? 0
-                        : getVerticalMonthsOffset(
-                            monthIndex,
-                            startWeekOnMonday,
-                            startYear,
-                            endYear
-                          ),
-                      left: isHorizontal
-                        ? getHorizontalMonthOffset(monthIndex, width)
-                        : 0,
-                      right: isHorizontal ? undefined : 0,
-                      position: 'absolute',
-                      width: isHorizontal ? width : undefined,
-                      height: isHorizontal ? height : monthHeight,
-                      overflow: 'hidden',
-                    }}
-                  >
-                    {renderItem({
-                      index: monthIndex,
-                      onPrev: onPrev,
-                      onNext: onNext,
-                    })}
-                  </View>
-                )
-              })
-            : null}
+          {new Array(visibleIndexes.length).fill(undefined).map((_, vi) => {
+            const monthIndex = visibleIndexes[vi]
+            const monthHeight = getMonthHeight(
+              scrollMode,
+              monthIndex,
+              startWeekOnMonday,
+              startYear,
+              endYear
+            )
+            // Horizontal paging does not scroll inside a month. Bound the
+            // page to the dialog so the day grid can scroll in landscape.
+            return (
+              <View
+                key={vi}
+                // eslint-disable-next-line react-native/no-inline-styles
+                style={{
+                  height: isHorizontal ? height : monthHeight,
+                  left: isHorizontal
+                    ? getHorizontalMonthOffset(monthIndex, width)
+                    : 0,
+                  overflow: 'hidden',
+                  position: 'absolute',
+                  right: isHorizontal ? undefined : 0,
+                  top: isHorizontal
+                    ? 0
+                    : getVerticalMonthsOffset(
+                        monthIndex,
+                        startWeekOnMonday,
+                        startYear,
+                        endYear
+                      ),
+                  width: isHorizontal ? width : undefined,
+                }}
+              >
+                {renderItem({
+                  index: monthIndex,
+                  onPrev: onPrev,
+                  onNext: onNext,
+                })}
+              </View>
+            )
+          })}
         </View>
       </ScrollView>
       {renderHeader &&

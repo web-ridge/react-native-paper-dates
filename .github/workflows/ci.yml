@@ -18,10 +18,13 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Lint files
-        run: yarn lint
+        run: bun run lint
+
+      - name: Check formatting
+        run: bun run format:check
 
       - name: Typecheck files
-        run: yarn typecheck
+        run: bun run typecheck
 
   test:
     runs-on: ubuntu-latest
@@ -33,7 +36,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Run unit tests
-        run: yarn test --maxWorkers=2 --coverage
+        run: bun run test --maxWorkers=2 --coverage
 
   build:
     runs-on: ubuntu-latest
@@ -45,7 +48,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build package
-        run: yarn prepack
+        run: bun run prepack
   release:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
@@ -65,7 +68,7 @@ jobs:
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
       - name: Upgrade npm for OIDC support
         run: npm install -g npm@latest
-      - run: yarn release
+      - run: bun run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   deploy-example:
@@ -78,7 +81,7 @@ jobs:
           fetch-depth: 0
       - name: Setup
         uses: ./.github/actions/setup
-      - run: yarn build-example
+      - run: bun run build-example
       - name: Deploy example
         uses: jakejarvis/s3-sync-action@master
         with:

@@ -4,76 +4,79 @@ We want this community to be friendly and respectful to each other. Please follo
 
 ## Development workflow
 
-> **Working on a Windows machine?** Before executing any of the commands below, please make sure to comment out the line: `yarn-path "scripts/bootstrap.js"` in the `.yarnrc` file located at the project's root.
-
-To get started with the project, run `yarn bootstrap` in the root directory to install the required dependencies for each package:
+To get started with the project, run `bun run bootstrap` in the root directory to install the required dependencies for each package:
 
 ```sh
-yarn bootstrap
+bun run bootstrap
 ```
 
-While developing, you can run the [example app](https://github.com/web-ridge/react-native-paper-dates/tree/master/example) to test your changes.
+While developing, you can run the example app in `example/` to test your changes.
 
 To start the packager:
 
 ```sh
-yarn example start
+bun run example start
 ```
 
 To run the example app on Android:
 
 ```sh
-yarn example android
+bun run example android
 ```
 
 To run the example app on iOS:
 
 ```sh
-yarn example ios
+bun run example ios
 ```
 
-Make sure your code passes TypeScript and ESLint. Run the following to verify:
+To run the example app on web:
 
 ```sh
-yarn typescript
-yarn lint
+bun run example web
+```
+
+Make sure your code passes TypeScript and Oxlint. Run the following to verify:
+
+```sh
+bun run typecheck
+bun run lint
+bun run format:check
 ```
 
 To fix formatting errors, run the following:
 
 ```sh
-yarn lint --fix
+bun run format
 ```
 
 Remember to add tests for your change if possible. Run the unit tests by:
 
 ```sh
-yarn test
+bun run test
 ```
-
-To edit the Objective-C files, open `example/ios/PaperDatesExample.xcworkspace` in XCode and find the source files at `Pods > Development Pods > react-native-paper-dates`.
-
-To edit the Kotlin files, open `example/android` in Android studio and find the source files at `reactnativepaperdates` under `Android`.
 
 ### Linting and tests
 
-[ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [TypeScript](https://www.typescriptlang.org/)
+[Oxlint](https://oxc.rs/docs/guide/usage/linter), [Oxfmt](https://oxc.rs/docs/guide/usage/formatter), [TypeScript](https://www.typescriptlang.org/)
 
-We use [TypeScript](https://www.typescriptlang.org/) for type checking, [ESLint](https://eslint.org/) with [Prettier](https://prettier.io/) for linting and formatting the code, and [Jest](https://jestjs.io/) for testing.
+We use [TypeScript](https://www.typescriptlang.org/) for type checking, [Oxlint](https://oxc.rs/docs/guide/usage/linter) for linting, [Oxfmt](https://oxc.rs/docs/guide/usage/formatter) for formatting, and [Jest](https://jestjs.io/) for testing.
 
-Our pre-commit hooks verify that the linter and tests pass when committing.
+Our pre-commit hooks verify that tests pass when committing.
 
 ### Scripts
 
 The `package.json` file contains various scripts for common tasks:
 
-- `yarn bootstrap`: setup project by installing all dependencies and pods.
-- `yarn typescript`: type-check files with TypeScript.
-- `yarn lint`: lint files with ESLint.
-- `yarn test`: run unit tests with Jest.
-- `yarn example start`: start the Metro server for the example app.
-- `yarn example android`: run the example app on Android.
-- `yarn example ios`: run the example app on iOS.
+- `bun run bootstrap`: setup project by installing all dependencies and pods.
+- `bun run typecheck`: type-check files with TypeScript.
+- `bun run lint`: lint files with Oxlint.
+- `bun run format`: format files with Oxfmt.
+- `bun run test`: run unit tests with Jest.
+- `bun run example start`: start the Metro server for the example app.
+- `bun run example android`: run the example app on Android.
+- `bun run example ios`: run the example app on iOS.
+- `bun run example web`: run the example app on web.
 
 ### Sending a pull request
 

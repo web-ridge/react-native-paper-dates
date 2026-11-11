@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`renders DayName 1`] = `
 <View
@@ -18,7 +18,7 @@ exports[`renders DayName 1`] = `
           "textAlign": "left",
         },
         {
-          "color": "rgba(28, 27, 31, 1)",
+          "color": "rgba(29, 27, 32, 1)",
           "fontFamily": "System",
           "fontWeight": "400",
           "letterSpacing": 0,

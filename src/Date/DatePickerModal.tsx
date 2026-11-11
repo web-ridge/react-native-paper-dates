@@ -14,7 +14,11 @@ import DatePickerModalContent, {
 } from './DatePickerModalContent'
 import { memo, useCallback, useMemo, useState } from 'react'
 import { sharedStyles } from '../shared/styles'
-import { supportedOrientations, useIsLargeScreen } from '../shared/utils'
+import {
+  scrimColor,
+  supportedOrientations,
+  useIsLargeScreen,
+} from '../shared/utils'
 
 interface DatePickerModalProps {
   visible: boolean
@@ -119,7 +123,7 @@ export function DatePickerModal(
             style={[
               StyleSheet.absoluteFill,
               sharedStyles.root,
-              { backgroundColor: theme.colors.backdrop },
+              { backgroundColor: scrimColor(theme.colors.scrim) },
             ]}
           />
         </TouchableWithoutFeedback>
@@ -159,27 +163,27 @@ export function DatePickerModal(
 const styles = StyleSheet.create({
   modalContent: {
     flex: 1,
-    width: '100%',
     minHeight: 0,
+    width: '100%',
   },
   modalContentBig: {
-    maxWidth: 400,
-    maxHeight: 600,
     borderRadius: 28,
-    width: '100%',
+    maxHeight: 600,
+    maxWidth: 400,
     overflow: 'hidden',
+    width: '100%',
   },
   modalContentFormSheet: {
-    maxWidth: 520,
-    maxHeight: 600,
     borderRadius: 28,
-    width: '100%',
+    maxHeight: 600,
+    maxWidth: 520,
     overflow: 'hidden',
+    width: '100%',
   },
   modalRoot: {
-    justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
+    justifyContent: 'center',
   },
 })
 

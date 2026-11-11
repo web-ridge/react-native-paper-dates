@@ -9,6 +9,15 @@ const workspaceRoot = path.resolve(projectRoot, '..')
 const nodeModules = path.join(projectRoot, 'node_modules')
 const librarySrc = path.join(workspaceRoot, 'src')
 const libraryEntry = fs.realpathSync(path.join(librarySrc, 'index.tsx'))
+const versionModulePath = path.join(projectRoot, 'src', 'libraryVersion.ts')
+const versionModuleSource = `// Synced from the library package.json when Metro starts.\nexport const libraryVersion = '${pak.version}'\n`
+
+if (
+  !fs.existsSync(versionModulePath) ||
+  fs.readFileSync(versionModulePath, 'utf8') !== versionModuleSource
+) {
+  fs.writeFileSync(versionModulePath, versionModuleSource)
+}
 
 const modules = Object.keys({
   ...pak.peerDependencies,
@@ -45,7 +54,6 @@ config.resolver.extraNodeModules = {
     acc[name] = path.join(nodeModules, name)
     return acc
   }, {}),
-  crypto: path.join(nodeModules, 'expo-crypto'),
 }
 
 const originalResolveRequest = config.resolver.resolveRequest

@@ -11,8 +11,6 @@ import {
   getGridCount,
   getRealIndex,
   getStartAtIndex,
-  getTotalMonths,
-  createGridCounts,
   DisableWeekDaysType,
   getDaysInMonth,
   isDateBetween,
@@ -327,8 +325,8 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
           styles.monthHeader,
           isHorizontal
             ? {
-                marginTop: monthHeaderSingleMarginTop,
                 marginBottom: monthHeaderSingleMarginBottom,
+                marginTop: monthHeaderSingleMarginTop,
               }
             : null,
         ]}
@@ -429,15 +427,15 @@ const styles = StyleSheet.create({
   },
   week: {
     flexDirection: 'row',
-    marginBottom: weekMargin,
     height: daySize,
+    marginBottom: weekMargin,
   },
   yearButton: {
     alignSelf: 'flex-start',
   },
   yearButtonInner: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
   },
 })
 
@@ -475,7 +473,6 @@ function weeksOffset(
   endYear?: number
 ): number {
   const dynamicStartAtIndex = getStartAtIndex(startYear, endYear)
-  const dynamicGridCounts = createGridCounts(getTotalMonths(startYear, endYear))
 
   if (index === dynamicStartAtIndex) {
     return 0
@@ -484,16 +481,12 @@ function weeksOffset(
   if (index > dynamicStartAtIndex) {
     for (let i = 0; i < index - dynamicStartAtIndex; i++) {
       const cIndex = dynamicStartAtIndex + i
-      off +=
-        dynamicGridCounts[cIndex] ||
-        getGridCount(cIndex, startWeekOnMonday, startYear, endYear)
+      off += getGridCount(cIndex, startWeekOnMonday, startYear, endYear)
     }
   } else {
     for (let i = 0; i < dynamicStartAtIndex - index; i++) {
       const cIndex = dynamicStartAtIndex - i - 1
-      off -=
-        dynamicGridCounts[cIndex] ||
-        getGridCount(cIndex, startWeekOnMonday, startYear, endYear)
+      off -= getGridCount(cIndex, startWeekOnMonday, startYear, endYear)
     }
   }
   return off
@@ -554,7 +547,7 @@ export function getVerticalMonthsOffset(
   const dynamicBeginOffset =
     estimatedMonthHeight * getStartAtIndex(startYear, endYear)
 
-  return (c || 0) + dynamicBeginOffset
+  return c + dynamicBeginOffset
 }
 
 export function getMonthHeight(
@@ -570,8 +563,7 @@ export function getMonthHeight(
   const currentMonthHeight = weekSize * gc
   const extraHeight =
     scrollMode === 'horizontal' ? monthHeaderSingleHeight : montHeaderHeight
-  const c = calendarHeight + currentMonthHeight + extraHeight
-  return c || 0
+  return calendarHeight + currentMonthHeight + extraHeight
 }
 
 export default memo(Month)

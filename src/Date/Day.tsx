@@ -145,29 +145,29 @@ function Day(props: {
 
 const styles = StyleSheet.create({
   button: {
-    width: daySize,
+    borderRadius: daySize / 2,
     height: daySize,
     overflow: 'hidden',
-    borderRadius: daySize / 2,
+    width: daySize,
   },
   content: {
     // Absolutely positioned without insets, so Yoga still honours the parent's
     // centering and this box lines up with the day circle instead of the
     // (wider) grid cell.
+    height: daySize,
     position: 'absolute',
     width: daySize,
-    height: daySize,
   },
   day: {
-    flexBasis: 0,
-    flex: 1,
+    alignItems: 'center',
+    borderColor: 'transparent',
     borderRadius: daySize / 2,
-    width: daySize,
+    borderWidth: 1,
+    flex: 1,
+    flexBasis: 0,
     height: daySize,
     justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'transparent',
+    width: daySize,
   },
   disabled: {
     opacity: 0.3,
@@ -177,10 +177,10 @@ const styles = StyleSheet.create({
     flexBasis: 0,
   },
   root: {
-    flexBasis: 0,
-    flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+    flex: 1,
+    flexBasis: 0,
+    justifyContent: 'center',
     position: 'relative',
   },
 })
@@ -188,16 +188,16 @@ const styles = StyleSheet.create({
 // Anchors for `dayContent`, applied to a box the size of the day circle.
 const contentPositions = StyleSheet.create({
   'bottom': {
-    justifyContent: 'flex-end',
     alignItems: 'center',
+    justifyContent: 'flex-end',
     paddingBottom: 2,
   },
-  'bottom-left': { justifyContent: 'flex-end', alignItems: 'flex-start' },
-  'bottom-right': { justifyContent: 'flex-end', alignItems: 'flex-end' },
-  'center': { justifyContent: 'center', alignItems: 'center' },
-  'top': { justifyContent: 'flex-start', alignItems: 'center', paddingTop: 2 },
-  'top-left': { justifyContent: 'flex-start', alignItems: 'flex-start' },
-  'top-right': { justifyContent: 'flex-start', alignItems: 'flex-end' },
+  'bottom-left': { alignItems: 'flex-start', justifyContent: 'flex-end' },
+  'bottom-right': { alignItems: 'flex-end', justifyContent: 'flex-end' },
+  'center': { alignItems: 'center', justifyContent: 'center' },
+  'top': { alignItems: 'center', justifyContent: 'flex-start', paddingTop: 2 },
+  'top-left': { alignItems: 'flex-start', justifyContent: 'flex-start' },
+  'top-right': { alignItems: 'flex-end', justifyContent: 'flex-start' },
 })
 
 export default memo(Day)

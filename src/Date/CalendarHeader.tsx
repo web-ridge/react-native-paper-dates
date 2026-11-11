@@ -99,26 +99,26 @@ function CalendarHeader({
 }
 
 const styles = StyleSheet.create({
-  datePickerHeader: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    left: 0,
-    zIndex: 10,
-  },
-  buttonContainer: {
-    height: buttonContainerHeight,
-    marginTop: buttonContainerMarginTop,
-    marginBottom: buttonContainerMarginBottom,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  arrowGroup: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   arrowButton: {
     margin: 0,
+  },
+  arrowGroup: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  buttonContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    height: buttonContainerHeight,
+    marginBottom: buttonContainerMarginBottom,
+    marginTop: buttonContainerMarginTop,
+  },
+  datePickerHeader: {
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    zIndex: 10,
   },
 })
 

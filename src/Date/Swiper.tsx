@@ -193,10 +193,7 @@ function VerticalScroller({
   const parentRef = useRef<HTMLDivElement | null>(null)
 
   useIsomorphicLayoutEffect(() => {
-    const element = parentRef.current
-    if (!element) {
-      return
-    }
+    const element = parentRef.current as HTMLDivElement
     const top =
       getVerticalMonthsOffset(
         idx.current,
@@ -254,10 +251,10 @@ function VerticalScroller({
       ref={parentRef}
       // eslint-disable-next-line react-native/no-inline-styles
       style={{
-        height,
-        width,
-        overflow: 'auto',
         colorScheme: theme.dark ? 'dark' : 'light',
+        height,
+        overflow: 'auto',
+        width,
       }}
       onScroll={onScroll}
     >
@@ -270,47 +267,40 @@ function VerticalScroller({
           position: 'relative',
         }}
       >
-        {[0, 1, 2, 3, 4]
-          .map((vi) => {
-            const monthIndex = visibleIndexes[vi]
-
-            if (monthIndex === undefined) {
-              return null
-            }
-
-            return (
-              <div
-                key={vi}
-                // eslint-disable-next-line react-native/no-inline-styles
-                style={{
-                  willChange: 'transform',
-                  transform: `translateY(${getVerticalMonthsOffset(
-                    monthIndex,
-                    startWeekOnMonday,
-                    effectiveStartYear,
-                    effectiveEndYear
-                  )}px)`,
-                  left: 0,
-                  right: 0,
-                  position: 'absolute',
-                  height: getMonthHeight(
-                    'vertical',
-                    monthIndex,
-                    startWeekOnMonday,
-                    effectiveStartYear,
-                    effectiveEndYear
-                  ),
-                }}
-              >
-                {renderItem({
-                  index: monthIndex,
-                  onPrev: empty,
-                  onNext: empty,
-                })}
-              </div>
-            )
-          })
-          .filter((item) => item !== null)}
+        {[0, 1, 2, 3, 4].map((vi) => {
+          const monthIndex = visibleIndexes[vi]
+          return (
+            <div
+              key={vi}
+              // eslint-disable-next-line react-native/no-inline-styles
+              style={{
+                height: getMonthHeight(
+                  'vertical',
+                  monthIndex,
+                  startWeekOnMonday,
+                  effectiveStartYear,
+                  effectiveEndYear
+                ),
+                left: 0,
+                position: 'absolute',
+                right: 0,
+                transform: `translateY(${getVerticalMonthsOffset(
+                  monthIndex,
+                  startWeekOnMonday,
+                  effectiveStartYear,
+                  effectiveEndYear
+                )}px)`,
+                willChange: 'transform',
+              }}
+            >
+              {renderItem({
+                index: monthIndex,
+                onPrev: empty,
+                onNext: empty,
+              })}
+            </div>
+          )
+        })}
       </div>
     </div>
   )

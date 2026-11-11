@@ -28,6 +28,11 @@
     "userInterfaceStyle": "automatic",
     "experiments": {
       "onDemandFilesystem": false
-    }
+    },
+    "plugins": [
+      "expo-font",
+      "expo-splash-screen",
+      "expo-status-bar"
+    ]
   }
 }

@@ -31,5 +31,5 @@ assignees: ''
 | react-native                | x.x.x
 | react-native-paper    | x.x.x
 | node                            | x.x.x
-| npm or yarn                | x.x.x
+| package manager        | x.x.x
 | expo sdk                     | x.x.x

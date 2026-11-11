@@ -243,14 +243,14 @@ export function HeaderContentRange({
 
 const styles = StyleSheet.create({
   editButton: {
-    marginTop: 0,
     marginBottom: 0,
     marginStart: 0,
+    marginTop: 0,
   },
   header: {
-    height: 75,
     alignItems: 'center',
     flexDirection: 'row',
+    height: 75,
   },
   headerContentContainer: {
     flexDirection: 'row',

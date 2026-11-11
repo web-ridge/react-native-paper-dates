@@ -1,0 +1,113 @@
+import { PackageManagerTabs } from '@theme'
+
+# Migration (Paper 5 to Paper 6)
+
+This guide is for apps on a Paper 5-compatible release of `react-native-paper-dates` (through `0.24.2`) that are upgrading to `0.25.0`, which requires **React Native Paper 6**.
+
+Paper 6 is a breaking change for Paper itself. Finish that upgrade first, then update this library. See [Paper's getting started guide](https://oss.callstack.com/react-native-paper/6.x/docs/guides/getting-started) and the [Paper 5.x to 6.x migration](https://oss.callstack.com/react-native-paper/6.x/docs/guides/migration) for theme, icon, and Button changes.
+
+## Upgrade dependencies
+
+This library requires:
+
+- **react-native-paper** `>=6.0.0-alpha.0 <7`
+- **[react-native-reanimated](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started/)** `>= 4.3.0`
+- **[react-native-safe-area-context](https://github.com/AppAndFlow/react-native-safe-area-context)** (already required)
+
+Paper 6 also needs **react-native-worklets** and its Babel plugin. Follow Paper's install guide for that setup.
+
+Then install a Paper 6-compatible release of this library:
+
+<PackageManagerTabs command="install react-native-paper-dates" />
+
+## What stays the same
+
+These APIs are unchanged:
+
+- Imports from `react-native-paper-dates`
+- `registerTranslation` and locale objects
+- Wrapping the app in `PaperProvider` and `SafeAreaProvider`
+- Props on `DatePickerModal`, `TimePicker`, and `TimePickerModal`
+
+`DatePickerModal` `mode` is still `'single' | 'range' | 'multiple'`. Do not rename those props to `variant`.
+
+## DatePickerInput
+
+`DatePickerInput` forwards [Paper 6 TextInput](https://oss.callstack.com/react-native-paper/6.x/docs/components/TextInput/TextInput) props. Update call sites as follows.
+
+### Variant
+
+```jsx
+// Before (Paper 5)
+<DatePickerInput locale="en" value={date} onChange={setDate} inputMode="start" mode="flat" />
+<DatePickerInput locale="en" value={date} onChange={setDate} inputMode="start" mode="outlined" />
+
+// After (Paper 6)
+<DatePickerInput locale="en" value={date} onChange={setDate} inputMode="start" variant="filled" />
+<DatePickerInput locale="en" value={date} onChange={setDate} inputMode="start" variant="outlined" />
+```
+
+| Before | After |
+| --- | --- |
+| `mode="flat"` | `variant="filled"` |
+| `mode="outlined"` | `variant="outlined"` |
+
+### Calendar icon and accessories
+
+Do not pass `right` or `endAccessory`. The calendar icon uses `endAccessory`. Change the icon with `calendarIcon`.
+
+```jsx
+// Before — do not keep `right` on DatePickerInput
+<DatePickerInput
+  locale="en"
+  value={date}
+  onChange={setDate}
+  inputMode="start"
+  right={<TextInput.Icon icon="calendar" />}
+/>
+
+// After — calendar icon is built in
+<DatePickerInput
+  locale="en"
+  value={date}
+  onChange={setDate}
+  inputMode="start"
+  calendarIcon="calendar"
+/>
+```
+
+### Supporting text
+
+Paper 6 removed `HelperText`. If your app rendered helper text next to `DatePickerInput`, pass `supportingText` on the input instead.
+
+```jsx
+// Before
+<>
+  <DatePickerInput locale="en" value={date} onChange={setDate} inputMode="start" />
+  <HelperText type="info">Use the format shown on the field</HelperText>
+</>
+
+// After
+<DatePickerInput
+  locale="en"
+  value={date}
+  onChange={setDate}
+  inputMode="start"
+  supportingText="Use the format shown on the field"
+/>
+```
+
+Other Paper 5 TextInput props (`left`, `dense`, outline and underline color overrides, and similar) were removed. See the [input date picker](./date-picker/input-date-picker) props and the [Paper 6 TextInput](https://oss.callstack.com/react-native-paper/6.x/docs/components/TextInput/TextInput) docs.
+
+## Find the call sites
+
+Search the app for these strings and update matches that belong to `DatePickerInput` or Paper 5:
+
+- `<DatePickerInput`
+- `mode="flat"`
+- `MD3LightTheme` / `MD3DarkTheme`
+- `HelperText`
+
+:::info
+Do not rewrite every `mode=` in the project. `DatePickerModal` still uses `mode="single"`, `mode="range"`, and `mode="multiple"`.
+:::

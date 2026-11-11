@@ -1,0 +1,21 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "semi": false,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "useTabs": false,
+  "trailingComma": "es5",
+  "quoteProps": "consistent",
+  "printWidth": 80,
+  "ignorePatterns": [
+    "website/",
+    "lib/",
+    "coverage/",
+    "src/__tests__/gaps.test.tsx",
+    "src/__tests__/utilsCoverage.test.tsx",
+    "src/__tests__/Date/Swiper.web.test.tsx",
+    "src/__tests__/Date/dateUtils.test.tsx",
+    "src/__tests__/Date/interactions.test.tsx",
+    "src/__tests__/Time/interactions.test.tsx"
+  ]
+}

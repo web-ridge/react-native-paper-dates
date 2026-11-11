@@ -1,9 +1,5 @@
-import {
-  StyleSheet,
-  TextInput as TextInputNative,
-  useWindowDimensions,
-  View,
-} from 'react-native'
+import { StyleSheet, useWindowDimensions, View } from 'react-native'
+import type { TextInputInstance } from 'react-native'
 import { Text, useTheme } from 'react-native-paper'
 
 import {
@@ -16,7 +12,7 @@ import {
 } from './timeUtils'
 import TimeInput from './TimeInput'
 import AmPmSwitcher from './AmPmSwitcher'
-import { useLatest } from '../shared/utils'
+import { themeColor, useLatest } from '../shared/utils'
 import Color from 'color'
 import { getTranslation } from '../translations/utils'
 import { memo, useCallback, useRef } from 'react'
@@ -49,8 +45,8 @@ function TimeInputs({
 }) {
   const theme = useTheme()
 
-  const startInput = useRef<TextInputNative | null>(null)
-  const endInput = useRef<TextInputNative | null>(null)
+  const startInput = useRef<TextInputInstance | null>(null)
+  const endInput = useRef<TextInputInstance | null>(null)
   const dimensions = useWindowDimensions()
   const isLandscape = dimensions.width > dimensions.height
   const useHorizontalAmPm =
@@ -93,8 +89,8 @@ function TimeInputs({
           maxFontSizeMultiplier={1.2}
           selectionColor={
             theme.dark
-              ? Color(theme.colors.primary).darken(0.2).hex()
-              : theme.colors.primary
+              ? Color(themeColor(theme.colors.primary)).darken(0.2).hex()
+              : themeColor(theme.colors.primary)
           }
           returnKeyType={'next'}
           onSubmitEditing={onSubmitStartInput}
@@ -160,8 +156,8 @@ function TimeInputs({
           maxFontSizeMultiplier={1.2}
           selectionColor={
             theme.dark
-              ? Color(theme.colors.primary).darken(0.2).hex()
-              : theme.colors.primary
+              ? Color(themeColor(theme.colors.primary)).darken(0.2).hex()
+              : themeColor(theme.colors.primary)
           }
           onSubmitEditing={onSubmitEndInput}
           onChanged={(newMinutesFromInput) => {
@@ -222,22 +218,22 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   dot: {
-    width: 7,
-    height: 7,
     borderRadius: 7 / 2,
+    height: 7,
+    width: 7,
   },
   hoursAndMinutesSeparator: {
+    alignItems: 'center',
     fontSize: 65,
     width: 24,
-    alignItems: 'center',
   },
   inputContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
   },
   landscapeColumn: {
-    flexDirection: 'column',
     alignItems: 'flex-start',
+    flexDirection: 'column',
   },
   landscapeSwitcherSpacing: {
     marginTop: 16,

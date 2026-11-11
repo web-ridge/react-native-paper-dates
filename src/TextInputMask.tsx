@@ -1,6 +1,8 @@
 import {
+  cloneElement,
   ComponentProps,
   forwardRef,
+  isValidElement,
   ReactNode,
   useEffect,
   useState,
@@ -88,7 +90,11 @@ function TextInputWithMask(
         onChange && onChange(e)
       }}
       maxLength={mask.length}
-      right={inputButton}
+      endAccessory={
+        isValidElement(inputButton)
+          ? (props) => cloneElement(inputButton, props)
+          : undefined
+      }
     />
   )
 }

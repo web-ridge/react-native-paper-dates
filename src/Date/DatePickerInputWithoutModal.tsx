@@ -1,5 +1,5 @@
 import TextInputWithMask from '../TextInputMask'
-import { HelperText, useTheme } from 'react-native-paper'
+import { Text, useTheme } from 'react-native-paper'
 import { StyleSheet, View } from 'react-native'
 import useDateInput from './inputUtils'
 import type { DatePickerInputProps } from './DatePickerInput.shared'
@@ -99,14 +99,12 @@ function DatePickerInputWithoutModal(
               rest.keyboardAppearance ?? (theme.dark ? 'dark' : 'default')
             }
             error={(!!error && !hideValidationErrors) || !!hasError}
-            style={[styles.input, style]}
+            style={style}
             inputButton={inputButton}
           />
         </View>
         {error && !hideValidationErrors ? (
-          <HelperText type="error" visible={!!error}>
-            {error}
-          </HelperText>
+          <Text style={{ color: theme.colors.error }}>{error}</Text>
         ) : null}
       </View>
       {modal?.({
@@ -144,21 +142,16 @@ function getLabel({
 }
 
 const styles = StyleSheet.create({
+  inputContainer: {
+    alignItems: 'stretch',
+    alignSelf: 'stretch',
+    flexGrow: 1,
+    width: '100%',
+  },
   root: {
+    alignItems: 'flex-start',
     flexGrow: 1,
     justifyContent: 'center',
-    alignItems: 'flex-start',
-    width: '100%',
-  },
-  inputContainer: {
-    flexGrow: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    width: '100%',
-  },
-  input: {
-    flexGrow: 1,
     width: '100%',
   },
 })

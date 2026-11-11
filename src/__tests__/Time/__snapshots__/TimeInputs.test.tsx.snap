@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`renders TimeInputs 1`] = `
 <View
@@ -53,7 +53,7 @@ exports[`renders TimeInputs 1`] = `
               "width": 96,
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "fontFamily": "System",
               "fontSize": 57,
               "lineHeight": undefined,
@@ -75,7 +75,7 @@ exports[`renders TimeInputs 1`] = `
             "textAlign": "left",
           },
           {
-            "color": "rgba(28, 27, 31, 1)",
+            "color": "rgba(29, 27, 32, 1)",
             "writingDirection": "ltr",
           },
           [
@@ -124,7 +124,7 @@ exports[`renders TimeInputs 1`] = `
             "width": 7,
           },
           {
-            "backgroundColor": "rgba(28, 27, 31, 1)",
+            "backgroundColor": "rgba(29, 27, 32, 1)",
           },
         ]
       }
@@ -145,7 +145,7 @@ exports[`renders TimeInputs 1`] = `
             "width": 7,
           },
           {
-            "backgroundColor": "rgba(28, 27, 31, 1)",
+            "backgroundColor": "rgba(29, 27, 32, 1)",
           },
         ]
       }
@@ -200,7 +200,7 @@ exports[`renders TimeInputs 1`] = `
               "width": 96,
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "fontFamily": "System",
               "fontSize": 57,
               "lineHeight": undefined,
@@ -222,7 +222,7 @@ exports[`renders TimeInputs 1`] = `
             "textAlign": "left",
           },
           {
-            "color": "rgba(28, 27, 31, 1)",
+            "color": "rgba(29, 27, 32, 1)",
             "writingDirection": "ltr",
           },
           [

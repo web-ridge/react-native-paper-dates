@@ -197,7 +197,7 @@ export function DatePickerModalContent(
           endLabel={props.endLabel}
           uppercase={props.uppercase ?? defaultUppercase}
           locale={locale}
-          editIcon={props?.editIcon}
+          editIcon={props.editIcon}
           calendarIcon={props.calendarIcon}
           allowEditing={props.allowEditing ?? true}
           disableWeekDays={disableWeekDays}

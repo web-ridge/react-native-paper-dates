@@ -137,18 +137,18 @@ function TimePicker({
 
 const styles = StyleSheet.create({
   clockContainer: {
-    paddingTop: 36,
     paddingLeft: 12,
     paddingRight: 12,
+    paddingTop: 36,
   },
   clockContainerLandscape: {
-    paddingTop: 0,
     paddingLeft: 64,
     paddingRight: 0,
+    paddingTop: 0,
   },
   rootLandscape: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
     justifyContent: 'center',
   },
   rootPortrait: {

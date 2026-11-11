@@ -33,7 +33,7 @@ export default function AmPmSwitcher({
         // eslint-disable-next-line react-native/no-inline-styles
         {
           borderColor: backgroundColor,
-          borderRadius: theme.roundness * 2,
+          borderRadius: theme.shapes.corner.small,
           height,
           marginBottom:
             !isHorizontal && inputType === inputTypes.keyboard ? 16 : 0,
@@ -121,28 +121,28 @@ function SwitchButton({
 }
 
 const styles = StyleSheet.create({
-  rootVertical: {
-    width: 52,
-    borderWidth: 1,
-    overflow: 'hidden',
-  },
   rootHorizontal: {
-    width: 216,
+    borderWidth: 1,
     flexDirection: 'row',
+    overflow: 'hidden',
+    width: 216,
+  },
+  rootVertical: {
     borderWidth: 1,
     overflow: 'hidden',
+    width: 52,
+  },
+  separatorHorizontal: {
+    alignSelf: 'stretch',
+    width: 1,
   },
   separatorVertical: {
     height: 1,
     width: 52,
   },
-  separatorHorizontal: {
-    width: 1,
-    alignSelf: 'stretch',
-  },
   switchButtonInner: {
-    flex: 1,
     alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
   },
 })

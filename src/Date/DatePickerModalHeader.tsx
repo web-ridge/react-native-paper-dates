@@ -44,13 +44,11 @@ export default function DatePickerModalHeader(
           textColor={theme.colors.primary}
           onPress={props.onSave}
           disabled={props.saveLabelDisabled ?? false}
-          uppercase={props.uppercase ?? true}
-          compact
           mode="text"
           testID="react-native-paper-dates-save"
           style={styles.saveButton}
         >
-          {saveLabel}
+          {(props.uppercase ?? true) ? saveLabel.toUpperCase() : saveLabel}
         </Button>
       </View>
     </View>
@@ -58,19 +56,19 @@ export default function DatePickerModalHeader(
 }
 
 const styles = StyleSheet.create({
-  headerBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-    paddingTop: 12,
-  },
   closeButton: {
-    marginTop: 0,
     marginBottom: 0,
     marginEnd: 0,
+    marginTop: 0,
+  },
+  headerBar: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    paddingTop: 12,
+    width: '100%',
   },
   saveButton: {
-    marginVertical: 0,
     marginEnd: 0,
+    marginVertical: 0,
   },
 })

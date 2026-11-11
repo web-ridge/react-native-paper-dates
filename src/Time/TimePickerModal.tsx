@@ -22,7 +22,7 @@ import {
 } from './timeUtils'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { sharedStyles } from '../shared/styles'
-import { supportedOrientations } from '../shared/utils'
+import { scrimColor, supportedOrientations } from '../shared/utils'
 
 export function TimePickerModal({
   visible,
@@ -122,7 +122,7 @@ export function TimePickerModal({
             style={[
               StyleSheet.absoluteFill,
               sharedStyles.root,
-              { backgroundColor: theme.colors?.backdrop },
+              { backgroundColor: scrimColor(theme.colors.scrim) },
             ]}
           />
         </TouchableWithoutFeedback>
@@ -188,16 +188,15 @@ export function TimePickerModal({
                   accessibilityLabel="toggle keyboard"
                 />
                 <View style={sharedStyles.root} />
-                <Button onPress={onDismiss} uppercase={uppercase}>
-                  {cancelLabel}
+                <Button onPress={onDismiss}>
+                  {uppercase ? cancelLabel.toUpperCase() : cancelLabel}
                 </Button>
                 <Button
                   onPress={() =>
                     onConfirm({ hours: localHours, minutes: localMinutes })
                   }
-                  uppercase={uppercase}
                 >
-                  {confirmLabel}
+                  {uppercase ? confirmLabel.toUpperCase() : confirmLabel}
                 </Button>
               </View>
             </Animated.View>
@@ -220,18 +219,22 @@ function getHours(hours: number | undefined | null): number {
 
 const styles = StyleSheet.create({
   bottom: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
     paddingHorizontal: 24,
     paddingVertical: 8,
   },
   center: {
-    justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
+    justifyContent: 'center',
   },
   inputTypeToggle: {
     margin: 0,
+  },
+  label: {
+    fontSize: 13,
+    letterSpacing: 1,
   },
   labelContainer: {
     justifyContent: 'flex-end',
@@ -239,27 +242,23 @@ const styles = StyleSheet.create({
     paddingRight: 24,
     paddingTop: 16,
   },
-  label: {
-    letterSpacing: 1,
-    fontSize: 13,
-  },
   modalContent: {
+    elevation: 3,
+    justifyContent: 'space-between',
+    paddingVertical: 8,
     shadowColor: '#000',
     shadowOffset: {
-      width: 0,
       height: 5,
+      width: 0,
     },
     shadowOpacity: 0.34,
     shadowRadius: 6.27,
-    elevation: 3,
-    paddingVertical: 8,
-    justifyContent: 'space-between',
   },
   timePickerContainer: {
-    paddingLeft: 24,
-    paddingTop: 20,
     paddingBottom: 16,
+    paddingLeft: 24,
     paddingRight: 24,
+    paddingTop: 20,
   },
 })
 

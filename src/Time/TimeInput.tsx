@@ -5,6 +5,7 @@ import {
   TextInputProps,
   View,
 } from 'react-native'
+import { themeColor } from '../shared/utils'
 import { TouchableRipple, useTheme } from 'react-native-paper'
 
 import Color from 'color'
@@ -78,10 +79,10 @@ function TimeInput(
         // eslint-disable-next-line react-native/no-inline-styles
         {
           backgroundColor,
-          borderRadius: theme.roundness * 2,
           borderColor: highlighted
             ? theme.colors.onPrimaryContainer
             : undefined,
+          borderRadius: theme.shapes.corner.small,
           borderWidth: highlighted ? 2 : 0,
           height: inputType === inputTypes.keyboard ? 72 : 80,
         },
@@ -101,8 +102,8 @@ function TimeInput(
               Platform.OS === 'android'
                 ? Math.max(inputFontSize, 48)
                 : undefined,
-            paddingTop: Platform.OS === 'android' ? 0 : undefined,
             paddingBottom: Platform.OS === 'android' ? 0 : undefined,
+            paddingTop: Platform.OS === 'android' ? 0 : undefined,
             textAlign: 'center',
           },
         ]}
@@ -122,12 +123,12 @@ function TimeInput(
             StyleSheet.absoluteFill,
             sharedStyles.overflowHidden,
             {
-              borderRadius: theme.roundness,
+              borderRadius: theme.shapes.corner.extraSmall,
             },
           ]}
           rippleColor={
             Platform.OS !== 'ios'
-              ? Color(theme.colors.onSurface).fade(0.7).hex()
+              ? Color(themeColor(theme.colors.onSurface)).fade(0.7).hex()
               : undefined
           }
           onPress={() => onPress(clockType)}

@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`renders AnimatedCrossView 1`] = `
 <View
@@ -37,7 +37,7 @@ exports[`renders AnimatedCrossView 1`] = `
     pointerEvents="auto"
     style={
       {
-        "backgroundColor": "rgb(238, 232, 244)",
+        "backgroundColor": "rgba(236, 230, 240, 1)",
         "left": 0,
         "opacity": 1,
         "position": "absolute",

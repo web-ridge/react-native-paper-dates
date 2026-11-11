@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`renders CalendarEdit 1`] = `
 <View
@@ -37,280 +37,277 @@ exports[`renders CalendarEdit 1`] = `
         <View
           style={
             {
-              "alignItems": "center",
-              "flexDirection": "row",
+              "alignItems": "stretch",
+              "alignSelf": "stretch",
               "flexGrow": 1,
-              "justifyContent": "flex-start",
               "width": "100%",
             }
           }
         >
           <View
-            style={
+            accessibilityState={
               {
-                "flexGrow": 1,
-                "width": "100%",
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
               }
             }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={false}
+            collapsable={false}
+            focusable={true}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            role="none"
           >
             <View
-              pointerEvents="none"
               style={
                 [
                   {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 6,
+                    "flexDirection": "row",
+                    "minHeight": 112,
+                    "paddingVertical": 16,
                   },
-                  false,
                   {
-                    "backgroundColor": "rgb(238, 232, 244)",
-                    "borderColor": "rgba(121, 116, 126, 1)",
                     "borderRadius": 4,
-                    "borderWidth": 1,
                   },
                   undefined,
                 ]
               }
-              testID="text-input-outline"
-            />
-            <View
-              style={
-                [
-                  {
-                    "flexGrow": 1,
-                    "paddingBottom": 0,
-                  },
-                  {
-                    "minHeight": 56,
-                    "paddingTop": 8,
-                  },
-                ]
-              }
             >
               <View
-                pointerEvents="none"
                 style={
                   [
                     {
+                      "borderRadius": 4,
                       "bottom": 0,
                       "left": 0,
+                      "pointerEvents": "none",
                       "position": "absolute",
                       "right": 0,
                       "top": 0,
                     },
                     {
-                      "overflow": "hidden",
+                      "borderColor": "rgba(121, 116, 126, 1)",
+                      "borderWidth": 1,
+                    },
+                    false,
+                  ]
+                }
+              />
+              <View
+                aria-hidden={true}
+                collapsable={false}
+                jestAnimatedProps={
+                  {
+                    "value": {},
+                  }
+                }
+                jestAnimatedStyle={
+                  {
+                    "value": {
+                      "top": -12,
+                      "transform": [
+                        {
+                          "translateX": -4,
+                        },
+                      ],
+                    },
+                  }
+                }
+                jestInlineStyle={
+                  [
+                    {
+                      "paddingHorizontal": 4,
+                      "pointerEvents": "none",
+                      "position": "absolute",
                     },
                     {
-                      "zIndex": 3,
+                      "backgroundColor": "rgba(254, 247, 255, 1)",
+                      "left": 16,
+                    },
+                  ]
+                }
+                style={
+                  [
+                    {
+                      "paddingHorizontal": 4,
+                      "pointerEvents": "none",
+                      "position": "absolute",
+                    },
+                    {
+                      "backgroundColor": "rgba(254, 247, 255, 1)",
+                      "left": 16,
+                    },
+                    {
+                      "top": -12,
+                      "transform": [
+                        {
+                          "translateX": -4,
+                        },
+                      ],
                     },
                   ]
                 }
               >
-                <View
+                <Text
                   collapsable={false}
-                  pointerEvents="none"
-                  style={
+                  jestAnimatedProps={
                     {
-                      "bottom": 0,
-                      "left": 0,
-                      "opacity": 0,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 0,
-                      "transform": [
-                        {
-                          "translateX": 3,
-                        },
-                      ],
-                      "width": 750,
+                      "value": {},
                     }
                   }
-                >
-                  <View
-                    style={
-                      {
-                        "width": 97.33333333333333,
-                      }
+                  jestAnimatedStyle={
+                    {
+                      "value": {
+                        "fontSize": 12,
+                      },
                     }
-                  >
-                    <Text
-                      collapsable={false}
-                      maxFontSizeMultiplier={1.5}
-                      numberOfLines={1}
-                      style={
-                        {
-                          "backgroundColor": "rgb(238, 232, 244)",
-                          "color": "transparent",
-                          "fontFamily": "System",
-                          "fontSize": 16,
-                          "fontWeight": undefined,
-                          "height": 0,
-                          "left": 8,
-                          "letterSpacing": 0.15,
-                          "lineHeight": undefined,
-                          "opacity": 1,
-                          "paddingHorizontal": 0,
-                          "position": "absolute",
-                          "textAlign": "left",
-                          "top": 33,
-                          "transform": [
-                            {
-                              "translateX": 0,
-                            },
-                            {
-                              "translateY": -26,
-                            },
-                            {
-                              "scale": 0.75,
-                            },
-                            {
-                              "scaleY": 0.2,
-                            },
-                          ],
-                          "width": -16,
-                          "writingDirection": "ltr",
-                        }
-                      }
-                      testID="text-input-outlined-label-background"
-                    />
-                    <Text
-                      collapsable={false}
-                      maxFontSizeMultiplier={1.5}
-                      numberOfLines={1}
-                      onLayout={[Function]}
-                      onTextLayout={[Function]}
-                      style={
-                        {
-                          "color": "rgba(103, 80, 164, 1)",
-                          "fontFamily": "System",
-                          "fontSize": 16,
-                          "fontWeight": undefined,
-                          "left": 0,
-                          "letterSpacing": 0.15,
-                          "lineHeight": undefined,
-                          "maxWidth": 97.33333333333333,
-                          "opacity": 0,
-                          "paddingHorizontal": 16,
-                          "position": "absolute",
-                          "textAlign": "left",
-                          "top": 32,
-                          "transform": [
-                            {
-                              "translateX": 0,
-                            },
-                            {
-                              "translateY": -26,
-                            },
-                            {
-                              "scale": 0.75,
-                            },
-                          ],
-                          "writingDirection": "ltr",
-                        }
-                      }
-                      testID="text-input-outlined-label-active"
-                    >
-                      MM/DD/YYYY
-                    </Text>
-                    <Text
-                      collapsable={false}
-                      maxFontSizeMultiplier={1.5}
-                      numberOfLines={1}
-                      style={
-                        {
-                          "color": "rgba(73, 69, 79, 1)",
-                          "fontFamily": "System",
-                          "fontSize": 16,
-                          "fontWeight": undefined,
-                          "left": 0,
-                          "letterSpacing": 0.15,
-                          "lineHeight": undefined,
-                          "maxWidth": 97.33333333333333,
-                          "opacity": 0,
-                          "paddingHorizontal": 16,
-                          "position": "absolute",
-                          "textAlign": "left",
-                          "top": 32,
-                          "transform": [
-                            {
-                              "translateX": 0,
-                            },
-                            {
-                              "translateY": -26,
-                            },
-                            {
-                              "scale": 0.75,
-                            },
-                          ],
-                          "writingDirection": "ltr",
-                        }
-                      }
-                      testID="text-input-outlined-label-inactive"
-                    >
-                      MM/DD/YYYY
-                    </Text>
-                  </View>
-                </View>
+                  }
+                  jestInlineStyle={
+                    [
+                      {
+                        "fontWeight": "400",
+                        "includeFontPadding": false,
+                        "paddingHorizontal": 0,
+                        "paddingVertical": 0,
+                      },
+                      {
+                        "color": "rgba(73, 69, 79, 1)",
+                      },
+                      false,
+                    ]
+                  }
+                  style={
+                    [
+                      {
+                        "fontWeight": "400",
+                        "includeFontPadding": false,
+                        "paddingHorizontal": 0,
+                        "paddingVertical": 0,
+                      },
+                      {
+                        "color": "rgba(73, 69, 79, 1)",
+                      },
+                      {
+                        "fontSize": 12,
+                      },
+                      false,
+                    ]
+                  }
+                >
+                  MM/DD/YYYY
+                </Text>
               </View>
-              <TextInput
-                autoComplete="off"
-                cursorColor="rgba(103, 80, 164, 1)"
-                editable={true}
-                keyboardAppearance="default"
-                keyboardType="number-pad"
-                maxFontSizeMultiplier={1.5}
-                maxLength={10}
-                multiline={false}
-                onBlur={[Function]}
-                onChange={[Function]}
-                onChangeText={[Function]}
-                onFocus={[Function]}
-                onLayout={[Function]}
-                onSubmitEditing={[Function]}
-                placeholderTextColor="transparent"
-                selectionColor="rgba(103, 80, 164, 1)"
+              <View
+                collapsable={false}
+                jestAnimatedProps={
+                  {
+                    "value": {},
+                  }
+                }
+                jestAnimatedStyle={
+                  {
+                    "value": {
+                      "opacity": 1,
+                    },
+                  }
+                }
+                jestInlineStyle={
+                  [
+                    [
+                      {
+                        "alignItems": "center",
+                        "flex": 1,
+                        "flexDirection": "row",
+                        "paddingHorizontal": 16,
+                      },
+                      false,
+                    ],
+                  ]
+                }
                 style={
                   [
                     {
-                      "flexGrow": 1,
-                      "margin": 0,
-                    },
-                    {
-                      "height": 48,
-                    },
-                    {
-                      "paddingBottom": 0,
-                      "paddingTop": 0,
-                    },
-                    {
-                      "color": "rgba(28, 27, 31, 1)",
-                      "fontFamily": "System",
-                      "fontSize": 16,
-                      "fontWeight": undefined,
-                      "letterSpacing": 0.15,
-                      "lineHeight": undefined,
-                      "minWidth": 65,
+                      "alignItems": "center",
+                      "flex": 1,
+                      "flexDirection": "row",
                       "paddingHorizontal": 16,
-                      "textAlign": "left",
-                      "textAlignVertical": "center",
                     },
-                    undefined,
-                    [
-                      {},
-                    ],
-                    undefined,
+                    false,
+                    {
+                      "opacity": 1,
+                    },
                   ]
                 }
-                testID="text-input-outlined"
-                underlineColorAndroid="transparent"
-                value="01/15/2025"
-                withModal={false}
-              />
+              >
+                <TextInput
+                  aria-disabled={false}
+                  aria-invalid={false}
+                  aria-label="MM/DD/YYYY"
+                  autoComplete="off"
+                  cursorColor="rgba(103, 80, 164, 1)"
+                  keyboardAppearance="default"
+                  keyboardType="number-pad"
+                  maxLength={10}
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onChangeText={[Function]}
+                  onFocus={[Function]}
+                  onSubmitEditing={[Function]}
+                  placeholderTextColor="rgba(73, 69, 79, 1)"
+                  selectionColor="rgba(103, 80, 164, 1)"
+                  style={
+                    [
+                      {
+                        "fontWeight": "400",
+                        "includeFontPadding": false,
+                        "paddingHorizontal": 0,
+                        "paddingVertical": 0,
+                      },
+                      {
+                        "color": "rgba(29, 27, 32, 1)",
+                        "flex": 1,
+                        "fontSize": 16,
+                        "textAlign": "left",
+                        "writingDirection": "ltr",
+                      },
+                      undefined,
+                      false,
+                      false,
+                      {
+                        "backgroundColor": "rgba(236, 230, 240, 1)",
+                      },
+                    ]
+                  }
+                  value="01/15/2025"
+                  withModal={false}
+                />
+              </View>
             </View>
+            <View
+              style={
+                {
+                  "flexDirection": "row",
+                }
+              }
+            />
           </View>
         </View>
       </View>

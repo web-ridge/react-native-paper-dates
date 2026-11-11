@@ -4,5 +4,5 @@
     "rootDir": "./src",
     "types": []
   },
-  "exclude": ["example", "website", "**/__tests__/**"]
+  "exclude": ["example", "website", "**/__tests__/**", "src/testUtils.tsx"]
 }

@@ -136,19 +136,19 @@ const styles = StyleSheet.create({
   },
   year: {
     flex: 1,
-    marginLeft: 16,
-    marginRight: 16,
     height: ITEM_HEIGHT,
     justifyContent: 'center',
+    marginLeft: 16,
+    marginRight: 16,
   },
   yearButton: {
     borderRadius: 46 / 2,
     overflow: 'hidden',
   },
   yearInner: {
+    alignItems: 'center',
     borderRadius: 46 / 2,
     height: 46,
-    alignItems: 'center',
     justifyContent: 'center',
   },
   yearLabel: {

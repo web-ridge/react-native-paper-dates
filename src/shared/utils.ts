@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { useWindowDimensions } from 'react-native'
-import { DefaultTheme, MD3DarkTheme, useTheme } from 'react-native-paper'
+import { useTheme } from 'react-native-paper'
+import type { Theme } from 'react-native-paper'
 import Color from 'color'
 
 export const supportedOrientations: (
@@ -17,7 +18,15 @@ export const supportedOrientations: (
   'landscape-right',
 ]
 
-export type PaperTheme = typeof MD3DarkTheme | typeof DefaultTheme
+export type PaperTheme = Theme
+
+export function themeColor(color: unknown) {
+  return typeof color === 'string' ? color : '#000000'
+}
+
+export function scrimColor(color: unknown) {
+  return Color(themeColor(color)).alpha(0.32).rgb().string()
+}
 
 export function useLatest<T>(value: T) {
   const ref = useRef(value)
@@ -37,17 +46,17 @@ export function useHeaderBackgroundColor() {
 
 export function useHeaderTextColor() {
   const theme = useTheme()
-  return theme.colors.onSurfaceVariant
+  return themeColor(theme.colors.onSurfaceVariant)
 }
 
 export function useTextColorOnPrimary() {
   const theme = useTheme()
-  const isDark = !Color(theme.colors.primary).isLight()
+  const isDark = !Color(themeColor(theme.colors.primary)).isLight()
 
   if (isDark && theme.dark) {
-    return theme.colors.onSurface
+    return themeColor(theme.colors.onSurface)
   }
-  return theme.colors.onPrimary
+  return themeColor(theme.colors.onPrimary)
 }
 
 export function range(start: number, end: number) {

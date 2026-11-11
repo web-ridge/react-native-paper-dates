@@ -1,4 +1,10 @@
+import type { ColorValue } from 'react-native'
 import { useTheme } from 'react-native-paper'
+
+type HighlightColors = {
+  backgroundColor: ColorValue
+  color: ColorValue
+}
 
 export const circleSize = 256
 
@@ -119,18 +125,9 @@ export function getHours(
   if (hour < 0) hour += 12
   if (hour >= 12) hour -= 12
 
-  if (hourType === hourTypes.am) {
+  if (hourType === hourTypes.am || hourType === hourTypes.pm) {
     if (hour <= 0) {
       hour += 12
-    } else if (hour >= 12) {
-      hour -= 12
-    }
-  }
-  if (hourType === hourTypes.pm) {
-    if (hour <= 0) {
-      hour += 12
-    } else if (hour > 12) {
-      hour -= 12
     }
   }
 
@@ -152,7 +149,7 @@ export function getAngle(left: number, top: number, size: number) {
   return angle
 }
 
-export function useSwitchColors(highlighted: boolean) {
+export function useSwitchColors(highlighted: boolean): HighlightColors {
   const theme = useTheme()
   const backgroundColor = highlighted
     ? theme.colors.tertiaryContainer
@@ -164,7 +161,7 @@ export function useSwitchColors(highlighted: boolean) {
   return { backgroundColor, color }
 }
 
-export function useInputColors(highlighted: boolean) {
+export function useInputColors(highlighted: boolean): HighlightColors {
   const theme = useTheme()
   // M3: primaryContainer / surfaceContainerHighest (Paper: surfaceVariant)
   const backgroundColor = highlighted
