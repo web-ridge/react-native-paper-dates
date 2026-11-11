@@ -3,8 +3,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useHeaderBackgroundColor } from '../shared/utils'
 import Color from 'color'
 import {
-  Animated,
   StatusBar,
+  View,
   type StatusBarProps,
   type StatusBarStyle,
 } from 'react-native'
@@ -33,13 +33,11 @@ function DatePickerModalStatusBar({
   return (
     <>
       {!disableSafeTop && !statusBarOnTopOfBackdrop && (
-        <Animated.View
-          style={[
-            {
-              backgroundColor: statusBarBackground,
-              height: insets.top || StatusBar.currentHeight,
-            },
-          ]}
+        <View
+          style={{
+            backgroundColor: statusBarBackground,
+            height: insets.top || StatusBar.currentHeight,
+          }}
         />
       )}
       {!disableStatusBar && (

@@ -1,4 +1,4 @@
-import { Animated, StyleSheet, useWindowDimensions, View } from 'react-native'
+import { StyleSheet, useWindowDimensions, View } from 'react-native'
 import { Divider } from 'react-native-paper'
 import { useHeaderBackgroundColor, useIsLargeScreen } from '../shared/utils'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -19,7 +19,7 @@ export default function DatePickerModalHeaderBackground({
   const isPhoneLandscape = width > height && !isLargeScreen
 
   return (
-    <Animated.View
+    <View
       style={[
         styles.background,
         {
@@ -37,7 +37,7 @@ export default function DatePickerModalHeaderBackground({
       ) : (
         <Divider />
       )}
-    </Animated.View>
+    </View>
   )
 }
 

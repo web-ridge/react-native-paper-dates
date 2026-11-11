@@ -1,5 +1,4 @@
 import {
-  Animated,
   Keyboard,
   KeyboardAvoidingView,
   Modal,
@@ -131,7 +130,7 @@ export function TimePickerModal({
           pointerEvents="box-none"
         >
           <KeyboardAvoidingView style={styles.center} behavior="padding">
-            <Animated.View
+            <View
               style={[
                 styles.modalContent,
                 // eslint-disable-next-line react-native/no-inline-styles
@@ -199,7 +198,7 @@ export function TimePickerModal({
                   {uppercase ? confirmLabel.toUpperCase() : confirmLabel}
                 </Button>
               </View>
-            </Animated.View>
+            </View>
           </KeyboardAvoidingView>
         </View>
       </>
