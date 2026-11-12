@@ -187,10 +187,11 @@ export function TimePickerModal({
                   accessibilityLabel="toggle keyboard"
                 />
                 <View style={sharedStyles.root} />
-                <Button onPress={onDismiss}>
+                <Button mode="text" onPress={onDismiss}>
                   {uppercase ? cancelLabel.toUpperCase() : cancelLabel}
                 </Button>
                 <Button
+                  mode="text"
                   onPress={() =>
                     onConfirm({ hours: localHours, minutes: localMinutes })
                   }
