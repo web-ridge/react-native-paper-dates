@@ -23,6 +23,8 @@ jobs:
 
       - name: Setup
         uses: ./.github/actions/setup
+        with:
+          install-example: true
 
       - name: Lint files
         run: bun run lint
