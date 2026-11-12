@@ -35,16 +35,16 @@ const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect
 
 function Swiper({
-  scrollMode,
-  renderItem,
-  renderHeader,
-  renderFooter,
-  selectedYear,
+  endYear,
   initialIndex,
+  initialLayout,
+  renderFooter,
+  renderHeader,
+  renderItem,
+  scrollMode,
+  selectedYear,
   startWeekOnMonday,
   startYear,
-  endYear,
-  initialLayout,
 }: SwiperProps) {
   const isHorizontal = scrollMode === 'horizontal'
 
@@ -85,10 +85,10 @@ function Swiper({
       }
     },
     {
-      selectedYear,
       currentIndexRef: indexRef,
-      startYear,
       endYear,
+      selectedYear,
+      startYear,
     }
   )
 
@@ -128,14 +128,14 @@ function Swiper({
           <AutoSizer initialLayout={initialLayout}>
             {({ width, height }) => (
               <VerticalScroller
-                width={width}
+                endYear={endYear}
+                estimatedHeight={estimatedMonthHeight}
                 height={height}
                 initialIndex={initialIndex}
-                estimatedHeight={estimatedMonthHeight}
                 renderItem={renderItem}
                 startWeekOnMonday={startWeekOnMonday}
                 startYear={startYear}
-                endYear={endYear}
+                width={width}
               />
             )}
           </AutoSizer>
@@ -151,23 +151,23 @@ const visibleArray = (i: number) => {
 }
 
 function VerticalScroller({
-  width,
+  endYear,
+  estimatedHeight,
   height,
   initialIndex,
-  estimatedHeight,
   renderItem,
   startWeekOnMonday,
   startYear,
-  endYear,
+  width,
 }: {
-  renderItem: (renderProps: RenderProps) => any
-  width: number
+  endYear?: number
+  estimatedHeight: number
   height: number
   initialIndex: number
-  estimatedHeight: number
+  renderItem: (renderProps: RenderProps) => any
   startWeekOnMonday: boolean
   startYear?: number
-  endYear?: number
+  width: number
 }) {
   // Provide default values for startYear and endYear
   const effectiveStartYear = startYear || 1800
@@ -248,6 +248,7 @@ function VerticalScroller({
 
   return (
     <div
+      onScroll={onScroll}
       ref={parentRef}
       // eslint-disable-next-line react-native/no-inline-styles
       style={{
@@ -256,7 +257,6 @@ function VerticalScroller({
         overflow: 'auto',
         width,
       }}
-      onScroll={onScroll}
     >
       <div
         // eslint-disable-next-line react-native/no-inline-styles

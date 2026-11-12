@@ -33,8 +33,8 @@ function AnalogClockMinutes({ minutes }: { minutes: number }) {
             <View style={styles.outerHourInner}>
               <Text
                 maxFontSizeMultiplier={1.5}
-                style={isCurrent ? { color } : undefined}
                 selectable={false}
+                style={isCurrent ? { color } : undefined}
                 variant="bodyLarge"
               >
                 {isZero ? '00' : currentMinutes}

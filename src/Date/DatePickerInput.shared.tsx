@@ -3,33 +3,33 @@ import type { ValidRangeType } from './Calendar'
 import type { TextInput } from 'react-native-paper'
 
 export type DatePickerInputProps = {
+  animationType?: 'slide' | 'fade' | 'none'
+  calendarIcon?: string
+  disableCalendarIcon?: boolean
+  disableStatusBar?: boolean
+  disableStatusBarPadding?: boolean
+  endYear?: number
+  hasError?: boolean
+  hideValidationErrors?: boolean
+  iconColor?: string
+  iconSize?: number
+  iconStyle?: CSSProperties
+  inputEnabled?: boolean
   inputMode: 'start' | 'end'
   locale: string
   onChange: (date: Date | undefined) => void
-  value: Date | undefined
-  validRange?: ValidRangeType | undefined
-  withModal?: boolean
-  withDateFormatInLabel?: boolean
-  hideValidationErrors?: boolean
-  hasError?: boolean
+  onChangeText?: (text: string | undefined) => void
   onValidationError?: ((error: string | null) => void) | undefined
-  calendarIcon?: string
-  disableCalendarIcon?: boolean
-  iconSize?: number
-  iconStyle?: CSSProperties
-  iconColor?: string
+  presentationStyle?: 'pageSheet' | 'overFullScreen'
   saveLabel?: string
   saveLabelDisabled?: boolean
-  uppercase?: boolean
-  startYear?: number
-  endYear?: number
-  onChangeText?: (text: string | undefined) => void
-  inputEnabled?: boolean
-  disableStatusBarPadding?: boolean
-  disableStatusBar?: boolean
-  animationType?: 'slide' | 'fade' | 'none'
-  presentationStyle?: 'pageSheet' | 'overFullScreen'
   startWeekOnMonday?: boolean
+  startYear?: number
+  uppercase?: boolean
+  validRange?: ValidRangeType | undefined
+  value: Date | undefined
+  withDateFormatInLabel?: boolean
+  withModal?: boolean
 } & Omit<
   ComponentProps<typeof TextInput>,
   'value' | 'onChange' | 'onChangeText' | 'inputMode' | 'endAccessory'

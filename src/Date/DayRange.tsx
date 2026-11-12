@@ -4,14 +4,14 @@ import { memo } from 'react'
 import { sharedStyles } from '../shared/styles'
 
 function DayRange({
+  inRange,
   leftCrop,
   rightCrop,
-  inRange,
   selectColor,
 }: {
+  inRange: boolean
   leftCrop: boolean
   rightCrop: boolean
-  inRange: boolean
   selectColor: string
 }) {
   const bothWays = inRange && leftCrop && rightCrop

@@ -227,20 +227,20 @@ describe('swiper index bounds', () => {
     const currentIndexRef = { current: 0 }
     await renderHook(() =>
       useYearChange(onChange, {
-        selectedYear: undefined,
         currentIndexRef,
-        startYear: 2020,
         endYear: 2030,
+        selectedYear: undefined,
+        startYear: 2020,
       })
     )
     expect(onChange).not.toHaveBeenCalled()
 
     await renderHook(() =>
       useYearChange(onChange, {
-        selectedYear: 2024,
         currentIndexRef,
-        startYear: 2020,
         endYear: 2030,
+        selectedYear: 2024,
+        startYear: 2020,
       })
     )
     expect(onChange).toHaveBeenCalled()
@@ -249,10 +249,10 @@ describe('swiper index bounds', () => {
     onChange.mockClear()
     await renderHook(() =>
       useYearChange(onChange, {
-        selectedYear: 2024,
         currentIndexRef,
-        startYear: 2020,
         endYear: 2030,
+        selectedYear: 2024,
+        startYear: 2020,
       })
     )
     expect(onChange).not.toHaveBeenCalled()

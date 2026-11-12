@@ -21,12 +21,12 @@ import {
 } from '../shared/utils'
 
 interface DatePickerModalProps {
-  visible: boolean
   animationType?: 'slide' | 'fade' | 'none'
   disableStatusBar?: boolean
   disableStatusBarPadding?: boolean
   inputEnabled?: boolean
   presentationStyle?: 'pageSheet' | 'formSheet' | 'overFullScreen'
+  visible: boolean
 }
 
 export interface DatePickerModalSingleProps
@@ -45,13 +45,13 @@ export function DatePickerModal(
     | DatePickerModalMultiProps
 ) {
   const {
-    visible,
     animationType,
     disableStatusBar,
     disableStatusBarPadding,
     inputEnabled,
     presentationStyle,
     statusBarOnTopOfBackdrop,
+    visible,
     ...rest
   } = props
   const animationTypeCalculated =
@@ -102,11 +102,9 @@ export function DatePickerModal(
   const isSheet = shouldUseSheet
 
   return (
-    <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
+    <View pointerEvents="box-none" style={StyleSheet.absoluteFill}>
       <Modal
         animationType={animationTypeCalculated}
-        transparent={!isSheet}
-        visible={visible}
         onRequestClose={rest.onDismiss}
         presentationStyle={
           useFormSheet
@@ -115,8 +113,10 @@ export function DatePickerModal(
               ? 'pageSheet'
               : 'overFullScreen'
         }
-        supportedOrientations={supportedOrientations}
         statusBarTranslucent={!disableStatusBar}
+        supportedOrientations={supportedOrientations}
+        transparent={!isSheet}
+        visible={visible}
       >
         <TouchableWithoutFeedback onPress={rest.onDismiss}>
           <View
@@ -128,8 +128,8 @@ export function DatePickerModal(
           />
         </TouchableWithoutFeedback>
         <View
-          style={[StyleSheet.absoluteFill, styles.modalRoot]}
           pointerEvents="box-none"
+          style={[StyleSheet.absoluteFill, styles.modalRoot]}
         >
           <View
             style={[
@@ -144,14 +144,14 @@ export function DatePickerModal(
           >
             <DatePickerModalContent
               {...rest}
-              inputEnabled={inputEnabled}
               disableSafeTop={disableStatusBarPadding}
               disableStatusBar={disableStatusBar}
+              initialLayout={rest.initialLayout ?? rememberedCalendarLayout}
+              inputEnabled={inputEnabled}
+              onCalendarLayout={onCalendarLayout}
+              placeholder={props.placeholder}
               statusBarOnTopOfBackdrop={isSheet || statusBarOnTopOfBackdrop}
               withDateFormatInLabel={props.withDateFormatInLabel}
-              placeholder={props.placeholder}
-              initialLayout={rest.initialLayout ?? rememberedCalendarLayout}
-              onCalendarLayout={onCalendarLayout}
             />
           </View>
         </View>

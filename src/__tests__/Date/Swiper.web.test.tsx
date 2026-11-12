@@ -38,27 +38,27 @@ describe('web swiper', () => {
     const onHeader = jest.fn()
     const screen = await render(
       <SwiperWeb
-        initialIndex={getStartAtIndex(2024, 2028)}
-        scrollMode="horizontal"
-        startWeekOnMonday={false}
-        startYear={2024}
         endYear={2028}
-        selectedYear={2027}
+        initialIndex={getStartAtIndex(2024, 2028)}
         initialLayout={{ width: 280, height: 100 }}
+        renderFooter={() => <Text>footer</Text>}
+        renderHeader={onHeader}
         renderItem={({
-          onPrev,
           onNext,
+          onPrev,
         }: {
-          onPrev: () => void
           onNext: () => void
+          onPrev: () => void
         }) => (
           <>
-            <Pressable testID="web-prev" onPress={onPrev} />
-            <Pressable testID="web-next" onPress={onNext} />
+            <Pressable onPress={onPrev} testID="web-prev" />
+            <Pressable onPress={onNext} testID="web-next" />
           </>
         )}
-        renderHeader={onHeader}
-        renderFooter={() => <Text>footer</Text>}
+        scrollMode="horizontal"
+        selectedYear={2027}
+        startWeekOnMonday={false}
+        startYear={2024}
       />
     )
     await pressNode(screen.getByTestId('web-prev'))
@@ -67,32 +67,32 @@ describe('web swiper', () => {
 
     await render(
       <SwiperWeb
-        initialIndex={-20}
-        scrollMode="vertical"
-        startWeekOnMonday
-        startYear={2026}
         endYear={2026}
-        selectedYear={undefined}
+        initialIndex={-20}
         initialLayout={{ width: 280, height: 700 }}
         renderItem={({ onPrev }: { onPrev: () => void }) => {
           onPrev()
           return <Text>month</Text>
         }}
+        scrollMode="vertical"
+        selectedYear={undefined}
+        startWeekOnMonday
+        startYear={2026}
       />
     )
 
     const vertical = await render(
       <ThemeProvider theme={{ ...DarkTheme, roundness: 4 }}>
       <SwiperWeb
+        endYear={2030}
         initialIndex={getStartAtIndex(2020, 2030)}
+        initialLayout={{ width: 280, height: 400 }}
+        renderHeader={() => <Text>header</Text>}
+        renderItem={() => <Text>month</Text>}
         scrollMode="vertical"
+        selectedYear={undefined}
         startWeekOnMonday={false}
         startYear={2020}
-        endYear={2030}
-        selectedYear={undefined}
-        initialLayout={{ width: 280, height: 400 }}
-        renderItem={() => <Text>month</Text>}
-        renderHeader={() => <Text>header</Text>}
       />
       </ThemeProvider>
     )
@@ -116,25 +116,25 @@ describe('web swiper', () => {
 
     const edge = await render(
       <SwiperWeb
-        initialIndex={0}
-        scrollMode="horizontal"
-        startWeekOnMonday={false}
-        startYear={2026}
         endYear={2026}
-        selectedYear={2025}
+        initialIndex={0}
         initialLayout={{ width: 280, height: 100 }}
         renderItem={({
-          onPrev,
           onNext,
+          onPrev,
         }: {
-          onPrev: () => void
           onNext: () => void
+          onPrev: () => void
         }) => (
           <>
-            <Pressable testID="edge-prev" onPress={onPrev} />
-            <Pressable testID="edge-next" onPress={onNext} />
+            <Pressable onPress={onPrev} testID="edge-prev" />
+            <Pressable onPress={onNext} testID="edge-next" />
           </>
         )}
+        scrollMode="horizontal"
+        selectedYear={2025}
+        startWeekOnMonday={false}
+        startYear={2026}
       />
     )
     await pressNode(edge.getByTestId('edge-prev'))
@@ -142,42 +142,42 @@ describe('web swiper', () => {
 
     const atEnd = await render(
       <SwiperWeb
-        initialIndex={getMaxIndex(2026, 2026)}
-        scrollMode="horizontal"
-        startWeekOnMonday={false}
-        startYear={2026}
         endYear={2026}
-        selectedYear={undefined}
+        initialIndex={getMaxIndex(2026, 2026)}
         initialLayout={{ width: 280, height: 4000 }}
         renderItem={({ onNext }: { onNext: () => void }) => (
-          <Pressable testID="end-next" onPress={onNext} />
+          <Pressable onPress={onNext} testID="end-next" />
         )}
+        scrollMode="horizontal"
+        selectedYear={undefined}
+        startWeekOnMonday={false}
+        startYear={2026}
       />
     )
     await pressNode(atEnd.getByTestId('end-next'))
 
     await render(
       <SwiperWeb
+        endYear={2027}
         initialIndex={3}
+        initialLayout={{ width: 280, height: 4000 }}
+        renderHeader={() => <Text>header</Text>}
+        renderItem={() => <Text>clamped</Text>}
         scrollMode="horizontal"
+        selectedYear={2026}
         startWeekOnMonday={false}
         startYear={2027}
-        endYear={2027}
-        selectedYear={2026}
-        initialLayout={{ width: 280, height: 4000 }}
-        renderItem={() => <Text>clamped</Text>}
-        renderHeader={() => <Text>header</Text>}
       />
     )
 
     await render(
       <SwiperWeb
         initialIndex={0}
-        scrollMode="vertical"
-        startWeekOnMonday={false}
-        selectedYear={undefined}
         initialLayout={{ width: 280, height: 4000 }}
         renderItem={() => <Text>open</Text>}
+        scrollMode="vertical"
+        selectedYear={undefined}
+        startWeekOnMonday={false}
       />
     )
 

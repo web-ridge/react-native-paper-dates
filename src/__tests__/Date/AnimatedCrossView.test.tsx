@@ -4,9 +4,9 @@ import AnimatedCrossView from '../../Date/AnimatedCrossView'
 it('renders AnimatedCrossView', async () => {
   const { toJSON } = await render(
     <AnimatedCrossView
-      collapsed={false}
       calendar={<></>}
       calendarEdit={<></>}
+      collapsed={false}
     />
   )
   expect(toJSON()).toMatchSnapshot()

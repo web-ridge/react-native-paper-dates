@@ -73,26 +73,26 @@ describe('remaining date branches', () => {
     await render(
       <ThemeProvider theme={{ ...DarkTheme, roundness: 4 }}>
         <DatePickerInputWithoutModal
-          locale="en"
-          inputMode="start"
-          value={new Date(2026, 10, 11)}
-          onChange={onChange}
           hasError
           hideValidationErrors
+          inputMode="start"
+          locale="en"
+          onChange={onChange}
+          value={new Date(2026, 10, 11)}
         />
       </ThemeProvider>
     )
     const invalid = await render(
       <DatePickerInputWithoutModal
-        locale="en"
         inputMode="start"
-        label="When"
-        value={undefined}
-        onChange={onChange}
         keyboardAppearance="light"
         keyboardType="default"
-        withDateFormatInLabel={false}
+        label="When"
+        locale="en"
+        onChange={onChange}
         validRange={{ startDate: new Date(2020, 0, 1), endDate: new Date(2020, 0, 2) }}
+        value={undefined}
+        withDateFormatInLabel={false}
       />
     )
     const field = invalid.container.queryAll(
@@ -109,13 +109,13 @@ describe('remaining date branches', () => {
     await render(
       safe(
         <DatePickerModal
+          date={new Date(2026, 10, 11)}
           locale="en"
           mode="single"
-          visible
-          date={new Date(2026, 10, 11)}
-          presentationStyle="pageSheet"
-          onDismiss={jest.fn()}
           onConfirm={jest.fn()}
+          onDismiss={jest.fn()}
+          presentationStyle="pageSheet"
+          visible
         />
       )
     )
@@ -123,13 +123,13 @@ describe('remaining date branches', () => {
     await render(
       safe(
         <DatePickerModal
+          date={new Date(2026, 10, 11)}
           locale="en"
           mode="single"
-          visible
-          date={new Date(2026, 10, 11)}
-          presentationStyle="pageSheet"
-          onDismiss={jest.fn()}
           onConfirm={jest.fn()}
+          onDismiss={jest.fn()}
+          presentationStyle="pageSheet"
+          visible
         />
       )
     )
@@ -137,11 +137,11 @@ describe('remaining date branches', () => {
     const content = await render(
       safe(
         <DatePickerModalContent
+          dates={undefined}
           locale="en"
           mode="multiple"
-          dates={undefined}
-          onDismiss={jest.fn()}
           onConfirm={jest.fn()}
+          onDismiss={jest.fn()}
         />
       )
     )
@@ -150,41 +150,41 @@ describe('remaining date branches', () => {
     const color = '#6750A4'
     await render(
       <HeaderContentMulti
+        collapsed={false}
+        color={color}
+        emptyLabel="None"
         locale="en"
         mode="multiple"
-        collapsed={false}
-        onToggle={() => null}
-        color={color}
         moreLabel="more"
-        emptyLabel="None"
+        onToggle={() => null}
         state={{ dates: [new Date(2026, 10, 1), new Date(2026, 10, 2)] }}
       />
     )
     await render(
       <>
         <HeaderContentRange
+          collapsed={false}
+          color={color}
           locale="en"
           mode="range"
-          collapsed={false}
           onToggle={() => null}
-          color={color}
           state={{ startDate: new Date(2026, 10, 1), endDate: undefined }}
         />
         <HeaderContentRange
+          collapsed={false}
+          color={color}
           locale="en"
           mode="range"
-          collapsed={false}
           onToggle={() => null}
-          color={color}
           state={{ startDate: undefined, endDate: new Date(2026, 10, 2) }}
         />
       </>
     )
     await render(
       <DatePickerModalContentHeader
+        collapsed={false}
         locale={undefined}
         mode={'other' as 'single'}
-        collapsed={false}
         onToggle={() => null}
         state={{}}
       />
@@ -194,74 +194,74 @@ describe('remaining date branches', () => {
   it('covers month geometry and the year list on web', async () => {
     const index = getInitialIndex(new Date(2026, 10, 15))
     const shared = {
-      locale: 'en',
       index,
+      locale: 'en',
       onPressDate: jest.fn(),
       onPressYear: jest.fn(),
-      selectingYear: false,
       primaryColor: '#6200ee',
-      selectColor: '#eee',
       roundness: 4,
+      selectColor: '#eee',
+      selectingYear: false,
       startWeekOnMonday: false,
     }
     await render(
       <Month
         {...shared}
+        endDate={new Date(2026, 10, 1)}
         mode="range"
         scrollMode="horizontal"
         startDate={new Date(2026, 9, 20)}
-        endDate={new Date(2026, 10, 1)}
       />
     )
     await render(
       <Month
         {...shared}
+        endDate={new Date(2026, 11, 5)}
         mode="range"
         scrollMode="horizontal"
         startDate={new Date(2026, 10, 30)}
-        endDate={new Date(2026, 11, 5)}
       />
     )
     await render(
       <Month
         {...shared}
+        dates={[new Date(2026, 10, 1), new Date(2026, 10, 10), new Date(2026, 10, 11), new Date(2026, 10, 30)]}
         mode="multiple"
         scrollMode="horizontal"
-        dates={[new Date(2026, 10, 1), new Date(2026, 10, 10), new Date(2026, 10, 11), new Date(2026, 10, 30)]}
       />
     )
 
     await render(
       <Month
         {...shared}
+        date={new Date(2026, 10, 15)}
         mode={'none' as 'single'}
         scrollMode="horizontal"
-        date={new Date(2026, 10, 15)}
       />
     )
 
     Platform.OS = 'web'
     await render(
       <>
-        <Month {...shared} mode="single" date={new Date(2026, 10, 11)} scrollMode="horizontal" />
+        <Month {...shared} date={new Date(2026, 10, 11)} mode="single" scrollMode="horizontal" />
         <YearPicker
-          selectingYear
-          selectedYear={2026}
-          startYear={2024}
           endYear={2028}
           onPressYear={jest.fn()}
+          selectedYear={2026}
+          selectingYear
+          startYear={2024}
         />
       </>
     )
     await render(
       <ThemeProvider theme={{ ...DarkTheme, roundness: 4 }}>
-        <Month {...shared} mode="single" date={new Date(2026, 10, 11)} scrollMode="horizontal" />
+        <Month {...shared} date={new Date(2026, 10, 11)} mode="single" scrollMode="horizontal" />
         <YearPicker
-          selectingYear
-          selectedYear={2026}
-          startYear={2024}
           endYear={2028}
           onPressYear={jest.fn()}
+          selectedYear={2026}
+          selectingYear
+          startYear={2024}
         />
       </ThemeProvider>
     )
@@ -280,10 +280,9 @@ describe('remaining date branches', () => {
     const onChange = jest.fn()
     const editing = await render(
       <CalendarEdit
-        mode="range"
         collapsed={false}
         locale="en"
-        validRange={undefined}
+        mode="range"
         onChange={onChange}
         state={{
           date: undefined,
@@ -291,6 +290,7 @@ describe('remaining date branches', () => {
           endDate: new Date(2026, 10, 2),
           dates: undefined,
         }}
+        validRange={undefined}
       />
     )
     callProps(
@@ -311,10 +311,10 @@ describe('branch edges', () => {
   it('covers fallthrough modes, empty refs, and clamped indexes', async () => {
     const unknown = await render(
       <Calendar
+        initialLayout={{ width: 320, height: 480 }}
         locale="en"
         mode={'none' as 'single'}
         onChange={jest.fn()}
-        initialLayout={{ width: 320, height: 480 }}
       />
     )
     const day = unknown.container.queryAll(
@@ -335,10 +335,9 @@ describe('branch edges', () => {
     })
     const editing = await render(
       <CalendarEdit
-        mode="range"
         collapsed={false}
         locale="en"
-        validRange={undefined}
+        mode="range"
         onChange={jest.fn()}
         state={{
           date: undefined,
@@ -346,6 +345,7 @@ describe('branch edges', () => {
           endDate: undefined,
           dates: undefined,
         }}
+        validRange={undefined}
       />
     )
     refs.forEach((ref) => {
@@ -370,9 +370,9 @@ describe('branch edges', () => {
         <DatePickerModalContent
           locale="en"
           mode={'none' as 'single'}
-          onDismiss={jest.fn()}
-          onConfirm={jest.fn()}
           onCalendarLayout={jest.fn()}
+          onConfirm={jest.fn()}
+          onDismiss={jest.fn()}
         />
       )
     )
@@ -384,11 +384,11 @@ describe('branch edges', () => {
 
     const hours = await render(
       <TimeInput
-        value={1}
         clockType="hours"
-        pressed={false}
         inputType="keyboard"
         onChanged={jest.fn()}
+        pressed={false}
+        value={1}
       />
     )
     const typed = hours.container.queryAll(
@@ -411,12 +411,12 @@ describe('branch edges', () => {
       })
     const inputs = await render(
       <TimeInputs
-        hours={9}
-        minutes={5}
         focused="hours"
+        hours={9}
         inputType="keyboard"
         is24Hour={false}
         locale="en"
+        minutes={5}
         onChange={jest.fn()}
         onFocusInput={jest.fn()}
       />
@@ -436,14 +436,14 @@ describe('branch edges', () => {
     const index = getStartAtIndex(2024, 2028)
     const swiper = await render(
       <Swiper
-        initialIndex={index}
-        scrollMode="horizontal"
-        startWeekOnMonday={false}
-        startYear={2024}
         endYear={2028}
-        selectedYear={undefined}
+        initialIndex={index}
         initialLayout={{ width: 300, height: 200 }}
         renderItem={() => null}
+        scrollMode="horizontal"
+        selectedYear={undefined}
+        startWeekOnMonday={false}
+        startYear={2024}
       />
     )
     const scroll = swiper.container.queryAll(
@@ -459,19 +459,19 @@ describe('branch edges', () => {
 
     const edge = await render(
       <Swiper
-        initialIndex={100}
-        scrollMode="horizontal"
-        startWeekOnMonday={false}
-        startYear={2027}
         endYear={2027}
-        selectedYear={undefined}
+        initialIndex={100}
         initialLayout={{ width: 300, height: 200 }}
-        renderItem={({ onPrev, onNext }) => (
+        renderItem={({ onNext, onPrev }) => (
           <>
-            <Pressable testID="gap-prev" onPress={onPrev} />
-            <Pressable testID="gap-next" onPress={onNext} />
+            <Pressable onPress={onPrev} testID="gap-prev" />
+            <Pressable onPress={onNext} testID="gap-next" />
           </>
         )}
+        scrollMode="horizontal"
+        selectedYear={undefined}
+        startWeekOnMonday={false}
+        startYear={2027}
       />
     )
     await pressTestId(edge, 'gap-prev')
@@ -479,14 +479,14 @@ describe('branch edges', () => {
 
     await render(
       <Swiper
-        initialIndex={10}
-        scrollMode="horizontal"
-        startWeekOnMonday={false}
-        startYear={2026}
         endYear={2028}
-        selectedYear={2020}
+        initialIndex={10}
         initialLayout={{ width: 300, height: 200 }}
         renderItem={() => null}
+        scrollMode="horizontal"
+        selectedYear={2020}
+        startWeekOnMonday={false}
+        startYear={2026}
       />
     )
   })
@@ -499,14 +499,14 @@ describe('remaining time branches', () => {
     setWindow(900, 400)
     const landscape = await render(
       <TimePicker
-        locale="en"
-        inputType="picker"
         focused="hours"
         hours={15}
+        inputType="picker"
+        locale="en"
         minutes={30}
-        use24HourClock={false}
         onChange={onChange}
         onFocusInput={onFocusInput}
+        use24HourClock={false}
       />
     )
     callProps(
@@ -527,26 +527,26 @@ describe('remaining time branches', () => {
     setWindow(400, 800)
     await render(
       <TimePicker
-        locale="en"
-        inputType="keyboard"
         focused="minutes"
         hours={3}
+        inputType="keyboard"
+        locale="en"
         minutes={5}
-        use24HourClock
         onChange={onChange}
         onFocusInput={onFocusInput}
+        use24HourClock
       />
     )
 
     const modal = await render(
       <TimePickerModal
-        visible
-        locale="en"
         hours={9}
-        minutes={15}
         inputType="keyboard"
-        onDismiss={jest.fn()}
+        locale="en"
+        minutes={15}
         onConfirm={jest.fn()}
+        onDismiss={jest.fn()}
+        visible
       />
     )
     callProps(

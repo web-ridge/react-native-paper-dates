@@ -15,41 +15,41 @@ function EmptyDayPure() {
 export const EmptyDay = memo(EmptyDayPure)
 
 function Day(props: {
-  theme: PaperTheme
-  textColorOnPrimary: string
   day: number
-  month: number
-  year: number
-  selected: boolean
-  inRange: boolean
-  leftCrop: boolean
-  rightCrop: boolean
-  primaryColor: string
-  selectColor: string
-  isToday: boolean
-  disabled: boolean
-  onPressDate: (date: Date) => any
   dayContent?: DayContentRenderer
   dayContentPosition?: DayContentPosition
   dayContentStyle?: StyleProp<ViewStyle>
+  disabled: boolean
+  inRange: boolean
+  isToday: boolean
+  leftCrop: boolean
+  month: number
+  onPressDate: (date: Date) => any
+  primaryColor: string
+  rightCrop: boolean
+  selectColor: string
+  selected: boolean
+  textColorOnPrimary: string
+  theme: PaperTheme
+  year: number
 }) {
   const {
     day,
-    month,
-    year,
-    selected,
-    inRange,
-    leftCrop,
-    rightCrop,
-    onPressDate,
-    primaryColor,
-    selectColor,
-    isToday,
-    disabled,
-    theme,
     dayContent,
     dayContentPosition,
     dayContentStyle,
+    disabled,
+    inRange,
+    isToday,
+    leftCrop,
+    month,
+    onPressDate,
+    primaryColor,
+    rightCrop,
+    selectColor,
+    selected,
+    theme,
+    year,
   } = props
   const borderColor = theme.colors.primary
 
@@ -86,15 +86,15 @@ function Day(props: {
         selectColor={selectColor}
       />
       <TouchableRipple
-        testID={`react-native-paper-dates-day-${year}-${month}-${day}`}
-        disabled={disabled}
+        accessibilityRole="button"
         borderless={true}
+        disabled={disabled}
         onPress={disabled ? undefined : onPress}
         style={[
           styles.button,
           { backgroundColor: inRange ? selectColor : undefined },
         ]}
-        accessibilityRole="button"
+        testID={`react-native-paper-dates-day-${year}-${month}-${day}`}
       >
         <View
           style={[
@@ -105,6 +105,7 @@ function Day(props: {
         >
           <Text
             maxFontSizeMultiplier={1.5}
+            selectable={false}
             style={[
               baseTextColor
                 ? {
@@ -113,7 +114,6 @@ function Day(props: {
                 : undefined,
               { ...textFont },
             ]}
-            selectable={false}
           >
             {day}
           </Text>
@@ -121,21 +121,21 @@ function Day(props: {
       </TouchableRipple>
       {dayContent ? (
         <View
+          pointerEvents="none"
           style={[
             styles.content,
             contentPositions[dayContentPosition || 'bottom'],
             dayContentStyle,
           ]}
-          pointerEvents="none"
         >
           {dayContent({
             date: new Date(year, month, day),
             day,
-            month,
-            year,
-            selected,
-            isToday,
             disabled,
+            isToday,
+            month,
+            selected,
+            year,
           })}
         </View>
       ) : null}

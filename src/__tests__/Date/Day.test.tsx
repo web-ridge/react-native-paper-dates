@@ -4,20 +4,20 @@ import Day from '../../Date/Day'
 import type { DayContentRenderer } from '../../Date/Calendar'
 
 const defaultProps = {
-  theme: LightTheme,
-  textColorOnPrimary: '#fff',
   day: 15,
-  month: 0,
-  year: 2025,
-  selected: false,
-  inRange: false,
-  leftCrop: false,
-  rightCrop: false,
-  primaryColor: 'blue',
-  selectColor: 'lightblue',
-  isToday: false,
   disabled: false,
+  inRange: false,
+  isToday: false,
+  leftCrop: false,
+  month: 0,
   onPressDate: () => null,
+  primaryColor: 'blue',
+  rightCrop: false,
+  selectColor: 'lightblue',
+  selected: false,
+  textColorOnPrimary: '#fff',
+  theme: LightTheme,
+  year: 2025,
 }
 
 it('renders no day content by default', async () => {

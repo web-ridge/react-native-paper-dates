@@ -21,17 +21,17 @@ function escapeForRegExp(value: string): string {
 
 function TextInputWithMask(
   {
-    inputButton,
-    onChangeText,
-    onChange,
-    value,
-    mask,
     disabled,
+    inputButton,
+    mask,
+    onChange,
+    onChangeText,
+    value,
     ...rest
   }: ComponentProps<typeof TextInput> & {
+    inputButton: ReactNode
     mask: string
     value: string
-    inputButton: ReactNode
   },
   ref: any
 ) {
@@ -84,17 +84,17 @@ function TextInputWithMask(
       ref={ref}
       {...rest}
       disabled={disabled}
-      value={controlledValue}
-      onChangeText={onInnerChange}
-      onChange={(e) => {
-        onChange && onChange(e)
-      }}
-      maxLength={mask.length}
       endAccessory={
         isValidElement(inputButton)
           ? (props) => cloneElement(inputButton, props)
           : undefined
       }
+      maxLength={mask.length}
+      onChange={(e) => {
+        onChange && onChange(e)
+      }}
+      onChangeText={onInnerChange}
+      value={controlledValue}
     />
   )
 }

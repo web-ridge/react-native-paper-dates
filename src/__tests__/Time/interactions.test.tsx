@@ -54,10 +54,10 @@ describe('analog clock', () => {
             await render(
               <DisplayModeContext.Provider value={{ mode, setMode: () => null }}>
                 <AnalogClock
-                  hours={is24Hour ? 15 : 12}
-                  minutes={30}
                   focused={focused as 'hours'}
+                  hours={is24Hour ? 15 : 12}
                   is24Hour={is24Hour}
+                  minutes={30}
                   onChange={onChange}
                 />
               </DisplayModeContext.Provider>
@@ -86,23 +86,23 @@ describe('analog clock', () => {
   })
 
   it('highlights outer and inner hours and the zero minute', async () => {
-    await render(<AnalogClockHours is24Hour hours={0} />)
-    await render(<AnalogClockHours is24Hour hours={12} />)
-    await render(<AnalogClockHours is24Hour={false} hours={1} />)
+    await render(<AnalogClockHours hours={0} is24Hour />)
+    await render(<AnalogClockHours hours={12} is24Hour />)
+    await render(<AnalogClockHours hours={1} is24Hour={false} />)
     await render(<AnalogClockMinutes minutes={0} />)
     await render(<AnalogClockMinutes minutes={59} />)
     await render(<AnalogClockMinutes minutes={7} />)
     const minutes = await render(
       <AnimatedClockSwitcher
         focused="minutes"
-        hours={<AnalogClockHours is24Hour={false} hours={1} />}
+        hours={<AnalogClockHours hours={1} is24Hour={false} />}
         minutes={<AnalogClockMinutes minutes={5} />}
       />
     )
     await minutes.rerender(
       <AnimatedClockSwitcher
         focused="hours"
-        hours={<AnalogClockHours is24Hour hours={13} />}
+        hours={<AnalogClockHours hours={13} is24Hour />}
         minutes={<AnalogClockMinutes minutes={5} />}
       />
     )
@@ -115,12 +115,12 @@ describe('time inputs', () => {
     const onFocusInput = jest.fn()
     const keyboard = await render(
       <TimeInputs
-        hours={9}
-        minutes={5}
         focused="hours"
+        hours={9}
         inputType="keyboard"
         is24Hour={false}
         locale="en"
+        minutes={5}
         onChange={onChange}
         onFocusInput={onFocusInput}
       />
@@ -150,14 +150,14 @@ describe('time inputs', () => {
         }}
       >
         <TimeInputs
-          hours={18}
-          minutes={45}
           focused="minutes"
+          hours={18}
+          inputFontSize={40}
           inputType="picker"
           is24Hour
+          minutes={45}
           onChange={onChange}
           onFocusInput={onFocusInput}
-          inputFontSize={40}
         />
       </ThemeProvider>
     )
@@ -165,11 +165,11 @@ describe('time inputs', () => {
     setWindow(900, 400)
     const landscape = await render(
       <TimeInputs
-        hours={1}
-        minutes={0}
         focused="hours"
+        hours={1}
         inputType="picker"
         is24Hour={false}
+        minutes={0}
         onChange={onChange}
         onFocusInput={onFocusInput}
       />
@@ -212,21 +212,21 @@ describe('time inputs', () => {
 
     await render(
       <AmPmSwitcher
+        direction="horizontal"
         hours={2}
         inputType="picker"
-        direction="horizontal"
         onChange={onChange}
       />
     )
 
     const input = await render(
       <TimeInput
-        value={4}
         clockType="hours"
-        pressed={false}
         inputType="picker"
         onChanged={jest.fn()}
         onPress={jest.fn()}
+        pressed={false}
+        value={4}
       />
     )
     input.container
@@ -238,21 +238,21 @@ describe('time inputs', () => {
     Platform.OS = 'android'
     const typed = await render(
       <TimeInput
-        value={12}
         clockType="minutes"
-        pressed
-        inputType="keyboard"
         inputFontSize={20}
+        inputType="keyboard"
         onChanged={jest.fn()}
+        pressed
+        value={12}
       />
     )
     await typed.rerender(
       <TimeInput
-        value={8}
         clockType="minutes"
-        pressed
         inputType="keyboard"
         onChanged={jest.fn()}
+        pressed
+        value={8}
       />
     )
     expect(onChange).toHaveBeenCalled()
@@ -265,17 +265,17 @@ describe('time picker modal', () => {
     const onConfirm = jest.fn()
     const modal = await render(
       <TimePickerModal
-        visible
-        hours={15}
-        minutes={45}
-        locale="en"
-        uppercase
-        label=""
-        onDismiss={onDismiss}
-        onConfirm={onConfirm}
         defaultInputType="keyboard"
-        use24HourClock={false}
+        hours={15}
         inputFontSize={48}
+        label=""
+        locale="en"
+        minutes={45}
+        onConfirm={onConfirm}
+        onDismiss={onDismiss}
+        uppercase
+        use24HourClock={false}
+        visible
       />
     )
     await fireEvent.press(modal.getByLabelText('toggle keyboard'))
@@ -286,11 +286,11 @@ describe('time picker modal', () => {
 
     const defaults = await render(
       <TimePickerModal
-        visible
         hours={undefined}
         minutes={null as unknown as number}
-        onDismiss={onDismiss}
         onConfirm={onConfirm}
+        onDismiss={onDismiss}
+        visible
       />
     )
     const backdrop = defaults.container.queryAll(
@@ -304,26 +304,26 @@ describe('time picker modal', () => {
 
     await render(
       <TimePicker
-        locale="en-US"
-        inputType="picker"
         focused="minutes"
         hours={0}
+        inputType="picker"
+        locale="en-US"
         minutes={0}
-        use24HourClock={undefined}
         onChange={jest.fn()}
         onFocusInput={jest.fn()}
+        use24HourClock={undefined}
       />
     )
     await render(
       <TimePicker
-        locale="en-GB"
-        inputType="keyboard"
         focused="hours"
         hours={23}
+        inputType="keyboard"
+        locale="en-GB"
         minutes={59}
-        use24HourClock
         onChange={jest.fn()}
         onFocusInput={jest.fn()}
+        use24HourClock
       />
     )
   })

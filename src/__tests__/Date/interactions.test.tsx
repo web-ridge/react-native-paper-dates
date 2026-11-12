@@ -99,16 +99,16 @@ describe('calendar interactions', () => {
     const onChange = jest.fn()
     const single = await render(
       <Calendar
-        locale="en"
-        mode="single"
         date={day}
         dateMode="end"
-        onChange={onChange}
-        initialLayout={layout}
-        startWeekOnMonday
-        disableWeekDays={[0]}
         dayContent={() => <Text>dot</Text>}
         dayContentPosition="top"
+        disableWeekDays={[0]}
+        initialLayout={layout}
+        locale="en"
+        mode="single"
+        onChange={onChange}
+        startWeekOnMonday
       />
     )
     await pressDays(single, 1)
@@ -119,12 +119,12 @@ describe('calendar interactions', () => {
 
     const startOnly = await render(
       <Calendar
+        endDate={undefined}
+        initialLayout={{ width: 320, height: 800 }}
         locale="en"
         mode="range"
-        startDate={new Date(2026, 10, 10)}
-        endDate={undefined}
         onChange={onChange}
-        initialLayout={{ width: 320, height: 800 }}
+        startDate={new Date(2026, 10, 10)}
       />
     )
     await pressDays(startOnly, 3)
@@ -132,12 +132,12 @@ describe('calendar interactions', () => {
 
     const both = await render(
       <Calendar
+        endDate={new Date(2026, 10, 30)}
+        initialLayout={{ width: 320, height: 200 }}
         locale="en"
         mode="range"
-        startDate={new Date(2026, 10, 1)}
-        endDate={new Date(2026, 10, 30)}
         onChange={onChange}
-        initialLayout={{ width: 320, height: 200 }}
+        startDate={new Date(2026, 10, 1)}
         validRange={{
           startDate: new Date(2026, 10, 5),
           endDate: new Date(2026, 10, 25),
@@ -149,11 +149,11 @@ describe('calendar interactions', () => {
 
     const multi = await render(
       <Calendar
+        dates={[new Date(2026, 10, 10), new Date(2026, 10, 11)]}
+        initialLayout={layout}
         locale="en"
         mode="multiple"
-        dates={[new Date(2026, 10, 10), new Date(2026, 10, 11)]}
         onChange={onChange}
-        initialLayout={layout}
       />
     )
     await pressDays(multi, 2)
@@ -162,11 +162,11 @@ describe('calendar interactions', () => {
 
     const empty = await render(
       <Calendar
+        dates={undefined}
+        initialLayout={layout}
         locale="en"
         mode="multiple"
-        dates={undefined}
         onChange={onChange}
-        initialLayout={layout}
       />
     )
     await pressDays(empty, 1)
@@ -203,46 +203,44 @@ describe('calendar interactions', () => {
     const onPressDate = jest.fn()
     const onPressYear = jest.fn()
     const shared = {
-      locale: 'en',
+      disableWeekDays: [6],
       index,
+      locale: 'en',
       onPressDate,
       onPressYear,
-      selectingYear: true,
       primaryColor: '#6200ee',
-      selectColor: '#eee',
       roundness: 4,
+      selectColor: '#eee',
+      selectingYear: true,
       startWeekOnMonday: true,
-      disableWeekDays: [6],
     }
     const single = await render(
-      <Month {...shared} mode="single" date={new Date()} scrollMode="horizontal" />
+      <Month {...shared} date={new Date()} mode="single" scrollMode="horizontal" />
     )
     await pressDays(single, 1)
 
     await render(
       <Month
         {...shared}
+        endDate={new Date(2026, 10, 30)}
         mode="range"
         scrollMode="vertical"
         startDate={new Date(2026, 10, 1)}
-        endDate={new Date(2026, 10, 30)}
       />
     )
     await render(
       <Month
         {...shared}
+        endDate={undefined}
         mode="range"
         scrollMode="vertical"
-        startDate={new Date(2026, 10, 10)}
-        endDate={undefined}
         selectingYear={false}
+        startDate={new Date(2026, 10, 10)}
       />
     )
     await render(
       <Month
         {...shared}
-        mode="multiple"
-        scrollMode="vertical"
         dates={[
           new Date(2026, 10, 1),
           new Date(2026, 10, 2),
@@ -250,16 +248,18 @@ describe('calendar interactions', () => {
           new Date(2026, 10, 15),
           new Date(2026, 10, 30),
         ]}
+        mode="multiple"
+        scrollMode="vertical"
       />
     )
     await render(
       <Month
         {...shared}
-        mode="multiple"
-        scrollMode="vertical"
         dates={null}
         dayContent={() => <Text>•</Text>}
         dayContentPosition="center"
+        mode="multiple"
+        scrollMode="vertical"
       />
     )
     expect(onPressDate).toHaveBeenCalled()
@@ -280,17 +280,17 @@ describe('date picker modal', () => {
     const single = await render(
       safe(
         <DatePickerModalContent
-          locale="en"
-          mode="single"
+          allowEditing
           date={day}
           dateMode="start"
-          onDismiss={onDismiss}
-          onConfirm={onConfirm}
-          onChange={onChange}
           initialLayout={layout}
           label="Birth date"
+          locale="en"
+          mode="single"
+          onChange={onChange}
+          onConfirm={onConfirm}
+          onDismiss={onDismiss}
           uppercase
-          allowEditing
         />
       )
     )
@@ -305,16 +305,16 @@ describe('date picker modal', () => {
     const range = await render(
       safe(
         <DatePickerModalContent
+          calendarIcon="calendar"
+          editIcon="pencil"
+          endDate={new Date(2026, 10, 12)}
+          initialLayout={layout}
           locale="en"
           mode="range"
-          startDate={new Date(2026, 10, 10)}
-          endDate={new Date(2026, 10, 12)}
-          onDismiss={onDismiss}
           onConfirm={onConfirm}
-          initialLayout={layout}
+          onDismiss={onDismiss}
           saveLabel="Apply"
-          editIcon="pencil"
-          calendarIcon="calendar"
+          startDate={new Date(2026, 10, 10)}
         />
       )
     )
@@ -323,18 +323,18 @@ describe('date picker modal', () => {
     const multi = await render(
       safe(
         <DatePickerModalContent
-          locale="en"
-          mode="multiple"
+          allowEditing={false}
           dates={[
             new Date(2026, 10, 1),
             new Date(2026, 10, 2),
             new Date(2026, 10, 3),
           ]}
-          onDismiss={onDismiss}
-          onConfirm={onConfirm}
           initialLayout={layout}
-          allowEditing={false}
+          locale="en"
+          mode="multiple"
           moreLabel="more"
+          onConfirm={onConfirm}
+          onDismiss={onDismiss}
         />
       )
     )
@@ -344,12 +344,12 @@ describe('date picker modal', () => {
     await render(
       safe(
         <DatePickerModalContent
+          dates={undefined}
+          initialLayout={layout}
           locale="en"
           mode="multiple"
-          dates={undefined}
-          onDismiss={onDismiss}
           onConfirm={onConfirm}
-          initialLayout={layout}
+          onDismiss={onDismiss}
         />
       )
     )
@@ -358,8 +358,8 @@ describe('date picker modal', () => {
         <DatePickerModalContent
           locale="en"
           mode={'other' as 'single'}
-          onDismiss={onDismiss}
           onConfirm={onConfirm}
+          onDismiss={onDismiss}
         />
       )
     )
@@ -371,17 +371,17 @@ describe('date picker modal', () => {
     const screen = await render(
       safe(
         <DatePickerModal
+          date={day}
+          disableStatusBar
+          initialLayout={layout}
           locale="en"
           mode="single"
-          visible
-          date={day}
-          presentationStyle="formSheet"
-          disableStatusBar
-          statusBarOnTopOfBackdrop
-          withDateFormatInLabel={false}
-          onDismiss={onDismiss}
           onConfirm={onConfirm}
-          initialLayout={layout}
+          onDismiss={onDismiss}
+          presentationStyle="formSheet"
+          statusBarOnTopOfBackdrop
+          visible
+          withDateFormatInLabel={false}
         />
       )
     )
@@ -408,13 +408,13 @@ describe('date picker modal', () => {
     await render(
       safe(
         <DatePickerModal
+          animationType="fade"
           locale="en"
           mode="single"
-          visible
-          presentationStyle="pageSheet"
-          animationType="fade"
-          onDismiss={onDismiss}
           onConfirm={onConfirm}
+          onDismiss={onDismiss}
+          presentationStyle="pageSheet"
+          visible
         />
       )
     )
@@ -422,14 +422,14 @@ describe('date picker modal', () => {
     await render(
       safe(
         <DatePickerModal
+          endDate={day}
           locale="en"
           mode="range"
-          visible
-          startDate={day}
-          endDate={day}
-          presentationStyle="pageSheet"
-          onDismiss={onDismiss}
           onConfirm={onConfirm}
+          onDismiss={onDismiss}
+          presentationStyle="pageSheet"
+          startDate={day}
+          visible
         />
       )
     )
@@ -443,21 +443,21 @@ describe('inputs, headers, and pickers', () => {
     const input = await render(
       safe(
         <DatePickerInput
-          locale="en"
-          inputMode="start"
-          value={day}
-          onChange={onChange}
-          testID="date"
+          disableStatusBarPadding
+          endYear={2030}
           iconColor="red"
           iconSize={20}
+          inputMode="start"
+          locale="en"
+          onChange={onChange}
           saveLabelDisabled
           startYear={2020}
-          endYear={2030}
-          disableStatusBarPadding
+          testID="date"
           validRange={{
             startDate: new Date(2026, 0, 1),
             endDate: new Date(2026, 11, 31),
           }}
+          value={day}
         />
       )
     )
@@ -469,29 +469,29 @@ describe('inputs, headers, and pickers', () => {
 
     await render(
       <DatePickerInput
-        locale="en"
-        inputMode="end"
-        value={undefined}
-        onChange={onChange}
-        withModal={false}
         disableCalendarIcon
         disabled
+        inputMode="end"
+        locale="en"
+        onChange={onChange}
+        value={undefined}
+        withModal={false}
       />
     )
 
     const plain = await render(
       <DatePickerInputWithoutModal
-        locale="en"
-        inputMode="start"
-        label="When"
-        value={undefined}
-        onChange={onChange}
-        onChangeText={onChangeText}
-        withDateFormatInLabel={false}
-        inputEnabled={false}
         hasError
         hideValidationErrors
+        inputEnabled={false}
+        inputMode="start"
+        label="When"
+        locale="en"
+        onChange={onChange}
+        onChangeText={onChangeText}
         testID="plain"
+        value={undefined}
+        withDateFormatInLabel={false}
       />
     )
     const field = byTestId(plain, 'plain')[0]
@@ -502,15 +502,15 @@ describe('inputs, headers, and pickers', () => {
 
     await render(
       <DatePickerInputWithoutModal
-        locale="en"
-        inputMode="start"
-        value={undefined}
-        onChange={onChange}
-        withDateFormatInLabel
         inputEnabled
-        keyboardType="default"
+        inputMode="start"
         keyboardAppearance="dark"
+        keyboardType="default"
+        locale="en"
+        onChange={onChange}
         testID="bare"
+        value={undefined}
+        withDateFormatInLabel
       />
     )
   })
@@ -519,10 +519,10 @@ describe('inputs, headers, and pickers', () => {
     const onChange = jest.fn()
     await render(
       <CalendarEdit
-        mode="range"
         collapsed
+        disableWeekDays={[0, 1, 2, 3, 4, 5, 6]}
         locale="en"
-        validRange={undefined}
+        mode="range"
         onChange={onChange}
         state={{
           date: day,
@@ -530,23 +530,23 @@ describe('inputs, headers, and pickers', () => {
           endDate: day,
           dates: [day],
         }}
-        disableWeekDays={[0, 1, 2, 3, 4, 5, 6]}
+        validRange={undefined}
       />
     )
     const editing = await render(
       <CalendarEdit
-        mode="single"
         collapsed={false}
-        locale="en"
-        validRange={undefined}
-        onChange={onChange}
         label="Day"
+        locale="en"
+        mode="single"
+        onChange={onChange}
         state={{
           date: undefined,
           startDate: undefined,
           endDate: undefined,
           dates: undefined,
         }}
+        validRange={undefined}
       />
     )
     editing.container
@@ -561,10 +561,9 @@ describe('inputs, headers, and pickers', () => {
 
     await render(
       <CalendarEdit
-        mode="multiple"
         collapsed={false}
         locale="en"
-        validRange={undefined}
+        mode="multiple"
         onChange={onChange}
         state={{
           date: undefined,
@@ -572,27 +571,28 @@ describe('inputs, headers, and pickers', () => {
           endDate: undefined,
           dates: undefined,
         }}
+        validRange={undefined}
       />
     )
 
     await render(
       <CalendarHeader
         locale="en"
-        scrollMode="vertical"
-        onPrev={() => null}
         onNext={() => null}
+        onPrev={() => null}
+        scrollMode="vertical"
         startWeekOnMonday={false}
       />
     )
     const header = await render(
       <CalendarHeader
-        locale={undefined}
-        scrollMode="horizontal"
-        onPrev={() => null}
-        onNext={() => null}
-        startWeekOnMonday
-        endInset={12}
         disableWeekDays={[0]}
+        endInset={12}
+        locale={undefined}
+        onNext={() => null}
+        onPrev={() => null}
+        scrollMode="horizontal"
+        startWeekOnMonday
       />
     )
     await pressTestId(header, 'react-native-paper-dates-next-month')
@@ -600,13 +600,13 @@ describe('inputs, headers, and pickers', () => {
     await render(
       safe(
         <DatePickerModalHeader
+          closeIcon="close"
           locale="en"
-          onSave={() => null}
           onDismiss={() => null}
+          onSave={() => null}
           saveLabel="Keep"
           saveLabelDisabled={false}
           uppercase={false}
-          closeIcon="close"
         />
       )
     )
@@ -617,7 +617,7 @@ describe('inputs, headers, and pickers', () => {
     await render(
       safe(
         <>
-          <DatePickerModalHeader locale="en" onSave={() => null} onDismiss={() => null} />
+          <DatePickerModalHeader locale="en" onDismiss={() => null} onSave={() => null} />
 
           <DatePickerModalHeaderBackground>
             <DatePickerModalStatusBar
@@ -642,11 +642,11 @@ describe('inputs, headers, and pickers', () => {
     const onPressYear = jest.fn()
     const years = await render(
       <YearPicker
-        selectingYear
-        selectedYear={2024}
-        startYear={2024}
         endYear={2026}
         onPressYear={onPressYear}
+        selectedYear={2024}
+        selectingYear
+        startYear={2024}
       />
     )
     const list = years.container.queryAll(
@@ -669,32 +669,32 @@ describe('inputs, headers, and pickers', () => {
 
     await render(
       <YearPicker
-        selectingYear={false}
-        selectedYear={undefined}
-        startYear={Number.NaN}
         endYear={1800}
         onPressYear={onPressYear}
+        selectedYear={undefined}
+        selectingYear={false}
+        startYear={Number.NaN}
       />
     )
     await render(
       <YearPicker
-        selectingYear
-        selectedYear={2200}
-        startYear={2200}
         endYear={Number.NaN}
         onPressYear={onPressYear}
+        selectedYear={2200}
+        selectingYear
+        startYear={2200}
       />
     )
     expect(onPressYear).toHaveBeenCalled()
 
     const collapsed = await render(
-      <AnimatedCrossView collapsed calendar={<Text>cal</Text>} calendarEdit={<Text>edit</Text>} />
+      <AnimatedCrossView calendar={<Text>cal</Text>} calendarEdit={<Text>edit</Text>} collapsed />
     )
     await collapsed.rerender(
       <AnimatedCrossView
-        collapsed={false}
         calendar={<Text>cal</Text>}
         calendarEdit={<Text>edit</Text>}
+        collapsed={false}
       />
     )
 
@@ -708,7 +708,7 @@ describe('inputs, headers, and pickers', () => {
     })
     await render(<AutoSizer>{() => <Text>later</Text>}</AutoSizer>)
 
-    await render(<DayNames locale="en" startWeekOnMonday disableWeekDays={[0]} />)
+    await render(<DayNames disableWeekDays={[0]} locale="en" startWeekOnMonday />)
   })
 
   it('renders every day-range shape and day text color', async () => {
@@ -724,34 +724,34 @@ describe('inputs, headers, and pickers', () => {
       colors: { ...LightTheme.colors, onPrimary: '' },
     }
     const base = {
-      theme,
-      textColorOnPrimary: '#fff',
       day: 2,
-      month: 0,
-      year: 2026,
-      leftCrop: false,
-      rightCrop: false,
-      primaryColor: 'blue',
-      selectColor: 'lightblue',
       disabled: false,
+      leftCrop: false,
+      month: 0,
       onPressDate: jest.fn(),
+      primaryColor: 'blue',
+      rightCrop: false,
+      selectColor: 'lightblue',
+      textColorOnPrimary: '#fff',
+      theme,
+      year: 2026,
     }
     const selected = await render(
-      <Day {...base} selected inRange isToday={false} />
+      <Day {...base} inRange isToday={false} selected />
     )
     await pressTestId(selected, 'react-native-paper-dates-day-2026-0-2')
 
-    await render(<Day {...base} selected={false} inRange isToday />)
+    await render(<Day {...base} inRange isToday selected={false} />)
     await render(
-      <Day {...base} selected={false} inRange={false} isToday disabled />
+      <Day {...base} disabled inRange={false} isToday selected={false} />
     )
     await render(
       <Day
         {...base}
-        selected
+        dayContent={() => <Text>x</Text>}
         inRange={false}
         isToday
-        dayContent={() => <Text>x</Text>}
+        selected
       />
     )
   })
@@ -761,20 +761,20 @@ describe('native month swiper', () => {
   it('pages horizontally and vertically, including an out-of-range index', async () => {
     const swiper = await render(
       <Swiper
-        initialIndex={getStartAtIndex(2024, 2028)}
-        scrollMode="horizontal"
-        startWeekOnMonday={false}
-        startYear={2024}
         endYear={2028}
-        selectedYear={2027}
+        initialIndex={getStartAtIndex(2024, 2028)}
         initialLayout={{ width: 300, height: 120 }}
-        renderItem={({ onPrev, onNext, index }) => (
-          <Pressable testID={`prev-${index}`} onPress={onPrev}>
-            <Pressable testID={`next-${index}`} onPress={onNext} />
+        renderFooter={() => <Text>footer</Text>}
+        renderHeader={(props) => <Text>{props.endInset}</Text>}
+        renderItem={({ index, onNext, onPrev }) => (
+          <Pressable onPress={onPrev} testID={`prev-${index}`}>
+            <Pressable onPress={onNext} testID={`next-${index}`} />
           </Pressable>
         )}
-        renderHeader={(props) => <Text>{props.endInset}</Text>}
-        renderFooter={() => <Text>footer</Text>}
+        scrollMode="horizontal"
+        selectedYear={2027}
+        startWeekOnMonday={false}
+        startYear={2024}
       />
     )
     const scroll = swiper.container.queryAll(
@@ -813,43 +813,43 @@ describe('native month swiper', () => {
 
     await render(
       <Swiper
-        initialIndex={-5}
-        scrollMode="vertical"
-        startWeekOnMonday
-        startYear={2026}
         endYear={2026}
-        selectedYear={undefined}
+        initialIndex={-5}
         initialLayout={{ width: 300, height: 900 }}
         renderItem={() => <Text>month</Text>}
+        scrollMode="vertical"
+        selectedYear={undefined}
+        startWeekOnMonday
+        startYear={2026}
       />
     )
     await render(
       <Swiper
         initialIndex={getStartAtIndex()}
-        scrollMode="vertical"
-        startWeekOnMonday={false}
-        selectedYear={undefined}
         initialLayout={{ width: 300, height: 500 }}
         renderItem={({ onNext }) => (
-          <Pressable testID="vertical-next" onPress={onNext} />
+          <Pressable onPress={onNext} testID="vertical-next" />
         )}
+        scrollMode="vertical"
+        selectedYear={undefined}
+        startWeekOnMonday={false}
       />
     )
     const vertical = await render(
       <Swiper
-        initialIndex={0}
-        scrollMode="vertical"
-        startWeekOnMonday={false}
-        startYear={2026}
         endYear={2026}
-        selectedYear={1800}
+        initialIndex={0}
         initialLayout={{ width: 300, height: 400 }}
-        renderItem={({ onPrev, onNext }) => (
+        renderItem={({ onNext, onPrev }) => (
           <>
-            <Pressable testID="edge-prev" onPress={onPrev} />
-            <Pressable testID="edge-next" onPress={onNext} />
+            <Pressable onPress={onPrev} testID="edge-prev" />
+            <Pressable onPress={onNext} testID="edge-next" />
           </>
         )}
+        scrollMode="vertical"
+        selectedYear={1800}
+        startWeekOnMonday={false}
+        startYear={2026}
       />
     )
     await pressTestId(vertical, 'edge-prev')

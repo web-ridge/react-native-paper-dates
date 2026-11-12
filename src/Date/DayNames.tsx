@@ -11,8 +11,8 @@ function DayNames({
   locale,
   startWeekOnMonday,
 }: {
-  locale: undefined | string
   disableWeekDays?: DisableWeekDaysType
+  locale: undefined | string
   startWeekOnMonday: boolean
 }) {
   const theme = useTheme()
@@ -39,11 +39,11 @@ function DayNames({
 
   return (
     <View
+      pointerEvents="none"
       style={[
         styles.dayNames,
         { backgroundColor: theme.colors.elevation.level3 },
       ]}
-      pointerEvents="none"
     >
       {shortDayNames
         .filter((_, dayIndex) => showWeekDay(dayIndex, disableWeekDays))

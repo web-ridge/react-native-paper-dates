@@ -4,9 +4,9 @@ import { useTheme } from 'react-native-paper'
 import { sharedStyles } from '../shared/styles'
 
 export default function AnimatedCrossView({
-  collapsed,
   calendar,
   calendarEdit,
+  collapsed,
 }: {
   calendar: any
   calendarEdit: any

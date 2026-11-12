@@ -39,25 +39,25 @@ function Swiper(props: SwiperProps) {
   return (
     <AutoSizer initialLayout={props.initialLayout}>
       {({ width, height }) => (
-        <SwiperInner {...props} width={width} height={height} />
+        <SwiperInner {...props} height={height} width={width} />
       )}
     </AutoSizer>
   )
 }
 
 function SwiperInner({
-  scrollMode,
-  renderItem,
-  renderHeader,
-  renderFooter,
-  selectedYear,
-  initialIndex,
-  width,
+  endYear,
   height,
+  initialIndex,
+  renderFooter,
+  renderHeader,
+  renderItem,
+  scrollMode,
+  selectedYear,
   startWeekOnMonday,
   startYear,
-  endYear,
-}: SwiperProps & { width: number; height: number }) {
+  width,
+}: SwiperProps & { height: number; width: number }) {
   const idx = useRef<number>(initialIndex)
   const isHorizontal = scrollMode === 'horizontal'
   const [visibleIndexes, setVisibleIndexes] = useState<number[]>(
@@ -207,31 +207,31 @@ function SwiperInner({
       }
     },
     {
-      selectedYear,
       currentIndexRef: idx,
-      startYear,
       endYear,
+      selectedYear,
+      startYear,
     }
   )
 
   return (
     <>
       <ScrollView
-        scrollsToTop={false}
-        ref={parentRef}
-        horizontal={isHorizontal}
-        pagingEnabled={isHorizontal}
-        nestedScrollEnabled={isHorizontal}
+        contentOffset={initialContentOffset}
+        decelerationRate="fast"
         directionalLockEnabled={isHorizontal}
-        style={[sharedStyles.root, sharedStyles.minHeightZero]}
+        horizontal={isHorizontal}
+        nestedScrollEnabled={isHorizontal}
+        onLayout={scrollToCurrent}
         onMomentumScrollEnd={onMomentumScrollEnd}
         onScrollEndDrag={onMomentumScrollEnd}
-        onLayout={scrollToCurrent}
-        contentOffset={initialContentOffset}
+        pagingEnabled={isHorizontal}
+        ref={parentRef}
+        scrollEventThrottle={10}
+        scrollsToTop={false}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        decelerationRate="fast"
-        scrollEventThrottle={10}
+        style={[sharedStyles.root, sharedStyles.minHeightZero]}
       >
         <View
           style={[

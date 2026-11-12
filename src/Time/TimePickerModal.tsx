@@ -24,39 +24,39 @@ import { sharedStyles } from '../shared/styles'
 import { scrimColor, supportedOrientations } from '../shared/utils'
 
 export function TimePickerModal({
-  visible,
-  onDismiss,
-  onConfirm,
-  hours,
-  minutes,
-  label = 'Select time',
-  uppercase: _uppercase,
-  cancelLabel = 'Cancel',
-  confirmLabel = 'Ok',
   animationType = 'none',
-  locale,
-  keyboardIcon = 'keyboard-outline',
+  cancelLabel = 'Cancel',
   clockIcon = 'clock-outline',
-  use24HourClock,
-  inputFontSize,
+  confirmLabel = 'Ok',
   defaultInputType,
+  hours,
+  inputFontSize,
+  keyboardIcon = 'keyboard-outline',
+  label = 'Select time',
+  locale,
+  minutes,
+  onConfirm,
+  onDismiss,
+  uppercase: _uppercase,
+  use24HourClock,
+  visible,
 }: {
-  locale?: undefined | string
-  label?: string
-  uppercase?: boolean
-  cancelLabel?: string
-  confirmLabel?: string
-  hours?: number | undefined
-  minutes?: number | undefined
-  visible: boolean | undefined
-  onDismiss: () => any
-  onConfirm: (hoursAndMinutes: { hours: number; minutes: number }) => any
   animationType?: 'slide' | 'fade' | 'none'
-  keyboardIcon?: string
+  cancelLabel?: string
   clockIcon?: string
-  use24HourClock?: boolean
-  inputFontSize?: number
+  confirmLabel?: string
   defaultInputType?: PossibleInputTypes
+  hours?: number | undefined
+  inputFontSize?: number
+  keyboardIcon?: string
+  label?: string
+  locale?: undefined | string
+  minutes?: number | undefined
+  onConfirm: (hoursAndMinutes: { hours: number; minutes: number }) => any
+  onDismiss: () => any
+  uppercase?: boolean
+  use24HourClock?: boolean
+  visible: boolean | undefined
 }) {
   const theme = useTheme()
 
@@ -108,12 +108,12 @@ export function TimePickerModal({
   return (
     <Modal
       animationType={animationType}
-      transparent={true}
-      visible={visible}
       onRequestClose={onDismiss}
       presentationStyle="overFullScreen"
-      supportedOrientations={supportedOrientations}
       statusBarTranslucent={true}
+      supportedOrientations={supportedOrientations}
+      transparent={true}
+      visible={visible}
     >
       <>
         <TouchableWithoutFeedback onPress={onDismiss}>
@@ -126,10 +126,10 @@ export function TimePickerModal({
           />
         </TouchableWithoutFeedback>
         <View
-          style={[StyleSheet.absoluteFill, styles.center]}
           pointerEvents="box-none"
+          style={[StyleSheet.absoluteFill, styles.center]}
         >
-          <KeyboardAvoidingView style={styles.center} behavior="padding">
+          <KeyboardAvoidingView behavior="padding" style={styles.center}>
             <View
               style={[
                 styles.modalContent,
@@ -160,31 +160,31 @@ export function TimePickerModal({
               </View>
               <View style={styles.timePickerContainer}>
                 <TimePicker
-                  locale={locale}
-                  inputType={inputType}
-                  use24HourClock={use24HourClock}
-                  inputFontSize={inputFontSize}
                   focused={focused}
                   hours={localHours}
+                  inputFontSize={inputFontSize}
+                  inputType={inputType}
+                  locale={locale}
                   minutes={localMinutes}
                   onChange={onChange}
                   onFocusInput={onFocusInput}
+                  use24HourClock={use24HourClock}
                 />
               </View>
               <View style={styles.bottom}>
                 <IconButton
-                  iconColor={theme.colors.onSurface}
+                  accessibilityLabel="toggle keyboard"
                   icon={getTimeInputTypeIcon(inputType, {
                     keyboard: keyboardIcon,
                     picker: clockIcon,
                   })}
+                  iconColor={theme.colors.onSurface}
                   onPress={() => {
                     Keyboard.dismiss()
                     setInputType(reverseInputTypes[inputType])
                   }}
                   size={24}
                   style={styles.inputTypeToggle}
-                  accessibilityLabel="toggle keyboard"
                 />
                 <View style={sharedStyles.root} />
                 <Button mode="text" onPress={onDismiss}>

@@ -29,20 +29,20 @@ function returnTrue() {
 }
 
 function AnalogClock({
-  hours,
-  minutes,
   focused,
+  hours,
   is24Hour,
+  minutes,
   onChange,
 }: {
-  hours: number
-  minutes: number
   focused: PossibleClockTypes
+  hours: number
   is24Hour: boolean
+  minutes: number
   onChange: (hoursMinutesAndFocused: {
+    focused?: undefined | PossibleClockTypes
     hours: number
     minutes: number
-    focused?: undefined | PossibleClockTypes
   }) => any
 }) {
   const shortPointer = hours >= 12 && is24Hour
@@ -133,16 +133,17 @@ function AnalogClock({
     <View
       ref={clockRef}
       {...panResponder.panHandlers}
+      // @ts-ignore -> https://github.com/necolas/react-native-web/issues/506
+      cursor={'pointer'}
       style={[
         styles.clock,
         {
           backgroundColor: theme.colors.surfaceVariant,
         },
       ]}
-      // @ts-ignore -> https://github.com/necolas/react-native-web/issues/506
-      cursor={'pointer'}
     >
       <View
+        pointerEvents="none"
         style={[
           styles.line,
           {
@@ -164,15 +165,14 @@ function AnalogClock({
             width: circleSize / 2 - 4 - dynamicSize,
           },
         ]}
-        pointerEvents="none"
       >
         <View
           style={[styles.endPoint, { backgroundColor: theme.colors.primary }]}
         />
       </View>
       <View
-        style={[StyleSheet.absoluteFill, styles.center]}
         pointerEvents="none"
+        style={[StyleSheet.absoluteFill, styles.center]}
       >
         <View
           style={[
@@ -185,7 +185,7 @@ function AnalogClock({
       </View>
       <AnimatedClockSwitcher
         focused={focused}
-        hours={<AnalogClockHours is24Hour={is24Hour} hours={hours} />}
+        hours={<AnalogClockHours hours={hours} is24Hour={is24Hour} />}
         minutes={<AnalogClockMinutes minutes={minutes} />}
       />
     </View>

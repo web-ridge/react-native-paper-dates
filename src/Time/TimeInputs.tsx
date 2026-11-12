@@ -19,29 +19,29 @@ import { memo, useCallback, useRef } from 'react'
 import { sharedStyles } from '../shared/styles'
 
 function TimeInputs({
-  hours,
-  minutes,
-  onFocusInput,
   focused,
-  inputType,
-  onChange,
-  is24Hour,
+  hours,
   inputFontSize,
+  inputType,
+  is24Hour,
   locale,
+  minutes,
+  onChange,
+  onFocusInput,
 }: {
-  inputType: PossibleInputTypes
   focused: PossibleClockTypes
   hours: number
+  inputFontSize?: number
+  inputType: PossibleInputTypes
+  is24Hour: boolean
+  locale?: string
   minutes: number
-  onFocusInput: (type: PossibleClockTypes) => any
   onChange: (hoursMinutesAndFocused: {
+    focused?: undefined | PossibleClockTypes
     hours: number
     minutes: number
-    focused?: undefined | PossibleClockTypes
   }) => any
-  is24Hour: boolean
-  inputFontSize?: number
-  locale?: string
+  onFocusInput: (type: PossibleClockTypes) => any
 }) {
   const theme = useTheme()
 
@@ -78,23 +78,11 @@ function TimeInputs({
     <View style={styles.inputContainer}>
       <View style={styles.column}>
         <TimeInput
-          ref={startInput}
-          inputFontSize={inputFontSize}
-          placeholder={'00'}
-          value={toHourInputFormat(hours, is24Hour)}
+          blurOnSubmit={false}
           clockType={clockTypes.hours}
-          pressed={focused === clockTypes.hours}
-          onPress={onFocusInput}
+          inputFontSize={inputFontSize}
           inputType={inputType}
           maxFontSizeMultiplier={1.2}
-          selectionColor={
-            theme.dark
-              ? Color(themeColor(theme.colors.primary)).darken(0.2).hex()
-              : themeColor(theme.colors.primary)
-          }
-          returnKeyType={'next'}
-          onSubmitEditing={onSubmitStartInput}
-          blurOnSubmit={false}
           onChanged={(newHoursFromInput) => {
             let newHours = toHourOutputFormat(
               newHoursFromInput,
@@ -109,6 +97,18 @@ function TimeInputs({
               minutes,
             })
           }}
+          onPress={onFocusInput}
+          onSubmitEditing={onSubmitStartInput}
+          placeholder={'00'}
+          pressed={focused === clockTypes.hours}
+          ref={startInput}
+          returnKeyType={'next'}
+          selectionColor={
+            theme.dark
+              ? Color(themeColor(theme.colors.primary)).darken(0.2).hex()
+              : themeColor(theme.colors.primary)
+          }
+          value={toHourInputFormat(hours, is24Hour)}
         />
         {inputType === 'keyboard' ? (
           <Text maxFontSizeMultiplier={1.5} variant="bodySmall">
@@ -145,21 +145,10 @@ function TimeInputs({
       </View>
       <View style={styles.column}>
         <TimeInput
-          ref={endInput}
-          inputFontSize={inputFontSize}
-          placeholder={'00'}
-          value={minutes}
           clockType={clockTypes.minutes}
-          pressed={focused === clockTypes.minutes}
-          onPress={onFocusInput}
+          inputFontSize={inputFontSize}
           inputType={inputType}
           maxFontSizeMultiplier={1.2}
-          selectionColor={
-            theme.dark
-              ? Color(themeColor(theme.colors.primary)).darken(0.2).hex()
-              : themeColor(theme.colors.primary)
-          }
-          onSubmitEditing={onSubmitEndInput}
           onChanged={(newMinutesFromInput) => {
             let newMinutes = newMinutesFromInput
             if (newMinutesFromInput > 59) {
@@ -170,6 +159,17 @@ function TimeInputs({
               minutes: newMinutes,
             })
           }}
+          onPress={onFocusInput}
+          onSubmitEditing={onSubmitEndInput}
+          placeholder={'00'}
+          pressed={focused === clockTypes.minutes}
+          ref={endInput}
+          selectionColor={
+            theme.dark
+              ? Color(themeColor(theme.colors.primary)).darken(0.2).hex()
+              : themeColor(theme.colors.primary)
+          }
+          value={minutes}
         />
         {inputType === 'keyboard' ? (
           <Text maxFontSizeMultiplier={1.5} variant="bodySmall">
@@ -181,10 +181,10 @@ function TimeInputs({
         <>
           <View style={styles.spaceBetweenInputsAndSwitcher} />
           <AmPmSwitcher
-            hours={hours}
-            onChange={onChangeHours}
-            inputType={inputType}
             direction="vertical"
+            hours={hours}
+            inputType={inputType}
+            onChange={onChangeHours}
           />
         </>
       ) : null}
@@ -197,10 +197,10 @@ function TimeInputs({
         {hourMinuteRow}
         <View style={styles.landscapeSwitcherSpacing}>
           <AmPmSwitcher
-            hours={hours}
-            onChange={onChangeHours}
-            inputType={inputType}
             direction="horizontal"
+            hours={hours}
+            inputType={inputType}
+            onChange={onChangeHours}
           />
         </View>
       </View>

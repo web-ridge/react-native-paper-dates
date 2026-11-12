@@ -5,11 +5,11 @@ import { useTextColorOnPrimary } from '../shared/utils'
 import { memo } from 'react'
 
 function AnalogClockHours({
-  is24Hour,
   hours,
+  is24Hour,
 }: {
-  is24Hour: boolean
   hours: number
+  is24Hour: boolean
 }) {
   const outerRange = getHourNumbers(false, circleSize, 12, 12)
   const innerRange = getHourNumbers(true, circleSize, 12, 12)
@@ -33,6 +33,7 @@ function AnalogClockHours({
             {/* Display 00 instead of 12 for AM hours */}
             <Text
               maxFontSizeMultiplier={1.5}
+              selectable={false}
               style={
                 (!is24Hour && i + 1 === hours) ||
                 (hours === i + 1 && hours !== 12) ||
@@ -41,7 +42,6 @@ function AnalogClockHours({
                   : null
               }
               variant="bodyLarge"
-              selectable={false}
             >
               {is24Hour && i + 1 === 12 ? '00' : i + 1}
             </Text>

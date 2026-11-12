@@ -17,16 +17,16 @@ export type RenderProps = {
 }
 
 export type SwiperProps = {
+  endYear?: number
   initialIndex: number
-  scrollMode: 'horizontal' | 'vertical'
-  renderItem: (renderProps: RenderProps) => any
-  renderHeader?: (renderProps: RenderProps) => any
+  initialLayout?: { width: number; height: number }
   renderFooter?: (renderProps: RenderProps) => any
+  renderHeader?: (renderProps: RenderProps) => any
+  renderItem: (renderProps: RenderProps) => any
+  scrollMode: 'horizontal' | 'vertical'
   selectedYear: number | undefined
   startWeekOnMonday: boolean
   startYear?: number
-  endYear?: number
-  initialLayout?: { width: number; height: number }
 }
 
 // Helper function to get the minimum allowed index based on startYear
@@ -74,15 +74,15 @@ export function isIndexWithinRange(
 export function useYearChange(
   onChange: (index: number | undefined) => void,
   {
-    selectedYear,
     currentIndexRef,
-    startYear,
     endYear,
+    selectedYear,
+    startYear,
   }: {
     currentIndexRef: MutableRefObject<number>
+    endYear?: number
     selectedYear: number | undefined
     startYear?: number
-    endYear?: number
   }
 ) {
   const onChangeRef = useLatest(onChange)

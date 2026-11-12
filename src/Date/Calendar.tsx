@@ -24,9 +24,9 @@ export type ModeType = 'single' | 'range' | 'multiple'
 export type ScrollModeType = 'horizontal' | 'vertical'
 
 export type ValidRangeType = {
-  startDate?: Date
-  endDate?: Date
   disabledDates?: Date[]
+  endDate?: Date
+  startDate?: Date
 }
 
 /**
@@ -52,73 +52,73 @@ export type DayContentPosition =
 export type DayContentRenderer = (params: {
   date: Date
   day: number
-  month: number
-  year: number
-  selected: boolean
-  isToday: boolean
   disabled: boolean
+  isToday: boolean
+  month: number
+  selected: boolean
+  year: number
 }) => ReactNode
 
 export type BaseCalendarProps = {
-  locale: string
-  disableWeekDays?: DisableWeekDaysType
-  validRange?: ValidRangeType
-  startYear?: number
-  endYear?: number
-  startWeekOnMonday?: boolean
   // here they are optional but in final implementation they are required
   date?: CalendarDate
-  dates?: CalendarDates
-  startDate?: CalendarDate
-  endDate?: CalendarDate
   dateMode?: 'start' | 'end'
+  dates?: CalendarDates
   dayContent?: DayContentRenderer
   /** Anchor for `dayContent`. Defaults to `'bottom'`. */
   dayContentPosition?: DayContentPosition
   /** Style for the `dayContent` overlay container (offsets, size, …). */
   dayContentStyle?: StyleProp<ViewStyle>
+  disableWeekDays?: DisableWeekDaysType
+  endDate?: CalendarDate
+  endYear?: number
   /**
    * Size of the calendar, if known before it is laid out (e.g. a fixed-size
    * dialog). The calendar draws immediately at this size instead of rendering
    * nothing until it has measured itself; the measured size replaces it.
    */
   initialLayout?: { width: number; height: number }
+  locale: string
+  startDate?: CalendarDate
+  startWeekOnMonday?: boolean
+  startYear?: number
+  validRange?: ValidRangeType
 }
 
 export type CalendarDate = Date | undefined
 export type CalendarDates = Date[] | undefined | null
 
 export type RangeChange = (params: {
-  startDate: CalendarDate
   endDate: CalendarDate
+  startDate: CalendarDate
 }) => any
 
 export type SingleChange = (params: { date: CalendarDate }) => void
 
 export type MultiChange = (params: {
-  dates: CalendarDates
-  datePressed: Date
   change: 'added' | 'removed'
+  datePressed: Date
+  dates: CalendarDates
 }) => any
 
 export type MultiConfirm = (params: { dates: Date[] }) => void
 
 export interface CalendarSingleProps extends BaseCalendarProps {
-  mode: 'single'
   date: CalendarDate
+  mode: 'single'
   onChange: SingleChange
 }
 
 export interface CalendarRangeProps extends BaseCalendarProps {
-  mode: 'range'
-  startDate: CalendarDate
   endDate: CalendarDate
+  mode: 'range'
   onChange: RangeChange
+  startDate: CalendarDate
 }
 
 export interface CalendarMultiProps extends BaseCalendarProps {
-  mode: 'multiple'
   dates: CalendarDates
+  mode: 'multiple'
   onChange: MultiChange
 }
 
@@ -126,23 +126,23 @@ function Calendar(
   props: CalendarSingleProps | CalendarRangeProps | CalendarMultiProps
 ) {
   const {
+    date,
+    dateMode,
+    dates,
+    dayContent,
+    dayContentPosition,
+    dayContentStyle,
+    disableWeekDays,
+    endDate,
+    endYear,
+    initialLayout,
     locale,
     mode,
     onChange,
     startDate,
-    endDate,
-    date,
-    disableWeekDays,
-    startYear,
-    endYear,
-    dates,
-    validRange,
-    dateMode,
     startWeekOnMonday,
-    dayContent,
-    dayContentPosition,
-    dayContentStyle,
-    initialLayout,
+    startYear,
+    validRange,
   } = props
   const scrollMode =
     mode === 'range' || mode === 'multiple' ? 'vertical' : 'horizontal'
@@ -213,41 +213,10 @@ function Calendar(
   return (
     <View style={[sharedStyles.root, sharedStyles.minHeightZero]}>
       <Swiper
+        endYear={endYear}
         initialIndex={getInitialIndex(firstDate, startYear, endYear)}
         initialLayout={initialLayout}
-        selectedYear={selectedYear}
-        scrollMode={scrollMode}
-        startWeekOnMonday={startWeekOnMonday || false}
-        startYear={startYear}
-        endYear={endYear}
-        renderItem={({ index }) => (
-          <Month
-            locale={locale}
-            mode={mode}
-            key={index}
-            validRange={validRange}
-            index={index}
-            startDate={startDate}
-            endDate={endDate}
-            date={date}
-            dates={dates}
-            onPressYear={onPressYear}
-            selectingYear={selectingYear}
-            onPressDate={onPressDate}
-            scrollMode={scrollMode}
-            primaryColor={themeColor(theme.colors.primary)}
-            selectColor={themeColor(selectColor)}
-            roundness={theme.shapes.corner.extraSmall}
-            disableWeekDays={disableWeekDays}
-            startWeekOnMonday={startWeekOnMonday || false}
-            startYear={startYear}
-            endYear={endYear}
-            dayContent={dayContent}
-            dayContentPosition={dayContentPosition}
-            dayContentStyle={dayContentStyle}
-          />
-        )}
-        renderHeader={({ endInset, onPrev, onNext }) => (
+        renderHeader={({ endInset, onNext, onPrev }) => (
           <CalendarHeader
             disableWeekDays={disableWeekDays}
             endInset={endInset}
@@ -258,14 +227,45 @@ function Calendar(
             startWeekOnMonday={startWeekOnMonday || false}
           />
         )}
+        renderItem={({ index }) => (
+          <Month
+            date={date}
+            dates={dates}
+            dayContent={dayContent}
+            dayContentPosition={dayContentPosition}
+            dayContentStyle={dayContentStyle}
+            disableWeekDays={disableWeekDays}
+            endDate={endDate}
+            endYear={endYear}
+            index={index}
+            key={index}
+            locale={locale}
+            mode={mode}
+            onPressDate={onPressDate}
+            onPressYear={onPressYear}
+            primaryColor={themeColor(theme.colors.primary)}
+            roundness={theme.shapes.corner.extraSmall}
+            scrollMode={scrollMode}
+            selectColor={themeColor(selectColor)}
+            selectingYear={selectingYear}
+            startDate={startDate}
+            startWeekOnMonday={startWeekOnMonday || false}
+            startYear={startYear}
+            validRange={validRange}
+          />
+        )}
+        scrollMode={scrollMode}
+        selectedYear={selectedYear}
+        startWeekOnMonday={startWeekOnMonday || false}
+        startYear={startYear}
       />
       {scrollMode === 'horizontal' ? (
         <YearPicker
+          endYear={endYear || defaultEndYear}
+          onPressYear={onPressYear}
           selectedYear={selectedYear}
           selectingYear={selectingYear}
-          onPressYear={onPressYear}
           startYear={startYear || defaultStartYear}
-          endYear={endYear || defaultEndYear}
         />
       ) : null}
     </View>

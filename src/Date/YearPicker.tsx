@@ -15,17 +15,17 @@ import { defaultStartYear, defaultEndYear } from './dateUtils'
 const ITEM_HEIGHT = 62
 
 export default function YearPicker({
+  endYear,
+  onPressYear,
   selectedYear,
   selectingYear,
-  onPressYear,
   startYear,
-  endYear,
 }: {
+  endYear: number
+  onPressYear: (year: number) => any
   selectedYear: number | undefined
   selectingYear: boolean
-  onPressYear: (year: number) => any
   startYear: number
-  endYear: number
 }) {
   const theme = useTheme()
 
@@ -48,48 +48,48 @@ export default function YearPicker({
 
   return (
     <View
+      pointerEvents={selectingYear ? 'auto' : 'none'}
       style={[
         StyleSheet.absoluteFill,
         styles.root,
         { backgroundColor: theme.colors.elevation.level3 },
         selectingYear ? sharedStyles.opacity1 : sharedStyles.opacity0,
       ]}
-      pointerEvents={selectingYear ? 'auto' : 'none'}
     >
       <FlatList<number>
+        data={years}
+        keyExtractor={(item) => `${item}`}
+        numColumns={3}
         ref={flatList}
+        renderItem={({ item }) => (
+          <Year
+            onPressYear={onPressYear}
+            selected={selectedYear === item}
+            year={item}
+          />
+        )}
+        renderScrollComponent={(sProps) => {
+          return <ScrollView {...sProps} />
+        }}
         style={[
           sharedStyles.root,
           Platform.OS === 'web'
             ? ({ colorScheme: theme.dark ? 'dark' : 'light' } as ViewStyle)
             : null,
         ]}
-        data={years}
-        renderScrollComponent={(sProps) => {
-          return <ScrollView {...sProps} />
-        }}
-        renderItem={({ item }) => (
-          <Year
-            year={item}
-            selected={selectedYear === item}
-            onPressYear={onPressYear}
-          />
-        )}
-        keyExtractor={(item) => `${item}`}
-        numColumns={3}
       />
     </View>
   )
 }
 
 function YearPure({
-  year,
-  selected,
   onPressYear,
+  selected,
+  year,
 }: {
-  year: number
-  selected: boolean
   onPressYear: (newYear: number) => any
+  selected: boolean
+  year: number
 }) {
   const theme = useTheme()
 
@@ -98,9 +98,9 @@ function YearPure({
   return (
     <View style={styles.year}>
       <TouchableRipple
-        onPress={() => onPressYear(year)}
-        accessibilityRole="button"
         accessibilityLabel={String(year)}
+        accessibilityRole="button"
+        onPress={() => onPressYear(year)}
         style={styles.yearButton}
       >
         <View
@@ -111,6 +111,7 @@ function YearPure({
         >
           <Text
             maxFontSizeMultiplier={1.5}
+            selectable={false}
             style={[
               styles.yearLabel,
               selected
@@ -118,7 +119,6 @@ function YearPure({
                 : { color: theme.colors.onSurfaceVariant },
               { ...textFont },
             ]}
-            selectable={false}
           >
             {year}
           </Text>

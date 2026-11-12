@@ -52,10 +52,10 @@ export default function AutoSizer({
 
   return (
     <View
+      collapsable={false}
       // Modals often skip onLayout during rotation. Keying by window size
       // mounts a fresh sizer so the calendar gets the landscape viewport.
       key={windowKey}
-      collapsable={false}
       onLayout={onLayout}
       style={[
         sharedStyles.overflowHidden,

@@ -15,35 +15,35 @@ import { DisplayModeContext } from '../contexts/DisplayModeContext'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 
 type onChangeFunc = ({
+  focused,
   hours,
   minutes,
-  focused,
 }: {
+  focused?: undefined | PossibleClockTypes
   hours: number
   minutes: number
-  focused?: undefined | PossibleClockTypes
 }) => any
 
 function TimePicker({
-  hours,
-  minutes,
-  onFocusInput,
   focused,
-  inputType,
-  onChange,
-  locale,
-  use24HourClock,
+  hours,
   inputFontSize,
+  inputType,
+  locale,
+  minutes,
+  onChange,
+  onFocusInput,
+  use24HourClock,
 }: {
-  locale?: undefined | string
-  inputType: PossibleInputTypes
   focused: PossibleClockTypes
   hours: number
-  minutes: number
-  onFocusInput: (type: PossibleClockTypes) => any
-  onChange: onChangeFunc
-  use24HourClock?: boolean
   inputFontSize?: number
+  inputType: PossibleInputTypes
+  locale?: undefined | string
+  minutes: number
+  onChange: onChangeFunc
+  onFocusInput: (type: PossibleClockTypes) => any
+  use24HourClock?: boolean
 }) {
   const dimensions = useWindowDimensions()
   const isLandscape = dimensions.width > dimensions.height
@@ -104,15 +104,15 @@ function TimePicker({
         }
       >
         <TimeInputs
-          inputType={inputType}
-          inputFontSize={inputFontSize}
+          focused={focused}
           hours={hours}
-          minutes={minutes}
+          inputFontSize={inputFontSize}
+          inputType={inputType}
           is24Hour={is24Hour}
+          locale={locale}
+          minutes={minutes}
           onChange={onChange}
           onFocusInput={onFocusInput}
-          focused={focused}
-          locale={locale}
         />
         {inputType === inputTypes.picker ? (
           <View
@@ -122,10 +122,10 @@ function TimePicker({
             ]}
           >
             <AnalogClock
-              hours={toHourInputFormat(hours, is24Hour)}
-              minutes={minutes}
               focused={focused}
+              hours={toHourInputFormat(hours, is24Hour)}
               is24Hour={is24Hour}
+              minutes={minutes}
               onChange={onInnerChange}
             />
           </View>

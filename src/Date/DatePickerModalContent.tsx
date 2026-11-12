@@ -29,47 +29,44 @@ export type LocalState = {
 }
 
 interface DatePickerModalContentBaseProps {
-  inputFormat?: string
-  locale: string
-  onDismiss: () => any
-
-  saveLabelDisabled?: boolean
-  uppercase?: boolean
-  inputEnabled?: boolean
-
   disableSafeTop?: boolean
   disableStatusBar?: boolean
-  statusBarOnTopOfBackdrop?: boolean
-
+  inputEnabled?: boolean
+  inputFormat?: string
+  locale: string
   /**
    * Called with the calendar's measured size. `DatePickerModal` uses it to
    * draw the calendar immediately the next time it opens.
    */
   onCalendarLayout?: (layout: { width: number; height: number }) => void
+  onDismiss: () => any
+  saveLabelDisabled?: boolean
+  statusBarOnTopOfBackdrop?: boolean
+  uppercase?: boolean
 }
 
 export interface DatePickerModalContentRangeProps
   extends HeaderPickProps, BaseCalendarProps, DatePickerModalContentBaseProps {
-  mode: 'range'
-  startDate: CalendarDate
   endDate: CalendarDate
+  mode: 'range'
   onChange?: RangeChange
   onConfirm: RangeChange
+  startDate: CalendarDate
 }
 
 export interface DatePickerModalContentSingleProps
   extends HeaderPickProps, BaseCalendarProps, DatePickerModalContentBaseProps {
-  mode: 'single'
   date?: CalendarDate
+  dateMode?: 'start' | 'end'
+  mode: 'single'
   onChange?: SingleChange
   onConfirm: SingleChange
-  dateMode?: 'start' | 'end'
 }
 
 export interface DatePickerModalContentMultiProps
   extends HeaderPickProps, BaseCalendarProps, DatePickerModalContentBaseProps {
-  mode: 'multiple'
   dates?: CalendarDates
+  mode: 'multiple'
   onChange?: MultiChange
   onConfirm: MultiConfirm
 }
@@ -81,25 +78,25 @@ export function DatePickerModalContent(
     | DatePickerModalContentMultiProps
 ) {
   const {
-    mode,
-    onChange,
-    onConfirm,
-    onDismiss,
-    disableSafeTop,
-    disableStatusBar,
-    disableWeekDays,
-    locale,
-    validRange,
     dateMode,
-    startYear,
-    endYear,
-    statusBarOnTopOfBackdrop,
-    startWeekOnMonday,
     dayContent,
     dayContentPosition,
     dayContentStyle,
+    disableSafeTop,
+    disableStatusBar,
+    disableWeekDays,
+    endYear,
     initialLayout,
+    locale,
+    mode,
     onCalendarLayout,
+    onChange,
+    onConfirm,
+    onDismiss,
+    startWeekOnMonday,
+    startYear,
+    statusBarOnTopOfBackdrop,
+    validRange,
   } = props
   const anyProps = props as any
   const defaultUppercase = false
@@ -175,82 +172,82 @@ export function DatePickerModalContent(
           statusBarOnTopOfBackdrop={!!statusBarOnTopOfBackdrop}
         />
         <DatePickerModalHeader
+          closeIcon={props.closeIcon}
+          disableWeekDays={disableWeekDays}
           locale={locale}
-          onSave={onInnerConfirm}
           onDismiss={onDismiss}
+          onSave={onInnerConfirm}
           saveLabel={props.saveLabel}
           saveLabelDisabled={props.saveLabelDisabled ?? false}
           uppercase={props.uppercase ?? defaultUppercase}
-          closeIcon={props.closeIcon}
-          disableWeekDays={disableWeekDays}
         />
         <DatePickerModalContentHeader
-          state={state}
-          mode={mode}
-          collapsed={collapsed}
-          onToggle={onToggleCollapse}
-          headerSeparator={props.headerSeparator}
-          emptyLabel={props.emptyLabel}
-          label={props.label}
-          moreLabel={props.moreLabel}
-          startLabel={props.startLabel}
-          endLabel={props.endLabel}
-          uppercase={props.uppercase ?? defaultUppercase}
-          locale={locale}
-          editIcon={props.editIcon}
-          calendarIcon={props.calendarIcon}
           allowEditing={props.allowEditing ?? true}
+          calendarIcon={props.calendarIcon}
+          collapsed={collapsed}
           disableWeekDays={disableWeekDays}
+          editIcon={props.editIcon}
+          emptyLabel={props.emptyLabel}
+          endLabel={props.endLabel}
+          headerSeparator={props.headerSeparator}
+          label={props.label}
+          locale={locale}
+          mode={mode}
+          moreLabel={props.moreLabel}
+          onToggle={onToggleCollapse}
+          startLabel={props.startLabel}
+          state={state}
+          uppercase={props.uppercase ?? defaultUppercase}
         />
       </DatePickerModalHeaderBackground>
       <View
+        onLayout={Platform.OS === 'web' ? undefined : onCalendarContainerLayout}
         style={[
           sharedStyles.root,
           sharedStyles.minHeightZero,
           { paddingLeft: insets.left, paddingRight: insets.right },
         ]}
-        onLayout={Platform.OS === 'web' ? undefined : onCalendarContainerLayout}
       >
         <AnimatedCrossView
-          collapsed={collapsed}
           calendar={
             <Calendar
-              locale={locale}
-              mode={mode}
-              startDate={state.startDate}
-              endDate={state.endDate}
               date={state.date}
-              onChange={onInnerChange}
-              disableWeekDays={disableWeekDays}
-              dates={state.dates}
-              validRange={validRange}
               dateMode={dateMode}
-              startYear={startYear}
-              endYear={endYear}
-              startWeekOnMonday={startWeekOnMonday}
+              dates={state.dates}
               dayContent={dayContent}
               dayContentPosition={dayContentPosition}
               dayContentStyle={dayContentStyle}
+              disableWeekDays={disableWeekDays}
+              endDate={state.endDate}
+              endYear={endYear}
               initialLayout={initialLayout}
+              locale={locale}
+              mode={mode}
+              onChange={onInnerChange}
+              startDate={state.startDate}
+              startWeekOnMonday={startWeekOnMonday}
+              startYear={startYear}
+              validRange={validRange}
             />
           }
           calendarEdit={
             <CalendarEdit
-              mode={mode}
-              state={state}
-              label={props.label}
-              startLabel={props.startLabel}
-              endLabel={props.endLabel}
               collapsed={collapsed}
-              onChange={onInnerChange}
-              validRange={validRange}
-              locale={locale}
-              inputEnabled={props.inputEnabled}
-              withDateFormatInLabel={props.withDateFormatInLabel}
-              placeholder={props.placeholder}
               disableWeekDays={disableWeekDays}
+              endLabel={props.endLabel}
+              inputEnabled={props.inputEnabled}
+              label={props.label}
+              locale={locale}
+              mode={mode}
+              onChange={onInnerChange}
+              placeholder={props.placeholder}
+              startLabel={props.startLabel}
+              state={state}
+              validRange={validRange}
+              withDateFormatInLabel={props.withDateFormatInLabel}
             />
           }
+          collapsed={collapsed}
         />
       </View>
     </>

@@ -8,9 +8,9 @@ it('renders DatePickerModal', async () => {
       <DatePickerModal
         locale="en"
         mode="single"
-        visible={true}
-        onDismiss={() => null}
         onConfirm={() => null}
+        onDismiss={() => null}
+        visible={true}
       />
     </SafeAreaProvider>
   )
@@ -26,13 +26,13 @@ it('passes initialLayout to the calendar so the month draws on open', async () =
       }}
     >
       <DatePickerModal
+        date={new Date('2025-01-15')}
+        initialLayout={{ width: 320, height: 400 }}
         locale="en"
         mode="single"
-        visible={true}
-        date={new Date('2025-01-15')}
-        onDismiss={() => null}
         onConfirm={() => null}
-        initialLayout={{ width: 320, height: 400 }}
+        onDismiss={() => null}
+        visible={true}
       />
     </SafeAreaProvider>
   )
@@ -47,12 +47,12 @@ it('reuses the calendar size from the last open, so a reopen draws the month at 
   const renderModal = (visible: boolean) => (
     <SafeAreaProvider initialMetrics={metrics}>
       <DatePickerModal
+        date={new Date('2025-01-15')}
         locale="en"
         mode="single"
-        visible={visible}
-        date={new Date('2025-01-15')}
-        onDismiss={() => null}
         onConfirm={() => null}
+        onDismiss={() => null}
+        visible={visible}
       />
     </SafeAreaProvider>
   )

@@ -34,71 +34,71 @@ import { memo, useMemo } from 'react'
 import { sharedStyles } from '../shared/styles'
 
 interface BaseMonthProps {
-  locale: undefined | string
-  scrollMode: 'horizontal' | 'vertical'
-  disableWeekDays?: DisableWeekDaysType
-  mode: ModeType
-  index: number
-  onPressYear: (year: number) => any
-  selectingYear: boolean
-  onPressDate: (date: Date) => any
-  primaryColor: string
-  selectColor: string
-  roundness: number
-  validRange?: ValidRangeType
-  startWeekOnMonday: boolean
-  startYear?: number
-  endYear?: number
-  // some of these should be required in final implementation
-  startDate?: CalendarDate
-  endDate?: CalendarDate
   date?: CalendarDate
   dates?: CalendarDates
   dayContent?: DayContentRenderer
   dayContentPosition?: DayContentPosition
   dayContentStyle?: StyleProp<ViewStyle>
+  disableWeekDays?: DisableWeekDaysType
+  endDate?: CalendarDate
+  endYear?: number
+  index: number
+  locale: undefined | string
+  mode: ModeType
+  onPressDate: (date: Date) => any
+  onPressYear: (year: number) => any
+  primaryColor: string
+  roundness: number
+  scrollMode: 'horizontal' | 'vertical'
+  selectColor: string
+  selectingYear: boolean
+  // some of these should be required in final implementation
+  startDate?: CalendarDate
+  startWeekOnMonday: boolean
+  startYear?: number
+  validRange?: ValidRangeType
 }
 
 interface MonthRangeProps extends BaseMonthProps {
+  endDate: CalendarDate
   mode: 'range'
   startDate: CalendarDate
-  endDate: CalendarDate
 }
 
 interface MonthSingleProps extends BaseMonthProps {
-  mode: 'single'
   date: CalendarDate
+  mode: 'single'
 }
 
 interface MonthMultiProps extends BaseMonthProps {
-  mode: 'multiple'
   dates: CalendarDates
+  mode: 'multiple'
 }
 
 function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
   const {
-    locale,
-    mode,
-    index,
-    onPressYear,
-    selectingYear,
-    onPressDate,
-    primaryColor,
-    selectColor,
-    roundness,
-    validRange,
-    disableWeekDays,
-    scrollMode,
-    startDate,
-    endDate,
     date,
     dates,
-    startWeekOnMonday,
-    startYear,
-    endYear,
     dayContent,
     dayContentPosition,
     dayContentStyle,
+    disableWeekDays,
+    endDate,
+    endYear,
+    index,
+    locale,
+    mode,
+    onPressDate,
+    onPressYear,
+    primaryColor,
+    roundness,
+    scrollMode,
+    selectColor,
+    selectingYear,
+    startDate,
+    startWeekOnMonday,
+    startYear,
+    validRange,
   } = props
   const isHorizontal = scrollMode === 'horizontal'
 
@@ -272,7 +272,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
   const iconSource = selectingYear ? 'menu-up' : 'menu-down'
 
   const weeks = grid.map(({ weekIndex, generatedDays }) => (
-    <View style={styles.week} key={weekIndex}>
+    <View key={weekIndex} style={styles.week}>
       {generatedDays
         .filter((gd) => showWeekDay(gd.dayIndex, disableWeekDays))
         .map((gd) =>
@@ -280,24 +280,24 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
             <EmptyDay key={gd.dayIndex} />
           ) : (
             <Day
-              key={gd.dayIndex}
-              theme={theme}
               day={gd.dayOfMonth}
-              month={gd.month}
-              year={gd.year}
-              selected={gd.selected}
-              inRange={gd.inRange}
-              leftCrop={gd.leftCrop}
-              rightCrop={gd.rightCrop}
-              onPressDate={onPressDate}
-              isToday={gd.isToday}
-              selectColor={selectColor}
-              primaryColor={primaryColor}
-              disabled={gd.disabled}
-              textColorOnPrimary={textColorOnPrimary}
               dayContent={dayContent}
               dayContentPosition={dayContentPosition}
               dayContentStyle={dayContentStyle}
+              disabled={gd.disabled}
+              inRange={gd.inRange}
+              isToday={gd.isToday}
+              key={gd.dayIndex}
+              leftCrop={gd.leftCrop}
+              month={gd.month}
+              onPressDate={onPressDate}
+              primaryColor={primaryColor}
+              rightCrop={gd.rightCrop}
+              selectColor={selectColor}
+              selected={gd.selected}
+              textColorOnPrimary={textColorOnPrimary}
+              theme={theme}
+              year={gd.year}
             />
           )
         )}
@@ -332,10 +332,10 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
         ]}
       >
         <TouchableRipple
+          accessibilityLabel={`${monthName} ${year}`}
+          accessibilityRole="button"
           disabled={!isHorizontal}
           onPress={isHorizontal ? () => onPressYear(year) : undefined}
-          accessibilityRole="button"
-          accessibilityLabel={`${monthName} ${year}`}
           style={[
             styles.yearButton,
             {
@@ -354,6 +354,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
           >
             <Text
               maxFontSizeMultiplier={1.5}
+              selectable={false}
               style={[
                 styles.monthLabel,
                 {
@@ -361,7 +362,6 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
                   color: theme.colors.onSurfaceVariant,
                 },
               ]}
-              selectable={false}
             >
               {monthName} {year}
             </Text>
@@ -371,7 +371,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
                 isHorizontal ? sharedStyles.opacity1 : sharedStyles.opacity0,
               ]}
             >
-              <Icon size={24} color={iconColor} source={iconSource} />
+              <Icon color={iconColor} size={24} source={iconSource} />
             </View>
           </View>
         </TouchableRipple>

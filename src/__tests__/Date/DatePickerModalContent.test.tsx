@@ -7,11 +7,11 @@ it('renders DatePickerModalContent', async () => {
   const { toJSON } = await render(
     <SafeAreaProvider>
       <DatePickerModalContent
+        date={fixedDate}
         locale="en"
         mode="single"
-        date={fixedDate}
-        onDismiss={() => null}
         onConfirm={() => null}
+        onDismiss={() => null}
       />
     </SafeAreaProvider>
   )

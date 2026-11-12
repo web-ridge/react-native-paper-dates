@@ -5,8 +5,8 @@ it('renders CalendarHeader', async () => {
   const { toJSON } = await render(
     <CalendarHeader
       locale="en"
-      onPrev={() => null}
       onNext={() => null}
+      onPrev={() => null}
       scrollMode="vertical"
       startWeekOnMonday={false}
     />

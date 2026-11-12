@@ -8,10 +8,10 @@ registerTranslation('en', en)
 it('renders TimePicker', async () => {
   const { toJSON } = await render(
     <TimePicker
-      locale="en"
-      inputType="keyboard"
       focused="hours"
       hours={6}
+      inputType="keyboard"
+      locale="en"
       minutes={30}
       onChange={() => null}
       onFocusInput={() => null}

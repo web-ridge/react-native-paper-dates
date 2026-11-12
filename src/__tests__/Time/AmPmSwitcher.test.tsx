@@ -6,8 +6,8 @@ it('renders AmPmSwitcher', async () => {
   const { toJSON } = await render(
     <AmPmSwitcher
       hours={12}
-      onChange={() => null}
       inputType={inputTypes.keyboard}
+      onChange={() => null}
     />
   )
 

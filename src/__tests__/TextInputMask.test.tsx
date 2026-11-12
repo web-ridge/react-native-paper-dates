@@ -7,11 +7,11 @@ describe('TextInputMask', () => {
   it('should set maxLength based on mask length for standard format', async () => {
     const { getByTestId } = await render(
       <TextInputWithMask
+        inputButton={null}
+        mask="MM/DD/YYYY"
+        onChangeText={noop}
         testID="date-input"
         value=""
-        mask="MM/DD/YYYY"
-        inputButton={null}
-        onChangeText={noop}
       />
     )
     const input = getByTestId('date-input')
@@ -21,11 +21,11 @@ describe('TextInputMask', () => {
   it('should set maxLength based on mask length for Czech locale format', async () => {
     const { getByTestId } = await render(
       <TextInputWithMask
+        inputButton={null}
+        mask="DD. MM. YYYY"
+        onChangeText={noop}
         testID="date-input"
         value=""
-        mask="DD. MM. YYYY"
-        inputButton={null}
-        onChangeText={noop}
       />
     )
     const input = getByTestId('date-input')
@@ -35,11 +35,11 @@ describe('TextInputMask', () => {
   it('should set maxLength based on mask length for Hungarian locale format', async () => {
     const { getByTestId } = await render(
       <TextInputWithMask
+        inputButton={null}
+        mask="YYYY. MM. DD."
+        onChangeText={noop}
         testID="date-input"
         value=""
-        mask="YYYY. MM. DD."
-        inputButton={null}
-        onChangeText={noop}
       />
     )
     const input = getByTestId('date-input')
@@ -49,11 +49,11 @@ describe('TextInputMask', () => {
   it('should set maxLength based on mask length for German locale format', async () => {
     const { getByTestId } = await render(
       <TextInputWithMask
+        inputButton={null}
+        mask="DD.MM.YYYY"
+        onChangeText={noop}
         testID="date-input"
         value=""
-        mask="DD.MM.YYYY"
-        inputButton={null}
-        onChangeText={noop}
       />
     )
     const input = getByTestId('date-input')
@@ -65,23 +65,23 @@ describe('TextInputMask', () => {
     const onChange = jest.fn()
     const screen = await render(
       <TextInputWithMask
+        inputButton={null}
+        mask="MM/DD/YYYY"
+        onChange={onChange}
+        onChangeText={onChangeText}
         testID="date-input"
         value="01/02/2020"
-        mask="MM/DD/YYYY"
-        inputButton={null}
-        onChangeText={onChangeText}
-        onChange={onChange}
       />
     )
     const input = screen.getByTestId('date-input')
     await screen.rerender(
       <TextInputWithMask
+        inputButton={null}
+        mask="MM/DD/YYYY"
+        onChange={onChange}
+        onChangeText={onChangeText}
         testID="date-input"
         value=""
-        mask="MM/DD/YYYY"
-        inputButton={null}
-        onChangeText={onChangeText}
-        onChange={onChange}
       />
     )
     input.props.onChangeText('1')
@@ -94,10 +94,10 @@ describe('TextInputMask', () => {
 
     const dotted = await render(
       <TextInputWithMask
+        inputButton={null}
+        mask="DD.MM.YYYY"
         testID="dotted"
         value=""
-        mask="DD.MM.YYYY"
-        inputButton={null}
       />
     )
     dotted.getByTestId('dotted').props.onChangeText('01012020')
@@ -105,11 +105,11 @@ describe('TextInputMask', () => {
 
     const plain = await render(
       <TextInputWithMask
+        inputButton={null}
+        mask="MMDDYYYY"
+        onChangeText={onChangeText}
         testID="plain"
         value=""
-        mask="MMDDYYYY"
-        inputButton={null}
-        onChangeText={onChangeText}
       />
     )
     await act(() => {
@@ -122,11 +122,11 @@ describe('TextInputMask', () => {
     for (const mask of ['DD-MM-YYYY', 'YYYY年MM年DD', 'DD MM YYYY']) {
       const masked = await render(
         <TextInputWithMask
+          inputButton={null}
+          mask={mask}
+          onChangeText={onChangeText}
           testID={mask}
           value=""
-          mask={mask}
-          inputButton={null}
-          onChangeText={onChangeText}
         />
       )
       masked.getByTestId(mask).props.onChangeText('1')

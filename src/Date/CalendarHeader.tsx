@@ -31,38 +31,38 @@ export function getCalendarHeaderHeight(scrollMode: 'horizontal' | 'vertical') {
 }
 
 function CalendarHeader({
-  scrollMode,
-  onPrev,
-  onNext,
   disableWeekDays,
-  locale,
-  startWeekOnMonday,
   endInset = 0,
+  locale,
+  onNext,
+  onPrev,
+  scrollMode,
+  startWeekOnMonday,
 }: {
-  locale: undefined | string
-  scrollMode: 'horizontal' | 'vertical'
-  onPrev: () => any
-  onNext: () => any
   disableWeekDays?: DisableWeekDaysType
-  startWeekOnMonday: boolean
   /** Shrink from the trailing edge so week names do not cover a vertical scrollbar. */
   endInset?: number
+  locale: undefined | string
+  onNext: () => any
+  onPrev: () => any
+  scrollMode: 'horizontal' | 'vertical'
+  startWeekOnMonday: boolean
 }) {
   const isHorizontal = scrollMode === 'horizontal'
   const theme = useTheme()
 
   return (
     <View
+      pointerEvents={'box-none'}
       style={
         endInset
           ? [styles.datePickerHeader, { right: endInset }]
           : styles.datePickerHeader
       }
-      pointerEvents={'box-none'}
     >
       {isHorizontal ? (
-        <View style={styles.buttonContainer} pointerEvents={'box-none'}>
-          <View style={sharedStyles.root} pointerEvents={'box-none'} />
+        <View pointerEvents={'box-none'} style={styles.buttonContainer}>
+          <View pointerEvents={'box-none'} style={sharedStyles.root} />
           <View
             style={[
               styles.arrowGroup,
@@ -73,18 +73,18 @@ function CalendarHeader({
             ]}
           >
             <IconButton
-              icon="chevron-left"
               accessibilityLabel={getTranslation(locale, 'previous')}
+              icon="chevron-left"
               onPress={onPrev}
-              testID="react-native-paper-dates-prev-month"
               style={styles.arrowButton}
+              testID="react-native-paper-dates-prev-month"
             />
             <IconButton
-              icon="chevron-right"
               accessibilityLabel={getTranslation(locale, 'next')}
+              icon="chevron-right"
               onPress={onNext}
-              testID="react-native-paper-dates-next-month"
               style={styles.arrowButton}
+              testID="react-native-paper-dates-next-month"
             />
           </View>
         </View>

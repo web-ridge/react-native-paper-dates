@@ -5,10 +5,10 @@ it('renders DatePickerInputWithoutModal', async () => {
   const fixedDate = new Date('2025-01-15')
   const { toJSON } = await render(
     <DatePickerInputWithoutModal
-      locale="en"
-      value={fixedDate}
-      onChange={() => null}
       inputMode="start"
+      locale="en"
+      onChange={() => null}
+      value={fixedDate}
     />
   )
   expect(toJSON()).toMatchSnapshot()

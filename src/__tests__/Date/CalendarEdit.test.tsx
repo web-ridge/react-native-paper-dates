@@ -5,17 +5,17 @@ it('renders CalendarEdit', async () => {
   const fixedDate = new Date('2025-01-15')
   const { toJSON } = await render(
     <CalendarEdit
+      collapsed={false}
+      locale="en"
       mode="single"
+      onChange={() => null}
       state={{
         startDate: fixedDate,
         endDate: fixedDate,
         date: fixedDate,
         dates: [fixedDate],
       }}
-      collapsed={false}
-      onChange={() => null}
       validRange={undefined}
-      locale="en"
     />
   )
   expect(toJSON()).toMatchSnapshot()
