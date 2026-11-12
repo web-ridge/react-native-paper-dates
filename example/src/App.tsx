@@ -1,11 +1,5 @@
 import { StatusBar } from 'expo-status-bar'
-import {
-  type ComponentProps,
-  type ReactNode,
-  useCallback,
-  useMemo,
-  useState,
-} from 'react'
+import { type ComponentProps, type ReactNode, useMemo, useState } from 'react'
 import {
   type ColorValue,
   Image,
@@ -110,6 +104,8 @@ type LocaleOption = {
   native?: string
   translations: TranslationsType
 }
+
+type OpenDialog = 'locale' | 'multi' | 'range' | 'single' | 'time'
 
 type TimeValue = {
   hours: number | undefined
@@ -541,6 +537,21 @@ function DemoCard({
   )
 }
 
+function daysFromToday(days: number) {
+  const date = new Date()
+  date.setDate(date.getDate() + days)
+  return date
+}
+
+function formatTime(time: TimeValue, formatter: Intl.DateTimeFormat) {
+  if (time.hours === undefined || time.minutes === undefined) {
+    return 'No time selected.'
+  }
+  const timeDate = new Date()
+  timeDate.setHours(time.hours, time.minutes, 0, 0)
+  return formatter.format(timeDate)
+}
+
 function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
   const { height, width } = useWindowDimensions()
   const insets = useSafeAreaInsets()
@@ -550,22 +561,18 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
 
   const [date, setDate] = useState<Date | undefined>(undefined)
   const [dates, setDates] = useState<Date[] | undefined>()
+  const [dialog, setDialog] = useState<OpenDialog | null>(null)
   const [inputDate, setInputDate] = useState<Date | undefined>(undefined)
   const [locale, setLocale] = useState('en-GB')
-  const [localeOpen, setLocaleOpen] = useState(false)
   const [localeQuery, setLocaleQuery] = useState('')
-  const [multiOpen, setMultiOpen] = useState(false)
   const [range, setRange] = useState<DateRange>({
     endDate: undefined,
     startDate: undefined,
   })
-  const [rangeOpen, setRangeOpen] = useState(false)
-  const [singleOpen, setSingleOpen] = useState(false)
   const [time, setTime] = useState<TimeValue>({
     hours: undefined,
     minutes: undefined,
   })
-  const [timeOpen, setTimeOpen] = useState(false)
 
   const dateFormatter = useMemo(
     () =>
@@ -595,82 +602,36 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
     [locale]
   )
 
-  const closeLocaleMenu = useCallback(() => {
-    setLocaleOpen(false)
+  const closeDialog = () => {
+    setDialog(null)
     setLocaleQuery('')
-  }, [])
-  const onChangeMulti = useCallback((params: { dates: Date[] | undefined }) => {
-    setMultiOpen(false)
-    setDates(params.dates)
-  }, [])
-  const onChangeRange = useCallback(({ endDate, startDate }: DateRange) => {
-    setRangeOpen(false)
-    setRange({ endDate, startDate })
-  }, [])
-  const onChangeSingle = useCallback((params: { date: Date | undefined }) => {
-    setSingleOpen(false)
-    setDate(params.date)
-  }, [])
-  const onConfirmTime = useCallback(
-    ({ hours, minutes }: { hours: number; minutes: number }) => {
-      setTimeOpen(false)
-      setTime({ hours, minutes })
-    },
-    []
-  )
-  const onDismissMulti = useCallback(() => {
-    setMultiOpen(false)
-  }, [])
-  const onDismissRange = useCallback(() => {
-    setRangeOpen(false)
-  }, [])
-  const onDismissSingle = useCallback(() => {
-    setSingleOpen(false)
-  }, [])
-  const onDismissTime = useCallback(() => {
-    setTimeOpen(false)
-  }, [])
+  }
+  const formatDate = (value: Date | undefined, empty = 'No date selected.') =>
+    value ? dateFormatter.format(value) : empty
 
   const cellStyle = wide ? styles.gridCell : undefined
-  const futureDate = new Date(new Date().setDate(new Date().getDate() + 5))
+  const futureDate = daysFromToday(5)
   const inputIconColor =
     typeof theme.colors.onSurfaceVariant === 'string'
       ? theme.colors.onSurfaceVariant
       : undefined
-  const inputLabel = inputDate
-    ? dateFormatter.format(inputDate)
-    : 'No date selected.'
+  const inputLabel = formatDate(inputDate)
   const layoutStyle = wide ? styles.grid : styles.stack
   const localeListMaxHeight = Math.min(
     420,
     Math.max(120, height - insets.top - insets.bottom - 248)
   )
-  const multiLabel =
-    dates
-      ?.map((d) => dateFormatter.format(d))
-      .filter(Boolean)
-      .join(', ') || 'No dates selected.'
-  const pastDate = new Date(new Date().setDate(new Date().getDate() - 5))
+  const multiLabel = dates?.length
+    ? dates.map((value) => dateFormatter.format(value)).join(', ')
+    : 'No dates selected.'
+  const pastDate = daysFromToday(-5)
   const rangeLabel =
-    !range.startDate && !range.endDate
-      ? 'No dates selected.'
-      : [
-          range.startDate ? dateFormatter.format(range.startDate) : '',
-          range.endDate ? dateFormatter.format(range.endDate) : '',
-        ].join(' - ')
+    range.startDate || range.endDate
+      ? `${formatDate(range.startDate, '')} - ${formatDate(range.endDate, '')}`
+      : 'No dates selected.'
   const rowStyle = wide ? styles.gridRow : styles.stack
-  const singleLabel = date ? dateFormatter.format(date) : 'No date selected.'
-  const timeDate = new Date()
-  if (time.hours !== undefined) {
-    timeDate.setHours(time.hours)
-  }
-  if (time.minutes !== undefined) {
-    timeDate.setMinutes(time.minutes)
-  }
-  const timeLabel =
-    time.hours !== undefined && time.minutes !== undefined
-      ? timeFormatter.format(timeDate)
-      : 'No time selected.'
+  const singleLabel = formatDate(date)
+  const timeLabel = formatTime(time, timeFormatter)
 
   return (
     <View style={styles.screen}>
@@ -761,8 +722,8 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
               accessibilityHint="Opens a list of locales"
               accessibilityLabel={`Locale ${localeLabel(locale)}`}
               accessibilityRole="button"
-              accessibilityState={{ expanded: localeOpen }}
-              onPress={() => setLocaleOpen(true)}
+              accessibilityState={{ expanded: dialog === 'locale' }}
+              onPress={() => setDialog('locale')}
               style={styles.localeTrigger}
             >
               <Icon color={theme.colors.primary} size={18} source="web" />
@@ -783,9 +744,9 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
               />
             </Pressable>
             <Dialog
-              onDismiss={closeLocaleMenu}
+              onDismiss={closeDialog}
               style={styles.localeDialog}
-              visible={localeOpen}
+              visible={dialog === 'locale'}
             >
               <Dialog.Title>Locale</Dialog.Title>
               <Searchbar
@@ -809,9 +770,9 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
               >
                 <ScrollView keyboardShouldPersistTaps="handled">
                   {filteredLocales.length === 0 ? (
-                    <Text style={styles.emptyLocales} variant="bodyMedium">
+                    <AppText style={styles.emptyLocales} variant="bodyMedium">
                       No locales match.
-                    </Text>
+                    </AppText>
                   ) : (
                     <RadioButton.Group
                       onValueChange={(code) => {
@@ -819,7 +780,7 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
                         // Close after this press ends. Unmounting the dialog
                         // mid-click lets the release land on the trigger and
                         // reopen it.
-                        setTimeout(closeLocaleMenu, 0)
+                        setTimeout(closeDialog, 0)
                       }}
                       value={locale}
                     >
@@ -836,7 +797,7 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
                 </ScrollView>
               </Dialog.ScrollArea>
               <Dialog.Actions>
-                <Button onPress={closeLocaleMenu}>Close</Button>
+                <Button onPress={closeDialog}>Close</Button>
               </Dialog.Actions>
             </Dialog>
           </View>
@@ -846,7 +807,7 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
               <DemoCard
                 actionLabel="Pick time"
                 icon="clock-outline"
-                onPress={() => setTimeOpen(true)}
+                onPress={() => setDialog('time')}
                 style={cellStyle}
                 title="Time"
                 value={timeLabel}
@@ -874,7 +835,7 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
               <DemoCard
                 actionLabel="Pick single date"
                 icon="calendar-check-outline"
-                onPress={() => setSingleOpen(true)}
+                onPress={() => setDialog('single')}
                 style={cellStyle}
                 title="Single date"
                 value={singleLabel}
@@ -885,7 +846,7 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
               <DemoCard
                 actionLabel="Pick multiple dates"
                 icon="calendar-multiple"
-                onPress={() => setMultiOpen(true)}
+                onPress={() => setDialog('multi')}
                 style={cellStyle}
                 title="Multiple dates"
                 value={multiLabel}
@@ -894,7 +855,7 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
               <DemoCard
                 actionLabel="Pick range"
                 icon="calendar-plus"
-                onPress={() => setRangeOpen(true)}
+                onPress={() => setDialog('range')}
                 style={cellStyle}
                 title="Date range"
                 value={rangeLabel}
@@ -911,42 +872,51 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
         endDate={range.endDate}
         locale={locale}
         mode="range"
-        onConfirm={onChangeRange}
-        onDismiss={onDismissRange}
-        presentationStyle="overFullScreen"
+        onConfirm={({ endDate, startDate }) => {
+          closeDialog()
+          setRange({ endDate, startDate })
+        }}
+        onDismiss={closeDialog}
         startDate={range.startDate}
-        visible={rangeOpen}
+        visible={dialog === 'range'}
       />
       <DatePickerModal
         date={date}
         locale={locale}
         mode="single"
-        onConfirm={onChangeSingle}
-        onDismiss={onDismissSingle}
-        presentationStyle="overFullScreen"
+        onConfirm={({ date: nextDate }) => {
+          closeDialog()
+          setDate(nextDate)
+        }}
+        onDismiss={closeDialog}
         validRange={{
           disabledDates: [futureDate],
           startDate: pastDate,
         }}
-        visible={singleOpen}
+        visible={dialog === 'single'}
       />
       <DatePickerModal
         dates={dates}
         locale={locale}
         mode="multiple"
-        onConfirm={onChangeMulti}
-        onDismiss={onDismissMulti}
-        presentationStyle="overFullScreen"
+        onConfirm={({ dates: nextDates }) => {
+          closeDialog()
+          setDates(nextDates)
+        }}
+        onDismiss={closeDialog}
         validRange={{ startDate: new Date() }}
-        visible={multiOpen}
+        visible={dialog === 'multi'}
       />
       <TimePickerModal
         hours={time.hours}
         locale={locale}
         minutes={time.minutes}
-        onConfirm={onConfirmTime}
-        onDismiss={onDismissTime}
-        visible={timeOpen}
+        onConfirm={({ hours, minutes }) => {
+          closeDialog()
+          setTime({ hours, minutes })
+        }}
+        onDismiss={closeDialog}
+        visible={dialog === 'time'}
       />
     </View>
   )
