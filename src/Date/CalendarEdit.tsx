@@ -44,7 +44,11 @@ function CalendarEdit({
   const dateInput = useRef<TextInputInstance | null>(null)
   const startInput = useRef<TextInputInstance | null>(null)
   const endInput = useRef<TextInputInstance | null>(null)
-  const inputStyle = { backgroundColor: theme.colors.elevation.level3 }
+  const surfaceColor = theme.colors.elevation.level3
+  // The outlined label cuts the border with theme.colors.background. This
+  // field sits on the modal surface, so the cutout has to use that color.
+  const inputTheme = { colors: { background: surfaceColor } }
+  const inputStyle = { backgroundColor: surfaceColor }
 
   // when switching views focus, or un-focus text input
   useEffect(() => {
@@ -104,6 +108,7 @@ function CalendarEdit({
               inputEnabled={inputEnabled}
               withDateFormatInLabel={withDateFormatInLabel}
               placeholder={placeholder}
+              theme={inputTheme}
               style={inputStyle}
             />
           ) : null}
@@ -126,6 +131,7 @@ function CalendarEdit({
                   inputEnabled={inputEnabled}
                   withDateFormatInLabel={withDateFormatInLabel}
                   placeholder={placeholder}
+                  theme={inputTheme}
                   style={inputStyle}
                 />
               </View>
@@ -146,6 +152,7 @@ function CalendarEdit({
                   inputEnabled={inputEnabled}
                   withDateFormatInLabel={withDateFormatInLabel}
                   placeholder={placeholder}
+                  theme={inputTheme}
                   style={inputStyle}
                 />
               </View>

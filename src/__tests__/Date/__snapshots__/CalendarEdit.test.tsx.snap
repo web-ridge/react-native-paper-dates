@@ -139,7 +139,7 @@ exports[`renders CalendarEdit 1`] = `
                       "position": "absolute",
                     },
                     {
-                      "backgroundColor": "rgba(254, 247, 255, 1)",
+                      "backgroundColor": "rgba(236, 230, 240, 1)",
                       "left": 16,
                     },
                   ]
@@ -152,7 +152,7 @@ exports[`renders CalendarEdit 1`] = `
                       "position": "absolute",
                     },
                     {
-                      "backgroundColor": "rgba(254, 247, 255, 1)",
+                      "backgroundColor": "rgba(236, 230, 240, 1)",
                       "left": 16,
                     },
                     {
