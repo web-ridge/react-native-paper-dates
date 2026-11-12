@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://web-ridge.github.io/react-native-paper-dates/
+    about: Installation, usage, and the Paper 5 migration guide.
