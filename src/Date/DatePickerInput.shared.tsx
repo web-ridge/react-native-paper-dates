@@ -32,5 +32,5 @@ export type DatePickerInputProps = {
   startWeekOnMonday?: boolean
 } & Omit<
   ComponentProps<typeof TextInput>,
-  'value' | 'onChange' | 'onChangeText' | 'inputMode'
+  'value' | 'onChange' | 'onChangeText' | 'inputMode' | 'endAccessory'
 >

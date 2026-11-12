@@ -1,5 +1,5 @@
 import TextInputWithMask from '../TextInputMask'
-import { Text, useTheme } from 'react-native-paper'
+import { useTheme } from 'react-native-paper'
 import { StyleSheet, View } from 'react-native'
 import useDateInput from './inputUtils'
 import type { DatePickerInputProps } from './DatePickerInput.shared'
@@ -99,13 +99,13 @@ function DatePickerInputWithoutModal(
               rest.keyboardAppearance ?? (theme.dark ? 'dark' : 'default')
             }
             error={(!!error && !hideValidationErrors) || !!hasError}
+            supportingText={
+              error && !hideValidationErrors ? error : rest.supportingText
+            }
             style={style}
             inputButton={inputButton}
           />
         </View>
-        {error && !hideValidationErrors ? (
-          <Text style={{ color: theme.colors.error }}>{error}</Text>
-        ) : null}
       </View>
       {modal?.({
         value,
