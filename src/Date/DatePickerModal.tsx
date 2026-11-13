@@ -61,10 +61,6 @@ export function DatePickerModal(
       default: 'slide',
     })
 
-  // The calendar unmounts when the modal closes. Keep its size from the last
-  // open, so the next open draws the month on the first frame instead of
-  // waiting for the calendar to measure itself. Only reused for the same window
-  // size, since rotating or resizing changes the layout.
   const { width: windowWidth, height: windowHeight } = useWindowDimensions()
   const windowKey = `${windowWidth}x${windowHeight}`
   const [lastCalendarLayout, setLastCalendarLayout] = useState<{

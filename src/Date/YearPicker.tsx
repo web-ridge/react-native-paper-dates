@@ -41,7 +41,6 @@ function YearPicker({
     [endYear, resolvedStartYear]
   )
 
-  // FlatList calls this with the row index when numColumns is 3.
   const getItemLayout = useCallback(
     (_: ArrayLike<number> | null | undefined, index: number) => ({
       index,

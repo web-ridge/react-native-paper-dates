@@ -90,8 +90,6 @@ describe('month offset helpers', () => {
     ).toEqual(expect.any(Number))
     const monthHeight = getMonthHeight('horizontal', start, false, 2020, 2030)
     expect(monthHeight).toBeGreaterThan(0)
-    // The month title sits over the header, so a viewport just shorter than
-    // getMonthHeight still fits the weeks and must not reserve a scrollbar.
     expect(
       horizontalMonthScrolls(monthHeight - 1, start, false, 2020, 2030)
     ).toBe(false)

@@ -24,7 +24,6 @@ it('draws the month on the first render when initialLayout is given', async () =
       onChange={() => null}
     />
   )
-  // Without a size it waits for its own layout.
   expect(queryByText('January 2025')).toBeNull()
 
   await rerender(

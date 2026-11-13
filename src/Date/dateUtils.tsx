@@ -29,8 +29,6 @@ export function addMonths(date: Date, count: number) {
   return n2
 }
 
-// https://stackoverflow.com/a/1185068/2508481
-// pass in any date as parameter anyDateInMonth based on dayjs
 export function getDaysInMonth({
   year,
   month,
@@ -65,7 +63,6 @@ export function getFirstDayOfMonth({
 }): number {
   let dayOfWeek = new Date(year, month, 1).getDay()
   if (startWeekOnMonday) {
-    // Map Sunday (0) to 6, Monday (1) to 0, etc.
     dayOfWeek = (dayOfWeek + 6) % 7
   }
 
@@ -166,11 +163,6 @@ export function isDateBetween(
   return date <= endDate && date >= startDate
 }
 
-/**
- * Check if a date is within an optional range.
- *
- * If the range doesn't exist, it defaults to `true`.
- */
 export function isDateWithinOptionalRange(
   date: Date,
   {
@@ -179,12 +171,10 @@ export function isDateWithinOptionalRange(
   }: { startUnix: number | undefined; endUnix: number | undefined }
 ) {
   const dateUnix = dateToUnix(date)
-  // if startUnix is provided and date is before start
   if (startUnix && dateUnix < startUnix) {
     return false
   }
 
-  // if endUnix is provided and date is after end
   if (endUnix && dateUnix > endUnix) {
     return false
   }
@@ -203,7 +193,6 @@ export const defaultEndYear = 2200
 
 const startAtIndexCache = new Map<string, number>()
 
-// Dynamic calculation functions to replace fixed constants
 export function getStartAtIndex(startYear?: number, _endYear?: number): number {
   const start = startYear || 1800
   const today = new Date()
@@ -231,12 +220,10 @@ export function getBeginOffset(startYear?: number, endYear?: number): number {
   return estimatedMonthHeight * getStartAtIndex(startYear, endYear)
 }
 
-// Keep the old constants for backward compatibility but make them dynamic
 export const startAtIndex = 2800
 export const totalMonths = startAtIndex * 2
 export const beginOffset = estimatedMonthHeight * startAtIndex
 
-// Create a dynamic grid counts array
 export function createGridCounts(count: number): Array<number | undefined> {
   return new Array<number | undefined>(count)
 }
@@ -318,7 +305,6 @@ export function useInputFormat({
   locale: string | undefined
 }) {
   return useMemo(() => {
-    // TODO: something cleaner and more universal?
     const inputDate = formatter.format(new Date(2020, 10 - 1, 1))
 
     if (inputDate.includes('٢٠٢٠')) {

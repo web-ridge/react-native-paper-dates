@@ -45,14 +45,10 @@ function CalendarEdit({
   const startInput = useRef<TextInputInstance | null>(null)
   const endInput = useRef<TextInputInstance | null>(null)
   const surfaceColor = theme.colors.elevation.level3
-  // The outlined label cuts the border with theme.colors.background. This
-  // field sits on the modal surface, so the cutout has to use that color.
   const inputTheme = { colors: { background: surfaceColor } }
   const inputStyle = { backgroundColor: surfaceColor }
 
-  // when switching views focus, or un-focus text input
   useEffect(() => {
-    // hide open keyboard
     if (collapsed) {
       Keyboard.dismiss()
     }
@@ -80,13 +76,9 @@ function CalendarEdit({
     }
   }, [endInput])
 
-  const onSubmitEndInput = useCallback(() => {
-    // TODO: close modal and persist range
-  }, [])
+  const onSubmitEndInput = useCallback(() => {}, [])
 
-  const onSubmitInput = useCallback(() => {
-    // TODO: close modal and persist range
-  }, [])
+  const onSubmitInput = useCallback(() => {}, [])
 
   return (
     <View style={styles.root}>

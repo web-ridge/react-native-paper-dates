@@ -52,7 +52,6 @@ function TimePicker({
     undefined
   )
 
-  // method to check whether we have 24 hours in clock or 12
   const is24Hour = useMemo(() => {
     if (use24HourClock !== undefined) {
       return use24HourClock
@@ -66,7 +65,6 @@ function TimePicker({
     return formatted.includes('23')
   }, [locale, use24HourClock])
 
-  // Initialize display Mode according the hours value
   useEffect(() => {
     if (hours >= 12) {
       setDisplayMode('PM')

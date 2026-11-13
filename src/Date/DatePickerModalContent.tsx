@@ -34,10 +34,6 @@ interface DatePickerModalContentBaseProps {
   inputEnabled?: boolean
   inputFormat?: string
   locale: string
-  /**
-   * Called with the calendar's measured size. `DatePickerModal` uses it to
-   * draw the calendar immediately the next time it opens.
-   */
   onCalendarLayout?: (layout: { width: number; height: number }) => void
   onDismiss: () => any
   saveLabelDisabled?: boolean
@@ -102,7 +98,6 @@ export function DatePickerModalContent(
   const defaultUppercase = false
   const insets = useSafeAreaInsets()
 
-  // use local state to add only onConfirm state changes
   const [state, setState] = useState<LocalState>({
     date: anyProps.date,
     startDate: anyProps.startDate,
@@ -111,7 +106,6 @@ export function DatePickerModalContent(
   })
   const [collapsed, setCollapsed] = useState(true)
 
-  // update local state if changed from outside or if modal is opened
   useEffect(() => {
     setState({
       date: anyProps.date,
@@ -150,8 +144,6 @@ export function DatePickerModalContent(
     setCollapsed((prev) => !prev)
   }, [setCollapsed])
 
-  // The calendar fills this view inside the inset padding. Not on web, where
-  // the range calendar's header sits above the part that sizes itself.
   const onCalendarContainerLayout = useCallback(
     (event: LayoutChangeEvent) => {
       const { width, height } = event.nativeEvent.layout

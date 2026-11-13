@@ -58,7 +58,6 @@ it('reuses the calendar size from the last open, so a reopen draws the month at 
   )
 
   const { queryByText, root, rerender } = await render(renderModal(true))
-  // First open: no size known yet, so the calendar waits for its layout.
   expect(queryByText('January 2025')).toBeNull()
 
   const calendarContainer = root!.queryAll(

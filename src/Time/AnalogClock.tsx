@@ -51,11 +51,8 @@ function AnalogClock({
 
   const { mode } = useContext(DisplayModeContext)
 
-  // used to make pointer shorter if hours are selected and above 12
   const clockRef = useRef<ViewInstance | null>(null)
 
-  // Hooks are nice, sometimes... :-)..
-  // We need the latest values, since the onPointerMove uses a closure to the function
   const hoursRef = useLatest(hours)
   const onChangeRef = useLatest(onChange)
   const minutesRef = useLatest(minutes)
@@ -77,9 +74,6 @@ function AnalogClock({
 
         let hourTypeFromOffset = getHourTypeFromOffset(x, y, circleSize)
         let hours24AndPM = hours24 && hourTypeFromOffset === hourTypes.pm
-
-        // Avoiding the "24h"
-        // Should be 12h for 12 hours and PM mode
 
         if (hours12AndPm || hours24AndPM) {
           pickedHours += 12

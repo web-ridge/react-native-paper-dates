@@ -29,22 +29,19 @@ export type SwiperProps = {
   startYear?: number
 }
 
-// Helper function to get the minimum allowed index based on startYear
 export function getMinIndex(startYear?: number, endYear?: number): number {
   if (!startYear) return 0
 
   const today = new Date()
-  const startDate = new Date(startYear, 0, 1) // January 1st of startYear
+  const startDate = new Date(startYear, 0, 1)
   const months = differenceInMonths(today, startDate)
   const dynamicStartAtIndex = getStartAtIndex(startYear, endYear)
   const minIndex = dynamicStartAtIndex + months
   const totalMonths = getTotalMonths(startYear, endYear)
 
-  // Allow any valid index within the dynamic range, no hard minimum
   return Math.max(0, Math.min(minIndex, totalMonths - 1))
 }
 
-// Helper function to get the maximum allowed index based on endYear
 export function getMaxIndex(startYear?: number, endYear?: number): number {
   const dynamicStartAtIndex = getStartAtIndex(startYear, endYear)
   const totalMonths = getTotalMonths(startYear, endYear)
@@ -52,15 +49,13 @@ export function getMaxIndex(startYear?: number, endYear?: number): number {
   if (!endYear) return totalMonths - 1
 
   const today = new Date()
-  const endDate = new Date(endYear, 11, 31) // December 31st of endYear
+  const endDate = new Date(endYear, 11, 31)
   const months = differenceInMonths(today, endDate)
   const maxIndex = dynamicStartAtIndex + months
 
-  // Allow any valid index within the dynamic range
   return Math.max(0, Math.min(maxIndex, totalMonths - 1))
 }
 
-// Helper function to check if an index is within allowed range
 export function isIndexWithinRange(
   index: number,
   startYear?: number,
@@ -101,7 +96,6 @@ export function useYearChange(
       const totalMonths = getTotalMonths(startYear, endYear)
 
       const newIndex = dynamicStartAtIndex + months
-      // Ensure the new index is within valid bounds
       const boundedIndex = Math.max(0, Math.min(newIndex, totalMonths - 1))
       if (currentIndex !== boundedIndex) {
         onChangeRef.current(boundedIndex)

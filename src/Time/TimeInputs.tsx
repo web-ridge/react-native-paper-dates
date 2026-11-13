@@ -59,9 +59,7 @@ function TimeInputs({
     }
   }, [endInput])
 
-  const onSubmitEndInput = useCallback(() => {
-    // TODO: close modal and persist time
-  }, [])
+  const onSubmitEndInput = useCallback(() => {}, [])
 
   const onChangeHours = useCallback(
     (newHours: number) => {

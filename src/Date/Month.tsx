@@ -60,7 +60,6 @@ interface BaseMonthProps {
   scrollMode: 'horizontal' | 'vertical'
   selectColor: string
   selectingYear: boolean
-  // some of these should be required in final implementation
   startDate?: CalendarDate
   startWeekOnMonday: boolean
   startYear?: number
@@ -607,7 +606,6 @@ export function getLocalMonthOffset(
 const horizontalMonthChrome =
   monthHeaderSingleMarginTop + montHeaderHeight + monthHeaderSingleMarginBottom
 
-/** True when the horizontal month's day list is taller than the space under its title. */
 export function horizontalMonthScrolls(
   viewportHeight: number,
   index: number,

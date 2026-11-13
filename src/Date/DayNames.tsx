@@ -18,7 +18,6 @@ function DayNames({
   const theme = useTheme()
 
   const shortDayNames = useMemo<string[]>(() => {
-    // TODO: wait for a better Intl api ;-)
     const weekdays = [
       new Date(2020, 7, 2),
       new Date(2020, 7, 3),

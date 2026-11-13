@@ -91,7 +91,6 @@ function DatePickerInputWithoutModal(
             keyboardType={rest.keyboardType ?? 'number-pad'}
             label={getLabel({
               inputFormat,
-              // TODO: support label components?
               label: label as any,
               withDateFormatInLabel,
             })}

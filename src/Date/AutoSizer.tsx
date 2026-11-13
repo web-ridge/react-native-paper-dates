@@ -16,7 +16,6 @@ export default function AutoSizer({
   initialLayout,
 }: {
   children: ({ width, height }: WidthAndHeight) => any
-  /** Used until the first measurement, so children render on the first frame. */
   initialLayout?: WidthAndHeight
 }) {
   const { width: windowWidth, height: windowHeight } = useWindowDimensions()
@@ -26,7 +25,6 @@ export default function AutoSizer({
   const onLayout = useCallback(
     (event: LayoutChangeEvent) => {
       const nl = event.nativeEvent.layout
-      // https://github.com/necolas/react-native-web/issues/1704
       setMeasured((prev) => {
         if (
           prev &&
@@ -53,8 +51,6 @@ export default function AutoSizer({
   return (
     <View
       collapsable={false}
-      // Modals often skip onLayout during rotation. Keying by window size
-      // mounts a fresh sizer so the calendar gets the landscape viewport.
       key={windowKey}
       onLayout={onLayout}
       style={[

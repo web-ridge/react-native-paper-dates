@@ -7,12 +7,6 @@ import { getTranslation } from '../translations/utils'
 import { sharedStyles } from '../shared/styles'
 import { memo } from 'react'
 
-/**
- * Space a classic scrollbar takes out of the layout. iOS draws its indicator
- * on top of the content. Web measures the real width: overlay scrollbars
- * (the usual desktop ones) take none, so a fixed guess would shift the weekday
- * labels and arrows off the day columns.
- */
 export const verticalScrollbarGutter = Platform.select({
   ios: 0,
   web: 0,
@@ -21,7 +15,6 @@ export const verticalScrollbarGutter = Platform.select({
 
 let cachedLayoutScrollbarWidth: number | undefined
 
-/** Width a classic scrollbar takes out of layout. Overlay scrollbars measure as 0. */
 export function layoutScrollbarWidth(): number {
   if (cachedLayoutScrollbarWidth !== undefined) {
     return cachedLayoutScrollbarWidth
@@ -64,7 +57,6 @@ function CalendarHeader({
   startWeekOnMonday,
 }: {
   disableWeekDays?: DisableWeekDaysType
-  /** Shrink from the trailing edge so week names do not cover a vertical scrollbar. */
   endInset?: number
   locale: undefined | string
   onNext: () => any

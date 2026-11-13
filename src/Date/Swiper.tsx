@@ -52,22 +52,20 @@ function Swiper({
   const onPrev = useCallback(() => {
     setIndex((prev) => {
       const newIndex = prev - 1
-      // Check if the new index is within allowed range
       if (isIndexWithinRange(newIndex, startYear, endYear)) {
         return newIndex
       }
-      return prev // Don't change if outside range
+      return prev
     })
   }, [setIndex, startYear, endYear])
 
   const onNext = useCallback(() => {
     setIndex((prev) => {
       const newIndex = prev + 1
-      // Check if the new index is within allowed range
       if (isIndexWithinRange(newIndex, startYear, endYear)) {
         return newIndex
       }
-      return prev // Don't change if outside range
+      return prev
     })
   }, [setIndex, startYear, endYear])
 
@@ -171,10 +169,8 @@ function VerticalScroller({
   startYear?: number
   width: number
 }) {
-  // Provide default values for startYear and endYear
   const effectiveStartYear = startYear || 1800
   const effectiveEndYear = endYear || 2200
-  // Ensure initial index is within allowed range
   const constrainedInitialIndex = isIndexWithinRange(
     initialIndex,
     effectiveStartYear,
@@ -208,7 +204,6 @@ function VerticalScroller({
     element.scrollTo({
       top,
     })
-    // Position once on mount; later moves go through onScroll compensation.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [parentRef, idx])
 

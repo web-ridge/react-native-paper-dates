@@ -55,7 +55,6 @@ function AnalogClockHours({
           ]}
         >
           <View style={styles.hourInner}>
-            {/* Display 00 instead of 12 for AM hours */}
             <Text
               maxFontSizeMultiplier={1.5}
               selectable={false}

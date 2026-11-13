@@ -57,7 +57,6 @@ function Day(props: {
     onPressDate(new Date(year, month, day))
   }, [onPressDate, year, month, day])
 
-  // Determine text colors for M3
   let baseTextColor
   let finalTextColor
 
@@ -150,9 +149,6 @@ const styles = StyleSheet.create({
     width: daySize,
   },
   content: {
-    // Absolutely positioned without insets, so Yoga still honours the parent's
-    // centering and this box lines up with the day circle instead of the
-    // (wider) grid cell.
     height: daySize,
     position: 'absolute',
     width: daySize,
@@ -184,7 +180,6 @@ const styles = StyleSheet.create({
   },
 })
 
-// Anchors for `dayContent`, applied to a box the size of the day circle.
 const contentPositions = StyleSheet.create({
   'bottom': {
     alignItems: 'center',

@@ -29,11 +29,6 @@ export type ValidRangeType = {
   startDate?: Date
 }
 
-/**
- * Where `dayContent` is anchored within a day. The anchor box matches the day
- * circle (not the wider grid cell), so corner positions sit on the circle's
- * bounding box.
- */
 export type DayContentPosition =
   | 'top'
   | 'top-left'
@@ -43,12 +38,6 @@ export type DayContentPosition =
   | 'bottom-left'
   | 'bottom-right'
 
-/**
- * Renders custom content inside a day, e.g. a dot or a badge with the number
- * of events on that date. The node is overlaid on the day and does not receive
- * touches, so pressing it still selects the date. Use `dayContentPosition` and
- * `dayContentStyle` to place it.
- */
 export type DayContentRenderer = (params: {
   date: Date
   day: number
@@ -60,23 +49,15 @@ export type DayContentRenderer = (params: {
 }) => ReactNode
 
 export type BaseCalendarProps = {
-  // here they are optional but in final implementation they are required
   date?: CalendarDate
   dateMode?: 'start' | 'end'
   dates?: CalendarDates
   dayContent?: DayContentRenderer
-  /** Anchor for `dayContent`. Defaults to `'bottom'`. */
   dayContentPosition?: DayContentPosition
-  /** Style for the `dayContent` overlay container (offsets, size, …). */
   dayContentStyle?: StyleProp<ViewStyle>
   disableWeekDays?: DisableWeekDaysType
   endDate?: CalendarDate
   endYear?: number
-  /**
-   * Size of the calendar, if known before it is laid out (e.g. a fixed-size
-   * dialog). The calendar draws immediately at this size instead of rendering
-   * nothing until it has measured itself; the measured size replaces it.
-   */
   initialLayout?: { width: number; height: number }
   locale: string
   startDate?: CalendarDate
@@ -155,8 +136,6 @@ function Calendar(
   )
   const [selectingYear, setSelectingYear] = useState(false)
 
-  // prevent re-rendering all months when something changed we only need the
-  // latest version of the props and we don't want the useCallback to change
   const startDateRef = useLatest<CalendarDate>(startDate)
   const endDateRef = useLatest<CalendarDate>(endDate)
   const onChangeRef = useLatest<RangeChange | SingleChange | MultiChange>(
