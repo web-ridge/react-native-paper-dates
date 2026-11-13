@@ -553,14 +553,17 @@ describe('inputs, headers, and pickers', () => {
         validRange={undefined}
       />
     )
-    editing.container
-      .queryAll(
-        (node: { props: { onChangeText?: Function } }) =>
-          typeof node.props.onChangeText === 'function'
-      )
-      .forEach((node: { props: { onSubmitEditing?: Function; onChangeText?: Function } }) => {
-      node.props.onSubmitEditing?.()
-      node.props.onChangeText?.('11/11/2026')
+    const fields = editing.container.queryAll(
+      (node: { props: { onChangeText?: Function } }) =>
+        typeof node.props.onChangeText === 'function'
+    ) as Array<{
+      props: { onSubmitEditing?: Function; onChangeText?: Function }
+    }>
+    await act(() => {
+      fields.forEach((node) => {
+        node.props.onSubmitEditing?.()
+        node.props.onChangeText?.('11/11/2026')
+      })
     })
 
     await render(
@@ -614,9 +617,11 @@ describe('inputs, headers, and pickers', () => {
         />
       )
     )
-    Dimensions.set({
-      window: { width: 800, height: 400, scale: 1, fontScale: 1 },
-      screen: { width: 800, height: 400, scale: 1, fontScale: 1 },
+    await act(async () => {
+      Dimensions.set({
+        window: { width: 800, height: 400, scale: 1, fontScale: 1 },
+        screen: { width: 800, height: 400, scale: 1, fontScale: 1 },
+      })
     })
     await render(
       safe(

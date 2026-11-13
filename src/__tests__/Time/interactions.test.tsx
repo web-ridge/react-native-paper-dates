@@ -17,19 +17,25 @@ import en from '../../translations/en'
 import { registerTranslation } from '../../translations/utils'
 
 registerTranslation('en', en)
+registerTranslation('en-US', en)
+registerTranslation('en-GB', en)
 
 const originalOS = Platform.OS
 const savedWindow = Dimensions.get('window')
 
-afterEach(() => {
+afterEach(async () => {
   Platform.OS = originalOS
-  Dimensions.set({ window: savedWindow, screen: savedWindow })
+  await act(async () => {
+    Dimensions.set({ window: savedWindow, screen: savedWindow })
+  })
 })
 
-function setWindow(width: number, height: number) {
-  Dimensions.set({
-    window: { width, height, scale: 1, fontScale: 1 },
-    screen: { width, height, scale: 1, fontScale: 1 },
+async function setWindow(width: number, height: number) {
+  await act(async () => {
+    Dimensions.set({
+      window: { width, height, scale: 1, fontScale: 1 },
+      screen: { width, height, scale: 1, fontScale: 1 },
+    })
   })
 }
 
@@ -125,19 +131,20 @@ describe('time inputs', () => {
         onFocusInput={onFocusInput}
       />
     )
-    keyboard.container
-      .queryAll(
-        (node: { props: { onChangeText?: Function } }) =>
-          typeof node.props.onChangeText === 'function'
-      )
-      .forEach((node: { props: Record<string, Function | undefined> }) => {
-      node.props.onChangeText('3')
-      node.props.onChangeText('30')
-      node.props.onChangeText('99')
-      node.props.onChangeText('-')
-      node.props.onFocus()
-      node.props.onBlur()
-      node.props.onSubmitEditing?.()
+    const fields = keyboard.container.queryAll(
+      (node: { props: { onChangeText?: Function } }) =>
+        typeof node.props.onChangeText === 'function'
+    ) as Array<{ props: Record<string, Function | undefined> }>
+    await act(() => {
+      fields.forEach((node) => {
+        node.props.onChangeText?.('3')
+        node.props.onChangeText?.('30')
+        node.props.onChangeText?.('99')
+        node.props.onChangeText?.('-')
+        node.props.onFocus?.()
+        node.props.onBlur?.()
+        node.props.onSubmitEditing?.()
+      })
     })
 
     Platform.OS = 'android'
@@ -162,7 +169,7 @@ describe('time inputs', () => {
       </ThemeProvider>
     )
 
-    setWindow(900, 400)
+    await setWindow(900, 400)
     const landscape = await render(
       <TimeInputs
         focused="hours"

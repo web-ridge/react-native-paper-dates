@@ -19,7 +19,7 @@ import TimeInput from '../Time/TimeInput'
 import TimeInputs from '../Time/TimeInputs'
 import TimePicker from '../Time/TimePicker'
 import TimePickerModal from '../Time/TimePickerModal'
-import { findPress, pressTestId, render, walkFibers } from '../testUtils'
+import { act, findPress, pressTestId, render, walkFibers } from '../testUtils'
 import en from '../translations/en'
 import { registerTranslation } from '../translations/utils'
 
@@ -32,16 +32,20 @@ const metrics = {
   insets: { top: 0, left: 0, right: 0, bottom: 0 },
 }
 
-afterEach(() => {
+afterEach(async () => {
   Platform.OS = originalOS
-  Dimensions.set({ window: savedWindow, screen: savedWindow })
+  await act(async () => {
+    Dimensions.set({ window: savedWindow, screen: savedWindow })
+  })
   jest.restoreAllMocks()
 })
 
-function setWindow(width: number, height: number) {
-  Dimensions.set({
-    window: { width, height, scale: 1, fontScale: 1 },
-    screen: { width, height, scale: 1, fontScale: 1 },
+async function setWindow(width: number, height: number) {
+  await act(async () => {
+    Dimensions.set({
+      window: { width, height, scale: 1, fontScale: 1 },
+      screen: { width, height, scale: 1, fontScale: 1 },
+    })
   })
 }
 
@@ -104,7 +108,7 @@ describe('remaining date branches', () => {
       field.props.onChangeText('06/12/2022')
     })
 
-    setWindow(400, 400)
+    await setWindow(400, 400)
     Platform.OS = 'ios'
     await render(
       safe(
@@ -119,7 +123,7 @@ describe('remaining date branches', () => {
         />
       )
     )
-    setWindow(800, 800)
+    await setWindow(800, 800)
     await render(
       safe(
         <DatePickerModal
@@ -395,11 +399,13 @@ describe('branch edges', () => {
       (node: { props: { onChangeText?: Function } }) =>
         typeof node.props.onChangeText === 'function'
     )[0]
-    typed.props.onChangeText('-1')
     const focus = hours.container.queryAll(
       (node: { props: { onFocus?: Function } }) => typeof node.props.onFocus === 'function'
     )[0]
-    focus.props.onFocus()
+    await act(async () => {
+      typed.props.onChangeText('-1')
+      focus.props.onFocus()
+    })
 
     const timeRefs: { current: unknown }[] = []
     const timeRefSpy = jest
@@ -496,7 +502,7 @@ describe('remaining time branches', () => {
   it('forwards clock edits in both orientations', async () => {
     const onChange = jest.fn()
     const onFocusInput = jest.fn()
-    setWindow(900, 400)
+    await setWindow(900, 400)
     const landscape = await render(
       <TimePicker
         focused="hours"
@@ -524,7 +530,7 @@ describe('remaining time branches', () => {
     )
     expect(onChange).toHaveBeenCalled()
 
-    setWindow(400, 800)
+    await setWindow(400, 800)
     await render(
       <TimePicker
         focused="minutes"
@@ -553,14 +559,16 @@ describe('remaining time branches', () => {
       modal,
       (props) => props.focused === 'hours' && typeof props.onFocusInput === 'function',
       (props) => {
-        ;(props.onFocusInput as (type: 'minutes') => void)('minutes')
-        const change = props.onChange as (value: {
-          hours: number
-          minutes: number
-          focused?: 'minutes'
-        }) => void
-        change({ hours: 10, minutes: 20, focused: 'minutes' })
-        change({ hours: 11, minutes: 21 })
+        act(() => {
+          ;(props.onFocusInput as (type: 'minutes') => void)('minutes')
+          const change = props.onChange as (value: {
+            hours: number
+            minutes: number
+            focused?: 'minutes'
+          }) => void
+          change({ hours: 10, minutes: 20, focused: 'minutes' })
+          change({ hours: 11, minutes: 21 })
+        })
       }
     )
     callProps(

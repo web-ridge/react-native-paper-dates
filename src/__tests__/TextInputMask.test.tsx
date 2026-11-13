@@ -84,11 +84,13 @@ describe('TextInputMask', () => {
         value=""
       />
     )
-    input.props.onChangeText('1')
-    input.props.onChangeText('1/')
-    input.props.onChangeText('01/02/2020')
-    input.props.onChangeText('01/02/202')
-    input.props.onChange({ nativeEvent: { text: '01/02/2020' } })
+    await act(() => {
+      input.props.onChangeText('1')
+      input.props.onChangeText('1/')
+      input.props.onChangeText('01/02/2020')
+      input.props.onChangeText('01/02/202')
+      input.props.onChange({ nativeEvent: { text: '01/02/2020' } })
+    })
     expect(onChangeText).toHaveBeenCalledWith('01/02/2020')
     expect(onChange).toHaveBeenCalled()
 
@@ -100,8 +102,10 @@ describe('TextInputMask', () => {
         value=""
       />
     )
-    dotted.getByTestId('dotted').props.onChangeText('01012020')
-    dotted.getByTestId('dotted').props.onChange({ nativeEvent: { text: '' } })
+    await act(() => {
+      dotted.getByTestId('dotted').props.onChangeText('01012020')
+      dotted.getByTestId('dotted').props.onChange({ nativeEvent: { text: '' } })
+    })
 
     const plain = await render(
       <TextInputWithMask
@@ -129,8 +133,10 @@ describe('TextInputMask', () => {
           value=""
         />
       )
-      masked.getByTestId(mask).props.onChangeText('1')
-      masked.getByTestId(mask).props.onChangeText('01012020extra')
+      await act(() => {
+        masked.getByTestId(mask).props.onChangeText('1')
+        masked.getByTestId(mask).props.onChangeText('01012020extra')
+      })
     }
   })
 })

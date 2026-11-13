@@ -22,6 +22,9 @@ const { DarkTheme, LightTheme, LocaleProvider } = require('react-native-paper')
 LightTheme.roundness = 4
 DarkTheme.roundness = 4
 
+const { registerTranslation } = require('./src/translations/utils')
+registerTranslation('en', require('./src/translations/en').default)
+
 // Text requires a locale context. A provider adds no host node, so snapshots
 // stay the component tree.
 const renderModule = require('@testing-library/react-native/dist/render')

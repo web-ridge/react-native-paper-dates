@@ -470,22 +470,39 @@ exports[`renders DatePickerInput 1`] = `
                 >
                   <Text
                     accessibilityElementsHidden={true}
+                    allowFontScaling={false}
                     importantForAccessibility="no-hide-descendants"
                     pointerEvents="none"
                     selectable={false}
                     style={
                       [
                         {
-                          "backgroundColor": "transparent",
-                        },
-                        {
                           "color": "rgba(73, 69, 79, 1)",
                           "fontSize": 24,
                         },
+                        [
+                          {
+                            "lineHeight": 24,
+                            "transform": [
+                              {
+                                "scaleX": 1,
+                              },
+                            ],
+                          },
+                          {
+                            "backgroundColor": "transparent",
+                          },
+                        ],
+                        {
+                          "fontFamily": "MaterialDesignIcons",
+                          "fontStyle": "normal",
+                          "fontWeight": "normal",
+                        },
+                        undefined,
                       ]
                     }
                   >
-                    □
+                    󰃭
                   </Text>
                 </View>
               </View>

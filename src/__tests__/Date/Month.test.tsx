@@ -1,5 +1,9 @@
 import { render, within } from '@testing-library/react-native'
-import Month from '../../Date/Month'
+import Month, {
+  getLocalMonthOffset,
+  getMonthHeight,
+  horizontalMonthScrolls,
+} from '../../Date/Month'
 import { getStartAtIndex } from '../../Date/dateUtils'
 
 const defaultProps = {
@@ -43,4 +47,27 @@ it('does not wrap day numbers in a scroll view in vertical mode', async () => {
     />
   )
   expect(queryByTestId('react-native-paper-dates-month-days-scroll')).toBeNull()
+})
+
+it('falls back when a month index is outside the cached layout', async () => {
+  expect(getLocalMonthOffset([0, 1], 9, false, 2020, 2021)).toBeGreaterThan(0)
+  expect(horizontalMonthScrolls(120, -1, false, 2020, 2021)).toEqual(
+    expect.any(Boolean)
+  )
+  expect(getMonthHeight('vertical', 10000, false, 2020, 2021)).toBeGreaterThan(
+    0
+  )
+
+  const { getAllByText } = await render(
+    <Month
+      {...defaultProps}
+      date={new Date(2020, 0, 1)}
+      endYear={2021}
+      index={-1}
+      mode="single"
+      scrollMode="horizontal"
+      startYear={2020}
+    />
+  )
+  expect(getAllByText('1').length).toBeGreaterThan(0)
 })

@@ -168,6 +168,7 @@ describe('useDateInput', () => {
   })
 
   it('uses the supplied fallback when a locale has no copy', async () => {
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined)
     const onValidationError = jest.fn()
     const broken = await input({ locale: 'zz', onValidationError })
     await act(() => {
@@ -209,6 +210,8 @@ describe('useDateInput', () => {
       )
     })
     expect(endOnly.result.current.error).toEqual(expect.any(String))
+    expect(warn).toHaveBeenCalled()
+    warn.mockRestore()
   })
 })
 
@@ -284,10 +287,12 @@ describe('weekday column alignment', () => {
 describe('shared hooks', () => {
   const saved = Dimensions.get('window')
 
-  afterEach(() => {
-    Dimensions.set({
-      window: saved,
-      screen: saved,
+  afterEach(async () => {
+    await act(async () => {
+      Dimensions.set({
+        window: saved,
+        screen: saved,
+      })
     })
   })
 
@@ -315,16 +320,20 @@ describe('shared hooks', () => {
   })
 
   it('reads header colors, screen size, and the latest value', async () => {
-    Dimensions.set({
-      window: { width: 800, height: 400, scale: 1, fontScale: 1 },
-      screen: { width: 800, height: 400, scale: 1, fontScale: 1 },
+    await act(async () => {
+      Dimensions.set({
+        window: { width: 800, height: 400, scale: 1, fontScale: 1 },
+        screen: { width: 800, height: 400, scale: 1, fontScale: 1 },
+      })
     })
     const wide = await renderHook(() => useIsLargeScreen())
     expect(wide.result.current).toBeFalsy()
 
-    Dimensions.set({
-      window: { width: 800, height: 800, scale: 1, fontScale: 1 },
-      screen: { width: 800, height: 800, scale: 1, fontScale: 1 },
+    await act(async () => {
+      Dimensions.set({
+        window: { width: 800, height: 800, scale: 1, fontScale: 1 },
+        screen: { width: 800, height: 800, scale: 1, fontScale: 1 },
+      })
     })
     const large = await renderHook(() => useIsLargeScreen())
     expect(large.result.current).toBeTruthy()
@@ -354,5 +363,17 @@ describe('shared hooks', () => {
     })
     expect(result.current.mode).toBe('AM')
   })
+})
 
+describe('public entry', () => {
+  it('loads the package exports', () => {
+    const api = require('../index') as typeof import('../index')
+    expect(api.Calendar).toBeTruthy()
+    expect(api.DatePickerModal).toBeTruthy()
+    expect(api.DatePickerInput).toBeTruthy()
+    expect(api.TimePickerModal).toBeTruthy()
+    expect(api.TimePicker).toBeTruthy()
+    expect(api.en.save).toBe('Save')
+    expect(api.getTranslation('en', 'save')).toBe('Save')
+  })
 })

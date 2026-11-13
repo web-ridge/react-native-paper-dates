@@ -5,7 +5,19 @@ import { DarkTheme, ThemeProvider } from 'react-native-paper'
 import { pressNode } from '../../testUtils'
 import { getStartAtIndex } from '../../Date/dateUtils'
 import { getVerticalMonthsOffset } from '../../Date/Month'
-import { getMaxIndex } from '../../Date/SwiperUtils'
+import { getMaxIndex, isIndexWithinRange } from '../../Date/SwiperUtils'
+
+jest.mock('../../Date/SwiperUtils', () => {
+  const actual = jest.requireActual('../../Date/SwiperUtils') as {
+    isIndexWithinRange: (...args: unknown[]) => boolean
+  }
+  return {
+    ...actual,
+    isIndexWithinRange: jest.fn((...args: unknown[]) =>
+      actual.isIndexWithinRange(...args)
+    ),
+  }
+})
 
 const originalWindow = global.window
 
@@ -96,9 +108,11 @@ describe('web swiper', () => {
       />
       </ThemeProvider>
     )
-    vertical.container
-      .queryAll((node: { props: { onScroll?: Function } }) => node.props.onScroll)
-      .forEach((node: { props: { onScroll: Function } }) => {
+    const scrollers = vertical.container.queryAll(
+      (node: { props: { onScroll?: Function } }) => node.props.onScroll
+    ) as Array<{ props: { onScroll: Function } }>
+    await act(async () => {
+      scrollers.forEach((node) => {
         node.props.onScroll({ currentTarget: { scrollTop: 0 } })
         node.props.onScroll({
           currentTarget: {
@@ -111,8 +125,10 @@ describe('web swiper', () => {
           },
         })
         node.props.onScroll({ currentTarget: { scrollTop: 4000 } })
+        node.props.onScroll({ currentTarget: { scrollTop: 4000 } })
         node.props.onScroll({ currentTarget: {} })
       })
+    })
 
     const edge = await render(
       <SwiperWeb
@@ -209,6 +225,38 @@ describe('web swiper', () => {
     await pending.unmount()
     frame?.(0)
     global.requestAnimationFrame = raf
+  })
+
+  it('keeps a single month when the visible window is out of range', async () => {
+    const range = isIndexWithinRange as unknown as jest.Mock
+    range.mockReturnValue(false)
+    try {
+      const SwiperWeb = (
+        require('../../Date/Swiper.tsx') as {
+          default: ComponentType<Record<string, unknown>>
+        }
+      ).default
+      await render(
+        <SwiperWeb
+          endYear={2026}
+          initialIndex={0}
+          initialLayout={{ width: 280, height: 400 }}
+          renderItem={() => <Text>placeholder</Text>}
+          scrollMode="vertical"
+          selectedYear={undefined}
+          startWeekOnMonday={false}
+          startYear={2026}
+        />
+      )
+    } finally {
+      range.mockImplementation((...args: unknown[]) =>
+        (
+          jest.requireActual('../../Date/SwiperUtils') as {
+            isIndexWithinRange: (...params: unknown[]) => boolean
+          }
+        ).isIndexWithinRange(...args)
+      )
+    }
   })
 })
 
