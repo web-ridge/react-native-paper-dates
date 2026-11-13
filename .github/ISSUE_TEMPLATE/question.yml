@@ -1,0 +1,15 @@
+name: 💬 Question
+description: You need help with React Native Paper Dates.
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Check the [documentation](https://web-ridge.github.io/react-native-paper-dates/) first. Use the bug report template when something is broken, and the feature request template for new behavior.
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: What are you trying to do, and where are you stuck? Include the library version and a short code sample when you can.
+    validations:
+      required: true

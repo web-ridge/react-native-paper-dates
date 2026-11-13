@@ -1,9 +1,5 @@
-import {
-  StyleSheet,
-  TextInput as TextInputNative,
-  useWindowDimensions,
-  View,
-} from 'react-native'
+import { StyleSheet, useWindowDimensions, View } from 'react-native'
+import type { TextInputInstance } from 'react-native'
 import { Text, useTheme } from 'react-native-paper'
 
 import {
@@ -16,41 +12,41 @@ import {
 } from './timeUtils'
 import TimeInput from './TimeInput'
 import AmPmSwitcher from './AmPmSwitcher'
-import { useLatest } from '../shared/utils'
+import { themeColor, useLatest } from '../shared/utils'
 import Color from 'color'
 import { getTranslation } from '../translations/utils'
 import { memo, useCallback, useRef } from 'react'
 import { sharedStyles } from '../shared/styles'
 
 function TimeInputs({
-  hours,
-  minutes,
-  onFocusInput,
   focused,
-  inputType,
-  onChange,
-  is24Hour,
+  hours,
   inputFontSize,
+  inputType,
+  is24Hour,
   locale,
+  minutes,
+  onChange,
+  onFocusInput,
 }: {
-  inputType: PossibleInputTypes
   focused: PossibleClockTypes
   hours: number
+  inputFontSize?: number
+  inputType: PossibleInputTypes
+  is24Hour: boolean
+  locale?: string
   minutes: number
-  onFocusInput: (type: PossibleClockTypes) => any
   onChange: (hoursMinutesAndFocused: {
+    focused?: undefined | PossibleClockTypes
     hours: number
     minutes: number
-    focused?: undefined | PossibleClockTypes
   }) => any
-  is24Hour: boolean
-  inputFontSize?: number
-  locale?: string
+  onFocusInput: (type: PossibleClockTypes) => any
 }) {
   const theme = useTheme()
 
-  const startInput = useRef<TextInputNative | null>(null)
-  const endInput = useRef<TextInputNative | null>(null)
+  const startInput = useRef<TextInputInstance | null>(null)
+  const endInput = useRef<TextInputInstance | null>(null)
   const dimensions = useWindowDimensions()
   const isLandscape = dimensions.width > dimensions.height
   const useHorizontalAmPm =
@@ -63,9 +59,7 @@ function TimeInputs({
     }
   }, [endInput])
 
-  const onSubmitEndInput = useCallback(() => {
-    // TODO: close modal and persist time
-  }, [])
+  const onSubmitEndInput = useCallback(() => {}, [])
 
   const onChangeHours = useCallback(
     (newHours: number) => {
@@ -82,23 +76,11 @@ function TimeInputs({
     <View style={styles.inputContainer}>
       <View style={styles.column}>
         <TimeInput
-          ref={startInput}
-          inputFontSize={inputFontSize}
-          placeholder={'00'}
-          value={toHourInputFormat(hours, is24Hour)}
+          blurOnSubmit={false}
           clockType={clockTypes.hours}
-          pressed={focused === clockTypes.hours}
-          onPress={onFocusInput}
+          inputFontSize={inputFontSize}
           inputType={inputType}
           maxFontSizeMultiplier={1.2}
-          selectionColor={
-            theme.dark
-              ? Color(theme.colors.primary).darken(0.2).hex()
-              : theme.colors.primary
-          }
-          returnKeyType={'next'}
-          onSubmitEditing={onSubmitStartInput}
-          blurOnSubmit={false}
           onChanged={(newHoursFromInput) => {
             let newHours = toHourOutputFormat(
               newHoursFromInput,
@@ -113,6 +95,18 @@ function TimeInputs({
               minutes,
             })
           }}
+          onPress={onFocusInput}
+          onSubmitEditing={onSubmitStartInput}
+          placeholder={'00'}
+          pressed={focused === clockTypes.hours}
+          ref={startInput}
+          returnKeyType={'next'}
+          selectionColor={
+            theme.dark
+              ? Color(themeColor(theme.colors.primary)).darken(0.2).hex()
+              : themeColor(theme.colors.primary)
+          }
+          value={toHourInputFormat(hours, is24Hour)}
         />
         {inputType === 'keyboard' ? (
           <Text maxFontSizeMultiplier={1.5} variant="bodySmall">
@@ -149,21 +143,10 @@ function TimeInputs({
       </View>
       <View style={styles.column}>
         <TimeInput
-          ref={endInput}
-          inputFontSize={inputFontSize}
-          placeholder={'00'}
-          value={minutes}
           clockType={clockTypes.minutes}
-          pressed={focused === clockTypes.minutes}
-          onPress={onFocusInput}
+          inputFontSize={inputFontSize}
           inputType={inputType}
           maxFontSizeMultiplier={1.2}
-          selectionColor={
-            theme.dark
-              ? Color(theme.colors.primary).darken(0.2).hex()
-              : theme.colors.primary
-          }
-          onSubmitEditing={onSubmitEndInput}
           onChanged={(newMinutesFromInput) => {
             let newMinutes = newMinutesFromInput
             if (newMinutesFromInput > 59) {
@@ -174,6 +157,17 @@ function TimeInputs({
               minutes: newMinutes,
             })
           }}
+          onPress={onFocusInput}
+          onSubmitEditing={onSubmitEndInput}
+          placeholder={'00'}
+          pressed={focused === clockTypes.minutes}
+          ref={endInput}
+          selectionColor={
+            theme.dark
+              ? Color(themeColor(theme.colors.primary)).darken(0.2).hex()
+              : themeColor(theme.colors.primary)
+          }
+          value={minutes}
         />
         {inputType === 'keyboard' ? (
           <Text maxFontSizeMultiplier={1.5} variant="bodySmall">
@@ -185,10 +179,10 @@ function TimeInputs({
         <>
           <View style={styles.spaceBetweenInputsAndSwitcher} />
           <AmPmSwitcher
-            hours={hours}
-            onChange={onChangeHours}
-            inputType={inputType}
             direction="vertical"
+            hours={hours}
+            inputType={inputType}
+            onChange={onChangeHours}
           />
         </>
       ) : null}
@@ -201,10 +195,10 @@ function TimeInputs({
         {hourMinuteRow}
         <View style={styles.landscapeSwitcherSpacing}>
           <AmPmSwitcher
-            hours={hours}
-            onChange={onChangeHours}
-            inputType={inputType}
             direction="horizontal"
+            hours={hours}
+            inputType={inputType}
+            onChange={onChangeHours}
           />
         </View>
       </View>
@@ -222,22 +216,22 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   dot: {
-    width: 7,
-    height: 7,
     borderRadius: 7 / 2,
+    height: 7,
+    width: 7,
   },
   hoursAndMinutesSeparator: {
+    alignItems: 'center',
     fontSize: 65,
     width: 24,
-    alignItems: 'center',
   },
   inputContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
   },
   landscapeColumn: {
-    flexDirection: 'column',
     alignItems: 'flex-start',
+    flexDirection: 'column',
   },
   landscapeSwitcherSpacing: {
     marginTop: 16,

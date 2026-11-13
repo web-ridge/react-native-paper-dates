@@ -4,11 +4,6 @@
     "slug": "react-native-paper-dates-example",
     "description": "Example app for react-native-paper-dates",
     "version": "1.0.0",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
     "ios": {
       "supportsTablet": true
     },
@@ -16,15 +11,11 @@
       "translucent": true
     },
     "web": {
-      "bundler": "metro",
       "favicon": "./favicon.png",
       "name": "React Native Paper Dates",
       "shortName": "PaperDates",
       "description": "Example app for react-native-paper-dates"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
     "userInterfaceStyle": "automatic",
     "experiments": {
       "onDemandFilesystem": false

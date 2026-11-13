@@ -11,11 +11,11 @@ function DayName({ label }: { label: string }) {
     <View style={styles.dayName}>
       <Text
         maxFontSizeMultiplier={1.5}
+        selectable={false}
         style={[
           styles.dayNameLabel,
           { ...textFont, color: theme.colors.onSurfaceVariant },
         ]}
-        selectable={false}
       >
         {label}
       </Text>

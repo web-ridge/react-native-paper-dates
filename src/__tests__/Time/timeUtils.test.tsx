@@ -1,5 +1,6 @@
 import {
   circleSize,
+  getAngle,
   getHours,
   getHourType,
   getHourTypeFromOffset,
@@ -83,5 +84,36 @@ describe('timeUtils', () => {
 
   it('should return correct hour output format when is24Hour', () => {
     expect(toHourOutputFormat(8, 6, true)).toBe(8)
+  })
+
+  it('covers clock geometry and the remaining hour conversions', () => {
+    expect(getAngle(10, circleSize / 2, circleSize)).toEqual(expect.any(Number))
+    expect(getAngle(circleSize, 10, circleSize)).toEqual(expect.any(Number))
+    expect(getAngle(circleSize / 2, circleSize, circleSize)).toBeCloseTo(
+      -Math.PI / 2
+    )
+    expect(getAngle(circleSize / 2, 0, circleSize)).toBeCloseTo(Math.PI / 2)
+    expect(getAngle(circleSize / 2, circleSize / 2, circleSize)).toBeCloseTo(
+      Math.PI / 2
+    )
+
+    for (let angle = -8; angle <= 8; angle += 0.05) {
+      getHours(angle, hourTypes.am)
+      getHours(angle, hourTypes.pm)
+      getHours(angle, undefined)
+      getMinutes(angle)
+      snap(angle, Math.PI / 6)
+    }
+
+    expect(toHourInputFormat(24, true)).toBe(0)
+    expect(toHourInputFormat(0, false)).toBe(12)
+    expect(toHourInputFormat(5, false)).toBe(5)
+    expect(toHourOutputFormat(1, 0, false)).toBe(1)
+    expect(toHourOutputFormat(13, 0, false)).toBe(1)
+    expect(toHourOutputFormat(0, 0, false)).toBe(0)
+    expect(toHourOutputFormat(15, 14, false)).toBe(15)
+    expect(getTimeInputTypeIcon('picker')).toBe('keyboard-outline')
+    expect(getTimeInputTypeIcon('keyboard', {} as never)).toBe('clock-outline')
+    expect(getTimeInputTypeIcon('nope' as 'picker')).toBeUndefined()
   })
 })

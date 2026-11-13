@@ -9,10 +9,17 @@ const workspaceRoot = path.resolve(projectRoot, '..')
 const nodeModules = path.join(projectRoot, 'node_modules')
 const librarySrc = path.join(workspaceRoot, 'src')
 const libraryEntry = fs.realpathSync(path.join(librarySrc, 'index.tsx'))
+const versionModulePath = path.join(projectRoot, 'src', 'libraryVersion.ts')
+const versionModuleSource = `// Synced from the library package.json when Metro starts.\nexport const libraryVersion = '${pak.version}'\n`
 
-const modules = Object.keys({
-  ...pak.peerDependencies,
-})
+if (
+  !fs.existsSync(versionModulePath) ||
+  fs.readFileSync(versionModulePath, 'utf8') !== versionModuleSource
+) {
+  fs.writeFileSync(versionModulePath, versionModuleSource)
+}
+
+const modules = Object.keys(pak.peerDependencies)
 
 /** @type {import('expo/metro-config').MetroConfig} */
 const config = getDefaultConfig(projectRoot)
@@ -21,31 +28,25 @@ const config = getDefaultConfig(projectRoot)
 config.watchFolders = [librarySrc]
 
 config.resolver.nodeModulesPaths = [
-  path.resolve(projectRoot, 'node_modules'),
-  path.resolve(workspaceRoot, 'node_modules'),
+  nodeModules,
+  path.join(workspaceRoot, 'node_modules'),
 ]
 
 config.resolver.blockList = [
-  ...(Array.isArray(config.resolver.blockList)
-    ? config.resolver.blockList
-    : config.resolver.blockList
-      ? [config.resolver.blockList]
-      : []),
+  ...config.resolver.blockList,
   ...modules.map(
-    (m) =>
+    (name) =>
       new RegExp(
-        `^${escape(path.join(workspaceRoot, 'node_modules', m))}\\/.*$`
+        `^${escape(path.join(workspaceRoot, 'node_modules', name))}\\/.*$`
       )
   ),
 ]
 
 config.resolver.extraNodeModules = {
-  ...(config.resolver.extraNodeModules || {}),
-  ...modules.reduce((acc, name) => {
-    acc[name] = path.join(nodeModules, name)
-    return acc
-  }, {}),
-  crypto: path.join(nodeModules, 'expo-crypto'),
+  ...config.resolver.extraNodeModules,
+  ...Object.fromEntries(
+    modules.map((name) => [name, path.join(nodeModules, name)])
+  ),
 }
 
 const originalResolveRequest = config.resolver.resolveRequest
@@ -65,11 +66,11 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
     )
   }
 
-  if (originalResolveRequest) {
-    return originalResolveRequest(context, moduleName, platform)
-  }
-
-  return context.resolveRequest(context, moduleName, platform)
+  return (originalResolveRequest ?? context.resolveRequest)(
+    context,
+    moduleName,
+    platform
+  )
 }
 
 module.exports = config

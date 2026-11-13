@@ -7,8 +7,8 @@ it('renders DatePickerModalHeader', async () => {
     <SafeAreaProvider>
       <DatePickerModalHeader
         locale="en"
-        onSave={() => null}
         onDismiss={() => null}
+        onSave={() => null}
         saveLabel="Save"
       />
     </SafeAreaProvider>

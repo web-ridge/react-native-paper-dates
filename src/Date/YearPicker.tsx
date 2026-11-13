@@ -8,88 +8,102 @@ import {
 } from 'react-native'
 import { Text, TouchableRipple, useTheme } from 'react-native-paper'
 import { range } from '../shared/utils'
-import { memo, useEffect, useRef } from 'react'
+import { memo, useCallback, useMemo } from 'react'
 import { sharedStyles } from '../shared/styles'
-import { defaultStartYear, defaultEndYear } from './dateUtils'
+import { defaultEndYear, defaultStartYear } from './dateUtils'
 
 const ITEM_HEIGHT = 62
 
-export default function YearPicker({
+function YearPicker({
+  endYear,
+  onPressYear,
   selectedYear,
   selectingYear,
-  onPressYear,
   startYear,
-  endYear,
 }: {
+  endYear: number
+  onPressYear: (year: number) => any
   selectedYear: number | undefined
   selectingYear: boolean
-  onPressYear: (year: number) => any
   startYear: number
-  endYear: number
 }) {
   const theme = useTheme()
 
-  const flatList = useRef<FlatList<number> | null>(null)
-  const years = range(
-    isNaN(startYear) ? defaultStartYear : startYear,
-    isNaN(endYear) ? defaultEndYear : endYear
+  const resolvedStartYear = isNaN(startYear) ? defaultStartYear : startYear
+  const selectedRow = useMemo(() => {
+    if (!selectedYear) {
+      return 0
+    }
+    return Math.max(0, Math.floor((selectedYear - resolvedStartYear) / 3) - 1)
+  }, [resolvedStartYear, selectedYear])
+  const years = useMemo(
+    () => range(resolvedStartYear, isNaN(endYear) ? defaultEndYear : endYear),
+    [endYear, resolvedStartYear]
   )
 
-  // scroll to selected year
-  useEffect(() => {
-    if (flatList.current && selectedYear) {
-      const indexToGo = selectedYear - startYear
-      flatList.current.scrollToOffset({
-        offset: (indexToGo / 3) * ITEM_HEIGHT - ITEM_HEIGHT,
-        animated: false,
-      })
-    }
-  }, [flatList, selectedYear, startYear])
+  const getItemLayout = useCallback(
+    (_: ArrayLike<number> | null | undefined, index: number) => ({
+      index,
+      length: ITEM_HEIGHT,
+      offset: index * ITEM_HEIGHT,
+    }),
+    []
+  )
+
+  const keyExtractor = useCallback((item: number) => `${item}`, [])
+
+  const renderItem = useCallback(
+    ({ item }: { item: number }) => (
+      <Year
+        onPressYear={onPressYear}
+        selected={selectedYear === item}
+        year={item}
+      />
+    ),
+    [onPressYear, selectedYear]
+  )
+
+  const renderScrollComponent = useCallback((sProps: object) => {
+    return <ScrollView {...sProps} />
+  }, [])
 
   return (
     <View
+      pointerEvents={selectingYear ? 'auto' : 'none'}
       style={[
         StyleSheet.absoluteFill,
         styles.root,
         { backgroundColor: theme.colors.elevation.level3 },
         selectingYear ? sharedStyles.opacity1 : sharedStyles.opacity0,
       ]}
-      pointerEvents={selectingYear ? 'auto' : 'none'}
     >
       <FlatList<number>
-        ref={flatList}
+        data={years}
+        getItemLayout={getItemLayout}
+        initialScrollIndex={selectedRow}
+        keyExtractor={keyExtractor}
+        numColumns={3}
+        renderItem={renderItem}
+        renderScrollComponent={renderScrollComponent}
         style={[
           sharedStyles.root,
           Platform.OS === 'web'
             ? ({ colorScheme: theme.dark ? 'dark' : 'light' } as ViewStyle)
             : null,
         ]}
-        data={years}
-        renderScrollComponent={(sProps) => {
-          return <ScrollView {...sProps} />
-        }}
-        renderItem={({ item }) => (
-          <Year
-            year={item}
-            selected={selectedYear === item}
-            onPressYear={onPressYear}
-          />
-        )}
-        keyExtractor={(item) => `${item}`}
-        numColumns={3}
       />
     </View>
   )
 }
 
 function YearPure({
-  year,
-  selected,
   onPressYear,
+  selected,
+  year,
 }: {
-  year: number
-  selected: boolean
   onPressYear: (newYear: number) => any
+  selected: boolean
+  year: number
 }) {
   const theme = useTheme()
 
@@ -98,9 +112,9 @@ function YearPure({
   return (
     <View style={styles.year}>
       <TouchableRipple
-        onPress={() => onPressYear(year)}
-        accessibilityRole="button"
         accessibilityLabel={String(year)}
+        accessibilityRole="button"
+        onPress={() => onPressYear(year)}
         style={styles.yearButton}
       >
         <View
@@ -111,14 +125,14 @@ function YearPure({
         >
           <Text
             maxFontSizeMultiplier={1.5}
+            selectable={false}
             style={[
               styles.yearLabel,
               selected
                 ? { color: theme.colors.onPrimary }
                 : { color: theme.colors.onSurfaceVariant },
-              { ...textFont },
+              textFont,
             ]}
-            selectable={false}
           >
             {year}
           </Text>
@@ -136,19 +150,19 @@ const styles = StyleSheet.create({
   },
   year: {
     flex: 1,
-    marginLeft: 16,
-    marginRight: 16,
     height: ITEM_HEIGHT,
     justifyContent: 'center',
+    marginLeft: 16,
+    marginRight: 16,
   },
   yearButton: {
     borderRadius: 46 / 2,
     overflow: 'hidden',
   },
   yearInner: {
+    alignItems: 'center',
     borderRadius: 46 / 2,
     height: 46,
-    alignItems: 'center',
     justifyContent: 'center',
   },
   yearLabel: {
@@ -156,3 +170,5 @@ const styles = StyleSheet.create({
   },
 })
 const Year = memo(YearPure)
+
+export default memo(YearPicker)

@@ -1,5 +1,5 @@
-import { Text, TouchableRipple } from 'react-native-paper'
-import { StyleSheet, View } from 'react-native'
+import { Text } from 'react-native-paper'
+import { Pressable, StyleSheet, View } from 'react-native'
 import type { StyleProp, ViewStyle } from 'react-native'
 import DayRange from './DayRange'
 import { daySize } from './dateUtils'
@@ -15,41 +15,41 @@ function EmptyDayPure() {
 export const EmptyDay = memo(EmptyDayPure)
 
 function Day(props: {
-  theme: PaperTheme
-  textColorOnPrimary: string
   day: number
-  month: number
-  year: number
-  selected: boolean
-  inRange: boolean
-  leftCrop: boolean
-  rightCrop: boolean
-  primaryColor: string
-  selectColor: string
-  isToday: boolean
-  disabled: boolean
-  onPressDate: (date: Date) => any
   dayContent?: DayContentRenderer
   dayContentPosition?: DayContentPosition
   dayContentStyle?: StyleProp<ViewStyle>
+  disabled: boolean
+  inRange: boolean
+  isToday: boolean
+  leftCrop: boolean
+  month: number
+  onPressDate: (date: Date) => any
+  primaryColor: string
+  rightCrop: boolean
+  selectColor: string
+  selected: boolean
+  textColorOnPrimary: string
+  theme: PaperTheme
+  year: number
 }) {
   const {
     day,
-    month,
-    year,
-    selected,
-    inRange,
-    leftCrop,
-    rightCrop,
-    onPressDate,
-    primaryColor,
-    selectColor,
-    isToday,
-    disabled,
-    theme,
     dayContent,
     dayContentPosition,
     dayContentStyle,
+    disabled,
+    inRange,
+    isToday,
+    leftCrop,
+    month,
+    onPressDate,
+    primaryColor,
+    rightCrop,
+    selectColor,
+    selected,
+    theme,
+    year,
   } = props
   const borderColor = theme.colors.primary
 
@@ -57,7 +57,6 @@ function Day(props: {
     onPressDate(new Date(year, month, day))
   }, [onPressDate, year, month, day])
 
-  // Determine text colors for M3
   let baseTextColor
   let finalTextColor
 
@@ -85,16 +84,15 @@ function Day(props: {
         rightCrop={rightCrop}
         selectColor={selectColor}
       />
-      <TouchableRipple
-        testID={`react-native-paper-dates-day-${year}-${month}-${day}`}
+      <Pressable
+        accessibilityRole="button"
         disabled={disabled}
-        borderless={true}
         onPress={disabled ? undefined : onPress}
         style={[
           styles.button,
           { backgroundColor: inRange ? selectColor : undefined },
         ]}
-        accessibilityRole="button"
+        testID={`react-native-paper-dates-day-${year}-${month}-${day}`}
       >
         <View
           style={[
@@ -105,37 +103,37 @@ function Day(props: {
         >
           <Text
             maxFontSizeMultiplier={1.5}
+            selectable={false}
             style={[
               baseTextColor
                 ? {
                     color: finalTextColor,
                   }
                 : undefined,
-              { ...textFont },
+              textFont,
             ]}
-            selectable={false}
           >
             {day}
           </Text>
         </View>
-      </TouchableRipple>
+      </Pressable>
       {dayContent ? (
         <View
+          pointerEvents="none"
           style={[
             styles.content,
             contentPositions[dayContentPosition || 'bottom'],
             dayContentStyle,
           ]}
-          pointerEvents="none"
         >
           {dayContent({
             date: new Date(year, month, day),
             day,
-            month,
-            year,
-            selected,
-            isToday,
             disabled,
+            isToday,
+            month,
+            selected,
+            year,
           })}
         </View>
       ) : null}
@@ -145,29 +143,26 @@ function Day(props: {
 
 const styles = StyleSheet.create({
   button: {
-    width: daySize,
+    borderRadius: daySize / 2,
     height: daySize,
     overflow: 'hidden',
-    borderRadius: daySize / 2,
+    width: daySize,
   },
   content: {
-    // Absolutely positioned without insets, so Yoga still honours the parent's
-    // centering and this box lines up with the day circle instead of the
-    // (wider) grid cell.
+    height: daySize,
     position: 'absolute',
     width: daySize,
-    height: daySize,
   },
   day: {
-    flexBasis: 0,
-    flex: 1,
+    alignItems: 'center',
+    borderColor: 'transparent',
     borderRadius: daySize / 2,
-    width: daySize,
+    borderWidth: 1,
+    flex: 1,
+    flexBasis: 0,
     height: daySize,
     justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'transparent',
+    width: daySize,
   },
   disabled: {
     opacity: 0.3,
@@ -177,27 +172,26 @@ const styles = StyleSheet.create({
     flexBasis: 0,
   },
   root: {
-    flexBasis: 0,
-    flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+    flex: 1,
+    flexBasis: 0,
+    justifyContent: 'center',
     position: 'relative',
   },
 })
 
-// Anchors for `dayContent`, applied to a box the size of the day circle.
 const contentPositions = StyleSheet.create({
   'bottom': {
-    justifyContent: 'flex-end',
     alignItems: 'center',
+    justifyContent: 'flex-end',
     paddingBottom: 2,
   },
-  'bottom-left': { justifyContent: 'flex-end', alignItems: 'flex-start' },
-  'bottom-right': { justifyContent: 'flex-end', alignItems: 'flex-end' },
-  'center': { justifyContent: 'center', alignItems: 'center' },
-  'top': { justifyContent: 'flex-start', alignItems: 'center', paddingTop: 2 },
-  'top-left': { justifyContent: 'flex-start', alignItems: 'flex-start' },
-  'top-right': { justifyContent: 'flex-start', alignItems: 'flex-end' },
+  'bottom-left': { alignItems: 'flex-start', justifyContent: 'flex-end' },
+  'bottom-right': { alignItems: 'flex-end', justifyContent: 'flex-end' },
+  'center': { alignItems: 'center', justifyContent: 'center' },
+  'top': { alignItems: 'center', justifyContent: 'flex-start', paddingTop: 2 },
+  'top-left': { alignItems: 'flex-start', justifyContent: 'flex-start' },
+  'top-right': { alignItems: 'flex-end', justifyContent: 'flex-start' },
 })
 
 export default memo(Day)

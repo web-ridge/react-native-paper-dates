@@ -4,8 +4,27 @@ import { circleSize } from './timeUtils'
 import { useTextColorOnPrimary } from '../shared/utils'
 import { memo } from 'react'
 
+function getMinuteNumbers(size: number, count: number) {
+  let angle = 0
+  let step = (2 * Math.PI) / count
+  let radius = size / 2.5
+
+  angle = angle = (-90 * Math.PI) / 180
+
+  return Array(12)
+    .fill(true)
+    .map(() => {
+      let x = Math.round(size / 2 + radius * Math.cos(angle))
+      let y = Math.round(size / 2 + radius * Math.sin(angle))
+      angle += step
+      return [x, y]
+    })
+}
+
+const minuteNumbers = getMinuteNumbers(circleSize, 12)
+
 function AnalogClockMinutes({ minutes }: { minutes: number }) {
-  const range = getMinuteNumbers(circleSize, 12)
+  const range = minuteNumbers
   const color = useTextColorOnPrimary()
 
   return (
@@ -25,16 +44,16 @@ function AnalogClockMinutes({ minutes }: { minutes: number }) {
             style={[
               styles.outerHourRoot,
               {
-                top: a[1] || 0,
-                left: a[0] || 0,
+                top: a[1],
+                left: a[0],
               },
             ]}
           >
             <View style={styles.outerHourInner}>
               <Text
                 maxFontSizeMultiplier={1.5}
-                style={isCurrent ? { color } : undefined}
                 selectable={false}
+                style={isCurrent ? { color } : undefined}
                 variant="bodyLarge"
               >
                 {isZero ? '00' : currentMinutes}
@@ -47,36 +66,19 @@ function AnalogClockMinutes({ minutes }: { minutes: number }) {
   )
 }
 
-function getMinuteNumbers(size: number, count: number) {
-  let angle = 0
-  let step = (2 * Math.PI) / count
-  let radius = size / 2.5
-
-  angle = angle = (-90 * Math.PI) / 180
-
-  return Array(12)
-    .fill(true)
-    .map(() => {
-      let x = Math.round(size / 2 + radius * Math.cos(angle))
-      let y = Math.round(size / 2 + radius * Math.sin(angle))
-      angle += step
-      return [x, y]
-    })
-}
-
 const styles = StyleSheet.create({
+  outerHourInner: { borderRadius: 24 },
   outerHourRoot: {
-    position: 'absolute',
-    justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 20,
-    width: 48,
+    borderRadius: 24,
     height: 48,
+    justifyContent: 'center',
     marginLeft: -24,
     marginTop: -24,
-    borderRadius: 24,
+    position: 'absolute',
+    width: 48,
+    zIndex: 20,
   },
-  outerHourInner: { borderRadius: 24 },
 })
 
 export default memo(AnalogClockMinutes)

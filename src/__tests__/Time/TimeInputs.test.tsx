@@ -8,14 +8,14 @@ registerTranslation('en', en)
 it('renders TimeInputs', async () => {
   const { toJSON } = await render(
     <TimeInputs
-      inputType="keyboard"
+      focused="hours"
       hours={12}
-      minutes={45}
+      inputType="keyboard"
       is24Hour
       locale="en"
+      minutes={45}
       onChange={() => null}
       onFocusInput={() => null}
-      focused="hours"
     />
   )
 

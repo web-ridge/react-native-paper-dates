@@ -7,12 +7,29 @@ import { getTranslation } from '../translations/utils'
 import { sharedStyles } from '../shared/styles'
 import { memo } from 'react'
 
-/** Space reserved so an overlay header does not paint over a vertical scrollbar. */
 export const verticalScrollbarGutter = Platform.select({
   ios: 0,
-  web: 16,
+  web: 0,
   default: 14,
 }) as number
+
+let cachedLayoutScrollbarWidth: number | undefined
+
+export function layoutScrollbarWidth(): number {
+  if (cachedLayoutScrollbarWidth !== undefined) {
+    return cachedLayoutScrollbarWidth
+  }
+  if (typeof document === 'undefined' || !document.body) {
+    return 0
+  }
+  const probe = document.createElement('div')
+  probe.style.cssText =
+    'position:absolute;top:-9999px;width:100px;height:100px;overflow:scroll;visibility:hidden'
+  document.body.appendChild(probe)
+  const width = probe.offsetWidth - probe.clientWidth
+  probe.remove()
+  return (cachedLayoutScrollbarWidth = width > 0 ? width : 0)
+}
 
 const buttonContainerHeight = 56
 const buttonContainerMarginTop = 4
@@ -31,38 +48,37 @@ export function getCalendarHeaderHeight(scrollMode: 'horizontal' | 'vertical') {
 }
 
 function CalendarHeader({
-  scrollMode,
-  onPrev,
-  onNext,
   disableWeekDays,
-  locale,
-  startWeekOnMonday,
   endInset = 0,
+  locale,
+  onNext,
+  onPrev,
+  scrollMode,
+  startWeekOnMonday,
 }: {
-  locale: undefined | string
-  scrollMode: 'horizontal' | 'vertical'
-  onPrev: () => any
-  onNext: () => any
   disableWeekDays?: DisableWeekDaysType
-  startWeekOnMonday: boolean
-  /** Shrink from the trailing edge so week names do not cover a vertical scrollbar. */
   endInset?: number
+  locale: undefined | string
+  onNext: () => any
+  onPrev: () => any
+  scrollMode: 'horizontal' | 'vertical'
+  startWeekOnMonday: boolean
 }) {
   const isHorizontal = scrollMode === 'horizontal'
   const theme = useTheme()
 
   return (
     <View
+      pointerEvents={'box-none'}
       style={
         endInset
           ? [styles.datePickerHeader, { right: endInset }]
           : styles.datePickerHeader
       }
-      pointerEvents={'box-none'}
     >
       {isHorizontal ? (
-        <View style={styles.buttonContainer} pointerEvents={'box-none'}>
-          <View style={sharedStyles.root} pointerEvents={'box-none'} />
+        <View pointerEvents={'box-none'} style={styles.buttonContainer}>
+          <View pointerEvents={'box-none'} style={sharedStyles.root} />
           <View
             style={[
               styles.arrowGroup,
@@ -73,18 +89,18 @@ function CalendarHeader({
             ]}
           >
             <IconButton
-              icon="chevron-left"
               accessibilityLabel={getTranslation(locale, 'previous')}
+              icon="chevron-left"
               onPress={onPrev}
-              testID="react-native-paper-dates-prev-month"
               style={styles.arrowButton}
+              testID="react-native-paper-dates-prev-month"
             />
             <IconButton
-              icon="chevron-right"
               accessibilityLabel={getTranslation(locale, 'next')}
+              icon="chevron-right"
               onPress={onNext}
-              testID="react-native-paper-dates-next-month"
               style={styles.arrowButton}
+              testID="react-native-paper-dates-next-month"
             />
           </View>
         </View>
@@ -99,26 +115,26 @@ function CalendarHeader({
 }
 
 const styles = StyleSheet.create({
-  datePickerHeader: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    left: 0,
-    zIndex: 10,
-  },
-  buttonContainer: {
-    height: buttonContainerHeight,
-    marginTop: buttonContainerMarginTop,
-    marginBottom: buttonContainerMarginBottom,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  arrowGroup: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   arrowButton: {
     margin: 0,
+  },
+  arrowGroup: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  buttonContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    height: buttonContainerHeight,
+    marginBottom: buttonContainerMarginBottom,
+    marginTop: buttonContainerMarginTop,
+  },
+  datePickerHeader: {
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    zIndex: 10,
   },
 })
 

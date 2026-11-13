@@ -15,35 +15,35 @@ import { DisplayModeContext } from '../contexts/DisplayModeContext'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 
 type onChangeFunc = ({
+  focused,
   hours,
   minutes,
-  focused,
 }: {
+  focused?: undefined | PossibleClockTypes
   hours: number
   minutes: number
-  focused?: undefined | PossibleClockTypes
 }) => any
 
 function TimePicker({
-  hours,
-  minutes,
-  onFocusInput,
   focused,
-  inputType,
-  onChange,
-  locale,
-  use24HourClock,
+  hours,
   inputFontSize,
+  inputType,
+  locale,
+  minutes,
+  onChange,
+  onFocusInput,
+  use24HourClock,
 }: {
-  locale?: undefined | string
-  inputType: PossibleInputTypes
   focused: PossibleClockTypes
   hours: number
-  minutes: number
-  onFocusInput: (type: PossibleClockTypes) => any
-  onChange: onChangeFunc
-  use24HourClock?: boolean
   inputFontSize?: number
+  inputType: PossibleInputTypes
+  locale?: undefined | string
+  minutes: number
+  onChange: onChangeFunc
+  onFocusInput: (type: PossibleClockTypes) => any
+  use24HourClock?: boolean
 }) {
   const dimensions = useWindowDimensions()
   const isLandscape = dimensions.width > dimensions.height
@@ -52,7 +52,6 @@ function TimePicker({
     undefined
   )
 
-  // method to check whether we have 24 hours in clock or 12
   const is24Hour = useMemo(() => {
     if (use24HourClock !== undefined) {
       return use24HourClock
@@ -66,7 +65,6 @@ function TimePicker({
     return formatted.includes('23')
   }, [locale, use24HourClock])
 
-  // Initialize display Mode according the hours value
   useEffect(() => {
     if (hours >= 12) {
       setDisplayMode('PM')
@@ -92,10 +90,13 @@ function TimePicker({
   const clockWidth =
     inputType === inputTypes.picker ? circleSize + (isLandscape ? 64 : 0) : 0
 
+  const displayModeValue = useMemo(
+    () => ({ mode: displayMode, setMode: setDisplayMode }),
+    [displayMode]
+  )
+
   return (
-    <DisplayModeContext.Provider
-      value={{ mode: displayMode, setMode: setDisplayMode }}
-    >
+    <DisplayModeContext.Provider value={displayModeValue}>
       <View
         style={
           isLandscape
@@ -104,15 +105,15 @@ function TimePicker({
         }
       >
         <TimeInputs
-          inputType={inputType}
-          inputFontSize={inputFontSize}
+          focused={focused}
           hours={hours}
-          minutes={minutes}
+          inputFontSize={inputFontSize}
+          inputType={inputType}
           is24Hour={is24Hour}
+          locale={locale}
+          minutes={minutes}
           onChange={onChange}
           onFocusInput={onFocusInput}
-          focused={focused}
-          locale={locale}
         />
         {inputType === inputTypes.picker ? (
           <View
@@ -122,10 +123,10 @@ function TimePicker({
             ]}
           >
             <AnalogClock
-              hours={toHourInputFormat(hours, is24Hour)}
-              minutes={minutes}
               focused={focused}
+              hours={toHourInputFormat(hours, is24Hour)}
               is24Hour={is24Hour}
+              minutes={minutes}
               onChange={onInnerChange}
             />
           </View>
@@ -137,18 +138,18 @@ function TimePicker({
 
 const styles = StyleSheet.create({
   clockContainer: {
-    paddingTop: 36,
     paddingLeft: 12,
     paddingRight: 12,
+    paddingTop: 36,
   },
   clockContainerLandscape: {
-    paddingTop: 0,
     paddingLeft: 64,
     paddingRight: 0,
+    paddingTop: 0,
   },
   rootLandscape: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
     justifyContent: 'center',
   },
   rootPortrait: {

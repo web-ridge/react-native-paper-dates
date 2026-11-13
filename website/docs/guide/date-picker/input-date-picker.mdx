@@ -1,43 +1,43 @@
-import { InputDateDemo } from '../../../components/demos'
-
 # Input Date Picker
 
 The input date picker provides a text field allowing for a date to be input or the date picker to be opened and selected.
 
-## Preview
-
-<InputDateDemo className="pd-demo--page" />
-
 ## Usage
 
 ```jsx
-import React from "react";
-import { View, Text } from "react-native";
-import { DatePickerInput } from 'react-native-paper-dates';
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import React from 'react';
+import { View } from 'react-native';
+import { PaperProvider } from 'react-native-paper';
+import { DatePickerInput, en, registerTranslation } from 'react-native-paper-dates';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+
+registerTranslation('en', en);
 
 export default function App() {
-  const [inputDate, setInputDate] = React.useState(undefined)
+  const [inputDate, setInputDate] = React.useState(undefined);
 
   return (
-    <SafeAreaProvider>
-      <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
-        <DatePickerInput
-          locale="en"
-          label="Birthdate"
-          value={inputDate}
-          onChange={(d) => setInputDate(d)}
-          inputMode="start"
-        />
-      </View>
-    </SafeAreaProvider>
-  )
+    <PaperProvider>
+      <SafeAreaProvider>
+        <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
+          <DatePickerInput
+            locale="en"
+            label="Birthdate"
+            value={inputDate}
+            onChange={(d) => setInputDate(d)}
+            inputMode="start"
+            variant="outlined"
+          />
+        </View>
+      </SafeAreaProvider>
+    </PaperProvider>
+  );
 }
 ```
 
 ## Live Example
 
-View an interactive [Expo snack](https://snack.expo.dev/@fitzwabs/react-native-paper-dates-input).
+Try this and the other pickers on the [example site](https://www.reactnativepaperdates.com/).
 
 ## Props
 
@@ -101,9 +101,9 @@ Label displayed on the text field.
 `Type: string`  
 Locale used for formatting, masking, and translations (for example `'en'` or `'de'`).
 
-**mode**  
-`Type: 'flat' | 'outlined'`  
-See [react-native-paper TextInput](https://callstack.github.io/react-native-paper/docs/components/TextInput#mode).
+**variant**  
+`Type: 'filled' | 'outlined' | undefined`  
+Paper 6 TextInput variant. See [react-native-paper TextInput](https://oss.callstack.com/react-native-paper/6.x/docs/components/TextInput/TextInput).
 
 **onChange**  
 `Type: (date: Date | undefined) => void`  
@@ -164,4 +164,4 @@ When `true`, appends the expected date format to the label. Defaults to `true`.
 `Type: boolean | undefined`  
 When `false`, hides the calendar icon and modal. Defaults to `true`.
 
-Also accepts other [react-native-paper TextInput](https://callstack.github.io/react-native-paper/docs/components/TextInput) props (except `value`, `onChange`, `onChangeText`, and `inputMode`).
+Also accepts other [react-native-paper TextInput](https://oss.callstack.com/react-native-paper/6.x/docs/components/TextInput/TextInput) props (except `value`, `onChange`, `onChangeText`, `inputMode`, and `endAccessory`, which is used for the calendar icon).

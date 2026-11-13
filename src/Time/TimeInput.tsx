@@ -5,6 +5,7 @@ import {
   TextInputProps,
   View,
 } from 'react-native'
+import { themeColor } from '../shared/utils'
 import { TouchableRipple, useTheme } from 'react-native-paper'
 
 import Color from 'color'
@@ -21,24 +22,24 @@ interface TimeInputProps extends Omit<
   Omit<Omit<TextInputProps, 'value'>, 'onFocus'>,
   'onPress'
 > {
-  value: number
   clockType: PossibleClockTypes
+  inputFontSize?: number
+  inputType: PossibleInputTypes
+  onChanged: (n: number) => any
   onPress?: (type: PossibleClockTypes) => any
   pressed: boolean
-  onChanged: (n: number) => any
-  inputType: PossibleInputTypes
-  inputFontSize?: number
+  value: number
 }
 
 function TimeInput(
   {
-    value,
     clockType,
-    pressed,
-    onPress,
-    onChanged,
-    inputType,
     inputFontSize = 57,
+    inputType,
+    onChanged,
+    onPress,
+    pressed,
+    value,
     ...rest
   }: TimeInputProps,
   ref: any
@@ -78,18 +79,24 @@ function TimeInput(
         // eslint-disable-next-line react-native/no-inline-styles
         {
           backgroundColor,
-          borderRadius: theme.roundness * 2,
           borderColor: highlighted
             ? theme.colors.onPrimaryContainer
             : undefined,
+          borderRadius: theme.shapes.corner.small,
           borderWidth: highlighted ? 2 : 0,
           height: inputType === inputTypes.keyboard ? 72 : 80,
         },
       ]}
     >
       <TextInput
+        keyboardAppearance={theme.dark ? 'dark' : 'default'}
+        keyboardType="number-pad"
+        maxFontSizeMultiplier={1.5}
+        maxLength={2}
+        onBlur={() => setInputFocused(false)}
+        onChangeText={(e) => onInnerChange(Number(e))}
+        onFocus={() => setInputFocused(true)}
         ref={ref}
-        textAlign="center"
         style={[
           styles.input,
           // eslint-disable-next-line react-native/no-inline-styles
@@ -101,37 +108,31 @@ function TimeInput(
               Platform.OS === 'android'
                 ? Math.max(inputFontSize, 48)
                 : undefined,
-            paddingTop: Platform.OS === 'android' ? 0 : undefined,
             paddingBottom: Platform.OS === 'android' ? 0 : undefined,
+            paddingTop: Platform.OS === 'android' ? 0 : undefined,
             textAlign: 'center',
           },
         ]}
-        maxFontSizeMultiplier={1.5}
+        textAlign="center"
         value={formattedValue}
-        maxLength={2}
-        onFocus={() => setInputFocused(true)}
-        onBlur={() => setInputFocused(false)}
-        keyboardAppearance={theme.dark ? 'dark' : 'default'}
-        keyboardType="number-pad"
-        onChangeText={(e) => onInnerChange(Number(e))}
         {...rest}
       />
       {onPress && inputType === inputTypes.picker ? (
         <TouchableRipple
+          borderless={true}
+          onPress={() => onPress(clockType)}
+          rippleColor={
+            Platform.OS !== 'ios'
+              ? Color(themeColor(theme.colors.onSurface)).fade(0.7).hex()
+              : undefined
+          }
           style={[
             StyleSheet.absoluteFill,
             sharedStyles.overflowHidden,
             {
-              borderRadius: theme.roundness,
+              borderRadius: theme.shapes.corner.extraSmall,
             },
           ]}
-          rippleColor={
-            Platform.OS !== 'ios'
-              ? Color(theme.colors.onSurface).fade(0.7).hex()
-              : undefined
-          }
-          onPress={() => onPress(clockType)}
-          borderless={true}
         >
           <View />
         </TouchableRipple>

@@ -1,5 +1,5 @@
 import TextInputWithMask from '../TextInputMask'
-import { HelperText, useTheme } from 'react-native-paper'
+import { useTheme } from 'react-native-paper'
 import { StyleSheet, View } from 'react-native'
 import useDateInput from './inputUtils'
 import type { DatePickerInputProps } from './DatePickerInput.shared'
@@ -7,47 +7,47 @@ import { forwardRef, ReactNode } from 'react'
 
 function DatePickerInputWithoutModal(
   {
-    label,
-    value,
-    onChange,
-    style,
-    locale,
-    validRange,
-    inputMode,
-    withDateFormatInLabel = true,
+    disableStatusBar,
+    disableStatusBarPadding,
+    endYear,
     hasError,
     hideValidationErrors,
-    onValidationError,
-    modal,
     inputButton,
+    inputEnabled,
+    inputMode,
+    label,
+    locale,
+    modal,
+    onChange,
+    onChangeText,
+    onValidationError,
     saveLabel,
     saveLabelDisabled,
-    uppercase,
-    startYear,
-    endYear,
-    onChangeText,
-    inputEnabled,
-    disableStatusBarPadding,
-    disableStatusBar,
     startWeekOnMonday,
+    startYear,
+    style,
+    uppercase,
+    validRange,
+    value,
+    withDateFormatInLabel = true,
     ...rest
   }: DatePickerInputProps & {
+    inputButton?: ReactNode
     modal?: (params: {
-      value: DatePickerInputProps['value']
-      locale: DatePickerInputProps['locale']
-      inputMode: DatePickerInputProps['inputMode']
-      validRange: DatePickerInputProps['validRange']
-      saveLabel: DatePickerInputProps['saveLabel']
-      saveLabelDisabled: DatePickerInputProps['saveLabelDisabled']
-      uppercase: DatePickerInputProps['uppercase']
-      startYear: DatePickerInputProps['startYear']
+      disableStatusBar: DatePickerInputProps['disableStatusBar']
+      disableStatusBarPadding: DatePickerInputProps['disableStatusBarPadding']
       endYear: DatePickerInputProps['endYear']
       inputEnabled: DatePickerInputProps['inputEnabled']
-      disableStatusBarPadding: DatePickerInputProps['disableStatusBarPadding']
-      disableStatusBar: DatePickerInputProps['disableStatusBar']
+      inputMode: DatePickerInputProps['inputMode']
+      locale: DatePickerInputProps['locale']
+      saveLabel: DatePickerInputProps['saveLabel']
+      saveLabelDisabled: DatePickerInputProps['saveLabelDisabled']
       startWeekOnMonday?: DatePickerInputProps['startWeekOnMonday']
+      startYear: DatePickerInputProps['startYear']
+      uppercase: DatePickerInputProps['uppercase']
+      validRange: DatePickerInputProps['validRange']
+      value: DatePickerInputProps['value']
     }) => any
-    inputButton?: ReactNode
   },
   ref: any
 ) {
@@ -58,12 +58,12 @@ function DatePickerInputWithoutModal(
     onChangeText: onDateInputChangeText,
     error,
   } = useDateInput({
-    locale,
-    value,
-    validRange,
     inputMode,
+    locale,
     onChange,
     onValidationError,
+    validRange,
+    value,
   })
 
   let disabled
@@ -82,60 +82,57 @@ function DatePickerInputWithoutModal(
         <View style={styles.inputContainer}>
           <TextInputWithMask
             {...rest}
-            ref={ref}
-            label={getLabel({
-              // TODO: support label components?
-              label: label as any,
-              inputFormat,
-              withDateFormatInLabel,
-            })}
-            value={formattedValue}
-            keyboardType={rest.keyboardType ?? 'number-pad'}
-            mask={inputFormat}
             disabled={disabled}
-            onChangeText={onDateInputChangeText}
-            onChange={(e) => onChangeText && onChangeText(e.nativeEvent.text)}
+            error={(!!error && !hideValidationErrors) || !!hasError}
+            inputButton={inputButton}
             keyboardAppearance={
               rest.keyboardAppearance ?? (theme.dark ? 'dark' : 'default')
             }
-            error={(!!error && !hideValidationErrors) || !!hasError}
-            style={[styles.input, style]}
-            inputButton={inputButton}
+            keyboardType={rest.keyboardType ?? 'number-pad'}
+            label={getLabel({
+              inputFormat,
+              label: label as any,
+              withDateFormatInLabel,
+            })}
+            mask={inputFormat}
+            onChange={(e) => onChangeText && onChangeText(e.nativeEvent.text)}
+            onChangeText={onDateInputChangeText}
+            ref={ref}
+            style={style}
+            supportingText={
+              error && !hideValidationErrors ? error : rest.supportingText
+            }
+            value={formattedValue}
           />
         </View>
-        {error && !hideValidationErrors ? (
-          <HelperText type="error" visible={!!error}>
-            {error}
-          </HelperText>
-        ) : null}
       </View>
       {modal?.({
-        value,
-        locale,
-        inputMode,
-        validRange,
-        saveLabel,
-        saveLabelDisabled,
-        uppercase,
-        startYear,
+        disableStatusBar,
+        disableStatusBarPadding,
         endYear,
         inputEnabled,
-        disableStatusBarPadding,
-        disableStatusBar,
+        inputMode,
+        locale,
+        saveLabel,
+        saveLabelDisabled,
         startWeekOnMonday,
+        startYear,
+        uppercase,
+        validRange,
+        value,
       })}
     </>
   )
 }
 
 function getLabel({
-  withDateFormatInLabel,
   inputFormat,
   label,
+  withDateFormatInLabel,
 }: {
-  withDateFormatInLabel: boolean
   inputFormat: string
   label: string | undefined
+  withDateFormatInLabel: boolean
 }) {
   if (withDateFormatInLabel) {
     return label ? `${label} (${inputFormat})` : inputFormat
@@ -144,21 +141,16 @@ function getLabel({
 }
 
 const styles = StyleSheet.create({
+  inputContainer: {
+    alignItems: 'stretch',
+    alignSelf: 'stretch',
+    flexGrow: 1,
+    width: '100%',
+  },
   root: {
+    alignItems: 'flex-start',
     flexGrow: 1,
     justifyContent: 'center',
-    alignItems: 'flex-start',
-    width: '100%',
-  },
-  inputContainer: {
-    flexGrow: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    width: '100%',
-  },
-  input: {
-    flexGrow: 1,
     width: '100%',
   },
 })

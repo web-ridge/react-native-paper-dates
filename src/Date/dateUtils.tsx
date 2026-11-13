@@ -1,5 +1,4 @@
 import { useCallback, useMemo } from 'react'
-import { useLatest } from '../shared/utils'
 import type { ValidRangeType } from './Calendar'
 
 export type DisableWeekDaysType = number[]
@@ -30,8 +29,6 @@ export function addMonths(date: Date, count: number) {
   return n2
 }
 
-// https://stackoverflow.com/a/1185068/2508481
-// pass in any date as parameter anyDateInMonth based on dayjs
 export function getDaysInMonth({
   year,
   month,
@@ -66,7 +63,6 @@ export function getFirstDayOfMonth({
 }): number {
   let dayOfWeek = new Date(year, month, 1).getDay()
   if (startWeekOnMonday) {
-    // Map Sunday (0) to 6, Monday (1) to 0, etc.
     dayOfWeek = (dayOfWeek + 6) % 7
   }
 
@@ -84,7 +80,16 @@ export function useRangeChecker(validRange: ValidRangeType | undefined) {
   const endUnix =
     validEnd instanceof Date ? dateToUnix(getEndOfDay(validEnd)) : undefined
 
-  const validDisabledDatesRef = useLatest(validRange?.disabledDates)
+  const disabledDates = validRange?.disabledDates
+  const disabledKeys = useMemo(() => {
+    const keys = new Set<string>()
+    if (disabledDates) {
+      for (const disabledDate of disabledDates) {
+        keys.add(calendarDateKey(disabledDate))
+      }
+    }
+    return keys
+  }, [disabledDates])
 
   const isWithinValidRange = useCallback(
     (day: Date) => {
@@ -97,17 +102,25 @@ export function useRangeChecker(validRange: ValidRangeType | undefined) {
   )
 
   const isDisabled = useCallback(
-    (day: Date) => {
-      return validDisabledDatesRef.current
-        ? validDisabledDatesRef.current.some((disabledDate) =>
-            areDatesOnSameDay(disabledDate, day)
-          )
-        : false
-    },
-    [validDisabledDatesRef]
+    (day: Date) => disabledKeys.has(calendarDateKey(day)),
+    [disabledKeys]
   )
 
-  return { isDisabled, isWithinValidRange, validStart, validEnd }
+  return { disabledKeys, isDisabled, isWithinValidRange, validStart, validEnd }
+}
+
+export function adjacentDayKey(
+  year: number,
+  month: number,
+  day: number,
+  delta: number
+): string {
+  const shifted = day + delta
+  if (shifted >= 1 && shifted <= getDaysInMonth({ year, month })) {
+    return calendarDayKey(year, month, shifted)
+  }
+  const overflow = new Date(year, month, shifted)
+  return calendarDateKey(overflow)
 }
 
 export function areDatesOnSameDay(a: Date, b?: Date | null | undefined) {
@@ -120,6 +133,18 @@ export function areDatesOnSameDay(a: Date, b?: Date | null | undefined) {
     a.getMonth() === b.getMonth() &&
     a.getDate() === b.getDate()
   )
+}
+
+export function calendarDateKey(date: Date): string {
+  return calendarDayKey(date.getFullYear(), date.getMonth(), date.getDate())
+}
+
+export function calendarDayKey(
+  year: number,
+  month: number,
+  day: number
+): string {
+  return `${year}-${month}-${day}`
 }
 
 export function isDateBetween(
@@ -138,11 +163,6 @@ export function isDateBetween(
   return date <= endDate && date >= startDate
 }
 
-/**
- * Check if a date is within an optional range.
- *
- * If the range doesn't exist, it defaults to `true`.
- */
 export function isDateWithinOptionalRange(
   date: Date,
   {
@@ -151,12 +171,10 @@ export function isDateWithinOptionalRange(
   }: { startUnix: number | undefined; endUnix: number | undefined }
 ) {
   const dateUnix = dateToUnix(date)
-  // if startUnix is provided and date is before start
   if (startUnix && dateUnix < startUnix) {
     return false
   }
 
-  // if endUnix is provided and date is after end
   if (endUnix && dateUnix > endUnix) {
     return false
   }
@@ -173,17 +191,23 @@ export const estimatedMonthHeight = 360
 export const defaultStartYear = 1800
 export const defaultEndYear = 2200
 
-// Dynamic calculation functions to replace fixed constants
+const startAtIndexCache = new Map<string, number>()
+
 export function getStartAtIndex(startYear?: number, _endYear?: number): number {
   const start = startYear || 1800
   const today = new Date()
   const currentYear = today.getFullYear()
+  const currentMonth = today.getMonth()
+  const key = `${start}:${currentYear}-${currentMonth}`
+  const cached = startAtIndexCache.get(key)
+  if (cached !== undefined) {
+    return cached
+  }
 
-  // Calculate months from start year to current year
-  const monthsFromStart = (currentYear - start) * 12 + today.getMonth()
-
-  // Ensure we have enough buffer for the range
-  return Math.max(monthsFromStart, 0)
+  const monthsFromStart = (currentYear - start) * 12 + currentMonth
+  const value = Math.max(monthsFromStart, 0)
+  startAtIndexCache.set(key, value)
+  return value
 }
 
 export function getTotalMonths(startYear?: number, endYear?: number): number {
@@ -196,12 +220,10 @@ export function getBeginOffset(startYear?: number, endYear?: number): number {
   return estimatedMonthHeight * getStartAtIndex(startYear, endYear)
 }
 
-// Keep the old constants for backward compatibility but make them dynamic
 export const startAtIndex = 2800
 export const totalMonths = startAtIndex * 2
 export const beginOffset = estimatedMonthHeight * startAtIndex
 
-// Create a dynamic grid counts array
 export function createGridCounts(count: number): Array<number | undefined> {
   return new Array<number | undefined>(count)
 }
@@ -214,18 +236,11 @@ export function getGridCount(
   startYear?: number,
   endYear?: number
 ) {
-  const dynamicGridCounts = createGridCounts(getTotalMonths(startYear, endYear))
-  const cHeight = dynamicGridCounts[index]
-  if (cHeight) {
-    return cHeight
-  }
   const monthDate = addMonths(
     new Date(),
     getRealIndex(index, startYear, endYear)
   )
-  const h = getGridCountForDate(monthDate, startWeekOnMonday)
-  dynamicGridCounts[index] = h
-  return h
+  return getGridCountForDate(monthDate, startWeekOnMonday)
 }
 
 export function getGridCountForDate(date: Date, startWeekOnMonday: boolean) {
@@ -290,7 +305,6 @@ export function useInputFormat({
   locale: string | undefined
 }) {
   return useMemo(() => {
-    // TODO: something cleaner and more universal?
     const inputDate = formatter.format(new Date(2020, 10 - 1, 1))
 
     if (inputDate.includes('٢٠٢٠')) {

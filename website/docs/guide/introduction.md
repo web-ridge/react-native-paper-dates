@@ -8,7 +8,7 @@
   <img alt="Runs with Expo" src="https://img.shields.io/badge/Runs%20with%20Expo-4630EB.svg?style=flat-square&logo=EXPO&labelColor=f3f3f3&logoColor=000" />
 </div>
 
-[React Native Paper Dates](https://github.com/web-ridge/react-native-paper-dates) is a cross-platform [Material Design](https://m3.material.io/) date and time picker library for [React Native Paper](https://reactnativepaper.com/).
+[React Native Paper Dates](https://github.com/web-ridge/react-native-paper-dates) is a cross-platform [Material Design](https://m3.material.io/) date and time picker library for [React Native Paper](https://reactnativepaper.com/) 6.
 
 ## What's included
 
@@ -20,4 +20,4 @@
 
 1. [Install the library](./installation)
 2. [Register a translation](./localization)
-3. Pick a component from the sidebar — each page has a live preview so you can see the UI immediately
+3. Pick a component from the sidebar for usage examples and props

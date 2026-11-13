@@ -4,18 +4,24 @@ import Day, { EmptyDay } from './Day'
 
 import {
   addMonths,
+  adjacentDayKey,
   areDatesOnSameDay,
+  calendarDateKey,
+  calendarDayKey,
+  dateToUnix,
   daySize,
+  defaultEndYear,
+  defaultStartYear,
+  DisableWeekDaysType,
   estimatedMonthHeight,
+  getDaysInMonth,
+  getEndOfDay,
   getFirstDayOfMonth,
   getGridCount,
   getRealIndex,
   getStartAtIndex,
+  getStartOfDay,
   getTotalMonths,
-  createGridCounts,
-  DisableWeekDaysType,
-  getDaysInMonth,
-  isDateBetween,
   showWeekDay,
   useRangeChecker,
 } from './dateUtils'
@@ -36,71 +42,70 @@ import { memo, useMemo } from 'react'
 import { sharedStyles } from '../shared/styles'
 
 interface BaseMonthProps {
-  locale: undefined | string
-  scrollMode: 'horizontal' | 'vertical'
-  disableWeekDays?: DisableWeekDaysType
-  mode: ModeType
-  index: number
-  onPressYear: (year: number) => any
-  selectingYear: boolean
-  onPressDate: (date: Date) => any
-  primaryColor: string
-  selectColor: string
-  roundness: number
-  validRange?: ValidRangeType
-  startWeekOnMonday: boolean
-  startYear?: number
-  endYear?: number
-  // some of these should be required in final implementation
-  startDate?: CalendarDate
-  endDate?: CalendarDate
   date?: CalendarDate
   dates?: CalendarDates
   dayContent?: DayContentRenderer
   dayContentPosition?: DayContentPosition
   dayContentStyle?: StyleProp<ViewStyle>
+  disableWeekDays?: DisableWeekDaysType
+  endDate?: CalendarDate
+  endYear?: number
+  index: number
+  locale: undefined | string
+  mode: ModeType
+  onPressDate: (date: Date) => any
+  onPressYear: (year: number) => any
+  primaryColor: string
+  roundness: number
+  scrollMode: 'horizontal' | 'vertical'
+  selectColor: string
+  selectingYear: boolean
+  startDate?: CalendarDate
+  startWeekOnMonday: boolean
+  startYear?: number
+  validRange?: ValidRangeType
 }
 
 interface MonthRangeProps extends BaseMonthProps {
+  endDate: CalendarDate
   mode: 'range'
   startDate: CalendarDate
-  endDate: CalendarDate
 }
 
 interface MonthSingleProps extends BaseMonthProps {
-  mode: 'single'
   date: CalendarDate
+  mode: 'single'
 }
 
 interface MonthMultiProps extends BaseMonthProps {
-  mode: 'multiple'
   dates: CalendarDates
+  mode: 'multiple'
 }
 
 function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
   const {
-    locale,
-    mode,
-    index,
-    onPressYear,
-    selectingYear,
-    onPressDate,
-    primaryColor,
-    selectColor,
-    roundness,
-    validRange,
-    disableWeekDays,
-    scrollMode,
-    startDate,
-    endDate,
     date,
     dates,
-    startWeekOnMonday,
-    startYear,
-    endYear,
     dayContent,
     dayContentPosition,
     dayContentStyle,
+    disableWeekDays,
+    endDate,
+    endYear,
+    index,
+    locale,
+    mode,
+    onPressDate,
+    onPressYear,
+    primaryColor,
+    roundness,
+    scrollMode,
+    selectColor,
+    selectingYear,
+    startDate,
+    startWeekOnMonday,
+    startYear,
+    validRange,
   } = props
   const isHorizontal = scrollMode === 'horizontal'
 
@@ -108,6 +113,15 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
   const textColorOnPrimary = useTextColorOnPrimary()
   const realIndex = getRealIndex(index, startYear, endYear)
   const { isDisabled, isWithinValidRange } = useRangeChecker(validRange)
+  const selectedKeys = useMemo(() => {
+    const keys = new Set<string>()
+    if (dates) {
+      for (const selected of dates) {
+        keys.add(calendarDateKey(selected))
+      }
+    }
+    return keys
+  }, [dates])
 
   const { monthName, month, year } = useMemo(() => {
     const md = addMonths(new Date(), realIndex)
@@ -125,6 +139,10 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
     const daysInMonth = getDaysInMonth({ year, month })
     const dayOfWeek = getFirstDayOfMonth({ year, month, startWeekOnMonday })
     const emptyDays = dayOfWeek
+    const rangeStartUnix = startDate
+      ? dateToUnix(getStartOfDay(startDate))
+      : undefined
+    const rangeEndUnix = endDate ? dateToUnix(getEndOfDay(endDate)) : undefined
 
     return monthGrid(index, startWeekOnMonday, startYear, endYear).map(
       ({ days, weekGrid }) => {
@@ -154,10 +172,12 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
               const selectedStartDay = areDatesOnSameDay(day, startDate)
               const selectedEndDay = areDatesOnSameDay(day, endDate)
               selected = selectedStartDay || selectedEndDay
-              inRange = isDateBetween(day, {
-                startDate,
-                endDate,
-              })
+              const dayUnix = dateToUnix(day)
+              inRange =
+                rangeStartUnix !== undefined &&
+                rangeEndUnix !== undefined &&
+                dayUnix >= rangeStartUnix &&
+                dayUnix <= rangeEndUnix
               if (selectedStartDay) {
                 leftCrop = true
               }
@@ -179,17 +199,14 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
                 inRange = false
               }
             } else if (mode === 'multiple') {
-              const safeDates = dates || []
-              selected = safeDates.some((d) => areDatesOnSameDay(day, d))
+              const dayKey = calendarDayKey(year, month, dayOfMonth)
+              selected = selectedKeys.has(dayKey)
 
-              const yesterday = new Date(year, month, dayOfMonth - 1)
-              const tomorrow = new Date(year, month, dayOfMonth + 1)
-
-              const yesterdaySelected = safeDates.some((d) =>
-                areDatesOnSameDay(d, yesterday)
+              const yesterdaySelected = selectedKeys.has(
+                adjacentDayKey(year, month, dayOfMonth, -1)
               )
-              const tomorrowSelected = safeDates.some((d) =>
-                areDatesOnSameDay(d, tomorrow)
+              const tomorrowSelected = selectedKeys.has(
+                adjacentDayKey(year, month, dayOfMonth, 1)
               )
 
               if (selected) {
@@ -252,19 +269,19 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
       }
     )
   }, [
-    year,
-    month,
+    date,
+    endDate,
+    endYear,
     index,
     isDisabled,
-    mode,
     isWithinValidRange,
+    mode,
+    month,
+    selectedKeys,
     startDate,
-    endDate,
-    dates,
-    date,
     startWeekOnMonday,
     startYear,
-    endYear,
+    year,
   ])
 
   const textFont = theme.fonts.titleSmall
@@ -274,7 +291,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
   const iconSource = selectingYear ? 'menu-up' : 'menu-down'
 
   const weeks = grid.map(({ weekIndex, generatedDays }) => (
-    <View style={styles.week} key={weekIndex}>
+    <View key={weekIndex} style={styles.week}>
       {generatedDays
         .filter((gd) => showWeekDay(gd.dayIndex, disableWeekDays))
         .map((gd) =>
@@ -282,24 +299,24 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
             <EmptyDay key={gd.dayIndex} />
           ) : (
             <Day
-              key={gd.dayIndex}
-              theme={theme}
               day={gd.dayOfMonth}
-              month={gd.month}
-              year={gd.year}
-              selected={gd.selected}
-              inRange={gd.inRange}
-              leftCrop={gd.leftCrop}
-              rightCrop={gd.rightCrop}
-              onPressDate={onPressDate}
-              isToday={gd.isToday}
-              selectColor={selectColor}
-              primaryColor={primaryColor}
-              disabled={gd.disabled}
-              textColorOnPrimary={textColorOnPrimary}
               dayContent={dayContent}
               dayContentPosition={dayContentPosition}
               dayContentStyle={dayContentStyle}
+              disabled={gd.disabled}
+              inRange={gd.inRange}
+              isToday={gd.isToday}
+              key={gd.dayIndex}
+              leftCrop={gd.leftCrop}
+              month={gd.month}
+              onPressDate={onPressDate}
+              primaryColor={primaryColor}
+              rightCrop={gd.rightCrop}
+              selectColor={selectColor}
+              selected={gd.selected}
+              textColorOnPrimary={textColorOnPrimary}
+              theme={theme}
+              year={gd.year}
             />
           )
         )}
@@ -327,17 +344,17 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
           styles.monthHeader,
           isHorizontal
             ? {
-                marginTop: monthHeaderSingleMarginTop,
                 marginBottom: monthHeaderSingleMarginBottom,
+                marginTop: monthHeaderSingleMarginTop,
               }
             : null,
         ]}
       >
         <TouchableRipple
+          accessibilityLabel={`${monthName} ${year}`}
+          accessibilityRole="button"
           disabled={!isHorizontal}
           onPress={isHorizontal ? () => onPressYear(year) : undefined}
-          accessibilityRole="button"
-          accessibilityLabel={`${monthName} ${year}`}
           style={[
             styles.yearButton,
             {
@@ -356,6 +373,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
           >
             <Text
               maxFontSizeMultiplier={1.5}
+              selectable={false}
               style={[
                 styles.monthLabel,
                 {
@@ -363,7 +381,6 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
                   color: theme.colors.onSurfaceVariant,
                 },
               ]}
-              selectable={false}
             >
               {monthName} {year}
             </Text>
@@ -373,7 +390,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
                 isHorizontal ? sharedStyles.opacity1 : sharedStyles.opacity0,
               ]}
             >
-              <Icon size={24} color={iconColor} source={iconSource} />
+              <Icon color={iconColor} size={24} source={iconSource} />
             </View>
           </View>
         </TouchableRipple>
@@ -429,17 +446,54 @@ const styles = StyleSheet.create({
   },
   week: {
     flexDirection: 'row',
-    marginBottom: weekMargin,
     height: daySize,
+    marginBottom: weekMargin,
   },
   yearButton: {
     alignSelf: 'flex-start',
   },
   yearButtonInner: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
   },
 })
+
+type VerticalLayout = {
+  gridCount: number[]
+  startAtIndex: number
+  weekPrefix: number[]
+}
+
+const verticalLayoutCache = new Map<string, VerticalLayout>()
+
+function getVerticalLayout(
+  startWeekOnMonday: boolean,
+  startYear?: number,
+  endYear?: number
+): VerticalLayout {
+  const start = startYear ?? defaultStartYear
+  const end = endYear ?? defaultEndYear
+  const today = new Date()
+  const key = `${start}:${end}:${startWeekOnMonday ? 1 : 0}:${today.getFullYear()}-${today.getMonth()}`
+  const cached = verticalLayoutCache.get(key)
+  if (cached) {
+    return cached
+  }
+
+  const startAtIndex = getStartAtIndex(start, end)
+  const total = getTotalMonths(start, end)
+  const gridCount = new Array<number>(total)
+  const weekPrefix = new Array<number>(total + 1)
+  weekPrefix[0] = 0
+  for (let i = 0; i < total; i += 1) {
+    const count = getGridCount(i, startWeekOnMonday, start, end)
+    gridCount[i] = count
+    weekPrefix[i + 1] = weekPrefix[i] + count
+  }
+  const layout = { gridCount, startAtIndex, weekPrefix }
+  verticalLayoutCache.set(key, layout)
+  return layout
+}
 
 const monthGrid = (
   index: number,
@@ -447,7 +501,11 @@ const monthGrid = (
   startYear?: number,
   endYear?: number
 ) => {
-  return Array(getGridCount(index, startWeekOnMonday, startYear, endYear))
+  const layout = getVerticalLayout(startWeekOnMonday, startYear, endYear)
+  const weeks =
+    layout.gridCount[index] ??
+    getGridCount(index, startWeekOnMonday, startYear, endYear)
+  return Array(weeks)
     .fill(null)
     .map((_, weekGrid) => {
       const days = Array(7).fill(null)
@@ -474,29 +532,17 @@ function weeksOffset(
   startYear?: number,
   endYear?: number
 ): number {
-  const dynamicStartAtIndex = getStartAtIndex(startYear, endYear)
-  const dynamicGridCounts = createGridCounts(getTotalMonths(startYear, endYear))
+  const layout = getVerticalLayout(startWeekOnMonday, startYear, endYear)
+  const max = layout.weekPrefix.length - 1
+  const clamped = Math.max(0, Math.min(index, max))
+  return layout.weekPrefix[clamped] - layout.weekPrefix[layout.startAtIndex]
+}
 
-  if (index === dynamicStartAtIndex) {
+export function getHorizontalMonthOffset(index: number, width: number) {
+  if (index < 0) {
     return 0
   }
-  let off = 0
-  if (index > dynamicStartAtIndex) {
-    for (let i = 0; i < index - dynamicStartAtIndex; i++) {
-      const cIndex = dynamicStartAtIndex + i
-      off +=
-        dynamicGridCounts[cIndex] ||
-        getGridCount(cIndex, startWeekOnMonday, startYear, endYear)
-    }
-  } else {
-    for (let i = 0; i < dynamicStartAtIndex - index; i++) {
-      const cIndex = dynamicStartAtIndex - i - 1
-      off -=
-        dynamicGridCounts[cIndex] ||
-        getGridCount(cIndex, startWeekOnMonday, startYear, endYear)
-    }
-  }
-  return off
+  return width * index
 }
 
 export function getIndexFromHorizontalOffset(
@@ -534,11 +580,63 @@ export function getIndexFromVerticalOffset(
   return estimatedIndex
 }
 
-export function getHorizontalMonthOffset(index: number, width: number) {
-  if (index < 0) {
-    return 0
+export function getLocalMonthOffset(
+  visibleIndexes: number[],
+  monthIndex: number,
+  startWeekOnMonday: boolean,
+  startYear?: number,
+  endYear?: number
+): number {
+  let offset = 0
+  for (const visibleIndex of visibleIndexes) {
+    if (visibleIndex === monthIndex) {
+      return offset
+    }
+    offset += getMonthHeight(
+      'vertical',
+      visibleIndex,
+      startWeekOnMonday,
+      startYear,
+      endYear
+    )
   }
-  return width * index
+  return offset
+}
+
+const horizontalMonthChrome =
+  monthHeaderSingleMarginTop + montHeaderHeight + monthHeaderSingleMarginBottom
+
+export function horizontalMonthScrolls(
+  viewportHeight: number,
+  index: number,
+  startWeekOnMonday: boolean,
+  startYear?: number,
+  endYear?: number
+): boolean {
+  const layout = getVerticalLayout(startWeekOnMonday, startYear, endYear)
+  const weeks =
+    layout.gridCount[index] ??
+    getGridCount(index, startWeekOnMonday, startYear, endYear)
+  return weekSize * weeks > viewportHeight - horizontalMonthChrome
+}
+
+export function getMonthHeight(
+  scrollMode: 'horizontal' | 'vertical',
+  index: number,
+  startWeekOnMonday: boolean,
+  startYear?: number,
+  endYear?: number
+): number {
+  const calendarHeight = getCalendarHeaderHeight(scrollMode)
+  const layout = getVerticalLayout(startWeekOnMonday, startYear, endYear)
+  const gc =
+    layout.gridCount[index] ??
+    getGridCount(index, startWeekOnMonday, startYear, endYear)
+
+  const currentMonthHeight = weekSize * gc
+  const extraHeight =
+    scrollMode === 'horizontal' ? monthHeaderSingleHeight : montHeaderHeight
+  return calendarHeight + currentMonthHeight + extraHeight
 }
 
 export function getVerticalMonthsOffset(
@@ -554,24 +652,27 @@ export function getVerticalMonthsOffset(
   const dynamicBeginOffset =
     estimatedMonthHeight * getStartAtIndex(startYear, endYear)
 
-  return (c || 0) + dynamicBeginOffset
+  return c + dynamicBeginOffset
 }
 
-export function getMonthHeight(
-  scrollMode: 'horizontal' | 'vertical',
-  index: number,
+export function getVisibleMonthsHeight(
+  visibleIndexes: number[],
   startWeekOnMonday: boolean,
   startYear?: number,
   endYear?: number
 ): number {
-  const calendarHeight = getCalendarHeaderHeight(scrollMode)
-  const gc = getGridCount(index, startWeekOnMonday, startYear, endYear)
-
-  const currentMonthHeight = weekSize * gc
-  const extraHeight =
-    scrollMode === 'horizontal' ? monthHeaderSingleHeight : montHeaderHeight
-  const c = calendarHeight + currentMonthHeight + extraHeight
-  return c || 0
+  return visibleIndexes.reduce(
+    (sum, visibleIndex) =>
+      sum +
+      getMonthHeight(
+        'vertical',
+        visibleIndex,
+        startWeekOnMonday,
+        startYear,
+        endYear
+      ),
+    0
+  )
 }
 
 export default memo(Month)

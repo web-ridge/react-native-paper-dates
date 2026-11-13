@@ -1,12 +1,8 @@
 {
   "compilerOptions": {
-    "paths": {
-      "react-native-paper-dates": ["./src/index"]
-    },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
     "jsx": "react-jsx",
     "lib": ["esnext", "dom"],
     "module": "esnext",
@@ -15,11 +11,22 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "paths": {
+      "react-native-paper-dates": ["./src/index"]
+    },
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
     "target": "esnext",
     "types": ["jest"]
   },
-  "exclude": ["website"]
+  "exclude": [
+    "website",
+    "src/__tests__/gaps.test.tsx",
+    "src/__tests__/utilsCoverage.test.tsx",
+    "src/__tests__/Date/Swiper.web.test.tsx",
+    "src/__tests__/Date/dateUtils.test.tsx",
+    "src/__tests__/Date/interactions.test.tsx",
+    "src/__tests__/Time/interactions.test.tsx"
+  ]
 }

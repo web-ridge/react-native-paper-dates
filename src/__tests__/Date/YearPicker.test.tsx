@@ -5,11 +5,11 @@ import { defaultEndYear, defaultStartYear } from '../../Date/dateUtils'
 it('renders', async () => {
   await render(
     <YearPicker
+      endYear={defaultEndYear}
+      onPressYear={() => null}
       selectedYear={undefined}
       selectingYear={false}
-      onPressYear={() => null}
       startYear={defaultStartYear}
-      endYear={defaultEndYear}
     />
   )
 })

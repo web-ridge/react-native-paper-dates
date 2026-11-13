@@ -4,19 +4,19 @@ import { getTranslation } from '../translations/utils'
 import { useState } from 'react'
 
 export default function useDateInput({
-  locale,
-  value,
-  validRange,
   inputMode,
+  locale,
   onChange,
   onValidationError,
+  validRange,
+  value,
 }: {
-  onChange: (d: Date) => void
-  locale: undefined | string
-  value: Date | undefined
-  validRange: ValidRangeType | undefined
   inputMode: 'start' | 'end'
+  locale: undefined | string
+  onChange: (d: Date) => void
   onValidationError?: ((error: string | null) => void) | undefined
+  validRange: ValidRangeType | undefined
+  value: Date | undefined
 }) {
   const formatter = useInputFormatter({ locale })
   const inputFormat = useInputFormat({ formatter, locale })

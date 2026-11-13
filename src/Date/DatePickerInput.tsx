@@ -9,11 +9,11 @@ import { defaultStartYear, defaultEndYear } from './dateUtils'
 
 function DatePickerInput(
   {
-    withModal = true,
+    animationType = Platform.select({ web: 'none', default: 'slide' }),
     calendarIcon = 'calendar',
     disableCalendarIcon = false,
-    animationType = Platform.select({ web: 'none', default: 'slide' }),
     presentationStyle = 'overFullScreen',
+    withModal = true,
     ...rest
   }: DatePickerInputProps,
   ref: any
@@ -41,12 +41,13 @@ function DatePickerInput(
       inputButton={
         withModal ? (
           <TextInput.Icon
-            size={rest.iconSize ?? 24}
-            icon={calendarIcon}
-            color={rest.iconColor ?? undefined}
-            forceTextInputFocus={false}
             disabled={rest.disabled || disableCalendarIcon}
+            error={false}
+            icon={calendarIcon}
+            iconColor={rest.iconColor ?? undefined}
+            multiline={false}
             onPress={() => setVisible(true)}
+            size={rest.iconSize ?? 24}
             style={rest.iconStyle as StyleProp<ViewStyle>}
             testID={`${rest.testID || 'date-picker'}-icon-button`}
           />
@@ -54,44 +55,44 @@ function DatePickerInput(
       }
       // eslint-disable-next-line react/no-unstable-nested-components
       modal={({
-        value,
-        locale,
-        inputMode,
-        validRange,
-        saveLabel,
-        saveLabelDisabled,
-        uppercase,
-        startYear,
+        disableStatusBar,
+        disableStatusBarPadding,
         endYear,
         inputEnabled,
-        disableStatusBarPadding,
-        disableStatusBar,
+        inputMode,
+        locale,
+        saveLabel,
+        saveLabelDisabled,
         startWeekOnMonday,
+        startYear,
+        uppercase,
+        validRange,
+        value,
       }) =>
         withModal ? (
           <DatePickerModal
+            animationType={animationType}
             date={value}
-            mode="single"
-            visible={visible}
-            onDismiss={onDismiss}
-            onConfirm={onInnerConfirm}
-            locale={locale}
             dateMode={inputMode}
-            validRange={validRange}
-            saveLabel={saveLabel}
-            saveLabelDisabled={saveLabelDisabled ?? false}
-            uppercase={uppercase}
-            startYear={startYear ?? defaultStartYear}
+            disableStatusBar={disableStatusBar}
+            disableStatusBarPadding={disableStatusBarPadding ?? false}
             endYear={endYear ?? defaultEndYear}
             inputEnabled={inputEnabled}
-            disableStatusBarPadding={disableStatusBarPadding ?? false}
-            disableStatusBar={disableStatusBar}
-            animationType={animationType}
-            presentationStyle={presentationStyle}
             label={rest.label as any}
-            startWeekOnMonday={startWeekOnMonday}
-            withDateFormatInLabel={rest.withDateFormatInLabel}
+            locale={locale}
+            mode="single"
+            onConfirm={onInnerConfirm}
+            onDismiss={onDismiss}
             placeholder={rest.placeholder}
+            presentationStyle={presentationStyle}
+            saveLabel={saveLabel}
+            saveLabelDisabled={saveLabelDisabled ?? false}
+            startWeekOnMonday={startWeekOnMonday}
+            startYear={startYear ?? defaultStartYear}
+            uppercase={uppercase}
+            validRange={validRange}
+            visible={visible}
+            withDateFormatInLabel={rest.withDateFormatInLabel}
           />
         ) : null
       }

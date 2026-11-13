@@ -5,6 +5,7 @@
   },
   "introduction",
   "installation",
+  "migration",
   "localization",
   {
     "type": "divider"

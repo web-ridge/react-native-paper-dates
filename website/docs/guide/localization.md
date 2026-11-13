@@ -49,6 +49,8 @@ registerTranslation('pl', {
   typeInDate: 'Type in date',
   pickDateFromCalendar: 'Pick date from calendar',
   close: 'Close',
+  hour: 'Hour',
+  minute: 'Minute',
 })
 ```
 
@@ -78,6 +80,8 @@ registerTranslation('dynamic', () => {
     typeInDate: translate('Type in date'),
     pickDateFromCalendar: translate('Pick date from calendar'),
     close: translate('Close'),
+    hour: translate('Hour'),
+    minute: translate('Minute'),
   }
 })
 ```

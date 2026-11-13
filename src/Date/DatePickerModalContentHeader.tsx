@@ -14,29 +14,29 @@ import {
 } from './weekdayColumns'
 
 export interface HeaderPickProps {
-  moreLabel?: string
-  label?: string
-  emptyLabel?: string
-  withDateFormatInLabel?: boolean
-  placeholder?: string
-  saveLabel?: string
-  uppercase?: boolean
-  headerSeparator?: string
-  startLabel?: string
-  endLabel?: string
-  editIcon?: string
+  allowEditing?: boolean
   calendarIcon?: string
   closeIcon?: string
-  allowEditing?: boolean
+  editIcon?: string
+  emptyLabel?: string
+  endLabel?: string
+  headerSeparator?: string
+  label?: string
+  moreLabel?: string
+  placeholder?: string
+  saveLabel?: string
+  startLabel?: string
+  uppercase?: boolean
+  withDateFormatInLabel?: boolean
 }
 
 export interface HeaderContentProps extends HeaderPickProps {
-  state: LocalState
-  mode: ModeType
   collapsed: boolean
-  onToggle: () => any
-  locale: string | undefined
   disableWeekDays?: DisableWeekDaysType
+  locale: string | undefined
+  mode: ModeType
+  onToggle: () => any
+  state: LocalState
 }
 
 function getLabel(
@@ -63,15 +63,15 @@ export default function DatePickerModalContentHeader(
   props: HeaderContentProps
 ) {
   const {
-    onToggle,
+    allowEditing,
+    calendarIcon,
     collapsed,
+    disableWeekDays,
+    editIcon,
     mode,
     moreLabel,
+    onToggle,
     uppercase,
-    editIcon,
-    calendarIcon,
-    allowEditing,
-    disableWeekDays,
   } = props
   const theme = useTheme()
   const label = getLabel(props.locale, props.mode, props.label)
@@ -110,16 +110,16 @@ export default function DatePickerModalContentHeader(
       <View style={sharedStyles.root} />
       {isEditingEnabled ? (
         <IconButton
-          icon={collapsed ? finalCollapsedIcon : finalExpandedIcon}
           accessibilityLabel={
             collapsed
               ? getTranslation(props.locale, 'typeInDate')
               : getTranslation(props.locale, 'pickDateFromCalendar')
           }
+          icon={collapsed ? finalCollapsedIcon : finalExpandedIcon}
           iconColor={theme.colors.onSurface}
           onPress={onToggle}
-          testID="react-native-paper-dates-toggle-edit"
           style={[styles.editButton, centerIconOnLastWeekday(disableWeekDays)]}
+          testID="react-native-paper-dates-toggle-edit"
         />
       ) : null}
     </View>
@@ -127,10 +127,10 @@ export default function DatePickerModalContentHeader(
 }
 
 export function HeaderContentSingle({
-  state,
-  emptyLabel = ' ',
   color,
+  emptyLabel = ' ',
   locale,
+  state,
 }: HeaderContentProps & { color: string }) {
   const theme = useTheme()
 
@@ -155,11 +155,11 @@ export function HeaderContentSingle({
 }
 
 export function HeaderContentMulti({
-  state,
-  emptyLabel = ' ',
-  moreLabel = 'more',
   color,
+  emptyLabel = ' ',
   locale,
+  moreLabel = 'more',
+  state,
 }: HeaderContentProps & { color: string; moreLabel: string | undefined }) {
   const theme = useTheme()
 
@@ -195,12 +195,12 @@ export function HeaderContentMulti({
 }
 
 export function HeaderContentRange({
-  locale,
-  state,
-  headerSeparator = '-',
-  startLabel = 'Start',
-  endLabel = 'End',
   color,
+  endLabel = 'End',
+  headerSeparator = '-',
+  locale,
+  startLabel = 'Start',
+  state,
 }: HeaderContentProps & { color: string }) {
   const theme = useTheme()
 
@@ -243,14 +243,14 @@ export function HeaderContentRange({
 
 const styles = StyleSheet.create({
   editButton: {
-    marginTop: 0,
     marginBottom: 0,
     marginStart: 0,
+    marginTop: 0,
   },
   header: {
-    height: 75,
     alignItems: 'center',
     flexDirection: 'row',
+    height: 75,
   },
   headerContentContainer: {
     flexDirection: 'row',

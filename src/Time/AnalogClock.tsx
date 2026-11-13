@@ -4,6 +4,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
+import type { ViewInstance } from 'react-native'
 import { useTheme } from 'react-native-paper'
 import {
   circleSize,
@@ -28,20 +29,20 @@ function returnTrue() {
 }
 
 function AnalogClock({
-  hours,
-  minutes,
   focused,
+  hours,
   is24Hour,
+  minutes,
   onChange,
 }: {
-  hours: number
-  minutes: number
   focused: PossibleClockTypes
+  hours: number
   is24Hour: boolean
+  minutes: number
   onChange: (hoursMinutesAndFocused: {
+    focused?: undefined | PossibleClockTypes
     hours: number
     minutes: number
-    focused?: undefined | PossibleClockTypes
   }) => any
 }) {
   const shortPointer = hours >= 12 && is24Hour
@@ -50,11 +51,8 @@ function AnalogClock({
 
   const { mode } = useContext(DisplayModeContext)
 
-  // used to make pointer shorter if hours are selected and above 12
-  const clockRef = useRef<View | null>(null)
+  const clockRef = useRef<ViewInstance | null>(null)
 
-  // Hooks are nice, sometimes... :-)..
-  // We need the latest values, since the onPointerMove uses a closure to the function
   const hoursRef = useLatest(hours)
   const onChangeRef = useLatest(onChange)
   const minutesRef = useLatest(minutes)
@@ -77,17 +75,10 @@ function AnalogClock({
         let hourTypeFromOffset = getHourTypeFromOffset(x, y, circleSize)
         let hours24AndPM = hours24 && hourTypeFromOffset === hourTypes.pm
 
-        // Avoiding the "24h"
-        // Should be 12h for 12 hours and PM mode
-
         if (hours12AndPm || hours24AndPM) {
           pickedHours += 12
         }
         if ((modeRef.current === 'AM' || hours24) && pickedHours === 12) {
-          pickedHours = 0
-        }
-
-        if (!hours24 && modeRef.current === 'AM' && pickedHours === 12) {
           pickedHours = 0
         }
 
@@ -136,16 +127,17 @@ function AnalogClock({
     <View
       ref={clockRef}
       {...panResponder.panHandlers}
+      // @ts-ignore -> https://github.com/necolas/react-native-web/issues/506
+      cursor={'pointer'}
       style={[
         styles.clock,
         {
           backgroundColor: theme.colors.surfaceVariant,
         },
       ]}
-      // @ts-ignore -> https://github.com/necolas/react-native-web/issues/506
-      cursor={'pointer'}
     >
       <View
+        pointerEvents="none"
         style={[
           styles.line,
           {
@@ -167,15 +159,14 @@ function AnalogClock({
             width: circleSize / 2 - 4 - dynamicSize,
           },
         ]}
-        pointerEvents="none"
       >
         <View
           style={[styles.endPoint, { backgroundColor: theme.colors.primary }]}
         />
       </View>
       <View
-        style={[StyleSheet.absoluteFill, styles.center]}
         pointerEvents="none"
+        style={[StyleSheet.absoluteFill, styles.center]}
       >
         <View
           style={[
@@ -188,7 +179,7 @@ function AnalogClock({
       </View>
       <AnimatedClockSwitcher
         focused={focused}
-        hours={<AnalogClockHours is24Hour={is24Hour} hours={hours} />}
+        hours={<AnalogClockHours hours={hours} is24Hour={is24Hour} />}
         minutes={<AnalogClockMinutes minutes={minutes} />}
       />
     </View>

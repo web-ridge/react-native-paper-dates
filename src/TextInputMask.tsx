@@ -1,8 +1,11 @@
 import {
+  cloneElement,
   ComponentProps,
   forwardRef,
+  isValidElement,
   ReactNode,
   useEffect,
+  useMemo,
   useState,
 } from 'react'
 import { TextInput } from 'react-native-paper'
@@ -19,17 +22,17 @@ function escapeForRegExp(value: string): string {
 
 function TextInputWithMask(
   {
-    inputButton,
-    onChangeText,
-    onChange,
-    value,
-    mask,
     disabled,
+    inputButton,
+    mask,
+    onChange,
+    onChangeText,
+    value,
     ...rest
   }: ComponentProps<typeof TextInput> & {
+    inputButton: ReactNode
     mask: string
     value: string
-    inputButton: ReactNode
   },
   ref: any
 ) {
@@ -39,11 +42,9 @@ function TextInputWithMask(
     setControlledValue(value || '')
   }, [value])
 
-  const onInnerChange = (text: string) => {
+  const maskParser = useMemo(() => {
     const splitCharacter = detectCharacter(mask)
     const maskParts = mask.split(splitCharacter)
-
-    let trimmedText = text.trim()
     const format =
       maskParts[0].toLowerCase() +
       splitCharacter +
@@ -60,6 +61,13 @@ function TextInputWithMask(
       new RegExp(escapeForRegExp(splitCharacter), 'g'),
       (replaceValue ?? '') as string
     )
+    return { match, replace, splitCharacter }
+  }, [mask])
+
+  const onInnerChange = (text: string) => {
+    const { match, replace } = maskParser
+
+    let trimmedText = text.trim()
 
     const isBackSpace = controlledValue.length > trimmedText.length
 
@@ -82,13 +90,17 @@ function TextInputWithMask(
       ref={ref}
       {...rest}
       disabled={disabled}
-      value={controlledValue}
-      onChangeText={onInnerChange}
+      endAccessory={
+        isValidElement(inputButton)
+          ? (props) => cloneElement(inputButton, props)
+          : undefined
+      }
+      maxLength={mask.length}
       onChange={(e) => {
         onChange && onChange(e)
       }}
-      maxLength={mask.length}
-      right={inputButton}
+      onChangeText={onInnerChange}
+      value={controlledValue}
     />
   )
 }

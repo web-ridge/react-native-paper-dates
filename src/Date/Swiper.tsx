@@ -1,23 +1,22 @@
 import { useTheme } from 'react-native-paper'
 import {
   getIndexFromVerticalOffset,
+  getLocalMonthOffset,
   getMonthHeight,
   getVerticalMonthsOffset,
+  getVisibleMonthsHeight,
+  horizontalMonthScrolls,
   montHeaderHeight,
 } from './Month'
-import {
-  getBeginOffset,
-  estimatedMonthHeight,
-  getTotalMonths,
-} from './dateUtils'
+import { getBeginOffset } from './dateUtils'
 import { useLatest } from '../shared/utils'
 import {
   RenderProps,
   SwiperProps,
-  useYearChange,
-  isIndexWithinRange,
-  getMinIndex,
   getMaxIndex,
+  getMinIndex,
+  isIndexWithinRange,
+  useYearChange,
 } from './SwiperUtils'
 import AutoSizer from './AutoSizer'
 import {
@@ -29,22 +28,22 @@ import {
   useRef,
   useState,
 } from 'react'
-import { verticalScrollbarGutter } from './CalendarHeader'
+import { layoutScrollbarWidth } from './CalendarHeader'
 
 const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect
 
 function Swiper({
-  scrollMode,
-  renderItem,
-  renderHeader,
-  renderFooter,
-  selectedYear,
+  endYear,
   initialIndex,
+  initialLayout,
+  renderFooter,
+  renderHeader,
+  renderItem,
+  scrollMode,
+  selectedYear,
   startWeekOnMonday,
   startYear,
-  endYear,
-  initialLayout,
 }: SwiperProps) {
   const isHorizontal = scrollMode === 'horizontal'
 
@@ -53,22 +52,20 @@ function Swiper({
   const onPrev = useCallback(() => {
     setIndex((prev) => {
       const newIndex = prev - 1
-      // Check if the new index is within allowed range
       if (isIndexWithinRange(newIndex, startYear, endYear)) {
         return newIndex
       }
-      return prev // Don't change if outside range
+      return prev
     })
   }, [setIndex, startYear, endYear])
 
   const onNext = useCallback(() => {
     setIndex((prev) => {
       const newIndex = prev + 1
-      // Check if the new index is within allowed range
       if (isIndexWithinRange(newIndex, startYear, endYear)) {
         return newIndex
       }
-      return prev // Don't change if outside range
+      return prev
     })
   }, [setIndex, startYear, endYear])
 
@@ -85,10 +82,10 @@ function Swiper({
       }
     },
     {
-      selectedYear,
       currentIndexRef: indexRef,
-      startYear,
       endYear,
+      selectedYear,
+      startYear,
     }
   )
 
@@ -97,14 +94,13 @@ function Swiper({
       {isHorizontal ? (
         <AutoSizer initialLayout={initialLayout}>
           {({ height }) => {
-            const overflow =
-              getMonthHeight(
-                'horizontal',
-                index,
-                startWeekOnMonday,
-                startYear,
-                endYear
-              ) > height
+            const overflow = horizontalMonthScrolls(
+              height,
+              index,
+              startWeekOnMonday,
+              startYear,
+              endYear
+            )
             return (
               <>
                 {renderItem({
@@ -115,7 +111,7 @@ function Swiper({
                 {renderHeader
                   ? renderHeader({
                       ...renderProps,
-                      endInset: overflow ? verticalScrollbarGutter : 0,
+                      endInset: overflow ? layoutScrollbarWidth() : 0,
                     })
                   : null}
               </>
@@ -128,14 +124,13 @@ function Swiper({
           <AutoSizer initialLayout={initialLayout}>
             {({ width, height }) => (
               <VerticalScroller
-                width={width}
+                endYear={endYear}
                 height={height}
                 initialIndex={initialIndex}
-                estimatedHeight={estimatedMonthHeight}
                 renderItem={renderItem}
                 startWeekOnMonday={startWeekOnMonday}
                 startYear={startYear}
-                endYear={endYear}
+                width={width}
               />
             )}
           </AutoSizer>
@@ -146,33 +141,36 @@ function Swiper({
   )
 }
 
-const visibleArray = (i: number) => {
-  return [i - 2, i - 1, i, i + 1, i + 2]
+const visibleArray = (i: number, startYear?: number, endYear?: number) => {
+  const indexes: number[] = []
+  for (let offset = -2; offset <= 2; offset += 1) {
+    const index = i + offset
+    if (isIndexWithinRange(index, startYear, endYear)) {
+      indexes.push(index)
+    }
+  }
+  return indexes.length ? indexes : [i]
 }
 
 function VerticalScroller({
-  width,
+  endYear,
   height,
   initialIndex,
-  estimatedHeight,
   renderItem,
   startWeekOnMonday,
   startYear,
-  endYear,
+  width,
 }: {
-  renderItem: (renderProps: RenderProps) => any
-  width: number
+  endYear?: number
   height: number
   initialIndex: number
-  estimatedHeight: number
+  renderItem: (renderProps: RenderProps) => any
   startWeekOnMonday: boolean
   startYear?: number
-  endYear?: number
+  width: number
 }) {
-  // Provide default values for startYear and endYear
   const effectiveStartYear = startYear || 1800
   const effectiveEndYear = endYear || 2200
-  // Ensure initial index is within allowed range
   const constrainedInitialIndex = isIndexWithinRange(
     initialIndex,
     effectiveStartYear,
@@ -185,7 +183,7 @@ function VerticalScroller({
       )
 
   const [visibleIndexes, setVisibleIndexes] = useState<number[]>(() =>
-    visibleArray(constrainedInitialIndex)
+    visibleArray(constrainedInitialIndex, effectiveStartYear, effectiveEndYear)
   )
 
   const theme = useTheme()
@@ -193,12 +191,10 @@ function VerticalScroller({
   const parentRef = useRef<HTMLDivElement | null>(null)
 
   useIsomorphicLayoutEffect(() => {
-    const element = parentRef.current
-    if (!element) {
-      return
-    }
+    const element = parentRef.current as HTMLDivElement
     const top =
-      getVerticalMonthsOffset(
+      getLocalMonthOffset(
+        visibleIndexes,
         idx.current,
         startWeekOnMonday,
         effectiveStartYear,
@@ -208,6 +204,7 @@ function VerticalScroller({
     element.scrollTo({
       top,
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [parentRef, idx])
 
   const setVisibleIndexesThrottled = useDebouncedCallback(setVisibleIndexes)
@@ -215,102 +212,114 @@ function VerticalScroller({
   const onScroll = useCallback(
     (e: UIEvent) => {
       const top = e.currentTarget?.scrollTop
-      if (top === 0) {
+      if (top === undefined) {
         return
       }
 
-      const dynamicBeginOffset = getBeginOffset(
-        effectiveStartYear,
-        effectiveEndYear
-      )
-      const offset = top - dynamicBeginOffset
+      const absY =
+        getVerticalMonthsOffset(
+          visibleIndexes[0],
+          startWeekOnMonday,
+          effectiveStartYear,
+          effectiveEndYear
+        ) + top
       const index = getIndexFromVerticalOffset(
-        offset,
+        absY - getBeginOffset(effectiveStartYear, effectiveEndYear),
         startWeekOnMonday,
         effectiveStartYear,
         effectiveEndYear
       )
 
-      // Check if the new index is within allowed range
       if (!isIndexWithinRange(index, effectiveStartYear, effectiveEndYear)) {
         return
       }
 
       if (idx.current !== index) {
+        const nextVisible = visibleArray(
+          index,
+          effectiveStartYear,
+          effectiveEndYear
+        )
+        const nextTop =
+          absY -
+          getVerticalMonthsOffset(
+            nextVisible[0],
+            startWeekOnMonday,
+            effectiveStartYear,
+            effectiveEndYear
+          )
         idx.current = index
-        setVisibleIndexesThrottled(visibleArray(index))
+        setVisibleIndexesThrottled(nextVisible)
+        parentRef.current?.scrollTo({ top: nextTop })
       }
     },
     [
+      effectiveEndYear,
+      effectiveStartYear,
       setVisibleIndexesThrottled,
       startWeekOnMonday,
-      effectiveStartYear,
-      effectiveEndYear,
+      visibleIndexes,
     ]
   )
 
   return (
     <div
+      onScroll={onScroll}
       ref={parentRef}
       // eslint-disable-next-line react-native/no-inline-styles
       style={{
-        height,
-        width,
-        overflow: 'auto',
         colorScheme: theme.dark ? 'dark' : 'light',
+        height,
+        overflow: 'auto',
+        width,
       }}
-      onScroll={onScroll}
     >
       <div
         // eslint-disable-next-line react-native/no-inline-styles
         style={{
-          height:
-            estimatedHeight *
-            getTotalMonths(effectiveStartYear, effectiveEndYear),
+          height: getVisibleMonthsHeight(
+            visibleIndexes,
+            startWeekOnMonday,
+            effectiveStartYear,
+            effectiveEndYear
+          ),
           position: 'relative',
         }}
       >
-        {[0, 1, 2, 3, 4]
-          .map((vi) => {
-            const monthIndex = visibleIndexes[vi]
-
-            if (monthIndex === undefined) {
-              return null
-            }
-
-            return (
-              <div
-                key={vi}
-                // eslint-disable-next-line react-native/no-inline-styles
-                style={{
-                  willChange: 'transform',
-                  transform: `translateY(${getVerticalMonthsOffset(
-                    monthIndex,
-                    startWeekOnMonday,
-                    effectiveStartYear,
-                    effectiveEndYear
-                  )}px)`,
-                  left: 0,
-                  right: 0,
-                  position: 'absolute',
-                  height: getMonthHeight(
-                    'vertical',
-                    monthIndex,
-                    startWeekOnMonday,
-                    effectiveStartYear,
-                    effectiveEndYear
-                  ),
-                }}
-              >
-                {renderItem({
-                  index: monthIndex,
-                  onPrev: empty,
-                  onNext: empty,
-                })}
-              </div>
-            )
-          })
-          .filter((item) => item !== null)}
+        {visibleIndexes.map((monthIndex, vi) => {
+          return (
+            <div
+              key={vi}
+              // eslint-disable-next-line react-native/no-inline-styles
+              style={{
+                height: getMonthHeight(
+                  'vertical',
+                  monthIndex,
+                  startWeekOnMonday,
+                  effectiveStartYear,
+                  effectiveEndYear
+                ),
+                left: 0,
+                position: 'absolute',
+                right: 0,
+                transform: `translateY(${getLocalMonthOffset(
+                  visibleIndexes,
+                  monthIndex,
+                  startWeekOnMonday,
+                  effectiveStartYear,
+                  effectiveEndYear
+                )}px)`,
+                willChange: 'transform',
+              }}
+            >
+              {renderItem({
+                index: monthIndex,
+                onPrev: empty,
+                onNext: empty,
+              })}
+            </div>
+          )
+        })}
       </div>
     </div>
   )
