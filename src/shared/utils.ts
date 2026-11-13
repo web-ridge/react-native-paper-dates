@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import { useWindowDimensions } from 'react-native'
 import { useTheme } from 'react-native-paper'
 import type { Theme } from 'react-native-paper'
@@ -51,12 +51,18 @@ export function useHeaderTextColor() {
 
 export function useTextColorOnPrimary() {
   const theme = useTheme()
-  const isDark = !Color(themeColor(theme.colors.primary)).isLight()
+  const primary = themeColor(theme.colors.primary)
+  const onSurface = themeColor(theme.colors.onSurface)
+  const onPrimary = themeColor(theme.colors.onPrimary)
+  const isThemeDark = theme.dark
 
-  if (isDark && theme.dark) {
-    return themeColor(theme.colors.onSurface)
-  }
-  return themeColor(theme.colors.onPrimary)
+  return useMemo(() => {
+    const isDark = !Color(primary).isLight()
+    if (isDark && isThemeDark) {
+      return onSurface
+    }
+    return onPrimary
+  }, [isThemeDark, onPrimary, onSurface, primary])
 }
 
 export function range(start: number, end: number) {

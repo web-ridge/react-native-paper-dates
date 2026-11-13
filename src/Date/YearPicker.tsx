@@ -8,13 +8,13 @@ import {
 } from 'react-native'
 import { Text, TouchableRipple, useTheme } from 'react-native-paper'
 import { range } from '../shared/utils'
-import { memo, useEffect, useRef } from 'react'
+import { memo, useCallback, useMemo } from 'react'
 import { sharedStyles } from '../shared/styles'
-import { defaultStartYear, defaultEndYear } from './dateUtils'
+import { defaultEndYear, defaultStartYear } from './dateUtils'
 
 const ITEM_HEIGHT = 62
 
-export default function YearPicker({
+function YearPicker({
   endYear,
   onPressYear,
   selectedYear,
@@ -29,22 +29,44 @@ export default function YearPicker({
 }) {
   const theme = useTheme()
 
-  const flatList = useRef<FlatList<number> | null>(null)
-  const years = range(
-    isNaN(startYear) ? defaultStartYear : startYear,
-    isNaN(endYear) ? defaultEndYear : endYear
+  const resolvedStartYear = isNaN(startYear) ? defaultStartYear : startYear
+  const selectedRow = useMemo(() => {
+    if (!selectedYear) {
+      return 0
+    }
+    return Math.max(0, Math.floor((selectedYear - resolvedStartYear) / 3) - 1)
+  }, [resolvedStartYear, selectedYear])
+  const years = useMemo(
+    () => range(resolvedStartYear, isNaN(endYear) ? defaultEndYear : endYear),
+    [endYear, resolvedStartYear]
   )
 
-  // scroll to selected year
-  useEffect(() => {
-    if (flatList.current && selectedYear) {
-      const indexToGo = selectedYear - startYear
-      flatList.current.scrollToOffset({
-        offset: (indexToGo / 3) * ITEM_HEIGHT - ITEM_HEIGHT,
-        animated: false,
-      })
-    }
-  }, [flatList, selectedYear, startYear])
+  // FlatList calls this with the row index when numColumns is 3.
+  const getItemLayout = useCallback(
+    (_: ArrayLike<number> | null | undefined, index: number) => ({
+      index,
+      length: ITEM_HEIGHT,
+      offset: index * ITEM_HEIGHT,
+    }),
+    []
+  )
+
+  const keyExtractor = useCallback((item: number) => `${item}`, [])
+
+  const renderItem = useCallback(
+    ({ item }: { item: number }) => (
+      <Year
+        onPressYear={onPressYear}
+        selected={selectedYear === item}
+        year={item}
+      />
+    ),
+    [onPressYear, selectedYear]
+  )
+
+  const renderScrollComponent = useCallback((sProps: object) => {
+    return <ScrollView {...sProps} />
+  }, [])
 
   return (
     <View
@@ -58,19 +80,12 @@ export default function YearPicker({
     >
       <FlatList<number>
         data={years}
-        keyExtractor={(item) => `${item}`}
+        getItemLayout={getItemLayout}
+        initialScrollIndex={selectedRow}
+        keyExtractor={keyExtractor}
         numColumns={3}
-        ref={flatList}
-        renderItem={({ item }) => (
-          <Year
-            onPressYear={onPressYear}
-            selected={selectedYear === item}
-            year={item}
-          />
-        )}
-        renderScrollComponent={(sProps) => {
-          return <ScrollView {...sProps} />
-        }}
+        renderItem={renderItem}
+        renderScrollComponent={renderScrollComponent}
         style={[
           sharedStyles.root,
           Platform.OS === 'web'
@@ -117,7 +132,7 @@ function YearPure({
               selected
                 ? { color: theme.colors.onPrimary }
                 : { color: theme.colors.onSurfaceVariant },
-              { ...textFont },
+              textFont,
             ]}
           >
             {year}
@@ -156,3 +171,5 @@ const styles = StyleSheet.create({
   },
 })
 const Year = memo(YearPure)
+
+export default memo(YearPicker)

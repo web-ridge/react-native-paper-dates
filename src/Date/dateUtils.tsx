@@ -1,5 +1,4 @@
 import { useCallback, useMemo } from 'react'
-import { useLatest } from '../shared/utils'
 import type { ValidRangeType } from './Calendar'
 
 export type DisableWeekDaysType = number[]
@@ -84,7 +83,16 @@ export function useRangeChecker(validRange: ValidRangeType | undefined) {
   const endUnix =
     validEnd instanceof Date ? dateToUnix(getEndOfDay(validEnd)) : undefined
 
-  const validDisabledDatesRef = useLatest(validRange?.disabledDates)
+  const disabledDates = validRange?.disabledDates
+  const disabledKeys = useMemo(() => {
+    const keys = new Set<string>()
+    if (disabledDates) {
+      for (const disabledDate of disabledDates) {
+        keys.add(calendarDateKey(disabledDate))
+      }
+    }
+    return keys
+  }, [disabledDates])
 
   const isWithinValidRange = useCallback(
     (day: Date) => {
@@ -97,17 +105,25 @@ export function useRangeChecker(validRange: ValidRangeType | undefined) {
   )
 
   const isDisabled = useCallback(
-    (day: Date) => {
-      return validDisabledDatesRef.current
-        ? validDisabledDatesRef.current.some((disabledDate) =>
-            areDatesOnSameDay(disabledDate, day)
-          )
-        : false
-    },
-    [validDisabledDatesRef]
+    (day: Date) => disabledKeys.has(calendarDateKey(day)),
+    [disabledKeys]
   )
 
-  return { isDisabled, isWithinValidRange, validStart, validEnd }
+  return { disabledKeys, isDisabled, isWithinValidRange, validStart, validEnd }
+}
+
+export function adjacentDayKey(
+  year: number,
+  month: number,
+  day: number,
+  delta: number
+): string {
+  const shifted = day + delta
+  if (shifted >= 1 && shifted <= getDaysInMonth({ year, month })) {
+    return calendarDayKey(year, month, shifted)
+  }
+  const overflow = new Date(year, month, shifted)
+  return calendarDateKey(overflow)
 }
 
 export function areDatesOnSameDay(a: Date, b?: Date | null | undefined) {
@@ -120,6 +136,18 @@ export function areDatesOnSameDay(a: Date, b?: Date | null | undefined) {
     a.getMonth() === b.getMonth() &&
     a.getDate() === b.getDate()
   )
+}
+
+export function calendarDateKey(date: Date): string {
+  return calendarDayKey(date.getFullYear(), date.getMonth(), date.getDate())
+}
+
+export function calendarDayKey(
+  year: number,
+  month: number,
+  day: number
+): string {
+  return `${year}-${month}-${day}`
 }
 
 export function isDateBetween(
@@ -173,17 +201,24 @@ export const estimatedMonthHeight = 360
 export const defaultStartYear = 1800
 export const defaultEndYear = 2200
 
+const startAtIndexCache = new Map<string, number>()
+
 // Dynamic calculation functions to replace fixed constants
 export function getStartAtIndex(startYear?: number, _endYear?: number): number {
   const start = startYear || 1800
   const today = new Date()
   const currentYear = today.getFullYear()
+  const currentMonth = today.getMonth()
+  const key = `${start}:${currentYear}-${currentMonth}`
+  const cached = startAtIndexCache.get(key)
+  if (cached !== undefined) {
+    return cached
+  }
 
-  // Calculate months from start year to current year
-  const monthsFromStart = (currentYear - start) * 12 + today.getMonth()
-
-  // Ensure we have enough buffer for the range
-  return Math.max(monthsFromStart, 0)
+  const monthsFromStart = (currentYear - start) * 12 + currentMonth
+  const value = Math.max(monthsFromStart, 0)
+  startAtIndexCache.set(key, value)
+  return value
 }
 
 export function getTotalMonths(startYear?: number, endYear?: number): number {

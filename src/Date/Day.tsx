@@ -1,5 +1,5 @@
-import { Text, TouchableRipple } from 'react-native-paper'
-import { StyleSheet, View } from 'react-native'
+import { Text } from 'react-native-paper'
+import { Pressable, StyleSheet, View } from 'react-native'
 import type { StyleProp, ViewStyle } from 'react-native'
 import DayRange from './DayRange'
 import { daySize } from './dateUtils'
@@ -85,9 +85,8 @@ function Day(props: {
         rightCrop={rightCrop}
         selectColor={selectColor}
       />
-      <TouchableRipple
+      <Pressable
         accessibilityRole="button"
-        borderless={true}
         disabled={disabled}
         onPress={disabled ? undefined : onPress}
         style={[
@@ -112,13 +111,13 @@ function Day(props: {
                     color: finalTextColor,
                   }
                 : undefined,
-              { ...textFont },
+              textFont,
             ]}
           >
             {day}
           </Text>
         </View>
-      </TouchableRipple>
+      </Pressable>
       {dayContent ? (
         <View
           pointerEvents="none"

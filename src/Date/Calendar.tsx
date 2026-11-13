@@ -208,7 +208,87 @@ function Calendar(
     [mode, dateMode, onChangeRef, startDateRef, endDateRef, datesRef]
   )
 
+  const primaryColor = themeColor(theme.colors.primary)
+  const roundness = theme.shapes.corner.extraSmall
   const selectColor = theme.colors.primaryContainer
+  const selectColorValue = themeColor(selectColor)
+  const startWeekOnMondayValue = startWeekOnMonday || false
+
+  const renderHeader = useCallback(
+    ({
+      endInset,
+      onNext,
+      onPrev,
+    }: {
+      endInset?: number
+      onNext: () => any
+      onPrev: () => any
+    }) => (
+      <CalendarHeader
+        disableWeekDays={disableWeekDays}
+        endInset={endInset}
+        locale={locale}
+        onNext={onNext}
+        onPrev={onPrev}
+        scrollMode={scrollMode}
+        startWeekOnMonday={startWeekOnMondayValue}
+      />
+    ),
+    [disableWeekDays, locale, scrollMode, startWeekOnMondayValue]
+  )
+
+  const renderItem = useCallback(
+    ({ index }: { index: number }) => (
+      <Month
+        date={date}
+        dates={dates}
+        dayContent={dayContent}
+        dayContentPosition={dayContentPosition}
+        dayContentStyle={dayContentStyle}
+        disableWeekDays={disableWeekDays}
+        endDate={endDate}
+        endYear={endYear}
+        index={index}
+        key={index}
+        locale={locale}
+        mode={mode}
+        onPressDate={onPressDate}
+        onPressYear={onPressYear}
+        primaryColor={primaryColor}
+        roundness={roundness}
+        scrollMode={scrollMode}
+        selectColor={selectColorValue}
+        selectingYear={selectingYear}
+        startDate={startDate}
+        startWeekOnMonday={startWeekOnMondayValue}
+        startYear={startYear}
+        validRange={validRange}
+      />
+    ),
+    [
+      date,
+      dates,
+      dayContent,
+      dayContentPosition,
+      dayContentStyle,
+      disableWeekDays,
+      endDate,
+      endYear,
+      locale,
+      mode,
+      onPressDate,
+      onPressYear,
+      primaryColor,
+      roundness,
+      scrollMode,
+      selectColorValue,
+      selectingYear,
+      startDate,
+      startWeekOnMondayValue,
+      startYear,
+      validRange,
+    ]
+  )
 
   return (
     <View style={[sharedStyles.root, sharedStyles.minHeightZero]}>
@@ -216,50 +296,14 @@ function Calendar(
         endYear={endYear}
         initialIndex={getInitialIndex(firstDate, startYear, endYear)}
         initialLayout={initialLayout}
-        renderHeader={({ endInset, onNext, onPrev }) => (
-          <CalendarHeader
-            disableWeekDays={disableWeekDays}
-            endInset={endInset}
-            locale={locale}
-            onNext={onNext}
-            onPrev={onPrev}
-            scrollMode={scrollMode}
-            startWeekOnMonday={startWeekOnMonday || false}
-          />
-        )}
-        renderItem={({ index }) => (
-          <Month
-            date={date}
-            dates={dates}
-            dayContent={dayContent}
-            dayContentPosition={dayContentPosition}
-            dayContentStyle={dayContentStyle}
-            disableWeekDays={disableWeekDays}
-            endDate={endDate}
-            endYear={endYear}
-            index={index}
-            key={index}
-            locale={locale}
-            mode={mode}
-            onPressDate={onPressDate}
-            onPressYear={onPressYear}
-            primaryColor={themeColor(theme.colors.primary)}
-            roundness={theme.shapes.corner.extraSmall}
-            scrollMode={scrollMode}
-            selectColor={themeColor(selectColor)}
-            selectingYear={selectingYear}
-            startDate={startDate}
-            startWeekOnMonday={startWeekOnMonday || false}
-            startYear={startYear}
-            validRange={validRange}
-          />
-        )}
+        renderHeader={renderHeader}
+        renderItem={renderItem}
         scrollMode={scrollMode}
         selectedYear={selectedYear}
-        startWeekOnMonday={startWeekOnMonday || false}
+        startWeekOnMonday={startWeekOnMondayValue}
         startYear={startYear}
       />
-      {scrollMode === 'horizontal' ? (
+      {scrollMode === 'horizontal' && selectingYear ? (
         <YearPicker
           endYear={endYear || defaultEndYear}
           onPressYear={onPressYear}

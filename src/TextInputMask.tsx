@@ -5,6 +5,7 @@ import {
   isValidElement,
   ReactNode,
   useEffect,
+  useMemo,
   useState,
 } from 'react'
 import { TextInput } from 'react-native-paper'
@@ -41,11 +42,9 @@ function TextInputWithMask(
     setControlledValue(value || '')
   }, [value])
 
-  const onInnerChange = (text: string) => {
+  const maskParser = useMemo(() => {
     const splitCharacter = detectCharacter(mask)
     const maskParts = mask.split(splitCharacter)
-
-    let trimmedText = text.trim()
     const format =
       maskParts[0].toLowerCase() +
       splitCharacter +
@@ -62,6 +61,13 @@ function TextInputWithMask(
       new RegExp(escapeForRegExp(splitCharacter), 'g'),
       (replaceValue ?? '') as string
     )
+    return { match, replace, splitCharacter }
+  }, [mask])
+
+  const onInnerChange = (text: string) => {
+    const { match, replace } = maskParser
+
+    let trimmedText = text.trim()
 
     const isBackSpace = controlledValue.length > trimmedText.length
 

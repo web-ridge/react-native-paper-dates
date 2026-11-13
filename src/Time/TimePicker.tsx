@@ -92,10 +92,13 @@ function TimePicker({
   const clockWidth =
     inputType === inputTypes.picker ? circleSize + (isLandscape ? 64 : 0) : 0
 
+  const displayModeValue = useMemo(
+    () => ({ mode: displayMode, setMode: setDisplayMode }),
+    [displayMode]
+  )
+
   return (
-    <DisplayModeContext.Provider
-      value={{ mode: displayMode, setMode: setDisplayMode }}
-    >
+    <DisplayModeContext.Provider value={displayModeValue}>
       <View
         style={
           isLandscape

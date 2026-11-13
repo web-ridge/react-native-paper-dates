@@ -1,7 +1,5 @@
 import { render } from '@testing-library/react-native'
 import Calendar from '../../Date/Calendar'
-import { getHorizontalMonthOffset } from '../../Date/Month'
-import { getInitialIndex } from '../../Date/dateUtils'
 
 it('renders Calendar', async () => {
   const fixedDate = new Date('2025-01-15')
@@ -54,7 +52,7 @@ it('starts the month pager on the current month instead of at 0', async () => {
   )
   const pager = root!.queryAll((node) => node.type === 'RCTScrollView')[0]
   expect(pager.props.contentOffset).toEqual({
-    x: getHorizontalMonthOffset(getInitialIndex(fixedDate), 320),
+    x: 320,
     y: 0,
   })
 })

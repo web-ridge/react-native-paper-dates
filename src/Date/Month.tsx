@@ -4,16 +4,24 @@ import Day, { EmptyDay } from './Day'
 
 import {
   addMonths,
+  adjacentDayKey,
   areDatesOnSameDay,
+  calendarDateKey,
+  calendarDayKey,
+  dateToUnix,
   daySize,
+  defaultEndYear,
+  defaultStartYear,
+  DisableWeekDaysType,
   estimatedMonthHeight,
+  getDaysInMonth,
+  getEndOfDay,
   getFirstDayOfMonth,
   getGridCount,
   getRealIndex,
   getStartAtIndex,
-  DisableWeekDaysType,
-  getDaysInMonth,
-  isDateBetween,
+  getStartOfDay,
+  getTotalMonths,
   showWeekDay,
   useRangeChecker,
 } from './dateUtils'
@@ -106,6 +114,15 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
   const textColorOnPrimary = useTextColorOnPrimary()
   const realIndex = getRealIndex(index, startYear, endYear)
   const { isDisabled, isWithinValidRange } = useRangeChecker(validRange)
+  const selectedKeys = useMemo(() => {
+    const keys = new Set<string>()
+    if (dates) {
+      for (const selected of dates) {
+        keys.add(calendarDateKey(selected))
+      }
+    }
+    return keys
+  }, [dates])
 
   const { monthName, month, year } = useMemo(() => {
     const md = addMonths(new Date(), realIndex)
@@ -123,6 +140,10 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
     const daysInMonth = getDaysInMonth({ year, month })
     const dayOfWeek = getFirstDayOfMonth({ year, month, startWeekOnMonday })
     const emptyDays = dayOfWeek
+    const rangeStartUnix = startDate
+      ? dateToUnix(getStartOfDay(startDate))
+      : undefined
+    const rangeEndUnix = endDate ? dateToUnix(getEndOfDay(endDate)) : undefined
 
     return monthGrid(index, startWeekOnMonday, startYear, endYear).map(
       ({ days, weekGrid }) => {
@@ -152,10 +173,12 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
               const selectedStartDay = areDatesOnSameDay(day, startDate)
               const selectedEndDay = areDatesOnSameDay(day, endDate)
               selected = selectedStartDay || selectedEndDay
-              inRange = isDateBetween(day, {
-                startDate,
-                endDate,
-              })
+              const dayUnix = dateToUnix(day)
+              inRange =
+                rangeStartUnix !== undefined &&
+                rangeEndUnix !== undefined &&
+                dayUnix >= rangeStartUnix &&
+                dayUnix <= rangeEndUnix
               if (selectedStartDay) {
                 leftCrop = true
               }
@@ -177,17 +200,14 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
                 inRange = false
               }
             } else if (mode === 'multiple') {
-              const safeDates = dates || []
-              selected = safeDates.some((d) => areDatesOnSameDay(day, d))
+              const dayKey = calendarDayKey(year, month, dayOfMonth)
+              selected = selectedKeys.has(dayKey)
 
-              const yesterday = new Date(year, month, dayOfMonth - 1)
-              const tomorrow = new Date(year, month, dayOfMonth + 1)
-
-              const yesterdaySelected = safeDates.some((d) =>
-                areDatesOnSameDay(d, yesterday)
+              const yesterdaySelected = selectedKeys.has(
+                adjacentDayKey(year, month, dayOfMonth, -1)
               )
-              const tomorrowSelected = safeDates.some((d) =>
-                areDatesOnSameDay(d, tomorrow)
+              const tomorrowSelected = selectedKeys.has(
+                adjacentDayKey(year, month, dayOfMonth, 1)
               )
 
               if (selected) {
@@ -250,19 +270,19 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
       }
     )
   }, [
-    year,
-    month,
+    date,
+    endDate,
+    endYear,
     index,
     isDisabled,
-    mode,
     isWithinValidRange,
+    mode,
+    month,
+    selectedKeys,
     startDate,
-    endDate,
-    dates,
-    date,
     startWeekOnMonday,
     startYear,
-    endYear,
+    year,
   ])
 
   const textFont = theme.fonts.titleSmall
@@ -439,13 +459,54 @@ const styles = StyleSheet.create({
   },
 })
 
+type VerticalLayout = {
+  gridCount: number[]
+  startAtIndex: number
+  weekPrefix: number[]
+}
+
+const verticalLayoutCache = new Map<string, VerticalLayout>()
+
+function getVerticalLayout(
+  startWeekOnMonday: boolean,
+  startYear?: number,
+  endYear?: number
+): VerticalLayout {
+  const start = startYear ?? defaultStartYear
+  const end = endYear ?? defaultEndYear
+  const today = new Date()
+  const key = `${start}:${end}:${startWeekOnMonday ? 1 : 0}:${today.getFullYear()}-${today.getMonth()}`
+  const cached = verticalLayoutCache.get(key)
+  if (cached) {
+    return cached
+  }
+
+  const startAtIndex = getStartAtIndex(start, end)
+  const total = getTotalMonths(start, end)
+  const gridCount = new Array<number>(total)
+  const weekPrefix = new Array<number>(total + 1)
+  weekPrefix[0] = 0
+  for (let i = 0; i < total; i += 1) {
+    const count = getGridCount(i, startWeekOnMonday, start, end)
+    gridCount[i] = count
+    weekPrefix[i + 1] = weekPrefix[i] + count
+  }
+  const layout = { gridCount, startAtIndex, weekPrefix }
+  verticalLayoutCache.set(key, layout)
+  return layout
+}
+
 const monthGrid = (
   index: number,
   startWeekOnMonday: boolean,
   startYear?: number,
   endYear?: number
 ) => {
-  return Array(getGridCount(index, startWeekOnMonday, startYear, endYear))
+  const layout = getVerticalLayout(startWeekOnMonday, startYear, endYear)
+  const weeks =
+    layout.gridCount[index] ??
+    getGridCount(index, startWeekOnMonday, startYear, endYear)
+  return Array(weeks)
     .fill(null)
     .map((_, weekGrid) => {
       const days = Array(7).fill(null)
@@ -472,24 +533,17 @@ function weeksOffset(
   startYear?: number,
   endYear?: number
 ): number {
-  const dynamicStartAtIndex = getStartAtIndex(startYear, endYear)
+  const layout = getVerticalLayout(startWeekOnMonday, startYear, endYear)
+  const max = layout.weekPrefix.length - 1
+  const clamped = Math.max(0, Math.min(index, max))
+  return layout.weekPrefix[clamped] - layout.weekPrefix[layout.startAtIndex]
+}
 
-  if (index === dynamicStartAtIndex) {
+export function getHorizontalMonthOffset(index: number, width: number) {
+  if (index < 0) {
     return 0
   }
-  let off = 0
-  if (index > dynamicStartAtIndex) {
-    for (let i = 0; i < index - dynamicStartAtIndex; i++) {
-      const cIndex = dynamicStartAtIndex + i
-      off += getGridCount(cIndex, startWeekOnMonday, startYear, endYear)
-    }
-  } else {
-    for (let i = 0; i < dynamicStartAtIndex - index; i++) {
-      const cIndex = dynamicStartAtIndex - i - 1
-      off -= getGridCount(cIndex, startWeekOnMonday, startYear, endYear)
-    }
-  }
-  return off
+  return width * index
 }
 
 export function getIndexFromHorizontalOffset(
@@ -527,11 +581,46 @@ export function getIndexFromVerticalOffset(
   return estimatedIndex
 }
 
-export function getHorizontalMonthOffset(index: number, width: number) {
-  if (index < 0) {
-    return 0
+export function getLocalMonthOffset(
+  visibleIndexes: number[],
+  monthIndex: number,
+  startWeekOnMonday: boolean,
+  startYear?: number,
+  endYear?: number
+): number {
+  let offset = 0
+  for (const visibleIndex of visibleIndexes) {
+    if (visibleIndex === monthIndex) {
+      return offset
+    }
+    offset += getMonthHeight(
+      'vertical',
+      visibleIndex,
+      startWeekOnMonday,
+      startYear,
+      endYear
+    )
   }
-  return width * index
+  return offset
+}
+
+export function getMonthHeight(
+  scrollMode: 'horizontal' | 'vertical',
+  index: number,
+  startWeekOnMonday: boolean,
+  startYear?: number,
+  endYear?: number
+): number {
+  const calendarHeight = getCalendarHeaderHeight(scrollMode)
+  const layout = getVerticalLayout(startWeekOnMonday, startYear, endYear)
+  const gc =
+    layout.gridCount[index] ??
+    getGridCount(index, startWeekOnMonday, startYear, endYear)
+
+  const currentMonthHeight = weekSize * gc
+  const extraHeight =
+    scrollMode === 'horizontal' ? monthHeaderSingleHeight : montHeaderHeight
+  return calendarHeight + currentMonthHeight + extraHeight
 }
 
 export function getVerticalMonthsOffset(
@@ -550,20 +639,24 @@ export function getVerticalMonthsOffset(
   return c + dynamicBeginOffset
 }
 
-export function getMonthHeight(
-  scrollMode: 'horizontal' | 'vertical',
-  index: number,
+export function getVisibleMonthsHeight(
+  visibleIndexes: number[],
   startWeekOnMonday: boolean,
   startYear?: number,
   endYear?: number
 ): number {
-  const calendarHeight = getCalendarHeaderHeight(scrollMode)
-  const gc = getGridCount(index, startWeekOnMonday, startYear, endYear)
-
-  const currentMonthHeight = weekSize * gc
-  const extraHeight =
-    scrollMode === 'horizontal' ? monthHeaderSingleHeight : montHeaderHeight
-  return calendarHeight + currentMonthHeight + extraHeight
+  return visibleIndexes.reduce(
+    (sum, visibleIndex) =>
+      sum +
+      getMonthHeight(
+        'vertical',
+        visibleIndex,
+        startWeekOnMonday,
+        startYear,
+        endYear
+      ),
+    0
+  )
 }
 
 export default memo(Month)
