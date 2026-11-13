@@ -5,6 +5,7 @@ import {
   getMonthHeight,
   getVerticalMonthsOffset,
   getVisibleMonthsHeight,
+  horizontalMonthScrolls,
   montHeaderHeight,
 } from './Month'
 import { getBeginOffset } from './dateUtils'
@@ -27,7 +28,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { verticalScrollbarGutter } from './CalendarHeader'
+import { layoutScrollbarWidth } from './CalendarHeader'
 
 const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect
@@ -95,14 +96,13 @@ function Swiper({
       {isHorizontal ? (
         <AutoSizer initialLayout={initialLayout}>
           {({ height }) => {
-            const overflow =
-              getMonthHeight(
-                'horizontal',
-                index,
-                startWeekOnMonday,
-                startYear,
-                endYear
-              ) > height
+            const overflow = horizontalMonthScrolls(
+              height,
+              index,
+              startWeekOnMonday,
+              startYear,
+              endYear
+            )
             return (
               <>
                 {renderItem({
@@ -113,7 +113,7 @@ function Swiper({
                 {renderHeader
                   ? renderHeader({
                       ...renderProps,
-                      endInset: overflow ? verticalScrollbarGutter : 0,
+                      endInset: overflow ? layoutScrollbarWidth() : 0,
                     })
                   : null}
               </>

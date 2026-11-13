@@ -7,12 +7,36 @@ import { getTranslation } from '../translations/utils'
 import { sharedStyles } from '../shared/styles'
 import { memo } from 'react'
 
-/** Space reserved so an overlay header does not paint over a vertical scrollbar. */
+/**
+ * Space a classic scrollbar takes out of the layout. iOS draws its indicator
+ * on top of the content. Web measures the real width: overlay scrollbars
+ * (the usual desktop ones) take none, so a fixed guess would shift the weekday
+ * labels and arrows off the day columns.
+ */
 export const verticalScrollbarGutter = Platform.select({
   ios: 0,
-  web: 16,
+  web: 0,
   default: 14,
 }) as number
+
+let cachedLayoutScrollbarWidth: number | undefined
+
+/** Width a classic scrollbar takes out of layout. Overlay scrollbars measure as 0. */
+export function layoutScrollbarWidth(): number {
+  if (cachedLayoutScrollbarWidth !== undefined) {
+    return cachedLayoutScrollbarWidth
+  }
+  if (typeof document === 'undefined' || !document.body) {
+    return 0
+  }
+  const probe = document.createElement('div')
+  probe.style.cssText =
+    'position:absolute;top:-9999px;width:100px;height:100px;overflow:scroll;visibility:hidden'
+  document.body.appendChild(probe)
+  const width = probe.offsetWidth - probe.clientWidth
+  probe.remove()
+  return (cachedLayoutScrollbarWidth = width > 0 ? width : 0)
+}
 
 const buttonContainerHeight = 56
 const buttonContainerMarginTop = 4

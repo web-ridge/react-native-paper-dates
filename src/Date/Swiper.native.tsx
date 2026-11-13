@@ -12,6 +12,7 @@ import {
   getMonthHeight,
   getVerticalMonthsOffset,
   getVisibleMonthsHeight,
+  horizontalMonthScrolls,
   montHeaderHeight,
 } from './Month'
 
@@ -354,13 +355,13 @@ function SwiperInner({
     visibleIndexes.some(
       (monthIndex) =>
         isIndexWithinRange(monthIndex, startYear, endYear) &&
-        getMonthHeight(
-          scrollMode,
+        horizontalMonthScrolls(
+          height,
           monthIndex,
           startWeekOnMonday,
           startYear,
           endYear
-        ) > height
+        )
     )
 
   useYearChange(

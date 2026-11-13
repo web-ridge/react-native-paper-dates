@@ -32,6 +32,7 @@ import Month, {
   getIndexFromVerticalOffset,
   getMonthHeight,
   getVerticalMonthsOffset,
+  horizontalMonthScrolls,
 } from '../../Date/Month'
 import Swiper from '../../Date/Swiper'
 import YearPicker from '../../Date/YearPicker'
@@ -87,9 +88,14 @@ describe('month offset helpers', () => {
     expect(
       getVerticalMonthsOffset(start - 2, true, 2020, 2030)
     ).toEqual(expect.any(Number))
-    expect(getMonthHeight('horizontal', start, false, 2020, 2030)).toBeGreaterThan(
-      0
-    )
+    const monthHeight = getMonthHeight('horizontal', start, false, 2020, 2030)
+    expect(monthHeight).toBeGreaterThan(0)
+    // The month title sits over the header, so a viewport just shorter than
+    // getMonthHeight still fits the weeks and must not reserve a scrollbar.
+    expect(
+      horizontalMonthScrolls(monthHeight - 1, start, false, 2020, 2030)
+    ).toBe(false)
+    expect(horizontalMonthScrolls(0, start, false, 2020, 2030)).toBe(true)
     expect(getMonthHeight('vertical', start, true, 2020, 2030)).toBeGreaterThan(0)
   })
 })

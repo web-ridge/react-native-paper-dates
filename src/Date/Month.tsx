@@ -604,6 +604,24 @@ export function getLocalMonthOffset(
   return offset
 }
 
+const horizontalMonthChrome =
+  monthHeaderSingleMarginTop + montHeaderHeight + monthHeaderSingleMarginBottom
+
+/** True when the horizontal month's day list is taller than the space under its title. */
+export function horizontalMonthScrolls(
+  viewportHeight: number,
+  index: number,
+  startWeekOnMonday: boolean,
+  startYear?: number,
+  endYear?: number
+): boolean {
+  const layout = getVerticalLayout(startWeekOnMonday, startYear, endYear)
+  const weeks =
+    layout.gridCount[index] ??
+    getGridCount(index, startWeekOnMonday, startYear, endYear)
+  return weekSize * weeks > viewportHeight - horizontalMonthChrome
+}
+
 export function getMonthHeight(
   scrollMode: 'horizontal' | 'vertical',
   index: number,
