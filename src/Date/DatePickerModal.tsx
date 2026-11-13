@@ -96,6 +96,7 @@ export function DatePickerModal(
     (presentationStyle === 'pageSheet' || presentationStyle === 'formSheet')
   const useFormSheet = shouldUseSheet && isLargeScreen
   const isSheet = shouldUseSheet
+  const centeredCard = isLargeScreen && !isSheet
 
   return (
     <View pointerEvents="box-none" style={StyleSheet.absoluteFill}>
@@ -140,7 +141,7 @@ export function DatePickerModal(
           >
             <DatePickerModalContent
               {...rest}
-              disableSafeTop={disableStatusBarPadding}
+              disableSafeTop={Boolean(disableStatusBarPadding) || centeredCard}
               disableStatusBar={disableStatusBar}
               initialLayout={rest.initialLayout ?? rememberedCalendarLayout}
               inputEnabled={inputEnabled}
