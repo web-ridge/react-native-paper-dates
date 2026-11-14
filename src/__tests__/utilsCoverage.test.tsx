@@ -167,6 +167,18 @@ describe('useDateInput', () => {
     expect(onChange).toHaveBeenCalled()
   })
 
+  it('parses a Thai input as a Gregorian date', async () => {
+    const { result, onChange } = await input({ locale: 'th' })
+    expect(result.current.inputFormat).toBe('DD/MM/YYYY')
+    await act(() => {
+      result.current.onChangeText('05/01/2024')
+    })
+    const parsed = onChange.mock.calls.at(-1)?.[0] as Date
+    expect(parsed.getFullYear()).toBe(2024)
+    expect(parsed.getMonth()).toBe(0)
+    expect(parsed.getDate()).toBe(5)
+  })
+
   it('uses the supplied fallback when a locale has no copy', async () => {
     const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined)
     const onValidationError = jest.fn()

@@ -278,8 +278,9 @@ export function getInitialIndex(
 export function useInputFormatter({ locale }: { locale: string | undefined }) {
   return useMemo(() => {
     return new Intl.DateTimeFormat(locale, {
-      month: '2-digit',
+      calendar: 'gregory',
       day: '2-digit',
+      month: '2-digit',
       year: 'numeric',
     })
   }, [locale])

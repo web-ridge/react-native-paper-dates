@@ -38,7 +38,14 @@ export default function useDateInput({
     const year = Number(date.slice(yearIndex, yearIndex + 4))
     const month = Number(date.slice(monthIndex, monthIndex + 2))
 
-    if (Number.isNaN(day) || Number.isNaN(year) || Number.isNaN(month)) {
+    if (
+      dayIndex < 0 ||
+      monthIndex < 0 ||
+      yearIndex < 0 ||
+      Number.isNaN(day) ||
+      Number.isNaN(year) ||
+      Number.isNaN(month)
+    ) {
       const inputError = getTranslation(
         locale,
         'notAccordingToDateFormat',

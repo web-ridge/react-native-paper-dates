@@ -243,5 +243,19 @@ describe('timeUtils', () => {
     expect(formatter.result.current.format(new Date(2020, 9, 1))).toEqual(
       expect.any(String)
     )
+
+    const thaiFormatter = await renderHook(() =>
+      useInputFormatter({ locale: 'th' })
+    )
+    expect(thaiFormatter.result.current.resolvedOptions().calendar).toBe(
+      'gregory'
+    )
+    const thai = await renderHook(() =>
+      useInputFormat({
+        formatter: thaiFormatter.result.current,
+        locale: 'th',
+      })
+    )
+    expect(thai.result.current).toBe('DD/MM/YYYY')
   })
 })
