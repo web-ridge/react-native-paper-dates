@@ -39,8 +39,8 @@ function TimePicker({
   const dimensions = useWindowDimensions()
   const isLandscape = dimensions.width > dimensions.height
 
-  const [displayMode, setDisplayMode] = useState<'AM' | 'PM' | undefined>(
-    undefined
+  const [displayMode, setDisplayMode] = useState<'AM' | 'PM' | undefined>(() =>
+    hours >= 12 ? 'PM' : 'AM'
   )
 
   const is24Hour = useMemo(() => {
@@ -57,18 +57,15 @@ function TimePicker({
   }, [locale, use24HourClock])
 
   useEffect(() => {
-    if (hours >= 12) {
-      setDisplayMode('PM')
-    } else {
-      setDisplayMode('AM')
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    setDisplayMode(hours >= 12 ? 'PM' : 'AM')
+  }, [hours])
 
   const onInnerChange = useCallback<TimeChange>(
     (params) => {
-      params.hours = toHourOutputFormat(params.hours, hours, is24Hour)
-      onChange(params)
+      onChange({
+        ...params,
+        hours: toHourOutputFormat(params.hours, hours, is24Hour),
+      })
     },
     [onChange, hours, is24Hour]
   )

@@ -23,6 +23,7 @@ import {
 import { memo, useCallback, useEffect, useState } from 'react'
 import { sharedStyles } from '../shared/styles'
 import { scrimColor, supportedOrientations } from '../shared/utils'
+import { getTranslation } from '../translations/utils'
 
 export function TimePickerModal({
   animationType = 'none',
@@ -170,7 +171,11 @@ export function TimePickerModal({
               </View>
               <View style={styles.bottom}>
                 <IconButton
-                  accessibilityLabel="toggle keyboard"
+                  accessibilityLabel={getTranslation(
+                    locale,
+                    'toggleKeyboard',
+                    'Toggle keyboard'
+                  )}
                   icon={getTimeInputTypeIcon(inputType, {
                     keyboard: keyboardIcon,
                     picker: clockIcon,

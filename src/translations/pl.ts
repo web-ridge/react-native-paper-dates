@@ -1,22 +1,25 @@
 import type { TranslationsType } from './utils'
 
 const pl: TranslationsType = {
-  save: 'Zapisz',
-  selectSingle: 'Wybierz datę',
-  selectMultiple: 'Wybierz daty',
-  selectRange: 'Wybierz zakres',
-  notAccordingToDateFormat: (inputFormat) =>
-    `Data musi mieć format ${inputFormat}`,
+  am: 'AM',
+  close: 'Zamknij',
+  dateIsDisabled: 'Niedozwolona data',
+  hour: 'Godzina',
+  minute: 'Minuta',
+  mustBeBetween: (startDate, endDate) => `Pomiędzy ${startDate} - ${endDate}`,
   mustBeHigherThan: (date) => `Nie wcześniej niżn ${date}`,
   mustBeLowerThan: (date) => `Nie później niż ${date}`,
-  mustBeBetween: (startDate, endDate) => `Pomiędzy ${startDate} - ${endDate}`,
-  dateIsDisabled: 'Niedozwolona data',
-  previous: 'Poprzedni',
   next: 'Dalej',
-  typeInDate: 'Wpisz datę',
+  notAccordingToDateFormat: (inputFormat) =>
+    `Data musi mieć format ${inputFormat}`,
   pickDateFromCalendar: 'Wybierz datę z kalendarza',
-  close: 'Zamknij',
-  minute: 'Minuta',
-  hour: 'Godzina',
+  pm: 'PM',
+  previous: 'Poprzedni',
+  save: 'Zapisz',
+  selectMultiple: 'Wybierz daty',
+  selectRange: 'Wybierz zakres',
+  selectSingle: 'Wybierz datę',
+  toggleKeyboard: 'Przełącz klawiaturę',
+  typeInDate: 'Wpisz datę',
 }
 export default pl

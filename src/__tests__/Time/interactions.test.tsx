@@ -285,7 +285,7 @@ describe('time picker modal', () => {
         visible
       />
     )
-    await fireEvent.press(modal.getByLabelText('toggle keyboard'))
+    await fireEvent.press(modal.getByLabelText('Toggle keyboard'))
     await fireEvent.press(modal.getByText('OK'))
     await fireEvent.press(modal.getByText('CANCEL'))
     expect(onConfirm).toHaveBeenCalled()

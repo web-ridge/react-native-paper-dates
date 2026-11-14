@@ -1,6 +1,10 @@
 import { render } from '@testing-library/react-native'
+import en from '../../translations/en'
+import { registerTranslation } from '../../translations/utils'
 import { inputTypes } from '../../Time/timeUtils'
 import AmPmSwitcher from '../../Time/AmPmSwitcher'
+
+registerTranslation('en', en)
 
 it('renders AmPmSwitcher', async () => {
   const { toJSON } = await render(

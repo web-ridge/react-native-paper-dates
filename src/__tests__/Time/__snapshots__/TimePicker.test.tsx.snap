@@ -274,7 +274,6 @@ exports[`renders TimePicker 1`] = `
       }
     >
       <View
-        accessibilityComponentType="button"
         accessibilityLabel="AM"
         accessibilityRole="button"
         accessibilityState={
@@ -283,14 +282,8 @@ exports[`renders TimePicker 1`] = `
             "checked": undefined,
             "disabled": true,
             "expanded": undefined,
-            "selected": undefined,
+            "selected": true,
           }
-        }
-        accessibilityTraits={
-          [
-            "button",
-            "disabled",
-          ]
         }
         accessibilityValue={
           {
@@ -383,7 +376,6 @@ exports[`renders TimePicker 1`] = `
         }
       />
       <View
-        accessibilityComponentType="button"
         accessibilityLabel="PM"
         accessibilityRole="button"
         accessibilityState={
@@ -392,10 +384,9 @@ exports[`renders TimePicker 1`] = `
             "checked": undefined,
             "disabled": false,
             "expanded": undefined,
-            "selected": undefined,
+            "selected": false,
           }
         }
-        accessibilityTraits="button"
         accessibilityValue={
           {
             "max": undefined,

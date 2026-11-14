@@ -4,7 +4,6 @@ import {
   areDatesOnSameDay,
   dateToUnix,
   differenceInMonths,
-  createGridCounts,
   getBeginOffset,
   getDaysInMonth,
   getEndOfDay,
@@ -16,7 +15,6 @@ import {
   getStartAtIndex,
   getStartOfDay,
   getTotalMonths,
-  isDateBetween,
   isDateWithinOptionalRange,
   isLeapYear,
   showWeekDay,
@@ -60,24 +58,6 @@ describe('dateUtils', () => {
     expect(areDatesOnSameDay(new Date(2022, 1, 1))).toBeFalsy()
   })
 
-  it('should indicate day is between a date range', () => {
-    expect(
-      isDateBetween(new Date(2022, 5, 1), {
-        startDate: new Date(2022, 1, 1),
-        endDate: new Date(2022, 11, 1),
-      })
-    ).toBeTruthy()
-  })
-
-  it('should indicate day is not between a date range', () => {
-    expect(
-      isDateBetween(new Date(2023, 5, 1), {
-        startDate: new Date(2022, 1, 1),
-        endDate: new Date(2022, 11, 1),
-      })
-    ).toBeFalsy()
-  })
-
   it('should indicate year is a leap year', () => {
     expect(isLeapYear({ year: 2024 })).toBeTruthy()
   })
@@ -116,21 +96,6 @@ describe('dateUtils', () => {
     ).toBeFalsy()
   })
 
-  it('treats a missing range bound as outside the range', () => {
-    expect(
-      isDateBetween(new Date(2022, 1, 1), { endDate: new Date(2022, 2, 1) })
-    ).toBeFalsy()
-    expect(
-      isDateBetween(new Date(2022, 1, 1), { startDate: new Date(2022, 1, 1) })
-    ).toBeFalsy()
-    expect(
-      isDateBetween(new Date(2022, 1, 1), {
-        startDate: new Date(2022, 2, 1),
-        endDate: new Date(2022, 3, 1),
-      })
-    ).toBeFalsy()
-  })
-
   it('knows century leap years and the length of February', () => {
     expect(isLeapYear({ year: 1900 })).toBeFalsy()
     expect(isLeapYear({ year: 2000 })).toBeTruthy()
@@ -163,7 +128,6 @@ describe('dateUtils', () => {
     expect(getTotalMonths(2020, 2021)).toBe(24)
     expect(getBeginOffset(2020, 2030)).toBeGreaterThan(0)
     expect(getRealIndex(getStartAtIndex(2020, 2030), 2020, 2030)).toBe(0)
-    expect(createGridCounts(2)).toEqual([undefined, undefined])
     expect(getGridCount(getStartAtIndex(), false)).toBeGreaterThan(0)
     expect(getGridCount(getStartAtIndex(), false)).toBeGreaterThan(0)
     expect(getInitialIndex(undefined)).toBe(getStartAtIndex())
@@ -189,6 +153,14 @@ describe('dateUtils', () => {
     expect(
       isDateWithinOptionalRange(new Date(2022, 5, 12), { endUnix: end })
     ).toBeTruthy()
+    const epoch = new Date(0)
+    expect(dateToUnix(epoch)).toBe(0)
+    expect(
+      isDateWithinOptionalRange(new Date(-1000), { startUnix: 0 })
+    ).toBeFalsy()
+    expect(isDateWithinOptionalRange(epoch, { startUnix: 0 })).toBeTruthy()
+    expect(isDateWithinOptionalRange(new Date(1000), { endUnix: 0 })).toBeFalsy()
+    expect(isDateWithinOptionalRange(epoch, { endUnix: 0 })).toBeTruthy()
   })
 
   it('checks disabled dates and valid bounds from the range hook', async () => {

@@ -8,16 +8,19 @@ import {
 } from './timeUtils'
 import { DisplayModeContext } from '../contexts/DisplayModeContext'
 import { sharedStyles } from '../shared/styles'
+import { getTranslation } from '../translations/utils'
 
 export default function AmPmSwitcher({
   direction = 'vertical',
   hours,
   inputType,
+  locale,
   onChange,
 }: {
   direction?: 'vertical' | 'horizontal'
   hours: number
   inputType: PossibleInputTypes
+  locale?: string
   onChange: (newHours: number) => void
 }) {
   const theme = useTheme()
@@ -46,7 +49,7 @@ export default function AmPmSwitcher({
     >
       <SwitchButton
         disabled={isAM}
-        label="AM"
+        label={getTranslation(locale, 'am', 'AM')}
         onPress={() => {
           setMode('AM')
           if (hours - 12 >= 0) {
@@ -63,7 +66,7 @@ export default function AmPmSwitcher({
       />
       <SwitchButton
         disabled={!isAM}
-        label="PM"
+        label={getTranslation(locale, 'pm', 'PM')}
         onPress={() => {
           setMode('PM')
           if (hours + 12 <= 24) {
@@ -95,13 +98,9 @@ function SwitchButton({
 
   return (
     <TouchableRipple
-      // @ts-ignore old React Native versions
-      accessibilityComponentType="button"
       accessibilityLabel={label}
       accessibilityRole="button"
-      accessibilityState={{ disabled }}
-      // @ts-ignore old React Native versions
-      accessibilityTraits={disabled ? ['button', 'disabled'] : 'button'}
+      accessibilityState={{ disabled, selected }}
       disabled={disabled}
       onPress={onPress}
       style={sharedStyles.root}

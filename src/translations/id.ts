@@ -1,23 +1,26 @@
 import type { TranslationsType } from './utils'
 
 const id: TranslationsType = {
-  save: 'Simpan',
-  selectSingle: 'Pilih tanggal',
-  selectMultiple: 'Pilih tanggal',
-  selectRange: 'Pilih periode',
-  notAccordingToDateFormat: (inputFormat) =>
-    `Format tanggal harus ${inputFormat}`,
-  mustBeHigherThan: (date) => `Harus lebih besar dari ${date}`,
-  mustBeLowerThan: (date) => `Harus lebih kecil dari ${date}`,
+  am: 'AM',
+  close: 'Tutup',
+  dateIsDisabled: 'Hari tidak diperbolehkan',
+  hour: 'Jam',
+  minute: 'Menit',
   mustBeBetween: (startDate, endDate) =>
     `Harus di antara ${startDate} - ${endDate}`,
-  dateIsDisabled: 'Hari tidak diperbolehkan',
-  previous: 'Sebelumnya',
+  mustBeHigherThan: (date) => `Harus lebih besar dari ${date}`,
+  mustBeLowerThan: (date) => `Harus lebih kecil dari ${date}`,
   next: 'Berikutnya',
-  typeInDate: 'Ketik tanggal',
+  notAccordingToDateFormat: (inputFormat) =>
+    `Format tanggal harus ${inputFormat}`,
   pickDateFromCalendar: 'Pilih tanggal dari kalender',
-  close: 'Tutup',
-  minute: 'Menit',
-  hour: 'Jam',
+  pm: 'PM',
+  previous: 'Sebelumnya',
+  save: 'Simpan',
+  selectMultiple: 'Pilih tanggal',
+  selectRange: 'Pilih periode',
+  selectSingle: 'Pilih tanggal',
+  toggleKeyboard: 'Alihkan keyboard',
+  typeInDate: 'Ketik tanggal',
 }
 export default id

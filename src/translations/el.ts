@@ -1,23 +1,26 @@
 import type { TranslationsType } from './utils'
 
 const el: TranslationsType = {
-  save: 'Αποθηκεύσετε',
-  selectSingle: 'Επιλέξτε ημερομηνία',
-  selectMultiple: 'Επιλέξτε ημερομηνίες',
-  selectRange: 'Επιλέξτε περίοδο',
-  notAccordingToDateFormat: (inputFormat) =>
-    `Η μορφή ημερομηνίας πρέπει να είναι ${inputFormat}`,
-  mustBeHigherThan: (date) => `Πρέπει να είναι αργότερα${date}`,
-  mustBeLowerThan: (date) => `Πρέπει να είναι νωρίτερα τότε ${date}`,
+  am: 'π.μ.',
+  close: 'Κλείσε',
+  dateIsDisabled: 'Ημέρα δεν επιτρέπεται',
+  hour: 'ώρα',
+  minute: 'λεπτό',
   mustBeBetween: (startDate, endDate) =>
     `Πρέπει να είναι μεταξύ ${startDate} - ${endDate}`,
-  dateIsDisabled: 'Ημέρα δεν επιτρέπεται',
-  previous: 'Προηγούμενος',
+  mustBeHigherThan: (date) => `Πρέπει να είναι αργότερα${date}`,
+  mustBeLowerThan: (date) => `Πρέπει να είναι νωρίτερα τότε ${date}`,
   next: 'Επόμενο',
-  typeInDate: 'Πληκτρολογήστε την ημερομηνία',
+  notAccordingToDateFormat: (inputFormat) =>
+    `Η μορφή ημερομηνίας πρέπει να είναι ${inputFormat}`,
   pickDateFromCalendar: 'Επιλέξτε ημερομηνία από το ημερολόγιο',
-  close: 'Κλείσε',
-  minute: 'λεπτό',
-  hour: 'ώρα',
+  pm: 'μ.μ.',
+  previous: 'Προηγούμενος',
+  save: 'Αποθηκεύσετε',
+  selectMultiple: 'Επιλέξτε ημερομηνίες',
+  selectRange: 'Επιλέξτε περίοδο',
+  selectSingle: 'Επιλέξτε ημερομηνία',
+  toggleKeyboard: 'Εναλλαγή πληκτρολογίου',
+  typeInDate: 'Πληκτρολογήστε την ημερομηνία',
 }
 export default el

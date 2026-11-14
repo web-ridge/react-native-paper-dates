@@ -1,23 +1,26 @@
 import type { TranslationsType } from './utils'
 
 const cs: TranslationsType = {
-  save: 'Uložit',
-  selectSingle: 'Vyberte datum',
-  selectMultiple: 'Vyberte data',
-  selectRange: 'Vyberte období',
-  notAccordingToDateFormat: (inputFormat) =>
-    `Formát data musí být ${inputFormat}`,
-  mustBeHigherThan: (date) => `Musí to být později ${date}`,
-  mustBeLowerThan: (date) => `Musí to být dříve ${date}`,
+  am: 'dop.',
+  close: 'Zavřít',
+  dateIsDisabled: 'Den není povolen',
+  hour: 'hodina',
+  minute: 'minuta',
   mustBeBetween: (startDate, endDate) =>
     `Musí být mezi ${startDate} - ${endDate}`,
-  dateIsDisabled: 'Den není povolen',
-  previous: 'Předchozí',
+  mustBeHigherThan: (date) => `Musí to být později ${date}`,
+  mustBeLowerThan: (date) => `Musí to být dříve ${date}`,
   next: 'další  ',
-  typeInDate: 'Zadejte datum',
+  notAccordingToDateFormat: (inputFormat) =>
+    `Formát data musí být ${inputFormat}`,
   pickDateFromCalendar: 'Vyberte datum z kalendáře',
-  close: 'Zavřít',
-  minute: 'minuta',
-  hour: 'hodina',
+  pm: 'odp.',
+  previous: 'Předchozí',
+  save: 'Uložit',
+  selectMultiple: 'Vyberte data',
+  selectRange: 'Vyberte období',
+  selectSingle: 'Vyberte datum',
+  toggleKeyboard: 'Přepnout klávesnici',
+  typeInDate: 'Zadejte datum',
 }
 export default cs

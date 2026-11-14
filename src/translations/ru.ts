@@ -1,23 +1,26 @@
 import type { TranslationsType } from './utils'
 
 const ru: TranslationsType = {
-  save: 'Сохранить',
-  selectSingle: 'Выбор даты',
-  selectMultiple: 'Выбор дат',
-  selectRange: 'Выбор диапазона',
-  notAccordingToDateFormat: (inputFormat) =>
-    `Формат даты должен быть ${inputFormat}`,
-  mustBeHigherThan: (date) => `Должен быть позже, чем ${date}`,
-  mustBeLowerThan: (date) => `Должен быть ранее, чем ${date}`,
-  mustBeBetween: (startDate, endDate) =>
-    `Должен быть между ${startDate} - ${endDate}`,
-  dateIsDisabled: 'День не разрешён',
-  previous: 'Предыдущий',
-  next: 'Следующий',
-  typeInDate: 'Ввод в дате',
-  pickDateFromCalendar: 'Выбор даты из календаря',
+  am: 'ДП',
   close: 'Закрыть',
+  dateIsDisabled: 'День не разрешён',
   hour: 'Час',
   minute: 'Минута',
+  mustBeBetween: (startDate, endDate) =>
+    `Должен быть между ${startDate} - ${endDate}`,
+  mustBeHigherThan: (date) => `Должен быть позже, чем ${date}`,
+  mustBeLowerThan: (date) => `Должен быть ранее, чем ${date}`,
+  next: 'Следующий',
+  notAccordingToDateFormat: (inputFormat) =>
+    `Формат даты должен быть ${inputFormat}`,
+  pickDateFromCalendar: 'Выбор даты из календаря',
+  pm: 'ПП',
+  previous: 'Предыдущий',
+  save: 'Сохранить',
+  selectMultiple: 'Выбор дат',
+  selectRange: 'Выбор диапазона',
+  selectSingle: 'Выбор даты',
+  toggleKeyboard: 'Переключить клавиатуру',
+  typeInDate: 'Ввод в дате',
 }
 export default ru

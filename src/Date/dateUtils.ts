@@ -147,22 +147,6 @@ export function calendarDayKey(
   return `${year}-${month}-${day}`
 }
 
-export function isDateBetween(
-  date: Date,
-  {
-    startDate,
-    endDate,
-  }: {
-    startDate?: Date | null | undefined
-    endDate?: Date | null | undefined
-  }
-): boolean {
-  if (!startDate || !endDate) {
-    return false
-  }
-  return date <= endDate && date >= startDate
-}
-
 export function isDateWithinOptionalRange(
   date: Date,
   {
@@ -171,11 +155,11 @@ export function isDateWithinOptionalRange(
   }: { startUnix: number | undefined; endUnix: number | undefined }
 ) {
   const dateUnix = dateToUnix(date)
-  if (startUnix && dateUnix < startUnix) {
+  if (startUnix !== undefined && dateUnix < startUnix) {
     return false
   }
 
-  if (endUnix && dateUnix > endUnix) {
+  if (endUnix !== undefined && dateUnix > endUnix) {
     return false
   }
 
@@ -218,10 +202,6 @@ export function getTotalMonths(startYear?: number, endYear?: number): number {
 
 export function getBeginOffset(startYear?: number, endYear?: number): number {
   return estimatedMonthHeight * getStartAtIndex(startYear, endYear)
-}
-
-export function createGridCounts(count: number): Array<number | undefined> {
-  return new Array<number | undefined>(count)
 }
 
 export function getGridCount(

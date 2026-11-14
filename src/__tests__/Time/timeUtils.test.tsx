@@ -18,19 +18,21 @@ const defaultInputTypeIcons = {
 }
 
 describe('timeUtils', () => {
-  it('should return "am" hour type, for hour between 0 and 12', () => {
-    for (let i = 0; i < 13; i++) {
-      expect(getHourType(i)).toMatch(hourTypes.am)
+  it('returns am from midnight through 11', () => {
+    for (let i = 0; i < 12; i++) {
+      expect(getHourType(i)).toBe(hourTypes.am)
     }
   })
 
-  it('should return "pm" hour type, for hour between 12 and 24', () => {
-    for (let i = 13; i < 25; i++) {
-      expect(getHourType(i)).toMatch(hourTypes.pm)
+  it('returns pm from noon through 23', () => {
+    for (let i = 12; i < 24; i++) {
+      expect(getHourType(i)).toBe(hourTypes.pm)
     }
   })
 
   it('should return undefined hour type, for invalid hour', () => {
+    expect(getHourType(-1)).toBeUndefined()
+    expect(getHourType(24)).toBeUndefined()
     expect(getHourType(26)).toBeUndefined()
   })
 

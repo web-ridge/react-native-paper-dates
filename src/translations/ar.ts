@@ -1,23 +1,26 @@
 import type { TranslationsType } from './utils'
 
 const ar: TranslationsType = {
-  save: 'حفظ',
-  selectSingle: 'حدد تاريخ',
-  selectMultiple: 'حدد التواريخ',
-  selectRange: 'حدد الفترة',
-  notAccordingToDateFormat: (inputFormat: string) =>
-    `يجب أن يكون تنسيق التاريخ ${inputFormat}`,
-  mustBeHigherThan: (date) => `يجب أن يكون بعد  ${date}`,
-  mustBeLowerThan: (date) => `يجب أن يكون قبل  ${date}`,
-  mustBeBetween: (startDate, endDate) =>
-    `يجب أن يكون بين ${startDate} - ${endDate}`,
-  dateIsDisabled: 'اليوم غير مسموح به',
-  previous: 'السابق',
-  next: 'التالي',
-  typeInDate: 'اكتب التاريخ',
-  pickDateFromCalendar: 'اختر التاريخ من التقويم',
+  am: 'ص',
   close: 'أغلق',
+  dateIsDisabled: 'اليوم غير مسموح به',
   hour: 'ساعة',
   minute: 'دقيقة',
+  mustBeBetween: (startDate, endDate) =>
+    `يجب أن يكون بين ${startDate} - ${endDate}`,
+  mustBeHigherThan: (date) => `يجب أن يكون بعد  ${date}`,
+  mustBeLowerThan: (date) => `يجب أن يكون قبل  ${date}`,
+  next: 'التالي',
+  notAccordingToDateFormat: (inputFormat: string) =>
+    `يجب أن يكون تنسيق التاريخ ${inputFormat}`,
+  pickDateFromCalendar: 'اختر التاريخ من التقويم',
+  pm: 'م',
+  previous: 'السابق',
+  save: 'حفظ',
+  selectMultiple: 'حدد التواريخ',
+  selectRange: 'حدد الفترة',
+  selectSingle: 'حدد تاريخ',
+  toggleKeyboard: 'تبديل لوحة المفاتيح',
+  typeInDate: 'اكتب التاريخ',
 }
 export default ar

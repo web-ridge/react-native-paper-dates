@@ -1,23 +1,26 @@
 import type { TranslationsType } from './utils'
 
 const de: TranslationsType = {
-  save: 'Speichern',
-  selectSingle: 'Wähle Datum',
-  selectMultiple: 'Wähle Daten',
-  selectRange: 'Wähle Zeitspanne',
-  notAccordingToDateFormat: (inputFormat) =>
-    `Das Format sollte ${inputFormat} sein`,
-  mustBeHigherThan: (date) => `Muss nach dem ${date} sein`,
-  mustBeLowerThan: (date) => `Muss vor dem ${date} sein`,
+  am: 'AM',
+  close: 'Schliessen',
+  dateIsDisabled: 'Datum nicht wählbar',
+  hour: 'Stunde',
+  minute: 'Minute',
   mustBeBetween: (startDate, endDate) =>
     `Muss in dieser Zeitspanne liegen ${startDate} - ${endDate}`,
-  dateIsDisabled: 'Datum nicht wählbar',
-  previous: 'Vorheriges',
+  mustBeHigherThan: (date) => `Muss nach dem ${date} sein`,
+  mustBeLowerThan: (date) => `Muss vor dem ${date} sein`,
   next: 'Nächstes',
-  typeInDate: 'Datum eingeben',
+  notAccordingToDateFormat: (inputFormat) =>
+    `Das Format sollte ${inputFormat} sein`,
   pickDateFromCalendar: 'Datum vom Kalender auswählen',
-  close: 'Schliessen',
-  minute: 'Minute',
-  hour: 'Stunde',
+  pm: 'PM',
+  previous: 'Vorheriges',
+  save: 'Speichern',
+  selectMultiple: 'Wähle Daten',
+  selectRange: 'Wähle Zeitspanne',
+  selectSingle: 'Wähle Datum',
+  toggleKeyboard: 'Tastatur umschalten',
+  typeInDate: 'Datum eingeben',
 }
 export default de

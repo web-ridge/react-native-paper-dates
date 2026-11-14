@@ -1,22 +1,25 @@
 import type { TranslationsType } from './utils'
 
 const zh: TranslationsType = {
-  save: '保存',
-  selectSingle: '选择日期',
-  selectMultiple: '选择多个日期',
-  selectRange: '选择期间',
-  notAccordingToDateFormat: (inputFormat) => `日期格式必须是 ${inputFormat}`,
-  mustBeHigherThan: (date) => `必须晚于 ${date}`,
-  mustBeLowerThan: (date) => `必须早于 ${date}`,
-  mustBeBetween: (startDate, endDate) =>
-    `必须在 ${startDate} - ${endDate} 之间`,
-  dateIsDisabled: '日期不可选',
-  previous: '上一个',
-  next: '下一个',
-  typeInDate: '输入日期',
-  pickDateFromCalendar: '从日历中选择日期',
+  am: '上午',
   close: '关闭',
+  dateIsDisabled: '日期不可选',
   hour: '小时',
   minute: '分钟',
+  mustBeBetween: (startDate, endDate) =>
+    `必须在 ${startDate} - ${endDate} 之间`,
+  mustBeHigherThan: (date) => `必须晚于 ${date}`,
+  mustBeLowerThan: (date) => `必须早于 ${date}`,
+  next: '下一个',
+  notAccordingToDateFormat: (inputFormat) => `日期格式必须是 ${inputFormat}`,
+  pickDateFromCalendar: '从日历中选择日期',
+  pm: '下午',
+  previous: '上一个',
+  save: '保存',
+  selectMultiple: '选择多个日期',
+  selectRange: '选择期间',
+  selectSingle: '选择日期',
+  toggleKeyboard: '切换键盘',
+  typeInDate: '输入日期',
 }
 export default zh

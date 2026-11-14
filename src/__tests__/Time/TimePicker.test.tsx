@@ -20,3 +20,39 @@ it('renders TimePicker', async () => {
 
   expect(toJSON()).toMatchSnapshot()
 })
+
+it('follows a later hours value onto PM', async () => {
+  const view = await render(
+    <TimePicker
+      focused="hours"
+      hours={8}
+      inputType="keyboard"
+      locale="en"
+      minutes={0}
+      onChange={() => null}
+      onFocusInput={() => null}
+      use24HourClock={false}
+    />
+  )
+  expect(view.getByLabelText('AM')).toHaveProp(
+    'accessibilityState',
+    expect.objectContaining({ disabled: true, selected: true })
+  )
+
+  await view.rerender(
+    <TimePicker
+      focused="hours"
+      hours={15}
+      inputType="keyboard"
+      locale="en"
+      minutes={0}
+      onChange={() => null}
+      onFocusInput={() => null}
+      use24HourClock={false}
+    />
+  )
+  expect(view.getByLabelText('PM')).toHaveProp(
+    'accessibilityState',
+    expect.objectContaining({ disabled: true, selected: true })
+  )
+})

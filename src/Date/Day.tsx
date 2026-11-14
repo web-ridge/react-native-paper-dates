@@ -6,7 +6,7 @@ import { daySize } from './dateUtils'
 
 import type { PaperTheme } from '../shared/utils'
 import type { DayContentPosition, DayContentRenderer } from './types'
-import { memo, useCallback } from 'react'
+import { memo, useCallback, useMemo } from 'react'
 
 function EmptyDayPure() {
   return <View style={styles.empty} />
@@ -23,6 +23,7 @@ function Day(props: {
   inRange: boolean
   isToday: boolean
   leftCrop: boolean
+  locale?: string
   month: number
   onPressDate: (date: Date) => void
   primaryColor: string
@@ -42,12 +43,14 @@ function Day(props: {
     inRange,
     isToday,
     leftCrop,
+    locale,
     month,
     onPressDate,
     primaryColor,
     rightCrop,
     selectColor,
     selected,
+    textColorOnPrimary,
     theme,
     year,
   } = props
@@ -57,11 +60,21 @@ function Day(props: {
     onPressDate(new Date(year, month, day))
   }, [onPressDate, year, month, day])
 
+  const accessibilityLabel = useMemo(
+    () =>
+      new Intl.DateTimeFormat(locale, {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      }).format(new Date(year, month, day)),
+    [day, locale, month, year]
+  )
+
   let baseTextColor
   let finalTextColor
 
   if (selected) {
-    baseTextColor = theme.colors.onPrimary
+    baseTextColor = textColorOnPrimary
   } else if (inRange && theme.dark) {
     baseTextColor = theme.colors.onPrimaryContainer
   } else {
@@ -85,7 +98,9 @@ function Day(props: {
         selectColor={selectColor}
       />
       <Pressable
+        accessibilityLabel={accessibilityLabel}
         accessibilityRole="button"
+        accessibilityState={{ disabled, selected }}
         disabled={disabled}
         onPress={disabled ? undefined : onPress}
         style={[

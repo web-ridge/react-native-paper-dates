@@ -179,6 +179,7 @@ function TimeInputs({
             direction="vertical"
             hours={hours}
             inputType={inputType}
+            locale={locale}
             onChange={onChangeHours}
           />
         </>
@@ -195,6 +196,7 @@ function TimeInputs({
             direction="horizontal"
             hours={hours}
             inputType={inputType}
+            locale={locale}
             onChange={onChangeHours}
           />
         </View>

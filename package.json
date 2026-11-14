@@ -70,7 +70,6 @@
     "react": "*",
     "react-native": "*",
     "react-native-paper": ">=6.0.0-alpha.0 <7",
-    "react-native-reanimated": ">=4.3.0",
     "react-native-safe-area-context": "*"
   },
   "react-native": "src/index",

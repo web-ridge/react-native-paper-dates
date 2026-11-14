@@ -20,6 +20,25 @@ const defaultProps = {
   year: 2025,
 }
 
+it('uses the contrast color and exposes the date when selected', async () => {
+  await render(
+    <Day
+      {...defaultProps}
+      locale="en-US"
+      selected
+      textColorOnPrimary="#123456"
+    />
+  )
+  expect(screen.getByText('15')).toHaveStyle({ color: '#123456' })
+  const button = screen.getByTestId('react-native-paper-dates-day-2025-0-15')
+  expect(button).toHaveProp(
+    'accessibilityState',
+    expect.objectContaining({ disabled: false, selected: true })
+  )
+  expect(button.props.accessibilityLabel).toContain('2025')
+  expect(button.props.accessibilityLabel).toContain('15')
+})
+
 it('renders no day content by default', async () => {
   await render(<Day {...defaultProps} />)
   expect(screen.queryByTestId('day-content')).toBeNull()

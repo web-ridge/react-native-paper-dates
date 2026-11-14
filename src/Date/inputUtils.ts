@@ -38,6 +38,16 @@ export default function useDateInput({
     const year = Number(date.slice(yearIndex, yearIndex + 4))
     const month = Number(date.slice(monthIndex, monthIndex + 2))
 
+    const rejectFormat = () => {
+      const inputError = getTranslation(
+        locale,
+        'notAccordingToDateFormat',
+        () => 'notAccordingToDateFormat'
+      )(inputFormat)
+      setError(inputError)
+      onValidationError && onValidationError(inputError)
+    }
+
     if (
       dayIndex < 0 ||
       monthIndex < 0 ||
@@ -46,13 +56,7 @@ export default function useDateInput({
       Number.isNaN(year) ||
       Number.isNaN(month)
     ) {
-      const inputError = getTranslation(
-        locale,
-        'notAccordingToDateFormat',
-        () => 'notAccordingToDateFormat'
-      )(inputFormat)
-      setError(inputError)
-      onValidationError && onValidationError(inputError)
+      rejectFormat()
       return
     }
 
@@ -60,6 +64,15 @@ export default function useDateInput({
       inputMode === 'end'
         ? new Date(year, month - 1, day, 23, 59, 59)
         : new Date(year, month - 1, day)
+
+    if (
+      finalDate.getFullYear() !== year ||
+      finalDate.getMonth() !== month - 1 ||
+      finalDate.getDate() !== day
+    ) {
+      rejectFormat()
+      return
+    }
 
     if (isDisabled(finalDate)) {
       const inputError = getTranslation(locale, 'dateIsDisabled')

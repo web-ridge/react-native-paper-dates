@@ -1,20 +1,23 @@
 export type TranslationsType = {
-  selectSingle: string
-  selectMultiple: string
-  selectRange: string
-  save: string
-  notAccordingToDateFormat: (inputFormat: string) => string
-  mustBeHigherThan: (date: string) => string
-  mustBeLowerThan: (date: string) => string
-  mustBeBetween: (startDate: string, endDate: string) => string
-  dateIsDisabled: string
-  previous: string
-  next: string
-  typeInDate: string
-  pickDateFromCalendar: string
+  am: string
   close: string
+  dateIsDisabled: string
   hour: string
   minute: string
+  mustBeBetween: (startDate: string, endDate: string) => string
+  mustBeHigherThan: (date: string) => string
+  mustBeLowerThan: (date: string) => string
+  next: string
+  notAccordingToDateFormat: (inputFormat: string) => string
+  pickDateFromCalendar: string
+  pm: string
+  previous: string
+  save: string
+  selectMultiple: string
+  selectRange: string
+  selectSingle: string
+  toggleKeyboard: string
+  typeInDate: string
 }
 
 export type TranslationResolver = (

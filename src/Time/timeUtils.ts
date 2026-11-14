@@ -30,10 +30,10 @@ export const hourTypes: HourTypeMap = {
 }
 
 export function getHourType(hours: number): PossibleHourTypes | undefined {
-  if (hours >= 0 && hours <= 12) {
+  if (hours >= 0 && hours < 12) {
     return hourTypes.am
   }
-  if (hours > 12 && hours <= 24) {
+  if (hours >= 12 && hours < 24) {
     return hourTypes.pm
   }
   return undefined

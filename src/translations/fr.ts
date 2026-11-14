@@ -1,23 +1,26 @@
 import type { TranslationsType } from './utils'
 
 const fr: TranslationsType = {
-  save: 'Enregistrer',
-  selectSingle: 'Sélectionner une date',
-  selectMultiple: 'Sélectionner plusieurs dates',
-  selectRange: 'Sélectionner une période',
-  notAccordingToDateFormat: (inputFormat) =>
-    `La date doit être au format ${inputFormat}`,
-  mustBeHigherThan: (date) => `La date doit être après le ${date}`,
-  mustBeLowerThan: (date) => `La date doit être avant le ${date}`,
+  am: 'AM',
+  close: 'Fermer',
+  dateIsDisabled: "Le jour n'est pas autorisé",
+  hour: 'heures',
+  minute: 'minutes',
   mustBeBetween: (startDate, endDate) =>
     `La date doit être entre le ${startDate} et le ${endDate}`,
-  dateIsDisabled: "Le jour n'est pas autorisé",
-  previous: 'Précédent',
+  mustBeHigherThan: (date) => `La date doit être après le ${date}`,
+  mustBeLowerThan: (date) => `La date doit être avant le ${date}`,
   next: 'Suivant',
-  typeInDate: 'Entrer la date',
+  notAccordingToDateFormat: (inputFormat) =>
+    `La date doit être au format ${inputFormat}`,
   pickDateFromCalendar: 'Sélectionner une date dans le calendrier',
-  close: 'Fermer',
-  minute: 'minutes',
-  hour: 'heures',
+  pm: 'PM',
+  previous: 'Précédent',
+  save: 'Enregistrer',
+  selectMultiple: 'Sélectionner plusieurs dates',
+  selectRange: 'Sélectionner une période',
+  selectSingle: 'Sélectionner une date',
+  toggleKeyboard: 'Basculer le clavier',
+  typeInDate: 'Entrer la date',
 }
 export default fr

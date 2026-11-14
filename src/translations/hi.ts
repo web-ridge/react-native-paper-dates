@@ -1,23 +1,26 @@
 import type { TranslationsType } from './utils'
 
 const hi: TranslationsType = {
-  save: 'जमा करें',
-  selectSingle: 'तारीख़ चुनें',
-  selectMultiple: 'तारीख़ें चुनें',
-  selectRange: 'अवधि चुनें',
-  notAccordingToDateFormat: (inputFormat) =>
-    `तारीख़ का प्रारूप ${inputFormat} होना चाहिए`,
-  mustBeHigherThan: (date) => `${date} के बाद होना चाहिए`,
-  mustBeLowerThan: (date) => `${date} से पहले होना चाहिए`,
+  am: 'AM',
+  close: 'बंद करें',
+  dateIsDisabled: 'दिन की अनुमति नहीं है',
+  hour: 'घंटा',
+  minute: 'मिनट',
   mustBeBetween: (startDate, endDate) =>
     `${startDate} - ${endDate} के बीच होना चाहिए`,
-  dateIsDisabled: 'दिन की अनुमति नहीं है',
-  previous: 'पिछला',
+  mustBeHigherThan: (date) => `${date} के बाद होना चाहिए`,
+  mustBeLowerThan: (date) => `${date} से पहले होना चाहिए`,
   next: 'अगला',
-  typeInDate: 'तारीख़ लिखें',
+  notAccordingToDateFormat: (inputFormat) =>
+    `तारीख़ का प्रारूप ${inputFormat} होना चाहिए`,
   pickDateFromCalendar: 'कैलेंडर से तारीख़ चुनें',
-  close: 'बंद करें',
-  minute: 'मिनट',
-  hour: 'घंटा',
+  pm: 'PM',
+  previous: 'पिछला',
+  save: 'जमा करें',
+  selectMultiple: 'तारीख़ें चुनें',
+  selectRange: 'अवधि चुनें',
+  selectSingle: 'तारीख़ चुनें',
+  toggleKeyboard: 'कीबोर्ड बदलें',
+  typeInDate: 'तारीख़ लिखें',
 }
 export default hi

@@ -157,6 +157,31 @@ describe('useDateInput', () => {
     expect(endOnly.onChange).toHaveBeenCalled()
   })
 
+  it('rejects a calendar day that does not exist', async () => {
+    const { result, onChange } = await input()
+    const format = result.current.inputFormat
+    await act(() => {
+      result.current.onChangeText(fill(format, '2022', '02', '31'))
+    })
+    expect(onChange).not.toHaveBeenCalled()
+    expect(result.current.error).toEqual(expect.any(String))
+
+    await act(() => {
+      result.current.onChangeText(fill(format, '2022', '02', '29'))
+    })
+    expect(onChange).not.toHaveBeenCalled()
+
+    await act(() => {
+      result.current.onChangeText(fill(format, '2024', '02', '29'))
+    })
+    expect(onChange).toHaveBeenCalled()
+    const parsed = onChange.mock.calls.at(-1)?.[0] as Date
+    expect(parsed.getFullYear()).toBe(2024)
+    expect(parsed.getMonth()).toBe(1)
+    expect(parsed.getDate()).toBe(29)
+    expect(result.current.error).toBeNull()
+  })
+
   it('reads a portuguese year token', async () => {
     const { result, onChange } = await input({ locale: 'pt' })
     await act(() => {

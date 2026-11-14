@@ -308,6 +308,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
               isToday={gd.isToday}
               key={gd.dayIndex}
               leftCrop={gd.leftCrop}
+              locale={locale}
               month={gd.month}
               onPressDate={onPressDate}
               primaryColor={primaryColor}
