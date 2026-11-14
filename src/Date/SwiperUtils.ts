@@ -66,6 +66,28 @@ export function isIndexWithinRange(
   return index >= minIndex && index <= maxIndex
 }
 
+export const verticalMonthOverscan = 6
+export const verticalWindowEdge = 2
+
+export function getVerticalWindow(
+  index: number,
+  startYear?: number,
+  endYear?: number
+): number[] {
+  const indexes: number[] = []
+  for (
+    let offset = -verticalMonthOverscan;
+    offset <= verticalMonthOverscan;
+    offset += 1
+  ) {
+    const monthIndex = index + offset
+    if (isIndexWithinRange(monthIndex, startYear, endYear)) {
+      indexes.push(monthIndex)
+    }
+  }
+  return indexes.length ? indexes : [index]
+}
+
 export function useYearChange(
   onChange: (index: number | undefined) => void,
   {

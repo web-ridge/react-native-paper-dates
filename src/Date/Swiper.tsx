@@ -1,12 +1,11 @@
 import { useTheme } from 'react-native-paper'
 import {
   getIndexFromVerticalOffset,
-  getLocalMonthOffset,
   getMonthHeight,
+  getVerticalListMetrics,
+  getVerticalMonthScrollY,
   getVerticalMonthsOffset,
-  getVisibleMonthsHeight,
   horizontalMonthScrolls,
-  montHeaderHeight,
 } from './Month'
 import { getBeginOffset } from './dateUtils'
 import { useLatest } from '../shared/utils'
@@ -15,8 +14,10 @@ import {
   SwiperProps,
   getMaxIndex,
   getMinIndex,
+  getVerticalWindow,
   isIndexWithinRange,
   useYearChange,
+  verticalWindowEdge,
 } from './SwiperUtils'
 import AutoSizer from './AutoSizer'
 import {
@@ -141,15 +142,16 @@ function Swiper({
   )
 }
 
-const visibleArray = (i: number, startYear?: number, endYear?: number) => {
-  const indexes: number[] = []
-  for (let offset = -2; offset <= 2; offset += 1) {
-    const index = i + offset
-    if (isIndexWithinRange(index, startYear, endYear)) {
-      indexes.push(index)
+function sameIndexes(left: number[], right: number[]) {
+  if (left.length !== right.length) {
+    return false
+  }
+  for (let i = 0; i < left.length; i += 1) {
+    if (left[i] !== right[i]) {
+      return false
     }
   }
-  return indexes.length ? indexes : [i]
+  return true
 }
 
 function VerticalScroller({
@@ -183,31 +185,41 @@ function VerticalScroller({
       )
 
   const [visibleIndexes, setVisibleIndexes] = useState<number[]>(() =>
-    visibleArray(constrainedInitialIndex, effectiveStartYear, effectiveEndYear)
+    getVerticalWindow(
+      constrainedInitialIndex,
+      effectiveStartYear,
+      effectiveEndYear
+    )
   )
 
   const theme = useTheme()
   const idx = useRef<number>(constrainedInitialIndex)
   const parentRef = useRef<HTMLDivElement | null>(null)
+  const verticalMetrics = getVerticalListMetrics(
+    getMinIndex(effectiveStartYear, effectiveEndYear),
+    getMaxIndex(effectiveStartYear, effectiveEndYear),
+    startWeekOnMonday,
+    effectiveStartYear,
+    effectiveEndYear
+  )
 
   useIsomorphicLayoutEffect(() => {
-    const element = parentRef.current as HTMLDivElement
-    const top =
-      getLocalMonthOffset(
-        visibleIndexes,
+    const element = parentRef.current
+    if (!element) {
+      return
+    }
+    element.scrollTo({
+      top: getVerticalMonthScrollY(
         idx.current,
+        verticalMetrics.origin,
         startWeekOnMonday,
         effectiveStartYear,
         effectiveEndYear
-      ) - montHeaderHeight
-
-    element.scrollTo({
-      top,
+      ),
     })
+    // Mount-only. Later scrolls keep the offset the user already has.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [parentRef, idx])
-
-  const setVisibleIndexesThrottled = useDebouncedCallback(setVisibleIndexes)
+  }, [])
 
   const onScroll = useCallback(
     (e: UIEvent) => {
@@ -216,48 +228,46 @@ function VerticalScroller({
         return
       }
 
-      const absY =
-        getVerticalMonthsOffset(
-          visibleIndexes[0],
-          startWeekOnMonday,
-          effectiveStartYear,
-          effectiveEndYear
-        ) + top
       const index = getIndexFromVerticalOffset(
-        absY - getBeginOffset(effectiveStartYear, effectiveEndYear),
+        verticalMetrics.origin +
+          top -
+          getBeginOffset(effectiveStartYear, effectiveEndYear),
         startWeekOnMonday,
         effectiveStartYear,
         effectiveEndYear
       )
 
-      if (!isIndexWithinRange(index, effectiveStartYear, effectiveEndYear)) {
+      if (
+        !isIndexWithinRange(index, effectiveStartYear, effectiveEndYear) ||
+        idx.current === index
+      ) {
         return
       }
 
-      if (idx.current !== index) {
-        const nextVisible = visibleArray(
+      idx.current = index
+      const first = visibleIndexes[0]
+      const last = visibleIndexes[visibleIndexes.length - 1]
+      if (
+        first === undefined ||
+        last === undefined ||
+        index - first <= verticalWindowEdge ||
+        last - index <= verticalWindowEdge
+      ) {
+        const next = getVerticalWindow(
           index,
           effectiveStartYear,
           effectiveEndYear
         )
-        const nextTop =
-          absY -
-          getVerticalMonthsOffset(
-            nextVisible[0],
-            startWeekOnMonday,
-            effectiveStartYear,
-            effectiveEndYear
-          )
-        idx.current = index
-        setVisibleIndexesThrottled(nextVisible)
-        parentRef.current?.scrollTo({ top: nextTop })
+        setVisibleIndexes((current) =>
+          sameIndexes(current, next) ? current : next
+        )
       }
     },
     [
       effectiveEndYear,
       effectiveStartYear,
-      setVisibleIndexesThrottled,
       startWeekOnMonday,
+      verticalMetrics.origin,
       visibleIndexes,
     ]
   )
@@ -271,25 +281,21 @@ function VerticalScroller({
         colorScheme: theme.dark ? 'dark' : 'light',
         height,
         overflow: 'auto',
+        overflowAnchor: 'none',
         width,
       }}
     >
       <div
         // eslint-disable-next-line react-native/no-inline-styles
         style={{
-          height: getVisibleMonthsHeight(
-            visibleIndexes,
-            startWeekOnMonday,
-            effectiveStartYear,
-            effectiveEndYear
-          ),
+          height: verticalMetrics.height,
           position: 'relative',
         }}
       >
-        {visibleIndexes.map((monthIndex, vi) => {
+        {visibleIndexes.map((monthIndex) => {
           return (
             <div
-              key={vi}
+              key={monthIndex}
               // eslint-disable-next-line react-native/no-inline-styles
               style={{
                 height: getMonthHeight(
@@ -302,13 +308,14 @@ function VerticalScroller({
                 left: 0,
                 position: 'absolute',
                 right: 0,
-                transform: `translateY(${getLocalMonthOffset(
-                  visibleIndexes,
-                  monthIndex,
-                  startWeekOnMonday,
-                  effectiveStartYear,
-                  effectiveEndYear
-                )}px)`,
+                transform: `translateY(${
+                  getVerticalMonthsOffset(
+                    monthIndex,
+                    startWeekOnMonday,
+                    effectiveStartYear,
+                    effectiveEndYear
+                  ) - verticalMetrics.origin
+                }px)`,
                 willChange: 'transform',
               }}
             >

@@ -225,7 +225,7 @@ describe('native swiper gaps', () => {
     ) => {
       const callback = original(fn, deps ?? [])
       const source = Function.prototype.toString.call(fn)
-      if (source.includes('ignoreScroll.current)')) {
+      if (source.includes('syncVerticalIndex(e.nativeEvent.contentOffset.y)')) {
         handlers.push(
           callback as (event: {
             nativeEvent: { contentOffset: { x: number; y: number } }

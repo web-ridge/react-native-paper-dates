@@ -2,9 +2,12 @@ import { render, within } from '@testing-library/react-native'
 import Month, {
   getLocalMonthOffset,
   getMonthHeight,
+  getVerticalListMetrics,
+  getVerticalMonthsOffset,
   horizontalMonthScrolls,
 } from '../../Date/Month'
 import { getStartAtIndex } from '../../Date/dateUtils'
+import { getMaxIndex, getMinIndex } from '../../Date/SwiperUtils'
 
 const defaultProps = {
   index: getStartAtIndex(),
@@ -47,6 +50,28 @@ it('does not wrap day numbers in a scroll view in vertical mode', async () => {
     />
   )
   expect(queryByTestId('react-native-paper-dates-month-days-scroll')).toBeNull()
+})
+
+it('keeps vertical months on one continuous scroll', () => {
+  const startYear = 2020
+  const endYear = 2022
+  const min = getMinIndex(startYear, endYear)
+  const max = getMaxIndex(startYear, endYear)
+  const { height, origin } = getVerticalListMetrics(
+    min,
+    max,
+    false,
+    startYear,
+    endYear
+  )
+  let cursor = origin
+  for (let index = min; index <= max; index += 1) {
+    expect(getVerticalMonthsOffset(index, false, startYear, endYear)).toBe(
+      cursor
+    )
+    cursor += getMonthHeight('vertical', index, false, startYear, endYear)
+  }
+  expect(cursor - origin).toBe(height)
 })
 
 it('falls back when a month index is outside the cached layout', async () => {

@@ -655,6 +655,43 @@ export function getVerticalMonthsOffset(
   return c + dynamicBeginOffset
 }
 
+export function getVerticalListMetrics(
+  minIndex: number,
+  maxIndex: number,
+  startWeekOnMonday: boolean,
+  startYear?: number,
+  endYear?: number
+) {
+  const origin = getVerticalMonthsOffset(
+    minIndex,
+    startWeekOnMonday,
+    startYear,
+    endYear
+  )
+  const end =
+    getVerticalMonthsOffset(maxIndex, startWeekOnMonday, startYear, endYear) +
+    getMonthHeight('vertical', maxIndex, startWeekOnMonday, startYear, endYear)
+  return {
+    height: Math.max(end - origin, 1),
+    origin,
+  }
+}
+
+export function getVerticalMonthScrollY(
+  index: number,
+  origin: number,
+  startWeekOnMonday: boolean,
+  startYear?: number,
+  endYear?: number
+) {
+  return Math.max(
+    0,
+    getVerticalMonthsOffset(index, startWeekOnMonday, startYear, endYear) -
+      origin -
+      montHeaderHeight
+  )
+}
+
 export function getVisibleMonthsHeight(
   visibleIndexes: number[],
   startWeekOnMonday: boolean,
