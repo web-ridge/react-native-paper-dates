@@ -2,7 +2,6 @@ import {
   Modal,
   Platform,
   StyleSheet,
-  TouchableWithoutFeedback,
   useWindowDimensions,
   View,
 } from 'react-native'
@@ -13,9 +12,9 @@ import DatePickerModalContent, {
   DatePickerModalContentSingleProps,
 } from './DatePickerModalContent'
 import { memo, useCallback, useMemo, useState } from 'react'
-import { sharedStyles } from '../shared/styles'
+import ModalScrim from '../shared/ModalScrim'
 import {
-  scrimColor,
+  rememberLayout,
   supportedOrientations,
   useIsLargeScreen,
 } from '../shared/utils'
@@ -60,12 +59,7 @@ export function DatePickerModal(
   const onCalendarLayout = useCallback(
     ({ height, width }: { height: number; width: number }) => {
       setLastCalendarLayout((prev) =>
-        prev &&
-        prev.windowKey === windowKey &&
-        prev.width === width &&
-        prev.height === height
-          ? prev
-          : { height, width, windowKey }
+        rememberLayout(prev, { height, width, windowKey })
       )
     },
     [windowKey]
@@ -95,15 +89,7 @@ export function DatePickerModal(
         transparent={!isSheet}
         visible={visible}
       >
-        <TouchableWithoutFeedback onPress={rest.onDismiss}>
-          <View
-            style={[
-              StyleSheet.absoluteFill,
-              sharedStyles.root,
-              { backgroundColor: scrimColor(theme.colors.scrim) },
-            ]}
-          />
-        </TouchableWithoutFeedback>
+        <ModalScrim onDismiss={rest.onDismiss} />
         <View
           pointerEvents="box-none"
           style={[StyleSheet.absoluteFill, styles.modalRoot]}

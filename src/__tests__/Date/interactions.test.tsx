@@ -27,8 +27,6 @@ import Day from '../../Date/Day'
 import DayNames from '../../Date/DayNames'
 import DayRange from '../../Date/DayRange'
 import Month, {
-  getHorizontalMonthOffset,
-  getIndexFromHorizontalOffset,
   getIndexFromVerticalOffset,
   getMonthHeight,
   getVerticalMonthsOffset,
@@ -69,11 +67,8 @@ function safe(children: ReactNode) {
 }
 
 describe('month offset helpers', () => {
-  it('measures horizontal and vertical month positions', () => {
+  it('measures vertical month positions', () => {
     const start = getStartAtIndex(2020, 2030)
-    expect(getHorizontalMonthOffset(-1, 320)).toBe(0)
-    expect(getHorizontalMonthOffset(3, 320)).toBe(960)
-    expect(getIndexFromHorizontalOffset(640, 320, 2020, 2030)).toBe(start + 2)
     expect(
       getIndexFromVerticalOffset(0, false, 2020, 2030)
     ).toEqual(expect.any(Number))

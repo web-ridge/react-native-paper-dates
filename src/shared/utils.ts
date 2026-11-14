@@ -17,6 +17,10 @@ export function darkenColor(color: string, ratio: number) {
   return hexColor(`rgb(${red}, ${green}, ${blue})`)
 }
 
+export function displayCase(text: string, uppercase: boolean) {
+  return uppercase ? text.toUpperCase() : text
+}
+
 export function fadeColor(color: string, ratio: number) {
   const parsed = parseColor(color)
   return rgbaString({ ...parsed, a: parsed.a * (1 - ratio) })
@@ -110,6 +114,17 @@ type Rgb = {
   b: number
   g: number
   r: number
+}
+
+export function rememberLayout<
+  T extends { height: number; width: number; windowKey: string },
+>(prev: T | null, next: T) {
+  return prev &&
+    prev.windowKey === next.windowKey &&
+    prev.width === next.width &&
+    prev.height === next.height
+    ? prev
+    : next
 }
 
 function rgbaString({ a, b, g, r }: Rgb) {

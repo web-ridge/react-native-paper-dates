@@ -8,9 +8,9 @@ import type { TextInputHandles } from 'react-native-paper'
 
 function DatePickerInputWithoutModal(
   {
-    disableStatusBar,
-    disableStatusBarPadding,
-    endYear,
+    disableStatusBar: _disableStatusBar,
+    disableStatusBarPadding: _disableStatusBarPadding,
+    endYear: _endYear,
     hasError,
     hideValidationErrors,
     inputButton,
@@ -22,33 +22,19 @@ function DatePickerInputWithoutModal(
     onChange,
     onChangeText,
     onValidationError,
-    saveLabel,
-    saveLabelDisabled,
-    startWeekOnMonday,
-    startYear,
+    saveLabel: _saveLabel,
+    saveLabelDisabled: _saveLabelDisabled,
+    startWeekOnMonday: _startWeekOnMonday,
+    startYear: _startYear,
     style,
-    uppercase,
+    uppercase: _uppercase,
     validRange,
     value,
     withDateFormatInLabel = true,
     ...rest
   }: DatePickerInputProps & {
     inputButton?: ReactNode
-    modal?: (params: {
-      disableStatusBar: DatePickerInputProps['disableStatusBar']
-      disableStatusBarPadding: DatePickerInputProps['disableStatusBarPadding']
-      endYear: DatePickerInputProps['endYear']
-      inputEnabled: DatePickerInputProps['inputEnabled']
-      inputMode: DatePickerInputProps['inputMode']
-      locale: DatePickerInputProps['locale']
-      saveLabel: DatePickerInputProps['saveLabel']
-      saveLabelDisabled: DatePickerInputProps['saveLabelDisabled']
-      startWeekOnMonday?: DatePickerInputProps['startWeekOnMonday']
-      startYear: DatePickerInputProps['startYear']
-      uppercase: DatePickerInputProps['uppercase']
-      validRange: DatePickerInputProps['validRange']
-      value: DatePickerInputProps['value']
-    }) => ReactNode
+    modal?: ReactNode
   },
   ref: Ref<TextInputHandles>
 ) {
@@ -108,21 +94,7 @@ function DatePickerInputWithoutModal(
           />
         </View>
       </View>
-      {modal?.({
-        disableStatusBar,
-        disableStatusBarPadding,
-        endYear,
-        inputEnabled,
-        inputMode,
-        locale,
-        saveLabel,
-        saveLabelDisabled,
-        startWeekOnMonday,
-        startYear,
-        uppercase,
-        validRange,
-        value,
-      })}
+      {modal}
     </>
   )
 }

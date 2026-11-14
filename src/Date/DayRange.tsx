@@ -14,10 +14,10 @@ function DayRange({
   rightCrop: boolean
   selectColor: string
 }) {
-  const bothWays = inRange && leftCrop && rightCrop
-  const isCrop = inRange && (leftCrop || rightCrop) && !(leftCrop && rightCrop)
+  const bothWays = leftCrop && rightCrop
+  const isCrop = leftCrop !== rightCrop
 
-  if (inRange || isCrop) {
+  if (inRange) {
     return (
       <View
         pointerEvents="none"
@@ -25,7 +25,7 @@ function DayRange({
           StyleSheet.absoluteFill,
           sharedStyles.flexDirectionRow,
           bothWays && styles.rangeRootBoth,
-          inRange && !isCrop
+          !isCrop
             ? {
                 backgroundColor: selectColor,
               }

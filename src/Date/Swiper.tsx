@@ -14,10 +14,10 @@ import {
   getMinIndex,
   getVerticalWindow,
   isIndexWithinRange,
+  nextVisibleIndexes,
   type RenderProps,
   type SwiperProps,
   useYearChange,
-  verticalWindowEdge,
 } from './SwiperUtils'
 import AutoSizer from './AutoSizer'
 import {
@@ -33,18 +33,6 @@ import {
 import { layoutScrollbarWidth } from './CalendarHeader'
 
 const empty = () => null
-
-function sameIndexes(left: number[], right: number[]) {
-  if (left.length !== right.length) {
-    return false
-  }
-  for (let i = 0; i < left.length; i += 1) {
-    if (left[i] !== right[i]) {
-      return false
-    }
-  }
-  return true
-}
 
 function Swiper({
   endYear,
@@ -64,25 +52,21 @@ function Swiper({
 
   const isHorizontal = scrollMode === 'horizontal'
 
-  const onNext = useCallback(() => {
-    setIndex((prev) => {
-      const newIndex = prev + 1
-      if (isIndexWithinRange(newIndex, startYear, endYear)) {
-        return newIndex
-      }
-      return prev
-    })
-  }, [setIndex, startYear, endYear])
+  const shiftIndex = useCallback(
+    (delta: number) => {
+      setIndex((prev) => {
+        const newIndex = prev + delta
+        return isIndexWithinRange(newIndex, startYear, endYear)
+          ? newIndex
+          : prev
+      })
+    },
+    [endYear, startYear]
+  )
 
-  const onPrev = useCallback(() => {
-    setIndex((prev) => {
-      const newIndex = prev - 1
-      if (isIndexWithinRange(newIndex, startYear, endYear)) {
-        return newIndex
-      }
-      return prev
-    })
-  }, [setIndex, startYear, endYear])
+  const onNext = useCallback(() => shiftIndex(1), [shiftIndex])
+
+  const onPrev = useCallback(() => shiftIndex(-1), [shiftIndex])
 
   const renderProps = {
     index,
@@ -152,37 +136,6 @@ function Swiper({
       )}
       {renderFooter && renderFooter(renderProps)}
     </>
-  )
-}
-
-export function useDebouncedCallback<T>(
-  callback: (value: T) => void
-): (value: T) => void {
-  const latest = useLatest(callback)
-  const mounted = useRef(true)
-  const timerId = useRef<number | null>(null)
-
-  useEffect(() => {
-    return () => {
-      mounted.current = false
-      if (timerId.current !== null) {
-        window.cancelAnimationFrame(timerId.current)
-      }
-    }
-  }, [])
-
-  return useCallback(
-    (value: T) => {
-      if (timerId.current !== null) {
-        window.cancelAnimationFrame(timerId.current)
-      }
-      timerId.current = window.requestAnimationFrame(() => {
-        if (mounted.current) {
-          latest.current(value)
-        }
-      })
-    },
-    [latest]
   )
 }
 
@@ -278,30 +231,15 @@ function VerticalScroller({
       }
 
       idx.current = index
-      const first = visibleIndexes[0]
-      const last = visibleIndexes[visibleIndexes.length - 1]
-      if (
-        first === undefined ||
-        last === undefined ||
-        index - first <= verticalWindowEdge ||
-        last - index <= verticalWindowEdge
-      ) {
-        const next = getVerticalWindow(
-          index,
-          effectiveStartYear,
-          effectiveEndYear
-        )
-        setVisibleIndexes((current) =>
-          sameIndexes(current, next) ? current : next
-        )
-      }
+      setVisibleIndexes((current) =>
+        nextVisibleIndexes(current, index, effectiveStartYear, effectiveEndYear)
+      )
     },
     [
       effectiveEndYear,
       effectiveStartYear,
       startWeekOnMonday,
       verticalMetrics.origin,
-      visibleIndexes,
     ]
   )
 

@@ -4,6 +4,7 @@ import type {
   CalendarDates,
   MultiChange,
   MultiConfirm,
+  RangeCalendarMode,
   RangeChange,
   SingleChange,
 } from './types'
@@ -219,24 +220,21 @@ interface DatePickerModalContentBaseProps {
 
 export interface DatePickerModalContentMultiProps
   extends HeaderPickProps, BaseCalendarProps, DatePickerModalContentBaseProps {
-  dates?: CalendarDates
   mode: 'multiple'
   onChange?: MultiChange
   onConfirm: MultiConfirm
 }
 
-export interface DatePickerModalContentRangeProps
-  extends HeaderPickProps, BaseCalendarProps, DatePickerModalContentBaseProps {
-  endDate: CalendarDate
-  mode: 'range'
-  onChange?: RangeChange
-  onConfirm: RangeChange
-  startDate: CalendarDate
-}
+export type DatePickerModalContentRangeProps = HeaderPickProps &
+  BaseCalendarProps &
+  DatePickerModalContentBaseProps &
+  RangeCalendarMode & {
+    onChange?: RangeChange
+    onConfirm: RangeChange
+  }
 
 export interface DatePickerModalContentSingleProps
   extends HeaderPickProps, BaseCalendarProps, DatePickerModalContentBaseProps {
-  date?: CalendarDate
   dateMode?: 'start' | 'end'
   mode: 'single'
   onChange?: SingleChange

@@ -44,14 +44,18 @@ export default function useDateInput({
     const day = Number(date.slice(dayIndex, dayIndex + 2))
     const monthIndex = inputFormat.indexOf('MM')
     const month = Number(date.slice(monthIndex, monthIndex + 2))
-    const rejectFormat = () => {
-      const inputError = getTranslation(
-        locale,
-        'notAccordingToDateFormat',
-        () => 'notAccordingToDateFormat'
-      )(inputFormat)
+    const report = (inputError: string | null) => {
       setError(inputError)
-      onValidationError && onValidationError(inputError)
+      onValidationError?.(inputError)
+    }
+    const rejectFormat = () => {
+      report(
+        getTranslation(
+          locale,
+          'notAccordingToDateFormat',
+          () => 'notAccordingToDateFormat'
+        )(inputFormat)
+      )
     }
     const yearIndex =
       locale === 'pt'
@@ -86,9 +90,7 @@ export default function useDateInput({
     }
 
     if (isDisabled(finalDate)) {
-      const inputError = getTranslation(locale, 'dateIsDisabled')
-      setError(inputError)
-      onValidationError && onValidationError(inputError)
+      report(getTranslation(locale, 'dateIsDisabled'))
       return
     }
     if (!isWithinValidRange(finalDate)) {
@@ -117,14 +119,11 @@ export default function useDateInput({
                   )(formatter.format(validEnd))
                 : '',
             ]
-      const inputError = errors.filter((message) => message).join(' ')
-      setError(inputError)
-      onValidationError && onValidationError(inputError)
+      report(errors.filter((message) => message).join(' '))
       return
     }
 
-    setError(null)
-    onValidationError?.(null)
+    report(null)
     onChange(finalDate)
   }
   return {

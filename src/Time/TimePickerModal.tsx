@@ -4,7 +4,6 @@ import {
   Modal,
   StyleSheet,
   Text,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native'
 
@@ -22,17 +21,12 @@ import {
 } from './timeUtils'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { sharedStyles } from '../shared/styles'
-import { scrimColor, supportedOrientations } from '../shared/utils'
+import ModalScrim from '../shared/ModalScrim'
+import { displayCase, supportedOrientations } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
 
-function getHours(hours: number | undefined | null): number {
-  return hours === undefined || hours === null ? new Date().getHours() : hours
-}
-
-function getMinutes(minutes: number | undefined | null): number {
-  return minutes === undefined || minutes === null
-    ? new Date().getMinutes()
-    : minutes
+function orNow(value: number | undefined | null, read: (date: Date) => number) {
+  return value ?? read(new Date())
 }
 
 const styles = StyleSheet.create({
@@ -119,17 +113,18 @@ export function TimePickerModal({
   const [inputType, setInputType] = useState<PossibleInputTypes>(
     defaultInputType || inputTypes.picker
   )
-  const [localHours, setLocalHours] = useState(getHours(hours))
-  const [localMinutes, setLocalMinutes] = useState(getMinutes(minutes))
+  const [localHours, setLocalHours] = useState(() =>
+    orNow(hours, (date) => date.getHours())
+  )
+  const [localMinutes, setLocalMinutes] = useState(() =>
+    orNow(minutes, (date) => date.getMinutes())
+  )
   const theme = useTheme()
 
   useEffect(() => {
-    setLocalHours(getHours(hours))
-  }, [setLocalHours, hours])
-
-  useEffect(() => {
-    setLocalMinutes(getMinutes(minutes))
-  }, [setLocalMinutes, minutes])
+    setLocalHours(orNow(hours, (date) => date.getHours()))
+    setLocalMinutes(orNow(minutes, (date) => date.getMinutes()))
+  }, [hours, minutes])
 
   let labelText = label
   const onChange = useCallback<TimeChange>(
@@ -167,15 +162,7 @@ export function TimePickerModal({
       visible={visible}
     >
       <>
-        <TouchableWithoutFeedback onPress={onDismiss}>
-          <View
-            style={[
-              StyleSheet.absoluteFill,
-              sharedStyles.root,
-              { backgroundColor: scrimColor(theme.colors.scrim) },
-            ]}
-          />
-        </TouchableWithoutFeedback>
+        <ModalScrim onDismiss={onDismiss} />
         <View
           pointerEvents="box-none"
           style={[StyleSheet.absoluteFill, styles.center]}
@@ -206,7 +193,7 @@ export function TimePickerModal({
                     },
                   ]}
                 >
-                  {uppercase ? labelText.toUpperCase() : labelText}
+                  {displayCase(labelText, uppercase)}
                 </Text>
               </View>
               <View style={styles.timePickerContainer}>
@@ -243,7 +230,7 @@ export function TimePickerModal({
                 />
                 <View style={sharedStyles.root} />
                 <Button mode="text" onPress={onDismiss}>
-                  {uppercase ? cancelLabel.toUpperCase() : cancelLabel}
+                  {displayCase(cancelLabel, uppercase)}
                 </Button>
                 <Button
                   mode="text"
@@ -251,7 +238,7 @@ export function TimePickerModal({
                     onConfirm({ hours: localHours, minutes: localMinutes })
                   }
                 >
-                  {uppercase ? confirmLabel.toUpperCase() : confirmLabel}
+                  {displayCase(confirmLabel, uppercase)}
                 </Button>
               </View>
             </View>

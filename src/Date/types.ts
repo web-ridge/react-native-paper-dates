@@ -3,6 +3,11 @@ import type { ReactNode } from 'react'
 export type CalendarDate = Date | undefined
 export type CalendarDates = Date[] | null | undefined
 
+export type CalendarMode =
+  | SingleCalendarMode
+  | RangeCalendarMode
+  | MultiCalendarMode
+
 export type DayContentPosition =
   | 'top'
   | 'top-left'
@@ -26,6 +31,11 @@ export type DisableWeekDaysType = number[]
 
 export type ModeType = 'single' | 'range' | 'multiple'
 
+export type MultiCalendarMode = {
+  dates: CalendarDates
+  mode: 'multiple'
+}
+
 export type MultiChange = (params: {
   change: 'added' | 'removed'
   datePressed: Date
@@ -34,12 +44,23 @@ export type MultiChange = (params: {
 
 export type MultiConfirm = (params: { dates: Date[] }) => void
 
+export type RangeCalendarMode = {
+  endDate: CalendarDate
+  mode: 'range'
+  startDate: CalendarDate
+}
+
 export type RangeChange = (params: {
   endDate: CalendarDate
   startDate: CalendarDate
 }) => void
 
 export type ScrollModeType = 'horizontal' | 'vertical'
+
+export type SingleCalendarMode = {
+  date: CalendarDate
+  mode: 'single'
+}
 
 export type SingleChange = (params: { date: CalendarDate }) => void
 

@@ -6,9 +6,10 @@ import type { DisableWeekDaysType, ModeType, ValidRangeType } from './types'
 
 import DatePickerInputWithoutModal from './DatePickerInputWithoutModal'
 import { weekdaySpan, weekdaySpanOvershoot } from './weekdayColumns'
-import { memo, useCallback, useEffect, useRef } from 'react'
+import { memo, type Ref, useCallback, useEffect, useRef } from 'react'
 import { useTheme } from 'react-native-paper'
 import { sharedStyles } from '../shared/styles'
+import type { TextInputHandles } from 'react-native-paper'
 
 function CalendarEdit({
   collapsed,
@@ -44,8 +45,6 @@ function CalendarEdit({
   const startInput = useRef<TextInputInstance | null>(null)
   const theme = useTheme()
   const surfaceColor = theme.colors.elevation.level3
-  const inputStyle = { backgroundColor: surfaceColor }
-  const inputTheme = { colors: { background: surfaceColor } }
 
   useEffect(() => {
     if (collapsed) {
@@ -69,14 +68,8 @@ function CalendarEdit({
     }
   }, [mode, startInput, endInput, dateInput, collapsed])
 
-  const onSubmitEndInput = useCallback(() => {}, [])
-
-  const onSubmitInput = useCallback(() => {}, [])
-
   const onSubmitStartInput = useCallback(() => {
-    if (endInput.current) {
-      endInput.current.focus()
-    }
+    endInput.current?.focus()
   }, [endInput])
 
   return (
@@ -84,67 +77,53 @@ function CalendarEdit({
       <View style={weekdaySpan(disableWeekDays)}>
         <View style={weekdaySpanOvershoot}>
           {mode === 'single' ? (
-            <DatePickerInputWithoutModal
-              autoComplete={'off'}
+            <CalendarDateField
               inputEnabled={inputEnabled}
               inputMode="start"
+              inputRef={dateInput}
               label={label}
               locale={locale}
               onChange={(date) => onChange({ ...state, date })}
-              onSubmitEditing={onSubmitInput}
               placeholder={placeholder}
-              ref={dateInput}
-              style={inputStyle}
-              theme={inputTheme}
+              surfaceColor={surfaceColor}
               validRange={validRange}
               value={state.date}
-              variant="outlined"
               withDateFormatInLabel={withDateFormatInLabel}
-              withModal={false}
             />
           ) : null}
           {mode === 'range' ? (
             <View style={sharedStyles.flexDirectionRow}>
               <View style={sharedStyles.root}>
-                <DatePickerInputWithoutModal
-                  autoComplete={'off'}
+                <CalendarDateField
                   inputEnabled={inputEnabled}
                   inputMode="start"
+                  inputRef={startInput}
                   label={startLabel}
                   locale={locale}
                   onChange={(startDate) => onChange({ ...state, startDate })}
                   onSubmitEditing={onSubmitStartInput}
                   placeholder={placeholder}
-                  ref={startInput}
-                  returnKeyType={'next'}
-                  style={inputStyle}
-                  theme={inputTheme}
+                  returnKeyType="next"
+                  surfaceColor={surfaceColor}
                   validRange={validRange}
                   value={state.startDate}
-                  variant="outlined"
                   withDateFormatInLabel={withDateFormatInLabel}
-                  withModal={false}
                 />
               </View>
               <View style={styles.separator} />
               <View style={sharedStyles.root}>
-                <DatePickerInputWithoutModal
-                  autoComplete="off"
+                <CalendarDateField
                   inputEnabled={inputEnabled}
                   inputMode="end"
+                  inputRef={endInput}
                   label={endLabel}
                   locale={locale}
                   onChange={(endDate) => onChange({ ...state, endDate })}
-                  onSubmitEditing={onSubmitEndInput}
                   placeholder={placeholder}
-                  ref={endInput}
-                  style={inputStyle}
-                  theme={inputTheme}
+                  surfaceColor={surfaceColor}
                   validRange={validRange}
                   value={state.endDate}
-                  variant="outlined"
                   withDateFormatInLabel={withDateFormatInLabel}
-                  withModal={false}
                 />
               </View>
             </View>
@@ -152,6 +131,61 @@ function CalendarEdit({
         </View>
       </View>
     </View>
+  )
+}
+
+function CalendarDateField({
+  inputEnabled,
+  inputMode,
+  inputRef,
+  label,
+  locale,
+  onChange,
+  onSubmitEditing,
+  placeholder,
+  returnKeyType,
+  surfaceColor,
+  validRange,
+  value,
+  withDateFormatInLabel,
+}: {
+  inputEnabled?: boolean
+  inputMode: 'start' | 'end'
+  inputRef: Ref<TextInputHandles>
+  label?: string
+  locale: string
+  onChange: (date: Date | undefined) => void
+  onSubmitEditing?: () => void
+  placeholder?: string
+  returnKeyType?: 'next'
+  surfaceColor: string
+  validRange: ValidRangeType | undefined
+  value: LocalState['date']
+  withDateFormatInLabel?: boolean
+}) {
+  const inputStyle = { backgroundColor: surfaceColor }
+  const inputTheme = { colors: { background: surfaceColor } }
+
+  return (
+    <DatePickerInputWithoutModal
+      autoComplete="off"
+      inputEnabled={inputEnabled}
+      inputMode={inputMode}
+      label={label}
+      locale={locale}
+      onChange={onChange}
+      onSubmitEditing={onSubmitEditing}
+      placeholder={placeholder}
+      ref={inputRef}
+      returnKeyType={returnKeyType}
+      style={inputStyle}
+      theme={inputTheme}
+      validRange={validRange}
+      value={value}
+      variant="outlined"
+      withDateFormatInLabel={withDateFormatInLabel}
+      withModal={false}
+    />
   )
 }
 

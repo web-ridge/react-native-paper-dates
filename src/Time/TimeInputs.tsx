@@ -15,7 +15,7 @@ import TimeInput from './TimeInput'
 import AmPmSwitcher from './AmPmSwitcher'
 import { darkenColor, themeColor, useLatest } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
-import { memo, useCallback, useRef } from 'react'
+import { memo, type ReactNode, useCallback, useRef } from 'react'
 import { sharedStyles } from '../shared/styles'
 
 const styles = StyleSheet.create({
@@ -91,12 +91,8 @@ function TimeInputs({
     [onChange, minutesRef]
   )
 
-  const onSubmitEndInput = useCallback(() => {}, [])
-
   const onSubmitStartInput = useCallback(() => {
-    if (endInput.current) {
-      endInput.current.focus()
-    }
+    endInput.current?.focus()
   }, [endInput])
 
   const startInput = useRef<TextInputInstance | null>(null)
@@ -112,7 +108,10 @@ function TimeInputs({
 
   const hourMinuteRow = (
     <View style={styles.inputContainer}>
-      <View style={styles.column}>
+      <TimeField
+        caption={getTranslation(locale, 'hour', 'Hour')}
+        inputType={inputType}
+      >
         <TimeInput
           blurOnSubmit={false}
           clockType={clockTypes.hours}
@@ -142,12 +141,7 @@ function TimeInputs({
           selectionColor={selectionColor}
           value={toHourInputFormat(hours, is24Hour)}
         />
-        {inputType === inputTypes.keyboard ? (
-          <Text maxFontSizeMultiplier={1.5} variant="bodySmall">
-            {getTranslation(locale, 'hour', 'Hour')}
-          </Text>
-        ) : null}
-      </View>
+      </TimeField>
       <View
         style={[
           styles.hoursAndMinutesSeparator,
@@ -175,36 +169,29 @@ function TimeInputs({
         />
         <View style={sharedStyles.root} />
       </View>
-      <View style={styles.column}>
+      <TimeField
+        caption={getTranslation(locale, 'minute', 'Minute')}
+        inputType={inputType}
+      >
         <TimeInput
           clockType={clockTypes.minutes}
           inputFontSize={inputFontSize}
           inputType={inputType}
           maxFontSizeMultiplier={1.2}
           onChanged={(newMinutesFromInput) => {
-            let newMinutes = newMinutesFromInput
-            if (newMinutesFromInput > 59) {
-              newMinutes = 59
-            }
             onChange({
               hours,
-              minutes: newMinutes,
+              minutes: Math.min(newMinutesFromInput, 59),
             })
           }}
           onPress={onFocusInput}
-          onSubmitEditing={onSubmitEndInput}
           placeholder={'00'}
           pressed={focused === clockTypes.minutes}
           ref={endInput}
           selectionColor={selectionColor}
           value={minutes}
         />
-        {inputType === inputTypes.keyboard ? (
-          <Text maxFontSizeMultiplier={1.5} variant="bodySmall">
-            {getTranslation(locale, 'minute', 'Minute')}
-          </Text>
-        ) : null}
-      </View>
+      </TimeField>
       {!is24Hour && !useHorizontalAmPm ? (
         <>
           <View style={styles.spaceBetweenInputsAndSwitcher} />
@@ -238,6 +225,27 @@ function TimeInputs({
   }
 
   return hourMinuteRow
+}
+
+function TimeField({
+  caption,
+  children,
+  inputType,
+}: {
+  caption: string
+  children: ReactNode
+  inputType: PossibleInputTypes
+}) {
+  return (
+    <View style={styles.column}>
+      {children}
+      {inputType === inputTypes.keyboard ? (
+        <Text maxFontSizeMultiplier={1.5} variant="bodySmall">
+          {caption}
+        </Text>
+      ) : null}
+    </View>
+  )
 }
 
 export default memo(TimeInputs)

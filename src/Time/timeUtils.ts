@@ -17,6 +17,25 @@ const _360 = Math.PI * 2
 
 export const circleSize = 256
 
+export function clockNumbers(
+  count: number,
+  radiusRatio: number,
+  size: number,
+  startAngle: number
+) {
+  let angle = startAngle
+  const radius = size / radiusRatio
+  const step = (2 * Math.PI) / count
+  return Array.from({ length: count }, () => {
+    const point = [
+      Math.round(size / 2 + radius * Math.cos(angle)),
+      Math.round(size / 2 + radius * Math.sin(angle)),
+    ]
+    angle += step
+    return point
+  })
+}
+
 export type ClockTypeMap = {
   [clockType in PossibleClockTypes]: PossibleClockTypes
 }

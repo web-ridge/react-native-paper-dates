@@ -1,6 +1,5 @@
 import { render, within } from '@testing-library/react-native'
 import Month, {
-  getLocalMonthOffset,
   getMonthHeight,
   getVerticalListMetrics,
   getVerticalMonthsOffset,
@@ -75,7 +74,6 @@ it('keeps vertical months on one continuous scroll', () => {
 })
 
 it('falls back when a month index is outside the cached layout', async () => {
-  expect(getLocalMonthOffset([0, 1], 9, false, 2020, 2021)).toBeGreaterThan(0)
   expect(horizontalMonthScrolls(120, -1, false, 2020, 2021)).toEqual(
     expect.any(Boolean)
   )

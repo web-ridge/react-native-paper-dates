@@ -13,7 +13,23 @@ function DatePickerInput(
     animationType = Platform.select({ default: 'slide', web: 'none' }),
     calendarIcon = 'calendar',
     disableCalendarIcon = false,
+    disableStatusBar,
+    disableStatusBarPadding,
+    endYear,
+    inputEnabled,
+    inputMode,
+    label,
+    locale,
+    placeholder,
     presentationStyle = 'overFullScreen',
+    saveLabel,
+    saveLabelDisabled,
+    startWeekOnMonday,
+    startYear,
+    uppercase,
+    validRange,
+    value,
+    withDateFormatInLabel,
     withModal = true,
     ...rest
   }: DatePickerInputProps,
@@ -39,6 +55,14 @@ function DatePickerInput(
     <DatePickerInputWithoutModal
       ref={ref}
       {...rest}
+      inputEnabled={inputEnabled}
+      inputMode={inputMode}
+      label={label}
+      locale={locale}
+      placeholder={placeholder}
+      validRange={validRange}
+      value={value}
+      withDateFormatInLabel={withDateFormatInLabel}
       inputButton={
         withModal ? (
           <TextInput.Icon
@@ -54,22 +78,7 @@ function DatePickerInput(
           />
         ) : null
       }
-      // eslint-disable-next-line react/no-unstable-nested-components
-      modal={({
-        disableStatusBar,
-        disableStatusBarPadding,
-        endYear,
-        inputEnabled,
-        inputMode,
-        locale,
-        saveLabel,
-        saveLabelDisabled,
-        startWeekOnMonday,
-        startYear,
-        uppercase,
-        validRange,
-        value,
-      }) =>
+      modal={
         withModal ? (
           <DatePickerModal
             animationType={animationType}
@@ -79,12 +88,12 @@ function DatePickerInput(
             disableStatusBarPadding={disableStatusBarPadding ?? false}
             endYear={endYear ?? defaultEndYear}
             inputEnabled={inputEnabled}
-            label={rest.label}
+            label={label}
             locale={locale}
             mode="single"
             onConfirm={onInnerConfirm}
             onDismiss={onDismiss}
-            placeholder={rest.placeholder}
+            placeholder={placeholder}
             presentationStyle={presentationStyle}
             saveLabel={saveLabel}
             saveLabelDisabled={saveLabelDisabled ?? false}
@@ -93,7 +102,7 @@ function DatePickerInput(
             uppercase={uppercase}
             validRange={validRange}
             visible={visible}
-            withDateFormatInLabel={rest.withDateFormatInLabel}
+            withDateFormatInLabel={withDateFormatInLabel}
           />
         ) : null
       }

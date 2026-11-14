@@ -1,6 +1,7 @@
 import { type ReactNode, useCallback, useState } from 'react'
 import { LayoutChangeEvent, useWindowDimensions, View } from 'react-native'
 import { sharedStyles } from '../shared/styles'
+import { rememberLayout } from '../shared/utils'
 
 export default function AutoSizer({
   children,
@@ -26,17 +27,13 @@ export default function AutoSizer({
   const onLayout = useCallback(
     (event: LayoutChangeEvent) => {
       const nl = event.nativeEvent.layout
-      setMeasured((prev) => {
-        if (
-          prev &&
-          prev.windowKey === windowKey &&
-          prev.width === nl.width &&
-          prev.height === nl.height
-        ) {
-          return prev
-        }
-        return { height: nl.height, width: nl.width, windowKey }
-      })
+      setMeasured((prev) =>
+        rememberLayout(prev, {
+          height: nl.height,
+          width: nl.width,
+          windowKey,
+        })
+      )
     },
     [windowKey]
   )

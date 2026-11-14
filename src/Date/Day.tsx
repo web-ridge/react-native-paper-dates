@@ -42,8 +42,6 @@ function Day(props: {
   theme: PaperTheme
   year: number
 }) {
-  let baseTextColor
-
   const {
     day,
     dayContent,
@@ -76,26 +74,16 @@ function Day(props: {
   )
 
   const borderColor = theme.colors.primary
-
-  let finalTextColor
+  const baseTextColor = selected
+    ? textColorOnPrimary
+    : inRange && theme.dark
+      ? theme.colors.onPrimaryContainer
+      : theme.colors.onSurface
+  const textColor = isToday && !selected ? theme.colors.primary : baseTextColor
 
   const onPress = useCallback(() => {
     onPressDate(new Date(year, month, day))
   }, [onPressDate, year, month, day])
-
-  if (selected) {
-    baseTextColor = textColorOnPrimary
-  } else if (inRange && theme.dark) {
-    baseTextColor = theme.colors.onPrimaryContainer
-  } else {
-    baseTextColor = theme.colors.onSurface
-  }
-
-  if (isToday) {
-    finalTextColor = selected ? baseTextColor : theme.colors.primary
-  } else {
-    finalTextColor = baseTextColor
-  }
 
   const textFont = theme.fonts.bodySmall
 
@@ -129,14 +117,7 @@ function Day(props: {
           <Text
             maxFontSizeMultiplier={1.5}
             selectable={false}
-            style={[
-              baseTextColor
-                ? {
-                    color: finalTextColor,
-                  }
-                : undefined,
-              textFont,
-            ]}
+            style={[{ color: textColor }, textFont]}
           >
             {day}
           </Text>

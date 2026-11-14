@@ -17,10 +17,13 @@ import type {
   DayContentRenderer,
   DisableWeekDaysType,
   ModeType,
+  MultiCalendarMode,
   MultiChange,
   MultiConfirm,
+  RangeCalendarMode,
   RangeChange,
   ScrollModeType,
+  SingleCalendarMode,
   SingleChange,
   ValidRangeType,
 } from './types'
@@ -247,23 +250,19 @@ export type {
   ValidRangeType,
 }
 
-export interface CalendarMultiProps extends BaseCalendarProps {
-  dates: CalendarDates
-  mode: 'multiple'
-  onChange: MultiChange
-}
+export type CalendarMultiProps = BaseCalendarProps &
+  MultiCalendarMode & {
+    onChange: MultiChange
+  }
 
-export interface CalendarRangeProps extends BaseCalendarProps {
-  endDate: CalendarDate
-  mode: 'range'
-  onChange: RangeChange
-  startDate: CalendarDate
-}
+export type CalendarRangeProps = BaseCalendarProps &
+  RangeCalendarMode & {
+    onChange: RangeChange
+  }
 
-export interface CalendarSingleProps extends BaseCalendarProps {
-  date: CalendarDate
-  mode: 'single'
-  onChange: SingleChange
-}
+export type CalendarSingleProps = BaseCalendarProps &
+  SingleCalendarMode & {
+    onChange: SingleChange
+  }
 
 export default memo(Calendar)

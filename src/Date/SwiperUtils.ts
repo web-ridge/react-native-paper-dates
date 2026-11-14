@@ -66,6 +66,38 @@ export function isIndexWithinRange(
   return index >= minIndex && index <= maxIndex
 }
 
+export function nextVisibleIndexes(
+  current: number[],
+  index: number,
+  startYear?: number,
+  endYear?: number
+) {
+  const first = current[0]
+  const last = current[current.length - 1]
+  if (
+    first !== undefined &&
+    last !== undefined &&
+    index - first > verticalWindowEdge &&
+    last - index > verticalWindowEdge
+  ) {
+    return current
+  }
+  const next = getVerticalWindow(index, startYear, endYear)
+  return sameIndexes(current, next) ? current : next
+}
+
+export function sameIndexes(left: number[], right: number[]) {
+  if (left.length !== right.length) {
+    return false
+  }
+  for (let i = 0; i < left.length; i += 1) {
+    if (left[i] !== right[i]) {
+      return false
+    }
+  }
+  return true
+}
+
 export type RenderProps = {
   endInset?: number
   index: number

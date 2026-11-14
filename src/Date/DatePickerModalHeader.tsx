@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native'
 import { Button, IconButton, useTheme } from 'react-native-paper'
-import { useHeaderTextColor } from '../shared/utils'
+import { displayCase, useHeaderTextColor } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
 import { sharedStyles } from '../shared/styles'
 import type { DisableWeekDaysType } from './types'
@@ -37,7 +37,7 @@ export default function DatePickerModalHeader(
           testID="react-native-paper-dates-save"
           textColor={theme.colors.primary}
         >
-          {(props.uppercase ?? true) ? saveLabel.toUpperCase() : saveLabel}
+          {displayCase(saveLabel, props.uppercase ?? true)}
         </Button>
       </View>
     </View>

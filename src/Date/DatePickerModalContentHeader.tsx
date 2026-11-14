@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native'
 import { IconButton, Text, useTheme } from 'react-native-paper'
 import type { DisableWeekDaysType, ModeType } from './types'
 import type { LocalState } from './DatePickerModalContent'
-import { fadeColor, useHeaderTextColor } from '../shared/utils'
+import { displayCase, fadeColor, useHeaderTextColor } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
 import { useMemo } from 'react'
 import { sharedStyles } from '../shared/styles'
@@ -41,7 +41,7 @@ export default function DatePickerModalContentHeader(
           maxFontSizeMultiplier={1.5}
           style={[styles.label, { color: supportingTextColor, ...textFont }]}
         >
-          {uppercase ? label.toUpperCase() : label}
+          {displayCase(label, !!uppercase)}
         </Text>
         <View style={styles.headerContentContainer}>
           {mode === 'range' ? (
@@ -106,21 +106,9 @@ export function HeaderContentMulti({
   state,
 }: HeaderContentProps & { color: string; moreLabel: string | undefined }) {
   const dateCount = state.dates?.length || 0
-
-  const formatter = useMemo(() => {
-    return new Intl.DateTimeFormat(locale, {
-      day: 'numeric',
-      month: 'short',
-    })
-  }, [locale])
-
+  const { colorFor, formatter } = useShortDateLabel(color, locale)
   let label = emptyLabel
 
-  const lighterColor = fadeColor(color, 0.5)
-
-  const theme = useTheme()
-
-  const dateColor = dateCount ? theme.colors.onSurface : lighterColor
   if (dateCount) {
     if (dateCount <= 2) {
       label = state.dates!.map((date) => formatter.format(date)).join(', ')
@@ -129,6 +117,8 @@ export function HeaderContentMulti({
         formatter.format(state.dates![0]) + ` (+ ${dateCount - 1} ${moreLabel})`
     }
   }
+
+  const dateColor = colorFor(dateCount > 0)
 
   return (
     <Text
@@ -148,18 +138,9 @@ export function HeaderContentRange({
   startLabel = 'Start',
   state,
 }: HeaderContentProps & { color: string }) {
-  const formatter = useMemo(() => {
-    return new Intl.DateTimeFormat(locale, {
-      day: 'numeric',
-      month: 'short',
-    })
-  }, [locale])
-  const lighterColor = fadeColor(color, 0.5)
-  const theme = useTheme()
-  const endColorFilled = theme.colors.onSurface
-  const endColor = state.endDate ? endColorFilled : lighterColor
-  const startColorFilled = theme.colors.onSurface
-  const startColor = state.startDate ? startColorFilled : lighterColor
+  const { colorFor, formatter } = useShortDateLabel(color, locale)
+  const endColor = colorFor(!!state.endDate)
+  const startColor = colorFor(!!state.startDate)
 
   return (
     <>
@@ -191,18 +172,8 @@ export function HeaderContentSingle({
   locale,
   state,
 }: HeaderContentProps & { color: string }) {
-  const formatter = useMemo(() => {
-    return new Intl.DateTimeFormat(locale, {
-      day: 'numeric',
-      month: 'short',
-    })
-  }, [locale])
-
-  const lighterColor = fadeColor(color, 0.5)
-
-  const theme = useTheme()
-
-  const dateColor = state.date ? theme.colors.onSurface : lighterColor
+  const { colorFor, formatter } = useShortDateLabel(color, locale)
+  const dateColor = colorFor(!!state.date)
 
   return (
     <Text
@@ -212,6 +183,23 @@ export function HeaderContentSingle({
       {state.date ? formatter.format(state.date) : emptyLabel}
     </Text>
   )
+}
+
+function useShortDateLabel(color: string, locale: string | undefined) {
+  const formatter = useMemo(() => {
+    return new Intl.DateTimeFormat(locale, {
+      day: 'numeric',
+      month: 'short',
+    })
+  }, [locale])
+  const theme = useTheme()
+  const emptyColor = fadeColor(color, 0.5)
+  const filledColor = theme.colors.onSurface
+
+  return {
+    colorFor: (filled: boolean) => (filled ? filledColor : emptyColor),
+    formatter,
+  }
 }
 
 export interface HeaderPickProps {

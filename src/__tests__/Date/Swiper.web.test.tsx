@@ -22,16 +22,7 @@ jest.mock('../../Date/SwiperUtils', () => {
 const originalWindow = global.window
 
 beforeAll(() => {
-  const windowPolyfill = global as typeof globalThis & {
-    cancelAnimationFrame: (handle: number) => void
-    requestAnimationFrame: (callback: FrameRequestCallback) => number
-  }
-  windowPolyfill.requestAnimationFrame = (callback) => {
-    callback(0)
-    return 1
-  }
-  windowPolyfill.cancelAnimationFrame = () => null
-  global.window = windowPolyfill
+  global.window = global as typeof globalThis & Window
 })
 
 afterAll(() => {
@@ -42,9 +33,7 @@ describe('web swiper', () => {
   it('pages a horizontal and vertical scroller', async () => {
     const swiperModule = require('../../Date/Swiper.tsx') as {
       default: ComponentType<Record<string, unknown>>
-      useDebouncedCallback: (callback: (value: number[]) => void) => (value: number[]) => void
     }
-    expect(typeof swiperModule.useDebouncedCallback).toBe('function')
 
     const onHeader = jest.fn()
     const SwiperWeb = swiperModule.default
@@ -196,12 +185,9 @@ describe('web swiper', () => {
         startWeekOnMonday={false}
       />
     )
-
-    const debounced = await render(<DebouncedProbe callback={swiperModule.useDebouncedCallback} />)
-    await debounced.unmount()
   })
 
-  it('falls back to useEffect without a window and ignores a late frame', async () => {
+  it('loads the web scroller when window is missing', async () => {
     const previous = global.window
     // @ts-expect-error the web build is selected by the presence of window
     delete global.window
@@ -209,22 +195,6 @@ describe('web swiper', () => {
       require('../../Date/Swiper.tsx')
     })
     global.window = previous
-
-    let frame: FrameRequestCallback | undefined
-    const raf = global.requestAnimationFrame
-    global.requestAnimationFrame = (callback) => {
-      frame = callback
-      return 7
-    }
-    const swiperModule = require('../../Date/Swiper.tsx') as {
-      useDebouncedCallback: (callback: (value: number[]) => void) => (value: number[]) => void
-    }
-    const pending = await render(
-      <DebouncedProbe callback={swiperModule.useDebouncedCallback} />
-    )
-    await pending.unmount()
-    frame?.(0)
-    global.requestAnimationFrame = raf
   })
 
   it('keeps a single month when the visible window is out of range', async () => {
@@ -259,17 +229,3 @@ describe('web swiper', () => {
     }
   })
 })
-
-function DebouncedProbe({
-  callback,
-}: {
-  callback: (fn: (value: number[]) => void) => (value: number[]) => void
-}) {
-  const debounced = callback((value) => value)
-  const { useEffect } = require('react') as typeof import('react')
-  useEffect(() => {
-    debounced([1])
-    debounced([2])
-  })
-  return null
-}

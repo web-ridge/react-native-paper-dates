@@ -20,9 +20,9 @@ import {
   getMinIndex,
   getVerticalWindow,
   isIndexWithinRange,
+  nextVisibleIndexes,
   SwiperProps,
   useYearChange,
-  verticalWindowEdge,
 } from './SwiperUtils'
 import { getBeginOffset } from './dateUtils'
 import AutoSizer from './AutoSizer'
@@ -67,18 +67,6 @@ function getVisibleArray(
 }
 
 const HORIZONTAL_PAGES = 3
-
-function sameIndexes(left: number[], right: number[]) {
-  if (left.length !== right.length) {
-    return false
-  }
-  for (let i = 0; i < left.length; i += 1) {
-    if (left[i] !== right[i]) {
-      return false
-    }
-  }
-  return true
-}
 
 const styles = StyleSheet.create({
   inner: {
@@ -255,27 +243,11 @@ function SwiperInner({
         return
       }
       idx.current = newIndex
-      const first = visibleIndexes[0]
-      const last = visibleIndexes[visibleIndexes.length - 1]
-      if (
-        first === undefined ||
-        last === undefined ||
-        newIndex - first <= verticalWindowEdge ||
-        last - newIndex <= verticalWindowEdge
-      ) {
-        const next = getVerticalWindow(newIndex, startYear, endYear)
-        setVisibleIndexes((current) =>
-          sameIndexes(current, next) ? current : next
-        )
-      }
+      setVisibleIndexes((current) =>
+        nextVisibleIndexes(current, newIndex, startYear, endYear)
+      )
     },
-    [
-      endYear,
-      startWeekOnMonday,
-      startYear,
-      verticalMetrics.origin,
-      visibleIndexes,
-    ]
+    [endYear, startWeekOnMonday, startYear, verticalMetrics.origin]
   )
 
   const onMomentumScrollEnd = useCallback(

@@ -30,6 +30,7 @@ import type { StyleProp, ViewStyle } from 'react-native'
 import type {
   CalendarDate,
   CalendarDates,
+  CalendarMode,
   DayContentPosition,
   DayContentRenderer,
   DisableWeekDaysType,
@@ -66,13 +67,6 @@ interface BaseMonthProps {
   validRange?: ValidRangeType
 }
 
-export function getHorizontalMonthOffset(index: number, width: number) {
-  if (index < 0) {
-    return 0
-  }
-  return width * index
-}
-
 function getIndexCount(
   index: number,
   startYear?: number,
@@ -84,16 +78,6 @@ function getIndexCount(
   }
 
   return -(dynamicStartAtIndex - index)
-}
-
-export function getIndexFromHorizontalOffset(
-  offset: number,
-  width: number,
-  startYear?: number,
-  endYear?: number
-): number {
-  const dynamicStartAtIndex = getStartAtIndex(startYear, endYear)
-  return dynamicStartAtIndex + Math.floor(offset / width)
 }
 
 export function getIndexFromVerticalOffset(
@@ -119,29 +103,6 @@ export function getIndexFromVerticalOffset(
     estimatedIndex -= Math.floor(difference)
   }
   return estimatedIndex
-}
-
-export function getLocalMonthOffset(
-  visibleIndexes: number[],
-  monthIndex: number,
-  startWeekOnMonday: boolean,
-  startYear?: number,
-  endYear?: number
-): number {
-  let offset = 0
-  for (const visibleIndex of visibleIndexes) {
-    if (visibleIndex === monthIndex) {
-      return offset
-    }
-    offset += getMonthHeight(
-      'vertical',
-      visibleIndex,
-      startWeekOnMonday,
-      startYear,
-      endYear
-    )
-  }
-  return offset
 }
 
 export function getMonthHeight(
@@ -244,26 +205,6 @@ export function getVerticalMonthsOffset(
   return c + dynamicBeginOffset
 }
 
-export function getVisibleMonthsHeight(
-  visibleIndexes: number[],
-  startWeekOnMonday: boolean,
-  startYear?: number,
-  endYear?: number
-): number {
-  return visibleIndexes.reduce(
-    (sum, visibleIndex) =>
-      sum +
-      getMonthHeight(
-        'vertical',
-        visibleIndex,
-        startWeekOnMonday,
-        startYear,
-        endYear
-      ),
-    0
-  )
-}
-
 export function horizontalMonthScrolls(
   viewportHeight: number,
   index: number,
@@ -278,7 +219,7 @@ export function horizontalMonthScrolls(
   return weekSize * weeks > viewportHeight - horizontalMonthChrome
 }
 
-function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
+function Month(props: BaseMonthProps & CalendarMode) {
   const {
     date,
     dates,
@@ -627,22 +568,6 @@ const horizontalMonthChrome =
 
 export const monthHeaderSingleHeight =
   monthHeaderSingleMarginTop + monthHeaderSingleMarginBottom
-
-interface MonthMultiProps extends BaseMonthProps {
-  dates: CalendarDates
-  mode: 'multiple'
-}
-
-interface MonthRangeProps extends BaseMonthProps {
-  endDate: CalendarDate
-  mode: 'range'
-  startDate: CalendarDate
-}
-
-interface MonthSingleProps extends BaseMonthProps {
-  date: CalendarDate
-  mode: 'single'
-}
 
 type VerticalLayout = {
   gridCount: number[]
