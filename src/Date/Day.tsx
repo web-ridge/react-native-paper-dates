@@ -5,7 +5,7 @@ import DayRange from './DayRange'
 import { daySize } from './dateUtils'
 
 import type { PaperTheme } from '../shared/utils'
-import type { DayContentPosition, DayContentRenderer } from './Calendar'
+import type { DayContentPosition, DayContentRenderer } from './types'
 import { memo, useCallback } from 'react'
 
 function EmptyDayPure() {
@@ -24,7 +24,7 @@ function Day(props: {
   isToday: boolean
   leftCrop: boolean
   month: number
-  onPressDate: (date: Date) => any
+  onPressDate: (date: Date) => void
   primaryColor: string
   rightCrop: boolean
   selectColor: string

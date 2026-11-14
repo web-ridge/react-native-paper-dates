@@ -103,7 +103,6 @@ describe('remaining date branches', () => {
       (node: { props: { onChangeText?: Function } }) =>
         typeof node.props.onChangeText === 'function'
     )[0]
-    const { act } = require('@testing-library/react-native') as typeof import('@testing-library/react-native')
     await act(() => {
       field.props.onChangeText('06/12/2022')
     })

@@ -5,10 +5,11 @@ import { Text, useTheme } from 'react-native-paper'
 import {
   clockTypes,
   inputTypes,
-  PossibleClockTypes,
-  PossibleInputTypes,
   toHourInputFormat,
   toHourOutputFormat,
+  type PossibleClockTypes,
+  type PossibleInputTypes,
+  type TimeChange,
 } from './timeUtils'
 import TimeInput from './TimeInput'
 import AmPmSwitcher from './AmPmSwitcher'
@@ -36,12 +37,8 @@ function TimeInputs({
   is24Hour: boolean
   locale?: string
   minutes: number
-  onChange: (hoursMinutesAndFocused: {
-    focused?: undefined | PossibleClockTypes
-    hours: number
-    minutes: number
-  }) => any
-  onFocusInput: (type: PossibleClockTypes) => any
+  onChange: TimeChange
+  onFocusInput: (type: PossibleClockTypes) => void
 }) {
   const theme = useTheme()
 
@@ -108,7 +105,7 @@ function TimeInputs({
           }
           value={toHourInputFormat(hours, is24Hour)}
         />
-        {inputType === 'keyboard' ? (
+        {inputType === inputTypes.keyboard ? (
           <Text maxFontSizeMultiplier={1.5} variant="bodySmall">
             {getTranslation(locale, 'hour', 'Hour')}
           </Text>
@@ -118,7 +115,7 @@ function TimeInputs({
         style={[
           styles.hoursAndMinutesSeparator,
           // eslint-disable-next-line react-native/no-inline-styles
-          { marginBottom: inputType === 'keyboard' ? 16 : 0 },
+          { marginBottom: inputType === inputTypes.keyboard ? 16 : 0 },
         ]}
       >
         <View style={sharedStyles.root} />
@@ -169,7 +166,7 @@ function TimeInputs({
           }
           value={minutes}
         />
-        {inputType === 'keyboard' ? (
+        {inputType === inputTypes.keyboard ? (
           <Text maxFontSizeMultiplier={1.5} variant="bodySmall">
             {getTranslation(locale, 'minute', 'Minute')}
           </Text>

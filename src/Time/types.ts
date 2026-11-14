@@ -5,7 +5,7 @@ export type PossibleHourTypes = 'am' | 'pm'
 export type PossibleInputTypes = 'keyboard' | 'picker'
 
 export type TimeChange = (params: {
-  focused?: undefined | PossibleClockTypes
+  focused?: PossibleClockTypes
   hours: number
   minutes: number
-}) => any
+}) => void

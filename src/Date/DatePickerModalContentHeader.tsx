@@ -1,13 +1,12 @@
 import { StyleSheet, View } from 'react-native'
 import { IconButton, Text, useTheme } from 'react-native-paper'
-import type { ModeType } from './Calendar'
+import type { DisableWeekDaysType, ModeType } from './types'
 import type { LocalState } from './DatePickerModalContent'
 import { useHeaderTextColor } from '../shared/utils'
 import Color from 'color'
 import { getTranslation } from '../translations/utils'
 import { useMemo } from 'react'
 import { sharedStyles } from '../shared/styles'
-import type { DisableWeekDaysType } from './dateUtils'
 import {
   alignTextToFirstWeekday,
   centerIconOnLastWeekday,
@@ -35,7 +34,7 @@ export interface HeaderContentProps extends HeaderPickProps {
   disableWeekDays?: DisableWeekDaysType
   locale: string | undefined
   mode: ModeType
-  onToggle: () => any
+  onToggle: () => void
   state: LocalState
 }
 

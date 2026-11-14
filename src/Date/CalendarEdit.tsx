@@ -1,11 +1,10 @@
 import { Keyboard, StyleSheet, View } from 'react-native'
 import type { TextInputInstance } from 'react-native'
 
-import type { ModeType, ValidRangeType } from './Calendar'
 import type { LocalState } from './DatePickerModalContent'
+import type { DisableWeekDaysType, ModeType, ValidRangeType } from './types'
 
 import DatePickerInputWithoutModal from './DatePickerInputWithoutModal'
-import type { DisableWeekDaysType } from './dateUtils'
 import { weekdaySpan, weekdaySpanOvershoot } from './weekdayColumns'
 import { memo, useCallback, useEffect, useRef } from 'react'
 import { useTheme } from 'react-native-paper'
@@ -33,7 +32,7 @@ function CalendarEdit({
   label?: string
   locale: string
   mode: ModeType
-  onChange: (s: LocalState) => any
+  onChange: (s: LocalState) => void
   placeholder?: string
   startLabel?: string
   state: LocalState

@@ -1,7 +1,11 @@
 import { StyleSheet, View } from 'react-native'
 import { Text, TouchableRipple, useTheme } from 'react-native-paper'
 import { useContext } from 'react'
-import { inputTypes, PossibleInputTypes, useSwitchColors } from './timeUtils'
+import {
+  inputTypes,
+  useSwitchColors,
+  type PossibleInputTypes,
+} from './timeUtils'
 import { DisplayModeContext } from '../contexts/DisplayModeContext'
 import { sharedStyles } from '../shared/styles'
 
@@ -14,7 +18,7 @@ export default function AmPmSwitcher({
   direction?: 'vertical' | 'horizontal'
   hours: number
   inputType: PossibleInputTypes
-  onChange: (newHours: number) => any
+  onChange: (newHours: number) => void
 }) {
   const theme = useTheme()
 
@@ -80,7 +84,7 @@ function SwitchButton({
 }: {
   disabled: boolean
   label: string
-  onPress: (() => any) | undefined
+  onPress: (() => void) | undefined
   selected: boolean
 }) {
   const theme = useTheme()

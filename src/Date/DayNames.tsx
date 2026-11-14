@@ -1,7 +1,8 @@
 import { StyleSheet, View } from 'react-native'
 import DayName from './DayName'
 import { useTheme } from 'react-native-paper'
-import { DisableWeekDaysType, showWeekDay } from './dateUtils'
+import { showWeekDay } from './dateUtils'
+import type { DisableWeekDaysType } from './types'
 import { memo, useMemo } from 'react'
 
 export const dayNamesHeight = 44
@@ -12,7 +13,7 @@ function DayNames({
   startWeekOnMonday,
 }: {
   disableWeekDays?: DisableWeekDaysType
-  locale: undefined | string
+  locale: string | undefined
   startWeekOnMonday: boolean
 }) {
   const theme = useTheme()

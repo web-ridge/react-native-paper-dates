@@ -12,7 +12,6 @@ import {
   daySize,
   defaultEndYear,
   defaultStartYear,
-  DisableWeekDaysType,
   estimatedMonthHeight,
   getDaysInMonth,
   getEndOfDay,
@@ -33,9 +32,10 @@ import type {
   CalendarDates,
   DayContentPosition,
   DayContentRenderer,
+  DisableWeekDaysType,
   ModeType,
   ValidRangeType,
-} from './Calendar'
+} from './types'
 import { dayNamesHeight } from './DayNames'
 import { useTextColorOnPrimary } from '../shared/utils'
 import { memo, useMemo } from 'react'
@@ -51,10 +51,10 @@ interface BaseMonthProps {
   endDate?: CalendarDate
   endYear?: number
   index: number
-  locale: undefined | string
+  locale: string | undefined
   mode: ModeType
-  onPressDate: (date: Date) => any
-  onPressYear: (year: number) => any
+  onPressDate: (date: Date) => void
+  onPressYear: (year: number) => void
   primaryColor: string
   roundness: number
   scrollMode: 'horizontal' | 'vertical'
@@ -421,7 +421,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
 
 export const weekMargin = 6
 export const weekSize = daySize + weekMargin
-export const montHeaderHeight = 56
+export const monthHeaderHeight = 56
 export const monthHeaderSingleMarginTop = 4
 export const monthHeaderSingleMarginBottom = 8 + 44 + 12
 export const monthHeaderSingleHeight =
@@ -436,7 +436,7 @@ const styles = StyleSheet.create({
     minHeight: 0,
   },
   monthHeader: {
-    height: montHeaderHeight,
+    height: monthHeaderHeight,
     justifyContent: 'center',
     overflow: 'hidden',
   },
@@ -604,7 +604,7 @@ export function getLocalMonthOffset(
 }
 
 const horizontalMonthChrome =
-  monthHeaderSingleMarginTop + montHeaderHeight + monthHeaderSingleMarginBottom
+  monthHeaderSingleMarginTop + monthHeaderHeight + monthHeaderSingleMarginBottom
 
 export function horizontalMonthScrolls(
   viewportHeight: number,
@@ -635,7 +635,7 @@ export function getMonthHeight(
 
   const currentMonthHeight = weekSize * gc
   const extraHeight =
-    scrollMode === 'horizontal' ? monthHeaderSingleHeight : montHeaderHeight
+    scrollMode === 'horizontal' ? monthHeaderSingleHeight : monthHeaderHeight
   return calendarHeight + currentMonthHeight + extraHeight
 }
 
@@ -648,7 +648,7 @@ export function getVerticalMonthsOffset(
   const count = getIndexCount(index, startYear, endYear)
   const ob = weeksOffset(index, startWeekOnMonday, startYear, endYear)
   const monthsHeight = weekSize * ob
-  const c = monthsHeight + count * (dayNamesHeight + montHeaderHeight)
+  const c = monthsHeight + count * (dayNamesHeight + monthHeaderHeight)
   const dynamicBeginOffset =
     estimatedMonthHeight * getStartAtIndex(startYear, endYear)
 
@@ -688,7 +688,7 @@ export function getVerticalMonthScrollY(
     0,
     getVerticalMonthsOffset(index, startWeekOnMonday, startYear, endYear) -
       origin -
-      montHeaderHeight
+      monthHeaderHeight
   )
 }
 

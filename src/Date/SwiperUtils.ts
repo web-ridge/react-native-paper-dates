@@ -1,28 +1,29 @@
-import { type MutableRefObject, useEffect } from 'react'
+import { type MutableRefObject, type ReactNode, useEffect } from 'react'
 import { useLatest } from '../shared/utils'
 import {
   addMonths,
+  defaultEndYear,
+  defaultStartYear,
   differenceInMonths,
   getRealIndex,
   getStartAtIndex,
   getTotalMonths,
 } from './dateUtils'
-import { defaultStartYear, defaultEndYear } from './dateUtils'
 
 export type RenderProps = {
   endInset?: number
   index: number
-  onNext: () => any
-  onPrev: () => any
+  onNext: () => void
+  onPrev: () => void
 }
 
 export type SwiperProps = {
   endYear?: number
   initialIndex: number
   initialLayout?: { width: number; height: number }
-  renderFooter?: (renderProps: RenderProps) => any
-  renderHeader?: (renderProps: RenderProps) => any
-  renderItem: (renderProps: RenderProps) => any
+  renderFooter?: (renderProps: RenderProps) => ReactNode
+  renderHeader?: (renderProps: RenderProps) => ReactNode
+  renderItem: (renderProps: RenderProps) => ReactNode
   scrollMode: 'horizontal' | 'vertical'
   selectedYear: number | undefined
   startWeekOnMonday: boolean

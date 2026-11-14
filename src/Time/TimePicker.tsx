@@ -3,26 +3,17 @@ import { StyleSheet, useWindowDimensions, View } from 'react-native'
 import {
   circleSize,
   inputTypes,
-  PossibleClockTypes,
-  PossibleInputTypes,
   toHourInputFormat,
   toHourOutputFormat,
+  type PossibleClockTypes,
+  type PossibleInputTypes,
+  type TimeChange,
 } from './timeUtils'
 
 import AnalogClock from './AnalogClock'
 import TimeInputs from './TimeInputs'
 import { DisplayModeContext } from '../contexts/DisplayModeContext'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
-
-type onChangeFunc = ({
-  focused,
-  hours,
-  minutes,
-}: {
-  focused?: undefined | PossibleClockTypes
-  hours: number
-  minutes: number
-}) => any
 
 function TimePicker({
   focused,
@@ -39,10 +30,10 @@ function TimePicker({
   hours: number
   inputFontSize?: number
   inputType: PossibleInputTypes
-  locale?: undefined | string
+  locale?: string
   minutes: number
-  onChange: onChangeFunc
-  onFocusInput: (type: PossibleClockTypes) => any
+  onChange: TimeChange
+  onFocusInput: (type: PossibleClockTypes) => void
   use24HourClock?: boolean
 }) {
   const dimensions = useWindowDimensions()
@@ -74,7 +65,7 @@ function TimePicker({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const onInnerChange = useCallback<onChangeFunc>(
+  const onInnerChange = useCallback<TimeChange>(
     (params) => {
       params.hours = toHourOutputFormat(params.hours, hours, is24Hour)
       onChange(params)

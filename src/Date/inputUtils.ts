@@ -1,5 +1,5 @@
 import { useInputFormat, useInputFormatter, useRangeChecker } from './dateUtils'
-import type { ValidRangeType } from './Calendar'
+import type { ValidRangeType } from './types'
 import { getTranslation } from '../translations/utils'
 import { useState } from 'react'
 
@@ -12,9 +12,9 @@ export default function useDateInput({
   value,
 }: {
   inputMode: 'start' | 'end'
-  locale: undefined | string
+  locale: string | undefined
   onChange: (d: Date) => void
-  onValidationError?: ((error: string | null) => void) | undefined
+  onValidationError?: (error: string | null) => void
   validRange: ValidRangeType | undefined
   value: Date | undefined
 }) {
@@ -68,7 +68,7 @@ export default function useDateInput({
       return
     }
     if (!isWithinValidRange(finalDate)) {
-      let errors =
+      const errors =
         validStart && validEnd
           ? [
               `${getTranslation(
@@ -93,19 +93,15 @@ export default function useDateInput({
                   )(formatter.format(validEnd))
                 : '',
             ]
-      const inputError = errors.filter((n) => n).join(' ')
-      setError(errors.filter((n) => n).join(' '))
+      const inputError = errors.filter((message) => message).join(' ')
+      setError(inputError)
       onValidationError && onValidationError(inputError)
       return
     }
 
     setError(null)
-    onValidationError && onValidationError(null)
-    if (inputMode === 'end') {
-      onChange(finalDate)
-    } else {
-      onChange(finalDate)
-    }
+    onValidationError?.(null)
+    onChange(finalDate)
   }
   return {
     onChange,

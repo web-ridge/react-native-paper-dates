@@ -15,9 +15,10 @@ import {
   clockTypes,
   getTimeInputTypeIcon,
   inputTypes,
-  PossibleClockTypes,
-  PossibleInputTypes,
   reverseInputTypes,
+  type PossibleClockTypes,
+  type PossibleInputTypes,
+  type TimeChange,
 } from './timeUtils'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { sharedStyles } from '../shared/styles'
@@ -46,14 +47,14 @@ export function TimePickerModal({
   clockIcon?: string
   confirmLabel?: string
   defaultInputType?: PossibleInputTypes
-  hours?: number | undefined
+  hours?: number
   inputFontSize?: number
   keyboardIcon?: string
   label?: string
-  locale?: undefined | string
-  minutes?: number | undefined
-  onConfirm: (hoursAndMinutes: { hours: number; minutes: number }) => any
-  onDismiss: () => any
+  locale?: string
+  minutes?: number
+  onConfirm: (hoursAndMinutes: { hours: number; minutes: number }) => void
+  onDismiss: () => void
   uppercase?: boolean
   use24HourClock?: boolean
   visible: boolean | undefined
@@ -79,12 +80,8 @@ export function TimePickerModal({
     (type: PossibleClockTypes) => setFocused(type),
     []
   )
-  const onChange = useCallback(
-    (params: {
-      focused?: PossibleClockTypes | undefined
-      hours: number
-      minutes: number
-    }) => {
+  const onChange = useCallback<TimeChange>(
+    (params) => {
       if (params.focused) {
         setFocused(params.focused)
       }

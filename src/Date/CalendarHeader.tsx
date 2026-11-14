@@ -1,7 +1,7 @@
 import { Platform, StyleSheet, View } from 'react-native'
 import { IconButton, useTheme } from 'react-native-paper'
 import DayNames, { dayNamesHeight } from './DayNames'
-import type { DisableWeekDaysType } from './dateUtils'
+import type { DisableWeekDaysType } from './types'
 import { centerIconOnLastWeekday } from './weekdayColumns'
 import { getTranslation } from '../translations/utils'
 import { sharedStyles } from '../shared/styles'
@@ -58,9 +58,9 @@ function CalendarHeader({
 }: {
   disableWeekDays?: DisableWeekDaysType
   endInset?: number
-  locale: undefined | string
-  onNext: () => any
-  onPrev: () => any
+  locale: string | undefined
+  onNext: () => void
+  onPrev: () => void
   scrollMode: 'horizontal' | 'vertical'
   startWeekOnMonday: boolean
 }) {

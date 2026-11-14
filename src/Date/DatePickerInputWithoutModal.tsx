@@ -3,7 +3,8 @@ import { useTheme } from 'react-native-paper'
 import { StyleSheet, View } from 'react-native'
 import useDateInput from './inputUtils'
 import type { DatePickerInputProps } from './DatePickerInput.shared'
-import { forwardRef, ReactNode } from 'react'
+import { forwardRef, type ReactNode, type Ref } from 'react'
+import type { TextInputHandles } from 'react-native-paper'
 
 function DatePickerInputWithoutModal(
   {
@@ -47,9 +48,9 @@ function DatePickerInputWithoutModal(
       uppercase: DatePickerInputProps['uppercase']
       validRange: DatePickerInputProps['validRange']
       value: DatePickerInputProps['value']
-    }) => any
+    }) => ReactNode
   },
-  ref: any
+  ref: Ref<TextInputHandles>
 ) {
   const theme = useTheme()
   const {
@@ -91,11 +92,11 @@ function DatePickerInputWithoutModal(
             keyboardType={rest.keyboardType ?? 'number-pad'}
             label={getLabel({
               inputFormat,
-              label: label as any,
+              label,
               withDateFormatInLabel,
             })}
             mask={inputFormat}
-            onChange={(e) => onChangeText && onChangeText(e.nativeEvent.text)}
+            onChange={(e) => onChangeText?.(e.nativeEvent.text)}
             onChangeText={onDateInputChangeText}
             ref={ref}
             style={style}

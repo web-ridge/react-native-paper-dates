@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Animated, StyleSheet, View } from 'react-native'
 import { useTheme } from 'react-native-paper'
 import { sharedStyles } from '../shared/styles'
@@ -8,8 +8,8 @@ export default function AnimatedCrossView({
   calendarEdit,
   collapsed,
 }: {
-  calendar: any
-  calendarEdit: any
+  calendar: ReactNode
+  calendarEdit: ReactNode
   collapsed: boolean
 }) {
   const theme = useTheme()

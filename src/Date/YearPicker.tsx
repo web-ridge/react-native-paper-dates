@@ -22,7 +22,7 @@ function YearPicker({
   startYear,
 }: {
   endYear: number
-  onPressYear: (year: number) => any
+  onPressYear: (year: number) => void
   selectedYear: number | undefined
   selectingYear: boolean
   startYear: number
@@ -101,7 +101,7 @@ function YearPure({
   selected,
   year,
 }: {
-  onPressYear: (newYear: number) => any
+  onPressYear: (newYear: number) => void
   selected: boolean
   year: number
 }) {

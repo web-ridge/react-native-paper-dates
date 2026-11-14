@@ -1,5 +1,6 @@
 import { I18nManager, type DimensionValue, type ViewStyle } from 'react-native'
-import { showWeekDay, type DisableWeekDaysType } from './dateUtils'
+import { showWeekDay } from './dateUtils'
+import type { DisableWeekDaysType } from './types'
 
 const compactTextButtonPadding = 8
 const iconButtonPadding = 8

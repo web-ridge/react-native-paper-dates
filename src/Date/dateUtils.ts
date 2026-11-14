@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
-import type { ValidRangeType } from './Calendar'
+import type { DisableWeekDaysType, ValidRangeType } from './types'
 
-export type DisableWeekDaysType = number[]
+export type { DisableWeekDaysType }
 
 export function showWeekDay(
   dayIndex: number,
@@ -15,7 +15,7 @@ export function dateToUnix(d: Date): number {
 }
 
 export function addMonths(date: Date, count: number) {
-  let n = date.getDate()
+  const n = date.getDate()
   let n2 = new Date(date.getTime())
   n2.setDate(1)
   n2.setMonth(n2.getMonth() + count)
@@ -194,7 +194,7 @@ export const defaultEndYear = 2200
 const startAtIndexCache = new Map<string, number>()
 
 export function getStartAtIndex(startYear?: number, _endYear?: number): number {
-  const start = startYear || 1800
+  const start = startYear || defaultStartYear
   const today = new Date()
   const currentYear = today.getFullYear()
   const currentMonth = today.getMonth()
@@ -211,8 +211,8 @@ export function getStartAtIndex(startYear?: number, _endYear?: number): number {
 }
 
 export function getTotalMonths(startYear?: number, endYear?: number): number {
-  const start = startYear || 1800
-  const end = endYear || 2200
+  const start = startYear || defaultStartYear
+  const end = endYear || defaultEndYear
   return (end - start + 1) * 12
 }
 
@@ -220,15 +220,9 @@ export function getBeginOffset(startYear?: number, endYear?: number): number {
   return estimatedMonthHeight * getStartAtIndex(startYear, endYear)
 }
 
-export const startAtIndex = 2800
-export const totalMonths = startAtIndex * 2
-export const beginOffset = estimatedMonthHeight * startAtIndex
-
 export function createGridCounts(count: number): Array<number | undefined> {
   return new Array<number | undefined>(count)
 }
-
-export const gridCounts = new Array<number | undefined>(totalMonths)
 
 export function getGridCount(
   index: number,

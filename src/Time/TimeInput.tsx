@@ -2,8 +2,9 @@ import {
   Platform,
   StyleSheet,
   TextInput,
-  TextInputProps,
   View,
+  type TextInputInstance,
+  type TextInputProps,
 } from 'react-native'
 import { themeColor } from '../shared/utils'
 import { TouchableRipple, useTheme } from 'react-native-paper'
@@ -11,11 +12,11 @@ import { TouchableRipple, useTheme } from 'react-native-paper'
 import Color from 'color'
 import {
   inputTypes,
-  PossibleClockTypes,
-  PossibleInputTypes,
   useInputColors,
+  type PossibleClockTypes,
+  type PossibleInputTypes,
 } from './timeUtils'
-import { forwardRef, useEffect, useState } from 'react'
+import { forwardRef, useEffect, useState, type Ref } from 'react'
 import { sharedStyles } from '../shared/styles'
 
 interface TimeInputProps extends Omit<
@@ -25,8 +26,8 @@ interface TimeInputProps extends Omit<
   clockType: PossibleClockTypes
   inputFontSize?: number
   inputType: PossibleInputTypes
-  onChanged: (n: number) => any
-  onPress?: (type: PossibleClockTypes) => any
+  onChanged: (n: number) => void
+  onPress?: (type: PossibleClockTypes) => void
   pressed: boolean
   value: number
 }
@@ -42,7 +43,7 @@ function TimeInput(
     value,
     ...rest
   }: TimeInputProps,
-  ref: any
+  ref: Ref<TextInputInstance>
 ) {
   const theme = useTheme()
   const [inputFocused, setInputFocused] = useState<boolean>(false)

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useState, type ReactNode } from 'react'
 import { LayoutChangeEvent, useWindowDimensions, View } from 'react-native'
 import { sharedStyles } from '../shared/styles'
 
@@ -15,7 +15,7 @@ export default function AutoSizer({
   children,
   initialLayout,
 }: {
-  children: ({ width, height }: WidthAndHeight) => any
+  children: ({ width, height }: WidthAndHeight) => ReactNode
   initialLayout?: WidthAndHeight
 }) {
   const { width: windowWidth, height: windowHeight } = useWindowDimensions()

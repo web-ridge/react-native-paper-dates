@@ -3,7 +3,7 @@ import { Button, IconButton, useTheme } from 'react-native-paper'
 import { useHeaderTextColor } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
 import { sharedStyles } from '../shared/styles'
-import type { DisableWeekDaysType } from './dateUtils'
+import type { DisableWeekDaysType } from './types'
 import {
   alignIconToFirstWeekday,
   alignTextToLastWeekday,

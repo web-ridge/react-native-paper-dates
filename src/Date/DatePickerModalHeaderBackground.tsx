@@ -1,15 +1,16 @@
+import type { ReactNode } from 'react'
 import { StyleSheet, useWindowDimensions, View } from 'react-native'
 import { Divider } from 'react-native-paper'
 import { useHeaderBackgroundColor, useIsLargeScreen } from '../shared/utils'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import type { DisableWeekDaysType } from './dateUtils'
+import type { DisableWeekDaysType } from './types'
 import { weekdaySpan, weekdaySpanOvershoot } from './weekdayColumns'
 
 export default function DatePickerModalHeaderBackground({
   children,
   disableWeekDays,
 }: {
-  children: any
+  children: ReactNode
   disableWeekDays?: DisableWeekDaysType
 }) {
   const backgroundColor = useHeaderBackgroundColor()

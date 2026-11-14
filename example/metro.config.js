@@ -8,7 +8,7 @@ const projectRoot = __dirname
 const workspaceRoot = path.resolve(projectRoot, '..')
 const nodeModules = path.join(projectRoot, 'node_modules')
 const librarySrc = path.join(workspaceRoot, 'src')
-const libraryEntry = fs.realpathSync(path.join(librarySrc, 'index.tsx'))
+const libraryEntry = fs.realpathSync(path.join(librarySrc, 'index.ts'))
 const versionModulePath = path.join(projectRoot, 'src', 'libraryVersion.ts')
 const versionModuleSource = `// Synced from the library package.json when Metro starts.\nexport const libraryVersion = '${pak.version}'\n`
 

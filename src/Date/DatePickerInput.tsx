@@ -1,10 +1,11 @@
-import { TextInput } from 'react-native-paper'
+import { TextInput, type TextInputHandles } from 'react-native-paper'
 import DatePickerModal from './DatePickerModal'
 import { useLatest } from '../shared/utils'
 import type { DatePickerInputProps } from './DatePickerInput.shared'
 import DatePickerInputWithoutModal from './DatePickerInputWithoutModal'
 import { Platform, StyleProp, ViewStyle } from 'react-native'
-import { forwardRef, useCallback, useState } from 'react'
+import { forwardRef, useCallback, useState, type Ref } from 'react'
+import type { CalendarDate } from './types'
 import { defaultStartYear, defaultEndYear } from './dateUtils'
 
 function DatePickerInput(
@@ -16,7 +17,7 @@ function DatePickerInput(
     withModal = true,
     ...rest
   }: DatePickerInputProps,
-  ref: any
+  ref: Ref<TextInputHandles>
 ) {
   const [visible, setVisible] = useState(false)
 
@@ -24,14 +25,14 @@ function DatePickerInput(
 
   const onDismiss = useCallback(() => {
     setVisible(false)
-  }, [setVisible])
+  }, [])
 
   const onInnerConfirm = useCallback(
-    ({ date }: any) => {
+    ({ date }: { date: CalendarDate }) => {
       setVisible(false)
       onChangeRef.current(date)
     },
-    [setVisible, onChangeRef]
+    [onChangeRef]
   )
 
   return (
@@ -78,7 +79,7 @@ function DatePickerInput(
             disableStatusBarPadding={disableStatusBarPadding ?? false}
             endYear={endYear ?? defaultEndYear}
             inputEnabled={inputEnabled}
-            label={rest.label as any}
+            label={rest.label}
             locale={locale}
             mode="single"
             onConfirm={onInnerConfirm}

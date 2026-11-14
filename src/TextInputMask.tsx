@@ -1,14 +1,15 @@
 import {
   cloneElement,
-  ComponentProps,
   forwardRef,
   isValidElement,
-  ReactNode,
   useEffect,
   useMemo,
   useState,
+  type ComponentProps,
+  type ReactNode,
+  type Ref,
 } from 'react'
-import { TextInput } from 'react-native-paper'
+import { TextInput, type TextInputHandles } from 'react-native-paper'
 
 const splitCharacters = ['-', '/', '.', '年', ' ']
 function detectCharacter(mask: string): string {
@@ -34,7 +35,7 @@ function TextInputWithMask(
     mask: string
     value: string
   },
-  ref: any
+  ref: Ref<TextInputHandles>
 ) {
   const [controlledValue, setControlledValue] = useState(value || '')
 
@@ -79,7 +80,7 @@ function TextInputWithMask(
     }
 
     if (trimmedText.length === mask.length) {
-      onChangeText && onChangeText(trimmedText)
+      onChangeText?.(trimmedText)
     }
 
     setControlledValue(trimmedText)
@@ -97,7 +98,7 @@ function TextInputWithMask(
       }
       maxLength={mask.length}
       onChange={(e) => {
-        onChange && onChange(e)
+        onChange?.(e)
       }}
       onChangeText={onInnerChange}
       value={controlledValue}

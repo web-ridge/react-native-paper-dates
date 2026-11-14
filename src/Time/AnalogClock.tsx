@@ -15,7 +15,8 @@ import {
   getHourTypeFromOffset,
   getMinutes,
   hourTypes,
-  PossibleClockTypes,
+  type PossibleClockTypes,
+  type TimeChange,
 } from './timeUtils'
 import { useLatest } from '../shared/utils'
 import AnalogClockHours from './AnalogClockHours'
@@ -39,11 +40,7 @@ function AnalogClock({
   hours: number
   is24Hour: boolean
   minutes: number
-  onChange: (hoursMinutesAndFocused: {
-    focused?: undefined | PossibleClockTypes
-    hours: number
-    minutes: number
-  }) => any
+  onChange: TimeChange
 }) {
   const shortPointer = hours >= 12 && is24Hour
 

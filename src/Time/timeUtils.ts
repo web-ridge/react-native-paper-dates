@@ -1,5 +1,18 @@
 import type { ColorValue } from 'react-native'
 import { useTheme } from 'react-native-paper'
+import type {
+  PossibleClockTypes,
+  PossibleHourTypes,
+  PossibleInputTypes,
+  TimeChange,
+} from './types'
+
+export type {
+  PossibleClockTypes,
+  PossibleHourTypes,
+  PossibleInputTypes,
+  TimeChange,
+}
 
 type HighlightColors = {
   backgroundColor: ColorValue
@@ -8,7 +21,6 @@ type HighlightColors = {
 
 export const circleSize = 256
 
-export type PossibleHourTypes = 'am' | 'pm'
 export type HourTypeMap = {
   [hourType in PossibleHourTypes]: PossibleHourTypes
 }
@@ -27,7 +39,6 @@ export function getHourType(hours: number): PossibleHourTypes | undefined {
   return undefined
 }
 
-export type PossibleInputTypes = 'keyboard' | 'picker'
 export type InputTypeMap = {
   [inputType in PossibleInputTypes]: PossibleInputTypes
 }
@@ -58,7 +69,6 @@ export const getTimeInputTypeIcon = (
   )
 }
 
-export type PossibleClockTypes = 'hours' | 'minutes'
 export type ClockTypeMap = {
   [clockType in PossibleClockTypes]: PossibleClockTypes
 }

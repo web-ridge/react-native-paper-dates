@@ -1,5 +1,5 @@
-import { ComponentProps, CSSProperties } from 'react'
-import type { ValidRangeType } from './Calendar'
+import type { ComponentProps, CSSProperties } from 'react'
+import type { ValidRangeType } from './types'
 import type { TextInput } from 'react-native-paper'
 
 export type DatePickerInputProps = {
@@ -19,14 +19,14 @@ export type DatePickerInputProps = {
   locale: string
   onChange: (date: Date | undefined) => void
   onChangeText?: (text: string | undefined) => void
-  onValidationError?: ((error: string | null) => void) | undefined
+  onValidationError?: (error: string | null) => void
   presentationStyle?: 'pageSheet' | 'overFullScreen'
   saveLabel?: string
   saveLabelDisabled?: boolean
   startWeekOnMonday?: boolean
   startYear?: number
   uppercase?: boolean
-  validRange?: ValidRangeType | undefined
+  validRange?: ValidRangeType
   value: Date | undefined
   withDateFormatInLabel?: boolean
   withModal?: boolean

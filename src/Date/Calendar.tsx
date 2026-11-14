@@ -5,48 +5,45 @@ import Month from './Month'
 import {
   areDatesOnSameDay,
   dateToUnix,
-  DisableWeekDaysType,
+  defaultEndYear,
+  defaultStartYear,
   getEndOfDay,
   getInitialIndex,
 } from './dateUtils'
-
+import type {
+  CalendarDate,
+  CalendarDates,
+  DayContentPosition,
+  DayContentRenderer,
+  DisableWeekDaysType,
+  ModeType,
+  MultiChange,
+  MultiConfirm,
+  RangeChange,
+  ScrollModeType,
+  SingleChange,
+  ValidRangeType,
+} from './types'
 import CalendarHeader from './CalendarHeader'
 import { memo, useCallback, useState } from 'react'
-import type { ReactNode } from 'react'
 import YearPicker from './YearPicker'
 import { useTheme } from 'react-native-paper'
 import { themeColor, useLatest } from '../shared/utils'
 import { sharedStyles } from '../shared/styles'
-import { defaultStartYear, defaultEndYear } from './dateUtils'
 
-export type ModeType = 'single' | 'range' | 'multiple'
-
-export type ScrollModeType = 'horizontal' | 'vertical'
-
-export type ValidRangeType = {
-  disabledDates?: Date[]
-  endDate?: Date
-  startDate?: Date
+export type {
+  CalendarDate,
+  CalendarDates,
+  DayContentPosition,
+  DayContentRenderer,
+  ModeType,
+  MultiChange,
+  MultiConfirm,
+  RangeChange,
+  ScrollModeType,
+  SingleChange,
+  ValidRangeType,
 }
-
-export type DayContentPosition =
-  | 'top'
-  | 'top-left'
-  | 'top-right'
-  | 'center'
-  | 'bottom'
-  | 'bottom-left'
-  | 'bottom-right'
-
-export type DayContentRenderer = (params: {
-  date: Date
-  day: number
-  disabled: boolean
-  isToday: boolean
-  month: number
-  selected: boolean
-  year: number
-}) => ReactNode
 
 export type BaseCalendarProps = {
   date?: CalendarDate
@@ -65,24 +62,6 @@ export type BaseCalendarProps = {
   startYear?: number
   validRange?: ValidRangeType
 }
-
-export type CalendarDate = Date | undefined
-export type CalendarDates = Date[] | undefined | null
-
-export type RangeChange = (params: {
-  endDate: CalendarDate
-  startDate: CalendarDate
-}) => any
-
-export type SingleChange = (params: { date: CalendarDate }) => void
-
-export type MultiChange = (params: {
-  change: 'added' | 'removed'
-  datePressed: Date
-  dates: CalendarDates
-}) => any
-
-export type MultiConfirm = (params: { dates: Date[] }) => void
 
 export interface CalendarSingleProps extends BaseCalendarProps {
   date: CalendarDate
@@ -200,8 +179,8 @@ function Calendar(
       onPrev,
     }: {
       endInset?: number
-      onNext: () => any
-      onPrev: () => any
+      onNext: () => void
+      onPrev: () => void
     }) => (
       <CalendarHeader
         disableWeekDays={disableWeekDays}

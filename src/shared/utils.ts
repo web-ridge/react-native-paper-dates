@@ -1,7 +1,6 @@
 import { useMemo, useRef } from 'react'
 import { useWindowDimensions } from 'react-native'
-import { useTheme } from 'react-native-paper'
-import type { Theme } from 'react-native-paper'
+import { useTheme, type Theme } from 'react-native-paper'
 import Color from 'color'
 
 export const supportedOrientations: (

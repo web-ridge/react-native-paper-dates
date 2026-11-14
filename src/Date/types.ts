@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 
 export type CalendarDate = Date | undefined
-export type CalendarDates = Date[] | undefined | null
+export type CalendarDates = Date[] | null | undefined
 
 export type DayContentPosition =
   | 'top'
@@ -30,14 +30,14 @@ export type MultiChange = (params: {
   change: 'added' | 'removed'
   datePressed: Date
   dates: CalendarDates
-}) => any
+}) => void
 
 export type MultiConfirm = (params: { dates: Date[] }) => void
 
 export type RangeChange = (params: {
   endDate: CalendarDate
   startDate: CalendarDate
-}) => any
+}) => void
 
 export type ScrollModeType = 'horizontal' | 'vertical'
 

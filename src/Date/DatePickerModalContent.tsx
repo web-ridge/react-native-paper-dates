@@ -1,12 +1,12 @@
-import Calendar, {
-  BaseCalendarProps,
+import Calendar, { type BaseCalendarProps } from './Calendar'
+import type {
   CalendarDate,
   CalendarDates,
   MultiChange,
   MultiConfirm,
   RangeChange,
   SingleChange,
-} from './Calendar'
+} from './types'
 
 import AnimatedCrossView from './AnimatedCrossView'
 import DatePickerModalHeader from './DatePickerModalHeader'
@@ -35,7 +35,7 @@ interface DatePickerModalContentBaseProps {
   inputFormat?: string
   locale: string
   onCalendarLayout?: (layout: { width: number; height: number }) => void
-  onDismiss: () => any
+  onDismiss: () => void
   saveLabelDisabled?: boolean
   statusBarOnTopOfBackdrop?: boolean
   uppercase?: boolean
@@ -74,13 +74,16 @@ export function DatePickerModalContent(
     | DatePickerModalContentMultiProps
 ) {
   const {
+    date,
     dateMode,
+    dates,
     dayContent,
     dayContentPosition,
     dayContentStyle,
     disableSafeTop,
     disableStatusBar,
     disableWeekDays,
+    endDate,
     endYear,
     initialLayout,
     locale,
@@ -89,38 +92,40 @@ export function DatePickerModalContent(
     onChange,
     onConfirm,
     onDismiss,
+    startDate,
     startWeekOnMonday,
     startYear,
     statusBarOnTopOfBackdrop,
     validRange,
   } = props
-  const anyProps = props as any
   const defaultUppercase = false
   const insets = useSafeAreaInsets()
 
   const [state, setState] = useState<LocalState>({
-    date: anyProps.date,
-    startDate: anyProps.startDate,
-    endDate: anyProps.endDate,
-    dates: anyProps.dates,
+    date,
+    startDate,
+    endDate,
+    dates,
   })
   const [collapsed, setCollapsed] = useState(true)
 
   useEffect(() => {
     setState({
-      date: anyProps.date,
-      startDate: anyProps.startDate,
-      endDate: anyProps.endDate,
-      dates: anyProps.dates,
+      date,
+      startDate,
+      endDate,
+      dates,
     })
-  }, [anyProps.date, anyProps.startDate, anyProps.endDate, anyProps.dates])
+  }, [date, startDate, endDate, dates])
 
   const onInnerChange = useCallback(
-    (params: any) => {
-      onChange && onChange(params)
+    (params: Partial<LocalState>) => {
+      if (onChange) {
+        ;(onChange as (next: Partial<LocalState>) => void)(params)
+      }
       setState((prev) => ({ ...prev, ...params }))
     },
-    [onChange, setState]
+    [onChange]
   )
 
   const onInnerConfirm = useCallback(() => {

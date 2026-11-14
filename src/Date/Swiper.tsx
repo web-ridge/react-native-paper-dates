@@ -7,27 +7,28 @@ import {
   getVerticalMonthsOffset,
   horizontalMonthScrolls,
 } from './Month'
-import { getBeginOffset } from './dateUtils'
+import { defaultEndYear, defaultStartYear, getBeginOffset } from './dateUtils'
 import { useLatest } from '../shared/utils'
 import {
-  RenderProps,
-  SwiperProps,
   getMaxIndex,
   getMinIndex,
   getVerticalWindow,
   isIndexWithinRange,
   useYearChange,
   verticalWindowEdge,
+  type RenderProps,
+  type SwiperProps,
 } from './SwiperUtils'
 import AutoSizer from './AutoSizer'
 import {
   memo,
-  UIEvent,
   useCallback,
   useEffect,
   useLayoutEffect,
   useRef,
   useState,
+  type ReactNode,
+  type UIEvent,
 } from 'react'
 import { layoutScrollbarWidth } from './CalendarHeader'
 
@@ -166,13 +167,13 @@ function VerticalScroller({
   endYear?: number
   height: number
   initialIndex: number
-  renderItem: (renderProps: RenderProps) => any
+  renderItem: (renderProps: RenderProps) => ReactNode
   startWeekOnMonday: boolean
   startYear?: number
   width: number
 }) {
-  const effectiveStartYear = startYear || 1800
-  const effectiveEndYear = endYear || 2200
+  const effectiveStartYear = startYear || defaultStartYear
+  const effectiveEndYear = endYear || defaultEndYear
   const constrainedInitialIndex = isIndexWithinRange(
     initialIndex,
     effectiveStartYear,
@@ -334,32 +335,34 @@ function VerticalScroller({
 
 const empty = () => null
 
-export function useDebouncedCallback(callback: any): any {
-  const mounted = useRef<boolean>(true)
-  const timerId = useRef<any>(null)
+export function useDebouncedCallback<T>(
+  callback: (value: T) => void
+): (value: T) => void {
+  const mounted = useRef(true)
+  const timerId = useRef<number | null>(null)
   const latest = useLatest(callback)
 
   useEffect(() => {
     return () => {
       mounted.current = false
-      if (timerId.current) {
+      if (timerId.current !== null) {
         window.cancelAnimationFrame(timerId.current)
       }
     }
-  }, [mounted, timerId])
+  }, [])
 
   return useCallback(
-    (args: any) => {
-      if (timerId.current) {
+    (value: T) => {
+      if (timerId.current !== null) {
         window.cancelAnimationFrame(timerId.current)
       }
-      timerId.current = window.requestAnimationFrame(function () {
+      timerId.current = window.requestAnimationFrame(() => {
         if (mounted.current) {
-          latest.current(args)
+          latest.current(value)
         }
       })
     },
-    [mounted, timerId, latest]
+    [latest]
   )
 }
 

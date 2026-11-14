@@ -29,15 +29,15 @@ let translationsPerLocale: Record<
 export function getTranslation<K extends keyof TranslationsType>(
   locale: string | undefined,
   key: K,
-  fallback?: any
-) {
+  fallback?: TranslationsType[K]
+): TranslationsType[K] {
   const l = locale || 'en'
   const translationForLocale = translationsPerLocale[l]
   if (!translationForLocale) {
     console.warn(
       `[react-native-paper-dates] The locale ${locale} is not registered, see README!, key: ${key}`
     )
-    return fallback || key
+    return (fallback || key) as TranslationsType[K]
   }
   const translation: TranslationsType[K] =
     typeof translationForLocale === 'function'
@@ -48,7 +48,7 @@ export function getTranslation<K extends keyof TranslationsType>(
       `[react-native-paper-dates] The locale ${locale} is registered, but ${key} is missing`
     )
   }
-  return translation || fallback || key
+  return (translation || fallback || key) as TranslationsType[K]
 }
 
 export function registerTranslation(

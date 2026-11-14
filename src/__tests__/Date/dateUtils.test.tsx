@@ -25,7 +25,7 @@ import {
   useRangeChecker,
 } from '../../Date/dateUtils'
 
-describe('timeUtils', () => {
+describe('dateUtils', () => {
   it('should return true for weekday', () => {
     expect(showWeekDay(6)).toBeTruthy()
   })
