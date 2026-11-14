@@ -7,33 +7,23 @@ import {
 } from '@testing-library/react-native'
 import { PaperProvider } from 'react-native-paper'
 
-async function render(
-  ui: ReactElement,
-  options?: RenderOptions
-): Promise<RenderResult> {
-  const { wrapper: Wrapper, ...rest } = options || {}
-
-  return rtlRender(ui, {
-    ...rest,
-    wrapper: ({ children }) => (
-      <PaperProvider>
-        {Wrapper ? <Wrapper>{children}</Wrapper> : children}
-      </PaperProvider>
-    ),
-  })
+export function byTestId(
+  screen: { container: { queryAll: Function } },
+  id: string | RegExp
+) {
+  return screen.container.queryAll((node: PressableInstance) => {
+    const testID = node.props.testID
+    if (typeof testID !== 'string') return false
+    return typeof id === 'string' ? testID === id : id.test(testID)
+  }) as PressableInstance[]
 }
 
 type Fiber = {
   child: Fiber | null
-  sibling: Fiber | null
-  return: Fiber | null
   memoizedProps?: { onPress?: unknown }
   pendingProps?: { onPress?: unknown }
-}
-
-export type PressableInstance = {
-  props: Record<string, unknown>
-  unstable_fiber?: Fiber | null
+  return: Fiber | null
+  sibling: Fiber | null
 }
 
 export function findPress(node: PressableInstance): (() => void) | undefined {
@@ -47,38 +37,9 @@ export function findPress(node: PressableInstance): (() => void) | undefined {
   return undefined
 }
 
-export async function pressNode(node: PressableInstance) {
-  const onPress = findPress(node)
-  if (!onPress) {
-    throw new Error(
-      `no onPress for ${String(node.props.testID ?? node.props.accessibilityLabel)}`
-    )
-  }
-  await act(async () => {
-    onPress()
-  })
-}
-
-export function byTestId(
-  screen: { container: { queryAll: Function } },
-  id: string | RegExp
-) {
-  return screen.container.queryAll((node: PressableInstance) => {
-    const testID = node.props.testID
-    if (typeof testID !== 'string') return false
-    return typeof id === 'string' ? testID === id : id.test(testID)
-  }) as PressableInstance[]
-}
-
-export async function pressTestId(
-  screen: { container: { queryAll: Function } },
-  id: string
-) {
-  const node = byTestId(screen, id)[0]
-  if (!node) {
-    throw new Error(`missing ${id}`)
-  }
-  await pressNode(node)
+export type PressableInstance = {
+  props: Record<string, unknown>
+  unstable_fiber?: Fiber | null
 }
 
 export async function pressDays(
@@ -95,6 +56,45 @@ export async function pressDays(
   if (pressed === 0) {
     throw new Error('no pressable day')
   }
+}
+
+export async function pressNode(node: PressableInstance) {
+  const onPress = findPress(node)
+  if (!onPress) {
+    throw new Error(
+      `no onPress for ${String(node.props.testID ?? node.props.accessibilityLabel)}`
+    )
+  }
+  await act(async () => {
+    onPress()
+  })
+}
+
+export async function pressTestId(
+  screen: { container: { queryAll: Function } },
+  id: string
+) {
+  const node = byTestId(screen, id)[0]
+  if (!node) {
+    throw new Error(`missing ${id}`)
+  }
+  await pressNode(node)
+}
+
+async function render(
+  ui: ReactElement,
+  options?: RenderOptions
+): Promise<RenderResult> {
+  const { wrapper: Wrapper, ...rest } = options || {}
+
+  return rtlRender(ui, {
+    ...rest,
+    wrapper: ({ children }) => (
+      <PaperProvider>
+        {Wrapper ? <Wrapper>{children}</Wrapper> : children}
+      </PaperProvider>
+    ),
+  })
 }
 
 export function walkFibers(

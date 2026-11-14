@@ -2,25 +2,21 @@ import * as path from 'node:path'
 import { defineConfig } from '@rspress/core'
 
 export default defineConfig({
-  root: path.join(__dirname, 'docs'),
-  title: 'Paper Dates',
+  base: '/react-native-paper-dates/',
   description:
     'Cross-platform Material Design date and time pickers for React Native Paper',
-  base: '/react-native-paper-dates/',
   icon: '/favicon.svg',
   logo: {
-    light: '/logo.svg',
     dark: '/logo-dark.svg',
+    light: '/logo.svg',
   },
   logoText: 'React Native Paper Dates',
+  root: path.join(__dirname, 'docs'),
   themeConfig: {
-    socialLinks: [
-      {
-        icon: 'github',
-        mode: 'link',
-        content: 'https://github.com/web-ridge/react-native-paper-dates',
-      },
-    ],
+    editLink: {
+      docRepoBaseUrl:
+        'https://github.com/web-ridge/react-native-paper-dates/tree/master/website/docs',
+    },
     footer: {
       message: `
         <div class="paper-footer">
@@ -55,9 +51,13 @@ export default defineConfig({
         </div>
       `,
     },
-    editLink: {
-      docRepoBaseUrl:
-        'https://github.com/web-ridge/react-native-paper-dates/tree/master/website/docs',
-    },
+    socialLinks: [
+      {
+        content: 'https://github.com/web-ridge/react-native-paper-dates',
+        icon: 'github',
+        mode: 'link',
+      },
+    ],
   },
+  title: 'Paper Dates',
 })

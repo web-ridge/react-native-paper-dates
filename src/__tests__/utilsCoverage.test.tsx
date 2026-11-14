@@ -1,4 +1,4 @@
-import { useContext, type ReactNode } from 'react'
+import { type ReactNode, useContext } from 'react'
 import { act, renderHook } from '@testing-library/react-native'
 import { I18nManager } from 'react-native'
 import { DarkTheme, LightTheme, ThemeProvider } from 'react-native-paper'
@@ -17,12 +17,14 @@ import {
   weekdaySpan,
 } from '../Date/weekdayColumns'
 import { DisplayModeContext } from '../contexts/DisplayModeContext'
-import Color from 'color'
 import {
-  darkenBy,
-  lightenBy,
-  themeColor,
+  darkenColor,
+  fadeColor,
+  hexColor,
+  isDarkColor,
   range,
+  scrimColor,
+  themeColor,
   useHeaderBackgroundColor,
   useHeaderTextColor,
   useIsLargeScreen,
@@ -35,12 +37,6 @@ import { Dimensions } from 'react-native'
 
 registerTranslation('en', en)
 
-function withTheme(theme: object) {
-  return function ThemeWrap({ children }: { children: ReactNode }) {
-    return <ThemeProvider theme={theme as never}>{children}</ThemeProvider>
-  }
-}
-
 function fill(format: string, year: string, month: string, day: string) {
   return format
     .replace('YYYY', year)
@@ -49,10 +45,15 @@ function fill(format: string, year: string, month: string, day: string) {
     .replace('DD', day)
 }
 
+function withTheme(theme: object) {
+  return function ThemeWrap({ children }: { children: ReactNode }) {
+    return <ThemeProvider theme={theme as never}>{children}</ThemeProvider>
+  }
+}
+
 describe('useDateInput', () => {
   async function input(props: Partial<Parameters<typeof useDateInput>[0]> = {}) {
     const onChange = jest.fn()
-    const onValidationError = props.onValidationError
     const hook = await renderHook(() =>
       useDateInput({
         inputMode: 'start',
@@ -63,6 +64,7 @@ describe('useDateInput', () => {
         ...props,
       })
     )
+    const onValidationError = props.onValidationError
     return { ...hook, onChange }
   }
 
@@ -88,14 +90,14 @@ describe('useDateInput', () => {
   })
 
   it('reports disabled dates and each side of a valid range', async () => {
-    const onValidationError = jest.fn()
     const disabled = new Date(2022, 5, 15)
-    const { result, onChange } = await input({
+    const onValidationError = jest.fn()
+    const { onChange, result } = await input({
       onValidationError,
       validRange: {
-        startDate: new Date(2022, 5, 10),
-        endDate: new Date(2022, 5, 20),
         disabledDates: [disabled],
+        endDate: new Date(2022, 5, 20),
+        startDate: new Date(2022, 5, 10),
       },
     })
     const format = result.current.inputFormat
@@ -124,8 +126,8 @@ describe('useDateInput', () => {
   it('accepts an end-of-day value and a one-sided range', async () => {
     const startOnly = await input({
       inputMode: 'end',
-      value: new Date(2022, 5, 12),
       validRange: { startDate: new Date(2022, 5, 10) },
+      value: new Date(2022, 5, 12),
     })
     expect(startOnly.result.current.formattedValue).not.toBe('')
     await act(() => {
@@ -158,7 +160,7 @@ describe('useDateInput', () => {
   })
 
   it('rejects a calendar day that does not exist', async () => {
-    const { result, onChange } = await input()
+    const { onChange, result } = await input()
     const format = result.current.inputFormat
     await act(() => {
       result.current.onChangeText(fill(format, '2022', '02', '31'))
@@ -183,7 +185,7 @@ describe('useDateInput', () => {
   })
 
   it('reads a portuguese year token', async () => {
-    const { result, onChange } = await input({ locale: 'pt' })
+    const { onChange, result } = await input({ locale: 'pt' })
     await act(() => {
       result.current.onChangeText(
         fill(result.current.inputFormat, '2022', '06', '12')
@@ -192,8 +194,62 @@ describe('useDateInput', () => {
     expect(onChange).toHaveBeenCalled()
   })
 
+  it('parses Korean, Czech, and Arabic date formats', async () => {
+    const korean = await input({ locale: 'ko' })
+    expect(korean.result.current.inputFormat).toBe('YYYY. MM. DD.')
+    await act(() => {
+      korean.result.current.onChangeText('2024. 06. 15.')
+    })
+
+    const czech = await input({ locale: 'cs' })
+    expect(czech.result.current.inputFormat).toBe('DD. MM. YYYY')
+    await act(() => {
+      czech.result.current.onChangeText('15. 06. 2024')
+    })
+
+    const arabic = await input({ locale: 'ar' })
+    expect(arabic.result.current.inputFormat).toBe('DD\u200f/MM\u200f/YYYY')
+    await act(() => {
+      arabic.result.current.onChangeText('15\u200f/06\u200f/2024')
+    })
+
+    for (const hook of [korean, czech, arabic]) {
+      const parsed = hook.onChange.mock.calls.at(-1)?.[0] as Date
+      expect(parsed.getFullYear()).toBe(2024)
+      expect(parsed.getMonth()).toBe(5)
+      expect(parsed.getDate()).toBe(15)
+    }
+  })
+
+  it('clears a validation error when the selected date changes', async () => {
+    const onValidationError = jest.fn()
+    const hook = await renderHook(
+      ({ value }: { value: Date | undefined }) =>
+        useDateInput({
+          inputMode: 'start',
+          locale: 'en',
+          onChange: () => undefined,
+          onValidationError,
+          validRange: undefined,
+          value,
+        }),
+      { initialProps: { value: undefined as Date | undefined } }
+    )
+    const format = hook.result.current.inputFormat
+    await act(() => {
+      hook.result.current.onChangeText(fill(format, '2022', '02', '31'))
+    })
+    expect(hook.result.current.error).toEqual(expect.any(String))
+
+    await act(() => {
+      hook.rerender({ value: new Date(2022, 5, 12) })
+    })
+    expect(hook.result.current.error).toBeNull()
+    expect(onValidationError).toHaveBeenCalledWith(null)
+  })
+
   it('parses a Thai input as a Gregorian date', async () => {
-    const { result, onChange } = await input({ locale: 'th' })
+    const { onChange, result } = await input({ locale: 'th' })
     expect(result.current.inputFormat).toBe('DD/MM/YYYY')
     await act(() => {
       result.current.onChangeText('05/01/2024')
@@ -205,9 +261,9 @@ describe('useDateInput', () => {
   })
 
   it('uses the supplied fallback when a locale has no copy', async () => {
-    const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined)
     const onValidationError = jest.fn()
     const broken = await input({ locale: 'zz', onValidationError })
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined)
     await act(() => {
       broken.result.current.onChangeText('not-a-date')
     })
@@ -217,8 +273,8 @@ describe('useDateInput', () => {
     const bounded = await input({
       locale: 'zz',
       validRange: {
-        startDate: new Date(2022, 0, 1),
         endDate: new Date(2022, 0, 10),
+        startDate: new Date(2022, 0, 1),
       },
     })
     await act(() => {
@@ -263,8 +319,8 @@ describe('swiper index bounds', () => {
   })
 
   it('scrolls when the selected year changes and ignores the same index', async () => {
-    const onChange = jest.fn()
     const currentIndexRef = { current: 0 }
+    const onChange = jest.fn()
     await renderHook(() =>
       useYearChange(onChange, {
         currentIndexRef,
@@ -327,8 +383,8 @@ describe('shared hooks', () => {
   afterEach(async () => {
     await act(async () => {
       Dimensions.set({
-        window: saved,
         screen: saved,
+        window: saved,
       })
     })
   })
@@ -337,8 +393,8 @@ describe('shared hooks', () => {
     const dark = await renderHook(() => useTextColorOnPrimary(), {
       wrapper: withTheme({
         ...DarkTheme,
-        roundness: 4,
         colors: { ...DarkTheme.colors, primary: '#000000' },
+        roundness: 4,
       }),
     })
     expect(dark.result.current).toBe(DarkTheme.colors.onSurface)
@@ -346,8 +402,8 @@ describe('shared hooks', () => {
     const lightPrimary = await renderHook(() => useTextColorOnPrimary(), {
       wrapper: withTheme({
         ...LightTheme,
-        roundness: 4,
         colors: { ...LightTheme.colors, primary: '#000000' },
+        roundness: 4,
       }),
     })
     expect(lightPrimary.result.current).toBe(LightTheme.colors.onPrimary)
@@ -359,8 +415,8 @@ describe('shared hooks', () => {
   it('reads header colors, screen size, and the latest value', async () => {
     await act(async () => {
       Dimensions.set({
-        window: { width: 800, height: 400, scale: 1, fontScale: 1 },
-        screen: { width: 800, height: 400, scale: 1, fontScale: 1 },
+        screen: { fontScale: 1, height: 400, scale: 1, width: 800 },
+        window: { fontScale: 1, height: 400, scale: 1, width: 800 },
       })
     })
     const wide = await renderHook(() => useIsLargeScreen())
@@ -368,8 +424,8 @@ describe('shared hooks', () => {
 
     await act(async () => {
       Dimensions.set({
-        window: { width: 800, height: 800, scale: 1, fontScale: 1 },
-        screen: { width: 800, height: 800, scale: 1, fontScale: 1 },
+        screen: { fontScale: 1, height: 800, scale: 1, width: 800 },
+        window: { fontScale: 1, height: 800, scale: 1, width: 800 },
       })
     })
     const large = await renderHook(() => useIsLargeScreen())
@@ -378,17 +434,30 @@ describe('shared hooks', () => {
     const colors = await renderHook(() => {
       return {
         background: useHeaderBackgroundColor(),
-        text: useHeaderTextColor(),
         latest: useLatest(1),
+        text: useHeaderTextColor(),
       }
     })
     expect(colors.result.current.background).toBeTruthy()
     expect(colors.result.current.text).toBeTruthy()
     expect(colors.result.current.latest.current).toBe(1)
     expect(range(1, 3)).toEqual([1, 2, 3])
-    const base = Color('#336699')
-    expect(lightenBy(base, 0.5).lightness()).toBeGreaterThan(base.lightness())
-    expect(darkenBy(base, 0.5).lightness()).toBeLessThan(base.lightness())
+    expect(scrimColor('#336699')).toBe('rgba(51, 102, 153, 0.32)')
+    expect(scrimColor(undefined)).toBe('rgba(0, 0, 0, 0.32)')
+    expect(fadeColor('#336699', 0.5)).toBe('rgba(51, 102, 153, 0.5)')
+    expect(fadeColor('rgba(20, 30, 40, 0.8)', 0.5)).toBe(
+      'rgba(20, 30, 40, 0.4)'
+    )
+    expect(darkenColor('#ff0000', 0.2)).toBe('#CC0000')
+    expect(darkenColor('#336699', 0.2)).toBe('#29527A')
+    expect(darkenColor('#ffffff', 0.2)).toBe('#CCCCCC')
+    expect(hexColor('rgba(103, 80, 164, 1)')).toBe('#6750A4')
+    expect(hexColor('#abc')).toBe('#AABBCC')
+    expect(hexColor('#abcd')).toBe('#AABBCC')
+    expect(hexColor('rgb(16, 32, 48)')).toBe('#102030')
+    expect(scrimColor('not-a-color')).toBe('rgba(0, 0, 0, 0.32)')
+    expect(isDarkColor('#000000')).toBe(true)
+    expect(isDarkColor('#ffffff')).toBe(false)
     expect(themeColor('red')).toBe('red')
     expect(themeColor(undefined)).toBe('#000000')
   })

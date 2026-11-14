@@ -18,11 +18,11 @@ it('finishes the crossfade in both directions', async () => {
   const timing = jest.spyOn(Animated, 'timing').mockImplementation(
     () =>
       ({
+        reset() {},
         start(callback?: (result: { finished: boolean }) => void) {
           if (callback) callbacks.push(callback)
         },
         stop() {},
-        reset() {},
       }) as ReturnType<typeof Animated.timing>
   )
 

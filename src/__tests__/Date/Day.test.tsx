@@ -78,8 +78,8 @@ it('renders day content at the given position with extra styles', async () => {
     />
   )
   expect(screen.getByTestId('day-content').parent).toHaveStyle({
-    justifyContent: 'flex-start',
     alignItems: 'flex-end',
+    justifyContent: 'flex-start',
     marginTop: -3,
   })
 })

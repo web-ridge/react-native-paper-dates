@@ -5,8 +5,6 @@ import { showWeekDay } from './dateUtils'
 import type { DisableWeekDaysType } from './types'
 import { memo, useMemo } from 'react'
 
-export const dayNamesHeight = 44
-
 function DayNames({
   disableWeekDays,
   locale,
@@ -16,8 +14,6 @@ function DayNames({
   locale: string | undefined
   startWeekOnMonday: boolean
 }) {
-  const theme = useTheme()
-
   const shortDayNames = useMemo<string[]>(() => {
     const weekdays = [
       new Date(2020, 7, 2),
@@ -37,6 +33,8 @@ function DayNames({
     return weekdays.map((date) => formatter.format(date))
   }, [locale, startWeekOnMonday])
 
+  const theme = useTheme()
+
   return (
     <View
       pointerEvents="none"
@@ -53,6 +51,9 @@ function DayNames({
     </View>
   )
 }
+
+export const dayNamesHeight = 44
+
 const styles = StyleSheet.create({
   dayNames: {
     alignItems: 'center',

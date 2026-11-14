@@ -45,7 +45,7 @@ describe('dateUtils', () => {
   })
 
   it('should return correct days for month', () => {
-    expect(getDaysInMonth({ year: 2022, month: 11 })).toBe(31)
+    expect(getDaysInMonth({ month: 11, year: 2022 })).toBe(31)
   })
 
   it('should indicate days are the same', () => {
@@ -99,8 +99,8 @@ describe('dateUtils', () => {
   it('knows century leap years and the length of February', () => {
     expect(isLeapYear({ year: 1900 })).toBeFalsy()
     expect(isLeapYear({ year: 2000 })).toBeTruthy()
-    expect(getDaysInMonth({ year: 2024, month: 1 })).toBe(29)
-    expect(getDaysInMonth({ year: 2022, month: 1 })).toBe(28)
+    expect(getDaysInMonth({ month: 1, year: 2024 })).toBe(29)
+    expect(getDaysInMonth({ month: 1, year: 2022 })).toBe(28)
   })
 
   it('clamps the day when the target month is shorter', () => {
@@ -110,10 +110,10 @@ describe('dateUtils', () => {
 
   it('shifts the first weekday when weeks start on Monday', () => {
     expect(
-      getFirstDayOfMonth({ year: 2021, month: 9, startWeekOnMonday: false })
+      getFirstDayOfMonth({ month: 9, startWeekOnMonday: false, year: 2021 })
     ).toBeGreaterThanOrEqual(0)
     expect(
-      getFirstDayOfMonth({ year: 2021, month: 9, startWeekOnMonday: true })
+      getFirstDayOfMonth({ month: 9, startWeekOnMonday: true, year: 2021 })
     ).toBeGreaterThanOrEqual(0)
   })
 
@@ -136,8 +136,8 @@ describe('dateUtils', () => {
 
   it('checks optional unix bounds', () => {
     const day = new Date(2022, 5, 15, 12)
-    const start = dateToUnix(getStartOfDay(new Date(2022, 5, 10)))
     const end = dateToUnix(getEndOfDay(new Date(2022, 5, 20)))
+    const start = dateToUnix(getStartOfDay(new Date(2022, 5, 10)))
     expect(getStartOfDay(day).getHours()).toBe(0)
     expect(getEndOfDay(day).getHours()).toBe(23)
     expect(isDateWithinOptionalRange(day, {})).toBeTruthy()
@@ -167,9 +167,9 @@ describe('dateUtils', () => {
     const disabled = new Date(2022, 5, 15)
     const { result } = await renderHook(() =>
       useRangeChecker({
-        startDate: new Date(2022, 5, 10),
-        endDate: new Date(2022, 5, 20),
         disabledDates: [disabled, new Date(2022, 5, 16)],
+        endDate: new Date(2022, 5, 20),
+        startDate: new Date(2022, 5, 10),
       })
     )
     expect(result.current.isDisabled(disabled)).toBeTruthy()

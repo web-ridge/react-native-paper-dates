@@ -2,8 +2,7 @@ import { StyleSheet, View } from 'react-native'
 import { IconButton, Text, useTheme } from 'react-native-paper'
 import type { DisableWeekDaysType, ModeType } from './types'
 import type { LocalState } from './DatePickerModalContent'
-import { useHeaderTextColor } from '../shared/utils'
-import Color from 'color'
+import { fadeColor, useHeaderTextColor } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
 import { useMemo } from 'react'
 import { sharedStyles } from '../shared/styles'
@@ -11,52 +10,6 @@ import {
   alignTextToFirstWeekday,
   centerIconOnLastWeekday,
 } from './weekdayColumns'
-
-export interface HeaderPickProps {
-  allowEditing?: boolean
-  calendarIcon?: string
-  closeIcon?: string
-  editIcon?: string
-  emptyLabel?: string
-  endLabel?: string
-  headerSeparator?: string
-  label?: string
-  moreLabel?: string
-  placeholder?: string
-  saveLabel?: string
-  startLabel?: string
-  uppercase?: boolean
-  withDateFormatInLabel?: boolean
-}
-
-export interface HeaderContentProps extends HeaderPickProps {
-  collapsed: boolean
-  disableWeekDays?: DisableWeekDaysType
-  locale: string | undefined
-  mode: ModeType
-  onToggle: () => void
-  state: LocalState
-}
-
-function getLabel(
-  locale: string | undefined,
-  mode: ModeType,
-  configuredLabel?: string
-) {
-  if (configuredLabel) {
-    return configuredLabel
-  }
-  if (mode === 'range') {
-    return getTranslation(locale, 'selectRange')
-  }
-  if (mode === 'multiple') {
-    return getTranslation(locale, 'selectMultiple')
-  }
-  if (mode === 'single') {
-    return getTranslation(locale, 'selectSingle')
-  }
-  return '...?'
-}
 
 export default function DatePickerModalContentHeader(
   props: HeaderContentProps
@@ -72,14 +25,14 @@ export default function DatePickerModalContentHeader(
     onToggle,
     uppercase,
   } = props
-  const theme = useTheme()
-  const label = getLabel(props.locale, props.mode, props.label)
   const color = useHeaderTextColor()
-  const isEditingEnabled = allowEditing && mode !== 'multiple'
-  const supportingTextColor = theme.colors.onSurfaceVariant
-  const textFont = theme.fonts.labelMedium
   const finalCollapsedIcon = editIcon ?? 'pencil-outline'
   const finalExpandedIcon = calendarIcon ?? 'calendar-blank'
+  const isEditingEnabled = allowEditing && mode !== 'multiple'
+  const label = getLabel(props.locale, props.mode, props.label)
+  const theme = useTheme()
+  const supportingTextColor = theme.colors.onSurfaceVariant
+  const textFont = theme.fonts.labelMedium
 
   return (
     <View style={styles.header}>
@@ -125,32 +78,24 @@ export default function DatePickerModalContentHeader(
   )
 }
 
-export function HeaderContentSingle({
-  color,
-  emptyLabel = ' ',
-  locale,
-  state,
-}: HeaderContentProps & { color: string }) {
-  const theme = useTheme()
-
-  const lighterColor = Color(color).fade(0.5).rgb().toString()
-  const dateColor = state.date ? theme.colors.onSurface : lighterColor
-
-  const formatter = useMemo(() => {
-    return new Intl.DateTimeFormat(locale, {
-      month: 'short',
-      day: 'numeric',
-    })
-  }, [locale])
-
-  return (
-    <Text
-      maxFontSizeMultiplier={1.5}
-      style={[styles.text, { color: dateColor }]}
-    >
-      {state.date ? formatter.format(state.date) : emptyLabel}
-    </Text>
-  )
+function getLabel(
+  locale: string | undefined,
+  mode: ModeType,
+  configuredLabel?: string
+) {
+  if (configuredLabel) {
+    return configuredLabel
+  }
+  if (mode === 'range') {
+    return getTranslation(locale, 'selectRange')
+  }
+  if (mode === 'multiple') {
+    return getTranslation(locale, 'selectMultiple')
+  }
+  if (mode === 'single') {
+    return getTranslation(locale, 'selectSingle')
+  }
+  return '...?'
 }
 
 export function HeaderContentMulti({
@@ -160,20 +105,22 @@ export function HeaderContentMulti({
   moreLabel = 'more',
   state,
 }: HeaderContentProps & { color: string; moreLabel: string | undefined }) {
-  const theme = useTheme()
-
   const dateCount = state.dates?.length || 0
-  const lighterColor = Color(color).fade(0.5).rgb().toString()
-  const dateColor = dateCount ? theme.colors.onSurface : lighterColor
 
   const formatter = useMemo(() => {
     return new Intl.DateTimeFormat(locale, {
-      month: 'short',
       day: 'numeric',
+      month: 'short',
     })
   }, [locale])
 
   let label = emptyLabel
+
+  const lighterColor = fadeColor(color, 0.5)
+
+  const theme = useTheme()
+
+  const dateColor = dateCount ? theme.colors.onSurface : lighterColor
   if (dateCount) {
     if (dateCount <= 2) {
       label = state.dates!.map((date) => formatter.format(date)).join(', ')
@@ -201,20 +148,18 @@ export function HeaderContentRange({
   startLabel = 'Start',
   state,
 }: HeaderContentProps & { color: string }) {
-  const theme = useTheme()
-
-  const lighterColor = Color(color).fade(0.5).rgb().toString()
-  const startColorFilled = theme.colors.onSurface
-  const endColorFilled = theme.colors.onSurface
-  const startColor = state.startDate ? startColorFilled : lighterColor
-  const endColor = state.endDate ? endColorFilled : lighterColor
-
   const formatter = useMemo(() => {
     return new Intl.DateTimeFormat(locale, {
-      month: 'short',
       day: 'numeric',
+      month: 'short',
     })
   }, [locale])
+  const lighterColor = fadeColor(color, 0.5)
+  const theme = useTheme()
+  const endColorFilled = theme.colors.onSurface
+  const endColor = state.endDate ? endColorFilled : lighterColor
+  const startColorFilled = theme.colors.onSurface
+  const startColor = state.startDate ? startColorFilled : lighterColor
 
   return (
     <>
@@ -238,6 +183,61 @@ export function HeaderContentRange({
       </Text>
     </>
   )
+}
+
+export function HeaderContentSingle({
+  color,
+  emptyLabel = ' ',
+  locale,
+  state,
+}: HeaderContentProps & { color: string }) {
+  const formatter = useMemo(() => {
+    return new Intl.DateTimeFormat(locale, {
+      day: 'numeric',
+      month: 'short',
+    })
+  }, [locale])
+
+  const lighterColor = fadeColor(color, 0.5)
+
+  const theme = useTheme()
+
+  const dateColor = state.date ? theme.colors.onSurface : lighterColor
+
+  return (
+    <Text
+      maxFontSizeMultiplier={1.5}
+      style={[styles.text, { color: dateColor }]}
+    >
+      {state.date ? formatter.format(state.date) : emptyLabel}
+    </Text>
+  )
+}
+
+export interface HeaderPickProps {
+  allowEditing?: boolean
+  calendarIcon?: string
+  closeIcon?: string
+  editIcon?: string
+  emptyLabel?: string
+  endLabel?: string
+  headerSeparator?: string
+  label?: string
+  moreLabel?: string
+  placeholder?: string
+  saveLabel?: string
+  startLabel?: string
+  uppercase?: boolean
+  withDateFormatInLabel?: boolean
+}
+
+export interface HeaderContentProps extends HeaderPickProps {
+  collapsed: boolean
+  disableWeekDays?: DisableWeekDaysType
+  locale: string | undefined
+  mode: ModeType
+  onToggle: () => void
+  state: LocalState
 }
 
 const styles = StyleSheet.create({

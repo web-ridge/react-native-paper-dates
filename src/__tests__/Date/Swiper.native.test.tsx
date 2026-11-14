@@ -20,85 +20,14 @@ jest.mock('../../Date/SwiperUtils', () => {
   }
 })
 
-const startYear = 2020
-const endYear = 2030
-const width = 300
-const height = 800
-
-function scrollEvent(x: number, y: number) {
-  return { nativeEvent: { contentOffset: { x, y } } }
-}
-
-function windowStart(index: number) {
-  const span = height < 700 ? 1 : 2
-  for (let offset = -span; offset <= span; offset += 1) {
-    if (isIndexWithinRange(index + offset, startYear, endYear)) {
-      return index + offset
-    }
-  }
-  return index
-}
-
-function offsetFor(target: number, first: number) {
-  const begin = getBeginOffset(startYear, endYear)
-  const base = getVerticalMonthsOffset(first, false, startYear, endYear)
-  for (let y = 0; y < 8000; y += 1) {
-    if (
-      getIndexFromVerticalOffset(
-        base + y - begin,
-        false,
-        startYear,
-        endYear
-      ) === target
-    ) {
-      return y
-    }
-  }
-  throw new Error(`no scroll offset for ${target}`)
-}
-
-type ScrollHandler = (event: ReturnType<typeof scrollEvent>) => void
-
-function scrollNodes(screen: { container: { queryAll: Function } }) {
-  return screen.container.queryAll(
-    (node: { props: Record<string, unknown> }) =>
-      typeof node.props.onMomentumScrollEnd === 'function'
-  ) as Array<{
-    props: {
-      onMomentumScrollEnd?: ScrollHandler
-      onScroll?: ScrollHandler
-      pagingEnabled?: boolean
-    }
-  }>
-}
-
-function indexAt(first: number, y: number) {
-  const begin = getBeginOffset(startYear, endYear)
-  const base = getVerticalMonthsOffset(first, false, startYear, endYear)
-  return getIndexFromVerticalOffset(base + y - begin, false, startYear, endYear)
-}
-
-type Fiber = {
-  child?: Fiber
-  sibling?: Fiber
-  return?: Fiber
-  memoizedState?: Hook | null
-  type?: { name?: string } | string
-}
-
-type Hook = {
-  memoizedState?: { current?: unknown }
-  next?: Hook | null
-}
-
 function detachScrollRef(screen: { container: { queryAll: Function } }) {
   const seed = screen.container.queryAll(() => true)[0] as {
     unstable_fiber?: Fiber
   }
   let root = seed.unstable_fiber
   while (root?.return) root = root.return
-  const stack: Fiber[] = root ? [root] : []
   const seen = new Set<Fiber>()
+  const stack: Fiber[] = root ? [root] : []
   while (stack.length) {
     const fiber = stack.pop()
     if (!fiber || seen.has(fiber)) continue
@@ -130,6 +59,80 @@ function detachScrollRef(screen: { container: { queryAll: Function } }) {
   throw new Error('missing scroll ref')
 }
 
+const endYear = 2030
+
+const height = 800
+
+type Hook = {
+  memoizedState?: { current?: unknown }
+  next?: Hook | null
+}
+
+type Fiber = {
+  child?: Fiber
+  memoizedState?: Hook | null
+  return?: Fiber
+  sibling?: Fiber
+  type?: { name?: string } | string
+}
+
+function indexAt(first: number, y: number) {
+  const base = getVerticalMonthsOffset(first, false, startYear, endYear)
+  const begin = getBeginOffset(startYear, endYear)
+  return getIndexFromVerticalOffset(base + y - begin, false, startYear, endYear)
+}
+
+function offsetFor(target: number, first: number) {
+  const base = getVerticalMonthsOffset(first, false, startYear, endYear)
+  const begin = getBeginOffset(startYear, endYear)
+  for (let y = 0; y < 8000; y += 1) {
+    if (
+      getIndexFromVerticalOffset(
+        base + y - begin,
+        false,
+        startYear,
+        endYear
+      ) === target
+    ) {
+      return y
+    }
+  }
+  throw new Error(`no scroll offset for ${target}`)
+}
+
+function scrollEvent(x: number, y: number) {
+  return { nativeEvent: { contentOffset: { x, y } } }
+}
+
+type ScrollHandler = (event: ReturnType<typeof scrollEvent>) => void
+
+function scrollNodes(screen: { container: { queryAll: Function } }) {
+  return screen.container.queryAll(
+    (node: { props: Record<string, unknown> }) =>
+      typeof node.props.onMomentumScrollEnd === 'function'
+  ) as Array<{
+    props: {
+      onMomentumScrollEnd?: ScrollHandler
+      onScroll?: ScrollHandler
+      pagingEnabled?: boolean
+    }
+  }>
+}
+
+const startYear = 2020
+
+const width = 300
+
+function windowStart(index: number) {
+  const span = height < 700 ? 1 : 2
+  for (let offset = -span; offset <= span; offset += 1) {
+    if (isIndexWithinRange(index + offset, startYear, endYear)) {
+      return index + offset
+    }
+  }
+  return index
+}
+
 afterEach(() => {
   const range = isIndexWithinRange as unknown as jest.Mock
   range.mockImplementation((...args: unknown[]) =>
@@ -149,7 +152,7 @@ describe('native swiper gaps', () => {
       <Swiper
         endYear={endYear}
         initialIndex={initialIndex}
-        initialLayout={{ width, height }}
+        initialLayout={{ height, width }}
         renderItem={({ onPrev: prev }) => {
           onPrev = prev
           return null
@@ -202,7 +205,7 @@ describe('native swiper gaps', () => {
       <Swiper
         endYear={1800}
         initialIndex={initialIndex}
-        initialLayout={{ width, height }}
+        initialLayout={{ height, width }}
         renderItem={() => null}
         scrollMode="vertical"
         selectedYear={undefined}
@@ -240,7 +243,7 @@ describe('native swiper gaps', () => {
         <Swiper
           endYear={endYear}
           initialIndex={getStartAtIndex(startYear, endYear)}
-          initialLayout={{ width, height: 120 }}
+          initialLayout={{ height: 120, width }}
           renderItem={() => null}
           scrollMode="horizontal"
           selectedYear={undefined}
@@ -266,7 +269,7 @@ describe('native swiper gaps', () => {
       <Swiper
         endYear={endYear}
         initialIndex={getStartAtIndex(startYear, endYear)}
-        initialLayout={{ width, height }}
+        initialLayout={{ height, width }}
         renderItem={() => null}
         scrollMode="vertical"
         selectedYear={undefined}
@@ -279,7 +282,7 @@ describe('native swiper gaps', () => {
       <Swiper
         endYear={2029}
         initialIndex={getStartAtIndex(startYear, endYear)}
-        initialLayout={{ width, height }}
+        initialLayout={{ height, width }}
         renderItem={() => null}
         scrollMode="vertical"
         selectedYear={undefined}
@@ -296,7 +299,7 @@ describe('native swiper gaps', () => {
       <Swiper
         endYear={2026}
         initialIndex={0}
-        initialLayout={{ width, height: 400 }}
+        initialLayout={{ height: 400, width }}
         renderItem={() => null}
         scrollMode="vertical"
         selectedYear={undefined}

@@ -26,33 +26,33 @@ const savedWindow = Dimensions.get('window')
 afterEach(async () => {
   Platform.OS = originalOS
   await act(async () => {
-    Dimensions.set({ window: savedWindow, screen: savedWindow })
+    Dimensions.set({ screen: savedWindow, window: savedWindow })
   })
 })
-
-async function setWindow(width: number, height: number) {
-  await act(async () => {
-    Dimensions.set({
-      window: { width, height, scale: 1, fontScale: 1 },
-      screen: { width, height, scale: 1, fontScale: 1 },
-    })
-  })
-}
 
 function clockEvent(x: number, y: number) {
   return { nativeEvent: { locationX: x, locationY: y } }
 }
 
+async function setWindow(width: number, height: number) {
+  await act(async () => {
+    Dimensions.set({
+      screen: { fontScale: 1, height, scale: 1, width },
+      window: { fontScale: 1, height, scale: 1, width },
+    })
+  })
+}
+
 describe('analog clock', () => {
   it('tracks hours and minutes from pointer moves', async () => {
-    const onChange = jest.fn()
     const configs: Array<Record<string, Function>> = []
     const create = PanResponder.create.bind(PanResponder)
+    const modes: Array<'AM' | 'PM' | undefined> = ['AM', 'PM', undefined]
+    const onChange = jest.fn()
     const spy = jest.spyOn(PanResponder, 'create').mockImplementation((config) => {
       configs.push(config as Record<string, Function>)
       return create(config)
     })
-    const modes: Array<'AM' | 'PM' | undefined> = ['AM', 'PM', undefined]
     try {
       for (const mode of modes) {
         for (const focused of ['hours', 'minutes', 'seconds'] as const) {
@@ -152,8 +152,8 @@ describe('time inputs', () => {
       <ThemeProvider
         theme={{
           ...DarkTheme,
-          roundness: 4,
           colors: { ...DarkTheme.colors, primary: '#000000' },
+          roundness: 4,
         }}
       >
         <TimeInputs
@@ -182,7 +182,7 @@ describe('time inputs', () => {
       />
     )
     landscape.container.queryAll(
-      (node: { props: { onPress?: Function; accessibilityLabel?: string } }) =>
+      (node: { props: { accessibilityLabel?: string; onPress?: Function } }) =>
         node.props.accessibilityLabel === 'PM' && node.props.onPress
     ).forEach((node: { props: { onPress: Function } }) => node.props.onPress())
     expect(onChange).toHaveBeenCalled()
@@ -199,7 +199,7 @@ describe('time inputs', () => {
           node.props.accessibilityLabel === 'AM' ||
           node.props.accessibilityLabel === 'PM'
       )
-      .forEach((node: { props: Record<string, unknown>; parent: null; unstable_fiber?: null }) => {
+      .forEach((node: { parent: null; props: Record<string, unknown>; unstable_fiber?: null }) => {
         const onPress = findPress(node)
         if (onPress) onPress()
       })
@@ -213,7 +213,7 @@ describe('time inputs', () => {
           node.props.accessibilityLabel === 'AM' ||
           node.props.accessibilityLabel === 'PM'
       )
-      .forEach((node: { unstable_fiber?: null; props: Record<string, unknown> }) => {
+      .forEach((node: { props: Record<string, unknown>; unstable_fiber?: null }) => {
         findPress(node)?.()
       })
 
@@ -238,7 +238,7 @@ describe('time inputs', () => {
     )
     input.container
       .queryAll((node: { props: { accessibilityRole?: string } }) => true)
-      .forEach((node: { unstable_fiber?: null; props: Record<string, unknown> }) => {
+      .forEach((node: { props: Record<string, unknown>; unstable_fiber?: null }) => {
         findPress(node)?.()
       })
 
@@ -268,8 +268,8 @@ describe('time inputs', () => {
 
 describe('time picker modal', () => {
   it('confirms, cancels, and toggles the keyboard', async () => {
-    const onDismiss = jest.fn()
     const onConfirm = jest.fn()
+    const onDismiss = jest.fn()
     const modal = await render(
       <TimePickerModal
         defaultInputType="keyboard"

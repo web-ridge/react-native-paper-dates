@@ -4,31 +4,6 @@ import { circleSize } from './timeUtils'
 import { useTextColorOnPrimary } from '../shared/utils'
 import { memo } from 'react'
 
-function getHourNumbers(
-  is24Hour: boolean,
-  size: number,
-  count: number,
-  arrayLength: number
-) {
-  let angle = 0
-  let step = (2 * Math.PI) / count
-  let radius = size / (is24Hour ? 4 : 2.5)
-
-  angle = (-90 * Math.PI) / 180 + Math.PI / 6
-
-  return Array(arrayLength)
-    .fill(true)
-    .map(() => {
-      let x = Math.round(size / 2 + radius * Math.cos(angle))
-      let y = Math.round(size / 2 + radius * Math.sin(angle))
-      angle += step
-      return [x, y]
-    })
-}
-
-const innerHourNumbers = getHourNumbers(true, circleSize, 12, 12)
-const outerHourNumbers = getHourNumbers(false, circleSize, 12, 12)
-
 function AnalogClockHours({
   hours,
   is24Hour,
@@ -49,8 +24,8 @@ function AnalogClockHours({
           style={[
             styles.hourRoot,
             {
-              top: a[1],
               left: a[0],
+              top: a[1],
             },
           ]}
         >
@@ -80,8 +55,8 @@ function AnalogClockHours({
               style={[
                 styles.hourRoot,
                 {
-                  top: a[1],
                   left: a[0],
+                  top: a[1],
                 },
               ]}
             >
@@ -105,6 +80,32 @@ function AnalogClockHours({
     </>
   )
 }
+
+function getHourNumbers(
+  is24Hour: boolean,
+  size: number,
+  count: number,
+  arrayLength: number
+) {
+  let angle = 0
+  let radius = size / (is24Hour ? 4 : 2.5)
+  let step = (2 * Math.PI) / count
+
+  angle = (-90 * Math.PI) / 180 + Math.PI / 6
+
+  return Array(arrayLength)
+    .fill(true)
+    .map(() => {
+      let x = Math.round(size / 2 + radius * Math.cos(angle))
+      let y = Math.round(size / 2 + radius * Math.sin(angle))
+      angle += step
+      return [x, y]
+    })
+}
+
+const innerHourNumbers = getHourNumbers(true, circleSize, 12, 12)
+
+const outerHourNumbers = getHourNumbers(false, circleSize, 12, 12)
 
 const styles = StyleSheet.create({
   hourInner: {

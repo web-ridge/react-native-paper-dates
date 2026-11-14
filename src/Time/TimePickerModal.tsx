@@ -15,15 +15,70 @@ import {
   clockTypes,
   getTimeInputTypeIcon,
   inputTypes,
-  reverseInputTypes,
   type PossibleClockTypes,
   type PossibleInputTypes,
+  reverseInputTypes,
   type TimeChange,
 } from './timeUtils'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { sharedStyles } from '../shared/styles'
 import { scrimColor, supportedOrientations } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
+
+function getHours(hours: number | undefined | null): number {
+  return hours === undefined || hours === null ? new Date().getHours() : hours
+}
+
+function getMinutes(minutes: number | undefined | null): number {
+  return minutes === undefined || minutes === null
+    ? new Date().getMinutes()
+    : minutes
+}
+
+const styles = StyleSheet.create({
+  bottom: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    paddingHorizontal: 24,
+    paddingVertical: 8,
+  },
+  center: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+  },
+  inputTypeToggle: {
+    margin: 0,
+  },
+  label: {
+    fontSize: 13,
+    letterSpacing: 1,
+  },
+  labelContainer: {
+    justifyContent: 'flex-end',
+    paddingLeft: 24,
+    paddingRight: 24,
+    paddingTop: 16,
+  },
+  modalContent: {
+    elevation: 3,
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+    shadowColor: '#000',
+    shadowOffset: {
+      height: 5,
+      width: 0,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+  },
+  timePickerContainer: {
+    paddingBottom: 16,
+    paddingLeft: 24,
+    paddingRight: 24,
+    paddingTop: 20,
+  },
+})
 
 export function TimePickerModal({
   animationType = 'none',
@@ -60,14 +115,13 @@ export function TimePickerModal({
   use24HourClock?: boolean
   visible: boolean | undefined
 }) {
-  const theme = useTheme()
-
+  const [focused, setFocused] = useState<PossibleClockTypes>(clockTypes.hours)
   const [inputType, setInputType] = useState<PossibleInputTypes>(
     defaultInputType || inputTypes.picker
   )
-  const [focused, setFocused] = useState<PossibleClockTypes>(clockTypes.hours)
   const [localHours, setLocalHours] = useState(getHours(hours))
   const [localMinutes, setLocalMinutes] = useState(getMinutes(minutes))
+  const theme = useTheme()
 
   useEffect(() => {
     setLocalHours(getHours(hours))
@@ -77,10 +131,7 @@ export function TimePickerModal({
     setLocalMinutes(getMinutes(minutes))
   }, [setLocalMinutes, minutes])
 
-  const onFocusInput = useCallback(
-    (type: PossibleClockTypes) => setFocused(type),
-    []
-  )
+  let labelText = label
   const onChange = useCallback<TimeChange>(
     (params) => {
       if (params.focused) {
@@ -92,10 +143,12 @@ export function TimePickerModal({
     },
     [setFocused, setLocalHours, setLocalMinutes]
   )
-
-  const uppercase = _uppercase ?? false
+  const onFocusInput = useCallback(
+    (type: PossibleClockTypes) => setFocused(type),
+    []
+  )
   const textFont = theme.fonts.labelMedium
-  let labelText = label
+  const uppercase = _uppercase ?? false
 
   if (inputType === inputTypes.keyboard && !label) {
     labelText = 'Enter time'
@@ -208,60 +261,5 @@ export function TimePickerModal({
     </Modal>
   )
 }
-
-function getMinutes(minutes: number | undefined | null): number {
-  return minutes === undefined || minutes === null
-    ? new Date().getMinutes()
-    : minutes
-}
-
-function getHours(hours: number | undefined | null): number {
-  return hours === undefined || hours === null ? new Date().getHours() : hours
-}
-
-const styles = StyleSheet.create({
-  bottom: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    paddingHorizontal: 24,
-    paddingVertical: 8,
-  },
-  center: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-  },
-  inputTypeToggle: {
-    margin: 0,
-  },
-  label: {
-    fontSize: 13,
-    letterSpacing: 1,
-  },
-  labelContainer: {
-    justifyContent: 'flex-end',
-    paddingLeft: 24,
-    paddingRight: 24,
-    paddingTop: 16,
-  },
-  modalContent: {
-    elevation: 3,
-    justifyContent: 'space-between',
-    paddingVertical: 8,
-    shadowColor: '#000',
-    shadowOffset: {
-      height: 5,
-      width: 0,
-    },
-    shadowOpacity: 0.34,
-    shadowRadius: 6.27,
-  },
-  timePickerContainer: {
-    paddingBottom: 16,
-    paddingLeft: 24,
-    paddingRight: 24,
-    paddingTop: 20,
-  },
-})
 
 export default memo(TimePickerModal)

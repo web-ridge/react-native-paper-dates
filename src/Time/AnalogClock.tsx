@@ -25,10 +25,6 @@ import AnalogClockMinutes from './AnalogClockMinutes'
 import { DisplayModeContext } from '../contexts/DisplayModeContext'
 import { memo, useCallback, useContext, useRef } from 'react'
 
-function returnTrue() {
-  return true
-}
-
 function AnalogClock({
   focused,
   hours,
@@ -42,21 +38,15 @@ function AnalogClock({
   minutes: number
   onChange: TimeChange
 }) {
-  const shortPointer = hours >= 12 && is24Hour
-
-  const theme = useTheme()
-
-  const { mode } = useContext(DisplayModeContext)
-
   const clockRef = useRef<ViewInstance | null>(null)
-
-  const hoursRef = useLatest(hours)
-  const onChangeRef = useLatest(onChange)
-  const minutesRef = useLatest(minutes)
+  const degreesPerNumber = focused === clockTypes.hours ? 30 : 6
   const focusedRef = useLatest(focused)
+  const hoursRef = useLatest(hours)
   const is24HourRef = useLatest(is24Hour)
+  const minutesRef = useLatest(minutes)
+  const { mode } = useContext(DisplayModeContext)
   const modeRef = useLatest(mode)
-
+  const onChangeRef = useLatest(onChange)
   const onPointerMove = useCallback(
     (e: GestureResponderEvent, final: boolean) => {
       let x = e.nativeEvent.locationX
@@ -64,13 +54,11 @@ function AnalogClock({
       let angle = getAngle(x, y, circleSize)
       if (focusedRef.current === clockTypes.hours) {
         let hours24 = is24HourRef.current
-        let previousHourType = getHourType(hoursRef.current)
-        let pickedHours = getHours(angle, previousHourType)
-
         let hours12AndPm = !hours24 && modeRef.current === 'PM'
-
         let hourTypeFromOffset = getHourTypeFromOffset(x, y, circleSize)
         let hours24AndPM = hours24 && hourTypeFromOffset === hourTypes.pm
+        let previousHourType = getHourType(hoursRef.current)
+        let pickedHours = getHours(angle, previousHourType)
 
         if (hours12AndPm || hours24AndPM) {
           pickedHours += 12
@@ -85,9 +73,9 @@ function AnalogClock({
 
         if (hoursRef.current !== pickedHours || final) {
           onChangeRef.current({
+            focused: final ? clockTypes.minutes : undefined,
             hours: pickedHours,
             minutes: minutesRef.current,
-            focused: final ? clockTypes.minutes : undefined,
           })
         }
       } else if (focusedRef.current === clockTypes.minutes) {
@@ -104,21 +92,21 @@ function AnalogClock({
   )
   const panResponder = useRef(
     PanResponder.create({
+      onMoveShouldSetPanResponder: returnTrue,
+      onMoveShouldSetPanResponderCapture: returnTrue,
       onPanResponderGrant: (e) => onPointerMove(e, false),
       onPanResponderMove: (e) => onPointerMove(e, false),
       onPanResponderRelease: (e) => onPointerMove(e, true),
-      onStartShouldSetPanResponder: returnTrue,
-      onStartShouldSetPanResponderCapture: () => false,
-      onMoveShouldSetPanResponder: returnTrue,
-      onMoveShouldSetPanResponderCapture: returnTrue,
       onPanResponderTerminationRequest: returnTrue,
       onShouldBlockNativeResponder: returnTrue,
+      onStartShouldSetPanResponder: returnTrue,
+      onStartShouldSetPanResponderCapture: () => false,
     })
   ).current
-
-  const dynamicSize = focused === clockTypes.hours && shortPointer ? 33 : 0
   const pointerNumber = focused === clockTypes.hours ? hours : minutes
-  const degreesPerNumber = focused === clockTypes.hours ? 30 : 6
+  const shortPointer = hours >= 12 && is24Hour
+  const dynamicSize = focused === clockTypes.hours && shortPointer ? 33 : 0
+  const theme = useTheme()
 
   return (
     <View
@@ -181,6 +169,10 @@ function AnalogClock({
       />
     </View>
   )
+}
+
+function returnTrue() {
+  return true
 }
 
 const styles = StyleSheet.create({

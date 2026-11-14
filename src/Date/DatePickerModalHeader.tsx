@@ -9,23 +9,12 @@ import {
   alignTextToLastWeekday,
 } from './weekdayColumns'
 
-export interface DatePickerModalHeaderProps {
-  closeIcon?: string
-  disableWeekDays?: DisableWeekDaysType
-  locale: string | undefined
-  onDismiss: () => void
-  onSave: () => void
-  saveLabel?: string
-  saveLabelDisabled?: boolean
-  uppercase?: boolean
-}
-
 export default function DatePickerModalHeader(
   props: DatePickerModalHeaderProps
 ) {
   const { closeIcon = 'close', disableWeekDays, locale } = props
-  const saveLabel = props.saveLabel || getTranslation(locale, 'save')
   const color = useHeaderTextColor()
+  const saveLabel = props.saveLabel || getTranslation(locale, 'save')
   const theme = useTheme()
 
   return (
@@ -53,6 +42,17 @@ export default function DatePickerModalHeader(
       </View>
     </View>
   )
+}
+
+export interface DatePickerModalHeaderProps {
+  closeIcon?: string
+  disableWeekDays?: DisableWeekDaysType
+  locale: string | undefined
+  onDismiss: () => void
+  onSave: () => void
+  saveLabel?: string
+  saveLabelDisabled?: boolean
+  uppercase?: boolean
 }
 
 const styles = StyleSheet.create({

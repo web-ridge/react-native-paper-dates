@@ -1,16 +1,15 @@
-const path = require('path')
-const fs = require('fs')
 const escape = require('escape-string-regexp')
+const fs = require('fs')
 const { getDefaultConfig } = require('expo/metro-config')
 const pak = require('../package.json')
-
+const path = require('path')
 const projectRoot = __dirname
-const workspaceRoot = path.resolve(projectRoot, '..')
 const nodeModules = path.join(projectRoot, 'node_modules')
-const librarySrc = path.join(workspaceRoot, 'src')
-const libraryEntry = fs.realpathSync(path.join(librarySrc, 'index.ts'))
 const versionModulePath = path.join(projectRoot, 'src', 'libraryVersion.ts')
 const versionModuleSource = `// Synced from the library package.json when Metro starts.\nexport const libraryVersion = '${pak.version}'\n`
+const workspaceRoot = path.resolve(projectRoot, '..')
+const librarySrc = path.join(workspaceRoot, 'src')
+const libraryEntry = fs.realpathSync(path.join(librarySrc, 'index.ts'))
 
 if (
   !fs.existsSync(versionModulePath) ||
@@ -19,10 +18,9 @@ if (
   fs.writeFileSync(versionModulePath, versionModuleSource)
 }
 
-const modules = Object.keys(pak.peerDependencies)
-
 /** @type {import('expo/metro-config').MetroConfig} */
 const config = getDefaultConfig(projectRoot)
+const modules = Object.keys(pak.peerDependencies)
 
 // Watch only the library source — not the whole repo (avoids nested node_modules issues)
 config.watchFolders = [librarySrc]

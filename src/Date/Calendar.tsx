@@ -31,20 +31,6 @@ import { useTheme } from 'react-native-paper'
 import { themeColor, useLatest } from '../shared/utils'
 import { sharedStyles } from '../shared/styles'
 
-export type {
-  CalendarDate,
-  CalendarDates,
-  DayContentPosition,
-  DayContentRenderer,
-  ModeType,
-  MultiChange,
-  MultiConfirm,
-  RangeChange,
-  ScrollModeType,
-  SingleChange,
-  ValidRangeType,
-}
-
 export type BaseCalendarProps = {
   date?: CalendarDate
   dateMode?: 'start' | 'end'
@@ -55,31 +41,12 @@ export type BaseCalendarProps = {
   disableWeekDays?: DisableWeekDaysType
   endDate?: CalendarDate
   endYear?: number
-  initialLayout?: { width: number; height: number }
+  initialLayout?: { height: number; width: number }
   locale: string
   startDate?: CalendarDate
   startWeekOnMonday?: boolean
   startYear?: number
   validRange?: ValidRangeType
-}
-
-export interface CalendarSingleProps extends BaseCalendarProps {
-  date: CalendarDate
-  mode: 'single'
-  onChange: SingleChange
-}
-
-export interface CalendarRangeProps extends BaseCalendarProps {
-  endDate: CalendarDate
-  mode: 'range'
-  onChange: RangeChange
-  startDate: CalendarDate
-}
-
-export interface CalendarMultiProps extends BaseCalendarProps {
-  dates: CalendarDates
-  mode: 'multiple'
-  onChange: MultiChange
 }
 
 function Calendar(
@@ -104,24 +71,18 @@ function Calendar(
     startYear,
     validRange,
   } = props
+  const datesRef = useLatest<CalendarDates>(dates)
+  const endDateRef = useLatest<CalendarDate>(endDate)
+  const firstDate = startDate || date || dates?.[0]
+  const onChangeRef = useLatest<RangeChange | SingleChange | MultiChange>(
+    onChange
+  )
   const scrollMode =
     mode === 'range' || mode === 'multiple' ? 'vertical' : 'horizontal'
-  const firstDate = startDate || date || dates?.[0]
-
-  const theme = useTheme()
-
   const [selectedYear, setSelectedYear] = useState<number | undefined>(
     undefined
   )
   const [selectingYear, setSelectingYear] = useState(false)
-
-  const startDateRef = useLatest<CalendarDate>(startDate)
-  const endDateRef = useLatest<CalendarDate>(endDate)
-  const onChangeRef = useLatest<RangeChange | SingleChange | MultiChange>(
-    onChange
-  )
-  const datesRef = useLatest<CalendarDates>(dates)
-
   const onPressYear = useCallback(
     (year: number) => {
       setSelectedYear(year)
@@ -129,7 +90,7 @@ function Calendar(
     },
     [setSelectingYear]
   )
-
+  const startDateRef = useLatest<CalendarDate>(startDate)
   const onPressDate = useCallback(
     (d: Date) => {
       if (mode === 'single') {
@@ -137,15 +98,15 @@ function Calendar(
           date: dateMode === 'start' ? d : getEndOfDay(d),
         })
       } else if (mode === 'range') {
-        const sd = startDateRef.current
         const ed = endDateRef.current
         let isStart: boolean = true
+        const sd = startDateRef.current
         if (sd && !ed && dateToUnix(d) >= dateToUnix(sd!)) {
           isStart = false
         }
         ;(onChangeRef.current as RangeChange)({
-          startDate: isStart ? d : sd,
           endDate: !isStart ? getEndOfDay(d) : undefined,
+          startDate: isStart ? d : sd,
         })
       } else if (mode === 'multiple') {
         datesRef.current = datesRef.current || []
@@ -157,21 +118,15 @@ function Calendar(
 
         newDates.sort((a, b) => a.getTime() - b.getTime())
         ;(onChangeRef.current as MultiChange)({
-          dates: newDates,
-          datePressed: d,
           change: exists ? 'removed' : 'added',
+          datePressed: d,
+          dates: newDates,
         })
       }
     },
     [mode, dateMode, onChangeRef, startDateRef, endDateRef, datesRef]
   )
-
-  const primaryColor = themeColor(theme.colors.primary)
-  const roundness = theme.shapes.corner.extraSmall
-  const selectColor = theme.colors.primaryContainer
-  const selectColorValue = themeColor(selectColor)
   const startWeekOnMondayValue = startWeekOnMonday || false
-
   const renderHeader = useCallback(
     ({
       endInset,
@@ -194,7 +149,11 @@ function Calendar(
     ),
     [disableWeekDays, locale, scrollMode, startWeekOnMondayValue]
   )
-
+  const theme = useTheme()
+  const primaryColor = themeColor(theme.colors.primary)
+  const roundness = theme.shapes.corner.extraSmall
+  const selectColor = theme.colors.primaryContainer
+  const selectColorValue = themeColor(selectColor)
   const renderItem = useCallback(
     ({ index }: { index: number }) => (
       <Month
@@ -272,6 +231,39 @@ function Calendar(
       ) : null}
     </View>
   )
+}
+
+export type {
+  CalendarDate,
+  CalendarDates,
+  DayContentPosition,
+  DayContentRenderer,
+  ModeType,
+  MultiChange,
+  MultiConfirm,
+  RangeChange,
+  ScrollModeType,
+  SingleChange,
+  ValidRangeType,
+}
+
+export interface CalendarMultiProps extends BaseCalendarProps {
+  dates: CalendarDates
+  mode: 'multiple'
+  onChange: MultiChange
+}
+
+export interface CalendarRangeProps extends BaseCalendarProps {
+  endDate: CalendarDate
+  mode: 'range'
+  onChange: RangeChange
+  startDate: CalendarDate
+}
+
+export interface CalendarSingleProps extends BaseCalendarProps {
+  date: CalendarDate
+  mode: 'single'
+  onChange: SingleChange
 }
 
 export default memo(Calendar)

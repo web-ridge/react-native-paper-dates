@@ -52,12 +52,13 @@ function DatePickerInputWithoutModal(
   },
   ref: Ref<TextInputHandles>
 ) {
-  const theme = useTheme()
+  let disabled
+
   const {
+    error,
     formattedValue,
     inputFormat,
     onChangeText: onDateInputChangeText,
-    error,
   } = useDateInput({
     inputMode,
     locale,
@@ -67,7 +68,7 @@ function DatePickerInputWithoutModal(
     value,
   })
 
-  let disabled
+  const theme = useTheme()
 
   if (inputEnabled !== undefined) {
     disabled = !inputEnabled

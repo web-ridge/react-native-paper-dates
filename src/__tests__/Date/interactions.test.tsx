@@ -3,10 +3,10 @@ import { act, fireEvent, render } from '@testing-library/react-native'
 
 import {
   byTestId,
+  type PressableInstance as Instance,
   pressDays,
   pressNode,
   pressTestId,
-  type PressableInstance as Instance,
 } from '../../testUtils'
 import { Dimensions, Platform, Pressable } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
@@ -43,28 +43,29 @@ import { registerTranslation } from '../../translations/utils'
 
 registerTranslation('en', en)
 
-const metrics = {
-  frame: { x: 0, y: 0, width: 360, height: 800 },
-  insets: { top: 0, left: 0, right: 0, bottom: 0 },
-}
-
-function safe(children: ReactNode) {
-  return (
-    <SafeAreaProvider initialMetrics={metrics}>{children}</SafeAreaProvider>
-  )
-}
-
-const layout = { width: 320, height: 480 }
 const day = new Date(2026, 10, 11)
+
+const layout = { height: 480, width: 320 }
 
 function layouts(root: { queryAll: Function }, width: number, height: number) {
   root.queryAll((node: { props: { onLayout?: Function } }) => {
     return typeof node.props.onLayout === 'function'
   }).forEach((node: { props: { onLayout: Function } }) => {
     node.props.onLayout({
-      nativeEvent: { layout: { x: 0, y: 0, width, height } },
+      nativeEvent: { layout: { height, width, x: 0, y: 0 } },
     })
   })
+}
+
+const metrics = {
+  frame: { height: 800, width: 360, x: 0, y: 0 },
+  insets: { bottom: 0, left: 0, right: 0, top: 0 },
+}
+
+function safe(children: ReactNode) {
+  return (
+    <SafeAreaProvider initialMetrics={metrics}>{children}</SafeAreaProvider>
+  )
 }
 
 describe('month offset helpers', () => {
@@ -124,7 +125,7 @@ describe('calendar interactions', () => {
     const startOnly = await render(
       <Calendar
         endDate={undefined}
-        initialLayout={{ width: 320, height: 800 }}
+        initialLayout={{ height: 800, width: 320 }}
         locale="en"
         mode="range"
         onChange={onChange}
@@ -137,15 +138,15 @@ describe('calendar interactions', () => {
     const both = await render(
       <Calendar
         endDate={new Date(2026, 10, 30)}
-        initialLayout={{ width: 320, height: 200 }}
+        initialLayout={{ height: 200, width: 320 }}
         locale="en"
         mode="range"
         onChange={onChange}
         startDate={new Date(2026, 10, 1)}
         validRange={{
-          startDate: new Date(2026, 10, 5),
-          endDate: new Date(2026, 10, 25),
           disabledDates: [new Date(2026, 10, 12)],
+          endDate: new Date(2026, 10, 25),
+          startDate: new Date(2026, 10, 5),
         }}
       />
     )
@@ -183,19 +184,19 @@ describe('calendar interactions', () => {
       scroll.props.onMomentumScrollEnd({
         nativeEvent: {
           contentOffset: { x: 0, y: 0 },
-          layoutMeasurement: { width: 320, height: 480 },
+          layoutMeasurement: { height: 480, width: 320 },
         },
       })
       scroll.props.onMomentumScrollEnd({
         nativeEvent: {
           contentOffset: { x: 3200, y: 0 },
-          layoutMeasurement: { width: 320, height: 480 },
+          layoutMeasurement: { height: 480, width: 320 },
         },
       })
       scroll.props.onScrollEndDrag({
         nativeEvent: {
           contentOffset: { x: 1600, y: 0 },
-          layoutMeasurement: { width: 320, height: 480 },
+          layoutMeasurement: { height: 480, width: 320 },
         },
       })
       scroll.props.onLayout?.()
@@ -278,8 +279,8 @@ describe('date picker modal', () => {
   })
 
   it('confirms single, range, and multiple selections', async () => {
-    const onConfirm = jest.fn()
     const onChange = jest.fn()
+    const onConfirm = jest.fn()
     const onDismiss = jest.fn()
     const single = await render(
       safe(
@@ -370,8 +371,8 @@ describe('date picker modal', () => {
   })
 
   it('covers sheet presentation, backdrop dismiss, and remembered layout', async () => {
-    const onDismiss = jest.fn()
     const onConfirm = jest.fn()
+    const onDismiss = jest.fn()
     const screen = await render(
       safe(
         <DatePickerModal
@@ -443,7 +444,6 @@ describe('date picker modal', () => {
 describe('inputs, headers, and pickers', () => {
   it('edits a masked date with and without the modal', async () => {
     const onChange = jest.fn()
-    const onChangeText = jest.fn()
     const input = await render(
       safe(
         <DatePickerInput
@@ -458,13 +458,14 @@ describe('inputs, headers, and pickers', () => {
           startYear={2020}
           testID="date"
           validRange={{
-            startDate: new Date(2026, 0, 1),
             endDate: new Date(2026, 11, 31),
+            startDate: new Date(2026, 0, 1),
           }}
           value={day}
         />
       )
     )
+    const onChangeText = jest.fn()
     await pressTestId(input, 'date-icon-button')
     await pressTestId(input, 'react-native-paper-dates-close')
     await pressTestId(input, 'date-icon-button')
@@ -530,9 +531,9 @@ describe('inputs, headers, and pickers', () => {
         onChange={onChange}
         state={{
           date: day,
-          startDate: day,
-          endDate: day,
           dates: [day],
+          endDate: day,
+          startDate: day,
         }}
         validRange={undefined}
       />
@@ -546,9 +547,9 @@ describe('inputs, headers, and pickers', () => {
         onChange={onChange}
         state={{
           date: undefined,
-          startDate: undefined,
-          endDate: undefined,
           dates: undefined,
+          endDate: undefined,
+          startDate: undefined,
         }}
         validRange={undefined}
       />
@@ -557,7 +558,7 @@ describe('inputs, headers, and pickers', () => {
       (node: { props: { onChangeText?: Function } }) =>
         typeof node.props.onChangeText === 'function'
     ) as Array<{
-      props: { onSubmitEditing?: Function; onChangeText?: Function }
+      props: { onChangeText?: Function; onSubmitEditing?: Function }
     }>
     await act(() => {
       fields.forEach((node) => {
@@ -574,9 +575,9 @@ describe('inputs, headers, and pickers', () => {
         onChange={onChange}
         state={{
           date: undefined,
-          startDate: undefined,
-          endDate: undefined,
           dates: undefined,
+          endDate: undefined,
+          startDate: undefined,
         }}
         validRange={undefined}
       />
@@ -619,8 +620,8 @@ describe('inputs, headers, and pickers', () => {
     )
     await act(async () => {
       Dimensions.set({
-        window: { width: 800, height: 400, scale: 1, fontScale: 1 },
-        screen: { width: 800, height: 400, scale: 1, fontScale: 1 },
+        screen: { fontScale: 1, height: 400, scale: 1, width: 800 },
+        window: { fontScale: 1, height: 400, scale: 1, width: 800 },
       })
     })
     await render(
@@ -664,8 +665,8 @@ describe('inputs, headers, and pickers', () => {
     )[0]
     const year = await render(
       list.props.renderItem({
-        item: [2024, 2025, 2026],
         index: 0,
+        item: [2024, 2025, 2026],
         separators: {},
       })
     )
@@ -729,8 +730,8 @@ describe('inputs, headers, and pickers', () => {
 
     const theme = {
       ...LightTheme,
-      dark: true,
       colors: { ...LightTheme.colors, onPrimary: '' },
+      dark: true,
     }
     const base = {
       day: 2,
@@ -772,7 +773,7 @@ describe('native month swiper', () => {
       <Swiper
         endYear={2028}
         initialIndex={getStartAtIndex(2024, 2028)}
-        initialLayout={{ width: 300, height: 120 }}
+        initialLayout={{ height: 120, width: 300 }}
         renderFooter={() => <Text>footer</Text>}
         renderHeader={(props) => <Text>{props.endInset}</Text>}
         renderItem={({ index, onNext, onPrev }) => (
@@ -786,15 +787,15 @@ describe('native month swiper', () => {
         startYear={2024}
       />
     )
-    const scroll = swiper.container.queryAll(
-      (node: { props: { onMomentumScrollEnd?: Function } }) =>
-        typeof node.props.onMomentumScrollEnd === 'function'
+    const next = swiper.container.queryAll(
+      (node: Instance) => String(node.props.testID).startsWith('next-')
     )[0]
     const prev = swiper.container.queryAll(
       (node: Instance) => String(node.props.testID).startsWith('prev-')
     )[0]
-    const next = swiper.container.queryAll(
-      (node: Instance) => String(node.props.testID).startsWith('next-')
+    const scroll = swiper.container.queryAll(
+      (node: { props: { onMomentumScrollEnd?: Function } }) =>
+        typeof node.props.onMomentumScrollEnd === 'function'
     )[0]
     await pressNode(prev)
     await pressNode(next)
@@ -802,19 +803,19 @@ describe('native month swiper', () => {
       scroll.props.onMomentumScrollEnd({
         nativeEvent: {
           contentOffset: { x: 0, y: 400 },
-          layoutMeasurement: { width: 300, height: 120 },
+          layoutMeasurement: { height: 120, width: 300 },
         },
       })
       scroll.props.onMomentumScrollEnd({
         nativeEvent: {
           contentOffset: { x: 10500, y: 0 },
-          layoutMeasurement: { width: 300, height: 120 },
+          layoutMeasurement: { height: 120, width: 300 },
         },
       })
       scroll.props.onMomentumScrollEnd({
         nativeEvent: {
           contentOffset: { x: 999999, y: 0 },
-          layoutMeasurement: { width: 300, height: 120 },
+          layoutMeasurement: { height: 120, width: 300 },
         },
       })
       scroll.props.onLayout()
@@ -824,7 +825,7 @@ describe('native month swiper', () => {
       <Swiper
         endYear={2026}
         initialIndex={-5}
-        initialLayout={{ width: 300, height: 900 }}
+        initialLayout={{ height: 900, width: 300 }}
         renderItem={() => <Text>month</Text>}
         scrollMode="vertical"
         selectedYear={undefined}
@@ -835,7 +836,7 @@ describe('native month swiper', () => {
     await render(
       <Swiper
         initialIndex={getStartAtIndex()}
-        initialLayout={{ width: 300, height: 500 }}
+        initialLayout={{ height: 500, width: 300 }}
         renderItem={({ onNext }) => (
           <Pressable onPress={onNext} testID="vertical-next" />
         )}
@@ -848,7 +849,7 @@ describe('native month swiper', () => {
       <Swiper
         endYear={2026}
         initialIndex={0}
-        initialLayout={{ width: 300, height: 400 }}
+        initialLayout={{ height: 400, width: 300 }}
         renderItem={({ onNext, onPrev }) => (
           <>
             <Pressable onPress={onPrev} testID="edge-prev" />
@@ -871,7 +872,7 @@ describe('native month swiper', () => {
       verticalScroll.props.onMomentumScrollEnd({
         nativeEvent: {
           contentOffset: { x: 0, y: 4000 },
-          layoutMeasurement: { width: 300, height: 400 },
+          layoutMeasurement: { height: 400, width: 300 },
         },
       })
     })

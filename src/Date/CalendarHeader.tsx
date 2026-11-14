@@ -7,45 +7,13 @@ import { getTranslation } from '../translations/utils'
 import { sharedStyles } from '../shared/styles'
 import { memo } from 'react'
 
-export const verticalScrollbarGutter = Platform.select({
-  ios: 0,
-  web: 0,
-  default: 14,
-}) as number
-
-let cachedLayoutScrollbarWidth: number | undefined
-
-export function layoutScrollbarWidth(): number {
-  if (cachedLayoutScrollbarWidth !== undefined) {
-    return cachedLayoutScrollbarWidth
-  }
-  if (typeof document === 'undefined' || !document.body) {
-    return 0
-  }
-  const probe = document.createElement('div')
-  probe.style.cssText =
-    'position:absolute;top:-9999px;width:100px;height:100px;overflow:scroll;visibility:hidden'
-  document.body.appendChild(probe)
-  const width = probe.offsetWidth - probe.clientWidth
-  probe.remove()
-  return (cachedLayoutScrollbarWidth = width > 0 ? width : 0)
-}
-
 const buttonContainerHeight = 56
-const buttonContainerMarginTop = 4
+
 const buttonContainerMarginBottom = 8
 
-export function getCalendarHeaderHeight(scrollMode: 'horizontal' | 'vertical') {
-  if (scrollMode === 'horizontal') {
-    return (
-      buttonContainerHeight +
-      buttonContainerMarginTop +
-      buttonContainerMarginBottom +
-      dayNamesHeight
-    )
-  }
-  return dayNamesHeight
-}
+const buttonContainerMarginTop = 4
+
+let cachedLayoutScrollbarWidth: number | undefined
 
 function CalendarHeader({
   disableWeekDays,
@@ -114,6 +82,34 @@ function CalendarHeader({
   )
 }
 
+export function getCalendarHeaderHeight(scrollMode: 'horizontal' | 'vertical') {
+  if (scrollMode === 'horizontal') {
+    return (
+      buttonContainerHeight +
+      buttonContainerMarginTop +
+      buttonContainerMarginBottom +
+      dayNamesHeight
+    )
+  }
+  return dayNamesHeight
+}
+
+export function layoutScrollbarWidth(): number {
+  if (cachedLayoutScrollbarWidth !== undefined) {
+    return cachedLayoutScrollbarWidth
+  }
+  if (typeof document === 'undefined' || !document.body) {
+    return 0
+  }
+  const probe = document.createElement('div')
+  probe.style.cssText =
+    'position:absolute;top:-9999px;width:100px;height:100px;overflow:scroll;visibility:hidden'
+  document.body.appendChild(probe)
+  const width = probe.offsetWidth - probe.clientWidth
+  probe.remove()
+  return (cachedLayoutScrollbarWidth = width > 0 ? width : 0)
+}
+
 const styles = StyleSheet.create({
   arrowButton: {
     margin: 0,
@@ -137,5 +133,11 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
 })
+
+export const verticalScrollbarGutter = Platform.select({
+  default: 14,
+  ios: 0,
+  web: 0,
+}) as number
 
 export default memo(CalendarHeader)

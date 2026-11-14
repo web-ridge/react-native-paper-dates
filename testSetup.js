@@ -10,8 +10,8 @@ for (const name of ['scrollTo', 'scrollToOffset', 'scrollToIndex']) {
   if (typeof Object.prototype[name] !== 'function') {
     Object.defineProperty(Object.prototype, name, {
       configurable: true,
-      writable: true,
       value() {},
+      writable: true,
     })
   }
 }

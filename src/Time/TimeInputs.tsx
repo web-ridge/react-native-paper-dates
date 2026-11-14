@@ -5,19 +5,51 @@ import { Text, useTheme } from 'react-native-paper'
 import {
   clockTypes,
   inputTypes,
-  toHourInputFormat,
-  toHourOutputFormat,
   type PossibleClockTypes,
   type PossibleInputTypes,
   type TimeChange,
+  toHourInputFormat,
+  toHourOutputFormat,
 } from './timeUtils'
 import TimeInput from './TimeInput'
 import AmPmSwitcher from './AmPmSwitcher'
-import { themeColor, useLatest } from '../shared/utils'
-import Color from 'color'
+import { darkenColor, themeColor, useLatest } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
 import { memo, useCallback, useRef } from 'react'
 import { sharedStyles } from '../shared/styles'
+
+const styles = StyleSheet.create({
+  betweenDot: {
+    height: 12,
+  },
+  column: {
+    flexDirection: 'column',
+  },
+  dot: {
+    borderRadius: 7 / 2,
+    height: 7,
+    width: 7,
+  },
+  hoursAndMinutesSeparator: {
+    alignItems: 'center',
+    fontSize: 65,
+    width: 24,
+  },
+  inputContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  landscapeColumn: {
+    alignItems: 'flex-start',
+    flexDirection: 'column',
+  },
+  landscapeSwitcherSpacing: {
+    marginTop: 16,
+  },
+  spaceBetweenInputsAndSwitcher: {
+    width: 12,
+  },
+})
 
 function TimeInputs({
   focused,
@@ -40,15 +72,26 @@ function TimeInputs({
   onChange: TimeChange
   onFocusInput: (type: PossibleClockTypes) => void
 }) {
-  const theme = useTheme()
-
-  const startInput = useRef<TextInputInstance | null>(null)
-  const endInput = useRef<TextInputInstance | null>(null)
   const dimensions = useWindowDimensions()
+
+  const endInput = useRef<TextInputInstance | null>(null)
+
   const isLandscape = dimensions.width > dimensions.height
-  const useHorizontalAmPm =
-    !is24Hour && isLandscape && inputType === inputTypes.picker
+
   const minutesRef = useLatest(minutes)
+
+  const onChangeHours = useCallback(
+    (newHours: number) => {
+      onChange({
+        focused: clockTypes.hours,
+        hours: newHours,
+        minutes: minutesRef.current,
+      })
+    },
+    [onChange, minutesRef]
+  )
+
+  const onSubmitEndInput = useCallback(() => {}, [])
 
   const onSubmitStartInput = useCallback(() => {
     if (endInput.current) {
@@ -56,18 +99,16 @@ function TimeInputs({
     }
   }, [endInput])
 
-  const onSubmitEndInput = useCallback(() => {}, [])
+  const startInput = useRef<TextInputInstance | null>(null)
 
-  const onChangeHours = useCallback(
-    (newHours: number) => {
-      onChange({
-        hours: newHours,
-        minutes: minutesRef.current,
-        focused: clockTypes.hours,
-      })
-    },
-    [onChange, minutesRef]
-  )
+  const theme = useTheme()
+
+  const selectionColor = theme.dark
+    ? darkenColor(themeColor(theme.colors.primary), 0.2)
+    : themeColor(theme.colors.primary)
+
+  const useHorizontalAmPm =
+    !is24Hour && isLandscape && inputType === inputTypes.picker
 
   const hourMinuteRow = (
     <View style={styles.inputContainer}>
@@ -98,11 +139,7 @@ function TimeInputs({
           pressed={focused === clockTypes.hours}
           ref={startInput}
           returnKeyType={'next'}
-          selectionColor={
-            theme.dark
-              ? Color(themeColor(theme.colors.primary)).darken(0.2).hex()
-              : themeColor(theme.colors.primary)
-          }
+          selectionColor={selectionColor}
           value={toHourInputFormat(hours, is24Hour)}
         />
         {inputType === inputTypes.keyboard ? (
@@ -159,11 +196,7 @@ function TimeInputs({
           placeholder={'00'}
           pressed={focused === clockTypes.minutes}
           ref={endInput}
-          selectionColor={
-            theme.dark
-              ? Color(themeColor(theme.colors.primary)).darken(0.2).hex()
-              : themeColor(theme.colors.primary)
-          }
+          selectionColor={selectionColor}
           value={minutes}
         />
         {inputType === inputTypes.keyboard ? (
@@ -206,38 +239,5 @@ function TimeInputs({
 
   return hourMinuteRow
 }
-
-const styles = StyleSheet.create({
-  betweenDot: {
-    height: 12,
-  },
-  column: {
-    flexDirection: 'column',
-  },
-  dot: {
-    borderRadius: 7 / 2,
-    height: 7,
-    width: 7,
-  },
-  hoursAndMinutesSeparator: {
-    alignItems: 'center',
-    fontSize: 65,
-    width: 24,
-  },
-  inputContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  landscapeColumn: {
-    alignItems: 'flex-start',
-    flexDirection: 'column',
-  },
-  landscapeSwitcherSpacing: {
-    marginTop: 16,
-  },
-  spaceBetweenInputsAndSwitcher: {
-    width: 12,
-  },
-})
 
 export default memo(TimeInputs)

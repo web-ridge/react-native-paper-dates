@@ -6,19 +6,18 @@ import AnimatedClockSwitcher from '../../Time/AnimatedClockSwitcher'
 
 it('finishes the clock crossfade in both directions', async () => {
   const callbacks: Array<(result: { finished: boolean }) => void> = []
+  const hours = <AnalogClockHours hours={1} is24Hour={false} />
+  const minutes = <AnalogClockMinutes minutes={5} />
   const timing = jest.spyOn(Animated, 'timing').mockImplementation(
     () =>
       ({
+        reset() {},
         start(callback?: (result: { finished: boolean }) => void) {
           if (callback) callbacks.push(callback)
         },
         stop() {},
-        reset() {},
       }) as ReturnType<typeof Animated.timing>
   )
-
-  const hours = <AnalogClockHours hours={1} is24Hour={false} />
-  const minutes = <AnalogClockMinutes minutes={5} />
 
   try {
     const screen = await render(

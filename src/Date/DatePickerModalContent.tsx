@@ -21,58 +21,13 @@ import { LayoutChangeEvent, Platform, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { sharedStyles } from '../shared/styles'
 
-export type LocalState = {
-  startDate: CalendarDate
-  endDate: CalendarDate
-  date: CalendarDate
-  dates: CalendarDates
-}
-
-interface DatePickerModalContentBaseProps {
-  disableSafeTop?: boolean
-  disableStatusBar?: boolean
-  inputEnabled?: boolean
-  inputFormat?: string
-  locale: string
-  onCalendarLayout?: (layout: { width: number; height: number }) => void
-  onDismiss: () => void
-  saveLabelDisabled?: boolean
-  statusBarOnTopOfBackdrop?: boolean
-  uppercase?: boolean
-}
-
-export interface DatePickerModalContentRangeProps
-  extends HeaderPickProps, BaseCalendarProps, DatePickerModalContentBaseProps {
-  endDate: CalendarDate
-  mode: 'range'
-  onChange?: RangeChange
-  onConfirm: RangeChange
-  startDate: CalendarDate
-}
-
-export interface DatePickerModalContentSingleProps
-  extends HeaderPickProps, BaseCalendarProps, DatePickerModalContentBaseProps {
-  date?: CalendarDate
-  dateMode?: 'start' | 'end'
-  mode: 'single'
-  onChange?: SingleChange
-  onConfirm: SingleChange
-}
-
-export interface DatePickerModalContentMultiProps
-  extends HeaderPickProps, BaseCalendarProps, DatePickerModalContentBaseProps {
-  dates?: CalendarDates
-  mode: 'multiple'
-  onChange?: MultiChange
-  onConfirm: MultiConfirm
-}
-
 export function DatePickerModalContent(
   props:
     | DatePickerModalContentRangeProps
     | DatePickerModalContentSingleProps
     | DatePickerModalContentMultiProps
 ) {
+  const [collapsed, setCollapsed] = useState(true)
   const {
     date,
     dateMode,
@@ -100,23 +55,32 @@ export function DatePickerModalContent(
   } = props
   const defaultUppercase = false
   const insets = useSafeAreaInsets()
-
   const [state, setState] = useState<LocalState>({
     date,
-    startDate,
-    endDate,
     dates,
+    endDate,
+    startDate,
   })
-  const [collapsed, setCollapsed] = useState(true)
 
   useEffect(() => {
     setState({
       date,
-      startDate,
-      endDate,
       dates,
+      endDate,
+      startDate,
     })
   }, [date, startDate, endDate, dates])
+
+  const onCalendarContainerLayout = useCallback(
+    (event: LayoutChangeEvent) => {
+      const { height, width } = event.nativeEvent.layout
+      const calendarWidth = width - insets.left - insets.right
+      if (onCalendarLayout && calendarWidth > 0 && height > 0) {
+        onCalendarLayout({ height, width: calendarWidth })
+      }
+    },
+    [onCalendarLayout, insets.left, insets.right]
+  )
 
   const onInnerChange = useCallback(
     (params: Partial<LocalState>) => {
@@ -135,8 +99,8 @@ export function DatePickerModalContent(
       })
     } else if (mode === 'range') {
       ;(onConfirm as DatePickerModalContentRangeProps['onConfirm'])({
-        startDate: state.startDate,
         endDate: state.endDate,
+        startDate: state.startDate,
       })
     } else if (mode === 'multiple') {
       ;(onConfirm as DatePickerModalContentMultiProps['onConfirm'])({
@@ -148,17 +112,6 @@ export function DatePickerModalContent(
   const onToggleCollapse = useCallback(() => {
     setCollapsed((prev) => !prev)
   }, [setCollapsed])
-
-  const onCalendarContainerLayout = useCallback(
-    (event: LayoutChangeEvent) => {
-      const { width, height } = event.nativeEvent.layout
-      const calendarWidth = width - insets.left - insets.right
-      if (onCalendarLayout && calendarWidth > 0 && height > 0) {
-        onCalendarLayout({ width: calendarWidth, height })
-      }
-    },
-    [onCalendarLayout, insets.left, insets.right]
-  )
 
   return (
     <>
@@ -249,6 +202,52 @@ export function DatePickerModalContent(
       </View>
     </>
   )
+}
+
+interface DatePickerModalContentBaseProps {
+  disableSafeTop?: boolean
+  disableStatusBar?: boolean
+  inputEnabled?: boolean
+  inputFormat?: string
+  locale: string
+  onCalendarLayout?: (layout: { height: number; width: number }) => void
+  onDismiss: () => void
+  saveLabelDisabled?: boolean
+  statusBarOnTopOfBackdrop?: boolean
+  uppercase?: boolean
+}
+
+export interface DatePickerModalContentMultiProps
+  extends HeaderPickProps, BaseCalendarProps, DatePickerModalContentBaseProps {
+  dates?: CalendarDates
+  mode: 'multiple'
+  onChange?: MultiChange
+  onConfirm: MultiConfirm
+}
+
+export interface DatePickerModalContentRangeProps
+  extends HeaderPickProps, BaseCalendarProps, DatePickerModalContentBaseProps {
+  endDate: CalendarDate
+  mode: 'range'
+  onChange?: RangeChange
+  onConfirm: RangeChange
+  startDate: CalendarDate
+}
+
+export interface DatePickerModalContentSingleProps
+  extends HeaderPickProps, BaseCalendarProps, DatePickerModalContentBaseProps {
+  date?: CalendarDate
+  dateMode?: 'start' | 'end'
+  mode: 'single'
+  onChange?: SingleChange
+  onConfirm: SingleChange
+}
+
+export type LocalState = {
+  date: CalendarDate
+  dates: CalendarDates
+  endDate: CalendarDate
+  startDate: CalendarDate
 }
 
 export default memo(DatePickerModalContent)

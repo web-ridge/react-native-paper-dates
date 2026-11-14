@@ -4,36 +4,17 @@ import { circleSize } from './timeUtils'
 import { useTextColorOnPrimary } from '../shared/utils'
 import { memo } from 'react'
 
-function getMinuteNumbers(size: number, count: number) {
-  let angle = 0
-  let step = (2 * Math.PI) / count
-  let radius = size / 2.5
-
-  angle = angle = (-90 * Math.PI) / 180
-
-  return Array(12)
-    .fill(true)
-    .map(() => {
-      let x = Math.round(size / 2 + radius * Math.cos(angle))
-      let y = Math.round(size / 2 + radius * Math.sin(angle))
-      angle += step
-      return [x, y]
-    })
-}
-
-const minuteNumbers = getMinuteNumbers(circleSize, 12)
-
 function AnalogClockMinutes({ minutes }: { minutes: number }) {
-  const range = minuteNumbers
   const color = useTextColorOnPrimary()
+  const range = minuteNumbers
 
   return (
     <>
       {range.map((a, i) => {
         const currentMinutes = i * 5
-        const isZero = currentMinutes === 0
         let isCurrent =
           currentMinutes - 1 <= minutes && currentMinutes + 1 >= minutes
+        const isZero = currentMinutes === 0
         if (isZero) {
           isCurrent = minutes >= 59 || currentMinutes + 1 >= minutes
         }
@@ -44,8 +25,8 @@ function AnalogClockMinutes({ minutes }: { minutes: number }) {
             style={[
               styles.outerHourRoot,
               {
-                top: a[1],
                 left: a[0],
+                top: a[1],
               },
             ]}
           >
@@ -65,6 +46,25 @@ function AnalogClockMinutes({ minutes }: { minutes: number }) {
     </>
   )
 }
+
+function getMinuteNumbers(size: number, count: number) {
+  let angle = 0
+  let radius = size / 2.5
+  let step = (2 * Math.PI) / count
+
+  angle = angle = (-90 * Math.PI) / 180
+
+  return Array(12)
+    .fill(true)
+    .map(() => {
+      let x = Math.round(size / 2 + radius * Math.cos(angle))
+      let y = Math.round(size / 2 + radius * Math.sin(angle))
+      angle += step
+      return [x, y]
+    })
+}
+
+const minuteNumbers = getMinuteNumbers(circleSize, 12)
 
 const styles = StyleSheet.create({
   outerHourInner: { borderRadius: 24 },

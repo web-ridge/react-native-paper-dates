@@ -14,10 +14,6 @@ export default function AnimatedClockSwitcher({
   minutes: ReactElement<typeof AnalogClockMinutes>
 }) {
   const collapsed = focused === clockTypes.hours
-  const [showHours, setShowHours] = useState(collapsed)
-  const [showMinutes, setShowMinutes] = useState(!collapsed)
-  const skipFirst = useRef(true)
-
   const animatedCollapsed = useRef<Animated.Value>(
     new Animated.Value(collapsed ? 1 : 0)
   ).current
@@ -39,6 +35,9 @@ export default function AnimatedClockSwitcher({
       outputRange: [1, 0.95],
     })
   ).current
+  const [showHours, setShowHours] = useState(collapsed)
+  const [showMinutes, setShowMinutes] = useState(!collapsed)
+  const skipFirst = useRef(true)
 
   useEffect(() => {
     if (skipFirst.current) {
@@ -51,8 +50,8 @@ export default function AnimatedClockSwitcher({
       setShowMinutes(true)
     }
     Animated.timing(animatedCollapsed, {
-      toValue: collapsed ? 1 : 0,
       duration: 250,
+      toValue: collapsed ? 1 : 0,
       useNativeDriver: true,
     }).start(({ finished }) => {
       if (!finished) {

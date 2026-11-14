@@ -14,26 +14,37 @@ import {
   getMinIndex,
   getVerticalWindow,
   isIndexWithinRange,
-  useYearChange,
-  verticalWindowEdge,
   type RenderProps,
   type SwiperProps,
+  useYearChange,
+  verticalWindowEdge,
 } from './SwiperUtils'
 import AutoSizer from './AutoSizer'
 import {
   memo,
+  type ReactNode,
+  type UIEvent,
   useCallback,
   useEffect,
   useLayoutEffect,
   useRef,
   useState,
-  type ReactNode,
-  type UIEvent,
 } from 'react'
 import { layoutScrollbarWidth } from './CalendarHeader'
 
-const useIsomorphicLayoutEffect =
-  typeof window !== 'undefined' ? useLayoutEffect : useEffect
+const empty = () => null
+
+function sameIndexes(left: number[], right: number[]) {
+  if (left.length !== right.length) {
+    return false
+  }
+  for (let i = 0; i < left.length; i += 1) {
+    if (left[i] !== right[i]) {
+      return false
+    }
+  }
+  return true
+}
 
 function Swiper({
   endYear,
@@ -47,19 +58,11 @@ function Swiper({
   startWeekOnMonday,
   startYear,
 }: SwiperProps) {
-  const isHorizontal = scrollMode === 'horizontal'
-
   const [index, setIndex] = useState(initialIndex)
 
-  const onPrev = useCallback(() => {
-    setIndex((prev) => {
-      const newIndex = prev - 1
-      if (isIndexWithinRange(newIndex, startYear, endYear)) {
-        return newIndex
-      }
-      return prev
-    })
-  }, [setIndex, startYear, endYear])
+  const indexRef = useLatest(index)
+
+  const isHorizontal = scrollMode === 'horizontal'
 
   const onNext = useCallback(() => {
     setIndex((prev) => {
@@ -71,12 +74,21 @@ function Swiper({
     })
   }, [setIndex, startYear, endYear])
 
+  const onPrev = useCallback(() => {
+    setIndex((prev) => {
+      const newIndex = prev - 1
+      if (isIndexWithinRange(newIndex, startYear, endYear)) {
+        return newIndex
+      }
+      return prev
+    })
+  }, [setIndex, startYear, endYear])
+
   const renderProps = {
     index,
-    onPrev,
     onNext,
+    onPrev,
   }
-  const indexRef = useLatest(index)
   useYearChange(
     (newIndex) => {
       if (newIndex && isIndexWithinRange(newIndex, startYear, endYear)) {
@@ -107,8 +119,8 @@ function Swiper({
               <>
                 {renderItem({
                   index,
-                  onPrev,
                   onNext,
+                  onPrev,
                 })}
                 {renderHeader
                   ? renderHeader({
@@ -124,7 +136,7 @@ function Swiper({
         <>
           {renderHeader && renderHeader(renderProps)}
           <AutoSizer initialLayout={initialLayout}>
-            {({ width, height }) => (
+            {({ height, width }) => (
               <VerticalScroller
                 endYear={endYear}
                 height={height}
@@ -143,17 +155,39 @@ function Swiper({
   )
 }
 
-function sameIndexes(left: number[], right: number[]) {
-  if (left.length !== right.length) {
-    return false
-  }
-  for (let i = 0; i < left.length; i += 1) {
-    if (left[i] !== right[i]) {
-      return false
+export function useDebouncedCallback<T>(
+  callback: (value: T) => void
+): (value: T) => void {
+  const latest = useLatest(callback)
+  const mounted = useRef(true)
+  const timerId = useRef<number | null>(null)
+
+  useEffect(() => {
+    return () => {
+      mounted.current = false
+      if (timerId.current !== null) {
+        window.cancelAnimationFrame(timerId.current)
+      }
     }
-  }
-  return true
+  }, [])
+
+  return useCallback(
+    (value: T) => {
+      if (timerId.current !== null) {
+        window.cancelAnimationFrame(timerId.current)
+      }
+      timerId.current = window.requestAnimationFrame(() => {
+        if (mounted.current) {
+          latest.current(value)
+        }
+      })
+    },
+    [latest]
+  )
 }
+
+const useIsomorphicLayoutEffect =
+  typeof window !== 'undefined' ? useLayoutEffect : useEffect
 
 function VerticalScroller({
   endYear,
@@ -172,8 +206,8 @@ function VerticalScroller({
   startYear?: number
   width: number
 }) {
-  const effectiveStartYear = startYear || defaultStartYear
   const effectiveEndYear = endYear || defaultEndYear
+  const effectiveStartYear = startYear || defaultStartYear
   const constrainedInitialIndex = isIndexWithinRange(
     initialIndex,
     effectiveStartYear,
@@ -184,7 +218,8 @@ function VerticalScroller({
         Math.min(initialIndex, getMaxIndex(effectiveEndYear)),
         getMinIndex(effectiveStartYear)
       )
-
+  const idx = useRef<number>(constrainedInitialIndex)
+  const parentRef = useRef<HTMLDivElement | null>(null)
   const [visibleIndexes, setVisibleIndexes] = useState<number[]>(() =>
     getVerticalWindow(
       constrainedInitialIndex,
@@ -192,10 +227,7 @@ function VerticalScroller({
       effectiveEndYear
     )
   )
-
   const theme = useTheme()
-  const idx = useRef<number>(constrainedInitialIndex)
-  const parentRef = useRef<HTMLDivElement | null>(null)
   const verticalMetrics = getVerticalListMetrics(
     getMinIndex(effectiveStartYear, effectiveEndYear),
     getMaxIndex(effectiveStartYear, effectiveEndYear),
@@ -322,47 +354,14 @@ function VerticalScroller({
             >
               {renderItem({
                 index: monthIndex,
-                onPrev: empty,
                 onNext: empty,
+                onPrev: empty,
               })}
             </div>
           )
         })}
       </div>
     </div>
-  )
-}
-
-const empty = () => null
-
-export function useDebouncedCallback<T>(
-  callback: (value: T) => void
-): (value: T) => void {
-  const mounted = useRef(true)
-  const timerId = useRef<number | null>(null)
-  const latest = useLatest(callback)
-
-  useEffect(() => {
-    return () => {
-      mounted.current = false
-      if (timerId.current !== null) {
-        window.cancelAnimationFrame(timerId.current)
-      }
-    }
-  }, [])
-
-  return useCallback(
-    (value: T) => {
-      if (timerId.current !== null) {
-        window.cancelAnimationFrame(timerId.current)
-      }
-      timerId.current = window.requestAnimationFrame(() => {
-        if (mounted.current) {
-          latest.current(value)
-        }
-      })
-    },
-    [latest]
   )
 }
 

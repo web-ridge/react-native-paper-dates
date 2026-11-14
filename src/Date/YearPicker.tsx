@@ -14,6 +14,34 @@ import { defaultEndYear, defaultStartYear } from './dateUtils'
 
 const ITEM_HEIGHT = 62
 
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    top: 56,
+    zIndex: 100,
+  },
+  year: {
+    flex: 1,
+    height: ITEM_HEIGHT,
+    justifyContent: 'center',
+    marginLeft: 16,
+    marginRight: 16,
+  },
+  yearButton: {
+    borderRadius: 46 / 2,
+    overflow: 'hidden',
+  },
+  yearInner: {
+    alignItems: 'center',
+    borderRadius: 46 / 2,
+    height: 46,
+    justifyContent: 'center',
+  },
+  yearLabel: {
+    fontSize: 16,
+  },
+})
+
 function YearPicker({
   endYear,
   onPressYear,
@@ -27,20 +55,6 @@ function YearPicker({
   selectingYear: boolean
   startYear: number
 }) {
-  const theme = useTheme()
-
-  const resolvedStartYear = isNaN(startYear) ? defaultStartYear : startYear
-  const selectedRow = useMemo(() => {
-    if (!selectedYear) {
-      return 0
-    }
-    return Math.max(0, Math.floor((selectedYear - resolvedStartYear) / 3) - 1)
-  }, [resolvedStartYear, selectedYear])
-  const years = useMemo(
-    () => range(resolvedStartYear, isNaN(endYear) ? defaultEndYear : endYear),
-    [endYear, resolvedStartYear]
-  )
-
   const getItemLayout = useCallback(
     (_: ArrayLike<number> | null | undefined, index: number) => ({
       index,
@@ -66,6 +80,22 @@ function YearPicker({
   const renderScrollComponent = useCallback((sProps: object) => {
     return <ScrollView {...sProps} />
   }, [])
+
+  const resolvedStartYear = isNaN(startYear) ? defaultStartYear : startYear
+
+  const selectedRow = useMemo(() => {
+    if (!selectedYear) {
+      return 0
+    }
+    return Math.max(0, Math.floor((selectedYear - resolvedStartYear) / 3) - 1)
+  }, [resolvedStartYear, selectedYear])
+
+  const theme = useTheme()
+
+  const years = useMemo(
+    () => range(resolvedStartYear, isNaN(endYear) ? defaultEndYear : endYear),
+    [endYear, resolvedStartYear]
+  )
 
   return (
     <View
@@ -142,33 +172,6 @@ function YearPure({
   )
 }
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    top: 56,
-    zIndex: 100,
-  },
-  year: {
-    flex: 1,
-    height: ITEM_HEIGHT,
-    justifyContent: 'center',
-    marginLeft: 16,
-    marginRight: 16,
-  },
-  yearButton: {
-    borderRadius: 46 / 2,
-    overflow: 'hidden',
-  },
-  yearInner: {
-    alignItems: 'center',
-    borderRadius: 46 / 2,
-    height: 46,
-    justifyContent: 'center',
-  },
-  yearLabel: {
-    fontSize: 16,
-  },
-})
 const Year = memo(YearPure)
 
 export default memo(YearPicker)

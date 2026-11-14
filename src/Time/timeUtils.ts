@@ -7,117 +7,35 @@ import type {
   TimeChange,
 } from './types'
 
-export type {
-  PossibleClockTypes,
-  PossibleHourTypes,
-  PossibleInputTypes,
-  TimeChange,
-}
+const _12 = Math.PI / 30
 
-type HighlightColors = {
-  backgroundColor: ColorValue
-  color: ColorValue
-}
+const _30 = Math.PI / 6
+
+const _90 = Math.PI / 2
+
+const _360 = Math.PI * 2
 
 export const circleSize = 256
-
-export type HourTypeMap = {
-  [hourType in PossibleHourTypes]: PossibleHourTypes
-}
-export const hourTypes: HourTypeMap = {
-  am: 'am',
-  pm: 'pm',
-}
-
-export function getHourType(hours: number): PossibleHourTypes | undefined {
-  if (hours >= 0 && hours < 12) {
-    return hourTypes.am
-  }
-  if (hours >= 12 && hours < 24) {
-    return hourTypes.pm
-  }
-  return undefined
-}
-
-export type InputTypeMap = {
-  [inputType in PossibleInputTypes]: PossibleInputTypes
-}
-export const inputTypes: InputTypeMap = {
-  keyboard: 'keyboard',
-  picker: 'picker',
-}
-
-export const reverseInputTypes: InputTypeMap = {
-  keyboard: 'picker',
-  picker: 'keyboard',
-}
-type InputIconMap = {
-  [inputType in PossibleInputTypes]: string
-}
-export const inputTypeIcons: InputIconMap = {
-  keyboard: 'keyboard-outline',
-  picker: 'clock-outline',
-}
-
-export const getTimeInputTypeIcon = (
-  inputType: PossibleInputTypes,
-  inputIconMap?: InputIconMap
-) => {
-  return (
-    inputIconMap?.[reverseInputTypes[inputType]] ||
-    inputTypeIcons?.[reverseInputTypes[inputType]]
-  )
-}
 
 export type ClockTypeMap = {
   [clockType in PossibleClockTypes]: PossibleClockTypes
 }
+
 export const clockTypes: ClockTypeMap = {
-  minutes: 'minutes',
   hours: 'hours',
+  minutes: 'minutes',
 }
 
-const outerHeight = 34
-const _30 = Math.PI / 6
-const _12 = Math.PI / 30
-const _360 = Math.PI * 2
-const _90 = Math.PI / 2
-
-export function snap(angle: number, step: number) {
-  let a = angle
-  while (a < 0) a += _360
-  let diff = a % step
-
-  if (diff <= step / 2) {
-    return angle - diff
-  }
-
-  return angle - diff + step
-}
-
-export function getHourTypeFromOffset(
-  left: number,
-  top: number,
-  size: number
-): PossibleHourTypes {
-  const w = size / 2
-  const x = w - left
+export function getAngle(left: number, top: number, size: number) {
+  const x = size / 2 - left
   const y = size / 2 - top
 
-  const distance = Math.sqrt(x * x + y * y)
-  const maxPm = w - outerHeight
+  let angle = x ? Math.atan(y / x) : y < 0 ? -_90 : _90
+  if (x < 0) {
+    angle = -angle + 2 * (_90 + angle)
+  }
 
-  return distance > maxPm ? hourTypes.am : hourTypes.pm
-}
-
-export function getMinutes(handAngle: number) {
-  handAngle = snap(handAngle, _12)
-
-  let minute = parseInt((((handAngle - _90) % _360) / _12).toFixed(), 10)
-  while (minute < 0) minute += 60
-  while (minute >= 60) minute -= 60
-
-  return minute
+  return angle
 }
 
 export function getHours(
@@ -139,40 +57,106 @@ export function getHours(
   return hour
 }
 
-export function getAngle(left: number, top: number, size: number) {
-  const x = size / 2 - left
-  const y = size / 2 - top
+export function getHourType(hours: number): PossibleHourTypes | undefined {
+  if (hours >= 0 && hours < 12) {
+    return hourTypes.am
+  }
+  if (hours >= 12 && hours < 24) {
+    return hourTypes.pm
+  }
+  return undefined
+}
 
-  let angle = x ? Math.atan(y / x) : y < 0 ? -_90 : _90
-  if (x < 0) {
-    angle = -angle + 2 * (_90 + angle)
+export function getHourTypeFromOffset(
+  left: number,
+  top: number,
+  size: number
+): PossibleHourTypes {
+  const w = size / 2
+  const maxPm = w - outerHeight
+  const x = w - left
+  const y = size / 2 - top
+  const distance = Math.sqrt(x * x + y * y)
+
+  return distance > maxPm ? hourTypes.am : hourTypes.pm
+}
+
+export function getMinutes(handAngle: number) {
+  handAngle = snap(handAngle, _12)
+
+  let minute = parseInt((((handAngle - _90) % _360) / _12).toFixed(), 10)
+  while (minute < 0) minute += 60
+  while (minute >= 60) minute -= 60
+
+  return minute
+}
+
+type HighlightColors = {
+  backgroundColor: ColorValue
+  color: ColorValue
+}
+
+export type HourTypeMap = {
+  [hourType in PossibleHourTypes]: PossibleHourTypes
+}
+
+export const hourTypes: HourTypeMap = {
+  am: 'am',
+  pm: 'pm',
+}
+
+type InputIconMap = {
+  [inputType in PossibleInputTypes]: string
+}
+
+export const inputTypeIcons: InputIconMap = {
+  keyboard: 'keyboard-outline',
+  picker: 'clock-outline',
+}
+
+export type InputTypeMap = {
+  [inputType in PossibleInputTypes]: PossibleInputTypes
+}
+
+export const inputTypes: InputTypeMap = {
+  keyboard: 'keyboard',
+  picker: 'picker',
+}
+
+const outerHeight = 34
+
+export type {
+  PossibleClockTypes,
+  PossibleHourTypes,
+  PossibleInputTypes,
+  TimeChange,
+}
+
+export const reverseInputTypes: InputTypeMap = {
+  keyboard: 'picker',
+  picker: 'keyboard',
+}
+
+export const getTimeInputTypeIcon = (
+  inputType: PossibleInputTypes,
+  inputIconMap?: InputIconMap
+) => {
+  return (
+    inputIconMap?.[reverseInputTypes[inputType]] ||
+    inputTypeIcons?.[reverseInputTypes[inputType]]
+  )
+}
+
+export function snap(angle: number, step: number) {
+  let a = angle
+  while (a < 0) a += _360
+  let diff = a % step
+
+  if (diff <= step / 2) {
+    return angle - diff
   }
 
-  return angle
-}
-
-export function useSwitchColors(highlighted: boolean): HighlightColors {
-  const theme = useTheme()
-  const backgroundColor = highlighted
-    ? theme.colors.tertiaryContainer
-    : 'transparent'
-  const color = highlighted
-    ? theme.colors.onTertiaryContainer
-    : theme.colors.onSurfaceVariant
-
-  return { backgroundColor, color }
-}
-
-export function useInputColors(highlighted: boolean): HighlightColors {
-  const theme = useTheme()
-  const backgroundColor = highlighted
-    ? theme.colors.primaryContainer
-    : theme.colors.surfaceVariant
-  const color = highlighted
-    ? theme.colors.onPrimaryContainer
-    : theme.colors.onSurface
-
-  return { backgroundColor, color }
+  return angle - diff + step
 }
 
 export function toHourInputFormat(hours: number, is24Hour: boolean): number {
@@ -206,4 +190,28 @@ export function toHourOutputFormat(
     return newHours + 12
   }
   return newHours
+}
+
+export function useInputColors(highlighted: boolean): HighlightColors {
+  const theme = useTheme()
+  const backgroundColor = highlighted
+    ? theme.colors.primaryContainer
+    : theme.colors.surfaceVariant
+  const color = highlighted
+    ? theme.colors.onPrimaryContainer
+    : theme.colors.onSurface
+
+  return { backgroundColor, color }
+}
+
+export function useSwitchColors(highlighted: boolean): HighlightColors {
+  const theme = useTheme()
+  const backgroundColor = highlighted
+    ? theme.colors.tertiaryContainer
+    : 'transparent'
+  const color = highlighted
+    ? theme.colors.onTertiaryContainer
+    : theme.colors.onSurfaceVariant
+
+  return { backgroundColor, color }
 }

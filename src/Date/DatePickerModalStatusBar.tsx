@@ -1,12 +1,15 @@
 import { memo } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useHeaderBackgroundColor } from '../shared/utils'
-import Color from 'color'
+import {
+  isDarkColor,
+  themeColor,
+  useHeaderBackgroundColor,
+} from '../shared/utils'
 import {
   StatusBar,
-  View,
   type StatusBarProps,
   type StatusBarStyle,
+  View,
 } from 'react-native'
 
 function DatePickerModalStatusBar({
@@ -18,17 +21,16 @@ function DatePickerModalStatusBar({
   disableStatusBar: boolean
   statusBarOnTopOfBackdrop: boolean
 }) {
-  const insets = useSafeAreaInsets()
   const headerBackgroundColor = useHeaderBackgroundColor()
-
+  const insets = useSafeAreaInsets()
   const onDarkBackground =
-    Color(headerBackgroundColor).isDark() || statusBarOnTopOfBackdrop
-  const statusBarTheme: StatusBarStyle = onDarkBackground
-    ? 'light-content'
-    : 'dark-content'
+    isDarkColor(themeColor(headerBackgroundColor)) || statusBarOnTopOfBackdrop
   const statusBarBackground = statusBarOnTopOfBackdrop
     ? 'transparent'
     : headerBackgroundColor
+  const statusBarTheme: StatusBarStyle = onDarkBackground
+    ? 'light-content'
+    : 'dark-content'
 
   return (
     <>

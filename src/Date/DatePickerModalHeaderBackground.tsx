@@ -14,8 +14,8 @@ export default function DatePickerModalHeaderBackground({
   disableWeekDays?: DisableWeekDaysType
 }) {
   const backgroundColor = useHeaderBackgroundColor()
+  const { height, width } = useWindowDimensions()
   const insets = useSafeAreaInsets()
-  const { width, height } = useWindowDimensions()
   const isLargeScreen = useIsLargeScreen()
   const isPhoneLandscape = width > height && !isLargeScreen
 

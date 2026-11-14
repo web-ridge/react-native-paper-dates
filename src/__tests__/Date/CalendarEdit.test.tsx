@@ -10,10 +10,10 @@ it('renders CalendarEdit', async () => {
       mode="single"
       onChange={() => null}
       state={{
-        startDate: fixedDate,
-        endDate: fixedDate,
         date: fixedDate,
         dates: [fixedDate],
+        endDate: fixedDate,
+        startDate: fixedDate,
       }}
       validRange={undefined}
     />

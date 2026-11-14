@@ -39,28 +39,28 @@ function CalendarEdit({
   validRange: ValidRangeType | undefined
   withDateFormatInLabel?: boolean
 }) {
-  const theme = useTheme()
   const dateInput = useRef<TextInputInstance | null>(null)
-  const startInput = useRef<TextInputInstance | null>(null)
   const endInput = useRef<TextInputInstance | null>(null)
+  const startInput = useRef<TextInputInstance | null>(null)
+  const theme = useTheme()
   const surfaceColor = theme.colors.elevation.level3
-  const inputTheme = { colors: { background: surfaceColor } }
   const inputStyle = { backgroundColor: surfaceColor }
+  const inputTheme = { colors: { background: surfaceColor } }
 
   useEffect(() => {
     if (collapsed) {
       Keyboard.dismiss()
     }
 
-    const inputsToFocus = [dateInput.current, startInput.current].filter(
-      (n) => n
-    ) as TextInputInstance[]
-
     const inputsToBlur = [
       dateInput.current,
       startInput.current,
       endInput.current,
     ].filter((n) => n) as TextInputInstance[]
+
+    const inputsToFocus = [dateInput.current, startInput.current].filter(
+      (n) => n
+    ) as TextInputInstance[]
 
     if (collapsed) {
       inputsToBlur.forEach((ip) => ip.blur())
@@ -69,15 +69,15 @@ function CalendarEdit({
     }
   }, [mode, startInput, endInput, dateInput, collapsed])
 
+  const onSubmitEndInput = useCallback(() => {}, [])
+
+  const onSubmitInput = useCallback(() => {}, [])
+
   const onSubmitStartInput = useCallback(() => {
     if (endInput.current) {
       endInput.current.focus()
     }
   }, [endInput])
-
-  const onSubmitEndInput = useCallback(() => {}, [])
-
-  const onSubmitInput = useCallback(() => {}, [])
 
   return (
     <View style={styles.root}>

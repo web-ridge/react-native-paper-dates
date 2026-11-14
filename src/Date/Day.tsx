@@ -8,11 +8,19 @@ import type { PaperTheme } from '../shared/utils'
 import type { DayContentPosition, DayContentRenderer } from './types'
 import { memo, useCallback, useMemo } from 'react'
 
-function EmptyDayPure() {
-  return <View style={styles.empty} />
-}
-
-export const EmptyDay = memo(EmptyDayPure)
+const contentPositions = StyleSheet.create({
+  'bottom': {
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingBottom: 2,
+  },
+  'bottom-left': { alignItems: 'flex-start', justifyContent: 'flex-end' },
+  'bottom-right': { alignItems: 'flex-end', justifyContent: 'flex-end' },
+  'center': { alignItems: 'center', justifyContent: 'center' },
+  'top': { alignItems: 'center', justifyContent: 'flex-start', paddingTop: 2 },
+  'top-left': { alignItems: 'flex-start', justifyContent: 'flex-start' },
+  'top-right': { alignItems: 'flex-end', justifyContent: 'flex-start' },
+})
 
 function Day(props: {
   day: number
@@ -34,6 +42,8 @@ function Day(props: {
   theme: PaperTheme
   year: number
 }) {
+  let baseTextColor
+
   const {
     day,
     dayContent,
@@ -54,11 +64,6 @@ function Day(props: {
     theme,
     year,
   } = props
-  const borderColor = theme.colors.primary
-
-  const onPress = useCallback(() => {
-    onPressDate(new Date(year, month, day))
-  }, [onPressDate, year, month, day])
 
   const accessibilityLabel = useMemo(
     () =>
@@ -70,8 +75,13 @@ function Day(props: {
     [day, locale, month, year]
   )
 
-  let baseTextColor
+  const borderColor = theme.colors.primary
+
   let finalTextColor
+
+  const onPress = useCallback(() => {
+    onPressDate(new Date(year, month, day))
+  }, [onPressDate, year, month, day])
 
   if (selected) {
     baseTextColor = textColorOnPrimary
@@ -156,6 +166,12 @@ function Day(props: {
   )
 }
 
+function EmptyDayPure() {
+  return <View style={styles.empty} />
+}
+
+export const EmptyDay = memo(EmptyDayPure)
+
 const styles = StyleSheet.create({
   button: {
     borderRadius: daySize / 2,
@@ -193,20 +209,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     position: 'relative',
   },
-})
-
-const contentPositions = StyleSheet.create({
-  'bottom': {
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    paddingBottom: 2,
-  },
-  'bottom-left': { alignItems: 'flex-start', justifyContent: 'flex-end' },
-  'bottom-right': { alignItems: 'flex-end', justifyContent: 'flex-end' },
-  'center': { alignItems: 'center', justifyContent: 'center' },
-  'top': { alignItems: 'center', justifyContent: 'flex-start', paddingTop: 2 },
-  'top-left': { alignItems: 'flex-start', justifyContent: 'flex-start' },
-  'top-right': { alignItems: 'flex-end', justifyContent: 'flex-start' },
 })
 
 export default memo(Day)

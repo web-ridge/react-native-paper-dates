@@ -1,34 +1,3 @@
-export type TranslationsType = {
-  am: string
-  close: string
-  dateIsDisabled: string
-  hour: string
-  minute: string
-  mustBeBetween: (startDate: string, endDate: string) => string
-  mustBeHigherThan: (date: string) => string
-  mustBeLowerThan: (date: string) => string
-  next: string
-  notAccordingToDateFormat: (inputFormat: string) => string
-  pickDateFromCalendar: string
-  pm: string
-  previous: string
-  save: string
-  selectMultiple: string
-  selectRange: string
-  selectSingle: string
-  toggleKeyboard: string
-  typeInDate: string
-}
-
-export type TranslationResolver = (
-  locale: string | undefined
-) => TranslationsType
-
-let translationsPerLocale: Record<
-  string,
-  TranslationsType | TranslationResolver
-> = {}
-
 export function getTranslation<K extends keyof TranslationsType>(
   locale: string | undefined,
   key: K,
@@ -60,3 +29,34 @@ export function registerTranslation(
 ) {
   translationsPerLocale[locale] = translations
 }
+
+export type TranslationsType = {
+  am: string
+  close: string
+  dateIsDisabled: string
+  hour: string
+  minute: string
+  mustBeBetween: (startDate: string, endDate: string) => string
+  mustBeHigherThan: (date: string) => string
+  mustBeLowerThan: (date: string) => string
+  next: string
+  notAccordingToDateFormat: (inputFormat: string) => string
+  pickDateFromCalendar: string
+  pm: string
+  previous: string
+  save: string
+  selectMultiple: string
+  selectRange: string
+  selectSingle: string
+  toggleKeyboard: string
+  typeInDate: string
+}
+
+export type TranslationResolver = (
+  locale: string | undefined
+) => TranslationsType
+
+let translationsPerLocale: Record<
+  string,
+  TranslationsType | TranslationResolver
+> = {}

@@ -10,65 +10,32 @@ import {
   getTotalMonths,
 } from './dateUtils'
 
-export type RenderProps = {
-  endInset?: number
-  index: number
-  onNext: () => void
-  onPrev: () => void
-}
-
-export type SwiperProps = {
-  endYear?: number
-  initialIndex: number
-  initialLayout?: { width: number; height: number }
-  renderFooter?: (renderProps: RenderProps) => ReactNode
-  renderHeader?: (renderProps: RenderProps) => ReactNode
-  renderItem: (renderProps: RenderProps) => ReactNode
-  scrollMode: 'horizontal' | 'vertical'
-  selectedYear: number | undefined
-  startWeekOnMonday: boolean
-  startYear?: number
-}
-
-export function getMinIndex(startYear?: number, endYear?: number): number {
-  if (!startYear) return 0
-
-  const today = new Date()
-  const startDate = new Date(startYear, 0, 1)
-  const months = differenceInMonths(today, startDate)
-  const dynamicStartAtIndex = getStartAtIndex(startYear, endYear)
-  const minIndex = dynamicStartAtIndex + months
-  const totalMonths = getTotalMonths(startYear, endYear)
-
-  return Math.max(0, Math.min(minIndex, totalMonths - 1))
-}
-
 export function getMaxIndex(startYear?: number, endYear?: number): number {
   const dynamicStartAtIndex = getStartAtIndex(startYear, endYear)
   const totalMonths = getTotalMonths(startYear, endYear)
 
   if (!endYear) return totalMonths - 1
 
-  const today = new Date()
   const endDate = new Date(endYear, 11, 31)
+  const today = new Date()
   const months = differenceInMonths(today, endDate)
   const maxIndex = dynamicStartAtIndex + months
 
   return Math.max(0, Math.min(maxIndex, totalMonths - 1))
 }
 
-export function isIndexWithinRange(
-  index: number,
-  startYear?: number,
-  endYear?: number
-): boolean {
-  const minIndex = getMinIndex(startYear || defaultStartYear, endYear)
-  const maxIndex = getMaxIndex(startYear, endYear || defaultEndYear)
-  return index >= minIndex && index <= maxIndex
-}
+export function getMinIndex(startYear?: number, endYear?: number): number {
+  if (!startYear) return 0
 
-export const verticalMonthOverscan = 6
-export const verticalWindowEdge = 2
+  const dynamicStartAtIndex = getStartAtIndex(startYear, endYear)
+  const startDate = new Date(startYear, 0, 1)
+  const today = new Date()
+  const months = differenceInMonths(today, startDate)
+  const minIndex = dynamicStartAtIndex + months
+  const totalMonths = getTotalMonths(startYear, endYear)
+
+  return Math.max(0, Math.min(minIndex, totalMonths - 1))
+}
 
 export function getVerticalWindow(
   index: number,
@@ -87,6 +54,36 @@ export function getVerticalWindow(
     }
   }
   return indexes.length ? indexes : [index]
+}
+
+export function isIndexWithinRange(
+  index: number,
+  startYear?: number,
+  endYear?: number
+): boolean {
+  const maxIndex = getMaxIndex(startYear, endYear || defaultEndYear)
+  const minIndex = getMinIndex(startYear || defaultStartYear, endYear)
+  return index >= minIndex && index <= maxIndex
+}
+
+export type RenderProps = {
+  endInset?: number
+  index: number
+  onNext: () => void
+  onPrev: () => void
+}
+
+export type SwiperProps = {
+  endYear?: number
+  initialIndex: number
+  initialLayout?: { height: number; width: number }
+  renderFooter?: (renderProps: RenderProps) => ReactNode
+  renderHeader?: (renderProps: RenderProps) => ReactNode
+  renderItem: (renderProps: RenderProps) => ReactNode
+  scrollMode: 'horizontal' | 'vertical'
+  selectedYear: number | undefined
+  startWeekOnMonday: boolean
+  startYear?: number
 }
 
 export function useYearChange(
@@ -113,12 +110,11 @@ export function useYearChange(
       )
       currentDate.setFullYear(selectedYear)
 
+      const dynamicStartAtIndex = getStartAtIndex(startYear, endYear)
       const today = new Date()
       const months = differenceInMonths(today, currentDate)
-      const dynamicStartAtIndex = getStartAtIndex(startYear, endYear)
-      const totalMonths = getTotalMonths(startYear, endYear)
-
       const newIndex = dynamicStartAtIndex + months
+      const totalMonths = getTotalMonths(startYear, endYear)
       const boundedIndex = Math.max(0, Math.min(newIndex, totalMonths - 1))
       if (currentIndex !== boundedIndex) {
         onChangeRef.current(boundedIndex)
@@ -126,3 +122,7 @@ export function useYearChange(
     }
   }, [currentIndexRef, onChangeRef, selectedYear, startYear, endYear])
 }
+
+export const verticalMonthOverscan = 6
+
+export const verticalWindowEdge = 2

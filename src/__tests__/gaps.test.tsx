@@ -25,35 +25,20 @@ import { registerTranslation } from '../translations/utils'
 
 registerTranslation('en', en)
 
+const metrics = {
+  frame: { height: 800, width: 360, x: 0, y: 0 },
+  insets: { bottom: 0, left: 0, right: 0, top: 0 },
+}
 const originalOS = Platform.OS
 const savedWindow = Dimensions.get('window')
-const metrics = {
-  frame: { x: 0, y: 0, width: 360, height: 800 },
-  insets: { top: 0, left: 0, right: 0, bottom: 0 },
-}
 
 afterEach(async () => {
   Platform.OS = originalOS
   await act(async () => {
-    Dimensions.set({ window: savedWindow, screen: savedWindow })
+    Dimensions.set({ screen: savedWindow, window: savedWindow })
   })
   jest.restoreAllMocks()
 })
-
-async function setWindow(width: number, height: number) {
-  await act(async () => {
-    Dimensions.set({
-      window: { width, height, scale: 1, fontScale: 1 },
-      screen: { width, height, scale: 1, fontScale: 1 },
-    })
-  })
-}
-
-function safe(children: React.ReactNode) {
-  return (
-    <SafeAreaProvider initialMetrics={metrics}>{children}</SafeAreaProvider>
-  )
-}
 
 function callProps(
   screen: { container: { queryAll: Function } },
@@ -68,6 +53,21 @@ function callProps(
   walkFibers(root, (fiber) => {
     const props = (fiber.memoizedProps ?? {}) as Record<string, unknown>
     if (match(props)) invoke(props)
+  })
+}
+
+function safe(children: React.ReactNode) {
+  return (
+    <SafeAreaProvider initialMetrics={metrics}>{children}</SafeAreaProvider>
+  )
+}
+
+async function setWindow(width: number, height: number) {
+  await act(async () => {
+    Dimensions.set({
+      screen: { fontScale: 1, height, scale: 1, width },
+      window: { fontScale: 1, height, scale: 1, width },
+    })
   })
 }
 
@@ -94,7 +94,7 @@ describe('remaining date branches', () => {
         label="When"
         locale="en"
         onChange={onChange}
-        validRange={{ startDate: new Date(2020, 0, 1), endDate: new Date(2020, 0, 2) }}
+        validRange={{ endDate: new Date(2020, 0, 2), startDate: new Date(2020, 0, 1) }}
         value={undefined}
         withDateFormatInLabel={false}
       />
@@ -171,7 +171,7 @@ describe('remaining date branches', () => {
           locale="en"
           mode="range"
           onToggle={() => null}
-          state={{ startDate: new Date(2026, 10, 1), endDate: undefined }}
+          state={{ endDate: undefined, startDate: new Date(2026, 10, 1) }}
         />
         <HeaderContentRange
           collapsed={false}
@@ -179,7 +179,7 @@ describe('remaining date branches', () => {
           locale="en"
           mode="range"
           onToggle={() => null}
-          state={{ startDate: undefined, endDate: new Date(2026, 10, 2) }}
+          state={{ endDate: new Date(2026, 10, 2), startDate: undefined }}
         />
       </>
     )
@@ -276,7 +276,7 @@ describe('remaining date branches', () => {
     jest.spyOn(React, 'useRef').mockImplementation((initial: unknown) => {
       seen += 1
       if (seen <= 3 && initial === null) {
-        return { current: { focus: jest.fn(), blur: jest.fn() } }
+        return { current: { blur: jest.fn(), focus: jest.fn() } }
       }
       return realUseRef(initial as never)
     })
@@ -289,9 +289,9 @@ describe('remaining date branches', () => {
         onChange={onChange}
         state={{
           date: undefined,
-          startDate: new Date(2026, 10, 1),
-          endDate: new Date(2026, 10, 2),
           dates: undefined,
+          endDate: new Date(2026, 10, 2),
+          startDate: new Date(2026, 10, 1),
         }}
         validRange={undefined}
       />
@@ -314,7 +314,7 @@ describe('branch edges', () => {
   it('covers fallthrough modes, empty refs, and clamped indexes', async () => {
     const unknown = await render(
       <Calendar
-        initialLayout={{ width: 320, height: 480 }}
+        initialLayout={{ height: 480, width: 320 }}
         locale="en"
         mode={'none' as 'single'}
         onChange={jest.fn()}
@@ -330,12 +330,6 @@ describe('branch edges', () => {
       if (press) press()
     }
 
-    const refs: { current: unknown }[] = []
-    const useRefSpy = jest.spyOn(React, 'useRef').mockImplementation((initial) => {
-      const ref = { current: initial ?? null }
-      refs.push(ref)
-      return ref as never
-    })
     const editing = await render(
       <CalendarEdit
         collapsed={false}
@@ -344,13 +338,19 @@ describe('branch edges', () => {
         onChange={jest.fn()}
         state={{
           date: undefined,
-          startDate: undefined,
-          endDate: undefined,
           dates: undefined,
+          endDate: undefined,
+          startDate: undefined,
         }}
         validRange={undefined}
       />
     )
+    const refs: { current: unknown }[] = []
+    const useRefSpy = jest.spyOn(React, 'useRef').mockImplementation((initial) => {
+      const ref = { current: initial ?? null }
+      refs.push(ref)
+      return ref as never
+    })
     refs.forEach((ref) => {
       ref.current = null
     })
@@ -383,7 +383,7 @@ describe('branch edges', () => {
     const layout = content.container.queryAll(
       (node: { props: { onLayout?: Function } }) => typeof node.props.onLayout === 'function'
     )[0]
-    layout.props.onLayout({ nativeEvent: { layout: { width: 0, height: 0 } } })
+    layout.props.onLayout({ nativeEvent: { layout: { height: 0, width: 0 } } })
 
     const hours = await render(
       <TimeInput
@@ -394,26 +394,18 @@ describe('branch edges', () => {
         value={1}
       />
     )
+    const focus = hours.container.queryAll(
+      (node: { props: { onFocus?: Function } }) => typeof node.props.onFocus === 'function'
+    )[0]
     const typed = hours.container.queryAll(
       (node: { props: { onChangeText?: Function } }) =>
         typeof node.props.onChangeText === 'function'
-    )[0]
-    const focus = hours.container.queryAll(
-      (node: { props: { onFocus?: Function } }) => typeof node.props.onFocus === 'function'
     )[0]
     await act(async () => {
       typed.props.onChangeText('-1')
       focus.props.onFocus()
     })
 
-    const timeRefs: { current: unknown }[] = []
-    const timeRefSpy = jest
-      .spyOn(React, 'useRef')
-      .mockImplementation((initial) => {
-        const ref = { current: initial ?? null }
-        timeRefs.push(ref)
-        return ref as never
-      })
     const inputs = await render(
       <TimeInputs
         focused="hours"
@@ -426,6 +418,14 @@ describe('branch edges', () => {
         onFocusInput={jest.fn()}
       />
     )
+    const timeRefs: { current: unknown }[] = []
+    const timeRefSpy = jest
+      .spyOn(React, 'useRef')
+      .mockImplementation((initial) => {
+        const ref = { current: initial ?? null }
+        timeRefs.push(ref)
+        return ref as never
+      })
     timeRefs.forEach((ref) => {
       ref.current = null
     })
@@ -443,7 +443,7 @@ describe('branch edges', () => {
       <Swiper
         endYear={2028}
         initialIndex={index}
-        initialLayout={{ width: 300, height: 200 }}
+        initialLayout={{ height: 200, width: 300 }}
         renderItem={() => null}
         scrollMode="horizontal"
         selectedYear={undefined}
@@ -458,7 +458,7 @@ describe('branch edges', () => {
     scroll.props.onMomentumScrollEnd({
       nativeEvent: {
         contentOffset: { x: index * 300, y: 0 },
-        layoutMeasurement: { width: 300, height: 200 },
+        layoutMeasurement: { height: 200, width: 300 },
       },
     })
 
@@ -466,7 +466,7 @@ describe('branch edges', () => {
       <Swiper
         endYear={2027}
         initialIndex={100}
-        initialLayout={{ width: 300, height: 200 }}
+        initialLayout={{ height: 200, width: 300 }}
         renderItem={({ onNext, onPrev }) => (
           <>
             <Pressable onPress={onPrev} testID="gap-prev" />
@@ -486,7 +486,7 @@ describe('branch edges', () => {
       <Swiper
         endYear={2028}
         initialIndex={10}
-        initialLayout={{ width: 300, height: 200 }}
+        initialLayout={{ height: 200, width: 300 }}
         renderItem={() => null}
         scrollMode="horizontal"
         selectedYear={2020}
@@ -561,11 +561,11 @@ describe('remaining time branches', () => {
         act(() => {
           ;(props.onFocusInput as (type: 'minutes') => void)('minutes')
           const change = props.onChange as (value: {
+            focused?: 'minutes'
             hours: number
             minutes: number
-            focused?: 'minutes'
           }) => void
-          change({ hours: 10, minutes: 20, focused: 'minutes' })
+          change({ focused: 'minutes', hours: 10, minutes: 20 })
           change({ hours: 11, minutes: 21 })
         })
       }

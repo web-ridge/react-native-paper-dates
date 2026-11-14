@@ -37,13 +37,13 @@ it('passes initialLayout to the calendar so the month draws on open', async () =
   const { queryByText } = await render(
     <SafeAreaProvider
       initialMetrics={{
-        frame: { x: 0, y: 0, width: 360, height: 640 },
-        insets: { top: 0, left: 0, right: 0, bottom: 0 },
+        frame: { height: 640, width: 360, x: 0, y: 0 },
+        insets: { bottom: 0, left: 0, right: 0, top: 0 },
       }}
     >
       <DatePickerModal
         date={new Date('2025-01-15')}
-        initialLayout={{ width: 320, height: 400 }}
+        initialLayout={{ height: 400, width: 320 }}
         locale="en"
         mode="single"
         onConfirm={() => null}
@@ -57,8 +57,8 @@ it('passes initialLayout to the calendar so the month draws on open', async () =
 
 it('reuses the calendar size from the last open, so a reopen draws the month at once', async () => {
   const metrics = {
-    frame: { x: 0, y: 0, width: 360, height: 640 },
-    insets: { top: 0, left: 0, right: 0, bottom: 0 },
+    frame: { height: 640, width: 360, x: 0, y: 0 },
+    insets: { bottom: 0, left: 0, right: 0, top: 0 },
   }
   const renderModal = (visible: boolean) => (
     <SafeAreaProvider initialMetrics={metrics}>
@@ -73,7 +73,7 @@ it('reuses the calendar size from the last open, so a reopen draws the month at 
     </SafeAreaProvider>
   )
 
-  const { queryByText, root, rerender } = await render(renderModal(true))
+  const { queryByText, rerender, root } = await render(renderModal(true))
   expect(queryByText('January 2025')).toBeNull()
 
   const calendarContainer = root!.queryAll(
@@ -81,7 +81,7 @@ it('reuses the calendar size from the last open, so a reopen draws the month at 
   )[0]
   await act(() => {
     calendarContainer.props.onLayout({
-      nativeEvent: { layout: { x: 0, y: 0, width: 360, height: 420 } },
+      nativeEvent: { layout: { height: 420, width: 360, x: 0, y: 0 } },
     })
   })
 
@@ -92,20 +92,21 @@ it('reuses the calendar size from the last open, so a reopen draws the month at 
 
 it('keeps close and save at the top of the centered tablet dialog', async () => {
   const saved = Dimensions.get('window')
+
   const topInset = 47
 
   const renderAt = async (width: number, height: number) => {
     await act(async () => {
       Dimensions.set({
-        window: { width, height, scale: 2, fontScale: 1 },
-        screen: { width, height, scale: 2, fontScale: 1 },
+        screen: { fontScale: 1, height, scale: 2, width },
+        window: { fontScale: 1, height, scale: 2, width },
       })
     })
     return render(
       <SafeAreaProvider
         initialMetrics={{
-          frame: { x: 0, y: 0, width, height },
-          insets: { top: topInset, left: 0, right: 0, bottom: 20 },
+          frame: { height, width, x: 0, y: 0 },
+          insets: { bottom: 20, left: 0, right: 0, top: topInset },
         }}
       >
         <DatePickerModal
@@ -129,7 +130,7 @@ it('keeps close and save at the top of the centered tablet dialog', async () => 
     expect(tablet.getByTestId('react-native-paper-dates-save')).toBeTruthy()
   } finally {
     await act(async () => {
-      Dimensions.set({ window: saved, screen: saved })
+      Dimensions.set({ screen: saved, window: saved })
     })
   }
 })

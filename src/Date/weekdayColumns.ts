@@ -1,11 +1,6 @@
-import { I18nManager, type DimensionValue, type ViewStyle } from 'react-native'
+import { type DimensionValue, I18nManager, type ViewStyle } from 'react-native'
 import { showWeekDay } from './dateUtils'
 import type { DisableWeekDaysType } from './types'
-
-const compactTextButtonPadding = 8
-const iconButtonPadding = 8
-const iconButtonSize = 24 + 2 * iconButtonPadding
-const letterHalfWidth = 4
 
 export function alignIconToFirstWeekday(
   disableWeekDays?: DisableWeekDaysType
@@ -66,9 +61,17 @@ function columnCentreInset(
   return `${50 / (visibleColumns || 7)}%`
 }
 
+const compactTextButtonPadding = 8
+
+const iconButtonPadding = 8
+
+const iconButtonSize = 24 + 2 * iconButtonPadding
+
+const letterHalfWidth = 4
+
 export function weekdaySpan(disableWeekDays?: DisableWeekDaysType): ViewStyle {
   const inset = columnCentreInset(disableWeekDays)
-  return { marginStart: inset, marginEnd: inset }
+  return { marginEnd: inset, marginStart: inset }
 }
 
 export const weekdaySpanOvershoot: ViewStyle = {

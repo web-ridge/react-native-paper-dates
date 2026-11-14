@@ -1,24 +1,87 @@
 import {
   cloneElement,
+  type ComponentProps,
   forwardRef,
   isValidElement,
+  type ReactNode,
+  type Ref,
   useEffect,
   useMemo,
   useState,
-  type ComponentProps,
-  type ReactNode,
-  type Ref,
 } from 'react'
 import { TextInput, type TextInputHandles } from 'react-native-paper'
 
-const splitCharacters = ['-', '/', '.', '年', ' ']
-function detectCharacter(mask: string): string {
-  const c = splitCharacters.find((ch) => mask.includes(ch))
-  return c || ''
+function digitsFromText(text: string, groups: number[]) {
+  let count = 0
+  let digits = ''
+  let groupIndex = 0
+  for (const char of text) {
+    if (groupIndex >= groups.length) break
+    if (/\d/.test(char)) {
+      digits += char
+      count += 1
+      if (count === groups[groupIndex]) {
+        groupIndex += 1
+        count = 0
+      }
+      continue
+    }
+    if (count === 1 && groups[groupIndex] === 2) {
+      digits = `${digits.slice(0, -1)}0${digits.slice(-1)}`
+      groupIndex += 1
+      count = 0
+    }
+  }
+  return digits
 }
 
-function escapeForRegExp(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+function formatDigits(digits: string, groups: number[], separators: string[]) {
+  let offset = 0
+  let result = ''
+  for (let index = 0; index < groups.length; index += 1) {
+    const size = groups[index]
+    const chunk = digits.slice(offset, offset + size)
+    if (!chunk) break
+    result += chunk
+    offset += chunk.length
+    if (chunk.length === size) result += separators[index]
+  }
+  return result
+}
+
+function isPlaceholder(char: string) {
+  return (
+    char === 'D' ||
+    char === 'M' ||
+    char === 'Y' ||
+    char === 'A' ||
+    char === 'd' ||
+    char === 'm' ||
+    char === 'y' ||
+    char === 'a'
+  )
+}
+
+function maskLayout(mask: string) {
+  const groups: number[] = []
+  let index = 0
+  const separators: string[] = []
+  while (index < mask.length) {
+    let size = 0
+    while (index < mask.length && isPlaceholder(mask[index])) {
+      size += 1
+      index += 1
+    }
+    if (size === 0) break
+    let separator = ''
+    while (index < mask.length && !isPlaceholder(mask[index])) {
+      separator += mask[index]
+      index += 1
+    }
+    groups.push(size)
+    separators.push(separator)
+  }
+  return { groups, separators }
 }
 
 function TextInputWithMask(
@@ -43,47 +106,24 @@ function TextInputWithMask(
     setControlledValue(value || '')
   }, [value])
 
-  const maskParser = useMemo(() => {
-    const splitCharacter = detectCharacter(mask)
-    const maskParts = mask.split(splitCharacter)
-    const format =
-      maskParts[0].toLowerCase() +
-      splitCharacter +
-      maskParts[1].toLowerCase() +
-      splitCharacter +
-      maskParts[2].toLowerCase()
-    const match = new RegExp(
-      format
-        .replace(/(\w+)\W(\w+)\W(\w+)/, '^\\s*($1)\\W*($2)?\\W*($3)?([0-9]*).*')
-        .replace(/m|d|y/g, '\\d')
-    )
-    const replaceValue = format.match(/\W/)
-    const replace = `$1${splitCharacter}$2${splitCharacter}$3$4`.replace(
-      new RegExp(escapeForRegExp(splitCharacter), 'g'),
-      (replaceValue ?? '') as string
-    )
-    return { match, replace, splitCharacter }
-  }, [mask])
+  const layout = useMemo(() => maskLayout(mask), [mask])
 
   const onInnerChange = (text: string) => {
-    const { match, replace } = maskParser
-
-    let trimmedText = text.trim()
-
+    const trimmedText = text.trim()
     const isBackSpace = controlledValue.length > trimmedText.length
+    const next = isBackSpace
+      ? trimmedText
+      : formatDigits(
+          digitsFromText(trimmedText, layout.groups),
+          layout.groups,
+          layout.separators
+        )
 
-    if (!isBackSpace) {
-      trimmedText = trimmedText
-        .replace(/(^|\W)(?=\d\W)/g, '$10')
-        .replace(match, replace)
-        .replace(/(\W)+/g, '$1')
+    if (next.length === mask.length) {
+      onChangeText?.(next)
     }
 
-    if (trimmedText.length === mask.length) {
-      onChangeText?.(trimmedText)
-    }
-
-    setControlledValue(trimmedText)
+    setControlledValue(next)
   }
 
   return (

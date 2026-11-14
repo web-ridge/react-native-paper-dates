@@ -61,8 +61,8 @@ describe('TextInputMask', () => {
   })
 
   it('formats typed text, backspaces, and forwards change events', async () => {
-    const onChangeText = jest.fn()
     const onChange = jest.fn()
+    const onChangeText = jest.fn()
     const screen = await render(
       <TextInputWithMask
         inputButton={null}
@@ -122,6 +122,28 @@ describe('TextInputMask', () => {
     await act(() => {
       plain.getByTestId('plain').props.onChangeText('0101')
     })
+
+    const spaced = [
+      ['DD. MM. YYYY', '15062024', '15. 06. 2024'],
+      ['YYYY. MM. DD.', '20240615', '2024. 06. 15.'],
+      ['DD\u200f/MM\u200f/YYYY', '15062024', '15\u200f/06\u200f/2024'],
+    ] as const
+    for (const [mask, typed, formatted] of spaced) {
+      const onMaskedChange = jest.fn()
+      const masked = await render(
+        <TextInputWithMask
+          inputButton={null}
+          mask={mask}
+          onChangeText={onMaskedChange}
+          testID={mask}
+          value=""
+        />
+      )
+      await act(() => {
+        masked.getByTestId(mask).props.onChangeText(typed)
+      })
+      expect(onMaskedChange).toHaveBeenCalledWith(formatted)
+    }
 
     for (const mask of ['DD-MM-YYYY', 'YYYY年MM年DD', 'DD MM YYYY']) {
       const masked = await render(

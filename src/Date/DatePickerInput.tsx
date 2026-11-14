@@ -4,13 +4,13 @@ import { useLatest } from '../shared/utils'
 import type { DatePickerInputProps } from './DatePickerInput.shared'
 import DatePickerInputWithoutModal from './DatePickerInputWithoutModal'
 import { Platform, StyleProp, ViewStyle } from 'react-native'
-import { forwardRef, useCallback, useState, type Ref } from 'react'
+import { forwardRef, type Ref, useCallback, useState } from 'react'
 import type { CalendarDate } from './types'
-import { defaultStartYear, defaultEndYear } from './dateUtils'
+import { defaultEndYear, defaultStartYear } from './dateUtils'
 
 function DatePickerInput(
   {
-    animationType = Platform.select({ web: 'none', default: 'slide' }),
+    animationType = Platform.select({ default: 'slide', web: 'none' }),
     calendarIcon = 'calendar',
     disableCalendarIcon = false,
     presentationStyle = 'overFullScreen',
@@ -19,9 +19,9 @@ function DatePickerInput(
   }: DatePickerInputProps,
   ref: Ref<TextInputHandles>
 ) {
-  const [visible, setVisible] = useState(false)
-
   const onChangeRef = useLatest(rest.onChange)
+
+  const [visible, setVisible] = useState(false)
 
   const onDismiss = useCallback(() => {
     setVisible(false)

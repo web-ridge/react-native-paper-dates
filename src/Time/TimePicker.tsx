@@ -3,17 +3,39 @@ import { StyleSheet, useWindowDimensions, View } from 'react-native'
 import {
   circleSize,
   inputTypes,
-  toHourInputFormat,
-  toHourOutputFormat,
   type PossibleClockTypes,
   type PossibleInputTypes,
   type TimeChange,
+  toHourInputFormat,
+  toHourOutputFormat,
 } from './timeUtils'
 
 import AnalogClock from './AnalogClock'
 import TimeInputs from './TimeInputs'
 import { DisplayModeContext } from '../contexts/DisplayModeContext'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+
+const styles = StyleSheet.create({
+  clockContainer: {
+    paddingLeft: 12,
+    paddingRight: 12,
+    paddingTop: 36,
+  },
+  clockContainerLandscape: {
+    paddingLeft: 64,
+    paddingRight: 0,
+    paddingTop: 0,
+  },
+  rootLandscape: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  rootPortrait: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+})
 
 function TimePicker({
   focused,
@@ -37,7 +59,6 @@ function TimePicker({
   use24HourClock?: boolean
 }) {
   const dimensions = useWindowDimensions()
-  const isLandscape = dimensions.width > dimensions.height
 
   const [displayMode, setDisplayMode] = useState<'AM' | 'PM' | undefined>(() =>
     hours >= 12 ? 'PM' : 'AM'
@@ -56,9 +77,24 @@ function TimePicker({
     return formatted.includes('23')
   }, [locale, use24HourClock])
 
+  const isLandscape = dimensions.width > dimensions.height
+
   useEffect(() => {
     setDisplayMode(hours >= 12 ? 'PM' : 'AM')
   }, [hours])
+
+  const clockWidth =
+    inputType === inputTypes.picker ? circleSize + (isLandscape ? 64 : 0) : 0
+
+  const displayModeValue = useMemo(
+    () => ({ mode: displayMode, setMode: setDisplayMode }),
+    [displayMode]
+  )
+
+  const inputsWidth =
+    96 * 2 +
+    24 +
+    (is24Hour || (isLandscape && inputType === inputTypes.picker) ? 0 : 12 + 52)
 
   const onInnerChange = useCallback<TimeChange>(
     (params) => {
@@ -68,19 +104,6 @@ function TimePicker({
       })
     },
     [onChange, hours, is24Hour]
-  )
-
-  const inputsWidth =
-    96 * 2 +
-    24 +
-    (is24Hour || (isLandscape && inputType === inputTypes.picker) ? 0 : 12 + 52)
-
-  const clockWidth =
-    inputType === inputTypes.picker ? circleSize + (isLandscape ? 64 : 0) : 0
-
-  const displayModeValue = useMemo(
-    () => ({ mode: displayMode, setMode: setDisplayMode }),
-    [displayMode]
   )
 
   return (
@@ -123,27 +146,5 @@ function TimePicker({
     </DisplayModeContext.Provider>
   )
 }
-
-const styles = StyleSheet.create({
-  clockContainer: {
-    paddingLeft: 12,
-    paddingRight: 12,
-    paddingTop: 36,
-  },
-  clockContainerLandscape: {
-    paddingLeft: 64,
-    paddingRight: 0,
-    paddingTop: 0,
-  },
-  rootLandscape: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  rootPortrait: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})
 
 export default memo(TimePicker)

@@ -23,8 +23,8 @@ const originalWindow = global.window
 
 beforeAll(() => {
   const windowPolyfill = global as typeof globalThis & {
-    requestAnimationFrame: (callback: FrameRequestCallback) => number
     cancelAnimationFrame: (handle: number) => void
+    requestAnimationFrame: (callback: FrameRequestCallback) => number
   }
   windowPolyfill.requestAnimationFrame = (callback) => {
     callback(0)
@@ -46,13 +46,13 @@ describe('web swiper', () => {
     }
     expect(typeof swiperModule.useDebouncedCallback).toBe('function')
 
-    const SwiperWeb = swiperModule.default
     const onHeader = jest.fn()
+    const SwiperWeb = swiperModule.default
     const screen = await render(
       <SwiperWeb
         endYear={2028}
         initialIndex={getStartAtIndex(2024, 2028)}
-        initialLayout={{ width: 280, height: 100 }}
+        initialLayout={{ height: 100, width: 280 }}
         renderFooter={() => <Text>footer</Text>}
         renderHeader={onHeader}
         renderItem={({
@@ -81,7 +81,7 @@ describe('web swiper', () => {
       <SwiperWeb
         endYear={2026}
         initialIndex={-20}
-        initialLayout={{ width: 280, height: 700 }}
+        initialLayout={{ height: 700, width: 280 }}
         renderItem={({ onPrev }: { onPrev: () => void }) => {
           onPrev()
           return <Text>month</Text>
@@ -98,7 +98,7 @@ describe('web swiper', () => {
       <SwiperWeb
         endYear={2030}
         initialIndex={getStartAtIndex(2020, 2030)}
-        initialLayout={{ width: 280, height: 400 }}
+        initialLayout={{ height: 400, width: 280 }}
         renderHeader={() => <Text>header</Text>}
         renderItem={() => <Text>month</Text>}
         scrollMode="vertical"
@@ -134,7 +134,7 @@ describe('web swiper', () => {
       <SwiperWeb
         endYear={2026}
         initialIndex={0}
-        initialLayout={{ width: 280, height: 100 }}
+        initialLayout={{ height: 100, width: 280 }}
         renderItem={({
           onNext,
           onPrev,
@@ -160,7 +160,7 @@ describe('web swiper', () => {
       <SwiperWeb
         endYear={2026}
         initialIndex={getMaxIndex(2026, 2026)}
-        initialLayout={{ width: 280, height: 4000 }}
+        initialLayout={{ height: 4000, width: 280 }}
         renderItem={({ onNext }: { onNext: () => void }) => (
           <Pressable onPress={onNext} testID="end-next" />
         )}
@@ -176,7 +176,7 @@ describe('web swiper', () => {
       <SwiperWeb
         endYear={2027}
         initialIndex={3}
-        initialLayout={{ width: 280, height: 4000 }}
+        initialLayout={{ height: 4000, width: 280 }}
         renderHeader={() => <Text>header</Text>}
         renderItem={() => <Text>clamped</Text>}
         scrollMode="horizontal"
@@ -189,7 +189,7 @@ describe('web swiper', () => {
     await render(
       <SwiperWeb
         initialIndex={0}
-        initialLayout={{ width: 280, height: 4000 }}
+        initialLayout={{ height: 4000, width: 280 }}
         renderItem={() => <Text>open</Text>}
         scrollMode="vertical"
         selectedYear={undefined}
@@ -240,7 +240,7 @@ describe('web swiper', () => {
         <SwiperWeb
           endYear={2026}
           initialIndex={0}
-          initialLayout={{ width: 280, height: 400 }}
+          initialLayout={{ height: 400, width: 280 }}
           renderItem={() => <Text>placeholder</Text>}
           scrollMode="vertical"
           selectedYear={undefined}
@@ -265,8 +265,8 @@ function DebouncedProbe({
 }: {
   callback: (fn: (value: number[]) => void) => (value: number[]) => void
 }) {
-  const { useEffect } = require('react') as typeof import('react')
   const debounced = callback((value) => value)
+  const { useEffect } = require('react') as typeof import('react')
   useEffect(() => {
     debounced([1])
     debounced([2])

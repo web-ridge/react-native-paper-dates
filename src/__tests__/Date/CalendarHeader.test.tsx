@@ -16,7 +16,6 @@ it('renders CalendarHeader', async () => {
 
 it('measures the document scrollbar and caches the width', () => {
   const globalDocument = globalThis as { document?: Document }
-  const previous = globalDocument.document
 
   function measure(
     documentMock: Document,
@@ -30,6 +29,8 @@ it('measures the document scrollbar and caches the width', () => {
       assert(loaded.layoutScrollbarWidth)
     })
   }
+
+  const previous = globalDocument.document
 
   try {
     measure({} as Document, (read) => {
@@ -55,18 +56,6 @@ it('measures the document scrollbar and caches the width', () => {
   }
 })
 
-function probe(offsetWidth: number, clientWidth: number) {
-  return {
-    probe: {
-      style: { cssText: '' },
-      offsetWidth,
-      clientWidth,
-      remove: jest.fn(),
-    },
-    body: { appendChild: jest.fn() },
-  }
-}
-
 function documentWith(
   node: ReturnType<typeof probe>['probe'],
   body: ReturnType<typeof probe>['body']
@@ -75,4 +64,16 @@ function documentWith(
     body,
     createElement: () => node,
   } as unknown as Document
+}
+
+function probe(offsetWidth: number, clientWidth: number) {
+  return {
+    body: { appendChild: jest.fn() },
+    probe: {
+      clientWidth,
+      offsetWidth,
+      remove: jest.fn(),
+      style: { cssText: '' },
+    },
+  }
 }

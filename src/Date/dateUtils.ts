@@ -1,19 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import type { DisableWeekDaysType, ValidRangeType } from './types'
 
-export type { DisableWeekDaysType }
-
-export function showWeekDay(
-  dayIndex: number,
-  disableWeekDays?: DisableWeekDaysType
-): boolean {
-  return !(disableWeekDays && disableWeekDays.some((di) => di === dayIndex))
-}
-
-export function dateToUnix(d: Date): number {
-  return Math.trunc(d.getTime() / 1000)
-}
-
 export function addMonths(date: Date, count: number) {
   const n = date.getDate()
   let n2 = new Date(date.getTime())
@@ -22,91 +9,11 @@ export function addMonths(date: Date, count: number) {
   n2.setDate(
     Math.min(
       n,
-      getDaysInMonth({ year: n2.getFullYear(), month: n2.getMonth() })
+      getDaysInMonth({ month: n2.getMonth(), year: n2.getFullYear() })
     )
   )
 
   return n2
-}
-
-export function getDaysInMonth({
-  year,
-  month,
-}: {
-  year: number
-  month: number
-}): number {
-  return [
-    31,
-    isLeapYear({ year }) ? 29 : 28,
-    31,
-    30,
-    31,
-    30,
-    31,
-    31,
-    30,
-    31,
-    30,
-    31,
-  ][month]
-}
-
-export function getFirstDayOfMonth({
-  year,
-  month,
-  startWeekOnMonday,
-}: {
-  year: number
-  month: number
-  startWeekOnMonday: boolean
-}): number {
-  let dayOfWeek = new Date(year, month, 1).getDay()
-  if (startWeekOnMonday) {
-    dayOfWeek = (dayOfWeek + 6) % 7
-  }
-
-  return dayOfWeek
-}
-
-export function useRangeChecker(validRange: ValidRangeType | undefined) {
-  const validStart = validRange?.startDate
-  const validEnd = validRange?.endDate
-  const startUnix =
-    validStart instanceof Date
-      ? dateToUnix(getStartOfDay(validStart))
-      : undefined
-
-  const endUnix =
-    validEnd instanceof Date ? dateToUnix(getEndOfDay(validEnd)) : undefined
-
-  const disabledDates = validRange?.disabledDates
-  const disabledKeys = useMemo(() => {
-    const keys = new Set<string>()
-    if (disabledDates) {
-      for (const disabledDate of disabledDates) {
-        keys.add(calendarDateKey(disabledDate))
-      }
-    }
-    return keys
-  }, [disabledDates])
-
-  const isWithinValidRange = useCallback(
-    (day: Date) => {
-      return isDateWithinOptionalRange(day, {
-        startUnix: startUnix,
-        endUnix: endUnix,
-      })
-    },
-    [startUnix, endUnix]
-  )
-
-  const isDisabled = useCallback(
-    (day: Date) => disabledKeys.has(calendarDateKey(day)),
-    [disabledKeys]
-  )
-
-  return { disabledKeys, isDisabled, isWithinValidRange, validStart, validEnd }
 }
 
 export function adjacentDayKey(
@@ -116,7 +23,7 @@ export function adjacentDayKey(
   delta: number
 ): string {
   const shifted = day + delta
-  if (shifted >= 1 && shifted <= getDaysInMonth({ year, month })) {
+  if (shifted >= 1 && shifted <= getDaysInMonth({ month, year })) {
     return calendarDayKey(year, month, shifted)
   }
   const overflow = new Date(year, month, shifted)
@@ -147,61 +54,75 @@ export function calendarDayKey(
   return `${year}-${month}-${day}`
 }
 
-export function isDateWithinOptionalRange(
-  date: Date,
-  {
-    startUnix,
-    endUnix,
-  }: { startUnix: number | undefined; endUnix: number | undefined }
-) {
-  const dateUnix = dateToUnix(date)
-  if (startUnix !== undefined && dateUnix < startUnix) {
-    return false
-  }
-
-  if (endUnix !== undefined && dateUnix > endUnix) {
-    return false
-  }
-
-  return true
-}
-
-export function isLeapYear({ year }: { year: number }) {
-  return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0
+export function dateToUnix(d: Date): number {
+  return Math.trunc(d.getTime() / 1000)
 }
 
 export const daySize = 46
-export const estimatedMonthHeight = 360
-export const defaultStartYear = 1800
+
 export const defaultEndYear = 2200
 
-const startAtIndexCache = new Map<string, number>()
+export const defaultStartYear = 1800
 
-export function getStartAtIndex(startYear?: number, _endYear?: number): number {
-  const start = startYear || defaultStartYear
-  const today = new Date()
-  const currentYear = today.getFullYear()
-  const currentMonth = today.getMonth()
-  const key = `${start}:${currentYear}-${currentMonth}`
-  const cached = startAtIndexCache.get(key)
-  if (cached !== undefined) {
-    return cached
-  }
-
-  const monthsFromStart = (currentYear - start) * 12 + currentMonth
-  const value = Math.max(monthsFromStart, 0)
-  startAtIndexCache.set(key, value)
-  return value
+export function differenceInMonths(firstDate: Date, secondDate: Date) {
+  let diffMonths = (secondDate.getFullYear() - firstDate.getFullYear()) * 12
+  diffMonths -= firstDate.getMonth()
+  diffMonths += secondDate.getMonth()
+  return diffMonths
 }
 
-export function getTotalMonths(startYear?: number, endYear?: number): number {
-  const start = startYear || defaultStartYear
-  const end = endYear || defaultEndYear
-  return (end - start + 1) * 12
-}
+export type { DisableWeekDaysType }
+
+export const estimatedMonthHeight = 360
 
 export function getBeginOffset(startYear?: number, endYear?: number): number {
   return estimatedMonthHeight * getStartAtIndex(startYear, endYear)
+}
+
+export function getDaysInMonth({
+  month,
+  year,
+}: {
+  month: number
+  year: number
+}): number {
+  return [
+    31,
+    isLeapYear({ year }) ? 29 : 28,
+    31,
+    30,
+    31,
+    30,
+    31,
+    31,
+    30,
+    31,
+    30,
+    31,
+  ][month]
+}
+
+export function getEndOfDay(d: Date): Date {
+  const endOfDay = new Date(d)
+  endOfDay.setHours(23, 59, 59, 999)
+  return endOfDay
+}
+
+export function getFirstDayOfMonth({
+  month,
+  startWeekOnMonday,
+  year,
+}: {
+  month: number
+  startWeekOnMonday: boolean
+  year: number
+}): number {
+  let dayOfWeek = new Date(year, month, 1).getDay()
+  if (startWeekOnMonday) {
+    dayOfWeek = (dayOfWeek + 6) % 7
+  }
+
+  return dayOfWeek
 }
 
 export function getGridCount(
@@ -218,19 +139,11 @@ export function getGridCount(
 }
 
 export function getGridCountForDate(date: Date, startWeekOnMonday: boolean) {
-  const year = date.getFullYear()
   const month = date.getMonth()
-  const daysInMonth = getDaysInMonth({ year, month })
-  const dayOfWeek = getFirstDayOfMonth({ year, month, startWeekOnMonday })
+  const year = date.getFullYear()
+  const dayOfWeek = getFirstDayOfMonth({ month, startWeekOnMonday, year })
+  const daysInMonth = getDaysInMonth({ month, year })
   return Math.ceil((daysInMonth + dayOfWeek) / 7)
-}
-
-export function getRealIndex(
-  index: number,
-  startYear?: number,
-  endYear?: number
-) {
-  return index - getStartAtIndex(startYear, endYear)
 }
 
 export function getInitialIndex(
@@ -249,15 +162,29 @@ export function getInitialIndex(
   return dynamicStartAtIndex + months
 }
 
-export function useInputFormatter({ locale }: { locale: string | undefined }) {
-  return useMemo(() => {
-    return new Intl.DateTimeFormat(locale, {
-      calendar: 'gregory',
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    })
-  }, [locale])
+export function getRealIndex(
+  index: number,
+  startYear?: number,
+  endYear?: number
+) {
+  return index - getStartAtIndex(startYear, endYear)
+}
+
+export function getStartAtIndex(startYear?: number, _endYear?: number): number {
+  const start = startYear || defaultStartYear
+  const today = new Date()
+  const currentMonth = today.getMonth()
+  const currentYear = today.getFullYear()
+  const key = `${start}:${currentYear}-${currentMonth}`
+  const cached = startAtIndexCache.get(key)
+  if (cached !== undefined) {
+    return cached
+  }
+
+  const monthsFromStart = (currentYear - start) * 12 + currentMonth
+  const value = Math.max(monthsFromStart, 0)
+  startAtIndexCache.set(key, value)
+  return value
 }
 
 export function getStartOfDay(d: Date): Date {
@@ -266,11 +193,43 @@ export function getStartOfDay(d: Date): Date {
   return startOfDay
 }
 
-export function getEndOfDay(d: Date): Date {
-  const endOfDay = new Date(d)
-  endOfDay.setHours(23, 59, 59, 999)
-  return endOfDay
+export function getTotalMonths(startYear?: number, endYear?: number): number {
+  const end = endYear || defaultEndYear
+  const start = startYear || defaultStartYear
+  return (end - start + 1) * 12
 }
+
+export function isDateWithinOptionalRange(
+  date: Date,
+  {
+    endUnix,
+    startUnix,
+  }: { endUnix: number | undefined; startUnix: number | undefined }
+) {
+  const dateUnix = dateToUnix(date)
+  if (startUnix !== undefined && dateUnix < startUnix) {
+    return false
+  }
+
+  if (endUnix !== undefined && dateUnix > endUnix) {
+    return false
+  }
+
+  return true
+}
+
+export function isLeapYear({ year }: { year: number }) {
+  return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0
+}
+
+export function showWeekDay(
+  dayIndex: number,
+  disableWeekDays?: DisableWeekDaysType
+): boolean {
+  return !(disableWeekDays && disableWeekDays.some((di) => di === dayIndex))
+}
+
+const startAtIndexCache = new Map<string, number>()
 
 export function useInputFormat({
   formatter,
@@ -295,9 +254,56 @@ export function useInputFormat({
   }, [formatter, locale])
 }
 
-export function differenceInMonths(firstDate: Date, secondDate: Date) {
-  let diffMonths = (secondDate.getFullYear() - firstDate.getFullYear()) * 12
-  diffMonths -= firstDate.getMonth()
-  diffMonths += secondDate.getMonth()
-  return diffMonths
+export function useInputFormatter({ locale }: { locale: string | undefined }) {
+  return useMemo(() => {
+    return new Intl.DateTimeFormat(locale, {
+      calendar: 'gregory',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    })
+  }, [locale])
+}
+
+export function useRangeChecker(validRange: ValidRangeType | undefined) {
+  const disabledDates = validRange?.disabledDates
+
+  const disabledKeys = useMemo(() => {
+    const keys = new Set<string>()
+    if (disabledDates) {
+      for (const disabledDate of disabledDates) {
+        keys.add(calendarDateKey(disabledDate))
+      }
+    }
+    return keys
+  }, [disabledDates])
+
+  const isDisabled = useCallback(
+    (day: Date) => disabledKeys.has(calendarDateKey(day)),
+    [disabledKeys]
+  )
+
+  const validEnd = validRange?.endDate
+
+  const endUnix =
+    validEnd instanceof Date ? dateToUnix(getEndOfDay(validEnd)) : undefined
+
+  const validStart = validRange?.startDate
+
+  const startUnix =
+    validStart instanceof Date
+      ? dateToUnix(getStartOfDay(validStart))
+      : undefined
+
+  const isWithinValidRange = useCallback(
+    (day: Date) => {
+      return isDateWithinOptionalRange(day, {
+        endUnix: endUnix,
+        startUnix: startUnix,
+      })
+    },
+    [startUnix, endUnix]
+  )
+
+  return { disabledKeys, isDisabled, isWithinValidRange, validEnd, validStart }
 }

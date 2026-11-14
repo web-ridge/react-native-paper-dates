@@ -3,8 +3,8 @@ import { Text, TouchableRipple, useTheme } from 'react-native-paper'
 import { useContext } from 'react'
 import {
   inputTypes,
-  useSwitchColors,
   type PossibleInputTypes,
+  useSwitchColors,
 } from './timeUtils'
 import { DisplayModeContext } from '../contexts/DisplayModeContext'
 import { sharedStyles } from '../shared/styles'
@@ -23,15 +23,17 @@ export default function AmPmSwitcher({
   locale?: string
   onChange: (newHours: number) => void
 }) {
-  const theme = useTheme()
-
-  const { setMode, mode } = useContext(DisplayModeContext)
-
-  const backgroundColor = theme.colors.outline
   const isHorizontal = direction === 'horizontal'
-  const isAM = mode === 'AM'
 
   const height = isHorizontal ? 38 : inputType === inputTypes.keyboard ? 72 : 80
+
+  const { mode, setMode } = useContext(DisplayModeContext)
+
+  const isAM = mode === 'AM'
+
+  const theme = useTheme()
+
+  const backgroundColor = theme.colors.outline
 
   return (
     <View
@@ -79,6 +81,33 @@ export default function AmPmSwitcher({
   )
 }
 
+const styles = StyleSheet.create({
+  rootHorizontal: {
+    borderWidth: 1,
+    flexDirection: 'row',
+    overflow: 'hidden',
+    width: 216,
+  },
+  rootVertical: {
+    borderWidth: 1,
+    overflow: 'hidden',
+    width: 52,
+  },
+  separatorHorizontal: {
+    alignSelf: 'stretch',
+    width: 1,
+  },
+  separatorVertical: {
+    height: 1,
+    width: 52,
+  },
+  switchButtonInner: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+  },
+})
+
 function SwitchButton({
   disabled,
   label,
@@ -90,9 +119,9 @@ function SwitchButton({
   onPress: (() => void) | undefined
   selected: boolean
 }) {
-  const theme = useTheme()
-
   const { backgroundColor, color } = useSwitchColors(selected)
+
+  const theme = useTheme()
 
   const textFont = theme.fonts.titleMedium
 
@@ -122,30 +151,3 @@ function SwitchButton({
     </TouchableRipple>
   )
 }
-
-const styles = StyleSheet.create({
-  rootHorizontal: {
-    borderWidth: 1,
-    flexDirection: 'row',
-    overflow: 'hidden',
-    width: 216,
-  },
-  rootVertical: {
-    borderWidth: 1,
-    overflow: 'hidden',
-    width: 52,
-  },
-  separatorHorizontal: {
-    alignSelf: 'stretch',
-    width: 1,
-  },
-  separatorVertical: {
-    height: 1,
-    width: 52,
-  },
-  switchButtonInner: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-  },
-})

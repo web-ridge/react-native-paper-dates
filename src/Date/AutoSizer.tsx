@@ -1,26 +1,27 @@
-import { useCallback, useState, type ReactNode } from 'react'
+import { type ReactNode, useCallback, useState } from 'react'
 import { LayoutChangeEvent, useWindowDimensions, View } from 'react-native'
 import { sharedStyles } from '../shared/styles'
-
-type WidthAndHeight = {
-  width: number
-  height: number
-}
-
-type MeasuredLayout = WidthAndHeight & {
-  windowKey: string
-}
 
 export default function AutoSizer({
   children,
   initialLayout,
 }: {
-  children: ({ width, height }: WidthAndHeight) => ReactNode
+  children: ({ height, width }: WidthAndHeight) => ReactNode
   initialLayout?: WidthAndHeight
 }) {
-  const { width: windowWidth, height: windowHeight } = useWindowDimensions()
-  const windowKey = `${windowWidth}x${windowHeight}`
   const [measured, setMeasured] = useState<MeasuredLayout | null>(null)
+
+  const { height: windowHeight, width: windowWidth } = useWindowDimensions()
+
+  const windowKey = `${windowWidth}x${windowHeight}`
+
+  const layout =
+    measured &&
+    measured.windowKey === windowKey &&
+    measured.width > 0 &&
+    measured.height > 0
+      ? measured
+      : (initialLayout ?? null)
 
   const onLayout = useCallback(
     (event: LayoutChangeEvent) => {
@@ -34,19 +35,11 @@ export default function AutoSizer({
         ) {
           return prev
         }
-        return { windowKey, width: nl.width, height: nl.height }
+        return { height: nl.height, width: nl.width, windowKey }
       })
     },
     [windowKey]
   )
-
-  const layout =
-    measured &&
-    measured.windowKey === windowKey &&
-    measured.width > 0 &&
-    measured.height > 0
-      ? measured
-      : (initialLayout ?? null)
 
   return (
     <View
@@ -62,4 +55,13 @@ export default function AutoSizer({
       {layout ? children(layout) : null}
     </View>
   )
+}
+
+type WidthAndHeight = {
+  height: number
+  width: number
+}
+
+type MeasuredLayout = WidthAndHeight & {
+  windowKey: string
 }

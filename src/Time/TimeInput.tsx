@@ -2,35 +2,31 @@ import {
   Platform,
   StyleSheet,
   TextInput,
-  View,
   type TextInputInstance,
   type TextInputProps,
+  View,
 } from 'react-native'
-import { themeColor } from '../shared/utils'
+import { hexColor, themeColor } from '../shared/utils'
 import { TouchableRipple, useTheme } from 'react-native-paper'
-
-import Color from 'color'
 import {
   inputTypes,
-  useInputColors,
   type PossibleClockTypes,
   type PossibleInputTypes,
+  useInputColors,
 } from './timeUtils'
-import { forwardRef, useEffect, useState, type Ref } from 'react'
+import { forwardRef, type Ref, useEffect, useState } from 'react'
 import { sharedStyles } from '../shared/styles'
 
-interface TimeInputProps extends Omit<
-  Omit<Omit<TextInputProps, 'value'>, 'onFocus'>,
-  'onPress'
-> {
-  clockType: PossibleClockTypes
-  inputFontSize?: number
-  inputType: PossibleInputTypes
-  onChanged: (n: number) => void
-  onPress?: (type: PossibleClockTypes) => void
-  pressed: boolean
-  value: number
-}
+const styles = StyleSheet.create({
+  input: {
+    width: 96,
+  },
+  root: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 96,
+  },
+})
 
 function TimeInput(
   {
@@ -45,18 +41,21 @@ function TimeInput(
   }: TimeInputProps,
   ref: Ref<TextInputInstance>
 ) {
-  const theme = useTheme()
-  const [inputFocused, setInputFocused] = useState<boolean>(false)
-
   const [controlledValue, setControlledValue] = useState(`${value}`)
+
+  const [inputFocused, setInputFocused] = useState<boolean>(false)
 
   const highlighted = inputType === inputTypes.picker ? pressed : inputFocused
 
-  const { color, backgroundColor } = useInputColors(highlighted)
+  const { backgroundColor, color } = useInputColors(highlighted)
+
+  const theme = useTheme()
 
   useEffect(() => {
     setControlledValue(`${value}`)
   }, [value])
+
+  let formattedValue = controlledValue
 
   const onInnerChange = (number: number) => {
     setControlledValue(`${number}`)
@@ -64,8 +63,6 @@ function TimeInput(
       onChanged(Number(number))
     }
   }
-
-  let formattedValue = controlledValue
   if (!inputFocused) {
     formattedValue =
       controlledValue.length === 1
@@ -124,7 +121,7 @@ function TimeInput(
           onPress={() => onPress(clockType)}
           rippleColor={
             Platform.OS !== 'ios'
-              ? Color(themeColor(theme.colors.onSurface)).fade(0.7).hex()
+              ? hexColor(themeColor(theme.colors.onSurface))
               : undefined
           }
           style={[
@@ -142,15 +139,17 @@ function TimeInput(
   )
 }
 
-const styles = StyleSheet.create({
-  root: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 96,
-  },
-  input: {
-    width: 96,
-  },
-})
+interface TimeInputProps extends Omit<
+  Omit<Omit<TextInputProps, 'value'>, 'onFocus'>,
+  'onPress'
+> {
+  clockType: PossibleClockTypes
+  inputFontSize?: number
+  inputType: PossibleInputTypes
+  onChanged: (n: number) => void
+  onPress?: (type: PossibleClockTypes) => void
+  pressed: boolean
+  value: number
+}
 
 export default forwardRef(TimeInput)

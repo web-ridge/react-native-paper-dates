@@ -53,10 +53,10 @@ it('does not wrap day numbers in a scroll view in vertical mode', async () => {
 })
 
 it('keeps vertical months on one continuous scroll', () => {
-  const startYear = 2020
   const endYear = 2022
-  const min = getMinIndex(startYear, endYear)
+  const startYear = 2020
   const max = getMaxIndex(startYear, endYear)
+  const min = getMinIndex(startYear, endYear)
   const { height, origin } = getVerticalListMetrics(
     min,
     max,

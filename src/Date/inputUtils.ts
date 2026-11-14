@@ -1,7 +1,7 @@
 import { useInputFormat, useInputFormatter, useRangeChecker } from './dateUtils'
 import type { ValidRangeType } from './types'
 import { getTranslation } from '../translations/utils'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export default function useDateInput({
   inputMode,
@@ -18,26 +18,32 @@ export default function useDateInput({
   validRange: ValidRangeType | undefined
   value: Date | undefined
 }) {
-  const formatter = useInputFormatter({ locale })
-  const inputFormat = useInputFormat({ formatter, locale })
-  const formattedValue = value ? formatter.format(value) : ''
-
   const [error, setError] = useState<null | string>(null)
+  const errorRef = useRef(error)
+  const formatter = useInputFormatter({ locale })
+  const formattedValue = value ? formatter.format(value) : ''
+  const inputFormat = useInputFormat({ formatter, locale })
+  const onValidationErrorRef = useRef(onValidationError)
+  const reportedValue = useRef(value)
+  errorRef.current = error
+  onValidationErrorRef.current = onValidationError
 
-  const { isDisabled, isWithinValidRange, validStart, validEnd } =
+  useEffect(() => {
+    if (reportedValue.current === value) return
+    reportedValue.current = value
+    if (!errorRef.current) return
+    setError(null)
+    onValidationErrorRef.current?.(null)
+  }, [value])
+
+  const { isDisabled, isWithinValidRange, validEnd, validStart } =
     useRangeChecker(validRange)
 
   const onChangeText = (date: string) => {
     const dayIndex = inputFormat.indexOf('DD')
-    const monthIndex = inputFormat.indexOf('MM')
-    const yearIndex =
-      locale === 'pt'
-        ? inputFormat.indexOf('AAAA')
-        : inputFormat.indexOf('YYYY')
     const day = Number(date.slice(dayIndex, dayIndex + 2))
-    const year = Number(date.slice(yearIndex, yearIndex + 4))
+    const monthIndex = inputFormat.indexOf('MM')
     const month = Number(date.slice(monthIndex, monthIndex + 2))
-
     const rejectFormat = () => {
       const inputError = getTranslation(
         locale,
@@ -47,6 +53,11 @@ export default function useDateInput({
       setError(inputError)
       onValidationError && onValidationError(inputError)
     }
+    const yearIndex =
+      locale === 'pt'
+        ? inputFormat.indexOf('AAAA')
+        : inputFormat.indexOf('YYYY')
+    const year = Number(date.slice(yearIndex, yearIndex + 4))
 
     if (
       dayIndex < 0 ||
@@ -117,10 +128,10 @@ export default function useDateInput({
     onChange(finalDate)
   }
   return {
-    onChange,
     error,
     formattedValue,
-    onChangeText,
     inputFormat,
+    onChange,
+    onChangeText,
   }
 }

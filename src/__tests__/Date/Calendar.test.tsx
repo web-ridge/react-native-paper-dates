@@ -29,7 +29,7 @@ it('draws the month on the first render when initialLayout is given', async () =
   await rerender(
     <Calendar
       date={fixedDate}
-      initialLayout={{ width: 320, height: 400 }}
+      initialLayout={{ height: 400, width: 320 }}
       locale="en"
       mode="single"
       onChange={() => null}
@@ -43,7 +43,7 @@ it('starts the month pager on the current month instead of at 0', async () => {
   const { root } = await render(
     <Calendar
       date={fixedDate}
-      initialLayout={{ width: 320, height: 400 }}
+      initialLayout={{ height: 400, width: 320 }}
       locale="en"
       mode="single"
       onChange={() => null}

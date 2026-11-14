@@ -48,8 +48,8 @@ function DayRange({
               style={[
                 {
                   backgroundColor: selectColor,
-                  minWidth: daySize,
                   minHeight: daySize,
+                  minWidth: daySize,
                 },
                 leftCrop ? styles.leftRadius : null,
                 rightCrop ? styles.rightRadius : null,
@@ -78,12 +78,12 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: daySize / 2,
     borderTopLeftRadius: daySize / 2,
   },
+  rangeRootBoth: {
+    borderRadius: daySize / 2,
+  },
   rightRadius: {
     borderBottomRightRadius: daySize / 2,
     borderTopRightRadius: daySize / 2,
-  },
-  rangeRootBoth: {
-    borderRadius: daySize / 2,
   },
 })
 
