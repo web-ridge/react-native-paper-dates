@@ -132,6 +132,15 @@ it('renders start and end fields for a range', async () => {
   await act(() => {
     field(screen, 'react-native-paper-dates-modal-input-end').onBlur?.({})
   })
+  const rangeHeadline = new Intl.DateTimeFormat('en', {
+    day: 'numeric',
+    month: 'short',
+  })
+  expect(
+    screen.getByText(
+      `${rangeHeadline.format(new Date(2026, 0, 2))} – ${rangeHeadline.format(new Date(2026, 0, 5))}`
+    )
+  ).toBeTruthy()
   await pressTestId(screen, 'react-native-paper-dates-modal-input-confirm')
   expect(onConfirm).toHaveBeenCalledWith({
     endDate: new Date(2026, 0, 5, 23, 59, 59),

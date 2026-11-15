@@ -1,12 +1,29 @@
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
+  memo,
+  type Ref,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import {
+  Keyboard,
   Modal,
   Platform,
   StyleSheet,
   useWindowDimensions,
   View,
 } from 'react-native'
-import { Button, Divider, IconButton, Text, useTheme } from 'react-native-paper'
+import {
+  Button,
+  Divider,
+  IconButton,
+  Text,
+  type TextInputHandles,
+  useTheme,
+} from 'react-native-paper'
 
 import ModalScrim from '../shared/ModalScrim'
 import { displayCase, supportedOrientations, themeColor } from '../shared/utils'
@@ -88,6 +105,9 @@ function DatePickerModalInput(props: DatePickerModalInputProps) {
   const startDate = mode === 'range' ? props.startDate : undefined
   const theme = useTheme()
   const { height: windowHeight, width: windowWidth } = useWindowDimensions()
+  const inputRef = useRef<TextInputHandles>(null)
+  const pageScroll = useRef<(() => void) | null>(null)
+  const shown = useRef(false)
   const [draftDate, setDraftDate] = useState<CalendarDate>(date)
   const [draftEnd, setDraftEnd] = useState<CalendarDate>(endDate)
   const [draftStart, setDraftStart] = useState<CalendarDate>(startDate)
@@ -99,10 +119,13 @@ function DatePickerModalInput(props: DatePickerModalInputProps) {
   const inputFormat = useInputFormat({ formatter, locale })
   const headlineFormatter = useMemo(
     () =>
-      new Intl.DateTimeFormat(locale, {
-        dateStyle: 'medium',
-      }),
-    [locale]
+      new Intl.DateTimeFormat(
+        locale,
+        mode === 'range'
+          ? { day: 'numeric', month: 'short' }
+          : { dateStyle: 'medium' }
+      ),
+    [locale, mode]
   )
   const resolvedEndYear = endYear ?? defaultEndYear
   const resolvedStartYear = startYear ?? defaultStartYear
@@ -118,6 +141,30 @@ function DatePickerModalInput(props: DatePickerModalInputProps) {
     }
     wasVisible.current = visible
   }, [date, endDate, startDate, visible])
+  // The field must not take focus until the modal is on screen. Focusing it
+  // earlier scrolls the page underneath, which shows up when the modal closes.
+  useLayoutEffect(() => {
+    if (!visible) return
+    pageScroll.current = rememberPageScroll()
+  }, [visible])
+  useEffect(() => {
+    if (!visible) {
+      shown.current = false
+      return
+    }
+    if (view === 'input' && shown.current) inputRef.current?.focus()
+    return () => {
+      pageScroll.current?.()
+    }
+  }, [view, visible])
+  const focusField = useCallback(() => {
+    shown.current = true
+    inputRef.current?.focus()
+  }, [])
+  const dismiss = useCallback(() => {
+    releaseFieldFocus()
+    onDismiss()
+  }, [onDismiss])
   const applyText = useCallback(
     (text: string | undefined, inputMode: 'end' | 'start') => {
       const next = readTypedDate(text ?? '', inputFormat, inputMode, {
@@ -140,6 +187,7 @@ function DatePickerModalInput(props: DatePickerModalInputProps) {
   )
   const confirm = useCallback(() => {
     if (invalid.start || (props.mode === 'range' && invalid.end)) return
+    releaseFieldFocus()
     if (props.mode === 'single') {
       props.onConfirm({ date: draftDate })
       return
@@ -147,6 +195,7 @@ function DatePickerModalInput(props: DatePickerModalInputProps) {
     props.onConfirm({ endDate: draftEnd, startDate: draftStart })
   }, [draftDate, draftEnd, draftStart, invalid.end, invalid.start, props])
   const showCalendar = useCallback(() => {
+    releaseFieldFocus()
     setInvalid({ end: false, start: false })
     setView('calendar')
   }, [])
@@ -193,13 +242,14 @@ function DatePickerModalInput(props: DatePickerModalInputProps) {
   return (
     <Modal
       animationType={Platform.select({ default: 'slide', web: 'none' })}
-      onRequestClose={onDismiss}
+      onRequestClose={dismiss}
+      onShow={focusField}
       statusBarTranslucent
       supportedOrientations={supportedOrientations}
       transparent
       visible={visible}
     >
-      <ModalScrim onDismiss={onDismiss} />
+      <ModalScrim onDismiss={dismiss} />
       <View pointerEvents="box-none" style={styles.modalRoot}>
         <View
           style={[
@@ -228,7 +278,7 @@ function DatePickerModalInput(props: DatePickerModalInputProps) {
                   setInvalid({ end: false, start: false })
                 }}
                 onConfirm={props.onConfirm}
-                onDismiss={onDismiss}
+                onDismiss={dismiss}
                 onRequestInput={showInput}
                 saveLabel={saveLabel}
                 saveLabelDisabled={saveLabelDisabled ?? false}
@@ -254,7 +304,7 @@ function DatePickerModalInput(props: DatePickerModalInputProps) {
                   setInvalid({ end: false, start: false })
                 }}
                 onConfirm={props.onConfirm}
-                onDismiss={onDismiss}
+                onDismiss={dismiss}
                 onRequestInput={showInput}
                 saveLabel={saveLabel}
                 saveLabelDisabled={saveLabelDisabled ?? false}
@@ -310,8 +360,8 @@ function DatePickerModalInput(props: DatePickerModalInputProps) {
               />
               <View style={styles.fields}>
                 <ModalDateField
-                  autoFocus={visible}
                   inputMode="start"
+                  inputRef={inputRef}
                   label={displayCase(
                     mode === 'range'
                       ? (startLabel ?? 'Date')
@@ -362,7 +412,7 @@ function DatePickerModalInput(props: DatePickerModalInputProps) {
                 <Button
                   labelStyle={styles.actionLabel}
                   mode="text"
-                  onPress={onDismiss}
+                  onPress={dismiss}
                   style={styles.action}
                   testID="react-native-paper-dates-modal-input-cancel"
                   textColor={actionColor}
@@ -412,8 +462,8 @@ function headlineFor({
 }
 
 function ModalDateField({
-  autoFocus,
   inputMode,
+  inputRef,
   label,
   locale,
   onChange,
@@ -425,8 +475,8 @@ function ModalDateField({
   validRange,
   value,
 }: {
-  autoFocus?: boolean
   inputMode: 'end' | 'start'
+  inputRef?: Ref<TextInputHandles>
   label: string
   locale: string
   onChange: (date: Date | undefined) => void
@@ -450,9 +500,9 @@ function ModalDateField({
         {label}
       </Text>
       <DatePickerInputWithoutModal
+        ref={inputRef}
         aria-label={`${label}, ${placeholder}`}
         autoComplete="off"
-        autoFocus={autoFocus}
         inputMode={inputMode}
         locale={locale}
         onChange={onChange}
@@ -468,6 +518,37 @@ function ModalDateField({
       />
     </View>
   )
+}
+
+function releaseFieldFocus() {
+  if (Platform.OS === 'web') {
+    const active = document.activeElement
+    if (active instanceof HTMLElement) active.blur()
+    return
+  }
+  Keyboard.dismiss()
+}
+
+// The modal focuses a text field. Closing it hands focus back to the page and
+// the browser scrolls that control into view.
+function rememberPageScroll() {
+  if (Platform.OS !== 'web' || typeof document === 'undefined') {
+    return () => {}
+  }
+  const saved = Array.from(document.querySelectorAll('div'))
+    .filter((node) => {
+      const style = getComputedStyle(node)
+      return (
+        (style.overflowY === 'auto' || style.overflowY === 'scroll') &&
+        node.scrollHeight > node.clientHeight + 1
+      )
+    })
+    .map((node) => [node, node.scrollTop] as const)
+  return () => {
+    for (const [node, top] of saved) {
+      if (Math.abs(node.scrollTop - top) > 1) node.scrollTop = top
+    }
+  }
 }
 
 function readTypedDate(
