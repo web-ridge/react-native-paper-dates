@@ -1,11 +1,12 @@
-import { StyleSheet, View } from 'react-native'
-import { Text, TouchableRipple, useTheme } from 'react-native-paper'
-import { useContext } from 'react'
+import { Pressable, StyleSheet, View } from 'react-native'
+import { Text, useTheme } from 'react-native-paper'
+import { useContext, useState } from 'react'
 import {
   inputTypes,
   type PossibleInputTypes,
   useSwitchColors,
 } from './timeUtils'
+import StateLayer from './StateLayer'
 import { DisplayModeContext } from '../contexts/DisplayModeContext'
 import { sharedStyles } from '../shared/styles'
 import { getTranslation } from '../translations/utils'
@@ -44,15 +45,15 @@ export default function AmPmSwitcher({
           borderColor: backgroundColor,
           borderRadius: theme.shapes.corner.small,
           height,
-          marginBottom:
-            !isHorizontal && inputType === inputTypes.keyboard ? 16 : 0,
         },
       ]}
     >
       <SwitchButton
-        disabled={isAM}
         label={getTranslation(locale, 'am', 'AM')}
         onPress={() => {
+          if (isAM) {
+            return
+          }
           setMode('AM')
           if (hours - 12 >= 0) {
             onChange(hours - 12)
@@ -67,9 +68,11 @@ export default function AmPmSwitcher({
         ]}
       />
       <SwitchButton
-        disabled={!isAM}
         label={getTranslation(locale, 'pm', 'PM')}
         onPress={() => {
+          if (!isAM) {
+            return
+          }
           setMode('PM')
           if (hours + 12 <= 24) {
             onChange(hours + 12)
@@ -109,16 +112,20 @@ const styles = StyleSheet.create({
 })
 
 function SwitchButton({
-  disabled,
   label,
   onPress,
   selected,
 }: {
-  disabled: boolean
   label: string
   onPress: (() => void) | undefined
   selected: boolean
 }) {
+  const [focused, setFocused] = useState(false)
+
+  const [hovered, setHovered] = useState(false)
+
+  const [pressed, setPressed] = useState(false)
+
   const { backgroundColor, color } = useSwitchColors(selected)
 
   const theme = useTheme()
@@ -126,15 +133,26 @@ function SwitchButton({
   const textFont = theme.fonts.titleMedium
 
   return (
-    <TouchableRipple
+    <Pressable
       accessibilityLabel={label}
       accessibilityRole="button"
-      accessibilityState={{ disabled, selected }}
-      disabled={disabled}
+      accessibilityState={{ selected }}
+      onBlur={() => setFocused(false)}
+      onFocus={() => setFocused(true)}
+      onHoverIn={() => setHovered(true)}
+      onHoverOut={() => setHovered(false)}
       onPress={onPress}
+      onPressIn={() => setPressed(true)}
+      onPressOut={() => setPressed(false)}
       style={sharedStyles.root}
     >
       <View style={[styles.switchButtonInner, { backgroundColor }]}>
+        <StateLayer
+          color={color}
+          focused={focused}
+          hovered={hovered}
+          pressed={pressed}
+        />
         <Text
           maxFontSizeMultiplier={1.5}
           selectable={false}
@@ -148,6 +166,6 @@ function SwitchButton({
           {label}
         </Text>
       </View>
-    </TouchableRipple>
+    </Pressable>
   )
 }

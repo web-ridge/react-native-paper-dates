@@ -5,7 +5,9 @@ const cs: TranslationsType = {
   close: 'Zavřít',
   dateIsDisabled: 'Den není povolen',
   hour: 'hodina',
+  hourOf: (hour, total) => `Hodina ${hour} z ${total}`,
   minute: 'minuta',
+  minuteOf: (minute, total) => `Minuta ${minute} z ${total}`,
   mustBeBetween: (startDate, endDate) =>
     `Musí být mezi ${startDate} - ${endDate}`,
   mustBeHigherThan: (date) => `Musí to být později ${date}`,
@@ -20,6 +22,7 @@ const cs: TranslationsType = {
   selectMultiple: 'Vyberte data',
   selectRange: 'Vyberte období',
   selectSingle: 'Vyberte datum',
+  toggleClock: 'Přepnout hodiny',
   toggleKeyboard: 'Přepnout klávesnici',
   typeInDate: 'Zadejte datum',
 }

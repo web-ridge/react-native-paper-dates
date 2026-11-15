@@ -30,12 +30,32 @@ export function registerTranslation(
   translationsPerLocale[locale] = translations
 }
 
+export function translate(
+  locale: string | undefined,
+  key: keyof TranslationsType,
+  fallback: string
+): string {
+  const l = locale || 'en'
+  const translationForLocale = translationsPerLocale[l]
+  if (!translationForLocale) return fallback
+  const table =
+    typeof translationForLocale === 'function'
+      ? translationForLocale(locale)
+      : translationForLocale
+  const value = table[key]
+  return typeof value === 'string' && value ? value : fallback
+}
+
 export type TranslationsType = {
   am: string
+  cancel?: string
   close: string
+  confirm?: string
   dateIsDisabled: string
   hour: string
+  hourOf: (hour: number, total: number) => string
   minute: string
+  minuteOf: (minute: number, total: number) => string
   mustBeBetween: (startDate: string, endDate: string) => string
   mustBeHigherThan: (date: string) => string
   mustBeLowerThan: (date: string) => string
@@ -48,6 +68,7 @@ export type TranslationsType = {
   selectMultiple: string
   selectRange: string
   selectSingle: string
+  toggleClock: string
   toggleKeyboard: string
   typeInDate: string
 }

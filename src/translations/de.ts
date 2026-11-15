@@ -5,7 +5,9 @@ const de: TranslationsType = {
   close: 'Schliessen',
   dateIsDisabled: 'Datum nicht wählbar',
   hour: 'Stunde',
+  hourOf: (hour, total) => `Stunde ${hour} von ${total}`,
   minute: 'Minute',
+  minuteOf: (minute, total) => `Minute ${minute} von ${total}`,
   mustBeBetween: (startDate, endDate) =>
     `Muss in dieser Zeitspanne liegen ${startDate} - ${endDate}`,
   mustBeHigherThan: (date) => `Muss nach dem ${date} sein`,
@@ -20,6 +22,7 @@ const de: TranslationsType = {
   selectMultiple: 'Wähle Daten',
   selectRange: 'Wähle Zeitspanne',
   selectSingle: 'Wähle Datum',
+  toggleClock: 'Zur Uhr umschalten',
   toggleKeyboard: 'Tastatur umschalten',
   typeInDate: 'Datum eingeben',
 }

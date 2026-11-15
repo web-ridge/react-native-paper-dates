@@ -4,62 +4,82 @@ exports[`renders TimeInputs 1`] = `
 <View
   style={
     {
-      "alignItems": "center",
+      "alignItems": "flex-start",
       "flexDirection": "row",
     }
   }
 >
   <View
     style={
-      {
-        "flexDirection": "column",
-      }
+      [
+        {
+          "alignItems": "center",
+          "flexDirection": "column",
+        },
+        {
+          "width": 96,
+        },
+      ]
     }
   >
     <View
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+      onPointerCancel={[Function]}
+      onPointerDown={[Function]}
+      onPointerUp={[Function]}
       style={
         [
           {
             "alignItems": "center",
             "justifyContent": "center",
-            "width": 96,
+            "overflow": "hidden",
           },
           {
-            "backgroundColor": "rgba(231, 224, 236, 1)",
+            "backgroundColor": "rgba(230, 224, 233, 1)",
             "borderColor": undefined,
             "borderRadius": 8,
             "borderWidth": 0,
             "height": 72,
+            "width": 96,
           },
         ]
       }
     >
       <TextInput
+        accessibilityLabel="Hour"
         blurOnSubmit={false}
         keyboardAppearance="default"
         keyboardType="number-pad"
         maxFontSizeMultiplier={1.2}
         maxLength={2}
+        multiline={false}
+        numberOfLines={1}
         onBlur={[Function]}
         onChangeText={[Function]}
         onFocus={[Function]}
         onSubmitEditing={[Function]}
-        placeholder="00"
         returnKeyType="next"
+        selectTextOnFocus={true}
         selectionColor="rgba(103, 80, 164, 1)"
         style={
           [
             {
-              "width": 96,
+              "borderWidth": 0,
+              "outlineWidth": 0,
+              "paddingHorizontal": 0,
+              "textAlign": "center",
+              "width": "100%",
             },
             {
               "color": "rgba(29, 27, 32, 1)",
               "fontFamily": "System",
-              "fontSize": 57,
-              "lineHeight": undefined,
-              "paddingBottom": undefined,
-              "paddingTop": undefined,
-              "textAlign": "center",
+              "fontSize": 45,
+              "fontWeight": "400",
+              "height": 72,
+              "lineHeight": 45,
+              "paddingBottom": 13.5,
+              "paddingTop": 13.5,
             },
           ]
         }
@@ -86,7 +106,15 @@ exports[`renders TimeInputs 1`] = `
               "letterSpacing": 0.4,
               "lineHeight": 16,
             },
-            undefined,
+            [
+              {
+                "marginTop": 7,
+                "textAlign": "center",
+              },
+              {
+                "color": "rgba(73, 69, 79, 1)",
+              },
+            ],
           ],
         ]
       }
@@ -99,29 +127,22 @@ exports[`renders TimeInputs 1`] = `
       [
         {
           "alignItems": "center",
-          "fontSize": 65,
+          "justifyContent": "center",
           "width": 24,
         },
         {
-          "marginBottom": 16,
+          "height": 72,
         },
       ]
     }
   >
     <View
       style={
-        {
-          "flex": 1,
-        }
-      }
-    />
-    <View
-      style={
         [
           {
-            "borderRadius": 3.5,
-            "height": 7,
-            "width": 7,
+            "borderRadius": 4,
+            "height": 8,
+            "width": 8,
           },
           {
             "backgroundColor": "rgba(29, 27, 32, 1)",
@@ -132,7 +153,7 @@ exports[`renders TimeInputs 1`] = `
     <View
       style={
         {
-          "height": 12,
+          "height": 6,
         }
       }
     />
@@ -140,72 +161,85 @@ exports[`renders TimeInputs 1`] = `
       style={
         [
           {
-            "borderRadius": 3.5,
-            "height": 7,
-            "width": 7,
+            "borderRadius": 4,
+            "height": 8,
+            "width": 8,
           },
           {
             "backgroundColor": "rgba(29, 27, 32, 1)",
           },
         ]
-      }
-    />
-    <View
-      style={
-        {
-          "flex": 1,
-        }
       }
     />
   </View>
   <View
     style={
-      {
-        "flexDirection": "column",
-      }
+      [
+        {
+          "alignItems": "center",
+          "flexDirection": "column",
+        },
+        {
+          "width": 96,
+        },
+      ]
     }
   >
     <View
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+      onPointerCancel={[Function]}
+      onPointerDown={[Function]}
+      onPointerUp={[Function]}
       style={
         [
           {
             "alignItems": "center",
             "justifyContent": "center",
-            "width": 96,
+            "overflow": "hidden",
           },
           {
-            "backgroundColor": "rgba(231, 224, 236, 1)",
+            "backgroundColor": "rgba(230, 224, 233, 1)",
             "borderColor": undefined,
             "borderRadius": 8,
             "borderWidth": 0,
             "height": 72,
+            "width": 96,
           },
         ]
       }
     >
       <TextInput
+        accessibilityLabel="Minute"
         keyboardAppearance="default"
         keyboardType="number-pad"
         maxFontSizeMultiplier={1.2}
         maxLength={2}
+        multiline={false}
+        numberOfLines={1}
         onBlur={[Function]}
         onChangeText={[Function]}
         onFocus={[Function]}
-        placeholder="00"
+        selectTextOnFocus={true}
         selectionColor="rgba(103, 80, 164, 1)"
         style={
           [
             {
-              "width": 96,
+              "borderWidth": 0,
+              "outlineWidth": 0,
+              "paddingHorizontal": 0,
+              "textAlign": "center",
+              "width": "100%",
             },
             {
               "color": "rgba(29, 27, 32, 1)",
               "fontFamily": "System",
-              "fontSize": 57,
-              "lineHeight": undefined,
-              "paddingBottom": undefined,
-              "paddingTop": undefined,
-              "textAlign": "center",
+              "fontSize": 45,
+              "fontWeight": "400",
+              "height": 72,
+              "lineHeight": 45,
+              "paddingBottom": 13.5,
+              "paddingTop": 13.5,
             },
           ]
         }
@@ -232,7 +266,15 @@ exports[`renders TimeInputs 1`] = `
               "letterSpacing": 0.4,
               "lineHeight": 16,
             },
-            undefined,
+            [
+              {
+                "marginTop": 7,
+                "textAlign": "center",
+              },
+              {
+                "color": "rgba(73, 69, 79, 1)",
+              },
+            ],
           ],
         ]
       }

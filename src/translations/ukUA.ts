@@ -5,7 +5,9 @@ const ukUA: TranslationsType = {
   close: 'Закрити',
   dateIsDisabled: 'Цей день не дозволено обирати',
   hour: 'Година',
+  hourOf: (hour, total) => `Година ${hour} з ${total}`,
   minute: 'Хвилина',
+  minuteOf: (minute, total) => `Хвилина ${minute} з ${total}`,
   mustBeBetween: (startDate: string, endDate: string) =>
     `Має бути між ${startDate} - ${endDate}`,
   mustBeHigherThan: (date: string) => `Має бути пізніше ніж ${date}`,
@@ -20,6 +22,7 @@ const ukUA: TranslationsType = {
   selectMultiple: 'Оберіть дати',
   selectRange: 'Оберіть період',
   selectSingle: 'Оберіть дату',
+  toggleClock: 'Перемкнути годинник',
   toggleKeyboard: 'Перемкнути клавіатуру',
   typeInDate: 'Введіть дату',
 }

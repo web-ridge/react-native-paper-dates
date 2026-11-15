@@ -5,7 +5,9 @@ const ca: TranslationsType = {
   close: 'Tancar',
   dateIsDisabled: 'Dia no permès',
   hour: 'Hora',
+  hourOf: (hour, total) => `Hora ${hour} de ${total}`,
   minute: 'Minut',
+  minuteOf: (minute, total) => `Minut ${minute} de ${total}`,
   mustBeBetween: (startDate, endDate) =>
     `Ha d'estar entre ${startDate} - ${endDate}`,
   mustBeHigherThan: (date) => `Ha de ser posterior a ${date}`,
@@ -20,6 +22,7 @@ const ca: TranslationsType = {
   selectMultiple: 'Seleccionar dates',
   selectRange: 'Seleccionar període',
   selectSingle: 'Seleccionar data',
+  toggleClock: 'Alterna el rellotge',
   toggleKeyboard: 'Alterna el teclat',
   typeInDate: 'Escriu la data',
 }

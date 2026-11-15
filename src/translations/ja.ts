@@ -5,7 +5,9 @@ const ja: TranslationsType = {
   close: '閉じる',
   dateIsDisabled: '日付は入力できません',
   hour: '時',
+  hourOf: (hour, total) => `${hour} 時 / ${total}`,
   minute: '分',
+  minuteOf: (minute, total) => `${minute} 分 / ${total}`,
   mustBeBetween: (startDate, endDate) =>
     `${startDate} - ${endDate}の範囲で入力してください`,
   mustBeHigherThan: (date) => `${date}より後にする必要があります`,
@@ -20,6 +22,7 @@ const ja: TranslationsType = {
   selectMultiple: '日付を選択',
   selectRange: '期間を選択',
   selectSingle: '日付を選択',
+  toggleClock: '時計に切り替え',
   toggleKeyboard: 'キーボードに切り替え',
   typeInDate: '日付を入力',
 }

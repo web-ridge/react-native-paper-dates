@@ -213,3 +213,10 @@ export function useTextColorOnPrimary() {
     return onPrimary
   }, [isThemeDark, onPrimary, onSurface, primary])
 }
+
+export function withAlpha(color: string, alpha: number) {
+  return rgbaString({
+    ...parseColor(themeColor(color)),
+    a: Math.max(0, Math.min(1, alpha)),
+  })
+}

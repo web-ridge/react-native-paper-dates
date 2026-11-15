@@ -5,7 +5,9 @@ const hi: TranslationsType = {
   close: 'बंद करें',
   dateIsDisabled: 'दिन की अनुमति नहीं है',
   hour: 'घंटा',
+  hourOf: (hour, total) => `घंटा ${hour} / ${total}`,
   minute: 'मिनट',
+  minuteOf: (minute, total) => `मिनट ${minute} / ${total}`,
   mustBeBetween: (startDate, endDate) =>
     `${startDate} - ${endDate} के बीच होना चाहिए`,
   mustBeHigherThan: (date) => `${date} के बाद होना चाहिए`,
@@ -20,6 +22,7 @@ const hi: TranslationsType = {
   selectMultiple: 'तारीख़ें चुनें',
   selectRange: 'अवधि चुनें',
   selectSingle: 'तारीख़ चुनें',
+  toggleClock: 'घड़ी बदलें',
   toggleKeyboard: 'कीबोर्ड बदलें',
   typeInDate: 'तारीख़ लिखें',
 }

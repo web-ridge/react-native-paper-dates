@@ -2,10 +2,14 @@ import type { TranslationsType } from './utils'
 
 const en: TranslationsType = {
   am: 'AM',
+  cancel: 'Cancel',
   close: 'Close',
+  confirm: 'OK',
   dateIsDisabled: 'Day is not allowed',
   hour: 'Hour',
+  hourOf: (hour, total) => `Hour ${hour} of ${total}`,
   minute: 'Minute',
+  minuteOf: (minute, total) => `Minute ${minute} of ${total}`,
   mustBeBetween: (startDate, endDate) =>
     `Must be between ${startDate} - ${endDate}`,
   mustBeHigherThan: (date) => `Must be later than ${date}`,
@@ -20,6 +24,7 @@ const en: TranslationsType = {
   selectMultiple: 'Select dates',
   selectRange: 'Select period',
   selectSingle: 'Select date',
+  toggleClock: 'Toggle clock',
   toggleKeyboard: 'Toggle keyboard',
   typeInDate: 'Type in date',
 }

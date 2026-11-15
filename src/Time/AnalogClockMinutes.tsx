@@ -1,12 +1,28 @@
 import { memo } from 'react'
-import { useTextColorOnPrimary } from '../shared/utils'
+import { useTheme } from 'react-native-paper'
 import ClockNumber from './ClockNumber'
 import { circleSize, clockNumbers } from './timeUtils'
+import { getTranslation } from '../translations/utils'
 
 const minuteNumbers = clockNumbers(12, 2.5, circleSize, -Math.PI / 2)
 
-function AnalogClockMinutes({ minutes }: { minutes: number }) {
-  const color = useTextColorOnPrimary()
+function AnalogClockMinutes({
+  locale,
+  minutes,
+  onPress,
+}: {
+  locale?: string
+  minutes: number
+  onPress?: (minutes: number) => void
+}) {
+  const theme = useTheme()
+  const selectedColor = theme.colors.onPrimary
+  const unselectedColor = theme.colors.onSurface
+  const minuteOf = getTranslation(
+    locale,
+    'minuteOf',
+    (minute, count) => `Minute ${minute} of ${count}`
+  )
 
   return (
     <>
@@ -18,9 +34,14 @@ function AnalogClockMinutes({ minutes }: { minutes: number }) {
           : currentMinutes - 1 <= minutes && currentMinutes + 1 >= minutes
         return (
           <ClockNumber
+            accessibilityLabel={minuteOf(currentMinutes, 60)}
             key={index}
             left={left}
-            textStyle={selected ? { color } : undefined}
+            onPress={() => onPress?.(currentMinutes)}
+            selected={selected}
+            textStyle={{
+              color: selected ? selectedColor : unselectedColor,
+            }}
             top={top}
             value={isZero ? '00' : currentMinutes}
           />

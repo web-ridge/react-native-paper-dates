@@ -5,7 +5,9 @@ const th: TranslationsType = {
   close: 'ปิด',
   dateIsDisabled: 'ไม่สามารถใช้วันที่นี้ได้',
   hour: 'ชั่วโมง',
+  hourOf: (hour, total) => `ชั่วโมง ${hour} จาก ${total}`,
   minute: 'นาที',
+  minuteOf: (minute, total) => `นาที ${minute} จาก ${total}`,
   mustBeBetween: (startDate, endDate) =>
     `ต้องอยู่ในช่วงวันที่ ${startDate} - ${endDate}`,
   mustBeHigherThan: (date) => `ต้องอยู่ภายหลังวันที่ ${date}`,
@@ -19,6 +21,7 @@ const th: TranslationsType = {
   selectMultiple: 'เลือกวันที่',
   selectRange: 'เลือกช่วงวันที่',
   selectSingle: 'เลือกวันที่',
+  toggleClock: 'สลับนาฬิกา',
   toggleKeyboard: 'สลับแป้นพิมพ์',
   typeInDate: 'พิมพ์วันที่',
 }

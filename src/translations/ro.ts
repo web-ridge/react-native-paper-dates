@@ -5,7 +5,9 @@ const ro: TranslationsType = {
   close: 'Închide',
   dateIsDisabled: 'Data nu este permisă',
   hour: 'Oră',
+  hourOf: (hour, total) => `Ora ${hour} din ${total}`,
   minute: 'Minut',
+  minuteOf: (minute, total) => `Minutul ${minute} din ${total}`,
   mustBeBetween: (startDate, endDate) =>
     `Trebuie să fie între ${startDate} - ${endDate}`,
   mustBeHigherThan: (date) => `Trebuie să fie mai târziu de ${date}`,
@@ -20,6 +22,7 @@ const ro: TranslationsType = {
   selectMultiple: 'Selectează datele',
   selectRange: 'Selectează perioada',
   selectSingle: 'Selectează data',
+  toggleClock: 'Comută ceasul',
   toggleKeyboard: 'Comută tastatura',
   typeInDate: 'Tipul în dată',
 }

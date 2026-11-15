@@ -5,7 +5,9 @@ const id: TranslationsType = {
   close: 'Tutup',
   dateIsDisabled: 'Hari tidak diperbolehkan',
   hour: 'Jam',
+  hourOf: (hour, total) => `Jam ${hour} dari ${total}`,
   minute: 'Menit',
+  minuteOf: (minute, total) => `Menit ${minute} dari ${total}`,
   mustBeBetween: (startDate, endDate) =>
     `Harus di antara ${startDate} - ${endDate}`,
   mustBeHigherThan: (date) => `Harus lebih besar dari ${date}`,
@@ -20,6 +22,7 @@ const id: TranslationsType = {
   selectMultiple: 'Pilih tanggal',
   selectRange: 'Pilih periode',
   selectSingle: 'Pilih tanggal',
+  toggleClock: 'Alihkan jam',
   toggleKeyboard: 'Alihkan keyboard',
   typeInDate: 'Ketik tanggal',
 }

@@ -1,7 +1,8 @@
 import { memo } from 'react'
-import { useTextColorOnPrimary } from '../shared/utils'
+import { useTheme } from 'react-native-paper'
 import ClockNumber from './ClockNumber'
 import { circleSize, clockNumbers } from './timeUtils'
+import { getTranslation } from '../translations/utils'
 
 const hourStart = -Math.PI / 2 + Math.PI / 6
 
@@ -12,22 +13,40 @@ const outerHourNumbers = clockNumbers(12, 2.5, circleSize, hourStart)
 function AnalogClockHours({
   hours,
   is24Hour,
+  locale,
+  onPress,
 }: {
   hours: number
   is24Hour: boolean
+  locale?: string
+  onPress?: (hours: number) => void
 }) {
-  const color = useTextColorOnPrimary()
+  const theme = useTheme()
+  const selectedColor = theme.colors.onPrimary
+  const unselectedColor = theme.colors.onSurface
+  const total = is24Hour ? 24 : 12
+  const hourOf = getTranslation(
+    locale,
+    'hourOf',
+    (hour, count) => `Hour ${hour} of ${count}`
+  )
 
   return (
     <>
       {outerHourNumbers.map(([left, top], index) => {
         const label = index + 1
+        const hourValue = is24Hour && label === 12 ? 0 : label
         const selected = isOuterHourSelected(hours, is24Hour, label)
         return (
           <ClockNumber
+            accessibilityLabel={hourOf(hourValue, total)}
             key={index}
             left={left}
-            textStyle={selected ? { color } : null}
+            onPress={() => onPress?.(hourValue)}
+            selected={selected}
+            textStyle={{
+              color: selected ? selectedColor : unselectedColor,
+            }}
             top={top}
             value={is24Hour && label === 12 ? '00' : label}
           />
@@ -36,12 +55,18 @@ function AnalogClockHours({
       {is24Hour
         ? innerHourNumbers.map(([left, top], index) => {
             const hour = index + 13
+            const hourValue = hour === 24 ? 12 : hour
             const selected = hour === 24 ? hours === 12 : hour === hours
             return (
               <ClockNumber
+                accessibilityLabel={hourOf(hourValue, total)}
                 key={index}
                 left={left}
-                textStyle={selected ? { color } : null}
+                onPress={() => onPress?.(hourValue)}
+                selected={selected}
+                textStyle={{
+                  color: selected ? selectedColor : unselectedColor,
+                }}
                 top={top}
                 value={hour === 24 ? '12' : hour}
               />

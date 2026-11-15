@@ -5,7 +5,9 @@ const ko: TranslationsType = {
   close: '닫기',
   dateIsDisabled: '날짜는 허용되지 않습니다',
   hour: '시',
+  hourOf: (hour, total) => `${hour}시 / ${total}`,
   minute: '분',
+  minuteOf: (minute, total) => `${minute}분 / ${total}`,
   mustBeBetween: (startDate, endDate) =>
     `${startDate} - ${endDate} 사이여야 합니다`,
   mustBeHigherThan: (date) => `${date} 보다 커야 합니다`,
@@ -20,6 +22,7 @@ const ko: TranslationsType = {
   selectMultiple: '여러 날짜 선택',
   selectRange: '기간 선택',
   selectSingle: '날짜 선택',
+  toggleClock: '시계로 전환',
   toggleKeyboard: '키보드 전환',
   typeInDate: '날짜 입력',
 }

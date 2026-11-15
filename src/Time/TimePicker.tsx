@@ -3,9 +3,14 @@ import { StyleSheet, useWindowDimensions, View } from 'react-native'
 import {
   circleSize,
   inputTypes,
+  periodSelectorGap,
+  periodSelectorVerticalWidth,
   type PossibleClockTypes,
   type PossibleInputTypes,
   type TimeChange,
+  timePickerUsesLandscape,
+  timeSelectorFieldWidth,
+  timeSeparatorWidth,
   toHourInputFormat,
   toHourOutputFormat,
 } from './timeUtils'
@@ -77,7 +82,11 @@ function TimePicker({
     return formatted.includes('23')
   }, [locale, use24HourClock])
 
-  const isLandscape = dimensions.width > dimensions.height
+  const isLandscape = timePickerUsesLandscape(
+    dimensions.width,
+    dimensions.height,
+    inputType
+  )
 
   useEffect(() => {
     setDisplayMode(hours >= 12 ? 'PM' : 'AM')
@@ -91,10 +100,13 @@ function TimePicker({
     [displayMode]
   )
 
+  const fieldWidth = timeSelectorFieldWidth(inputType, is24Hour, isLandscape)
   const inputsWidth =
-    96 * 2 +
-    24 +
-    (is24Hour || (isLandscape && inputType === inputTypes.picker) ? 0 : 12 + 52)
+    fieldWidth * 2 +
+    timeSeparatorWidth +
+    (is24Hour || (isLandscape && inputType === inputTypes.picker)
+      ? 0
+      : periodSelectorGap + periodSelectorVerticalWidth)
 
   const onInnerChange = useCallback<TimeChange>(
     (params) => {
@@ -137,6 +149,7 @@ function TimePicker({
               focused={focused}
               hours={toHourInputFormat(hours, is24Hour)}
               is24Hour={is24Hour}
+              locale={locale}
               minutes={minutes}
               onChange={onInnerChange}
             />

@@ -1,6 +1,10 @@
 import { render } from '@testing-library/react-native'
 
 import AnalogClock from '../../Time/AnalogClock'
+import en from '../../translations/en'
+import { registerTranslation } from '../../translations/utils'
+
+registerTranslation('en', en)
 
 it('renders AnalogClock', async () => {
   const { toJSON } = await render(

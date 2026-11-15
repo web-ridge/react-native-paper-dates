@@ -5,7 +5,9 @@ const ar: TranslationsType = {
   close: 'أغلق',
   dateIsDisabled: 'اليوم غير مسموح به',
   hour: 'ساعة',
+  hourOf: (hour, total) => `ساعة ${hour} من ${total}`,
   minute: 'دقيقة',
+  minuteOf: (minute, total) => `دقيقة ${minute} من ${total}`,
   mustBeBetween: (startDate, endDate) =>
     `يجب أن يكون بين ${startDate} - ${endDate}`,
   mustBeHigherThan: (date) => `يجب أن يكون بعد  ${date}`,
@@ -20,6 +22,7 @@ const ar: TranslationsType = {
   selectMultiple: 'حدد التواريخ',
   selectRange: 'حدد الفترة',
   selectSingle: 'حدد تاريخ',
+  toggleClock: 'تبديل الساعة',
   toggleKeyboard: 'تبديل لوحة المفاتيح',
   typeInDate: 'اكتب التاريخ',
 }

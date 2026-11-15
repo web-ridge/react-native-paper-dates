@@ -5,7 +5,9 @@ const zh: TranslationsType = {
   close: '关闭',
   dateIsDisabled: '日期不可选',
   hour: '小时',
+  hourOf: (hour, total) => `小时 ${hour} / ${total}`,
   minute: '分钟',
+  minuteOf: (minute, total) => `分钟 ${minute} / ${total}`,
   mustBeBetween: (startDate, endDate) =>
     `必须在 ${startDate} - ${endDate} 之间`,
   mustBeHigherThan: (date) => `必须晚于 ${date}`,
@@ -19,6 +21,7 @@ const zh: TranslationsType = {
   selectMultiple: '选择多个日期',
   selectRange: '选择期间',
   selectSingle: '选择日期',
+  toggleClock: '切换时钟',
   toggleKeyboard: '切换键盘',
   typeInDate: '输入日期',
 }

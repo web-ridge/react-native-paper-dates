@@ -29,12 +29,14 @@ function AnalogClock({
   focused,
   hours,
   is24Hour,
+  locale,
   minutes,
   onChange,
 }: {
   focused: PossibleClockTypes
   hours: number
   is24Hour: boolean
+  locale?: string
   minutes: number
   onChange: TimeChange
 }) {
@@ -117,7 +119,7 @@ function AnalogClock({
       style={[
         styles.clock,
         {
-          backgroundColor: theme.colors.surfaceVariant,
+          backgroundColor: theme.colors.surfaceContainerHighest,
         },
       ]}
     >
@@ -164,8 +166,32 @@ function AnalogClock({
       </View>
       <AnimatedClockSwitcher
         focused={focused}
-        hours={<AnalogClockHours hours={hours} is24Hour={is24Hour} />}
-        minutes={<AnalogClockMinutes minutes={minutes} />}
+        hours={
+          <AnalogClockHours
+            hours={hours}
+            is24Hour={is24Hour}
+            locale={locale}
+            onPress={(nextHours) => {
+              onChange({
+                focused: clockTypes.minutes,
+                hours: nextHours,
+                minutes,
+              })
+            }}
+          />
+        }
+        minutes={
+          <AnalogClockMinutes
+            locale={locale}
+            minutes={minutes}
+            onPress={(nextMinutes) => {
+              onChange({
+                hours,
+                minutes: nextMinutes,
+              })
+            }}
+          />
+        }
       />
     </View>
   )

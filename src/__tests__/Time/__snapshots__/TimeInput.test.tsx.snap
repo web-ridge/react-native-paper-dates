@@ -7,44 +7,88 @@ exports[`renders TimeInput 1`] = `
       {
         "alignItems": "center",
         "justifyContent": "center",
-        "width": 96,
+        "overflow": "hidden",
       },
       {
         "backgroundColor": "rgba(234, 221, 255, 1)",
-        "borderColor": "rgba(33, 0, 93, 1)",
+        "borderColor": undefined,
         "borderRadius": 8,
-        "borderWidth": 2,
+        "borderWidth": 0,
         "height": 80,
+        "width": 96,
       },
     ]
   }
 >
-  <TextInput
-    keyboardAppearance="default"
-    keyboardType="number-pad"
+  <Text
     maxFontSizeMultiplier={1.5}
-    maxLength={2}
-    onBlur={[Function]}
-    onChangeText={[Function]}
-    onFocus={[Function]}
+    selectable={false}
     style={
       [
         {
-          "width": 96,
+          "textAlign": "center",
         },
         {
           "color": "rgba(33, 0, 93, 1)",
           "fontFamily": "System",
           "fontSize": 57,
-          "lineHeight": undefined,
-          "paddingBottom": undefined,
-          "paddingTop": undefined,
-          "textAlign": "center",
+          "fontWeight": "400",
+          "letterSpacing": -0.25,
+          "lineHeight": 64,
         },
       ]
     }
-    textAlign="center"
-    value="12"
+  >
+    12
+  </Text>
+  <View
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": true,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "overflow": "hidden",
+        },
+        {
+          "borderRadius": 8,
+        },
+      ]
+    }
   />
 </View>
 `;

@@ -1,139 +1,252 @@
 import {
-  Platform,
+  Pressable,
   StyleSheet,
+  Text,
   TextInput,
   type TextInputInstance,
   type TextInputProps,
   View,
 } from 'react-native'
-import { hexColor, themeColor } from '../shared/utils'
-import { TouchableRipple, useTheme } from 'react-native-paper'
+import { useTheme } from 'react-native-paper'
 import {
+  clockTypes,
   inputTypes,
+  isValidHourInput,
+  isValidMinuteInput,
   type PossibleClockTypes,
   type PossibleInputTypes,
+  timeInputFieldHeight,
+  timeSelectorHeight,
+  timeSelectorWidth,
   useInputColors,
 } from './timeUtils'
 import { forwardRef, type Ref, useEffect, useState } from 'react'
 import { sharedStyles } from '../shared/styles'
+import StateLayer from './StateLayer'
 
 const styles = StyleSheet.create({
   input: {
-    width: 96,
+    borderWidth: 0,
+    outlineWidth: 0,
+    paddingHorizontal: 0,
+    textAlign: 'center',
+    width: '100%',
   },
   root: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: 96,
+    overflow: 'hidden',
+  },
+  value: {
+    textAlign: 'center',
   },
 })
 
 function TimeInput(
   {
+    accessibilityLabel,
     clockType,
-    inputFontSize = 57,
+    inputFontSize,
     inputType,
+    is24Hour = false,
     onChanged,
     onPress,
     pressed,
     value,
+    width = timeSelectorWidth,
     ...rest
   }: TimeInputProps,
   ref: Ref<TextInputInstance>
 ) {
   const [controlledValue, setControlledValue] = useState(`${value}`)
 
-  const [inputFocused, setInputFocused] = useState<boolean>(false)
+  const [editing, setEditing] = useState(false)
 
-  const highlighted = inputType === inputTypes.picker ? pressed : inputFocused
+  const [hovered, setHovered] = useState(false)
 
-  const { backgroundColor, color } = useInputColors(highlighted)
+  const [inputFocused, setInputFocused] = useState(false)
+
+  const [pointerPressed, setPointerPressed] = useState(false)
+
+  const [, setRejectedEdits] = useState(0)
+
+  const [selectorFocused, setSelectorFocused] = useState(false)
+
+  const isPicker = inputType === inputTypes.picker
+
+  const highlighted = isPicker ? pressed : inputFocused
+
+  const parsedValue = Number(controlledValue)
+
+  const invalid =
+    isPicker || controlledValue === ''
+      ? false
+      : clockType === clockTypes.hours
+        ? !isValidHourInput(parsedValue, is24Hour)
+        : !isValidMinuteInput(parsedValue)
+
+  const { backgroundColor, color } = useInputColors(highlighted, invalid)
 
   const theme = useTheme()
 
+  const typeface = isPicker
+    ? theme.fonts.displayLarge
+    : theme.fonts.displayMedium
+
+  const fontSize = inputFontSize ?? typeface.fontSize
+
   useEffect(() => {
-    setControlledValue(`${value}`)
+    setControlledValue((current) => {
+      if (current === '' || Number(current) === value) {
+        return current
+      }
+      return `${value}`
+    })
   }, [value])
 
-  let formattedValue = controlledValue
-
-  const onInnerChange = (number: number) => {
-    setControlledValue(`${number}`)
-    if (number >= 0) {
-      onChanged(Number(number))
+  const onInnerChange = (text: string) => {
+    if (text !== '' && !/^\d{1,2}$/.test(text)) {
+      setRejectedEdits((count) => count + 1)
+      return
+    }
+    setEditing(true)
+    setControlledValue(text)
+    if (text === '') {
+      return
+    }
+    const number = Number(text)
+    if (
+      clockType === clockTypes.hours
+        ? isValidHourInput(number, is24Hour)
+        : isValidMinuteInput(number)
+    ) {
+      onChanged(number)
     }
   }
-  if (!inputFocused) {
-    formattedValue =
-      controlledValue.length === 1
-        ? `0${controlledValue}`
-        : `${controlledValue}`
-  }
+
+  const formattedValue =
+    !editing && controlledValue.length === 1
+      ? `0${controlledValue}`
+      : controlledValue
+
+  const showOutline = !isPicker && inputFocused
+
+  const fieldHeight = isPicker ? timeSelectorHeight : timeInputFieldHeight
+
+  const textPadding = Math.max(
+    0,
+    (fieldHeight - (showOutline ? 4 : 0) - fontSize) / 2
+  )
 
   return (
     <View
+      {...(isPicker
+        ? null
+        : {
+            onMouseEnter: () => setHovered(true),
+            onMouseLeave: () => {
+              setHovered(false)
+              setPointerPressed(false)
+            },
+            onPointerCancel: () => setPointerPressed(false),
+            onPointerDown: () => setPointerPressed(true),
+            onPointerUp: () => setPointerPressed(false),
+          })}
       style={[
         styles.root,
-        // eslint-disable-next-line react-native/no-inline-styles
         {
           backgroundColor,
-          borderColor: highlighted
-            ? theme.colors.onPrimaryContainer
+          borderColor: showOutline
+            ? invalid
+              ? theme.colors.error
+              : theme.colors.primary
             : undefined,
           borderRadius: theme.shapes.corner.small,
-          borderWidth: highlighted ? 2 : 0,
-          height: inputType === inputTypes.keyboard ? 72 : 80,
+          borderWidth: showOutline ? 2 : 0,
+          height: fieldHeight,
+          width,
         },
       ]}
     >
-      <TextInput
-        keyboardAppearance={theme.dark ? 'dark' : 'default'}
-        keyboardType="number-pad"
-        maxFontSizeMultiplier={1.5}
-        maxLength={2}
-        onBlur={() => setInputFocused(false)}
-        onChangeText={(e) => onInnerChange(Number(e))}
-        onFocus={() => setInputFocused(true)}
-        ref={ref}
-        style={[
-          styles.input,
-          // eslint-disable-next-line react-native/no-inline-styles
-          {
-            color,
-            fontFamily: theme.fonts.titleMedium.fontFamily,
-            fontSize: inputFontSize,
-            lineHeight:
-              Platform.OS === 'android'
-                ? Math.max(inputFontSize, 48)
-                : undefined,
-            paddingBottom: Platform.OS === 'android' ? 0 : undefined,
-            paddingTop: Platform.OS === 'android' ? 0 : undefined,
-            textAlign: 'center',
-          },
-        ]}
-        textAlign="center"
-        value={formattedValue}
-        {...rest}
+      <StateLayer
+        color={color}
+        focused={isPicker && selectorFocused}
+        hovered={hovered}
+        pressed={pointerPressed}
       />
-      {onPress && inputType === inputTypes.picker ? (
-        <TouchableRipple
-          borderless={true}
-          onPress={() => onPress(clockType)}
-          rippleColor={
-            Platform.OS !== 'ios'
-              ? hexColor(themeColor(theme.colors.onSurface))
-              : undefined
-          }
+      {isPicker ? (
+        <Text
+          maxFontSizeMultiplier={1.5}
+          selectable={false}
+          style={[
+            styles.value,
+            {
+              ...typeface,
+              color,
+              fontSize,
+            },
+          ]}
+        >
+          {formattedValue}
+        </Text>
+      ) : (
+        <TextInput
+          accessibilityLabel={accessibilityLabel}
+          keyboardAppearance={theme.dark ? 'dark' : 'default'}
+          keyboardType="number-pad"
+          maxFontSizeMultiplier={1.5}
+          maxLength={2}
+          multiline={false}
+          numberOfLines={1}
+          onBlur={() => {
+            setEditing(false)
+            setInputFocused(false)
+          }}
+          onChangeText={onInnerChange}
+          onFocus={() => {
+            setEditing(false)
+            setInputFocused(true)
+          }}
+          selectTextOnFocus
+          ref={ref}
+          style={[
+            styles.input,
+            {
+              color,
+              fontFamily: typeface.fontFamily,
+              fontSize,
+              fontWeight: typeface.fontWeight,
+              height: fieldHeight - (showOutline ? 4 : 0),
+              lineHeight: fontSize,
+              paddingBottom: textPadding,
+              paddingTop: textPadding,
+            },
+          ]}
+          textAlign="center"
+          value={formattedValue}
+          {...rest}
+        />
+      )}
+      {isPicker ? (
+        <Pressable
+          accessibilityLabel={accessibilityLabel}
+          accessibilityRole="button"
+          accessibilityState={{ selected: pressed }}
+          onBlur={() => setSelectorFocused(false)}
+          onFocus={() => setSelectorFocused(true)}
+          onHoverIn={() => setHovered(true)}
+          onHoverOut={() => setHovered(false)}
+          onPress={() => onPress?.(clockType)}
+          onPressIn={() => setPointerPressed(true)}
+          onPressOut={() => setPointerPressed(false)}
           style={[
             StyleSheet.absoluteFill,
             sharedStyles.overflowHidden,
             {
-              borderRadius: theme.shapes.corner.extraSmall,
+              borderRadius: theme.shapes.corner.small,
             },
           ]}
-        >
-          <View />
-        </TouchableRipple>
+        />
       ) : null}
     </View>
   )
@@ -143,13 +256,16 @@ interface TimeInputProps extends Omit<
   Omit<Omit<TextInputProps, 'value'>, 'onFocus'>,
   'onPress'
 > {
+  accessibilityLabel?: string
   clockType: PossibleClockTypes
   inputFontSize?: number
   inputType: PossibleInputTypes
+  is24Hour?: boolean
   onChanged: (n: number) => void
   onPress?: (type: PossibleClockTypes) => void
   pressed: boolean
   value: number
+  width?: number
 }
 
 export default forwardRef(TimeInput)

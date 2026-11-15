@@ -5,7 +5,9 @@ const nl: TranslationsType = {
   close: 'Sluit',
   dateIsDisabled: 'Deze dag mag niet',
   hour: 'Uur',
+  hourOf: (hour, total) => `Uur ${hour} van ${total}`,
   minute: 'Minuut',
+  minuteOf: (minute, total) => `Minuut ${minute} van ${total}`,
   mustBeBetween: (startDate, endDate) =>
     `Moet tussen ${startDate} - ${endDate}`,
   mustBeHigherThan: (date) => `Moet later dan ${date}`,
@@ -20,6 +22,7 @@ const nl: TranslationsType = {
   selectMultiple: 'Selecteer datums',
   selectRange: 'Selecteer periode',
   selectSingle: 'Selecteer datum',
+  toggleClock: 'Naar klok wisselen',
   toggleKeyboard: 'Toetsenbord wisselen',
   typeInDate: 'Typ datum',
 }

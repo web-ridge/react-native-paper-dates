@@ -36,7 +36,7 @@ it('follows a later hours value onto PM', async () => {
   )
   expect(view.getByLabelText('AM')).toHaveProp(
     'accessibilityState',
-    expect.objectContaining({ disabled: true, selected: true })
+    expect.objectContaining({ selected: true })
   )
 
   await view.rerender(
@@ -53,6 +53,6 @@ it('follows a later hours value onto PM', async () => {
   )
   expect(view.getByLabelText('PM')).toHaveProp(
     'accessibilityState',
-    expect.objectContaining({ disabled: true, selected: true })
+    expect.objectContaining({ selected: true })
   )
 })

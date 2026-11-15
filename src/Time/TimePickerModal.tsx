@@ -2,8 +2,10 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Modal,
+  Platform,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
 } from 'react-native'
 
@@ -17,6 +19,7 @@ import {
   type PossibleClockTypes,
   type PossibleInputTypes,
   reverseInputTypes,
+  timeDialFits,
   type TimeChange,
 } from './timeUtils'
 import { memo, useCallback, useEffect, useState } from 'react'
@@ -33,8 +36,9 @@ const styles = StyleSheet.create({
   bottom: {
     alignItems: 'center',
     flexDirection: 'row',
+    paddingBottom: 16,
     paddingHorizontal: 24,
-    paddingVertical: 8,
+    paddingTop: 8,
   },
   center: {
     alignItems: 'center',
@@ -75,15 +79,15 @@ const styles = StyleSheet.create({
 })
 
 export function TimePickerModal({
-  animationType = 'none',
+  animationType,
   cancelLabel = 'Cancel',
   clockIcon = 'clock-outline',
-  confirmLabel = 'Ok',
+  confirmLabel = 'OK',
   defaultInputType,
   hours,
   inputFontSize,
   keyboardIcon = 'keyboard-outline',
-  label = 'Select time',
+  label,
   locale,
   minutes,
   onConfirm,
@@ -120,13 +124,24 @@ export function TimePickerModal({
     orNow(minutes, (date) => date.getMinutes())
   )
   const theme = useTheme()
+  const { height, width } = useWindowDimensions()
+  const canShowDial = timeDialFits(width, height)
+  const displayedInputType = canShowDial ? inputType : inputTypes.keyboard
 
   useEffect(() => {
     setLocalHours(orNow(hours, (date) => date.getHours()))
     setLocalMinutes(orNow(minutes, (date) => date.getMinutes()))
   }, [hours, minutes])
 
-  let labelText = label
+  const animation =
+    animationType ||
+    Platform.select({
+      default: 'slide',
+      web: 'none',
+    })
+  const headline =
+    label ||
+    (displayedInputType === inputTypes.keyboard ? 'Enter time' : 'Select time')
   const onChange = useCallback<TimeChange>(
     (params) => {
       if (params.focused) {
@@ -145,15 +160,11 @@ export function TimePickerModal({
   const textFont = theme.fonts.labelMedium
   const uppercase = _uppercase ?? false
 
-  if (inputType === inputTypes.keyboard && !label) {
-    labelText = 'Enter time'
-  }
-
   const color = theme.colors.elevation.level3
 
   return (
     <Modal
-      animationType={animationType}
+      animationType={animation}
       onRequestClose={onDismiss}
       presentationStyle="overFullScreen"
       statusBarTranslucent={true}
@@ -175,8 +186,9 @@ export function TimePickerModal({
                 {
                   backgroundColor: color,
                   borderRadius: 28,
-                  minWidth: inputType === inputTypes.picker ? 328 : 280,
-                  ...(inputType === inputTypes.keyboard
+                  minWidth:
+                    displayedInputType === inputTypes.picker ? 328 : 280,
+                  ...(displayedInputType === inputTypes.keyboard
                     ? { height: 252 }
                     : null),
                 },
@@ -193,7 +205,7 @@ export function TimePickerModal({
                     },
                   ]}
                 >
-                  {displayCase(labelText, uppercase)}
+                  {displayCase(headline, uppercase)}
                 </Text>
               </View>
               <View style={styles.timePickerContainer}>
@@ -201,7 +213,7 @@ export function TimePickerModal({
                   focused={focused}
                   hours={localHours}
                   inputFontSize={inputFontSize}
-                  inputType={inputType}
+                  inputType={displayedInputType}
                   locale={locale}
                   minutes={localMinutes}
                   onChange={onChange}
@@ -210,24 +222,30 @@ export function TimePickerModal({
                 />
               </View>
               <View style={styles.bottom}>
-                <IconButton
-                  accessibilityLabel={getTranslation(
-                    locale,
-                    'toggleKeyboard',
-                    'Toggle keyboard'
-                  )}
-                  icon={getTimeInputTypeIcon(inputType, {
-                    keyboard: keyboardIcon,
-                    picker: clockIcon,
-                  })}
-                  iconColor={theme.colors.onSurface}
-                  onPress={() => {
-                    Keyboard.dismiss()
-                    setInputType(reverseInputTypes[inputType])
-                  }}
-                  size={24}
-                  style={styles.inputTypeToggle}
-                />
+                {canShowDial ? (
+                  <IconButton
+                    accessibilityLabel={
+                      inputType === inputTypes.picker
+                        ? getTranslation(
+                            locale,
+                            'toggleKeyboard',
+                            'Toggle keyboard'
+                          )
+                        : getTranslation(locale, 'toggleClock', 'Toggle clock')
+                    }
+                    icon={getTimeInputTypeIcon(inputType, {
+                      keyboard: keyboardIcon,
+                      picker: clockIcon,
+                    })}
+                    iconColor={theme.colors.onSurfaceVariant}
+                    onPress={() => {
+                      Keyboard.dismiss()
+                      setInputType(reverseInputTypes[inputType])
+                    }}
+                    size={24}
+                    style={styles.inputTypeToggle}
+                  />
+                ) : null}
                 <View style={sharedStyles.root} />
                 <Button mode="text" onPress={onDismiss}>
                   {displayCase(cancelLabel, uppercase)}

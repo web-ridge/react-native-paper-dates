@@ -5,7 +5,9 @@ const sv: TranslationsType = {
   close: 'Stäng',
   dateIsDisabled: 'Datumet är inte tillåtet',
   hour: 'Timme',
+  hourOf: (hour, total) => `Timme ${hour} av ${total}`,
   minute: 'Minut',
+  minuteOf: (minute, total) => `Minut ${minute} av ${total}`,
   mustBeBetween: (startDate, endDate) =>
     `Måste vara mellan ${startDate} - ${endDate}`,
   mustBeHigherThan: (date) => `Måste vara efter ${date}`,
@@ -20,6 +22,7 @@ const sv: TranslationsType = {
   selectMultiple: 'Välj datum',
   selectRange: 'Välj period',
   selectSingle: 'Välj datum',
+  toggleClock: 'Växla klocka',
   toggleKeyboard: 'Växla tangentbord',
   typeInDate: 'Skriv datum',
 }

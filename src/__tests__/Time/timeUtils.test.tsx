@@ -7,7 +7,12 @@ import {
   getMinutes,
   getTimeInputTypeIcon,
   hourTypes,
+  isValidHourInput,
+  isValidMinuteInput,
   snap,
+  timeDialFits,
+  timePickerUsesLandscape,
+  timeSelectorFieldWidth,
   toHourInputFormat,
   toHourOutputFormat,
 } from '../../Time/timeUtils'
@@ -117,5 +122,30 @@ describe('timeUtils', () => {
     expect(getTimeInputTypeIcon('picker')).toBe('keyboard-outline')
     expect(getTimeInputTypeIcon('keyboard', {} as never)).toBe('clock-outline')
     expect(getTimeInputTypeIcon('nope' as 'picker')).toBeUndefined()
+  })
+
+  it('validates typed hours and minutes', () => {
+    expect(isValidHourInput(0, true)).toBe(true)
+    expect(isValidHourInput(23, true)).toBe(true)
+    expect(isValidHourInput(24, true)).toBe(false)
+    expect(isValidHourInput(0, false)).toBe(false)
+    expect(isValidHourInput(12, false)).toBe(true)
+    expect(isValidHourInput(13, false)).toBe(false)
+    expect(isValidMinuteInput(0)).toBe(true)
+    expect(isValidMinuteInput(59)).toBe(true)
+    expect(isValidMinuteInput(60)).toBe(false)
+    expect(isValidMinuteInput(Number.NaN)).toBe(false)
+  })
+
+  it('chooses landscape or input fallback from the viewport', () => {
+    expect(timeDialFits(400, 800)).toBe(true)
+    expect(timeDialFits(900, 400)).toBe(true)
+    expect(timeDialFits(320, 360)).toBe(false)
+    expect(timePickerUsesLandscape(900, 400, 'picker')).toBe(true)
+    expect(timePickerUsesLandscape(400, 800, 'picker')).toBe(false)
+    expect(timePickerUsesLandscape(900, 400, 'keyboard')).toBe(true)
+    expect(timeSelectorFieldWidth('picker', true, false)).toBe(114)
+    expect(timeSelectorFieldWidth('picker', true, true)).toBe(96)
+    expect(timeSelectorFieldWidth('keyboard', true, false)).toBe(96)
   })
 })

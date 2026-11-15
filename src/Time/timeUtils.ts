@@ -17,6 +17,26 @@ const _360 = Math.PI * 2
 
 export const circleSize = 256
 
+export const periodSelectorGap = 12
+
+export const periodSelectorVerticalWidth = 52
+
+export const timeInputFieldHeight = 72
+
+export const timeSelector24HourVerticalWidth = 114
+
+export const timeSelectorHeight = 80
+
+export const timeSelectorWidth = 96
+
+export const timeSeparatorWidth = 24
+
+const landscapeDialChrome = 132
+
+const landscapeDialExtraWidth = 112
+
+const portraitDialChrome = 248
+
 export function clockNumbers(
   count: number,
   radiusRatio: number,
@@ -108,6 +128,59 @@ export function getMinutes(handAngle: number) {
   while (minute >= 60) minute -= 60
 
   return minute
+}
+
+export function isValidHourInput(hours: number, is24Hour: boolean) {
+  if (!Number.isFinite(hours) || hours < 0) {
+    return false
+  }
+  if (is24Hour) {
+    return hours <= 23
+  }
+  return hours >= 1 && hours <= 12
+}
+
+export function isValidMinuteInput(minutes: number) {
+  return Number.isFinite(minutes) && minutes >= 0 && minutes <= 59
+}
+
+export function timeDialFits(width: number, height: number) {
+  if (height >= circleSize + portraitDialChrome) {
+    return true
+  }
+  return (
+    height >= circleSize + landscapeDialChrome &&
+    width >=
+      timeSelectorWidth * 2 +
+        timeSeparatorWidth +
+        circleSize +
+        landscapeDialExtraWidth
+  )
+}
+
+export function timePickerUsesLandscape(
+  width: number,
+  height: number,
+  inputType: PossibleInputTypes
+) {
+  if (width > height) {
+    return true
+  }
+  if (inputType !== inputTypes.picker) {
+    return false
+  }
+  return height < circleSize + portraitDialChrome && timeDialFits(width, height)
+}
+
+export function timeSelectorFieldWidth(
+  inputType: PossibleInputTypes,
+  is24Hour: boolean,
+  landscape: boolean
+) {
+  if (inputType === inputTypes.picker && is24Hour && !landscape) {
+    return timeSelector24HourVerticalWidth
+  }
+  return timeSelectorWidth
 }
 
 type HighlightColors = {
@@ -211,11 +284,20 @@ export function toHourOutputFormat(
   return newHours
 }
 
-export function useInputColors(highlighted: boolean): HighlightColors {
+export function useInputColors(
+  highlighted: boolean,
+  invalid = false
+): HighlightColors {
   const theme = useTheme()
+  if (invalid) {
+    return {
+      backgroundColor: theme.colors.errorContainer,
+      color: highlighted ? theme.colors.error : theme.colors.onErrorContainer,
+    }
+  }
   const backgroundColor = highlighted
     ? theme.colors.primaryContainer
-    : theme.colors.surfaceVariant
+    : theme.colors.surfaceContainerHighest
   const color = highlighted
     ? theme.colors.onPrimaryContainer
     : theme.colors.onSurface

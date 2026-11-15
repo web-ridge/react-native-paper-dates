@@ -5,7 +5,9 @@ const fi: TranslationsType = {
   close: 'Sulje',
   dateIsDisabled: 'Päivä ei ole sallittu',
   hour: 'Tunti',
+  hourOf: (hour, total) => `Tunti ${hour} / ${total}`,
   minute: 'Minuutti',
+  minuteOf: (minute, total) => `Minuutti ${minute} / ${total}`,
   mustBeBetween: (startDate, endDate) =>
     `Oltava välillä ${startDate} - ${endDate}`,
   mustBeHigherThan: (date) => `Oltava myöhempi kuin ${date}`,
@@ -20,6 +22,7 @@ const fi: TranslationsType = {
   selectMultiple: 'Valitse päivämäärät',
   selectRange: 'Valitse ajanjakso',
   selectSingle: 'Valitse päivämäärä',
+  toggleClock: 'Vaihda kelloon',
   toggleKeyboard: 'Vaihda näppäimistöä',
   typeInDate: 'Syötä päivämäärä',
 }

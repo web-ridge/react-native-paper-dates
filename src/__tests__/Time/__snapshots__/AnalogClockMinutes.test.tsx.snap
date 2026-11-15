@@ -3,6 +3,46 @@
 exports[`renders AnalogClockMinutes 1`] = `
 <>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Minute 0 of 60"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -51,7 +91,9 @@ exports[`renders AnalogClockMinutes 1`] = `
                 "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              undefined,
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -61,6 +103,46 @@ exports[`renders AnalogClockMinutes 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Minute 5 of 60"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -109,7 +191,9 @@ exports[`renders AnalogClockMinutes 1`] = `
                 "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              undefined,
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -119,6 +203,46 @@ exports[`renders AnalogClockMinutes 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Minute 10 of 60"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -167,7 +291,9 @@ exports[`renders AnalogClockMinutes 1`] = `
                 "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              undefined,
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -177,6 +303,46 @@ exports[`renders AnalogClockMinutes 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Minute 15 of 60"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -225,7 +391,9 @@ exports[`renders AnalogClockMinutes 1`] = `
                 "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              undefined,
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -235,6 +403,46 @@ exports[`renders AnalogClockMinutes 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Minute 20 of 60"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -283,7 +491,9 @@ exports[`renders AnalogClockMinutes 1`] = `
                 "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              undefined,
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -293,6 +503,46 @@ exports[`renders AnalogClockMinutes 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Minute 25 of 60"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -341,7 +591,9 @@ exports[`renders AnalogClockMinutes 1`] = `
                 "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              undefined,
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -351,6 +603,46 @@ exports[`renders AnalogClockMinutes 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Minute 30 of 60"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -399,7 +691,9 @@ exports[`renders AnalogClockMinutes 1`] = `
                 "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              undefined,
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -409,6 +703,46 @@ exports[`renders AnalogClockMinutes 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Minute 35 of 60"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -457,7 +791,9 @@ exports[`renders AnalogClockMinutes 1`] = `
                 "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              undefined,
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -467,6 +803,46 @@ exports[`renders AnalogClockMinutes 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Minute 40 of 60"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -515,7 +891,9 @@ exports[`renders AnalogClockMinutes 1`] = `
                 "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              undefined,
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -525,6 +903,46 @@ exports[`renders AnalogClockMinutes 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Minute 45 of 60"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": true,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -585,6 +1003,46 @@ exports[`renders AnalogClockMinutes 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Minute 50 of 60"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -633,7 +1091,9 @@ exports[`renders AnalogClockMinutes 1`] = `
                 "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              undefined,
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -643,6 +1103,46 @@ exports[`renders AnalogClockMinutes 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Minute 55 of 60"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -691,7 +1191,9 @@ exports[`renders AnalogClockMinutes 1`] = `
                 "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              undefined,
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }

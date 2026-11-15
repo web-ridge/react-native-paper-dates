@@ -5,7 +5,9 @@ const he: TranslationsType = {
   close: 'סגור',
   dateIsDisabled: 'יום לא מורשה',
   hour: 'שעה',
+  hourOf: (hour, total) => `שעה ${hour} מתוך ${total}`,
   minute: 'דקה',
+  minuteOf: (minute, total) => `דקה ${minute} מתוך ${total}`,
   mustBeBetween: (startDate, endDate) =>
     `חייב להיות בין ${startDate} - ${endDate}`,
   mustBeHigherThan: (date) => `חייב להיות אחרי ${date}`,
@@ -20,6 +22,7 @@ const he: TranslationsType = {
   selectMultiple: 'בחר תאריכים',
   selectRange: 'בחר טווח',
   selectSingle: 'בחר תאריך',
+  toggleClock: 'החלף שעון',
   toggleKeyboard: 'החלף מקלדת',
   typeInDate: 'הקש תאריך',
 }

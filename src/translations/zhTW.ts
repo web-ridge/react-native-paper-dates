@@ -5,7 +5,9 @@ const zhTW: TranslationsType = {
   close: '關閉',
   dateIsDisabled: '日期不可選',
   hour: '小時',
+  hourOf: (hour, total) => `小時 ${hour} / ${total}`,
   minute: '分鐘',
+  minuteOf: (minute, total) => `分鐘 ${minute} / ${total}`,
   mustBeBetween: (startDate, endDate) =>
     `必須在 ${startDate} - ${endDate} 之間`,
   mustBeHigherThan: (date) => `必須晚於 ${date}`,
@@ -19,6 +21,7 @@ const zhTW: TranslationsType = {
   selectMultiple: '選擇多個日期',
   selectRange: '選擇期間',
   selectSingle: '選擇日期',
+  toggleClock: '切換時鐘',
   toggleKeyboard: '切換鍵盤',
   typeInDate: '輸入日期',
 }

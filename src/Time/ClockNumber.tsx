@@ -1,19 +1,46 @@
-import { type StyleProp, StyleSheet, type TextStyle, View } from 'react-native'
+import {
+  Pressable,
+  type StyleProp,
+  StyleSheet,
+  type TextStyle,
+  View,
+} from 'react-native'
 import { Text } from 'react-native-paper'
 
 export default function ClockNumber({
+  accessibilityLabel,
   left,
+  onPress,
+  selected = false,
   textStyle,
   top,
   value,
 }: {
+  accessibilityLabel?: string
   left: number
+  onPress?: () => void
+  selected?: boolean
   textStyle?: StyleProp<TextStyle>
   top: number
   value: number | string
 }) {
   return (
-    <View pointerEvents="none" style={[styles.root, { left, top }]}>
+    <Pressable
+      accessibilityActions={onPress ? [{ name: 'activate' }] : undefined}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityRole={accessibilityLabel ? 'button' : undefined}
+      accessibilityState={accessibilityLabel ? { selected } : undefined}
+      accessible={Boolean(accessibilityLabel)}
+      importantForAccessibility={accessibilityLabel ? 'yes' : 'no'}
+      onAccessibilityAction={(event) => {
+        if (event.nativeEvent.actionName === 'activate') {
+          onPress?.()
+        }
+      }}
+      onPress={onPress}
+      pointerEvents="none"
+      style={[styles.root, { left, top }]}
+    >
       <View style={styles.inner}>
         <Text
           maxFontSizeMultiplier={1.5}
@@ -24,7 +51,7 @@ export default function ClockNumber({
           {value}
         </Text>
       </View>
-    </View>
+    </Pressable>
   )
 }
 
