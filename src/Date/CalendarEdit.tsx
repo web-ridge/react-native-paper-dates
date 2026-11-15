@@ -5,7 +5,7 @@ import {
   type TextInputInstance,
   View,
 } from 'react-native'
-import { type TextInputHandles, useTheme } from 'react-native-paper'
+import { Text, type TextInputHandles, useTheme } from 'react-native-paper'
 
 import { sharedStyles } from '../shared/styles'
 import DatePickerInputWithoutModal from './DatePickerInputWithoutModal'
@@ -165,14 +165,20 @@ function CalendarDateField({
   withDateFormatInLabel?: boolean
 }) {
   const inputTheme = { colors: { background: surfaceColor } }
-
-  return (
+  const theme = useTheme()
+  const showFormatInLabel = Boolean(withDateFormatInLabel && label)
+  const input = (
     <DatePickerInputWithoutModal
       ref={inputRef}
       autoComplete="off"
+      {...(label
+        ? {
+            'aria-label': `${label}${placeholder ? `, ${placeholder}` : ''}`,
+          }
+        : null)}
       inputEnabled={inputEnabled}
       inputMode={inputMode}
-      label={label}
+      label={showFormatInLabel ? label : undefined}
       locale={locale}
       onChange={onChange}
       onSubmitEditing={onSubmitEditing}
@@ -186,9 +192,29 @@ function CalendarDateField({
       withModal={false}
     />
   )
+
+  if (!label || showFormatInLabel) {
+    return input
+  }
+
+  return (
+    <View style={sharedStyles.root}>
+      <Text
+        maxFontSizeMultiplier={1.5}
+        style={[styles.caption, { color: theme.colors.onSurfaceVariant }]}
+        variant="bodySmall"
+      >
+        {label}
+      </Text>
+      {input}
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({
+  caption: {
+    marginBottom: 4,
+  },
   root: {
     paddingVertical: 12,
     width: '100%',

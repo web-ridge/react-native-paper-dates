@@ -438,13 +438,22 @@ function ModalDateField({
   validRange?: ValidRangeType
   value: CalendarDate
 }) {
+  const theme = useTheme()
+
   return (
     <View style={styles.field}>
+      <Text
+        maxFontSizeMultiplier={1.5}
+        style={[styles.caption, { color: theme.colors.onSurfaceVariant }]}
+        variant="bodySmall"
+      >
+        {label}
+      </Text>
       <DatePickerInputWithoutModal
+        aria-label={`${label}, ${placeholder}`}
         autoComplete="off"
         autoFocus={autoFocus}
         inputMode={inputMode}
-        label={label}
         locale={locale}
         onChange={onChange}
         onChangeText={onChangeText}
@@ -507,6 +516,9 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
     paddingRight: 16,
     paddingTop: 12,
+  },
+  caption: {
+    marginBottom: 4,
   },
   card: {
     borderRadius: 28,
