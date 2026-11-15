@@ -148,7 +148,6 @@ exports[`renders DatePickerInputWithoutModal 1`] = `
           }
         />
         <View
-          aria-hidden={true}
           collapsable={false}
           jestAnimatedProps={
             {
@@ -157,98 +156,7 @@ exports[`renders DatePickerInputWithoutModal 1`] = `
           }
           jestAnimatedStyle={
             {
-              "value": {
-                "top": 16,
-              },
-            }
-          }
-          jestInlineStyle={
-            [
-              {
-                "pointerEvents": "none",
-                "position": "absolute",
-              },
-              {
-                "left": 16,
-              },
-            ]
-          }
-          style={
-            [
-              {
-                "pointerEvents": "none",
-                "position": "absolute",
-              },
-              {
-                "left": 16,
-              },
-              {
-                "top": 16,
-              },
-            ]
-          }
-        >
-          <Text
-            collapsable={false}
-            jestAnimatedProps={
-              {
-                "value": {},
-              }
-            }
-            jestAnimatedStyle={
-              {
-                "value": {
-                  "fontSize": 12,
-                },
-              }
-            }
-            jestInlineStyle={
-              [
-                {
-                  "fontWeight": "400",
-                  "includeFontPadding": false,
-                  "paddingHorizontal": 0,
-                  "paddingVertical": 0,
-                },
-                {
-                  "color": "rgba(73, 69, 79, 1)",
-                },
-                false,
-              ]
-            }
-            style={
-              [
-                {
-                  "fontWeight": "400",
-                  "includeFontPadding": false,
-                  "paddingHorizontal": 0,
-                  "paddingVertical": 0,
-                },
-                {
-                  "color": "rgba(73, 69, 79, 1)",
-                },
-                {
-                  "fontSize": 12,
-                },
-                false,
-              ]
-            }
-          >
-            MM/DD/YYYY
-          </Text>
-        </View>
-        <View
-          collapsable={false}
-          jestAnimatedProps={
-            {
               "value": {},
-            }
-          }
-          jestAnimatedStyle={
-            {
-              "value": {
-                "opacity": 1,
-              },
             }
           }
           jestInlineStyle={
@@ -262,6 +170,7 @@ exports[`renders DatePickerInputWithoutModal 1`] = `
                 },
                 false,
               ],
+              undefined,
             ]
           }
           style={
@@ -273,24 +182,22 @@ exports[`renders DatePickerInputWithoutModal 1`] = `
                 "paddingHorizontal": 16,
               },
               false,
-              {
-                "opacity": 1,
-              },
+              undefined,
             ]
           }
         >
           <TextInput
             aria-disabled={false}
             aria-invalid={false}
-            aria-label="MM/DD/YYYY"
+            aria-label=""
             cursorColor="rgba(103, 80, 164, 1)"
             keyboardAppearance="default"
-            keyboardType="number-pad"
-            maxLength={10}
+            keyboardType="default"
             onBlur={[Function]}
-            onChange={[Function]}
             onChangeText={[Function]}
             onFocus={[Function]}
+            onSubmitEditing={[Function]}
+            placeholder="MM/DD/YYYY"
             placeholderTextColor="rgba(73, 69, 79, 1)"
             selectionColor="rgba(103, 80, 164, 1)"
             style={

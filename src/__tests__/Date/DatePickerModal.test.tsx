@@ -90,7 +90,7 @@ it('reuses the calendar size from the last open, so a reopen draws the month at 
   expect(queryByText('January 2025')).toBeTruthy()
 })
 
-it('keeps close and save at the top of the centered tablet dialog', async () => {
+it('uses cancel and ok at the bottom of the centered tablet dialog', async () => {
   const saved = Dimensions.get('window')
 
   const topInset = 47
@@ -126,8 +126,9 @@ it('keeps close and save at the top of the centered tablet dialog', async () => 
 
     const tablet = await renderAt(1024, 1366)
     expect(viewsWithHeight(tablet.root, topInset)).toHaveLength(0)
-    expect(tablet.getByTestId('react-native-paper-dates-close')).toBeTruthy()
-    expect(tablet.getByTestId('react-native-paper-dates-save')).toBeTruthy()
+    expect(tablet.queryByTestId('react-native-paper-dates-close')).toBeNull()
+    expect(tablet.getByTestId('react-native-paper-dates-cancel')).toBeTruthy()
+    expect(tablet.getByTestId('react-native-paper-dates-confirm')).toBeTruthy()
   } finally {
     await act(async () => {
       Dimensions.set({ screen: saved, window: saved })

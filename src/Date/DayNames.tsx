@@ -6,11 +6,15 @@ import type { DisableWeekDaysType } from './types'
 import { memo, useMemo } from 'react'
 
 function DayNames({
+  backgroundColor,
   disableWeekDays,
+  height = dayNamesHeight,
   locale,
   startWeekOnMonday,
 }: {
+  backgroundColor?: string
   disableWeekDays?: DisableWeekDaysType
+  height?: number
   locale: string | undefined
   startWeekOnMonday: boolean
 }) {
@@ -40,7 +44,10 @@ function DayNames({
       pointerEvents="none"
       style={[
         styles.dayNames,
-        { backgroundColor: theme.colors.elevation.level3 },
+        {
+          backgroundColor: backgroundColor ?? theme.colors.elevation.level3,
+        },
+        ...(height === dayNamesHeight ? [] : [{ height }]),
       ]}
     >
       {shortDayNames
@@ -52,7 +59,7 @@ function DayNames({
   )
 }
 
-export const dayNamesHeight = 44
+export const dayNamesHeight = 48
 
 const styles = StyleSheet.create({
   dayNames: {

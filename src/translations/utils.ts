@@ -52,6 +52,8 @@ export type TranslationsType = {
   close: string
   confirm?: string
   dateIsDisabled: string
+  enterDate?: string
+  enterDates?: string
   hour: string
   hourOf: (hour: number, total: number) => string
   minute: string

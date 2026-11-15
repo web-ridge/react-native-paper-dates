@@ -148,7 +148,7 @@ describe('remaining date branches', () => {
         />
       )
     )
-    await pressTestId(content, 'react-native-paper-dates-save')
+    await pressTestId(content, 'react-native-paper-dates-confirm')
 
     const color = '#6750A4'
     await render(
@@ -379,7 +379,7 @@ describe('branch edges', () => {
         />
       )
     )
-    await pressTestId(content, 'react-native-paper-dates-save')
+    await pressTestId(content, 'react-native-paper-dates-confirm')
     const layout = content.container.queryAll(
       (node: { props: { onLayout?: Function } }) => typeof node.props.onLayout === 'function'
     )[0]

@@ -3,13 +3,16 @@ import type { StyleProp, ViewStyle } from 'react-native'
 import Swiper from './Swiper'
 import Month from './Month'
 import {
+  addMonths,
   areDatesOnSameDay,
   dateToUnix,
   defaultEndYear,
   defaultStartYear,
+  getDaysInMonth,
   getEndOfDay,
   getInitialIndex,
 } from './dateUtils'
+import MonthMenu from './MonthMenu'
 import type {
   CalendarDate,
   CalendarDates,
@@ -28,7 +31,7 @@ import type {
   ValidRangeType,
 } from './types'
 import CalendarHeader from './CalendarHeader'
-import { memo, useCallback, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import YearPicker from './YearPicker'
 import { useTheme } from 'react-native-paper'
 import { themeColor, useLatest } from '../shared/utils'
@@ -45,7 +48,10 @@ export type BaseCalendarProps = {
   endDate?: CalendarDate
   endYear?: number
   initialLayout?: { height: number; width: number }
+  keyboardEnabled?: boolean
   locale: string
+  onKeyboardConfirm?: () => void
+  onSelectingYearChange?: (selectingYear: boolean) => void
   startDate?: CalendarDate
   startWeekOnMonday?: boolean
   startYear?: number
@@ -66,9 +72,12 @@ function Calendar(
     endDate,
     endYear,
     initialLayout,
+    keyboardEnabled = true,
     locale,
     mode,
+    onKeyboardConfirm,
     onChange,
+    onSelectingYearChange,
     startDate,
     startWeekOnMonday,
     startYear,
@@ -82,10 +91,47 @@ function Calendar(
   )
   const scrollMode =
     mode === 'range' || mode === 'multiple' ? 'vertical' : 'horizontal'
+  const [focusedDate, setFocusedDate] = useState<Date | undefined>(undefined)
+  const [navigateDate, setNavigateDate] = useState<Date | undefined>(undefined)
   const [selectedYear, setSelectedYear] = useState<number | undefined>(
     undefined
   )
+  const [selectingMonth, setSelectingMonth] = useState(false)
   const [selectingYear, setSelectingYear] = useState(false)
+
+  useEffect(() => {
+    onSelectingYearChange?.(scrollMode === 'horizontal' && selectingYear)
+  }, [onSelectingYearChange, scrollMode, selectingYear])
+  const onMoveFocus = useCallback(
+    (delta: number) => {
+      setFocusedDate((prev) => addMonths(prev || date || new Date(), delta))
+    },
+    [date]
+  )
+  const onOpenMonthMenu = useCallback(() => {
+    setSelectingYear(false)
+    setSelectingMonth((prev) => !prev)
+  }, [])
+  const onOpenYearMenu = useCallback(() => {
+    const year = (focusedDate || date || new Date()).getFullYear()
+    setSelectedYear(year)
+    setSelectingMonth(false)
+    setSelectingYear(true)
+  }, [date, focusedDate])
+  const onPressMonth = useCallback(
+    (month: number) => {
+      const base = focusedDate || date || new Date()
+      const day = Math.min(
+        base.getDate(),
+        getDaysInMonth({ month, year: base.getFullYear() })
+      )
+      const next = new Date(base.getFullYear(), month, day)
+      setFocusedDate(next)
+      setNavigateDate(next)
+      setSelectingMonth(false)
+    },
+    [date, focusedDate]
+  )
   const onPressYear = useCallback(
     (year: number) => {
       setSelectedYear(year)
@@ -147,18 +193,19 @@ function Calendar(
         onNext={onNext}
         onPrev={onPrev}
         scrollMode={scrollMode}
+        selectingYear={selectingYear}
         startWeekOnMonday={startWeekOnMondayValue}
       />
     ),
-    [disableWeekDays, locale, scrollMode, startWeekOnMondayValue]
+    [disableWeekDays, locale, scrollMode, selectingYear, startWeekOnMondayValue]
   )
   const theme = useTheme()
   const primaryColor = themeColor(theme.colors.primary)
   const roundness = theme.shapes.corner.extraSmall
-  const selectColor = theme.colors.primaryContainer
+  const selectColor = theme.colors.secondaryContainer
   const selectColorValue = themeColor(selectColor)
   const renderItem = useCallback(
-    ({ index }: { index: number }) => (
+    ({ active, index }: { active?: boolean; index: number }) => (
       <Month
         date={date}
         dates={dates}
@@ -168,10 +215,12 @@ function Calendar(
         disableWeekDays={disableWeekDays}
         endDate={endDate}
         endYear={endYear}
+        focusedDate={focusedDate}
         index={index}
         key={index}
         locale={locale}
         mode={mode}
+        onNavigateToDate={active === false ? undefined : setNavigateDate}
         onPressDate={onPressDate}
         onPressYear={onPressYear}
         primaryColor={primaryColor}
@@ -179,6 +228,7 @@ function Calendar(
         scrollMode={scrollMode}
         selectColor={selectColorValue}
         selectingYear={selectingYear}
+        showOutsideDays={scrollMode === 'horizontal' && active !== false}
         startDate={startDate}
         startWeekOnMonday={startWeekOnMondayValue}
         startYear={startYear}
@@ -194,6 +244,7 @@ function Calendar(
       disableWeekDays,
       endDate,
       endYear,
+      focusedDate,
       locale,
       mode,
       onPressDate,
@@ -214,8 +265,15 @@ function Calendar(
     <View style={[sharedStyles.root, sharedStyles.minHeightZero]}>
       <Swiper
         endYear={endYear}
+        focusDate={navigateDate}
         initialIndex={getInitialIndex(firstDate, startYear, endYear)}
         initialLayout={initialLayout}
+        keyboardEnabled={keyboardEnabled}
+        onFocusDate={setFocusedDate}
+        onKeyboardConfirm={onKeyboardConfirm}
+        onMoveFocus={onMoveFocus}
+        onOpenMonthMenu={onOpenMonthMenu}
+        onOpenYearMenu={onOpenYearMenu}
         renderHeader={renderHeader}
         renderItem={renderItem}
         scrollMode={scrollMode}
@@ -223,6 +281,13 @@ function Calendar(
         startWeekOnMonday={startWeekOnMondayValue}
         startYear={startYear}
       />
+      {scrollMode === 'horizontal' && selectingMonth ? (
+        <MonthMenu
+          locale={locale}
+          onPressMonth={onPressMonth}
+          selectedMonth={(focusedDate || date || new Date()).getMonth()}
+        />
+      ) : null}
       {scrollMode === 'horizontal' && selectingYear ? (
         <YearPicker
           endYear={endYear || defaultEndYear}

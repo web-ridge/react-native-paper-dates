@@ -5,17 +5,18 @@ import { Text, useTheme } from 'react-native-paper'
 function DayName({ label }: { label: string }) {
   const theme = useTheme()
 
-  const textFont = theme.fonts.bodySmall
+  const textFont = theme.fonts.bodyLarge
 
   return (
-    <View style={styles.dayName}>
+    <View
+      accessibilityElementsHidden
+      importantForAccessibility="no-hide-descendants"
+      style={styles.dayName}
+    >
       <Text
         maxFontSizeMultiplier={1.5}
         selectable={false}
-        style={[
-          styles.dayNameLabel,
-          { ...textFont, color: theme.colors.onSurfaceVariant },
-        ]}
+        style={[textFont, { color: theme.colors.onSurface }]}
       >
         {label}
       </Text>
@@ -27,9 +28,6 @@ const styles = StyleSheet.create({
   dayName: {
     alignItems: 'center',
     flex: 1,
-  },
-  dayNameLabel: {
-    fontSize: 14,
   },
 })
 

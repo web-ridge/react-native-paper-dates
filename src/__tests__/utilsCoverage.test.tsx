@@ -52,6 +52,23 @@ function withTheme(theme: object) {
 }
 
 describe('useDateInput', () => {
+  async function commit(
+    result: {
+      current: {
+        onBlur: () => void
+        onChangeText: (text: string) => void
+      }
+    },
+    text: string
+  ) {
+    await act(() => {
+      result.current.onChangeText(text)
+    })
+    await act(() => {
+      result.current.onBlur()
+    })
+  }
+
   async function input(props: Partial<Parameters<typeof useDateInput>[0]> = {}) {
     const onChange = jest.fn()
     const hook = await renderHook(() =>
@@ -73,19 +90,13 @@ describe('useDateInput', () => {
     expect(result.current.formattedValue).toBe('')
     const format = result.current.inputFormat
 
-    await act(() => {
-      result.current.onChangeText(fill(format, 'abcd', '01', '01'))
-    })
+    await commit(result, fill(format, 'abcd', '01', '01'))
     expect(result.current.error).toEqual(expect.any(String))
 
-    await act(() => {
-      result.current.onChangeText(fill(format, '2022', 'aa', '01'))
-    })
+    await commit(result, fill(format, '2022', 'aa', '01'))
     expect(result.current.error).toEqual(expect.any(String))
 
-    await act(() => {
-      result.current.onChangeText(fill(format, '2022', '01', 'aa'))
-    })
+    await commit(result, fill(format, '2022', '01', 'aa'))
     expect(result.current.error).toEqual(expect.any(String))
   })
 
@@ -102,22 +113,14 @@ describe('useDateInput', () => {
     })
     const format = result.current.inputFormat
 
-    await act(() => {
-      result.current.onChangeText(fill(format, '2022', '06', '15'))
-    })
+    await commit(result, fill(format, '2022', '06', '15'))
     expect(onValidationError).toHaveBeenCalledWith(expect.any(String))
     expect(onChange).not.toHaveBeenCalled()
 
-    await act(() => {
-      result.current.onChangeText(fill(format, '2022', '06', '01'))
-    })
-    await act(() => {
-      result.current.onChangeText(fill(format, '2022', '06', '28'))
-    })
+    await commit(result, fill(format, '2022', '06', '01'))
+    await commit(result, fill(format, '2022', '06', '28'))
 
-    await act(() => {
-      result.current.onChangeText(fill(format, '2022', '06', '12'))
-    })
+    await commit(result, fill(format, '2022', '06', '12'))
     expect(onChange).toHaveBeenCalled()
     expect(onValidationError).toHaveBeenCalledWith(null)
     expect(result.current.error).toBeNull()
@@ -130,52 +133,42 @@ describe('useDateInput', () => {
       value: new Date(2022, 5, 12),
     })
     expect(startOnly.result.current.formattedValue).not.toBe('')
-    await act(() => {
-      startOnly.result.current.onChangeText(
-        fill(startOnly.result.current.inputFormat, '2022', '06', '01')
-      )
-    })
-    await act(() => {
-      startOnly.result.current.onChangeText(
-        fill(startOnly.result.current.inputFormat, '2022', '06', '18')
-      )
-    })
+    await commit(
+      startOnly.result,
+      fill(startOnly.result.current.inputFormat, '2022', '06', '01')
+    )
+    await commit(
+      startOnly.result,
+      fill(startOnly.result.current.inputFormat, '2022', '06', '18')
+    )
     const confirmed = startOnly.onChange.mock.calls.at(-1)?.[0] as Date
     expect(confirmed.getHours()).toBe(23)
 
     const endOnly = await input({
       validRange: { endDate: new Date(2022, 5, 20) },
     })
-    await act(() => {
-      endOnly.result.current.onChangeText(
-        fill(endOnly.result.current.inputFormat, '2022', '06', '28')
-      )
-    })
-    await act(() => {
-      endOnly.result.current.onChangeText(
-        fill(endOnly.result.current.inputFormat, '2022', '06', '02')
-      )
-    })
+    await commit(
+      endOnly.result,
+      fill(endOnly.result.current.inputFormat, '2022', '06', '28')
+    )
+    await commit(
+      endOnly.result,
+      fill(endOnly.result.current.inputFormat, '2022', '06', '02')
+    )
     expect(endOnly.onChange).toHaveBeenCalled()
   })
 
   it('rejects a calendar day that does not exist', async () => {
     const { onChange, result } = await input()
     const format = result.current.inputFormat
-    await act(() => {
-      result.current.onChangeText(fill(format, '2022', '02', '31'))
-    })
+    await commit(result, fill(format, '2022', '02', '31'))
     expect(onChange).not.toHaveBeenCalled()
     expect(result.current.error).toEqual(expect.any(String))
 
-    await act(() => {
-      result.current.onChangeText(fill(format, '2022', '02', '29'))
-    })
+    await commit(result, fill(format, '2022', '02', '29'))
     expect(onChange).not.toHaveBeenCalled()
 
-    await act(() => {
-      result.current.onChangeText(fill(format, '2024', '02', '29'))
-    })
+    await commit(result, fill(format, '2024', '02', '29'))
     expect(onChange).toHaveBeenCalled()
     const parsed = onChange.mock.calls.at(-1)?.[0] as Date
     expect(parsed.getFullYear()).toBe(2024)
@@ -186,32 +179,25 @@ describe('useDateInput', () => {
 
   it('reads a portuguese year token', async () => {
     const { onChange, result } = await input({ locale: 'pt' })
-    await act(() => {
-      result.current.onChangeText(
-        fill(result.current.inputFormat, '2022', '06', '12')
-      )
-    })
+    await commit(
+      result,
+      fill(result.current.inputFormat, '2022', '06', '12')
+    )
     expect(onChange).toHaveBeenCalled()
   })
 
   it('parses Korean, Czech, and Arabic date formats', async () => {
     const korean = await input({ locale: 'ko' })
     expect(korean.result.current.inputFormat).toBe('YYYY. MM. DD.')
-    await act(() => {
-      korean.result.current.onChangeText('2024. 06. 15.')
-    })
+    await commit(korean.result, '2024. 06. 15.')
 
     const czech = await input({ locale: 'cs' })
     expect(czech.result.current.inputFormat).toBe('DD. MM. YYYY')
-    await act(() => {
-      czech.result.current.onChangeText('15. 06. 2024')
-    })
+    await commit(czech.result, '15. 06. 2024')
 
     const arabic = await input({ locale: 'ar' })
     expect(arabic.result.current.inputFormat).toBe('DD\u200f/MM\u200f/YYYY')
-    await act(() => {
-      arabic.result.current.onChangeText('15\u200f/06\u200f/2024')
-    })
+    await commit(arabic.result, '15\u200f/06\u200f/2024')
 
     for (const hook of [korean, czech, arabic]) {
       const parsed = hook.onChange.mock.calls.at(-1)?.[0] as Date
@@ -236,9 +222,7 @@ describe('useDateInput', () => {
       { initialProps: { value: undefined as Date | undefined } }
     )
     const format = hook.result.current.inputFormat
-    await act(() => {
-      hook.result.current.onChangeText(fill(format, '2022', '02', '31'))
-    })
+    await commit(hook.result, fill(format, '2022', '02', '31'))
     expect(hook.result.current.error).toEqual(expect.any(String))
 
     await act(() => {
@@ -251,9 +235,7 @@ describe('useDateInput', () => {
   it('parses a Thai input as a Gregorian date', async () => {
     const { onChange, result } = await input({ locale: 'th' })
     expect(result.current.inputFormat).toBe('DD/MM/YYYY')
-    await act(() => {
-      result.current.onChangeText('05/01/2024')
-    })
+    await commit(result, '05/01/2024')
     const parsed = onChange.mock.calls.at(-1)?.[0] as Date
     expect(parsed.getFullYear()).toBe(2024)
     expect(parsed.getMonth()).toBe(0)
@@ -264,9 +246,7 @@ describe('useDateInput', () => {
     const onValidationError = jest.fn()
     const broken = await input({ locale: 'zz', onValidationError })
     const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined)
-    await act(() => {
-      broken.result.current.onChangeText('not-a-date')
-    })
+    await commit(broken.result, 'not-a-date')
     expect(broken.result.current.error).toEqual(expect.any(String))
     expect(onValidationError).toHaveBeenCalled()
 
@@ -277,31 +257,28 @@ describe('useDateInput', () => {
         startDate: new Date(2022, 0, 1),
       },
     })
-    await act(() => {
-      bounded.result.current.onChangeText(
-        fill(bounded.result.current.inputFormat, '2022', '06', '12')
-      )
-    })
+    await commit(
+      bounded.result,
+      fill(bounded.result.current.inputFormat, '2022', '06', '12')
+    )
     expect(bounded.result.current.error).toEqual(expect.any(String))
 
     const startOnly = await input({
       locale: 'zz',
       validRange: { startDate: new Date(2022, 5, 20) },
     })
-    await act(() => {
-      startOnly.result.current.onChangeText(
-        fill(startOnly.result.current.inputFormat, '2022', '01', '02')
-      )
-    })
+    await commit(
+      startOnly.result,
+      fill(startOnly.result.current.inputFormat, '2022', '01', '02')
+    )
     const endOnly = await input({
       locale: 'zz',
       validRange: { endDate: new Date(2022, 0, 10) },
     })
-    await act(() => {
-      endOnly.result.current.onChangeText(
-        fill(endOnly.result.current.inputFormat, '2022', '06', '12')
-      )
-    })
+    await commit(
+      endOnly.result,
+      fill(endOnly.result.current.inputFormat, '2022', '06', '12')
+    )
     expect(endOnly.result.current.error).toEqual(expect.any(String))
     expect(warn).toHaveBeenCalled()
     warn.mockRestore()

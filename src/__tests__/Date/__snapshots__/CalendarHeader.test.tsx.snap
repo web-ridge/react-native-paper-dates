@@ -20,7 +20,7 @@ exports[`renders CalendarHeader 1`] = `
         {
           "alignItems": "center",
           "flexDirection": "row",
-          "height": 44,
+          "height": 48,
         },
         {
           "backgroundColor": "rgba(236, 230, 240, 1)",
@@ -29,6 +29,8 @@ exports[`renders CalendarHeader 1`] = `
     }
   >
     <View
+      accessibilityElementsHidden={true}
+      importantForAccessibility="no-hide-descendants"
       style={
         {
           "alignItems": "center",
@@ -55,15 +57,14 @@ exports[`renders CalendarHeader 1`] = `
             },
             [
               {
-                "fontSize": 14,
+                "fontFamily": "System",
+                "fontSize": 16,
+                "fontWeight": "400",
+                "letterSpacing": 0.5,
+                "lineHeight": 24,
               },
               {
-                "color": "rgba(73, 69, 79, 1)",
-                "fontFamily": "System",
-                "fontSize": 12,
-                "fontWeight": "400",
-                "letterSpacing": 0.4,
-                "lineHeight": 16,
+                "color": "rgba(29, 27, 32, 1)",
               },
             ],
           ]
@@ -73,6 +74,8 @@ exports[`renders CalendarHeader 1`] = `
       </Text>
     </View>
     <View
+      accessibilityElementsHidden={true}
+      importantForAccessibility="no-hide-descendants"
       style={
         {
           "alignItems": "center",
@@ -99,15 +102,14 @@ exports[`renders CalendarHeader 1`] = `
             },
             [
               {
-                "fontSize": 14,
+                "fontFamily": "System",
+                "fontSize": 16,
+                "fontWeight": "400",
+                "letterSpacing": 0.5,
+                "lineHeight": 24,
               },
               {
-                "color": "rgba(73, 69, 79, 1)",
-                "fontFamily": "System",
-                "fontSize": 12,
-                "fontWeight": "400",
-                "letterSpacing": 0.4,
-                "lineHeight": 16,
+                "color": "rgba(29, 27, 32, 1)",
               },
             ],
           ]
@@ -117,6 +119,8 @@ exports[`renders CalendarHeader 1`] = `
       </Text>
     </View>
     <View
+      accessibilityElementsHidden={true}
+      importantForAccessibility="no-hide-descendants"
       style={
         {
           "alignItems": "center",
@@ -143,15 +147,14 @@ exports[`renders CalendarHeader 1`] = `
             },
             [
               {
-                "fontSize": 14,
+                "fontFamily": "System",
+                "fontSize": 16,
+                "fontWeight": "400",
+                "letterSpacing": 0.5,
+                "lineHeight": 24,
               },
               {
-                "color": "rgba(73, 69, 79, 1)",
-                "fontFamily": "System",
-                "fontSize": 12,
-                "fontWeight": "400",
-                "letterSpacing": 0.4,
-                "lineHeight": 16,
+                "color": "rgba(29, 27, 32, 1)",
               },
             ],
           ]
@@ -161,6 +164,8 @@ exports[`renders CalendarHeader 1`] = `
       </Text>
     </View>
     <View
+      accessibilityElementsHidden={true}
+      importantForAccessibility="no-hide-descendants"
       style={
         {
           "alignItems": "center",
@@ -187,15 +192,14 @@ exports[`renders CalendarHeader 1`] = `
             },
             [
               {
-                "fontSize": 14,
+                "fontFamily": "System",
+                "fontSize": 16,
+                "fontWeight": "400",
+                "letterSpacing": 0.5,
+                "lineHeight": 24,
               },
               {
-                "color": "rgba(73, 69, 79, 1)",
-                "fontFamily": "System",
-                "fontSize": 12,
-                "fontWeight": "400",
-                "letterSpacing": 0.4,
-                "lineHeight": 16,
+                "color": "rgba(29, 27, 32, 1)",
               },
             ],
           ]
@@ -205,6 +209,8 @@ exports[`renders CalendarHeader 1`] = `
       </Text>
     </View>
     <View
+      accessibilityElementsHidden={true}
+      importantForAccessibility="no-hide-descendants"
       style={
         {
           "alignItems": "center",
@@ -231,15 +237,14 @@ exports[`renders CalendarHeader 1`] = `
             },
             [
               {
-                "fontSize": 14,
+                "fontFamily": "System",
+                "fontSize": 16,
+                "fontWeight": "400",
+                "letterSpacing": 0.5,
+                "lineHeight": 24,
               },
               {
-                "color": "rgba(73, 69, 79, 1)",
-                "fontFamily": "System",
-                "fontSize": 12,
-                "fontWeight": "400",
-                "letterSpacing": 0.4,
-                "lineHeight": 16,
+                "color": "rgba(29, 27, 32, 1)",
               },
             ],
           ]
@@ -249,6 +254,8 @@ exports[`renders CalendarHeader 1`] = `
       </Text>
     </View>
     <View
+      accessibilityElementsHidden={true}
+      importantForAccessibility="no-hide-descendants"
       style={
         {
           "alignItems": "center",
@@ -275,15 +282,14 @@ exports[`renders CalendarHeader 1`] = `
             },
             [
               {
-                "fontSize": 14,
+                "fontFamily": "System",
+                "fontSize": 16,
+                "fontWeight": "400",
+                "letterSpacing": 0.5,
+                "lineHeight": 24,
               },
               {
-                "color": "rgba(73, 69, 79, 1)",
-                "fontFamily": "System",
-                "fontSize": 12,
-                "fontWeight": "400",
-                "letterSpacing": 0.4,
-                "lineHeight": 16,
+                "color": "rgba(29, 27, 32, 1)",
               },
             ],
           ]
@@ -293,6 +299,8 @@ exports[`renders CalendarHeader 1`] = `
       </Text>
     </View>
     <View
+      accessibilityElementsHidden={true}
+      importantForAccessibility="no-hide-descendants"
       style={
         {
           "alignItems": "center",
@@ -319,15 +327,14 @@ exports[`renders CalendarHeader 1`] = `
             },
             [
               {
-                "fontSize": 14,
+                "fontFamily": "System",
+                "fontSize": 16,
+                "fontWeight": "400",
+                "letterSpacing": 0.5,
+                "lineHeight": 24,
               },
               {
-                "color": "rgba(73, 69, 79, 1)",
-                "fontFamily": "System",
-                "fontSize": 12,
-                "fontWeight": "400",
-                "letterSpacing": 0.4,
-                "lineHeight": 16,
+                "color": "rgba(29, 27, 32, 1)",
               },
             ],
           ]

@@ -20,6 +20,7 @@ export type DatePickerInputProps = {
   onChange: (date: Date | undefined) => void
   onChangeText?: (text: string | undefined) => void
   onValidationError?: (error: string | null) => void
+  presentation?: 'auto' | 'modal' | 'docked'
   presentationStyle?: 'pageSheet' | 'overFullScreen'
   saveLabel?: string
   saveLabelDisabled?: boolean

@@ -1,4 +1,9 @@
-import { useInputFormat, useInputFormatter, useRangeChecker } from './dateUtils'
+import {
+  parseLooseDate,
+  useInputFormat,
+  useInputFormatter,
+  useRangeChecker,
+} from './dateUtils'
 import type { ValidRangeType } from './types'
 import { getTranslation } from '../translations/utils'
 import { useEffect, useRef, useState } from 'react'
@@ -13,12 +18,15 @@ export default function useDateInput({
 }: {
   inputMode: 'start' | 'end'
   locale: string | undefined
-  onChange: (d: Date) => void
+  onChange: (d: Date | undefined) => void
   onValidationError?: (error: string | null) => void
   validRange: ValidRangeType | undefined
   value: Date | undefined
 }) {
+  const [draft, setDraft] = useState('')
   const [error, setError] = useState<null | string>(null)
+  const [focused, setFocused] = useState(false)
+  const [rejected, setRejected] = useState<null | string>(null)
   const errorRef = useRef(error)
   const formatter = useInputFormatter({ locale })
   const formattedValue = value ? formatter.format(value) : ''
@@ -31,6 +39,7 @@ export default function useDateInput({
   useEffect(() => {
     if (reportedValue.current === value) return
     reportedValue.current = value
+    setRejected(null)
     if (!errorRef.current) return
     setError(null)
     onValidationErrorRef.current?.(null)
@@ -39,15 +48,12 @@ export default function useDateInput({
   const { isDisabled, isWithinValidRange, validEnd, validStart } =
     useRangeChecker(validRange)
 
-  const onChangeText = (date: string) => {
-    const dayIndex = inputFormat.indexOf('DD')
-    const day = Number(date.slice(dayIndex, dayIndex + 2))
-    const monthIndex = inputFormat.indexOf('MM')
-    const month = Number(date.slice(monthIndex, monthIndex + 2))
-    const report = (inputError: string | null) => {
-      setError(inputError)
-      onValidationError?.(inputError)
-    }
+  const report = (inputError: string | null) => {
+    setError(inputError)
+    onValidationError?.(inputError)
+  }
+
+  const commit = (text: string) => {
     const rejectFormat = () => {
       report(
         getTranslation(
@@ -56,25 +62,23 @@ export default function useDateInput({
           () => 'notAccordingToDateFormat'
         )(inputFormat)
       )
+      setRejected(text)
     }
-    const yearIndex =
-      locale === 'pt'
-        ? inputFormat.indexOf('AAAA')
-        : inputFormat.indexOf('YYYY')
-    const year = Number(date.slice(yearIndex, yearIndex + 4))
+    const trimmed = text.trim()
+    if (!trimmed) {
+      report(null)
+      setRejected(null)
+      onChange(undefined)
+      return
+    }
 
-    if (
-      dayIndex < 0 ||
-      monthIndex < 0 ||
-      yearIndex < 0 ||
-      Number.isNaN(day) ||
-      Number.isNaN(year) ||
-      Number.isNaN(month)
-    ) {
+    const parsed = parseLooseDate(trimmed, inputFormat)
+    if (!parsed) {
       rejectFormat()
       return
     }
 
+    const { day, month, year } = parsed
     const finalDate =
       inputMode === 'end'
         ? new Date(year, month - 1, day, 23, 59, 59)
@@ -91,6 +95,7 @@ export default function useDateInput({
 
     if (isDisabled(finalDate)) {
       report(getTranslation(locale, 'dateIsDisabled'))
+      setRejected(text)
       return
     }
     if (!isWithinValidRange(finalDate)) {
@@ -120,17 +125,41 @@ export default function useDateInput({
                 : '',
             ]
       report(errors.filter((message) => message).join(' '))
+      setRejected(text)
       return
     }
 
     report(null)
+    setRejected(null)
     onChange(finalDate)
   }
+
+  const onChangeText = (text: string) => {
+    setDraft(text)
+    if (rejected) setRejected(null)
+  }
+
+  const onFocus = () => {
+    setDraft(rejected ?? formattedValue)
+    setFocused(true)
+  }
+
+  const onBlur = () => {
+    setFocused(false)
+    commit(draft)
+  }
+
+  const displayedValue = focused ? draft : (rejected ?? formattedValue)
+
   return {
+    displayedValue,
     error,
     formattedValue,
     inputFormat,
+    onBlur,
     onChange,
     onChangeText,
+    onFocus,
+    onSubmitEditing: () => commit(focused ? draft : displayedValue),
   }
 }

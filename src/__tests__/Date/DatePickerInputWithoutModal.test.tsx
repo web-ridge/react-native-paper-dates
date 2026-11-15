@@ -18,6 +18,7 @@ it('leaves the label empty when no format suffix is requested', async () => {
   const screen = await render(
     <DatePickerInputWithoutModal
       inputMode="start"
+      label="When"
       locale="en"
       onChange={() => null}
       value={undefined}
@@ -26,7 +27,9 @@ it('leaves the label empty when no format suffix is requested', async () => {
   )
   const field = screen.container.queryAll(
     (node: { props: { keyboardType?: string } }) =>
-      node.props.keyboardType === 'number-pad'
+      node.props.keyboardType === 'default'
   )[0]
-  expect(field?.props['aria-label']).toBe('')
+  const accessibleName = String(field?.props['aria-label'] ?? '')
+  expect(accessibleName).toContain('When')
+  expect(accessibleName).not.toContain('(MM/DD/YYYY)')
 })

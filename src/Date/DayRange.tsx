@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native'
-import { daySize } from './dateUtils'
+import { dayCellSize, daySize } from './dateUtils'
 import { memo } from 'react'
 import { sharedStyles } from '../shared/styles'
 
@@ -22,7 +22,7 @@ function DayRange({
       <View
         pointerEvents="none"
         style={[
-          StyleSheet.absoluteFill,
+          styles.bar,
           sharedStyles.flexDirectionRow,
           bothWays && styles.rangeRootBoth,
           !isCrop
@@ -74,6 +74,13 @@ function DayRange({
 }
 
 const styles = StyleSheet.create({
+  bar: {
+    height: daySize,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: (dayCellSize - daySize) / 2,
+  },
   leftRadius: {
     borderBottomLeftRadius: daySize / 2,
     borderTopLeftRadius: daySize / 2,

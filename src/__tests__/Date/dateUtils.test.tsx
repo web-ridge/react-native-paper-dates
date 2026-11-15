@@ -17,6 +17,7 @@ import {
   getTotalMonths,
   isDateWithinOptionalRange,
   isLeapYear,
+  parseLooseDate,
   showWeekDay,
   useInputFormat,
   useInputFormatter,
@@ -64,6 +65,30 @@ describe('dateUtils', () => {
 
   it('should indicate year is not a leap year', () => {
     expect(isLeapYear({ year: 2022 })).toBeFalsy()
+  })
+
+  it('parses loose dates in locale field order', () => {
+    expect(parseLooseDate('1/2/2026', 'MM/DD/YYYY')).toEqual({
+      day: 2,
+      month: 1,
+      year: 2026,
+    })
+    expect(parseLooseDate('1-2-2026', 'DD-MM-YYYY')).toEqual({
+      day: 1,
+      month: 2,
+      year: 2026,
+    })
+    expect(parseLooseDate('2026.01.02', 'YYYY.MM.DD')).toEqual({
+      day: 2,
+      month: 1,
+      year: 2026,
+    })
+    expect(parseLooseDate('01022026', 'MM/DD/YYYY')).toEqual({
+      day: 2,
+      month: 1,
+      year: 2026,
+    })
+    expect(parseLooseDate('1 2', 'MM/DD/YYYY')).toBeNull()
   })
 
   it('should return correct gridCount for October 2021', () => {

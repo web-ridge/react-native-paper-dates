@@ -7,7 +7,13 @@ import {
   getVerticalMonthsOffset,
   horizontalMonthScrolls,
 } from './Month'
-import { defaultEndYear, defaultStartYear, getBeginOffset } from './dateUtils'
+import {
+  addMonths,
+  defaultEndYear,
+  defaultStartYear,
+  getBeginOffset,
+  getRealIndex,
+} from './dateUtils'
 import { useLatest } from '../shared/utils'
 import {
   getMaxIndex,
@@ -17,8 +23,10 @@ import {
   nextVisibleIndexes,
   type RenderProps,
   type SwiperProps,
+  useFocusDate,
   useYearChange,
 } from './SwiperUtils'
+import { useDatePickerKeys } from './datePickerKeys'
 import AutoSizer from './AutoSizer'
 import {
   memo,
@@ -36,8 +44,15 @@ const empty = () => null
 
 function Swiper({
   endYear,
+  focusDate,
   initialIndex,
   initialLayout,
+  keyboardEnabled = true,
+  onFocusDate,
+  onKeyboardConfirm,
+  onMoveFocus,
+  onOpenMonthMenu,
+  onOpenYearMenu,
   renderFooter,
   renderHeader,
   renderItem,
@@ -73,6 +88,34 @@ function Swiper({
     onNext,
     onPrev,
   }
+  useFocusDate(
+    (newIndex) => {
+      if (
+        newIndex !== undefined &&
+        isIndexWithinRange(newIndex, startYear, endYear)
+      ) {
+        setIndex(newIndex)
+      }
+    },
+    {
+      currentIndexRef: indexRef,
+      endYear,
+      focusDate,
+      startYear,
+    }
+  )
+
+  useDatePickerKeys(keyboardEnabled, {
+    getVisibleMonth: () =>
+      addMonths(new Date(), getRealIndex(indexRef.current, startYear, endYear)),
+    onConfirm: onKeyboardConfirm,
+    onFocusDate,
+    onMoveFocus,
+    onMoveMonth: shiftIndex,
+    onOpenMonthMenu,
+    onOpenYearMenu,
+  })
+
   useYearChange(
     (newIndex) => {
       if (newIndex && isIndexWithinRange(newIndex, startYear, endYear)) {
@@ -102,6 +145,7 @@ function Swiper({
             return (
               <>
                 {renderItem({
+                  active: true,
                   index,
                   onNext,
                   onPrev,

@@ -1,6 +1,6 @@
 # Single Date Picker
 
-The single date picker provides a modal allowing only a single date selection.
+The single date picker provides a modal allowing only a single date selection. On compact screens it is full screen, with Close and Save at the top. On medium and expanded screens it is a 360×568 dialog with Cancel and OK at the bottom.
 
 ## Usage
 
@@ -80,6 +80,10 @@ The currently selected date.
 **dateMode**  
 `Type: 'start' | 'end' | undefined`  
 Controls how the confirmed date is normalized. Use `'end'` to set the time to the end of the day; otherwise the start of the day is used.
+
+**displayMode**  
+`Type: 'calendar' | 'input' | undefined`  
+Initial view. `'input'` opens the modal date input, for dates such as a birth date that do not need a calendar first. Defaults to `'calendar'`. The edit icon still switches between the two views.
 
 **dayContent**  
 `Type: ((params: {
@@ -178,11 +182,11 @@ iOS modal presentation style. Defaults to `'overFullScreen'`.
 
 - `'overFullScreen'`: Full-screen overlay (default).
 - `'pageSheet'`: Card-style sheet. On iPad (width and height > 650pt), automatically uses `formSheet` for a better fit.
-- `'formSheet'`: Centered form sheet (~540×620pt on iPad).
+- `'formSheet'`: Centered form sheet. The picker itself stays 360×568.
 
 **saveLabel**  
 `Type: string | undefined`  
-Confirm button label. Defaults to the locale translation for `save` (English: `'Save'`).
+Confirm button label. Compact screens default to `save` (English: `'Save'`). Larger screens default to `confirm` (English: `'OK'`) when this is omitted.
 
 **saveLabelDisabled**  
 `Type: boolean | undefined`  

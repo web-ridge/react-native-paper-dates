@@ -5,6 +5,7 @@ import {
   defaultEndYear,
   defaultStartYear,
   differenceInMonths,
+  getInitialIndex,
   getRealIndex,
   getStartAtIndex,
   getTotalMonths,
@@ -99,6 +100,7 @@ export function sameIndexes(left: number[], right: number[]) {
 }
 
 export type RenderProps = {
+  active?: boolean
   endInset?: number
   index: number
   onNext: () => void
@@ -107,8 +109,15 @@ export type RenderProps = {
 
 export type SwiperProps = {
   endYear?: number
+  focusDate?: Date
   initialIndex: number
   initialLayout?: { height: number; width: number }
+  keyboardEnabled?: boolean
+  onFocusDate?: (date: Date) => void
+  onKeyboardConfirm?: () => void
+  onMoveFocus?: (deltaMonths: number) => void
+  onOpenMonthMenu?: () => void
+  onOpenYearMenu?: () => void
   renderFooter?: (renderProps: RenderProps) => ReactNode
   renderHeader?: (renderProps: RenderProps) => ReactNode
   renderItem: (renderProps: RenderProps) => ReactNode
@@ -116,6 +125,32 @@ export type SwiperProps = {
   selectedYear: number | undefined
   startWeekOnMonday: boolean
   startYear?: number
+}
+
+export function useFocusDate(
+  onChange: (index: number | undefined) => void,
+  {
+    currentIndexRef,
+    endYear,
+    focusDate,
+    startYear,
+  }: {
+    currentIndexRef: MutableRefObject<number>
+    endYear?: number
+    focusDate?: Date
+    startYear?: number
+  }
+) {
+  const onChangeRef = useLatest(onChange)
+  const focusTime = focusDate?.getTime()
+  useEffect(() => {
+    if (focusTime === undefined) return
+    const newIndex = getInitialIndex(new Date(focusTime), startYear, endYear)
+    if (!isIndexWithinRange(newIndex, startYear, endYear)) return
+    if (currentIndexRef.current !== newIndex) {
+      onChangeRef.current(newIndex)
+    }
+  }, [currentIndexRef, endYear, focusTime, onChangeRef, startYear])
 }
 
 export function useYearChange(

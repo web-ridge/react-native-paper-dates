@@ -163,7 +163,6 @@ function CalendarDateField({
   value: LocalState['date']
   withDateFormatInLabel?: boolean
 }) {
-  const inputStyle = { backgroundColor: surfaceColor }
   const inputTheme = { colors: { background: surfaceColor } }
 
   return (
@@ -178,7 +177,6 @@ function CalendarDateField({
       placeholder={placeholder}
       ref={inputRef}
       returnKeyType={returnKeyType}
-      style={inputStyle}
       theme={inputTheme}
       validRange={validRange}
       value={value}

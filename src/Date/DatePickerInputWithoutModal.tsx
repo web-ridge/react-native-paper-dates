@@ -1,10 +1,15 @@
-import TextInputWithMask from '../TextInputMask'
-import { useTheme } from 'react-native-paper'
+import { TextInput, useTheme } from 'react-native-paper'
+import type { TextInputHandles } from 'react-native-paper'
 import { StyleSheet, View } from 'react-native'
 import useDateInput from './inputUtils'
 import type { DatePickerInputProps } from './DatePickerInput.shared'
-import { forwardRef, type ReactNode, type Ref } from 'react'
-import type { TextInputHandles } from 'react-native-paper'
+import {
+  cloneElement,
+  forwardRef,
+  isValidElement,
+  type ReactNode,
+  type Ref,
+} from 'react'
 
 function DatePickerInputWithoutModal(
   {
@@ -30,7 +35,7 @@ function DatePickerInputWithoutModal(
     uppercase: _uppercase,
     validRange,
     value,
-    withDateFormatInLabel = true,
+    withDateFormatInLabel = false,
     ...rest
   }: DatePickerInputProps & {
     inputButton?: ReactNode
@@ -41,10 +46,13 @@ function DatePickerInputWithoutModal(
   let disabled
 
   const {
+    displayedValue,
     error,
-    formattedValue,
     inputFormat,
+    onBlur,
     onChangeText: onDateInputChangeText,
+    onFocus,
+    onSubmitEditing,
   } = useDateInput({
     inputMode,
     locale,
@@ -64,33 +72,52 @@ function DatePickerInputWithoutModal(
     disabled = rest.disabled
   }
 
+  const helperText =
+    error && !hideValidationErrors ? error : rest.supportingText
+
   return (
     <>
       <View style={styles.root}>
         <View style={styles.inputContainer}>
-          <TextInputWithMask
+          <TextInput
             {...rest}
             disabled={disabled}
+            endAccessory={
+              isValidElement(inputButton)
+                ? (props) => cloneElement(inputButton, props)
+                : undefined
+            }
             error={(!!error && !hideValidationErrors) || !!hasError}
-            inputButton={inputButton}
             keyboardAppearance={
               rest.keyboardAppearance ?? (theme.dark ? 'dark' : 'default')
             }
-            keyboardType={rest.keyboardType ?? 'number-pad'}
+            keyboardType={rest.keyboardType ?? 'default'}
             label={getLabel({
               inputFormat,
               label,
               withDateFormatInLabel,
             })}
-            mask={inputFormat}
-            onChange={(e) => onChangeText?.(e.nativeEvent.text)}
-            onChangeText={onDateInputChangeText}
+            onBlur={(event) => {
+              onBlur()
+              rest.onBlur?.(event)
+            }}
+            onChangeText={(text) => {
+              onDateInputChangeText(text)
+              onChangeText?.(text)
+            }}
+            onFocus={(event) => {
+              onFocus()
+              rest.onFocus?.(event)
+            }}
+            onSubmitEditing={(event) => {
+              onSubmitEditing()
+              rest.onSubmitEditing?.(event)
+            }}
+            placeholder={rest.placeholder ?? inputFormat}
             ref={ref}
             style={style}
-            supportingText={
-              error && !hideValidationErrors ? error : rest.supportingText
-            }
-            value={formattedValue}
+            supportingText={helperText}
+            value={displayedValue}
           />
         </View>
       </View>

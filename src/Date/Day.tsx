@@ -2,7 +2,7 @@ import { Text } from 'react-native-paper'
 import { Pressable, StyleSheet, View } from 'react-native'
 import type { StyleProp, ViewStyle } from 'react-native'
 import DayRange from './DayRange'
-import { daySize } from './dateUtils'
+import { dayCellSize, daySize } from './dateUtils'
 
 import type { PaperTheme } from '../shared/utils'
 import type { DayContentPosition, DayContentRenderer } from './types'
@@ -28,12 +28,14 @@ function Day(props: {
   dayContentPosition?: DayContentPosition
   dayContentStyle?: StyleProp<ViewStyle>
   disabled: boolean
+  focused?: boolean
   inRange: boolean
   isToday: boolean
   leftCrop: boolean
   locale?: string
   month: number
   onPressDate: (date: Date) => void
+  outside?: boolean
   primaryColor: string
   rightCrop: boolean
   selectColor: string
@@ -48,12 +50,14 @@ function Day(props: {
     dayContentPosition,
     dayContentStyle,
     disabled,
+    focused,
     inRange,
     isToday,
     leftCrop,
     locale,
     month,
     onPressDate,
+    outside,
     primaryColor,
     rightCrop,
     selectColor,
@@ -68,27 +72,30 @@ function Day(props: {
       new Intl.DateTimeFormat(locale, {
         day: 'numeric',
         month: 'long',
+        weekday: 'long',
         year: 'numeric',
       }).format(new Date(year, month, day)),
     [day, locale, month, year]
   )
 
   const borderColor = theme.colors.primary
+  const muted = (disabled || outside) && !selected
   const baseTextColor = selected
     ? textColorOnPrimary
-    : inRange && theme.dark
-      ? theme.colors.onPrimaryContainer
+    : inRange && !disabled
+      ? theme.colors.onSecondaryContainer
       : theme.colors.onSurface
-  const textColor = isToday && !selected ? theme.colors.primary : baseTextColor
+  const textColor =
+    isToday && !selected && !disabled ? theme.colors.primary : baseTextColor
 
   const onPress = useCallback(() => {
     onPressDate(new Date(year, month, day))
   }, [onPressDate, year, month, day])
 
-  const textFont = theme.fonts.bodySmall
+  const textFont = theme.fonts.bodyLarge
 
   return (
-    <View style={[styles.root, disabled && styles.disabled]}>
+    <View style={styles.root}>
       <DayRange
         inRange={inRange}
         leftCrop={leftCrop}
@@ -101,48 +108,50 @@ function Day(props: {
         accessibilityState={{ disabled, selected }}
         disabled={disabled}
         onPress={disabled ? undefined : onPress}
-        style={[
-          styles.button,
-          { backgroundColor: inRange ? selectColor : undefined },
-        ]}
+        style={styles.button}
         testID={`react-native-paper-dates-day-${year}-${month}-${day}`}
       >
         <View
           style={[
             styles.day,
-            isToday ? { borderColor: borderColor } : null,
-            selected ? { backgroundColor: primaryColor } : null,
+            isToday && !selected && !disabled
+              ? { borderColor: borderColor }
+              : null,
+            focused && !selected && !disabled
+              ? [styles.focused, { borderColor }]
+              : null,
+            selected && !disabled ? { backgroundColor: primaryColor } : null,
           ]}
         >
           <Text
             maxFontSizeMultiplier={1.5}
             selectable={false}
-            style={[{ color: textColor }, textFont]}
+            style={[{ color: textColor }, textFont, muted && styles.muted]}
           >
             {day}
           </Text>
         </View>
+        {dayContent ? (
+          <View
+            pointerEvents="none"
+            style={[
+              styles.content,
+              contentPositions[dayContentPosition || 'bottom'],
+              dayContentStyle,
+            ]}
+          >
+            {dayContent({
+              date: new Date(year, month, day),
+              day,
+              disabled,
+              isToday,
+              month,
+              selected,
+              year,
+            })}
+          </View>
+        ) : null}
       </Pressable>
-      {dayContent ? (
-        <View
-          pointerEvents="none"
-          style={[
-            styles.content,
-            contentPositions[dayContentPosition || 'bottom'],
-            dayContentStyle,
-          ]}
-        >
-          {dayContent({
-            date: new Date(year, month, day),
-            day,
-            disabled,
-            isToday,
-            month,
-            selected,
-            year,
-          })}
-        </View>
-      ) : null}
     </View>
   )
 }
@@ -155,10 +164,10 @@ export const EmptyDay = memo(EmptyDayPure)
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: daySize / 2,
-    height: daySize,
-    overflow: 'hidden',
-    width: daySize,
+    alignItems: 'center',
+    height: dayCellSize,
+    justifyContent: 'center',
+    width: dayCellSize,
   },
   content: {
     height: daySize,
@@ -170,14 +179,15 @@ const styles = StyleSheet.create({
     borderColor: 'transparent',
     borderRadius: daySize / 2,
     borderWidth: 1,
-    flex: 1,
-    flexBasis: 0,
     height: daySize,
     justifyContent: 'center',
     width: daySize,
   },
-  disabled: {
-    opacity: 0.3,
+  focused: {
+    borderWidth: 2,
+  },
+  muted: {
+    opacity: 0.38,
   },
   empty: {
     flex: 1,

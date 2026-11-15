@@ -1,5 +1,5 @@
 import { Platform, StyleSheet, View } from 'react-native'
-import { IconButton, useTheme } from 'react-native-paper'
+import { IconButton } from 'react-native-paper'
 import DayNames, { dayNamesHeight } from './DayNames'
 import type { DisableWeekDaysType } from './types'
 import { centerIconOnLastWeekday } from './weekdayColumns'
@@ -22,6 +22,7 @@ function CalendarHeader({
   onNext,
   onPrev,
   scrollMode,
+  selectingYear = false,
   startWeekOnMonday,
 }: {
   disableWeekDays?: DisableWeekDaysType
@@ -30,10 +31,10 @@ function CalendarHeader({
   onNext: () => void
   onPrev: () => void
   scrollMode: 'horizontal' | 'vertical'
+  selectingYear?: boolean
   startWeekOnMonday: boolean
 }) {
   const isHorizontal = scrollMode === 'horizontal'
-  const theme = useTheme()
 
   return (
     <View
@@ -47,30 +48,33 @@ function CalendarHeader({
       {isHorizontal ? (
         <View pointerEvents={'box-none'} style={styles.buttonContainer}>
           <View pointerEvents={'box-none'} style={sharedStyles.root} />
-          <View
-            style={[
-              styles.arrowGroup,
-              {
-                backgroundColor: theme.colors.elevation.level3,
-              },
-              centerIconOnLastWeekday(disableWeekDays),
-            ]}
-          >
-            <IconButton
-              accessibilityLabel={getTranslation(locale, 'previous')}
-              icon="chevron-left"
-              onPress={onPrev}
-              style={styles.arrowButton}
-              testID="react-native-paper-dates-prev-month"
-            />
-            <IconButton
-              accessibilityLabel={getTranslation(locale, 'next')}
-              icon="chevron-right"
-              onPress={onNext}
-              style={styles.arrowButton}
-              testID="react-native-paper-dates-next-month"
-            />
-          </View>
+          {selectingYear ? null : (
+            <View
+              style={[
+                styles.arrowGroup,
+                centerIconOnLastWeekday(disableWeekDays),
+              ]}
+            >
+              <IconButton
+                accessibilityHint="Page Up"
+                accessibilityLabel={getTranslation(locale, 'previous')}
+                icon="chevron-left"
+                onPress={onPrev}
+                size={24}
+                style={styles.arrowButton}
+                testID="react-native-paper-dates-prev-month"
+              />
+              <IconButton
+                accessibilityHint="Page Down"
+                accessibilityLabel={getTranslation(locale, 'next')}
+                icon="chevron-right"
+                onPress={onNext}
+                size={24}
+                style={styles.arrowButton}
+                testID="react-native-paper-dates-next-month"
+              />
+            </View>
+          )}
         </View>
       ) : null}
       <DayNames
@@ -112,7 +116,9 @@ export function layoutScrollbarWidth(): number {
 
 const styles = StyleSheet.create({
   arrowButton: {
+    height: 48,
     margin: 0,
+    width: 48,
   },
   arrowGroup: {
     alignItems: 'center',

@@ -1,6 +1,6 @@
 # Input Date Picker
 
-The input date picker provides a text field allowing for a date to be input or the date picker to be opened and selected.
+The input date picker provides a text field for typing a date, plus a calendar icon that opens a picker. On compact screens the icon opens a full-screen modal. On medium and expanded screens (width and height over 650) it opens a docked calendar under the field. Typed text is kept as entered and formatted only after blur or submit. The field accepts `/`, `-`, `.`, and spaces, including a single-digit month or day.
 
 ## Usage
 
@@ -99,7 +99,7 @@ Label displayed on the text field.
 
 **locale (Required)**  
 `Type: string`  
-Locale used for formatting, masking, and translations (for example `'en'` or `'de'`).
+Locale used for formatting and translations (for example `'en'` or `'de'`).
 
 **variant**  
 `Type: 'filled' | 'outlined' | undefined`  
@@ -107,7 +107,7 @@ Paper 6 TextInput variant. See [react-native-paper TextInput](https://oss.callst
 
 **onChange**  
 `Type: (date: Date | undefined) => void`  
-Called when a valid date is entered or confirmed from the modal.
+Called when a valid date is committed on blur or submit, or confirmed from the picker.
 
 **onChangeText**  
 `Type: (text: string | undefined) => void`  
@@ -116,6 +116,14 @@ Called when the underlying text input value changes.
 **onValidationError**  
 `Type: ((error: string | null) => void) | undefined`  
 Called with validation error messages, or `null` when valid.
+
+**presentation**  
+`Type: 'auto' | 'modal' | 'docked' | undefined`  
+Which picker the calendar icon opens. Defaults to `'auto'`.
+
+- `'auto'`: Docked calendar when both window dimensions are over 650; otherwise the full-screen modal.
+- `'modal'`: Always open `DatePickerModal`.
+- `'docked'`: Always open the 360dp docked calendar, anchored under the field.
 
 **presentationStyle**  
 `Type: 'pageSheet' | 'overFullScreen' | undefined`  
@@ -126,7 +134,7 @@ iOS modal presentation style. Defaults to `'overFullScreen'`.
 
 **saveLabel**  
 `Type: string | undefined`  
-Confirm button label in the modal. Defaults to the locale translation for `save` (English: `'Save'`).
+Confirm button label. The compact modal defaults to `save` (English: `'Save'`). The docked picker and the large-screen dialog default to `confirm` (English: `'OK'`) when this is omitted.
 
 **saveLabelDisabled**  
 `Type: boolean | undefined`  
@@ -158,7 +166,7 @@ The current date value.
 
 **withDateFormatInLabel**  
 `Type: boolean | undefined`  
-When `true`, appends the expected date format to the label. Defaults to `true`.
+When `true`, appends the expected date format to the label. Defaults to `false`. The format is the field placeholder unless `placeholder` is set.
 
 **withModal**  
 `Type: boolean | undefined`  

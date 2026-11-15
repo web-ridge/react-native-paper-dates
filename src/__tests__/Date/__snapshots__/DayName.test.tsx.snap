@@ -2,6 +2,8 @@
 
 exports[`renders DayName 1`] = `
 <View
+  accessibilityElementsHidden={true}
+  importantForAccessibility="no-hide-descendants"
   style={
     {
       "alignItems": "center",
@@ -28,15 +30,14 @@ exports[`renders DayName 1`] = `
         },
         [
           {
-            "fontSize": 14,
+            "fontFamily": "System",
+            "fontSize": 16,
+            "fontWeight": "400",
+            "letterSpacing": 0.5,
+            "lineHeight": 24,
           },
           {
-            "color": "rgba(73, 69, 79, 1)",
-            "fontFamily": "System",
-            "fontSize": 12,
-            "fontWeight": "400",
-            "letterSpacing": 0.4,
-            "lineHeight": 16,
+            "color": "rgba(29, 27, 32, 1)",
           },
         ],
       ]

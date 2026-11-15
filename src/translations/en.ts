@@ -6,6 +6,8 @@ const en: TranslationsType = {
   close: 'Close',
   confirm: 'OK',
   dateIsDisabled: 'Day is not allowed',
+  enterDate: 'Enter date',
+  enterDates: 'Enter dates',
   hour: 'Hour',
   hourOf: (hour, total) => `Hour ${hour} of ${total}`,
   minute: 'Minute',

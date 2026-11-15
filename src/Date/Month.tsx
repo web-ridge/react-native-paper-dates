@@ -7,9 +7,8 @@ import {
   adjacentDayKey,
   areDatesOnSameDay,
   calendarDateKey,
-  calendarDayKey,
   dateToUnix,
-  daySize,
+  dayCellSize,
   defaultEndYear,
   defaultStartYear,
   estimatedMonthHeight,
@@ -51,9 +50,12 @@ interface BaseMonthProps {
   disableWeekDays?: DisableWeekDaysType
   endDate?: CalendarDate
   endYear?: number
+  focusedDate?: CalendarDate
+  hideHeader?: boolean
   index: number
   locale: string | undefined
   mode: ModeType
+  onNavigateToDate?: (date: Date) => void
   onPressDate: (date: Date) => void
   onPressYear: (year: number) => void
   primaryColor: string
@@ -61,6 +63,7 @@ interface BaseMonthProps {
   scrollMode: 'horizontal' | 'vertical'
   selectColor: string
   selectingYear: boolean
+  showOutsideDays?: boolean
   startDate?: CalendarDate
   startWeekOnMonday: boolean
   startYear?: number
@@ -229,9 +232,12 @@ function Month(props: BaseMonthProps & CalendarMode) {
     disableWeekDays,
     endDate,
     endYear,
+    focusedDate,
+    hideHeader,
     index,
     locale,
     mode,
+    onNavigateToDate,
     onPressDate,
     onPressYear,
     primaryColor,
@@ -239,6 +245,7 @@ function Month(props: BaseMonthProps & CalendarMode) {
     scrollMode,
     selectColor,
     selectingYear,
+    showOutsideDays,
     startDate,
     startWeekOnMonday,
     startYear,
@@ -333,7 +340,7 @@ function Month(props: BaseMonthProps & CalendarMode) {
                 inRange = false
               }
             } else if (mode === 'multiple') {
-              const dayKey = calendarDayKey(year, month, dayOfMonth)
+              const dayKey = calendarDateKey(day)
               selected = selectedKeys.has(dayKey)
 
               const tomorrowSelected = selectedKeys.has(
@@ -387,16 +394,17 @@ function Month(props: BaseMonthProps & CalendarMode) {
               afterWeekDay,
               beforeWeekDay,
               dayIndex,
-              dayOfMonth,
+              dayOfMonth: day.getDate(),
               disabled,
               inRange,
               isToday,
               leftCrop,
               mode,
-              month,
+              month: day.getMonth(),
+              outside: beforeWeekDay || afterWeekDay,
               rightCrop,
               selected,
-              year,
+              year: day.getFullYear(),
             }
           }),
           weekIndex: weekGrid,
@@ -427,12 +435,14 @@ function Month(props: BaseMonthProps & CalendarMode) {
 
   const textFont = theme.fonts.titleSmall
 
+  const renderOutsideDays = showOutsideDays ?? isHorizontal
+
   const weeks = grid.map(({ generatedDays, weekIndex }) => (
     <View key={weekIndex} style={styles.week}>
       {generatedDays
         .filter((gd) => showWeekDay(gd.dayIndex, disableWeekDays))
         .map((gd) =>
-          gd.beforeWeekDay || gd.afterWeekDay ? (
+          gd.outside && !renderOutsideDays ? (
             <EmptyDay key={gd.dayIndex} />
           ) : (
             <Day
@@ -441,13 +451,29 @@ function Month(props: BaseMonthProps & CalendarMode) {
               dayContentPosition={dayContentPosition}
               dayContentStyle={dayContentStyle}
               disabled={gd.disabled}
+              focused={
+                !!focusedDate &&
+                areDatesOnSameDay(
+                  focusedDate,
+                  new Date(gd.year, gd.month, gd.dayOfMonth)
+                )
+              }
               inRange={gd.inRange}
               isToday={gd.isToday}
               key={gd.dayIndex}
               leftCrop={gd.leftCrop}
               locale={locale}
               month={gd.month}
-              onPressDate={onPressDate}
+              onPressDate={(pressed) => {
+                onPressDate(pressed)
+                if (
+                  pressed.getFullYear() !== year ||
+                  pressed.getMonth() !== month
+                ) {
+                  onNavigateToDate?.(pressed)
+                }
+              }}
+              outside={gd.outside}
               primaryColor={primaryColor}
               rightCrop={gd.rightCrop}
               selectColor={selectColor}
@@ -464,76 +490,83 @@ function Month(props: BaseMonthProps & CalendarMode) {
   return (
     <View
       style={
-        isHorizontal
-          ? styles.monthFill
-          : {
-              height: getMonthHeight(
-                scrollMode,
-                index,
-                startWeekOnMonday,
-                startYear,
-                endYear
-              ),
-            }
+        hideHeader
+          ? undefined
+          : isHorizontal
+            ? styles.monthFill
+            : {
+                height: getMonthHeight(
+                  scrollMode,
+                  index,
+                  startWeekOnMonday,
+                  startYear,
+                  endYear
+                ),
+              }
       }
     >
-      <View
-        style={[
-          styles.monthHeader,
-          isHorizontal
-            ? {
-                marginBottom: monthHeaderSingleMarginBottom,
-                marginTop: monthHeaderSingleMarginTop,
-              }
-            : null,
-        ]}
-      >
-        <TouchableRipple
-          accessibilityLabel={`${monthName} ${year}`}
-          accessibilityRole="button"
-          disabled={!isHorizontal}
-          onPress={isHorizontal ? () => onPressYear(year) : undefined}
+      {hideHeader ? null : (
+        <View
           style={[
-            styles.yearButton,
-            {
-              borderRadius: roundness,
-            },
-            alignTextToFirstWeekday(disableWeekDays),
+            styles.monthHeader,
+            isHorizontal
+              ? {
+                  marginBottom: monthHeaderSingleMarginBottom,
+                  marginTop: monthHeaderSingleMarginTop,
+                }
+              : null,
           ]}
         >
-          <View
+          <TouchableRipple
+            accessibilityHint="Shift+Y"
+            accessibilityLabel={`${monthName} ${year}`}
+            accessibilityRole="button"
+            disabled={!isHorizontal}
+            onPress={isHorizontal ? () => onPressYear(year) : undefined}
             style={[
-              styles.yearButtonInner,
+              styles.yearButton,
               {
                 borderRadius: roundness,
               },
+              alignTextToFirstWeekday(disableWeekDays),
             ]}
           >
-            <Text
-              maxFontSizeMultiplier={1.5}
-              selectable={false}
+            <View
               style={[
-                styles.monthLabel,
+                styles.yearButtonInner,
                 {
-                  ...textFont,
-                  color: theme.colors.onSurfaceVariant,
+                  borderRadius: roundness,
                 },
               ]}
             >
-              {monthName} {year}
-            </Text>
-            <View
-              style={[
-                styles.iconWrapper,
-                isHorizontal ? sharedStyles.opacity1 : sharedStyles.opacity0,
-              ]}
-            >
-              <Icon color={iconColor} size={24} source={iconSource} />
+              <Text
+                maxFontSizeMultiplier={1.5}
+                numberOfLines={1}
+                selectable={false}
+                style={[
+                  {
+                    ...textFont,
+                    color: theme.colors.onSurfaceVariant,
+                  },
+                ]}
+              >
+                {monthName} {year}
+              </Text>
+              <View
+                style={[
+                  styles.iconWrapper,
+                  isHorizontal ? sharedStyles.opacity1 : sharedStyles.opacity0,
+                ]}
+              >
+                <Icon color={iconColor} size={18} source={iconSource} />
+              </View>
             </View>
-          </View>
-        </TouchableRipple>
-      </View>
-      {isHorizontal ? (
+          </TouchableRipple>
+        </View>
+      )}
+      {hideHeader ? (
+        <View>{weeks}</View>
+      ) : isHorizontal ? (
         <ScrollView
           alwaysBounceVertical={false}
           directionalLockEnabled
@@ -559,7 +592,7 @@ function Month(props: BaseMonthProps & CalendarMode) {
 
 export const monthHeaderHeight = 56
 
-export const monthHeaderSingleMarginBottom = 8 + 44 + 12
+export const monthHeaderSingleMarginBottom = 8 + dayNamesHeight + 12
 
 export const monthHeaderSingleMarginTop = 4
 
@@ -595,7 +628,7 @@ const monthGrid = (
     })
 }
 
-export const weekMargin = 6
+export const weekMargin = 0
 
 const styles = StyleSheet.create({
   iconWrapper: {
@@ -610,13 +643,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     overflow: 'hidden',
   },
-  monthLabel: {
-    fontSize: 14,
-    opacity: 0.7,
-  },
   week: {
     flexDirection: 'row',
-    height: daySize,
+    height: dayCellSize,
     marginBottom: weekMargin,
   },
   yearButton: {
@@ -628,7 +657,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export const weekSize = daySize + weekMargin
+export const weekSize = dayCellSize + weekMargin
 
 function weeksOffset(
   index: number,

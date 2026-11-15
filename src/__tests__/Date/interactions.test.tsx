@@ -112,9 +112,9 @@ describe('calendar interactions', () => {
       />
     )
     await pressDays(single, 1)
-    await fireEvent.press(single.getByLabelText('November 2026'))
     await pressTestId(single, 'react-native-paper-dates-next-month')
     await pressTestId(single, 'react-native-paper-dates-prev-month')
+    await fireEvent.press(single.getByLabelText('November 2026'))
     expect(onChange).toHaveBeenCalled()
 
     const startOnly = await render(
@@ -268,9 +268,22 @@ describe('calendar interactions', () => {
 
 describe('date picker modal', () => {
   const originalOS = Platform.OS
+  const savedWindow = Dimensions.get('window')
 
-  afterEach(() => {
+  beforeEach(async () => {
+    await act(async () => {
+      Dimensions.set({
+        screen: { fontScale: 1, height: 844, scale: 2, width: 390 },
+        window: { fontScale: 1, height: 844, scale: 2, width: 390 },
+      })
+    })
+  })
+
+  afterEach(async () => {
     Platform.OS = originalOS
+    await act(async () => {
+      Dimensions.set({ screen: savedWindow, window: savedWindow })
+    })
   })
 
   it('confirms single, range, and multiple selections', async () => {
@@ -437,7 +450,13 @@ describe('date picker modal', () => {
 })
 
 describe('inputs, headers, and pickers', () => {
-  it('edits a masked date with and without the modal', async () => {
+  it('formats a typed date on blur and opens the modal from the icon', async () => {
+    await act(async () => {
+      Dimensions.set({
+        screen: { fontScale: 1, height: 844, scale: 2, width: 390 },
+        window: { fontScale: 1, height: 844, scale: 2, width: 390 },
+      })
+    })
     const onChange = jest.fn()
     const input = await render(
       safe(
@@ -449,6 +468,7 @@ describe('inputs, headers, and pickers', () => {
           inputMode="start"
           locale="en"
           onChange={onChange}
+          presentation="modal"
           saveLabelDisabled
           startYear={2020}
           testID="date"
@@ -496,9 +516,13 @@ describe('inputs, headers, and pickers', () => {
     )
     const field = byTestId(plain, 'plain')[0]
     await act(() => {
-      field.props.onChangeText?.('01/02/2026')
-      field.props.onChange?.({ nativeEvent: { text: '01/02/2026' } })
+      field.props.onChangeText?.('1/2/2026')
     })
+    const updated = byTestId(plain, 'plain')[0]
+    await act(() => {
+      updated.props.onBlur?.({})
+    })
+    expect(onChange).toHaveBeenCalledWith(new Date(2026, 0, 2))
 
     await render(
       <DatePickerInputWithoutModal
@@ -658,18 +682,8 @@ describe('inputs, headers, and pickers', () => {
       (node: { props: { renderItem?: Function } }) =>
         typeof node.props.renderItem === 'function'
     )[0]
-    const year = await render(
-      list.props.renderItem({
-        index: 0,
-        item: [2024, 2025, 2026],
-        separators: {},
-      })
-    )
-    const yearButton = year.container.queryAll(
-      (node: Instance) => node.props.accessibilityLabel === '2025'
-    )[0]
-    if (yearButton) await pressNode(yearButton)
-    list.props.renderScrollComponent({})
+    await fireEvent.press(years.getByLabelText('2025'))
+    list.props.renderScrollComponent?.({})
     list.props.keyExtractor([2024, 2025, 2026])
 
     await render(

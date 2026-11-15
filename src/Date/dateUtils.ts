@@ -58,7 +58,9 @@ export function dateToUnix(d: Date): number {
   return Math.trunc(d.getTime() / 1000)
 }
 
-export const daySize = 46
+export const dayCellSize = 48
+
+export const daySize = 40
 
 export const defaultEndYear = 2200
 
@@ -73,7 +75,7 @@ export function differenceInMonths(firstDate: Date, secondDate: Date) {
 
 export type { DisableWeekDaysType }
 
-export const estimatedMonthHeight = 360
+export const estimatedMonthHeight = 400
 
 export function getBeginOffset(startYear?: number, endYear?: number): number {
   return estimatedMonthHeight * getStartAtIndex(startYear, endYear)
@@ -220,6 +222,83 @@ export function isDateWithinOptionalRange(
 
 export function isLeapYear({ year }: { year: number }) {
   return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0
+}
+
+export function fieldOrder(inputFormat: string): Array<'D' | 'M' | 'Y'> {
+  const yearIndex = Math.max(
+    inputFormat.indexOf('YYYY'),
+    inputFormat.indexOf('AAAA')
+  )
+  return (
+    [
+      { field: 'D' as const, index: inputFormat.indexOf('DD') },
+      { field: 'M' as const, index: inputFormat.indexOf('MM') },
+      { field: 'Y' as const, index: yearIndex },
+    ] as const
+  )
+    .filter((entry) => entry.index >= 0)
+    .sort((a, b) => a.index - b.index)
+    .map((entry) => entry.field)
+}
+
+const nativeDigits: Record<string, string> = {}
+
+for (const [index, digit] of '٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹'.split('').entries()) {
+  nativeDigits[digit] = String(index % 10)
+}
+
+function normalizeDigits(text: string) {
+  return text.replace(/[٠-٩۰-۹]/g, (digit) => nativeDigits[digit] ?? digit)
+}
+
+export function parseLooseDate(
+  text: string,
+  inputFormat: string
+): { day: number; month: number; year: number } | null {
+  const order = fieldOrder(inputFormat)
+  if (order.length !== 3) return null
+
+  const trimmed = normalizeDigits(text.trim())
+  if (!trimmed) return null
+
+  const parts = trimmed.split(/[^\d]+/).filter((part) => part.length > 0)
+  const values: Partial<Record<'D' | 'M' | 'Y', number>> = {}
+
+  if (parts.length === 1) {
+    const digits = parts[0]
+    if (digits.length < 6 || digits.length > 8) return null
+    let offset = 0
+    for (const field of order) {
+      const size = field === 'Y' ? 4 : 2
+      const chunk = digits.slice(offset, offset + size)
+      if (chunk.length === 0) return null
+      values[field] = Number(chunk)
+      offset += chunk.length
+    }
+    if (offset !== digits.length) return null
+  } else if (parts.length === 3) {
+    order.forEach((field, index) => {
+      values[field] = Number(parts[index])
+    })
+  } else {
+    return null
+  }
+
+  const day = values.D
+  const month = values.M
+  const year = values.Y
+  if (
+    day === undefined ||
+    month === undefined ||
+    year === undefined ||
+    Number.isNaN(day) ||
+    Number.isNaN(month) ||
+    Number.isNaN(year)
+  ) {
+    return null
+  }
+
+  return { day, month, year }
 }
 
 export function showWeekDay(
