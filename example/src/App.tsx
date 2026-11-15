@@ -28,6 +28,7 @@ import {
   Dialog,
   Divider,
   Icon,
+  IconButton,
   LightTheme,
   Provider as PaperProvider,
   RadioButton,
@@ -184,8 +185,10 @@ function createStyles(colors: AppColors) {
     },
     brandRow: {
       alignItems: 'center',
+      flex: 1,
       flexDirection: 'row',
       gap: 14,
+      minWidth: 0,
     },
     brandRowNarrow: {
       alignItems: 'flex-start',
@@ -256,9 +259,6 @@ function createStyles(colors: AppColors) {
     divider: {
       backgroundColor: colors.outlineVariant,
       marginTop: 4,
-    },
-    docsButton: {
-      flexGrow: 1,
     },
     emptyLocales: {
       paddingHorizontal: 16,
@@ -339,8 +339,12 @@ function createStyles(colors: AppColors) {
     headerActions: {
       alignItems: 'center',
       flexDirection: 'row',
-      flexWrap: 'wrap',
       gap: 10,
+    },
+    headerTop: {
+      alignItems: 'flex-start',
+      flexDirection: 'row',
+      gap: 8,
     },
     libraryNote: {
       color: colors.onSurfaceVariant,
@@ -470,6 +474,9 @@ function createStyles(colors: AppColors) {
       fontWeight: '700',
       letterSpacing: -0.6,
       lineHeight: 34,
+    },
+    themeToggle: {
+      margin: 0,
     },
     titleWide: {
       color: colors.onSurface,
@@ -860,39 +867,51 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
       >
         <View style={[styles.page, wide && styles.pageWide]}>
           <View style={styles.header}>
-            <View style={[styles.brandRow, !wide && styles.brandRowNarrow]}>
-              <Image source={require('./schedule.png')} style={styles.logo} />
-              <View style={styles.brandCopy}>
-                <AppText
-                  onPress={() => Linking.openURL(githubUrl)}
-                  style={[styles.title, wide && styles.titleWide]}
-                >
-                  {wide
-                    ? 'react-native-paper-dates'
-                    : 'react-native-\npaper-dates'}
-                </AppText>
-                <AppText style={styles.version}>v{libraryVersion}</AppText>
-                <AppText style={styles.authors}>
-                  Authors:{' '}
+            <View style={styles.headerTop}>
+              <View style={[styles.brandRow, !wide && styles.brandRowNarrow]}>
+                <Image source={require('./schedule.png')} style={styles.logo} />
+                <View style={styles.brandCopy}>
                   <AppText
-                    onPress={() =>
-                      Linking.openURL('https://twitter.com/RichardLindhout')
-                    }
-                    style={styles.authorLink}
+                    onPress={() => Linking.openURL(githubUrl)}
+                    style={[styles.title, wide && styles.titleWide]}
                   >
-                    Richard Lindhout
+                    {wide
+                      ? 'react-native-paper-dates'
+                      : 'react-native-\npaper-dates'}
                   </AppText>
-                  ,{' '}
-                  <AppText
-                    onPress={() =>
-                      Linking.openURL('https://github.com/iM-GeeKy')
-                    }
-                    style={styles.authorLink}
-                  >
-                    Brandon Fitzwater
+                  <AppText style={styles.version}>v{libraryVersion}</AppText>
+                  <AppText style={styles.authors}>
+                    Authors:{' '}
+                    <AppText
+                      onPress={() =>
+                        Linking.openURL('https://twitter.com/RichardLindhout')
+                      }
+                      style={styles.authorLink}
+                    >
+                      Richard Lindhout
+                    </AppText>
+                    ,{' '}
+                    <AppText
+                      onPress={() =>
+                        Linking.openURL('https://github.com/iM-GeeKy')
+                      }
+                      style={styles.authorLink}
+                    >
+                      Brandon Fitzwater
+                    </AppText>
                   </AppText>
-                </AppText>
+                </View>
               </View>
+              <IconButton
+                accessibilityLabel={
+                  theme.dark ? 'Switch to light theme' : 'Switch to dark theme'
+                }
+                icon={theme.dark ? 'weather-sunny' : 'weather-night'}
+                iconColor={theme.colors.primary}
+                mode="outlined"
+                onPress={onToggleTheme}
+                style={styles.themeToggle}
+              />
             </View>
             <AppText style={styles.description}>
               Cross-platform Material Design{' '}
@@ -923,17 +942,6 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
             </AppText>
             <View style={styles.headerActions}>
               <Button
-                accessibilityLabel={
-                  theme.dark ? 'Switch to light theme' : 'Switch to dark theme'
-                }
-                icon={theme.dark ? 'weather-sunny' : 'weather-night'}
-                mode="outlined"
-                onPress={onToggleTheme}
-                textColor={theme.colors.primary}
-              >
-                {theme.dark ? 'Light theme' : 'Dark theme'}
-              </Button>
-              <Button
                 buttonColor={theme.colors.secondaryContainer}
                 icon="github"
                 mode="filled"
@@ -947,7 +955,6 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
                 icon="file-document-outline"
                 mode="filled"
                 onPress={() => Linking.openURL(docsUrl)}
-                style={wide ? undefined : styles.docsButton}
                 textColor={theme.colors.onPrimary}
               >
                 View documentation
