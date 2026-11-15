@@ -296,12 +296,7 @@ function SwiperInner({
   )
   useFocusDate(
     (newIndex) => {
-      if (
-        newIndex !== undefined &&
-        isIndexWithinRange(newIndex, startYear, endYear)
-      ) {
-        scrollTo(newIndex, false)
-      }
+      scrollTo(newIndex, false)
     },
     {
       currentIndexRef: idx,

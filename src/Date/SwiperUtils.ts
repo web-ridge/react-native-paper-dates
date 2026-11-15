@@ -131,7 +131,7 @@ export function sameIndexes(left: number[], right: number[]) {
 }
 
 export function useFocusDate(
-  onChange: (index: number | undefined) => void,
+  onChange: (index: number) => void,
   {
     currentIndexRef,
     endYear,

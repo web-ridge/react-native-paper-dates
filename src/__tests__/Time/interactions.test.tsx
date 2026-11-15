@@ -100,17 +100,25 @@ describe('analog clock', () => {
     await render(<AnalogClockHours hours={0} is24Hour />)
     await render(<AnalogClockHours hours={12} is24Hour />)
     await render(<AnalogClockHours hours={1} is24Hour={false} />)
-    await render(
-      <AnalogClockHours
-        hours={15}
-        is24Hour
-        locale="xx"
-        onPress={() => null}
-      />
-    )
-    await render(
-      <AnalogClockMinutes locale="xx" minutes={20} onPress={() => null} />
-    )
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
+    try {
+      await render(
+        <AnalogClockHours
+          hours={15}
+          is24Hour
+          locale="xx"
+          onPress={() => null}
+        />
+      )
+      await render(
+        <AnalogClockMinutes locale="xx" minutes={20} onPress={() => null} />
+      )
+      expect(warn).toHaveBeenCalledWith(
+        expect.stringContaining('The locale xx is not registered')
+      )
+    } finally {
+      warn.mockRestore()
+    }
     await render(<AnalogClockMinutes minutes={0} />)
     await render(<AnalogClockMinutes minutes={59} />)
     await render(<AnalogClockMinutes minutes={7} />)
@@ -193,7 +201,11 @@ describe('analog clock', () => {
     )
 
     const unlabeled = await render(<ClockNumber left={10} top={10} value={1} />)
-    await fireEvent(unlabeled.getByText('1'), 'accessibilityAction', {
+    let dial = unlabeled.getByText('1')
+    while (dial.parent && typeof dial.props.onAccessibilityAction !== 'function') {
+      dial = dial.parent
+    }
+    await fireEvent(dial, 'accessibilityAction', {
       nativeEvent: { actionName: 'activate' },
     })
   })

@@ -89,12 +89,7 @@ function Swiper({
   }
   useFocusDate(
     (newIndex) => {
-      if (
-        newIndex !== undefined &&
-        isIndexWithinRange(newIndex, startYear, endYear)
-      ) {
-        setIndex(newIndex)
-      }
+      setIndex(newIndex)
     },
     {
       currentIndexRef: indexRef,

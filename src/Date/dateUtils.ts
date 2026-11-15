@@ -244,7 +244,7 @@ export function isLeapYear({ year }: { year: number }) {
 }
 
 function normalizeDigits(text: string) {
-  return text.replace(/[٠-٩۰-۹]/g, (digit) => nativeDigits[digit] ?? digit)
+  return text.replace(/[٠-٩۰-۹]/g, (digit) => nativeDigits[digit])
 }
 
 export function parseLooseDate(
@@ -258,7 +258,7 @@ export function parseLooseDate(
   if (!trimmed) return null
 
   const parts = trimmed.split(/[^\d]+/).filter((part) => part.length > 0)
-  const values: Partial<Record<'D' | 'M' | 'Y', number>> = {}
+  const values = { D: 0, M: 0, Y: 0 }
 
   if (parts.length === 1) {
     const digits = parts[0]
@@ -271,7 +271,6 @@ export function parseLooseDate(
       values[field] = Number(chunk)
       offset += chunk.length
     }
-    if (offset !== digits.length) return null
   } else if (parts.length === 3) {
     order.forEach((field, index) => {
       values[field] = Number(parts[index])
@@ -280,21 +279,7 @@ export function parseLooseDate(
     return null
   }
 
-  const day = values.D
-  const month = values.M
-  const year = values.Y
-  if (
-    day === undefined ||
-    month === undefined ||
-    year === undefined ||
-    Number.isNaN(day) ||
-    Number.isNaN(month) ||
-    Number.isNaN(year)
-  ) {
-    return null
-  }
-
-  return { day, month, year }
+  return { day: values.D, month: values.M, year: values.Y }
 }
 
 export function showWeekDay(
