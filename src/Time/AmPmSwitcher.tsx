@@ -3,9 +3,9 @@ import { Pressable, StyleSheet, View } from 'react-native'
 import { Text, useTheme } from 'react-native-paper'
 
 import { DisplayModeContext } from '../contexts/DisplayModeContext'
+import StateLayer from '../shared/StateLayer'
 import { sharedStyles } from '../shared/styles'
 import { getTranslation } from '../translations/utils'
-import StateLayer from './StateLayer'
 import {
   inputTypes,
   type PossibleInputTypes,
@@ -41,7 +41,6 @@ export default function AmPmSwitcher({
     <View
       style={[
         isHorizontal ? styles.rootHorizontal : styles.rootVertical,
-        // eslint-disable-next-line react-native/no-inline-styles
         {
           borderColor: backgroundColor,
           borderRadius: theme.shapes.corner.small,

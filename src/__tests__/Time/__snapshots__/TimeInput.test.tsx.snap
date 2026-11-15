@@ -10,10 +10,12 @@ exports[`renders TimeInput 1`] = `
         "overflow": "hidden",
       },
       {
+        "borderWidth": 0,
+      },
+      {
         "backgroundColor": "rgba(234, 221, 255, 1)",
         "borderColor": undefined,
         "borderRadius": 8,
-        "borderWidth": 0,
         "height": 80,
         "width": 96,
       },

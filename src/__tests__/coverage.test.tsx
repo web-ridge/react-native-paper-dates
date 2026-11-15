@@ -5,9 +5,9 @@ import { LightTheme, PaperProvider } from 'react-native-paper'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 import Calendar from '../Date/Calendar'
-import CalendarEdit from '../Date/CalendarEdit'
 import DatePickerDocked, { placeDockedCard } from '../Date/DatePickerDocked'
 import DatePickerInput from '../Date/DatePickerInput'
+import DatePickerInputForm from '../Date/DatePickerInputForm'
 import DatePickerInputWithoutModal from '../Date/DatePickerInputWithoutModal'
 import DatePickerModalContent from '../Date/DatePickerModalContent'
 import DatePickerModalInput from '../Date/DatePickerModalInput'
@@ -26,11 +26,11 @@ import {
   useFocusDate,
 } from '../Date/SwiperUtils'
 import CrossFade from '../shared/CrossFade'
+import StateLayer from '../shared/StateLayer'
 import { darkenColor } from '../shared/utils'
 import { act, pressNode, pressTestId, render } from '../testUtils'
 import TextInputWithMask from '../TextInputMask'
 import AmPmSwitcher from '../Time/AmPmSwitcher'
-import StateLayer from '../Time/StateLayer'
 import TimeInput from '../Time/TimeInput'
 import { isValidHourInput, useInputColors } from '../Time/timeUtils'
 import { DisplayModeContext } from '../contexts/DisplayModeContext'
@@ -38,13 +38,6 @@ import { DisplayModeContext } from '../contexts/DisplayModeContext'
 const metrics = {
   frame: { height: 800, width: 390, x: 0, y: 0 },
   insets: { bottom: 0, left: 0, right: 0, top: 0 },
-}
-
-const emptyState = {
-  date: undefined,
-  dates: undefined,
-  endDate: undefined,
-  startDate: undefined,
 }
 
 type HookNode = { memoizedState: unknown; next: HookNode | null }
@@ -881,30 +874,23 @@ describe('inputs, menus, and state layers', () => {
   })
 
   it('labels a calendar field with and without the format', async () => {
+    const shared = {
+      label: 'When',
+      locale: 'en' as const,
+      mode: 'single' as const,
+      onChange: jest.fn(),
+      onConfirm: jest.fn(),
+      onDismiss: jest.fn(),
+      onRequestCalendar: jest.fn(),
+    }
     await render(
-      <CalendarEdit
-        collapsed={false}
-        label="When"
-        locale="en"
-        mode="single"
-        onChange={jest.fn()}
+      <DatePickerInputForm
+        {...shared}
         placeholder="Type a date"
-        state={emptyState}
-        validRange={undefined}
         withDateFormatInLabel
       />
     )
-    await render(
-      <CalendarEdit
-        collapsed={false}
-        label="When"
-        locale="en"
-        mode="single"
-        onChange={jest.fn()}
-        state={emptyState}
-        validRange={undefined}
-      />
-    )
+    await render(<DatePickerInputForm {...shared} />)
   })
 
   it('shows the year divider and edits the calendar without an external onChange', async () => {

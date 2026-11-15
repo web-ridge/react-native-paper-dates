@@ -4,17 +4,23 @@ import { Button, Divider, useTheme } from 'react-native-paper'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { sharedStyles } from '../shared/styles'
-import { displayCase, themeColor, useIsLargeScreen } from '../shared/utils'
+import {
+  displayCase,
+  themeColor,
+  useIsLargeScreen,
+  useLatest,
+} from '../shared/utils'
 import { translate } from '../translations/utils'
 import AnimatedCrossView from './AnimatedCrossView'
 import Calendar, { type BaseCalendarProps } from './Calendar'
-import CalendarEdit from './CalendarEdit'
+import DatePickerInputForm from './DatePickerInputForm'
 import DatePickerModalContentHeader, {
   HeaderPickProps,
 } from './DatePickerModalContentHeader'
 import DatePickerModalHeader from './DatePickerModalHeader'
 import DatePickerModalHeaderBackground from './DatePickerModalHeaderBackground'
 import DatePickerModalStatusBar from './DatePickerModalStatusBar'
+import { areDatesOnSameDay } from './dateUtils'
 import type {
   CalendarDate,
   CalendarDates,
@@ -35,6 +41,7 @@ interface DatePickerModalContentBaseProps {
   locale: string
   onCalendarLayout?: (layout: { height: number; width: number }) => void
   onDismiss: () => void
+  onDisplayModeChange?: (mode: 'calendar' | 'input') => void
   onRequestInput?: () => void
   saveLabelDisabled?: boolean
   statusBarOnTopOfBackdrop?: boolean
@@ -73,7 +80,11 @@ export function DatePickerModalContent(
     | DatePickerModalContentSingleProps
     | DatePickerModalContentMultiProps
 ) {
-  const [collapsed, setCollapsed] = useState(props.displayMode !== 'input')
+  const [collapsed, setCollapsed] = useState(
+    () => props.mode === 'multiple' || props.displayMode !== 'input'
+  )
+  const [focusOnInput, setFocusOnInput] = useState(false)
+  const [inputValid, setInputValid] = useState(true)
   const [selectingYear, setSelectingYear] = useState(false)
   const {
     date,
@@ -96,6 +107,7 @@ export function DatePickerModalContent(
     onChange,
     onConfirm,
     onDismiss,
+    onDisplayModeChange,
     onRequestInput,
     startDate,
     startWeekOnMonday,
@@ -134,9 +146,20 @@ export function DatePickerModalContent(
       startDate,
     })
   }, [date, startDate, endDate, dates])
+  const onDisplayModeChangeRef = useLatest(onDisplayModeChange)
+  const reportDisplayMode = useCallback(
+    (nextCollapsed: boolean) => {
+      onDisplayModeChangeRef.current?.(
+        !nextCollapsed && mode !== 'multiple' ? 'input' : 'calendar'
+      )
+    },
+    [mode, onDisplayModeChangeRef]
+  )
   useEffect(() => {
-    setCollapsed(displayMode !== 'input')
-  }, [displayMode])
+    const nextCollapsed = mode === 'multiple' || displayMode !== 'input'
+    setCollapsed(nextCollapsed)
+    reportDisplayMode(nextCollapsed)
+  }, [displayMode, mode, reportDisplayMode])
   const onCalendarContainerLayout = useCallback(
     (event: LayoutChangeEvent) => {
       const { height, width } = event.nativeEvent.layout
@@ -156,12 +179,24 @@ export function DatePickerModalContent(
     },
     [onChange]
   )
+  const sameDayRange =
+    mode === 'range' &&
+    !!state.startDate &&
+    !!state.endDate &&
+    areDatesOnSameDay(state.startDate, state.endDate)
   const onInnerConfirm = useCallback(() => {
     if (mode === 'single') {
       ;(onConfirm as DatePickerModalContentSingleProps['onConfirm'])({
         date: state.date,
       })
     } else if (mode === 'range') {
+      if (
+        state.startDate &&
+        state.endDate &&
+        areDatesOnSameDay(state.startDate, state.endDate)
+      ) {
+        return
+      }
       ;(onConfirm as DatePickerModalContentRangeProps['onConfirm'])({
         endDate: state.endDate,
         startDate: state.startDate,
@@ -172,13 +207,87 @@ export function DatePickerModalContent(
       })
     }
   }, [state, mode, onConfirm])
+  const onInputValidityChange = useCallback((valid: boolean) => {
+    setInputValid(valid)
+  }, [])
+  const showCalendar = useCallback(() => {
+    setCollapsed(true)
+    reportDisplayMode(true)
+  }, [reportDisplayMode])
   const onToggleCollapse = useCallback(() => {
     if (onRequestInput && collapsed) {
       onRequestInput()
       return
     }
-    setCollapsed((prev) => !prev)
-  }, [collapsed, onRequestInput])
+    setFocusOnInput(true)
+    setCollapsed(false)
+    reportDisplayMode(false)
+  }, [collapsed, onRequestInput, reportDisplayMode])
+
+  if ((mode === 'single' || mode === 'range') && !collapsed) {
+    const form = (
+      <DatePickerInputForm
+        autoFocus={focusOnInput}
+        calendarIcon={props.calendarIcon}
+        date={state.date}
+        endDate={state.endDate}
+        endLabel={props.endLabel}
+        inputEnabled={props.inputEnabled}
+        label={props.label}
+        locale={locale}
+        mode={mode}
+        onChange={onInnerChange}
+        onConfirm={onInnerConfirm}
+        onDismiss={onDismiss}
+        onRequestCalendar={showCalendar}
+        onValidityChange={onInputValidityChange}
+        placeholder={props.placeholder}
+        saveLabel={props.saveLabel}
+        saveLabelDisabled={props.saveLabelDisabled}
+        showActions={!showSheetHeader}
+        startDate={state.startDate}
+        startLabel={props.startLabel}
+        uppercase={uppercase}
+        validRange={validRange}
+        withDateFormatInLabel={props.withDateFormatInLabel}
+      />
+    )
+    if (!showSheetHeader) return form
+    return (
+      <View style={sharedStyles.root}>
+        <DatePickerModalHeaderBackground
+          disableWeekDays={disableWeekDays}
+          divider={false}
+        >
+          <DatePickerModalStatusBar
+            disableSafeTop={!!disableSafeTop}
+            disableStatusBar={!!disableStatusBar}
+            statusBarOnTopOfBackdrop={!!statusBarOnTopOfBackdrop}
+          />
+          <DatePickerModalHeader
+            closeIcon={props.closeIcon}
+            disableWeekDays={disableWeekDays}
+            locale={locale}
+            onDismiss={onDismiss}
+            onSave={onInnerConfirm}
+            saveLabel={props.saveLabel}
+            saveLabelDisabled={
+              (props.saveLabelDisabled ?? false) || !inputValid || sameDayRange
+            }
+            uppercase={uppercase}
+          />
+        </DatePickerModalHeaderBackground>
+        <View
+          style={[
+            sharedStyles.root,
+            { paddingLeft: insets.left, paddingRight: insets.right },
+          ]}
+        >
+          {form}
+        </View>
+      </View>
+    )
+  }
 
   return (
     <>
@@ -196,7 +305,9 @@ export function DatePickerModalContent(
             onDismiss={onDismiss}
             onSave={onInnerConfirm}
             saveLabel={props.saveLabel}
-            saveLabelDisabled={props.saveLabelDisabled ?? false}
+            saveLabelDisabled={
+              (props.saveLabelDisabled ?? false) || sameDayRange
+            }
             uppercase={uppercase}
           />
         ) : null}
@@ -210,6 +321,7 @@ export function DatePickerModalContent(
           endLabel={props.endLabel}
           headerSeparator={props.headerSeparator}
           label={props.label}
+          layout={props.layout}
           locale={locale}
           mode={mode}
           moreLabel={props.moreLabel}
@@ -253,23 +365,7 @@ export function DatePickerModalContent(
               validRange={validRange}
             />
           }
-          calendarEdit={
-            <CalendarEdit
-              collapsed={collapsed}
-              disableWeekDays={disableWeekDays}
-              endLabel={props.endLabel}
-              inputEnabled={props.inputEnabled}
-              label={props.label}
-              locale={locale}
-              mode={mode}
-              onChange={onInnerChange}
-              placeholder={props.placeholder}
-              startLabel={props.startLabel}
-              state={state}
-              validRange={validRange}
-              withDateFormatInLabel={props.withDateFormatInLabel}
-            />
-          }
+          calendarEdit={null}
           collapsed={collapsed}
         />
       </View>
@@ -293,7 +389,7 @@ export function DatePickerModalContent(
               {cancelLabel}
             </Button>
             <Button
-              disabled={props.saveLabelDisabled ?? false}
+              disabled={(props.saveLabelDisabled ?? false) || sameDayRange}
               labelStyle={styles.actionLabel}
               mode="text"
               onPress={onInnerConfirm}

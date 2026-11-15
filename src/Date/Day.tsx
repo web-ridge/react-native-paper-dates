@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo } from 'react'
+import { memo, useCallback, useMemo, useState } from 'react'
 import {
   Pressable,
   type StyleProp,
@@ -8,7 +8,8 @@ import {
 } from 'react-native'
 import { Text } from 'react-native-paper'
 
-import type { PaperTheme } from '../shared/utils'
+import StateLayer from '../shared/StateLayer'
+import { type PaperTheme, withAlpha } from '../shared/utils'
 import { dayCellSize, daySize } from './dateUtils'
 import DayRange from './DayRange'
 import type { DayContentPosition, DayContentRenderer } from './types'
@@ -69,7 +70,9 @@ function Day(props: {
     [day, locale, month, year]
   )
 
-  const borderColor = theme.colors.primary
+  const [hovered, setHovered] = useState(false)
+  const [inputFocused, setInputFocused] = useState(false)
+  const [pressed, setPressed] = useState(false)
   const muted = (disabled || outside) && !selected
   const baseTextColor = selected
     ? textColorOnPrimary
@@ -78,6 +81,13 @@ function Day(props: {
       : theme.colors.onSurface
   const textColor =
     isToday && !selected && !disabled ? theme.colors.primary : baseTextColor
+  const stateLayerColor = selected
+    ? theme.colors.onPrimary
+    : isToday
+      ? theme.colors.primary
+      : inRange
+        ? theme.colors.onPrimaryContainer
+        : theme.colors.onSurfaceVariant
 
   const onPress = useCallback(() => {
     onPressDate(new Date(year, month, day))
@@ -98,7 +108,13 @@ function Day(props: {
         accessibilityRole="button"
         accessibilityState={{ disabled, selected }}
         disabled={disabled}
+        onBlur={() => setInputFocused(false)}
+        onFocus={() => setInputFocused(true)}
+        onHoverIn={() => setHovered(true)}
+        onHoverOut={() => setHovered(false)}
         onPress={disabled ? undefined : onPress}
+        onPressIn={() => setPressed(true)}
+        onPressOut={() => setPressed(false)}
         style={styles.button}
         testID={`react-native-paper-dates-day-${year}-${month}-${day}`}
       >
@@ -106,18 +122,36 @@ function Day(props: {
           style={[
             styles.day,
             isToday && !selected && !disabled
-              ? { borderColor: borderColor }
+              ? { borderColor: theme.colors.primary }
               : null,
-            focused && !selected && !disabled
-              ? [styles.focused, { borderColor }]
+            selected
+              ? {
+                  backgroundColor: disabled
+                    ? withAlpha(primaryColor, 0.38)
+                    : primaryColor,
+                }
               : null,
-            selected && !disabled ? { backgroundColor: primaryColor } : null,
           ]}
         >
+          <StateLayer
+            color={stateLayerColor}
+            focused={!disabled && (focused || inputFocused)}
+            hovered={!disabled && hovered}
+            pressed={!disabled && pressed}
+          />
           <Text
             maxFontSizeMultiplier={1.5}
             selectable={false}
-            style={[{ color: textColor }, textFont, muted && styles.muted]}
+            style={[
+              {
+                color:
+                  selected && disabled
+                    ? withAlpha(textColorOnPrimary, 0.38)
+                    : textColor,
+              },
+              textFont,
+              muted && styles.muted,
+            ]}
           >
             {day}
           </Text>
@@ -186,14 +220,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     height: daySize,
     justifyContent: 'center',
+    overflow: 'hidden',
     width: daySize,
   },
   empty: {
     flex: 1,
     flexBasis: 0,
-  },
-  focused: {
-    borderWidth: 2,
   },
   muted: {
     opacity: 0.38,

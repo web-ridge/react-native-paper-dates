@@ -1,6 +1,10 @@
 import { render } from '@testing-library/react-native'
 
-import CalendarHeader, { layoutScrollbarWidth } from '../../Date/CalendarHeader'
+import CalendarHeader, {
+  layoutScrollbarWidth,
+  overlayScrollbarPadding,
+  weekdayScrollbarInset,
+} from '../../Date/CalendarHeader'
 
 it('renders CalendarHeader', async () => {
   const { toJSON } = await render(
@@ -18,6 +22,9 @@ it('renders CalendarHeader', async () => {
 it('measures the document scrollbar and caches the width', () => {
   const globalDocument = globalThis as { document?: Document }
 
+  let overlayPadding: typeof overlayScrollbarPadding = () => 0
+  let weekdayInset: typeof weekdayScrollbarInset = () => 0
+
   function measure(
     documentMock: Document,
     assert: (read: typeof layoutScrollbarWidth) => void
@@ -26,7 +33,11 @@ it('measures the document scrollbar and caches the width', () => {
     jest.isolateModules(() => {
       const loaded = require('../../Date/CalendarHeader') as {
         layoutScrollbarWidth: typeof layoutScrollbarWidth
+        overlayScrollbarPadding: typeof overlayScrollbarPadding
+        weekdayScrollbarInset: typeof weekdayScrollbarInset
       }
+      overlayPadding = loaded.overlayScrollbarPadding
+      weekdayInset = loaded.weekdayScrollbarInset
       assert(loaded.layoutScrollbarWidth)
     })
   }
@@ -36,12 +47,16 @@ it('measures the document scrollbar and caches the width', () => {
   try {
     measure({} as Document, (read) => {
       expect(read()).toBe(0)
+      expect(weekdayInset()).toBe(15)
+      expect(overlayPadding()).toBe(15)
     })
 
     const zero = probe(40, 40)
     measure(documentWith(zero.probe, zero.body), (read) => {
       expect(read()).toBe(0)
       expect(read()).toBe(0)
+      expect(weekdayInset()).toBe(15)
+      expect(overlayPadding()).toBe(15)
       expect(zero.body.appendChild).toHaveBeenCalledTimes(1)
     })
 
@@ -49,6 +64,8 @@ it('measures the document scrollbar and caches the width', () => {
     measure(documentWith(wide.probe, wide.body), (read) => {
       expect(read()).toBe(15)
       expect(read()).toBe(15)
+      expect(weekdayInset()).toBe(15)
+      expect(overlayPadding()).toBe(0)
       expect(wide.body.appendChild).toHaveBeenCalledTimes(1)
     })
   } finally {

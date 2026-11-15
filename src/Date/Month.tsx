@@ -45,6 +45,7 @@ import type {
   ModeType,
   ValidRangeType,
 } from './types'
+import { getMaxIndex, getMinIndex } from './SwiperUtils'
 import { alignTextToFirstWeekday } from './weekdayColumns'
 
 interface BaseMonthProps {
@@ -157,6 +158,8 @@ function Month(props: BaseMonthProps & CalendarMode) {
     const rangeStartUnix = startDate
       ? dateToUnix(getStartOfDay(startDate))
       : undefined
+    const sameDayRange =
+      !!startDate && !!endDate && areDatesOnSameDay(startDate, endDate)
     const today = new Date()
 
     return monthGrid(index, startWeekOnMonday, startYear, endYear).map(
@@ -184,6 +187,7 @@ function Month(props: BaseMonthProps & CalendarMode) {
               selected = selectedStartDay || selectedEndDay
               const dayUnix = dateToUnix(day)
               inRange =
+                !sameDayRange &&
                 rangeStartUnix !== undefined &&
                 rangeEndUnix !== undefined &&
                 dayUnix >= rangeStartUnix &&
@@ -477,23 +481,25 @@ export function getIndexFromVerticalOffset(
   startYear?: number,
   endYear?: number
 ): number {
-  const dynamicStartAtIndex = getStartAtIndex(startYear, endYear)
-  const dynamicBeginOffset = estimatedMonthHeight * dynamicStartAtIndex
-  let estimatedIndex =
-    dynamicStartAtIndex + Math.ceil(offset / estimatedMonthHeight)
-
-  const realOffset = getVerticalMonthsOffset(
-    estimatedIndex,
-    startWeekOnMonday,
-    startYear,
-    endYear
-  )
-  const difference =
-    (realOffset - dynamicBeginOffset - offset) / estimatedMonthHeight
-  if (difference >= 1 || difference <= -1) {
-    estimatedIndex -= Math.floor(difference)
+  const target =
+    offset + estimatedMonthHeight * getStartAtIndex(startYear, endYear)
+  let low = getMinIndex(startYear, endYear)
+  let high = getMaxIndex(startYear, endYear)
+  while (low < high) {
+    const mid = Math.ceil((low + high) / 2)
+    const top = getVerticalMonthsOffset(
+      mid,
+      startWeekOnMonday,
+      startYear,
+      endYear
+    )
+    if (top > target) {
+      high = mid - 1
+    } else {
+      low = mid
+    }
   }
-  return estimatedIndex
+  return low
 }
 
 export function getMonthHeight(

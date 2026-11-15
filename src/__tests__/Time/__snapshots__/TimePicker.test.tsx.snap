@@ -44,10 +44,12 @@ exports[`renders TimePicker 1`] = `
               "overflow": "hidden",
             },
             {
+              "borderWidth": 0,
+            },
+            {
               "backgroundColor": "rgba(230, 224, 233, 1)",
               "borderColor": undefined,
               "borderRadius": 8,
-              "borderWidth": 0,
               "height": 72,
               "width": 96,
             },
@@ -207,10 +209,12 @@ exports[`renders TimePicker 1`] = `
               "overflow": "hidden",
             },
             {
+              "borderWidth": 0,
+            },
+            {
               "backgroundColor": "rgba(230, 224, 233, 1)",
               "borderColor": undefined,
               "borderRadius": 8,
-              "borderWidth": 0,
               "height": 72,
               "width": 96,
             },

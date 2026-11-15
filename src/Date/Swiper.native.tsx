@@ -372,26 +372,30 @@ function SwiperInner({
                   endYear
                 )
               : height
+            const monthOffset =
+              getVerticalMonthsOffset(
+                monthIndex,
+                startWeekOnMonday,
+                startYear,
+                endYear
+              ) - verticalMetrics.origin
             return (
               <View
                 key={isHorizontal ? vi : monthIndex}
-                // eslint-disable-next-line react-native/no-inline-styles
-                style={{
-                  height: isHorizontal ? height : monthHeight,
-                  left: isHorizontal ? vi * width : 0,
-                  overflow: 'hidden',
-                  position: 'absolute',
-                  right: isHorizontal ? undefined : 0,
-                  top: isHorizontal
-                    ? 0
-                    : getVerticalMonthsOffset(
-                        monthIndex,
-                        startWeekOnMonday,
-                        startYear,
-                        endYear
-                      ) - verticalMetrics.origin,
-                  width: isHorizontal ? width : undefined,
-                }}
+                style={[
+                  styles.month,
+                  isHorizontal ? styles.monthHorizontal : styles.monthVertical,
+                  isHorizontal
+                    ? {
+                        height,
+                        left: vi * width,
+                        width,
+                      }
+                    : {
+                        height: monthHeight,
+                        top: monthOffset,
+                      },
+                ]}
               >
                 {inRange
                   ? renderItem({
@@ -419,6 +423,17 @@ function SwiperInner({
 const styles = StyleSheet.create({
   inner: {
     position: 'relative',
+  },
+  month: {
+    overflow: 'hidden',
+    position: 'absolute',
+  },
+  monthHorizontal: {
+    top: 0,
+  },
+  monthVertical: {
+    left: 0,
+    right: 0,
   },
 })
 

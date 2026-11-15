@@ -2,7 +2,6 @@
 
 exports[`renders AnalogClock 1`] = `
 <View
-  cursor="pointer"
   onMoveShouldSetResponder={[Function]}
   onMoveShouldSetResponderCapture={[Function]}
   onResponderEnd={[Function]}
@@ -20,6 +19,7 @@ exports[`renders AnalogClock 1`] = `
       {
         "alignItems": "center",
         "borderRadius": 128,
+        "cursor": "pointer",
         "height": 256,
         "justifyContent": "center",
         "position": "relative",

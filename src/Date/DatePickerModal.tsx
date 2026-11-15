@@ -14,6 +14,7 @@ import {
   supportedOrientations,
   useIsLargeScreen,
 } from '../shared/utils'
+import { dateInputCardWidth } from './DatePickerInputForm'
 import DatePickerModalContent, {
   DatePickerModalContentMultiProps,
   DatePickerModalContentRangeProps,
@@ -57,6 +58,12 @@ export function DatePickerModal(
       default: 'slide',
       web: 'none',
     })
+  const [inputMode, setInputMode] = useState(
+    () => props.mode !== 'multiple' && props.displayMode === 'input'
+  )
+  const onDisplayModeChange = useCallback((next: 'calendar' | 'input') => {
+    setInputMode(next === 'input')
+  }, [])
   const isLargeScreen = useIsLargeScreen()
   const [lastCalendarLayout, setLastCalendarLayout] = useState<{
     height: number
@@ -71,6 +78,7 @@ export function DatePickerModal(
   const theme = useTheme()
   const useFormSheet = shouldUseSheet && isLargeScreen
   const { height: windowHeight, width: windowWidth } = useWindowDimensions()
+  const inputWidth = dateInputCardWidth(windowWidth)
   const windowKey = `${windowWidth}x${windowHeight}`
   const onCalendarLayout = useCallback(
     ({ height, width }: { height: number; width: number }) => {
@@ -112,13 +120,17 @@ export function DatePickerModal(
         >
           <View
             style={[
-              styles.modalContent,
+              inputMode && isLargeScreen && !useFormSheet
+                ? styles.inputCard
+                : styles.modalContent,
               { backgroundColor: theme.colors.elevation.level3 },
-              isLargeScreen
-                ? useFormSheet
-                  ? styles.modalContentFormSheet
-                  : styles.modalContentBig
-                : null,
+              inputMode && isLargeScreen && !useFormSheet
+                ? { width: inputWidth }
+                : isLargeScreen
+                  ? useFormSheet
+                    ? styles.modalContentFormSheet
+                    : styles.modalContentBig
+                  : null,
             ]}
           >
             <DatePickerModalContent
@@ -128,6 +140,7 @@ export function DatePickerModal(
               initialLayout={rest.initialLayout ?? rememberedCalendarLayout}
               inputEnabled={inputEnabled}
               onCalendarLayout={onCalendarLayout}
+              onDisplayModeChange={onDisplayModeChange}
               placeholder={props.placeholder}
               statusBarOnTopOfBackdrop={isSheet || statusBarOnTopOfBackdrop}
               withDateFormatInLabel={props.withDateFormatInLabel}
@@ -140,6 +153,13 @@ export function DatePickerModal(
 }
 
 const styles = StyleSheet.create({
+  inputCard: {
+    borderRadius: 28,
+    elevation: 3,
+    flexGrow: 0,
+    maxWidth: 360,
+    overflow: 'hidden',
+  },
   modalContent: {
     flex: 1,
     minHeight: 0,

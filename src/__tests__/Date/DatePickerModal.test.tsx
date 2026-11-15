@@ -1,8 +1,14 @@
 import { act, render } from '@testing-library/react-native'
-import { Dimensions } from 'react-native'
+import {
+  Dimensions,
+  StyleSheet,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 import DatePickerModal from '../../Date/DatePickerModal'
+import { pressTestId } from '../../testUtils'
 
 function viewsWithHeight(root: { queryAll: Function } | null, height: number) {
   if (!root) return []
@@ -124,6 +130,21 @@ it('uses cancel and ok at the bottom of the centered tablet dialog', async () =>
   try {
     const phone = await renderAt(390, 844)
     expect(viewsWithHeight(phone.root, topInset).length).toBeGreaterThan(0)
+    await pressTestId(phone, 'react-native-paper-dates-toggle-edit')
+    expect(phone.getByText('Enter date')).toBeTruthy()
+    expect(phone.getByText('Date')).toBeTruthy()
+    expect(phone.getByTestId('react-native-paper-dates-close')).toBeTruthy()
+    expect(phone.getByTestId('react-native-paper-dates-save')).toBeTruthy()
+    expect(viewsWithHeight(phone.root, topInset).length).toBeGreaterThan(0)
+    const inputCard = phone.root!.queryAll(
+      (node: { props?: { style?: unknown } }) => {
+        const flat = StyleSheet.flatten(
+          node.props?.style as StyleProp<ViewStyle>
+        )
+        return flat?.width === 360 && flat?.borderRadius === 28
+      }
+    )
+    expect(inputCard).toHaveLength(0)
 
     const tablet = await renderAt(1024, 1366)
     expect(viewsWithHeight(tablet.root, topInset)).toHaveLength(0)

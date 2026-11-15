@@ -10,9 +10,11 @@ import { weekdaySpan, weekdaySpanOvershoot } from './weekdayColumns'
 export default function DatePickerModalHeaderBackground({
   children,
   disableWeekDays,
+  divider = true,
 }: {
   children: ReactNode
   disableWeekDays?: DisableWeekDaysType
+  divider?: boolean
 }) {
   const backgroundColor = useHeaderBackgroundColor()
   const { height, width } = useWindowDimensions()
@@ -32,13 +34,15 @@ export default function DatePickerModalHeaderBackground({
       ]}
     >
       {children}
-      {isPhoneLandscape ? (
-        <View style={weekdaySpan(disableWeekDays)}>
-          <Divider style={weekdaySpanOvershoot} />
-        </View>
-      ) : (
-        <Divider />
-      )}
+      {divider ? (
+        isPhoneLandscape ? (
+          <View style={weekdaySpan(disableWeekDays)}>
+            <Divider style={weekdaySpanOvershoot} />
+          </View>
+        ) : (
+          <Divider />
+        )
+      ) : null}
     </View>
   )
 }

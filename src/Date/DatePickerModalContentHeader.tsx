@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { IconButton, Text, useTheme } from 'react-native-paper'
 
-import { displayCase, themeColor } from '../shared/utils'
+import { displayCase, themeColor, useIsLargeScreen } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
 import type { LocalState } from './DatePickerModalContent'
 import type { DisableWeekDaysType, ModeType } from './types'
@@ -10,6 +10,7 @@ import type { DisableWeekDaysType, ModeType } from './types'
 export interface HeaderContentProps extends HeaderPickProps {
   collapsed: boolean
   disableWeekDays?: DisableWeekDaysType
+  layout?: 'card'
   locale: string | undefined
   mode: ModeType
   onToggle: () => void
@@ -50,20 +51,37 @@ export default function DatePickerModalContentHeader(
   const finalCollapsedIcon = editIcon ?? 'pencil-outline'
   const finalExpandedIcon = calendarIcon ?? 'calendar-blank'
   const isEditingEnabled = allowEditing && mode !== 'multiple'
+  const isLargeScreen = useIsLargeScreen()
+  const isRange = mode === 'range'
+  const compactRange = isRange && !isLargeScreen && props.layout !== 'card'
   const label = getLabel(props.locale, props.mode, props.label)
   const supportingTextColor = theme.colors.onSurfaceVariant
   const textFont = theme.fonts.labelLarge
 
   return (
-    <View style={styles.header}>
+    <View style={[styles.header, compactRange && styles.rangeHeader]}>
       <Text
         maxFontSizeMultiplier={1.5}
-        style={{ color: supportingTextColor, ...textFont }}
+        style={[
+          textFont,
+          compactRange && styles.rangeSupporting,
+          { color: supportingTextColor },
+        ]}
       >
         {displayCase(label, !!uppercase)}
       </Text>
-      <View style={styles.headlineRow}>
-        <View style={styles.headerContentContainer}>
+      <View
+        style={[styles.headlineRow, compactRange && styles.rangeHeadlineRow]}
+      >
+        <View
+          style={[
+            styles.headerContentContainer,
+            compactRange && styles.rangeHeaderContent,
+            compactRange &&
+              isEditingEnabled &&
+              styles.rangeHeaderContentWithToggle,
+          ]}
+        >
           {mode === 'range' ? (
             <HeaderContentRange {...props} color={headlineColor} />
           ) : null}
@@ -89,7 +107,7 @@ export default function DatePickerModalContentHeader(
             iconColor={theme.colors.onSurfaceVariant}
             onPress={onToggle}
             size={24}
-            style={styles.editButton}
+            style={[styles.editButton, compactRange && styles.rangeEditButton]}
             testID="react-native-paper-dates-toggle-edit"
           />
         ) : null}
@@ -246,8 +264,7 @@ const styles = StyleSheet.create({
     minHeight: 40,
   },
   headerSeparator: {
-    paddingLeft: 6,
-    paddingRight: 6,
+    marginHorizontal: 4,
   },
   headlineRow: {
     alignItems: 'center',
@@ -256,6 +273,32 @@ const styles = StyleSheet.create({
     minHeight: 40,
   },
   headlineText: {
+    includeFontPadding: false,
+  },
+  rangeEditButton: {
+    end: 0,
+    margin: 0,
+    position: 'absolute',
+    top: '50%',
+    transform: [{ translateY: -24 }],
+  },
+  rangeHeader: {
+    paddingBottom: 12,
+    paddingEnd: 12,
+    paddingStart: 64,
+    paddingTop: 8,
+  },
+  rangeHeaderContent: {
+    minHeight: 28,
+  },
+  rangeHeaderContentWithToggle: {
+    paddingEnd: 60,
+  },
+  rangeHeadlineRow: {
+    marginTop: 0,
+    minHeight: 28,
+  },
+  rangeSupporting: {
     includeFontPadding: false,
   },
 })

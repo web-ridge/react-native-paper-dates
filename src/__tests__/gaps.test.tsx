@@ -4,7 +4,7 @@ import { DarkTheme, ThemeProvider } from 'react-native-paper'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 import Calendar from '../Date/Calendar'
-import CalendarEdit from '../Date/CalendarEdit'
+import DatePickerInputForm from '../Date/DatePickerInputForm'
 import DatePickerInputWithoutModal from '../Date/DatePickerInputWithoutModal'
 import DatePickerModal from '../Date/DatePickerModal'
 import DatePickerModalContent from '../Date/DatePickerModalContent'
@@ -43,7 +43,7 @@ afterEach(async () => {
   jest.restoreAllMocks()
 })
 
-function callProps(
+async function callProps(
   screen: { container: { queryAll: Function } },
   match: (props: Record<string, unknown>) => boolean,
   invoke: (props: Record<string, unknown>) => void
@@ -53,9 +53,13 @@ function callProps(
   }
   let root = seed?.unstable_fiber
   while (root?.return) root = root.return
+  const matched: Record<string, unknown>[] = []
   walkFibers(root, (fiber) => {
     const props = (fiber.memoizedProps ?? {}) as Record<string, unknown>
-    if (match(props)) invoke(props)
+    if (match(props)) matched.push(props)
+  })
+  await act(async () => {
+    for (const props of matched) invoke(props)
   })
 }
 
@@ -195,6 +199,33 @@ describe('remaining date branches', () => {
         state={{}}
       />
     )
+    const editing = await render(
+      <DatePickerModalContentHeader
+        allowEditing
+        calendarIcon="calendar"
+        collapsed={false}
+        editIcon="pencil"
+        locale="en"
+        mode="single"
+        onToggle={() => null}
+        state={{ date: new Date(2026, 0, 2) }}
+      />
+    )
+    expect(editing.getByLabelText('Pick date from calendar')).toBeTruthy()
+    await editing.rerender(
+      <DatePickerModalContentHeader
+        allowEditing
+        collapsed
+        locale="en"
+        mode="range"
+        onToggle={() => null}
+        state={{
+          endDate: new Date(2026, 0, 4),
+          startDate: new Date(2026, 0, 2),
+        }}
+      />
+    )
+    expect(editing.getByLabelText('Type in date')).toBeTruthy()
   })
 
   it('covers month geometry and the year list on web', async () => {
@@ -274,32 +305,20 @@ describe('remaining date branches', () => {
   })
 
   it('focuses calendar fields and forwards their edits', async () => {
-    const realUseRef = React.useRef
-    let seen = 0
-    jest.spyOn(React, 'useRef').mockImplementation((initial: unknown) => {
-      seen += 1
-      if (seen <= 3 && initial === null) {
-        return { current: { blur: jest.fn(), focus: jest.fn() } }
-      }
-      return realUseRef(initial as never)
-    })
     const onChange = jest.fn()
     const editing = await render(
-      <CalendarEdit
-        collapsed={false}
+      <DatePickerInputForm
+        endDate={new Date(2026, 10, 2)}
         locale="en"
         mode="range"
         onChange={onChange}
-        state={{
-          date: undefined,
-          dates: undefined,
-          endDate: new Date(2026, 10, 2),
-          startDate: new Date(2026, 10, 1),
-        }}
-        validRange={undefined}
+        onConfirm={jest.fn()}
+        onDismiss={jest.fn()}
+        onRequestCalendar={jest.fn()}
+        startDate={new Date(2026, 10, 1)}
       />
     )
-    callProps(
+    await callProps(
       editing,
       (props) =>
         (props.inputMode === 'start' || props.inputMode === 'end') &&
@@ -330,35 +349,25 @@ describe('branch edges', () => {
     )[0]
     if (day) {
       const press = findPress(day)
-      if (press) press()
+      if (press) {
+        await act(async () => {
+          press()
+        })
+      }
     }
 
     const editing = await render(
-      <CalendarEdit
-        collapsed={false}
+      <DatePickerInputForm
         locale="en"
         mode="range"
         onChange={jest.fn()}
-        state={{
-          date: undefined,
-          dates: undefined,
-          endDate: undefined,
-          startDate: undefined,
-        }}
-        validRange={undefined}
+        onConfirm={jest.fn()}
+        onDismiss={jest.fn()}
+        onRequestCalendar={jest.fn()}
       />
     )
-    const refs: { current: unknown }[] = []
-    const useRefSpy = jest.spyOn(React, 'useRef').mockImplementation((initial) => {
-      const ref = { current: initial ?? null }
-      refs.push(ref)
-      return ref as never
-    })
-    refs.forEach((ref) => {
-      ref.current = null
-    })
     let submits = 0
-    callProps(
+    await callProps(
       editing,
       (props) => typeof props.onSubmitEditing === 'function',
       (props) => {
@@ -369,7 +378,6 @@ describe('branch edges', () => {
     if (submits === 0) {
       throw new Error('calendar edit submit was not found')
     }
-    useRefSpy.mockRestore()
 
     const content = await render(
       safe(
@@ -386,7 +394,9 @@ describe('branch edges', () => {
     const layout = content.container.queryAll(
       (node: { props: { onLayout?: Function } }) => typeof node.props.onLayout === 'function'
     )[0]
-    layout.props.onLayout({ nativeEvent: { layout: { height: 0, width: 0 } } })
+    await act(async () => {
+      layout.props.onLayout({ nativeEvent: { layout: { height: 0, width: 0 } } })
+    })
 
     const hours = await render(
       <TimeInput
@@ -421,25 +431,13 @@ describe('branch edges', () => {
         onFocusInput={jest.fn()}
       />
     )
-    const timeRefs: { current: unknown }[] = []
-    const timeRefSpy = jest
-      .spyOn(React, 'useRef')
-      .mockImplementation((initial) => {
-        const ref = { current: initial ?? null }
-        timeRefs.push(ref)
-        return ref as never
-      })
-    timeRefs.forEach((ref) => {
-      ref.current = null
-    })
-    callProps(
+    await callProps(
       inputs,
       (props) => typeof props.onSubmitEditing === 'function',
       (props) => {
         ;(props.onSubmitEditing as () => void)()
       }
     )
-    timeRefSpy.mockRestore()
 
     const index = getStartAtIndex(2024, 2028)
     const swiper = await render(
@@ -458,11 +456,13 @@ describe('branch edges', () => {
       (node: { props: { onMomentumScrollEnd?: Function } }) =>
         typeof node.props.onMomentumScrollEnd === 'function'
     )[0]
-    scroll.props.onMomentumScrollEnd({
-      nativeEvent: {
-        contentOffset: { x: index * 300, y: 0 },
-        layoutMeasurement: { height: 200, width: 300 },
-      },
+    await act(async () => {
+      scroll.props.onMomentumScrollEnd({
+        nativeEvent: {
+          contentOffset: { x: index * 300, y: 0 },
+          layoutMeasurement: { height: 200, width: 300 },
+        },
+      })
     })
 
     const edge = await render(
@@ -517,7 +517,7 @@ describe('remaining time branches', () => {
         use24HourClock={false}
       />
     )
-    callProps(
+    await callProps(
       landscape,
       (props) =>
         typeof props.onChange === 'function' &&
@@ -557,23 +557,21 @@ describe('remaining time branches', () => {
         visible
       />
     )
-    callProps(
+    await callProps(
       modal,
       (props) => props.focused === 'hours' && typeof props.onFocusInput === 'function',
       (props) => {
-        act(() => {
-          ;(props.onFocusInput as (type: 'minutes') => void)('minutes')
-          const change = props.onChange as (value: {
-            focused?: 'minutes'
-            hours: number
-            minutes: number
-          }) => void
-          change({ focused: 'minutes', hours: 10, minutes: 20 })
-          change({ hours: 11, minutes: 21 })
-        })
+        ;(props.onFocusInput as (type: 'minutes') => void)('minutes')
+        const change = props.onChange as (value: {
+          focused?: 'minutes'
+          hours: number
+          minutes: number
+        }) => void
+        change({ focused: 'minutes', hours: 10, minutes: 20 })
+        change({ hours: 11, minutes: 21 })
       }
     )
-    callProps(
+    await callProps(
       landscape,
       (props) => typeof props.direction === 'string' && typeof props.onChange === 'function',
       (props) => {

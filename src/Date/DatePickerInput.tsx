@@ -64,8 +64,6 @@ function DatePickerInput(
       setVisible(true)
       return
     }
-    // The web measurement callback is deferred. Opening first, then applying
-    // that callback, left the menu at the fallback corner.
     setVisible(true)
     const measurable = node as {
       measureInWindow?: (

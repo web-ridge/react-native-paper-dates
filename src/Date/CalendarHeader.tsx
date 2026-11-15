@@ -11,6 +11,7 @@ import { centerIconOnLastWeekday } from './weekdayColumns'
 const buttonContainerHeight = 56
 const buttonContainerMarginBottom = 8
 const buttonContainerMarginTop = 4
+const overlayScrollbarWidth = 15
 let cachedLayoutScrollbarWidth: number | undefined
 export const verticalScrollbarGutter = Platform.select({
   default: 14,
@@ -115,6 +116,15 @@ export function layoutScrollbarWidth(): number {
   const width = probe.offsetWidth - probe.clientWidth
   probe.remove()
   return (cachedLayoutScrollbarWidth = width > 0 ? width : 0)
+}
+
+export function overlayScrollbarPadding(): number {
+  return layoutScrollbarWidth() > 0 ? 0 : overlayScrollbarWidth
+}
+
+export function weekdayScrollbarInset(): number {
+  const measured = layoutScrollbarWidth()
+  return measured > 0 ? measured : overlayScrollbarWidth
 }
 
 const styles = StyleSheet.create({

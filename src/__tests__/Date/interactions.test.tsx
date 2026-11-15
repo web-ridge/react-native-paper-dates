@@ -7,25 +7,27 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import AnimatedCrossView from '../../Date/AnimatedCrossView'
 import AutoSizer from '../../Date/AutoSizer'
 import Calendar from '../../Date/Calendar'
-import CalendarEdit from '../../Date/CalendarEdit'
 import CalendarHeader from '../../Date/CalendarHeader'
 import DatePickerInput from '../../Date/DatePickerInput'
+import DatePickerInputForm from '../../Date/DatePickerInputForm'
 import DatePickerInputWithoutModal from '../../Date/DatePickerInputWithoutModal'
 import DatePickerModal from '../../Date/DatePickerModal'
 import DatePickerModalContent from '../../Date/DatePickerModalContent'
 import DatePickerModalHeader from '../../Date/DatePickerModalHeader'
 import DatePickerModalHeaderBackground from '../../Date/DatePickerModalHeaderBackground'
 import DatePickerModalStatusBar from '../../Date/DatePickerModalStatusBar'
-import { getStartAtIndex } from '../../Date/dateUtils'
+import { getBeginOffset, getStartAtIndex } from '../../Date/dateUtils'
 import Day from '../../Date/Day'
 import DayNames from '../../Date/DayNames'
 import DayRange from '../../Date/DayRange'
 import Month, {
   getIndexFromVerticalOffset,
   getMonthHeight,
+  getVerticalListMetrics,
   getVerticalMonthsOffset,
   horizontalMonthScrolls,
 } from '../../Date/Month'
+import { getMaxIndex, getMinIndex } from '../../Date/SwiperUtils'
 import Swiper from '../../Date/Swiper'
 import YearPicker from '../../Date/YearPicker'
 import {
@@ -90,6 +92,41 @@ describe('month offset helpers', () => {
     ).toBe(false)
     expect(horizontalMonthScrolls(0, start, false, 2020, 2030)).toBe(true)
     expect(getMonthHeight('vertical', start, true, 2020, 2030)).toBeGreaterThan(0)
+  })
+
+  it('finds the month that occupies a far scroll position', () => {
+    const startYear = 1800
+    const endYear = 2200
+    const min = getMinIndex(startYear, endYear)
+    const max = getMaxIndex(startYear, endYear)
+    const { height, origin } = getVerticalListMetrics(
+      min,
+      max,
+      false,
+      startYear,
+      endYear
+    )
+    const begin = getBeginOffset(startYear, endYear)
+    const maxScroll = Math.max(0, height - 400)
+    for (const top of [0, 1000, 250000, 963048, 1200000, maxScroll]) {
+      const found = getIndexFromVerticalOffset(
+        origin + top - begin,
+        false,
+        startYear,
+        endYear
+      )
+      const monthTop =
+        getVerticalMonthsOffset(found, false, startYear, endYear) - origin
+      const monthHeight = getMonthHeight(
+        'vertical',
+        found,
+        false,
+        startYear,
+        endYear
+      )
+      expect(monthTop).toBeLessThanOrEqual(top + 1)
+      expect(monthTop + monthHeight).toBeGreaterThan(top - 1)
+    }
   })
 })
 
@@ -309,10 +346,17 @@ describe('date picker modal', () => {
     await pressDays(single, 1)
 
     await pressTestId(single, 'react-native-paper-dates-toggle-edit')
+    expect(
+      byTestId(single, 'react-native-paper-dates-modal-input').length
+    ).toBeGreaterThan(0)
+    expect(
+      byTestId(single, 'react-native-paper-dates-close').length
+    ).toBeGreaterThan(0)
     await pressTestId(single, 'react-native-paper-dates-save')
     await pressTestId(single, 'react-native-paper-dates-close')
     expect(onConfirm).toHaveBeenCalled()
     expect(onChange).toHaveBeenCalled()
+    expect(onDismiss).toHaveBeenCalled()
 
     const range = await render(
       safe(
@@ -540,36 +584,15 @@ describe('inputs, headers, and pickers', () => {
 
   it('renders header chrome for both orientations and editing states', async () => {
     const onChange = jest.fn()
-    await render(
-      <CalendarEdit
-        collapsed
-        disableWeekDays={[0, 1, 2, 3, 4, 5, 6]}
-        locale="en"
-        mode="range"
-        onChange={onChange}
-        state={{
-          date: day,
-          dates: [day],
-          endDate: day,
-          startDate: day,
-        }}
-        validRange={undefined}
-      />
-    )
     const editing = await render(
-      <CalendarEdit
-        collapsed={false}
+      <DatePickerInputForm
         label="Day"
         locale="en"
         mode="single"
         onChange={onChange}
-        state={{
-          date: undefined,
-          dates: undefined,
-          endDate: undefined,
-          startDate: undefined,
-        }}
-        validRange={undefined}
+        onConfirm={jest.fn()}
+        onDismiss={jest.fn()}
+        onRequestCalendar={jest.fn()}
       />
     )
     const fields = editing.container.queryAll(
@@ -586,18 +609,16 @@ describe('inputs, headers, and pickers', () => {
     })
 
     await render(
-      <CalendarEdit
-        collapsed={false}
+      <DatePickerInputForm
+        endDate={day}
         locale="en"
-        mode="multiple"
+        mode="range"
         onChange={onChange}
-        state={{
-          date: undefined,
-          dates: undefined,
-          endDate: undefined,
-          startDate: undefined,
-        }}
-        validRange={undefined}
+        onConfirm={jest.fn()}
+        onDismiss={jest.fn()}
+        onRequestCalendar={jest.fn()}
+        startDate={day}
+        withDateFormatInLabel
       />
     )
 

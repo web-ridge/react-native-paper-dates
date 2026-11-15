@@ -168,16 +168,6 @@ function createStyles(colors: AppColors) {
     actionButtonCompact: {
       alignSelf: 'flex-end',
     },
-    authorLink: {
-      color: colors.primary,
-      fontSize: 12,
-      lineHeight: 16,
-    },
-    authors: {
-      color: colors.onSurfaceVariant,
-      fontSize: 12,
-      lineHeight: 16,
-    },
     brandCopy: {
       flex: 1,
       gap: 4,
@@ -878,7 +868,9 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
                 <Image source={require('./schedule.png')} style={styles.logo} />
                 <View style={styles.brandCopy}>
                   <AppText
-                    onPress={() => Linking.openURL(githubUrl)}
+                    accessibilityHint="Opens the documentation"
+                    accessibilityRole="link"
+                    onPress={() => Linking.openURL(docsUrl)}
                     style={[styles.title, wide && styles.titleWide]}
                   >
                     {wide
@@ -886,38 +878,30 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
                       : 'react-native-\npaper-dates'}
                   </AppText>
                   <AppText style={styles.version}>v{libraryVersion}</AppText>
-                  <AppText style={styles.authors}>
-                    Authors:{' '}
-                    <AppText
-                      onPress={() =>
-                        Linking.openURL('https://twitter.com/RichardLindhout')
-                      }
-                      style={styles.authorLink}
-                    >
-                      Richard Lindhout
-                    </AppText>
-                    ,{' '}
-                    <AppText
-                      onPress={() =>
-                        Linking.openURL('https://github.com/iM-GeeKy')
-                      }
-                      style={styles.authorLink}
-                    >
-                      Brandon Fitzwater
-                    </AppText>
-                  </AppText>
                 </View>
               </View>
-              <IconButton
-                accessibilityLabel={
-                  theme.dark ? 'Switch to light theme' : 'Switch to dark theme'
-                }
-                icon={theme.dark ? 'weather-sunny' : 'weather-night'}
-                iconColor={theme.colors.primary}
-                mode="outlined"
-                onPress={onToggleTheme}
-                style={styles.themeToggle}
-              />
+              <View style={styles.headerActions}>
+                <IconButton
+                  accessibilityLabel="GitHub"
+                  icon="github"
+                  iconColor={theme.colors.primary}
+                  mode="outlined"
+                  onPress={() => Linking.openURL(githubUrl)}
+                  style={styles.themeToggle}
+                />
+                <IconButton
+                  accessibilityLabel={
+                    theme.dark
+                      ? 'Switch to light theme'
+                      : 'Switch to dark theme'
+                  }
+                  icon={theme.dark ? 'weather-sunny' : 'weather-night'}
+                  iconColor={theme.colors.primary}
+                  mode="outlined"
+                  onPress={onToggleTheme}
+                  style={styles.themeToggle}
+                />
+              </View>
             </View>
             <AppText style={styles.description}>
               Cross-platform Material Design{' '}
@@ -946,26 +930,6 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
               </AppText>{' '}
               for React Native Paper.
             </AppText>
-            <View style={styles.headerActions}>
-              <Button
-                buttonColor={theme.colors.secondaryContainer}
-                icon="github"
-                mode="filled"
-                onPress={() => Linking.openURL(githubUrl)}
-                textColor={theme.colors.onSecondaryContainer}
-              >
-                GitHub
-              </Button>
-              <Button
-                buttonColor={theme.colors.primary}
-                icon="file-document-outline"
-                mode="filled"
-                onPress={() => Linking.openURL(docsUrl)}
-                textColor={theme.colors.onPrimary}
-              >
-                View documentation
-              </Button>
-            </View>
           </View>
 
           <View style={[styles.localeBar, wide && styles.localeBarWide]}>

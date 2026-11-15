@@ -115,8 +115,6 @@ function AnalogClock({
     <View
       ref={clockRef}
       {...panResponder.panHandlers}
-      // @ts-ignore -> https://github.com/necolas/react-native-web/issues/506
-      cursor={'pointer'}
       style={[
         styles.clock,
         {
@@ -210,6 +208,7 @@ const styles = StyleSheet.create({
   clock: {
     alignItems: 'center',
     borderRadius: circleSize / 2,
+    cursor: 'pointer',
     height: circleSize,
     justifyContent: 'center',
     position: 'relative',

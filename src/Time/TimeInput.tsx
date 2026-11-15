@@ -18,7 +18,7 @@ import {
 import { useTheme } from 'react-native-paper'
 
 import { sharedStyles } from '../shared/styles'
-import StateLayer from './StateLayer'
+import StateLayer from '../shared/StateLayer'
 import {
   clockTypes,
   inputTypes,
@@ -153,6 +153,7 @@ function TimeInput(
           })}
       style={[
         styles.root,
+        showOutline ? styles.rootOutline : styles.rootBorder,
         {
           backgroundColor,
           borderColor: showOutline
@@ -161,7 +162,6 @@ function TimeInput(
               : theme.colors.primary
             : undefined,
           borderRadius: theme.shapes.corner.small,
-          borderWidth: showOutline ? 2 : 0,
           height: fieldHeight,
           width,
         },
@@ -267,6 +267,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
+  },
+  rootBorder: {
+    borderWidth: 0,
+  },
+  rootOutline: {
+    borderWidth: 2,
   },
   value: {
     textAlign: 'center',

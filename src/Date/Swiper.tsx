@@ -1,5 +1,6 @@
 import {
   memo,
+  type CSSProperties,
   type ReactNode,
   type UIEvent,
   useCallback,
@@ -10,9 +11,13 @@ import {
 } from 'react'
 import { useTheme } from 'react-native-paper'
 
-import { useLatest } from '../shared/utils'
+import { themeColor, useLatest } from '../shared/utils'
 import AutoSizer from './AutoSizer'
-import { layoutScrollbarWidth } from './CalendarHeader'
+import {
+  layoutScrollbarWidth,
+  overlayScrollbarPadding,
+  weekdayScrollbarInset,
+} from './CalendarHeader'
 import { useDatePickerKeys } from './datePickerKeys'
 import {
   addMonths,
@@ -154,10 +159,15 @@ function Swiper({
         </AutoSizer>
       ) : (
         <>
-          {renderHeader && renderHeader(renderProps)}
+          {renderHeader &&
+            renderHeader({
+              ...renderProps,
+              endInset: weekdayScrollbarInset(),
+            })}
           <AutoSizer initialLayout={initialLayout}>
             {({ height, width }) => (
               <VerticalScroller
+                contentInset={overlayScrollbarPadding()}
                 endYear={endYear}
                 height={height}
                 initialIndex={initialIndex}
@@ -178,6 +188,7 @@ function Swiper({
 const empty = () => null
 
 function VerticalScroller({
+  contentInset,
   endYear,
   height,
   initialIndex,
@@ -186,6 +197,7 @@ function VerticalScroller({
   startYear,
   width,
 }: {
+  contentInset: number
   endYear?: number
   height: number
   initialIndex: number
@@ -238,8 +250,6 @@ function VerticalScroller({
         effectiveEndYear
       ),
     })
-    // Mount-only. Later scrolls keep the offset the user already has.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const onScroll = useCallback(
     (e: UIEvent) => {
@@ -277,53 +287,50 @@ function VerticalScroller({
     ]
   )
 
+  const scrollerStyle: CSSProperties = {
+    boxSizing: 'border-box',
+    colorScheme: theme.dark ? 'dark' : 'light',
+    height,
+    overflow: 'auto',
+    paddingRight: contentInset,
+    overflowAnchor: 'none',
+    scrollbarColor: `${themeColor(theme.colors.outline)} ${themeColor(
+      theme.colors.elevation.level3
+    )}`,
+    width,
+  }
+  const trackStyle: CSSProperties = {
+    height: verticalMetrics.height,
+    position: 'relative',
+  }
+
   return (
-    <div
-      onScroll={onScroll}
-      ref={parentRef}
-      // eslint-disable-next-line react-native/no-inline-styles
-      style={{
-        colorScheme: theme.dark ? 'dark' : 'light',
-        height,
-        overflow: 'auto',
-        overflowAnchor: 'none',
-        width,
-      }}
-    >
-      <div
-        // eslint-disable-next-line react-native/no-inline-styles
-        style={{
-          height: verticalMetrics.height,
-          position: 'relative',
-        }}
-      >
+    <div onScroll={onScroll} ref={parentRef} style={scrollerStyle}>
+      <div style={trackStyle}>
         {visibleIndexes.map((monthIndex) => {
+          const monthStyle: CSSProperties = {
+            height: getMonthHeight(
+              'vertical',
+              monthIndex,
+              startWeekOnMonday,
+              effectiveStartYear,
+              effectiveEndYear
+            ),
+            left: 0,
+            position: 'absolute',
+            right: 0,
+            transform: `translateY(${
+              getVerticalMonthsOffset(
+                monthIndex,
+                startWeekOnMonday,
+                effectiveStartYear,
+                effectiveEndYear
+              ) - verticalMetrics.origin
+            }px)`,
+            willChange: 'transform',
+          }
           return (
-            <div
-              key={monthIndex}
-              // eslint-disable-next-line react-native/no-inline-styles
-              style={{
-                height: getMonthHeight(
-                  'vertical',
-                  monthIndex,
-                  startWeekOnMonday,
-                  effectiveStartYear,
-                  effectiveEndYear
-                ),
-                left: 0,
-                position: 'absolute',
-                right: 0,
-                transform: `translateY(${
-                  getVerticalMonthsOffset(
-                    monthIndex,
-                    startWeekOnMonday,
-                    effectiveStartYear,
-                    effectiveEndYear
-                  ) - verticalMetrics.origin
-                }px)`,
-                willChange: 'transform',
-              }}
-            >
+            <div key={monthIndex} style={monthStyle}>
               {renderItem({
                 index: monthIndex,
                 onNext: empty,

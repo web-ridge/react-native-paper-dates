@@ -164,6 +164,10 @@ describe('native swiper gaps', () => {
         startYear={startYear}
       />
     )
+    await act(async () => {
+      onPrev?.()
+    })
+
     const scroll = scrollNodes(screen).find(
       (node) => typeof node.props.onScroll === 'function'
     )

@@ -14,6 +14,7 @@ import {
   getDaysInMonth,
   getEndOfDay,
   getInitialIndex,
+  getStartOfDay,
 } from './dateUtils'
 import Month from './Month'
 import MonthMenu from './MonthMenu'
@@ -172,14 +173,14 @@ function Calendar(
         })
       } else if (mode === 'range') {
         const ed = endDateRef.current
-        let isStart: boolean = true
         const sd = startDateRef.current
-        if (sd && !ed && dateToUnix(d) >= dateToUnix(sd!)) {
-          isStart = false
-        }
+        const extendsRange =
+          !!sd &&
+          (!ed || areDatesOnSameDay(sd, ed)) &&
+          dateToUnix(getStartOfDay(d)) > dateToUnix(getStartOfDay(sd))
         ;(onChangeRef.current as RangeChange)({
-          endDate: !isStart ? getEndOfDay(d) : undefined,
-          startDate: isStart ? d : sd,
+          endDate: extendsRange ? getEndOfDay(d) : undefined,
+          startDate: extendsRange ? sd : d,
         })
       } else if (mode === 'multiple') {
         datesRef.current = datesRef.current || []

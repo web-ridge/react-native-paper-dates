@@ -189,13 +189,15 @@ describe('web swiper', () => {
   })
 
   it('loads the web scroller when window is missing', async () => {
-    const previous = global.window
-    // @ts-expect-error the web build is selected by the presence of window
-    delete global.window
-    jest.isolateModules(() => {
-      require('../../Date/Swiper.tsx')
-    })
-    global.window = previous
+    const previous = globalThis.window
+    Reflect.deleteProperty(globalThis, 'window')
+    try {
+      jest.isolateModules(() => {
+        require('../../Date/Swiper.tsx')
+      })
+    } finally {
+      globalThis.window = previous
+    }
   })
 
   it('keeps a single month when the visible window is out of range', async () => {

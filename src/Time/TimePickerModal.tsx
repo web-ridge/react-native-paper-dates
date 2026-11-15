@@ -131,16 +131,10 @@ export function TimePickerModal({
             <View
               style={[
                 styles.modalContent,
-                // eslint-disable-next-line react-native/no-inline-styles
-                {
-                  backgroundColor: color,
-                  borderRadius: 28,
-                  minWidth:
-                    displayedInputType === inputTypes.picker ? 328 : 280,
-                  ...(displayedInputType === inputTypes.keyboard
-                    ? { height: 252 }
-                    : null),
-                },
+                displayedInputType === inputTypes.keyboard
+                  ? styles.keyboardModal
+                  : styles.pickerModal,
+                { backgroundColor: color },
               ]}
             >
               <View style={styles.labelContainer}>
@@ -236,6 +230,10 @@ const styles = StyleSheet.create({
   inputTypeToggle: {
     margin: 0,
   },
+  keyboardModal: {
+    height: 252,
+    minWidth: 280,
+  },
   label: {
     fontSize: 13,
     letterSpacing: 1,
@@ -247,6 +245,7 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   modalContent: {
+    borderRadius: 28,
     elevation: 3,
     justifyContent: 'space-between',
     paddingVertical: 8,
@@ -257,6 +256,9 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.34,
     shadowRadius: 6.27,
+  },
+  pickerModal: {
+    minWidth: 328,
   },
   timePickerContainer: {
     paddingBottom: 16,
