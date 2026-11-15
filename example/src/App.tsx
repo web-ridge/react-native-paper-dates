@@ -204,6 +204,22 @@ function createStyles(colors: AppColors) {
       flex: 1,
       gap: 2,
     },
+    cardDocsLink: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      flexShrink: 0,
+      gap: 4,
+      minHeight: 24,
+    },
+    cardDocsLinkText: {
+      color: colors.primary,
+      fontSize: 13,
+      fontWeight: '600',
+      lineHeight: 18,
+    },
+    cardDocsLinkTextActive: {
+      textDecorationLine: 'underline',
+    },
     cardFill: {
       flex: 1,
       width: '100%',
@@ -213,6 +229,7 @@ function createStyles(colors: AppColors) {
       width: '100%',
     },
     cardHeader: {
+      alignItems: 'flex-start',
       flexDirection: 'row',
       gap: 12,
     },
@@ -556,6 +573,7 @@ function daysFromToday(days: number) {
 function DemoCard({
   actionLabel,
   children,
+  docsUrl: cardDocsUrl,
   icon,
   onPress,
   style,
@@ -599,6 +617,33 @@ function DemoCard({
             {value}
           </AppText>
         </View>
+        {cardDocsUrl ? (
+          <Pressable
+            accessibilityLabel={`Documentation for ${title}`}
+            accessibilityRole="link"
+            hitSlop={8}
+            onPress={() => Linking.openURL(cardDocsUrl)}
+          >
+            {(state: PressableStateCallbackType & { hovered?: boolean }) => (
+              <View style={styles.cardDocsLink}>
+                <AppText
+                  style={[
+                    styles.cardDocsLinkText,
+                    (state.hovered || state.pressed) &&
+                      styles.cardDocsLinkTextActive,
+                  ]}
+                >
+                  Docs
+                </AppText>
+                <Icon
+                  color={theme.colors.primary}
+                  size={16}
+                  source="open-in-new"
+                />
+              </View>
+            )}
+          </Pressable>
+        ) : null}
       </View>
       <View style={styles.cardFooter}>{control}</View>
     </View>
@@ -608,6 +653,7 @@ function DemoCard({
 type DemoCardProps = {
   actionLabel?: string
   children?: ReactNode
+  docsUrl?: string
   icon: string
   onPress?: () => void
   style?: StyleProp<ViewStyle>
@@ -625,6 +671,16 @@ const materialDateGuidelinesUrl =
 
 const materialTimeGuidelinesUrl =
   'https://m3.material.io/components/time-pickers/guidelines'
+
+const inputDatePickerDocsUrl = `${docsBase}/guide/date-picker/input-date-picker`
+
+const multipleDatesPickerDocsUrl = `${docsBase}/guide/date-picker/multiple-dates-picker`
+
+const rangeDatePickerDocsUrl = `${docsBase}/guide/date-picker/range-date-picker`
+
+const singleDatePickerDocsUrl = `${docsBase}/guide/date-picker/single-date-picker`
+
+const timePickerDocsUrl = `${docsBase}/guide/time-picker`
 
 function ExampleSection({
   children,
@@ -992,6 +1048,7 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
               wide={wide}
             >
               <DemoCard
+                docsUrl={inputDatePickerDocsUrl}
                 icon="calendar-month-outline"
                 style={wide ? styles.cardFill : undefined}
                 title="Date input"
@@ -1011,6 +1068,7 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
                 />
               </DemoCard>
               <DemoCard
+                docsUrl={inputDatePickerDocsUrl}
                 icon="calendar-cursor"
                 style={wide ? styles.cardFill : undefined}
                 title="Docked date"
@@ -1038,6 +1096,7 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
             >
               <DemoCard
                 actionLabel="Pick single date"
+                docsUrl={singleDatePickerDocsUrl}
                 icon="calendar-check-outline"
                 onPress={() => setDialog('single')}
                 style={wide ? styles.cardFill : undefined}
@@ -1047,6 +1106,7 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
               />
               <DemoCard
                 actionLabel="Pick range"
+                docsUrl={rangeDatePickerDocsUrl}
                 icon="calendar-plus"
                 onPress={() => setDialog('range')}
                 style={wide ? styles.cardFill : undefined}
@@ -1063,6 +1123,7 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
             >
               <DemoCard
                 actionLabel="Enter date"
+                docsUrl={singleDatePickerDocsUrl}
                 icon="calendar-edit"
                 onPress={() => setDialog('modalInput')}
                 style={wide ? styles.cardFill : undefined}
@@ -1072,6 +1133,7 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
               />
               <DemoCard
                 actionLabel="Enter dates"
+                docsUrl={rangeDatePickerDocsUrl}
                 icon="calendar-range"
                 onPress={() => setDialog('modalInputRange')}
                 style={wide ? styles.cardFill : undefined}
@@ -1087,6 +1149,7 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
             >
               <DemoCard
                 actionLabel="Pick multiple dates"
+                docsUrl={multipleDatesPickerDocsUrl}
                 icon="calendar-multiple"
                 onPress={() => setDialog('multi')}
                 style={wide ? styles.cardFill : undefined}
@@ -1103,6 +1166,7 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
             >
               <DemoCard
                 actionLabel="Pick time"
+                docsUrl={timePickerDocsUrl}
                 icon="clock-outline"
                 onPress={() => setDialog('time')}
                 style={wide ? styles.cardFill : undefined}
