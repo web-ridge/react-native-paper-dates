@@ -22,7 +22,7 @@ import { getTranslation, translate } from '../translations/utils'
 import DatePickerInputWithoutModal from './DatePickerInputWithoutModal'
 import {
   areDatesOnSameDay,
-  parseLooseDate,
+  interpretTypedDate,
   useInputFormat,
   useInputFormatter,
   useRangeChecker,
@@ -109,15 +109,15 @@ function DatePickerInputForm({
   )
   const applyText = useCallback(
     (text: string | undefined, inputMode: 'end' | 'start') => {
-      const next = readTypedDate(text ?? '', inputFormat, inputMode, {
+      const next = interpretTypedDate(text ?? '', inputFormat, inputMode, {
         isDisabled,
         isWithinValidRange,
       })
       setInvalid((current) => ({
         ...current,
-        [inputMode]: next.invalid,
+        [inputMode]: next.issue !== undefined,
       }))
-      if (next.invalid) return
+      if (next.issue) return
       onChange(patchFor(mode, inputMode, next.date))
     },
     [inputFormat, isDisabled, isWithinValidRange, mode, onChange]
@@ -422,36 +422,6 @@ export function releaseFieldFocus() {
     return
   }
   Keyboard.dismiss()
-}
-
-function readTypedDate(
-  text: string,
-  inputFormat: string,
-  inputMode: 'end' | 'start',
-  check: {
-    isDisabled: (day: Date) => boolean
-    isWithinValidRange: (day: Date) => boolean
-  }
-) {
-  const trimmed = text.trim()
-  if (!trimmed) return { date: undefined, invalid: false }
-  const parsed = parseLooseDate(trimmed, inputFormat)
-  if (!parsed) return { date: undefined, invalid: true }
-  const { day, month, year } = parsed
-  const date =
-    inputMode === 'end'
-      ? new Date(year, month - 1, day, 23, 59, 59)
-      : new Date(year, month - 1, day)
-  if (
-    date.getFullYear() !== year ||
-    date.getMonth() !== month - 1 ||
-    date.getDate() !== day ||
-    check.isDisabled(date) ||
-    !check.isWithinValidRange(date)
-  ) {
-    return { date: undefined, invalid: true }
-  }
-  return { date, invalid: false }
 }
 
 const styles = StyleSheet.create({

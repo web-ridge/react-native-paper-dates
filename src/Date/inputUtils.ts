@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import { getTranslation } from '../translations/utils'
 import {
-  parseLooseDate,
+  interpretTypedDate,
   useInputFormat,
   useInputFormatter,
   useRangeChecker,
@@ -54,51 +54,29 @@ export default function useDateInput({
   }
 
   const commit = (text: string) => {
-    const rejectFormat = () => {
-      report(
+    const reject = (message: string) => {
+      report(message)
+      setRejected(text)
+    }
+    const next = interpretTypedDate(text, inputFormat, inputMode, {
+      isDisabled,
+      isWithinValidRange,
+    })
+    if (next.issue === 'disabled') {
+      reject(getTranslation(locale, 'dateIsDisabled'))
+      return
+    }
+    if (next.issue === 'format') {
+      reject(
         getTranslation(
           locale,
           'notAccordingToDateFormat',
           () => 'notAccordingToDateFormat'
         )(inputFormat)
       )
-      setRejected(text)
-    }
-    const trimmed = text.trim()
-    if (!trimmed) {
-      report(null)
-      setRejected(null)
-      onChange(undefined)
       return
     }
-
-    const parsed = parseLooseDate(trimmed, inputFormat)
-    if (!parsed) {
-      rejectFormat()
-      return
-    }
-
-    const { day, month, year } = parsed
-    const finalDate =
-      inputMode === 'end'
-        ? new Date(year, month - 1, day, 23, 59, 59)
-        : new Date(year, month - 1, day)
-
-    if (
-      finalDate.getFullYear() !== year ||
-      finalDate.getMonth() !== month - 1 ||
-      finalDate.getDate() !== day
-    ) {
-      rejectFormat()
-      return
-    }
-
-    if (isDisabled(finalDate)) {
-      report(getTranslation(locale, 'dateIsDisabled'))
-      setRejected(text)
-      return
-    }
-    if (!isWithinValidRange(finalDate)) {
+    if (next.issue === 'range') {
       const errors =
         validStart && validEnd
           ? [
@@ -124,14 +102,13 @@ export default function useDateInput({
                   )(formatter.format(validEnd))
                 : '',
             ]
-      report(errors.filter((message) => message).join(' '))
-      setRejected(text)
+      reject(errors.filter((message) => message).join(' '))
       return
     }
 
     report(null)
     setRejected(null)
-    onChange(finalDate)
+    onChange(next.date)
   }
 
   const onChangeText = (text: string) => {

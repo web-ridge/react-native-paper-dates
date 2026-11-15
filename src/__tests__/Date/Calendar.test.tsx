@@ -3,6 +3,21 @@ import { render } from '@testing-library/react-native'
 import Calendar from '../../Date/Calendar'
 import { pressTestId } from '../../testUtils'
 
+it('shows one month without a pager', async () => {
+  const screen = await render(
+    <Calendar
+      date={new Date(2026, 0, 15)}
+      locale="en"
+      mode="single"
+      onChange={() => null}
+      singleMonth
+    />
+  )
+  expect(
+    screen.getByTestId('react-native-paper-dates-day-2026-0-15')
+  ).toBeTruthy()
+})
+
 it('renders Calendar', async () => {
   const fixedDate = new Date('2025-01-15')
   const { toJSON } = await render(

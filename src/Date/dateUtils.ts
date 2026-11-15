@@ -3,6 +3,7 @@ import { useCallback, useMemo } from 'react'
 import type { DisableWeekDaysType, ValidRangeType } from './types'
 
 export type { DisableWeekDaysType }
+export type TypedDateIssue = 'disabled' | 'format' | 'range'
 
 export const dayCellSize = 48
 export const daySize = 40
@@ -218,6 +219,36 @@ export function getTotalMonths(startYear?: number, endYear?: number): number {
   const end = endYear || defaultEndYear
   const start = startYear || defaultStartYear
   return (end - start + 1) * 12
+}
+
+export function interpretTypedDate(
+  text: string,
+  inputFormat: string,
+  inputMode: 'end' | 'start',
+  check: {
+    isDisabled: (day: Date) => boolean
+    isWithinValidRange: (day: Date) => boolean
+  }
+): { date?: Date; issue?: TypedDateIssue } {
+  const trimmed = text.trim()
+  if (!trimmed) return {}
+  const parsed = parseLooseDate(trimmed, inputFormat)
+  if (!parsed) return { issue: 'format' }
+  const { day, month, year } = parsed
+  const date =
+    inputMode === 'end'
+      ? new Date(year, month - 1, day, 23, 59, 59)
+      : new Date(year, month - 1, day)
+  if (
+    date.getFullYear() !== year ||
+    date.getMonth() !== month - 1 ||
+    date.getDate() !== day
+  ) {
+    return { issue: 'format' }
+  }
+  if (check.isDisabled(date)) return { issue: 'disabled' }
+  if (!check.isWithinValidRange(date)) return { issue: 'range' }
+  return { date }
 }
 
 export function isDateWithinOptionalRange(

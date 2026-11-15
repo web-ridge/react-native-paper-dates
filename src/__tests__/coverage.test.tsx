@@ -144,6 +144,18 @@ async function withWebKeys(
   }
 }
 
+async function pressLabel(
+  screen: { container: { queryAll: Function } },
+  label: string
+) {
+  const node = screen.container.queryAll(
+    (candidate: { props: { accessibilityLabel?: string } }) =>
+      candidate.props.accessibilityLabel === label
+  )[0]
+  if (!node) throw new Error(`missing ${label}`)
+  await pressNode(node)
+}
+
 function safe(children: ReactNode) {
   return (
     <SafeAreaProvider initialMetrics={metrics}>{children}</SafeAreaProvider>
@@ -355,27 +367,9 @@ describe('docked picker callbacks', () => {
     expect(onConfirm).toHaveBeenCalledWith({ date: new Date(2026, 0, 20) })
 
     await pressTestId(screen, 'react-native-paper-dates-docked-month')
-    await act(() => {
-      invoke(
-        screen,
-        (props) =>
-          props.embedded === true && typeof props.onPressMonth === 'function',
-        (props) => {
-          ;(props.onPressMonth as (month: number) => void)(2)
-        }
-      )
-    })
+    await pressLabel(screen, 'March')
     await pressTestId(screen, 'react-native-paper-dates-docked-year')
-    await act(() => {
-      invoke(
-        screen,
-        (props) =>
-          props.variant === 'menu' && typeof props.onPressYear === 'function',
-        (props) => {
-          ;(props.onPressYear as (year: number) => void)(2025)
-        }
-      )
-    })
+    await pressLabel(screen, '2026')
   })
 
   it('stops at the year bounds and confirms an end-of-day or empty date', async () => {
@@ -393,16 +387,7 @@ describe('docked picker callbacks', () => {
     await pressTestId(bounded, 'react-native-paper-dates-docked-year-next')
     await pressTestId(bounded, 'react-native-paper-dates-docked-year-prev')
     await pressTestId(bounded, 'react-native-paper-dates-docked-prev')
-    await act(() => {
-      invoke(
-        bounded,
-        (props) =>
-          props.hideHeader === true && typeof props.onPressYear === 'function',
-        (props) => {
-          ;(props.onPressYear as () => void)()
-        }
-      )
-    })
+    await pressTestId(bounded, 'react-native-paper-dates-docked-year')
 
     const onConfirm = jest.fn()
     const ending = await render(
@@ -451,6 +436,7 @@ describe('docked picker callbacks', () => {
         key({ key: 'PageDown' })
         key({ key: 'PageUp', shiftKey: true })
         key({ key: 'Home' })
+        key({ key: 'Enter' })
         key({ key: 'm', shiftKey: true })
         key({ key: 'm', shiftKey: true })
         key({ key: 'y', shiftKey: true })

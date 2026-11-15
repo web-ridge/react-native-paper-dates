@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useState } from 'react'
+import { memo, type ReactNode, useCallback, useEffect, useState } from 'react'
 import { type StyleProp, View, type ViewStyle } from 'react-native'
 import { useTheme } from 'react-native-paper'
 
@@ -17,6 +17,10 @@ import {
   getStartOfDay,
 } from './dateUtils'
 import Month from './Month'
+import MonthCalendar, {
+  type MonthCalendarNav,
+  renderMonthBody,
+} from './MonthCalendar'
 import MonthMenu from './MonthMenu'
 import Swiper from './Swiper'
 import type {
@@ -38,7 +42,10 @@ import type {
 } from './types'
 import YearPicker from './YearPicker'
 
+export type { MonthCalendarNav }
+
 export type BaseCalendarProps = {
+  children?: (navigation: MonthCalendarNav) => ReactNode
   date?: CalendarDate
   dateMode?: 'start' | 'end'
   dates?: CalendarDates
@@ -52,7 +59,9 @@ export type BaseCalendarProps = {
   keyboardEnabled?: boolean
   locale: string
   onKeyboardConfirm?: () => void
+  onMonthConfirm?: SingleChange
   onSelectingYearChange?: (selectingYear: boolean) => void
+  singleMonth?: boolean
   startDate?: CalendarDate
   startWeekOnMonday?: boolean
   startYear?: number
@@ -85,6 +94,30 @@ export type CalendarSingleProps = BaseCalendarProps &
   }
 
 function Calendar(
+  props: CalendarSingleProps | CalendarRangeProps | CalendarMultiProps
+) {
+  if (props.singleMonth) {
+    return (
+      <MonthCalendar
+        date={props.date}
+        dateMode={props.dateMode}
+        disableWeekDays={props.disableWeekDays}
+        endYear={props.endYear}
+        locale={props.locale}
+        onChange={props.onChange as SingleChange}
+        onMonthConfirm={props.onMonthConfirm}
+        startWeekOnMonday={props.startWeekOnMonday}
+        startYear={props.startYear}
+        validRange={props.validRange}
+      >
+        {props.children ?? renderMonthBody}
+      </MonthCalendar>
+    )
+  }
+  return <ScrollCalendar {...props} />
+}
+
+function ScrollCalendar(
   props: CalendarSingleProps | CalendarRangeProps | CalendarMultiProps
 ) {
   const {

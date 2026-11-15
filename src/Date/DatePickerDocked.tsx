@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useRef, useState } from 'react'
+import { memo, useState } from 'react'
 import {
   Modal,
   Pressable,
@@ -16,32 +16,15 @@ import {
   useTheme,
 } from 'react-native-paper'
 
-import {
-  displayCase,
-  supportedOrientations,
-  themeColor,
-  useLatest,
-} from '../shared/utils'
+import { displayCase, supportedOrientations, themeColor } from '../shared/utils'
 import { getTranslation, translate } from '../translations/utils'
-import { useDatePickerKeys } from './datePickerKeys'
-import {
-  addMonths,
-  dayCellSize,
-  defaultEndYear,
-  defaultStartYear,
-  getEndOfDay,
-  getInitialIndex,
-} from './dateUtils'
-import DayNames from './DayNames'
-import Month from './Month'
-import MonthMenu from './MonthMenu'
+import Calendar from './Calendar'
 import type {
   CalendarDate,
   DisableWeekDaysType,
   SingleChange,
   ValidRangeType,
 } from './types'
-import YearPicker from './YearPicker'
 
 export type DatePickerAnchor = {
   height: number
@@ -82,13 +65,6 @@ const menuIconGap = 8
 const menuLabelInset = 16 + 24 + 16
 const screenInset = 8
 const stepperGap = 8
-const weekdayRowHeight = 24
-const menuHeight =
-  weekdayRowHeight +
-  dayCellSize * 6 +
-  actionPaddingTop +
-  actionHeight +
-  actionPaddingBottom
 
 function DatePickerDocked({
   anchor,
@@ -110,91 +86,6 @@ function DatePickerDocked({
   const theme = useTheme()
   const { height: windowHeight, width: windowWidth } = useWindowDimensions()
   const [cardHeight, setCardHeight] = useState(480)
-  const [draft, setDraft] = useState<CalendarDate>(date)
-  const [focusedDate, setFocusedDate] = useState<Date | undefined>(date)
-  const [menu, setMenu] = useState<'day' | 'month' | 'year'>('day')
-  const [visibleMonth, setVisibleMonth] = useState(() => {
-    const initial = date ?? new Date()
-    return new Date(initial.getFullYear(), initial.getMonth(), 1)
-  })
-  const wasVisible = useRef(false)
-  const onConfirmRef = useLatest(onConfirm)
-  const resolvedEndYear = endYear ?? defaultEndYear
-  const resolvedStartYear = startYear ?? defaultStartYear
-  const monday = startWeekOnMonday ?? false
-
-  useEffect(() => {
-    if (visible && !wasVisible.current) {
-      const initial = date ?? new Date()
-      setDraft(date)
-      setFocusedDate(date)
-      setMenu('day')
-      setVisibleMonth(new Date(initial.getFullYear(), initial.getMonth(), 1))
-    }
-    wasVisible.current = visible
-  }, [date, visible])
-  const showMonth = useCallback((next: Date) => {
-    setFocusedDate(next)
-    setVisibleMonth(new Date(next.getFullYear(), next.getMonth(), 1))
-  }, [])
-  const commitDate = useCallback(
-    (next: Date) => {
-      const normalized = dateMode === 'end' ? getEndOfDay(next) : next
-      setDraft(normalized)
-      showMonth(next)
-    },
-    [dateMode, showMonth]
-  )
-  const moveMonth = useCallback(
-    (delta: number) => {
-      setVisibleMonth((current) => {
-        const next = addMonths(current, delta)
-        const year = next.getFullYear()
-        if (year < resolvedStartYear || year > resolvedEndYear) return current
-        return new Date(next.getFullYear(), next.getMonth(), 1)
-      })
-    },
-    [resolvedEndYear, resolvedStartYear]
-  )
-  const moveYear = useCallback(
-    (delta: number) => {
-      setVisibleMonth((current) => {
-        const year = current.getFullYear() + delta
-        if (year < resolvedStartYear || year > resolvedEndYear) return current
-        return new Date(year, current.getMonth(), 1)
-      })
-    },
-    [resolvedEndYear, resolvedStartYear]
-  )
-  const confirm = useCallback(() => {
-    const next = focusedDate
-      ? dateMode === 'end'
-        ? getEndOfDay(focusedDate)
-        : focusedDate
-      : draft
-    onConfirmRef.current({ date: next })
-  }, [dateMode, draft, focusedDate, onConfirmRef])
-  useDatePickerKeys(visible && menu === 'day', {
-    getVisibleMonth: () => visibleMonth,
-    onConfirm: confirm,
-    onFocusDate: showMonth,
-    onMoveFocus: (delta) => {
-      const base = focusedDate || draft || visibleMonth
-      const next = addMonths(base, delta)
-      if (
-        next.getFullYear() < resolvedStartYear ||
-        next.getFullYear() > resolvedEndYear
-      ) {
-        return
-      }
-      showMonth(next)
-    },
-    onMoveMonth: moveMonth,
-    onOpenMonthMenu: () =>
-      setMenu((current) => (current === 'month' ? 'day' : 'month')),
-    onOpenYearMenu: () =>
-      setMenu((current) => (current === 'year' ? 'day' : 'year')),
-  })
 
   if (!visible) return null
 
@@ -207,24 +98,16 @@ function DatePickerDocked({
     windowHeight,
     windowWidth,
   })
-  const monthLabel = new Intl.DateTimeFormat(locale, { month: 'short' }).format(
-    visibleMonth
-  )
   const actionColor = themeColor(theme.colors.primary)
-  const radius = theme.shapes.corner.large
-  const index = getInitialIndex(
-    visibleMonth,
-    resolvedStartYear,
-    resolvedEndYear
+  const cancelLabel = displayCase(
+    translate(locale, 'cancel', 'Cancel'),
+    !!uppercase
   )
   const confirmLabel = displayCase(
     saveLabel || translate(locale, 'confirm', 'OK'),
     !!uppercase
   )
-  const cancelLabel = displayCase(
-    translate(locale, 'cancel', 'Cancel'),
-    !!uppercase
-  )
+  const radius = theme.shapes.corner.large
 
   return (
     <Modal
@@ -252,141 +135,96 @@ function DatePickerDocked({
           testID="react-native-paper-dates-docked-surface"
         >
           <View style={[styles.clip, { borderRadius: radius }]}>
-            <View
-              style={[
-                styles.toolbar,
-                menu === 'day' ? styles.toolbarDay : styles.toolbarMenu,
-              ]}
+            <Calendar
+              date={date}
+              dateMode={dateMode}
+              disableWeekDays={disableWeekDays}
+              endYear={endYear}
+              locale={locale}
+              mode="single"
+              onChange={() => undefined}
+              onMonthConfirm={onConfirm}
+              singleMonth
+              startWeekOnMonday={startWeekOnMonday}
+              startYear={startYear}
+              validRange={validRange}
             >
-              <View style={menu === 'day' ? null : styles.menuMonth}>
-                <DockedStepper
-                  disabled={menu === 'year'}
-                  hint="Shift+M"
-                  label={monthLabel}
-                  onNext={() => moveMonth(1)}
-                  onOpen={() =>
-                    setMenu((current) =>
-                      current === 'month' ? 'day' : 'month'
-                    )
-                  }
-                  onPrev={() => moveMonth(-1)}
-                  open={menu === 'month'}
-                  testID="react-native-paper-dates-docked-month"
-                />
-              </View>
-              {menu === 'day' ? <View style={styles.spacer} /> : null}
-              <View style={menu === 'day' ? null : styles.menuYear}>
-                <DockedStepper
-                  disabled={menu === 'month'}
-                  hint="Shift+Y"
-                  label={String(visibleMonth.getFullYear())}
-                  onNext={() => moveYear(1)}
-                  onOpen={() =>
-                    setMenu((current) => (current === 'year' ? 'day' : 'year'))
-                  }
-                  onPrev={() => moveYear(-1)}
-                  open={menu === 'year'}
-                  testID="react-native-paper-dates-docked-year"
-                />
-              </View>
-            </View>
-            {menu === 'day' ? null : (
-              <Divider
-                bold
-                style={{ backgroundColor: theme.colors.outlineVariant }}
-                testID="react-native-paper-dates-docked-divider"
-              />
-            )}
-            {menu === 'month' ? (
-              <View style={styles.menu}>
-                <MonthMenu
-                  embedded
-                  locale={locale}
-                  onPressMonth={(month) => {
-                    setVisibleMonth(
-                      new Date(visibleMonth.getFullYear(), month, 1)
-                    )
-                    setMenu('day')
-                  }}
-                  selectedMonth={visibleMonth.getMonth()}
-                />
-              </View>
-            ) : null}
-            {menu === 'year' ? (
-              <View style={styles.menu}>
-                <YearPicker
-                  embedded
-                  endYear={resolvedEndYear}
-                  onPressYear={(year) => {
-                    setVisibleMonth(new Date(year, visibleMonth.getMonth(), 1))
-                    setMenu('day')
-                  }}
-                  selectedYear={visibleMonth.getFullYear()}
-                  selectingYear
-                  startYear={resolvedStartYear}
-                  variant="menu"
-                />
-              </View>
-            ) : null}
-            {menu === 'day' ? (
-              <View style={styles.grid}>
-                <DayNames
-                  backgroundColor="transparent"
-                  disableWeekDays={disableWeekDays}
-                  height={weekdayRowHeight}
-                  locale={locale}
-                  startWeekOnMonday={monday}
-                />
-                <Month
-                  date={draft}
-                  disableWeekDays={disableWeekDays}
-                  endYear={resolvedEndYear}
-                  focusedDate={focusedDate}
-                  hideHeader
-                  index={index}
-                  locale={locale}
-                  mode="single"
-                  onPressDate={commitDate}
-                  onPressYear={() => setMenu('year')}
-                  primaryColor={themeColor(theme.colors.primary)}
-                  roundness={theme.shapes.corner.extraSmall}
-                  scrollMode="horizontal"
-                  selectColor={themeColor(theme.colors.secondaryContainer)}
-                  selectingYear={false}
-                  showOutsideDays
-                  startWeekOnMonday={monday}
-                  startYear={resolvedStartYear}
-                  validRange={validRange}
-                />
-              </View>
-            ) : null}
-            {menu === 'day' ? (
-              <View style={styles.actions}>
-                <Button
-                  contentStyle={styles.actionContent}
-                  labelStyle={styles.actionLabel}
-                  mode="text"
-                  onPress={onDismiss}
-                  style={styles.action}
-                  testID="react-native-paper-dates-docked-cancel"
-                  textColor={actionColor}
-                >
-                  {cancelLabel}
-                </Button>
-                <Button
-                  contentStyle={styles.actionContent}
-                  disabled={saveLabelDisabled ?? false}
-                  labelStyle={styles.actionLabel}
-                  mode="text"
-                  onPress={confirm}
-                  style={styles.action}
-                  testID="react-native-paper-dates-docked-confirm"
-                  textColor={actionColor}
-                >
-                  {confirmLabel}
-                </Button>
-              </View>
-            ) : null}
+              {(nav) => (
+                <>
+                  <View
+                    style={[
+                      styles.toolbar,
+                      nav.menu === 'day'
+                        ? styles.toolbarDay
+                        : styles.toolbarMenu,
+                    ]}
+                  >
+                    <View style={nav.menu === 'day' ? null : styles.menuMonth}>
+                      <DockedStepper
+                        disabled={nav.menu === 'year'}
+                        hint="Shift+M"
+                        label={new Intl.DateTimeFormat(locale, {
+                          month: 'short',
+                        }).format(nav.visibleMonth)}
+                        onNext={() => nav.moveMonth(1)}
+                        onOpen={nav.toggleMonth}
+                        onPrev={() => nav.moveMonth(-1)}
+                        open={nav.menu === 'month'}
+                        testID="react-native-paper-dates-docked-month"
+                      />
+                    </View>
+                    {nav.menu === 'day' ? <View style={styles.spacer} /> : null}
+                    <View style={nav.menu === 'day' ? null : styles.menuYear}>
+                      <DockedStepper
+                        disabled={nav.menu === 'month'}
+                        hint="Shift+Y"
+                        label={String(nav.visibleMonth.getFullYear())}
+                        onNext={() => nav.moveYear(1)}
+                        onOpen={nav.toggleYear}
+                        onPrev={() => nav.moveYear(-1)}
+                        open={nav.menu === 'year'}
+                        testID="react-native-paper-dates-docked-year"
+                      />
+                    </View>
+                  </View>
+                  {nav.menu === 'day' ? null : (
+                    <Divider
+                      bold
+                      style={{ backgroundColor: theme.colors.outlineVariant }}
+                      testID="react-native-paper-dates-docked-divider"
+                    />
+                  )}
+                  {nav.body}
+                  {nav.menu === 'day' ? (
+                    <View style={styles.actions}>
+                      <Button
+                        contentStyle={styles.actionContent}
+                        labelStyle={styles.actionLabel}
+                        mode="text"
+                        onPress={onDismiss}
+                        style={styles.action}
+                        testID="react-native-paper-dates-docked-cancel"
+                        textColor={actionColor}
+                      >
+                        {cancelLabel}
+                      </Button>
+                      <Button
+                        contentStyle={styles.actionContent}
+                        disabled={saveLabelDisabled ?? false}
+                        labelStyle={styles.actionLabel}
+                        mode="text"
+                        onPress={() => onConfirm({ date: nav.resolvedDate })}
+                        style={styles.action}
+                        testID="react-native-paper-dates-docked-confirm"
+                        textColor={actionColor}
+                      >
+                        {confirmLabel}
+                      </Button>
+                    </View>
+                  ) : null}
+                </>
+              )}
+            </Calendar>
           </View>
         </Surface>
       </View>
@@ -539,18 +377,10 @@ const styles = StyleSheet.create({
   clip: {
     overflow: 'hidden',
   },
-  grid: {
-    paddingHorizontal: 12,
-  },
   iconButton: {
     height: headerRowHeight,
     margin: 0,
     width: headerRowHeight,
-  },
-  menu: {
-    height: menuHeight,
-    marginTop: headerPaddingBottom - menuDividerOffset,
-    paddingBottom: 20,
   },
   menuButton: {
     alignItems: 'center',
