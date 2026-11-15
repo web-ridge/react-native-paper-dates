@@ -12,9 +12,10 @@ export function alignIconToFirstWeekday(
 }
 
 export function alignTextToFirstWeekday(
-  disableWeekDays?: DisableWeekDaysType
+  disableWeekDays?: DisableWeekDaysType,
+  contentInset = 0
 ): ViewStyle {
-  return alignToFirstColumn(disableWeekDays, letterHalfWidth)
+  return alignToFirstColumn(disableWeekDays, letterHalfWidth + contentInset)
 }
 
 export function alignTextToLastWeekday(

@@ -527,8 +527,9 @@ function Month(props: BaseMonthProps & CalendarMode) {
               styles.yearButton,
               {
                 borderRadius: roundness,
+                paddingStart: menuButtonInset,
               },
-              alignTextToFirstWeekday(disableWeekDays),
+              alignTextToFirstWeekday(disableWeekDays, menuButtonInset),
             ]}
           >
             <View
@@ -629,6 +630,8 @@ const monthGrid = (
 }
 
 export const weekMargin = 0
+
+const menuButtonInset = 8
 
 const styles = StyleSheet.create({
   iconWrapper: {
