@@ -1,0 +1,127 @@
+# Docked Date Picker
+
+The docked date picker is a 360dp calendar anchored to a text field. It opens under the field and flips above the field when there is not enough room below. The month and year controls replace the day grid. Cancel and OK sit under the days.
+
+`DatePickerInput` opens this calendar when `presentation` is `'docked'`. With `presentation="auto"`, the same calendar opens when both window dimensions are over 650. Text field props are on the [input date picker](./input-date-picker) page. `value` is passed through as `date`, and `inputMode` is passed through as `dateMode`.
+
+## Usage
+
+```jsx
+import React from 'react';
+import { View } from 'react-native';
+import { PaperProvider } from 'react-native-paper';
+import { DatePickerInput, en, registerTranslation } from 'react-native-paper-dates';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+
+registerTranslation('en', en);
+
+export default function App() {
+  const [date, setDate] = React.useState(undefined);
+
+  return (
+    <PaperProvider>
+      <SafeAreaProvider>
+        <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
+          <DatePickerInput
+            locale="en"
+            label="Date"
+            value={date}
+            onChange={setDate}
+            inputMode="start"
+            presentation="docked"
+            variant="outlined"
+          />
+        </View>
+      </SafeAreaProvider>
+    </PaperProvider>
+  );
+}
+```
+
+## Live Example
+
+Try this and the other pickers on the [example site](https://www.reactnativepaperdates.com/).
+
+## Standalone
+
+`DatePickerDocked` is the calendar itself. Pass `anchor` as the field's window rectangle (`x`, `y`, `width`, `height`) so the card lines up with that field. `DatePickerInput` measures the field and passes this for you.
+
+```jsx
+<DatePickerDocked
+  anchor={anchor}
+  date={date}
+  locale="en"
+  visible={open}
+  onDismiss={() => setOpen(false)}
+  onConfirm={({ date }) => {
+    setOpen(false);
+    setDate(date);
+  }}
+/>
+```
+
+## Props
+
+**anchor**  
+`Type: { x: number, y: number, width: number, height: number } | null | undefined`  
+Window rectangle of the field the calendar should attach to. The card aligns to that box, below it when it fits and above it otherwise. When omitted, the card sits near the top-left inset.
+
+**date**  
+`Type: Date | undefined`  
+The currently selected date.
+
+**dateMode**  
+`Type: 'start' | 'end' | undefined`  
+Controls how the confirmed date is normalized. Use `'end'` to set the time to the end of the day; otherwise the start of the day is used.
+
+**disableWeekDays**  
+`Type: number[] | undefined`  
+Weekday indexes to hide from the calendar grid (for example `[0, 6]` to hide Sunday and Saturday).
+
+**endYear**  
+`Type: number | undefined`  
+The last year available in the year menu. Defaults to `2200`.
+
+**locale (Required)**  
+`Type: string`  
+Locale used for formatting and translations (for example `'en'` or `'de'`).
+
+**onConfirm (Required)**  
+`Type: (params: { date: Date | undefined }) => void`  
+Called when the user confirms the selected day.
+
+**onDismiss (Required)**  
+`Type: () => void`  
+Called when the calendar is dismissed. Cancel and the backdrop both call this.
+
+**saveLabel**  
+`Type: string | undefined`  
+Confirm button label. Defaults to the locale translation for `confirm` (English: `'OK'`).
+
+**saveLabelDisabled**  
+`Type: boolean | undefined`  
+Disables the confirm button. Defaults to `false`.
+
+**startWeekOnMonday**  
+`Type: boolean | undefined`  
+When `true`, the calendar grid starts on Monday. Defaults to `false`.
+
+**startYear**  
+`Type: number | undefined`  
+The first year available in the year menu. Defaults to `1800`.
+
+**uppercase**  
+`Type: boolean | undefined`  
+Whether the action labels are uppercased. Defaults to `false`.
+
+**validRange**  
+`Type: {
+  startDate?: Date,
+  endDate?: Date,
+  disabledDates?: Date[]
+}`  
+Limits which dates can be selected. Dates outside the range are grayed out.
+
+**visible (Required)**  
+`Type: boolean`  
+Whether the calendar is shown.

@@ -679,11 +679,17 @@ const materialDateGuidelinesUrl =
 const materialTimeGuidelinesUrl =
   'https://m3.material.io/components/time-pickers/guidelines'
 
+const dockedDatePickerDocsUrl = `${docsBase}/guide/date-picker/docked-date-picker`
+
 const inputDatePickerDocsUrl = `${docsBase}/guide/date-picker/input-date-picker`
 
 const multipleDatesPickerDocsUrl = `${docsBase}/guide/date-picker/multiple-dates-picker`
 
+const rangeDateInputDocsUrl = `${docsBase}/guide/date-picker/range-date-input`
+
 const rangeDatePickerDocsUrl = `${docsBase}/guide/date-picker/range-date-picker`
+
+const singleDateInputDocsUrl = `${docsBase}/guide/date-picker/single-date-input`
 
 const singleDatePickerDocsUrl = `${docsBase}/guide/date-picker/single-date-picker`
 
@@ -1075,7 +1081,7 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
                 />
               </DemoCard>
               <DemoCard
-                docsUrl={inputDatePickerDocsUrl}
+                docsUrl={dockedDatePickerDocsUrl}
                 icon="calendar-cursor"
                 style={wide ? styles.cardFill : undefined}
                 title="Docked date"
@@ -1130,7 +1136,7 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
             >
               <DemoCard
                 actionLabel="Enter date"
-                docsUrl={singleDatePickerDocsUrl}
+                docsUrl={singleDateInputDocsUrl}
                 icon="calendar-edit"
                 onPress={() => setDialog('modalInput')}
                 style={wide ? styles.cardFill : undefined}
@@ -1140,7 +1146,7 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
               />
               <DemoCard
                 actionLabel="Enter dates"
-                docsUrl={rangeDatePickerDocsUrl}
+                docsUrl={rangeDateInputDocsUrl}
                 icon="calendar-range"
                 onPress={() => setDialog('modalInputRange')}
                 style={wide ? styles.cardFill : undefined}

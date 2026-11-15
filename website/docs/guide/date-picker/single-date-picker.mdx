@@ -1,6 +1,6 @@
 # Single Date Picker
 
-The single date picker provides a modal allowing only a single date selection. On compact screens it is full screen, with Close and Save at the top. On medium and expanded screens it is a 360×568 dialog with Cancel and OK at the bottom.
+The single date picker provides a modal allowing only a single date selection. On compact screens it is full screen, with Close and Save at the top. On medium and expanded screens it is a 360×568 dialog with Cancel and OK at the bottom. To open on a text field first, use the [single date input](./single-date-input).
 
 ## Usage
 
@@ -83,7 +83,7 @@ Controls how the confirmed date is normalized. Use `'end'` to set the time to th
 
 **displayMode**  
 `Type: 'calendar' | 'input' | undefined`  
-Initial view. `'input'` opens the modal date input, for dates such as a birth date that do not need a calendar first. Defaults to `'calendar'`. The edit icon still switches between the two views.
+Initial view of this modal. `'input'` starts on the text fields. Defaults to `'calendar'`. The edit icon still switches between the two views. For a dialog that opens on the field, use the [single date input](./single-date-input).
 
 **dayContent**  
 `Type: ((params: {

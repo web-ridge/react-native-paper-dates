@@ -1,6 +1,6 @@
 # Input Date Picker
 
-The input date picker provides a text field for typing a date, plus a calendar icon that opens a picker. On compact screens the icon opens a full-screen modal. On medium and expanded screens (width and height over 650) it opens a docked calendar under the field. Typed text is kept as entered and formatted only after blur or submit. The field accepts `/`, `-`, `.`, and spaces, including a single-digit month or day.
+The input date picker provides a text field for typing a date, plus a calendar icon that opens a picker. On compact screens the icon opens a full-screen modal. On medium and expanded screens (width and height over 650) it opens a docked calendar under the field. Set `presentation` to `'docked'` for the [docked date picker](./docked-date-picker), which always anchors that calendar to the field. Typed text is kept as entered and formatted only after blur or submit. The field accepts `/`, `-`, `.`, and spaces, including a single-digit month or day.
 
 ## Usage
 
@@ -123,7 +123,7 @@ Which picker the calendar icon opens. Defaults to `'auto'`.
 
 - `'auto'`: Docked calendar when both window dimensions are over 650; otherwise the full-screen modal.
 - `'modal'`: Always open `DatePickerModal`.
-- `'docked'`: Always open the 360dp docked calendar, anchored under the field.
+- `'docked'`: Always open the [docked date picker](./docked-date-picker), a 360dp calendar anchored under the field.
 
 **presentationStyle**  
 `Type: 'pageSheet' | 'overFullScreen' | undefined`  

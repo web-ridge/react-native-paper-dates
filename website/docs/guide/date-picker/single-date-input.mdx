@@ -1,0 +1,119 @@
+# Single Date Input
+
+The single date input opens a dialog on a text field, for a date such as a birth date that does not need a calendar first. The calendar icon switches to a calendar in the same dialog. Typed text accepts `/`, `-`, `.`, and spaces, including a single-digit month or day. The dialog is centered and at most 360dp wide.
+
+`DatePickerModal` can start on the same fields with `displayMode="input"`. This component is the dialog that opens on the field. The calendar modal is documented on the [single date picker](./single-date-picker) page.
+
+## Usage
+
+```jsx
+import React from 'react';
+import { View } from 'react-native';
+import { Button, PaperProvider } from 'react-native-paper';
+import { DatePickerModalInput, en, registerTranslation } from 'react-native-paper-dates';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+
+registerTranslation('en', en);
+
+export default function App() {
+  const [date, setDate] = React.useState(undefined);
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <PaperProvider>
+      <SafeAreaProvider>
+        <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
+          <Button onPress={() => setOpen(true)} mode="outlined">
+            Enter date
+          </Button>
+          <DatePickerModalInput
+            locale="en"
+            mode="single"
+            visible={open}
+            onDismiss={() => setOpen(false)}
+            date={date}
+            onConfirm={({ date }) => {
+              setOpen(false);
+              setDate(date);
+            }}
+          />
+        </View>
+      </SafeAreaProvider>
+    </PaperProvider>
+  );
+}
+```
+
+## Live Example
+
+Try this and the other pickers on the [example site](https://www.reactnativepaperdates.com/).
+
+## Props
+
+**calendarIcon**  
+`Type: string | undefined`  
+Icon that switches from the text field to the calendar. Defaults to `'calendar'`. Pass a name from [MaterialCommunityIcons](https://materialdesignicons.com/).
+
+**date**  
+`Type: Date | undefined`  
+The currently selected date.
+
+**disableWeekDays**  
+`Type: number[] | undefined`  
+Weekday indexes to hide from the calendar (for example `[0, 6]` to hide Sunday and Saturday).
+
+**endYear**  
+`Type: number | undefined`  
+The last year available in the year picker. Defaults to `2200`.
+
+**label**  
+`Type: string | undefined`  
+Label on the text field. Defaults to `'Date'`.
+
+**locale (Required)**  
+`Type: string`  
+Locale used for formatting and translations (for example `'en'` or `'de'`).
+
+**mode (Required)**  
+`Type: 'single' | 'range'`  
+Selection mode. Use `'single'` for this picker.
+
+**onConfirm (Required)**  
+`Type: (params: { date: Date | undefined }) => void`  
+Called when the user confirms the date. The confirm button stays disabled while the field text is invalid.
+
+**onDismiss (Required)**  
+`Type: () => void`  
+Called when the dialog is dismissed.
+
+**saveLabel**  
+`Type: string | undefined`  
+Confirm button label. Defaults to the locale translation for `confirm` (English: `'OK'`).
+
+**saveLabelDisabled**  
+`Type: boolean | undefined`  
+Disables the confirm button. Defaults to `false`. The button is also disabled while the field text is invalid.
+
+**startWeekOnMonday**  
+`Type: boolean | undefined`  
+When `true`, the calendar grid starts on Monday. Defaults to `false`.
+
+**startYear**  
+`Type: number | undefined`  
+The first year available in the year picker. Defaults to `1800`.
+
+**uppercase**  
+`Type: boolean | undefined`  
+Whether header, field, and action labels are uppercased. Defaults to `false`.
+
+**validRange**  
+`Type: {
+  startDate?: Date,
+  endDate?: Date,
+  disabledDates?: Date[]
+}`  
+Limits which dates can be confirmed. Dates outside the range fail validation.
+
+**visible (Required)**  
+`Type: boolean`  
+Whether the dialog is shown.

@@ -370,6 +370,21 @@ const MODES = [
     name: 'Input date',
   },
   {
+    detail: '360dp calendar anchored under the field on every screen size.',
+    href: '/guide/date-picker/docked-date-picker',
+    name: 'Docked date',
+  },
+  {
+    detail: 'Dialog that opens on a text field, with a calendar one tap away.',
+    href: '/guide/date-picker/single-date-input',
+    name: 'Single date input',
+  },
+  {
+    detail: 'Start and end fields for a range when a calendar is not needed first.',
+    href: '/guide/date-picker/range-date-input',
+    name: 'Date range input',
+  },
+  {
     detail: 'Clock and input modes aligned with Material time pickers.',
     href: '/guide/time-picker',
     name: 'Time picker',

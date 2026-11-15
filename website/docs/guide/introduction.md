@@ -12,7 +12,7 @@
 
 ## What's included
 
-- [Date pickers](./date-picker/single-date-picker) — single, range, multiple, and input modes
+- [Date pickers](./date-picker/single-date-picker) — single, range, multiple, input, docked, and modal date input
 - [Time picker](./time-picker) — clock face or keyboard input
 - [Localization](./localization) — built-in translations plus custom and dynamic locales
 
