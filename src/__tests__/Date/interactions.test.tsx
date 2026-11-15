@@ -1,16 +1,11 @@
-import type { ReactNode } from 'react'
 import { act, fireEvent, render } from '@testing-library/react-native'
-
-import {
-  byTestId,
-  type PressableInstance as Instance,
-  pressDays,
-  pressNode,
-  pressTestId,
-} from '../../testUtils'
+import type { ReactNode } from 'react'
 import { Dimensions, Platform, Pressable } from 'react-native'
+import { LightTheme, Text } from 'react-native-paper'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import { Text } from 'react-native-paper'
+
+import AnimatedCrossView from '../../Date/AnimatedCrossView'
+import AutoSizer from '../../Date/AutoSizer'
 import Calendar from '../../Date/Calendar'
 import CalendarEdit from '../../Date/CalendarEdit'
 import CalendarHeader from '../../Date/CalendarHeader'
@@ -21,8 +16,7 @@ import DatePickerModalContent from '../../Date/DatePickerModalContent'
 import DatePickerModalHeader from '../../Date/DatePickerModalHeader'
 import DatePickerModalHeaderBackground from '../../Date/DatePickerModalHeaderBackground'
 import DatePickerModalStatusBar from '../../Date/DatePickerModalStatusBar'
-import AnimatedCrossView from '../../Date/AnimatedCrossView'
-import AutoSizer from '../../Date/AutoSizer'
+import { getStartAtIndex } from '../../Date/dateUtils'
 import Day from '../../Date/Day'
 import DayNames from '../../Date/DayNames'
 import DayRange from '../../Date/DayRange'
@@ -34,8 +28,13 @@ import Month, {
 } from '../../Date/Month'
 import Swiper from '../../Date/Swiper'
 import YearPicker from '../../Date/YearPicker'
-import { getStartAtIndex } from '../../Date/dateUtils'
-import { LightTheme } from 'react-native-paper'
+import {
+  byTestId,
+  type PressableInstance as Instance,
+  pressDays,
+  pressNode,
+  pressTestId,
+} from '../../testUtils'
 import en from '../../translations/en'
 import { registerTranslation } from '../../translations/utils'
 
@@ -887,7 +886,6 @@ describe('native month swiper', () => {
     })
   })
 })
-
 
 describe('platform specific header gutter', () => {
   const originalOS = Platform.OS

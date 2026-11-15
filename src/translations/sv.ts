@@ -26,4 +26,5 @@ const sv: TranslationsType = {
   toggleKeyboard: 'Växla tangentbord',
   typeInDate: 'Skriv datum',
 }
+
 export default sv

@@ -26,4 +26,5 @@ const pt: TranslationsType = {
   toggleKeyboard: 'Alternar teclado',
   typeInDate: 'Digite a data',
 }
+
 export default pt

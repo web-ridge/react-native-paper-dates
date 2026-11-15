@@ -3,13 +3,13 @@ export { default as ca } from './translations/ca'
 export { default as Calendar } from './Date/Calendar'
 export { default as cs } from './translations/cs'
 export { default as da } from './translations/da'
-export { default as DatePickerInput } from './Date/DatePickerInput'
 export { default as DatePickerDocked } from './Date/DatePickerDocked'
 export type { DatePickerDockedProps } from './Date/DatePickerDocked'
+export { default as DatePickerInput } from './Date/DatePickerInput'
 export { default as DatePickerModal } from './Date/DatePickerModal'
+export { default as DatePickerModalContent } from './Date/DatePickerModalContent'
 export { default as DatePickerModalInput } from './Date/DatePickerModalInput'
 export type { DatePickerModalInputProps } from './Date/DatePickerModalInput'
-export { default as DatePickerModalContent } from './Date/DatePickerModalContent'
 export type {
   DatePickerModalMultiProps,
   DatePickerModalRangeProps,

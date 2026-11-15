@@ -1,7 +1,16 @@
 import { type ReactNode, useCallback, useState } from 'react'
 import { LayoutChangeEvent, useWindowDimensions, View } from 'react-native'
+
 import { sharedStyles } from '../shared/styles'
 import { rememberLayout } from '../shared/utils'
+
+type MeasuredLayout = WidthAndHeight & {
+  windowKey: string
+}
+type WidthAndHeight = {
+  height: number
+  width: number
+}
 
 export default function AutoSizer({
   children,
@@ -11,7 +20,6 @@ export default function AutoSizer({
   initialLayout?: WidthAndHeight
 }) {
   const [measured, setMeasured] = useState<MeasuredLayout | null>(null)
-
   const { height: windowHeight, width: windowWidth } = useWindowDimensions()
 
   const windowKey = `${windowWidth}x${windowHeight}`
@@ -40,8 +48,8 @@ export default function AutoSizer({
 
   return (
     <View
-      collapsable={false}
       key={windowKey}
+      collapsable={false}
       onLayout={onLayout}
       style={[
         sharedStyles.overflowHidden,
@@ -52,13 +60,4 @@ export default function AutoSizer({
       {layout ? children(layout) : null}
     </View>
   )
-}
-
-type WidthAndHeight = {
-  height: number
-  width: number
-}
-
-type MeasuredLayout = WidthAndHeight & {
-  windowKey: string
 }

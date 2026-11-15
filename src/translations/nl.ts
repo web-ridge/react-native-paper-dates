@@ -26,4 +26,5 @@ const nl: TranslationsType = {
   toggleKeyboard: 'Toetsenbord wisselen',
   typeInDate: 'Typ datum',
 }
+
 export default nl

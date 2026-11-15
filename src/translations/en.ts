@@ -30,4 +30,5 @@ const en: TranslationsType = {
   toggleKeyboard: 'Toggle keyboard',
   typeInDate: 'Type in date',
 }
+
 export default en

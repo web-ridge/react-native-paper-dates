@@ -1,4 +1,5 @@
 import { type MutableRefObject, type ReactNode, useEffect } from 'react'
+
 import { useLatest } from '../shared/utils'
 import {
   addMonths,
@@ -10,6 +11,36 @@ import {
   getStartAtIndex,
   getTotalMonths,
 } from './dateUtils'
+
+export type RenderProps = {
+  active?: boolean
+  endInset?: number
+  index: number
+  onNext: () => void
+  onPrev: () => void
+}
+export type SwiperProps = {
+  endYear?: number
+  focusDate?: Date
+  initialIndex: number
+  initialLayout?: { height: number; width: number }
+  keyboardEnabled?: boolean
+  onFocusDate?: (date: Date) => void
+  onKeyboardConfirm?: () => void
+  onMoveFocus?: (deltaMonths: number) => void
+  onOpenMonthMenu?: () => void
+  onOpenYearMenu?: () => void
+  renderFooter?: (renderProps: RenderProps) => ReactNode
+  renderHeader?: (renderProps: RenderProps) => ReactNode
+  renderItem: (renderProps: RenderProps) => ReactNode
+  scrollMode: 'horizontal' | 'vertical'
+  selectedYear: number | undefined
+  startWeekOnMonday: boolean
+  startYear?: number
+}
+
+export const verticalMonthOverscan = 6
+export const verticalWindowEdge = 2
 
 export function getMaxIndex(startYear?: number, endYear?: number): number {
   const dynamicStartAtIndex = getStartAtIndex(startYear, endYear)
@@ -99,34 +130,6 @@ export function sameIndexes(left: number[], right: number[]) {
   return true
 }
 
-export type RenderProps = {
-  active?: boolean
-  endInset?: number
-  index: number
-  onNext: () => void
-  onPrev: () => void
-}
-
-export type SwiperProps = {
-  endYear?: number
-  focusDate?: Date
-  initialIndex: number
-  initialLayout?: { height: number; width: number }
-  keyboardEnabled?: boolean
-  onFocusDate?: (date: Date) => void
-  onKeyboardConfirm?: () => void
-  onMoveFocus?: (deltaMonths: number) => void
-  onOpenMonthMenu?: () => void
-  onOpenYearMenu?: () => void
-  renderFooter?: (renderProps: RenderProps) => ReactNode
-  renderHeader?: (renderProps: RenderProps) => ReactNode
-  renderItem: (renderProps: RenderProps) => ReactNode
-  scrollMode: 'horizontal' | 'vertical'
-  selectedYear: number | undefined
-  startWeekOnMonday: boolean
-  startYear?: number
-}
-
 export function useFocusDate(
   onChange: (index: number | undefined) => void,
   {
@@ -189,7 +192,3 @@ export function useYearChange(
     }
   }, [currentIndexRef, onChangeRef, selectedYear, startYear, endYear])
 }
-
-export const verticalMonthOverscan = 6
-
-export const verticalWindowEdge = 2

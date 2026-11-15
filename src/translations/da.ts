@@ -26,4 +26,5 @@ const da: TranslationsType = {
   toggleKeyboard: 'Skift tastatur',
   typeInDate: 'Indtast dato',
 }
+
 export default da

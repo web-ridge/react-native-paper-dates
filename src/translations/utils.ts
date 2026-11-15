@@ -1,3 +1,40 @@
+export type TranslationResolver = (
+  locale: string | undefined
+) => TranslationsType
+export type TranslationsType = {
+  am: string
+  cancel?: string
+  close: string
+  confirm?: string
+  dateIsDisabled: string
+  enterDate?: string
+  enterDates?: string
+  hour: string
+  hourOf: (hour: number, total: number) => string
+  minute: string
+  minuteOf: (minute: number, total: number) => string
+  mustBeBetween: (startDate: string, endDate: string) => string
+  mustBeHigherThan: (date: string) => string
+  mustBeLowerThan: (date: string) => string
+  next: string
+  notAccordingToDateFormat: (inputFormat: string) => string
+  pickDateFromCalendar: string
+  pm: string
+  previous: string
+  save: string
+  selectMultiple: string
+  selectRange: string
+  selectSingle: string
+  toggleClock: string
+  toggleKeyboard: string
+  typeInDate: string
+}
+
+let translationsPerLocale: Record<
+  string,
+  TranslationsType | TranslationResolver
+> = {}
+
 export function getTranslation<K extends keyof TranslationsType>(
   locale: string | undefined,
   key: K,
@@ -45,41 +82,3 @@ export function translate(
   const value = table[key]
   return typeof value === 'string' && value ? value : fallback
 }
-
-export type TranslationsType = {
-  am: string
-  cancel?: string
-  close: string
-  confirm?: string
-  dateIsDisabled: string
-  enterDate?: string
-  enterDates?: string
-  hour: string
-  hourOf: (hour: number, total: number) => string
-  minute: string
-  minuteOf: (minute: number, total: number) => string
-  mustBeBetween: (startDate: string, endDate: string) => string
-  mustBeHigherThan: (date: string) => string
-  mustBeLowerThan: (date: string) => string
-  next: string
-  notAccordingToDateFormat: (inputFormat: string) => string
-  pickDateFromCalendar: string
-  pm: string
-  previous: string
-  save: string
-  selectMultiple: string
-  selectRange: string
-  selectSingle: string
-  toggleClock: string
-  toggleKeyboard: string
-  typeInDate: string
-}
-
-export type TranslationResolver = (
-  locale: string | undefined
-) => TranslationsType
-
-let translationsPerLocale: Record<
-  string,
-  TranslationsType | TranslationResolver
-> = {}

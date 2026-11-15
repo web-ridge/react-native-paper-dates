@@ -26,4 +26,5 @@ const ko: TranslationsType = {
   toggleKeyboard: '키보드 전환',
   typeInDate: '날짜 입력',
 }
+
 export default ko

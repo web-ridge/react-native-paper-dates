@@ -1,11 +1,12 @@
 import { render, within } from '@testing-library/react-native'
+
+import { getStartAtIndex } from '../../Date/dateUtils'
 import Month, {
   getMonthHeight,
   getVerticalListMetrics,
   getVerticalMonthsOffset,
   horizontalMonthScrolls,
 } from '../../Date/Month'
-import { getStartAtIndex } from '../../Date/dateUtils'
 import { getMaxIndex, getMinIndex } from '../../Date/SwiperUtils'
 
 const defaultProps = {

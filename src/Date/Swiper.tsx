@@ -1,4 +1,26 @@
+import {
+  memo,
+  type ReactNode,
+  type UIEvent,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
 import { useTheme } from 'react-native-paper'
+
+import { useLatest } from '../shared/utils'
+import AutoSizer from './AutoSizer'
+import { layoutScrollbarWidth } from './CalendarHeader'
+import { useDatePickerKeys } from './datePickerKeys'
+import {
+  addMonths,
+  defaultEndYear,
+  defaultStartYear,
+  getBeginOffset,
+  getRealIndex,
+} from './dateUtils'
 import {
   getIndexFromVerticalOffset,
   getMonthHeight,
@@ -7,14 +29,6 @@ import {
   getVerticalMonthsOffset,
   horizontalMonthScrolls,
 } from './Month'
-import {
-  addMonths,
-  defaultEndYear,
-  defaultStartYear,
-  getBeginOffset,
-  getRealIndex,
-} from './dateUtils'
-import { useLatest } from '../shared/utils'
 import {
   getMaxIndex,
   getMinIndex,
@@ -26,21 +40,9 @@ import {
   useFocusDate,
   useYearChange,
 } from './SwiperUtils'
-import { useDatePickerKeys } from './datePickerKeys'
-import AutoSizer from './AutoSizer'
-import {
-  memo,
-  type ReactNode,
-  type UIEvent,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react'
-import { layoutScrollbarWidth } from './CalendarHeader'
 
-const empty = () => null
+const useIsomorphicLayoutEffect =
+  typeof window !== 'undefined' ? useLayoutEffect : useEffect
 
 function Swiper({
   endYear,
@@ -62,7 +64,6 @@ function Swiper({
   startYear,
 }: SwiperProps) {
   const [index, setIndex] = useState(initialIndex)
-
   const indexRef = useLatest(index)
 
   const isHorizontal = scrollMode === 'horizontal'
@@ -78,9 +79,7 @@ function Swiper({
     },
     [endYear, startYear]
   )
-
   const onNext = useCallback(() => shiftIndex(1), [shiftIndex])
-
   const onPrev = useCallback(() => shiftIndex(-1), [shiftIndex])
 
   const renderProps = {
@@ -104,7 +103,6 @@ function Swiper({
       startYear,
     }
   )
-
   useDatePickerKeys(keyboardEnabled, {
     getVisibleMonth: () =>
       addMonths(new Date(), getRealIndex(indexRef.current, startYear, endYear)),
@@ -115,7 +113,6 @@ function Swiper({
     onOpenMonthMenu,
     onOpenYearMenu,
   })
-
   useYearChange(
     (newIndex) => {
       if (newIndex && isIndexWithinRange(newIndex, startYear, endYear)) {
@@ -183,8 +180,7 @@ function Swiper({
   )
 }
 
-const useIsomorphicLayoutEffect =
-  typeof window !== 'undefined' ? useLayoutEffect : useEffect
+const empty = () => null
 
 function VerticalScroller({
   endYear,
@@ -250,7 +246,6 @@ function VerticalScroller({
     // Mount-only. Later scrolls keep the offset the user already has.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
   const onScroll = useCallback(
     (e: UIEvent) => {
       const top = e.currentTarget?.scrollTop

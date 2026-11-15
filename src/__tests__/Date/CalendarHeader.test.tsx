@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react-native'
+
 import CalendarHeader, { layoutScrollbarWidth } from '../../Date/CalendarHeader'
 
 it('renders CalendarHeader', async () => {

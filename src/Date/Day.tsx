@@ -1,26 +1,17 @@
+import { memo, useCallback, useMemo } from 'react'
+import {
+  Pressable,
+  type StyleProp,
+  StyleSheet,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import { Text } from 'react-native-paper'
-import { Pressable, StyleSheet, View } from 'react-native'
-import type { StyleProp, ViewStyle } from 'react-native'
-import DayRange from './DayRange'
-import { dayCellSize, daySize } from './dateUtils'
 
 import type { PaperTheme } from '../shared/utils'
+import { dayCellSize, daySize } from './dateUtils'
+import DayRange from './DayRange'
 import type { DayContentPosition, DayContentRenderer } from './types'
-import { memo, useCallback, useMemo } from 'react'
-
-const contentPositions = StyleSheet.create({
-  'bottom': {
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    paddingBottom: 2,
-  },
-  'bottom-left': { alignItems: 'flex-start', justifyContent: 'flex-end' },
-  'bottom-right': { alignItems: 'flex-end', justifyContent: 'flex-end' },
-  'center': { alignItems: 'center', justifyContent: 'center' },
-  'top': { alignItems: 'center', justifyContent: 'flex-start', paddingTop: 2 },
-  'top-left': { alignItems: 'flex-start', justifyContent: 'flex-start' },
-  'top-right': { alignItems: 'flex-end', justifyContent: 'flex-start' },
-})
 
 function Day(props: {
   day: number
@@ -162,6 +153,20 @@ function EmptyDayPure() {
 
 export const EmptyDay = memo(EmptyDayPure)
 
+const contentPositions = StyleSheet.create({
+  'bottom': {
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingBottom: 2,
+  },
+  'bottom-left': { alignItems: 'flex-start', justifyContent: 'flex-end' },
+  'bottom-right': { alignItems: 'flex-end', justifyContent: 'flex-end' },
+  'center': { alignItems: 'center', justifyContent: 'center' },
+  'top': { alignItems: 'center', justifyContent: 'flex-start', paddingTop: 2 },
+  'top-left': { alignItems: 'flex-start', justifyContent: 'flex-start' },
+  'top-right': { alignItems: 'flex-end', justifyContent: 'flex-start' },
+})
+
 const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
@@ -183,15 +188,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: daySize,
   },
+  empty: {
+    flex: 1,
+    flexBasis: 0,
+  },
   focused: {
     borderWidth: 2,
   },
   muted: {
     opacity: 0.38,
-  },
-  empty: {
-    flex: 1,
-    flexBasis: 0,
   },
   root: {
     alignItems: 'center',

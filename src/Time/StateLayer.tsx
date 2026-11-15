@@ -1,10 +1,9 @@
 import { type ColorValue, StyleSheet, View } from 'react-native'
+
 import { themeColor, withAlpha } from '../shared/utils'
 
 const focusedStateLayerOpacity = 0.1
-
 const hoveredStateLayerOpacity = 0.08
-
 const pressedStateLayerOpacity = 0.1
 
 export default function StateLayer({

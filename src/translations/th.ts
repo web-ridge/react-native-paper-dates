@@ -25,4 +25,5 @@ const th: TranslationsType = {
   toggleKeyboard: 'สลับแป้นพิมพ์',
   typeInDate: 'พิมพ์วันที่',
 }
+
 export default th

@@ -26,4 +26,5 @@ const he: TranslationsType = {
   toggleKeyboard: 'החלף מקלדת',
   typeInDate: 'הקש תאריך',
 }
+
 export default he

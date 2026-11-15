@@ -1,6 +1,7 @@
+import { render } from '@testing-library/react-native'
 import { act } from 'react'
 import { StyleSheet, Text } from 'react-native'
-import { render } from '@testing-library/react-native'
+
 import AutoSizer from '../../Date/AutoSizer'
 
 it('renders AutoSizer', async () => {

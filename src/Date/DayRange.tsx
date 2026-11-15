@@ -1,7 +1,8 @@
-import { StyleSheet, View } from 'react-native'
-import { dayCellSize, daySize } from './dateUtils'
 import { memo } from 'react'
+import { StyleSheet, View } from 'react-native'
+
 import { sharedStyles } from '../shared/styles'
+import { dayCellSize, daySize } from './dateUtils'
 
 function DayRange({
   inRange,

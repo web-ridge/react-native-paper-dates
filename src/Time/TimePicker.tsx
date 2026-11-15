@@ -1,5 +1,9 @@
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { StyleSheet, useWindowDimensions, View } from 'react-native'
 
+import { DisplayModeContext } from '../contexts/DisplayModeContext'
+import AnalogClock from './AnalogClock'
+import TimeInputs from './TimeInputs'
 import {
   circleSize,
   inputTypes,
@@ -14,33 +18,6 @@ import {
   toHourInputFormat,
   toHourOutputFormat,
 } from './timeUtils'
-
-import AnalogClock from './AnalogClock'
-import TimeInputs from './TimeInputs'
-import { DisplayModeContext } from '../contexts/DisplayModeContext'
-import { memo, useCallback, useEffect, useMemo, useState } from 'react'
-
-const styles = StyleSheet.create({
-  clockContainer: {
-    paddingLeft: 12,
-    paddingRight: 12,
-    paddingTop: 36,
-  },
-  clockContainerLandscape: {
-    paddingLeft: 64,
-    paddingRight: 0,
-    paddingTop: 0,
-  },
-  rootLandscape: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  rootPortrait: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})
 
 function TimePicker({
   focused,
@@ -64,11 +41,9 @@ function TimePicker({
   use24HourClock?: boolean
 }) {
   const dimensions = useWindowDimensions()
-
   const [displayMode, setDisplayMode] = useState<'AM' | 'PM' | undefined>(() =>
     hours >= 12 ? 'PM' : 'AM'
   )
-
   const is24Hour = useMemo(() => {
     if (use24HourClock !== undefined) {
       return use24HourClock
@@ -159,5 +134,27 @@ function TimePicker({
     </DisplayModeContext.Provider>
   )
 }
+
+const styles = StyleSheet.create({
+  clockContainer: {
+    paddingLeft: 12,
+    paddingRight: 12,
+    paddingTop: 36,
+  },
+  clockContainerLandscape: {
+    paddingLeft: 64,
+    paddingRight: 0,
+    paddingTop: 0,
+  },
+  rootLandscape: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  rootPortrait: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+})
 
 export default memo(TimePicker)

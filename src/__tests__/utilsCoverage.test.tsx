@@ -1,7 +1,9 @@
-import { type ReactNode, useContext } from 'react'
 import { act, renderHook } from '@testing-library/react-native'
-import { I18nManager } from 'react-native'
+import { type ReactNode, useContext } from 'react'
+import { Dimensions, I18nManager } from 'react-native'
 import { DarkTheme, LightTheme, ThemeProvider } from 'react-native-paper'
+
+import { DisplayModeContext } from '../contexts/DisplayModeContext'
 import useDateInput from '../Date/inputUtils'
 import {
   getMaxIndex,
@@ -16,7 +18,6 @@ import {
   centerIconOnLastWeekday,
   weekdaySpan,
 } from '../Date/weekdayColumns'
-import { DisplayModeContext } from '../contexts/DisplayModeContext'
 import {
   darkenColor,
   fadeColor,
@@ -33,7 +34,6 @@ import {
 } from '../shared/utils'
 import en from '../translations/en'
 import { registerTranslation } from '../translations/utils'
-import { Dimensions } from 'react-native'
 
 registerTranslation('en', en)
 

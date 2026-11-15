@@ -1,3 +1,4 @@
+import { memo, useCallback, useMemo, useState } from 'react'
 import {
   Modal,
   Platform,
@@ -6,18 +7,33 @@ import {
   View,
 } from 'react-native'
 import { useTheme } from 'react-native-paper'
-import DatePickerModalContent, {
-  DatePickerModalContentMultiProps,
-  DatePickerModalContentRangeProps,
-  DatePickerModalContentSingleProps,
-} from './DatePickerModalContent'
-import { memo, useCallback, useMemo, useState } from 'react'
+
 import ModalScrim from '../shared/ModalScrim'
 import {
   rememberLayout,
   supportedOrientations,
   useIsLargeScreen,
 } from '../shared/utils'
+import DatePickerModalContent, {
+  DatePickerModalContentMultiProps,
+  DatePickerModalContentRangeProps,
+  DatePickerModalContentSingleProps,
+} from './DatePickerModalContent'
+
+export interface DatePickerModalMultiProps
+  extends DatePickerModalContentMultiProps, DatePickerModalProps {}
+interface DatePickerModalProps {
+  animationType?: 'slide' | 'fade' | 'none'
+  disableStatusBar?: boolean
+  disableStatusBarPadding?: boolean
+  inputEnabled?: boolean
+  presentationStyle?: 'pageSheet' | 'formSheet' | 'overFullScreen'
+  visible: boolean
+}
+export interface DatePickerModalRangeProps
+  extends DatePickerModalContentRangeProps, DatePickerModalProps {}
+export interface DatePickerModalSingleProps
+  extends DatePickerModalContentSingleProps, DatePickerModalProps {}
 
 export function DatePickerModal(
   props:
@@ -122,24 +138,6 @@ export function DatePickerModal(
     </View>
   )
 }
-
-interface DatePickerModalProps {
-  animationType?: 'slide' | 'fade' | 'none'
-  disableStatusBar?: boolean
-  disableStatusBarPadding?: boolean
-  inputEnabled?: boolean
-  presentationStyle?: 'pageSheet' | 'formSheet' | 'overFullScreen'
-  visible: boolean
-}
-
-export interface DatePickerModalMultiProps
-  extends DatePickerModalContentMultiProps, DatePickerModalProps {}
-
-export interface DatePickerModalRangeProps
-  extends DatePickerModalContentRangeProps, DatePickerModalProps {}
-
-export interface DatePickerModalSingleProps
-  extends DatePickerModalContentSingleProps, DatePickerModalProps {}
 
 const styles = StyleSheet.create({
   modalContent: {

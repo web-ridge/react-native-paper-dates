@@ -1,3 +1,4 @@
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import {
   Modal,
   Pressable,
@@ -14,11 +15,14 @@ import {
   Text,
   useTheme,
 } from 'react-native-paper'
-import { memo, useCallback, useEffect, useRef, useState } from 'react'
-import Month from './Month'
-import MonthMenu from './MonthMenu'
-import YearPicker from './YearPicker'
-import DayNames from './DayNames'
+
+import {
+  displayCase,
+  supportedOrientations,
+  themeColor,
+  useLatest,
+} from '../shared/utils'
+import { getTranslation, translate } from '../translations/utils'
 import { useDatePickerKeys } from './datePickerKeys'
 import {
   addMonths,
@@ -28,86 +32,16 @@ import {
   getEndOfDay,
   getInitialIndex,
 } from './dateUtils'
+import DayNames from './DayNames'
+import Month from './Month'
+import MonthMenu from './MonthMenu'
 import type {
   CalendarDate,
   DisableWeekDaysType,
   SingleChange,
   ValidRangeType,
 } from './types'
-import {
-  displayCase,
-  supportedOrientations,
-  themeColor,
-  useLatest,
-} from '../shared/utils'
-import { getTranslation, translate } from '../translations/utils'
-
-const cardWidth = 360
-
-const screenInset = 8
-
-const anchorGap = 8
-
-const headerRowHeight = 24
-
-const headerPaddingTop = 20
-
-const headerPaddingBottom = 30
-
-const menuDividerOffset = 20
-
-const dayHeaderInset = 12
-
-const stepperGap = 8
-
-const menuButtonPadding = 12
-
-const menuIconGap = 8
-
-const menuLabelInset = 16 + 24 + 16
-
-const weekdayRowHeight = 24
-
-const actionHeight = 36
-
-const actionPaddingTop = 8
-
-const actionPaddingBottom = 12
-
-const menuHeight =
-  weekdayRowHeight +
-  dayCellSize * 6 +
-  actionPaddingTop +
-  actionHeight +
-  actionPaddingBottom
-
-export function placeDockedCard({
-  anchor,
-  cardHeight,
-  cardWidth: width,
-  windowHeight,
-  windowWidth,
-}: {
-  anchor: DatePickerAnchor
-  cardHeight: number
-  cardWidth: number
-  windowHeight: number
-  windowWidth: number
-}) {
-  const maxLeft = Math.max(screenInset, windowWidth - width - screenInset)
-  let left = anchor.x
-  if (left + width > windowWidth - screenInset) {
-    left = anchor.x + anchor.width - width
-  }
-  left = Math.min(Math.max(screenInset, left), maxLeft)
-  const below = anchor.y + anchor.height + anchorGap
-  const above = anchor.y - cardHeight - anchorGap
-  const top =
-    below + cardHeight > windowHeight - screenInset && above >= screenInset
-      ? above
-      : below
-  return { left, top }
-}
+import YearPicker from './YearPicker'
 
 export type DatePickerAnchor = {
   height: number
@@ -115,7 +49,6 @@ export type DatePickerAnchor = {
   x: number
   y: number
 }
-
 export type DatePickerDockedProps = {
   anchor?: DatePickerAnchor | null
   date?: CalendarDate
@@ -133,6 +66,29 @@ export type DatePickerDockedProps = {
   validRange?: ValidRangeType
   visible: boolean
 }
+
+const actionHeight = 36
+const actionPaddingBottom = 12
+const actionPaddingTop = 8
+const anchorGap = 8
+const cardWidth = 360
+const dayHeaderInset = 12
+const headerPaddingBottom = 30
+const headerPaddingTop = 20
+const headerRowHeight = 24
+const menuButtonPadding = 12
+const menuDividerOffset = 20
+const menuIconGap = 8
+const menuLabelInset = 16 + 24 + 16
+const screenInset = 8
+const stepperGap = 8
+const weekdayRowHeight = 24
+const menuHeight =
+  weekdayRowHeight +
+  dayCellSize * 6 +
+  actionPaddingTop +
+  actionHeight +
+  actionPaddingBottom
 
 function DatePickerDocked({
   anchor,
@@ -177,12 +133,10 @@ function DatePickerDocked({
     }
     wasVisible.current = visible
   }, [date, visible])
-
   const showMonth = useCallback((next: Date) => {
     setFocusedDate(next)
     setVisibleMonth(new Date(next.getFullYear(), next.getMonth(), 1))
   }, [])
-
   const commitDate = useCallback(
     (next: Date) => {
       const normalized = dateMode === 'end' ? getEndOfDay(next) : next
@@ -191,7 +145,6 @@ function DatePickerDocked({
     },
     [dateMode, showMonth]
   )
-
   const moveMonth = useCallback(
     (delta: number) => {
       setVisibleMonth((current) => {
@@ -203,7 +156,6 @@ function DatePickerDocked({
     },
     [resolvedEndYear, resolvedStartYear]
   )
-
   const moveYear = useCallback(
     (delta: number) => {
       setVisibleMonth((current) => {
@@ -214,7 +166,6 @@ function DatePickerDocked({
     },
     [resolvedEndYear, resolvedStartYear]
   )
-
   const confirm = useCallback(() => {
     const next = focusedDate
       ? dateMode === 'end'
@@ -223,7 +174,6 @@ function DatePickerDocked({
       : draft
     onConfirmRef.current({ date: next })
   }, [dateMode, draft, focusedDate, onConfirmRef])
-
   useDatePickerKeys(visible && menu === 'day', {
     getVisibleMonth: () => visibleMonth,
     onConfirm: confirm,
@@ -535,6 +485,34 @@ function DockedStepper({
   )
 }
 
+export function placeDockedCard({
+  anchor,
+  cardHeight,
+  cardWidth: width,
+  windowHeight,
+  windowWidth,
+}: {
+  anchor: DatePickerAnchor
+  cardHeight: number
+  cardWidth: number
+  windowHeight: number
+  windowWidth: number
+}) {
+  const maxLeft = Math.max(screenInset, windowWidth - width - screenInset)
+  let left = anchor.x
+  if (left + width > windowWidth - screenInset) {
+    left = anchor.x + anchor.width - width
+  }
+  left = Math.min(Math.max(screenInset, left), maxLeft)
+  const below = anchor.y + anchor.height + anchorGap
+  const above = anchor.y - cardHeight - anchorGap
+  const top =
+    below + cardHeight > windowHeight - screenInset && above >= screenInset
+      ? above
+      : below
+  return { left, top }
+}
+
 const styles = StyleSheet.create({
   action: {
     margin: 0,
@@ -580,6 +558,13 @@ const styles = StyleSheet.create({
     gap: menuIconGap,
     height: headerRowHeight,
   },
+  menuLabel: {
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+  },
+  menuLabelDisabled: {
+    opacity: 0.38,
+  },
   menuMonth: {
     flex: 1,
     justifyContent: 'center',
@@ -589,13 +574,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-  },
-  menuLabel: {
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-  },
-  menuLabelDisabled: {
-    opacity: 0.38,
   },
   spacer: {
     flex: 1,

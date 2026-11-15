@@ -1,5 +1,6 @@
-import { Animated } from 'react-native'
 import { act, render } from '@testing-library/react-native'
+import { Animated } from 'react-native'
+
 import AnalogClockHours from '../../Time/AnalogClockHours'
 import AnalogClockMinutes from '../../Time/AnalogClockMinutes'
 import AnimatedClockSwitcher from '../../Time/AnimatedClockSwitcher'

@@ -1,11 +1,23 @@
-import { ReactElement } from 'react'
 import {
   act,
   render as rtlRender,
   RenderOptions,
   RenderResult,
 } from '@testing-library/react-native'
+import { ReactElement } from 'react'
 import { PaperProvider } from 'react-native-paper'
+
+type Fiber = {
+  child: Fiber | null
+  memoizedProps?: { onPress?: unknown }
+  pendingProps?: { onPress?: unknown }
+  return: Fiber | null
+  sibling: Fiber | null
+}
+export type PressableInstance = {
+  props: Record<string, unknown>
+  unstable_fiber?: Fiber | null
+}
 
 export function byTestId(
   screen: { container: { queryAll: Function } },
@@ -18,14 +30,6 @@ export function byTestId(
   }) as PressableInstance[]
 }
 
-type Fiber = {
-  child: Fiber | null
-  memoizedProps?: { onPress?: unknown }
-  pendingProps?: { onPress?: unknown }
-  return: Fiber | null
-  sibling: Fiber | null
-}
-
 export function findPress(node: PressableInstance): (() => void) | undefined {
   let fiber = node.unstable_fiber ?? null
   for (let depth = 0; fiber && depth < 12; depth += 1, fiber = fiber.return) {
@@ -35,11 +39,6 @@ export function findPress(node: PressableInstance): (() => void) | undefined {
     }
   }
   return undefined
-}
-
-export type PressableInstance = {
-  props: Record<string, unknown>
-  unstable_fiber?: Fiber | null
 }
 
 export async function pressDays(
@@ -110,4 +109,5 @@ export function walkFibers(
 }
 
 export * from '@testing-library/react-native'
+
 export { render }

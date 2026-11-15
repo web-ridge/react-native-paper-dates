@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react-native'
+
 import DayName from '../../Date/DayName'
 
 it('renders DayName', async () => {

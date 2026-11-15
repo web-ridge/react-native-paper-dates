@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react-native'
-import YearPicker from '../../Date/YearPicker'
+
 import { defaultEndYear, defaultStartYear } from '../../Date/dateUtils'
+import YearPicker from '../../Date/YearPicker'
 
 it('renders', async () => {
   await render(

@@ -1,6 +1,7 @@
 import type { ComponentProps, CSSProperties } from 'react'
-import type { ValidRangeType } from './types'
 import type { TextInput } from 'react-native-paper'
+
+import type { ValidRangeType } from './types'
 
 export type DatePickerInputProps = {
   animationType?: 'slide' | 'fade' | 'none'

@@ -1,11 +1,18 @@
+import { memo, useCallback, useContext, useRef } from 'react'
 import {
   GestureResponderEvent,
   PanResponder,
   StyleSheet,
   View,
+  type ViewInstance,
 } from 'react-native'
-import type { ViewInstance } from 'react-native'
 import { useTheme } from 'react-native-paper'
+
+import { DisplayModeContext } from '../contexts/DisplayModeContext'
+import { useLatest } from '../shared/utils'
+import AnalogClockHours from './AnalogClockHours'
+import AnalogClockMinutes from './AnalogClockMinutes'
+import AnimatedClockSwitcher from './AnimatedClockSwitcher'
 import {
   circleSize,
   clockTypes,
@@ -18,12 +25,6 @@ import {
   type PossibleClockTypes,
   type TimeChange,
 } from './timeUtils'
-import { useLatest } from '../shared/utils'
-import AnalogClockHours from './AnalogClockHours'
-import AnimatedClockSwitcher from './AnimatedClockSwitcher'
-import AnalogClockMinutes from './AnalogClockMinutes'
-import { DisplayModeContext } from '../contexts/DisplayModeContext'
-import { memo, useCallback, useContext, useRef } from 'react'
 
 function AnalogClock({
   focused,

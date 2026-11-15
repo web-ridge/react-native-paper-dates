@@ -1,5 +1,6 @@
-import { type ReactElement } from 'react'
+import type { ReactElement } from 'react'
 import { StyleSheet } from 'react-native'
+
 import CrossFade from '../shared/CrossFade'
 import AnalogClockHours from './AnalogClockHours'
 import AnalogClockMinutes from './AnalogClockMinutes'

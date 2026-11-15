@@ -26,4 +26,5 @@ const tr: TranslationsType = {
   toggleKeyboard: 'Klavyeyi değiştir',
   typeInDate: 'Tarihi yazın',
 }
+
 export default tr

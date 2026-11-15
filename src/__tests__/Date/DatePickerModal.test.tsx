@@ -1,6 +1,7 @@
 import { act, render } from '@testing-library/react-native'
 import { Dimensions } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
+
 import DatePickerModal from '../../Date/DatePickerModal'
 
 function viewsWithHeight(root: { queryAll: Function } | null, height: number) {

@@ -1,14 +1,15 @@
 import { act, fireEvent, render } from '@testing-library/react-native'
-import { findPress } from '../../testUtils'
 import { Dimensions, PanResponder, Platform, StyleSheet } from 'react-native'
 import { DarkTheme, ThemeProvider } from 'react-native-paper'
+
 import { DisplayModeContext } from '../../contexts/DisplayModeContext'
+import { findPress } from '../../testUtils'
 import AmPmSwitcher from '../../Time/AmPmSwitcher'
 import AnalogClock from '../../Time/AnalogClock'
 import AnalogClockHours from '../../Time/AnalogClockHours'
 import AnalogClockMinutes from '../../Time/AnalogClockMinutes'
-import ClockNumber from '../../Time/ClockNumber'
 import AnimatedClockSwitcher from '../../Time/AnimatedClockSwitcher'
+import ClockNumber from '../../Time/ClockNumber'
 import TimeInput from '../../Time/TimeInput'
 import TimeInputs from '../../Time/TimeInputs'
 import TimePicker from '../../Time/TimePicker'
@@ -18,10 +19,13 @@ import en from '../../translations/en'
 import { registerTranslation } from '../../translations/utils'
 
 registerTranslation('en', en)
+
 registerTranslation('en-US', en)
+
 registerTranslation('en-GB', en)
 
 const originalOS = Platform.OS
+
 const savedWindow = Dimensions.get('window')
 
 afterEach(async () => {

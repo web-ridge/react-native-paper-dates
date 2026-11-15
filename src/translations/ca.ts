@@ -26,4 +26,5 @@ const ca: TranslationsType = {
   toggleKeyboard: 'Alterna el teclat',
   typeInDate: 'Escriu la data',
 }
+
 export default ca

@@ -1,15 +1,16 @@
+import { useContext, useState } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
 import { Text, useTheme } from 'react-native-paper'
-import { useContext, useState } from 'react'
+
+import { DisplayModeContext } from '../contexts/DisplayModeContext'
+import { sharedStyles } from '../shared/styles'
+import { getTranslation } from '../translations/utils'
+import StateLayer from './StateLayer'
 import {
   inputTypes,
   type PossibleInputTypes,
   useSwitchColors,
 } from './timeUtils'
-import StateLayer from './StateLayer'
-import { DisplayModeContext } from '../contexts/DisplayModeContext'
-import { sharedStyles } from '../shared/styles'
-import { getTranslation } from '../translations/utils'
 
 export default function AmPmSwitcher({
   direction = 'vertical',
@@ -84,33 +85,6 @@ export default function AmPmSwitcher({
   )
 }
 
-const styles = StyleSheet.create({
-  rootHorizontal: {
-    borderWidth: 1,
-    flexDirection: 'row',
-    overflow: 'hidden',
-    width: 216,
-  },
-  rootVertical: {
-    borderWidth: 1,
-    overflow: 'hidden',
-    width: 52,
-  },
-  separatorHorizontal: {
-    alignSelf: 'stretch',
-    width: 1,
-  },
-  separatorVertical: {
-    height: 1,
-    width: 52,
-  },
-  switchButtonInner: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-  },
-})
-
 function SwitchButton({
   label,
   onPress,
@@ -121,13 +95,9 @@ function SwitchButton({
   selected: boolean
 }) {
   const [focused, setFocused] = useState(false)
-
   const [hovered, setHovered] = useState(false)
-
   const [pressed, setPressed] = useState(false)
-
   const { backgroundColor, color } = useSwitchColors(selected)
-
   const theme = useTheme()
 
   const textFont = theme.fonts.titleMedium
@@ -169,3 +139,30 @@ function SwitchButton({
     </Pressable>
   )
 }
+
+const styles = StyleSheet.create({
+  rootHorizontal: {
+    borderWidth: 1,
+    flexDirection: 'row',
+    overflow: 'hidden',
+    width: 216,
+  },
+  rootVertical: {
+    borderWidth: 1,
+    overflow: 'hidden',
+    width: 52,
+  },
+  separatorHorizontal: {
+    alignSelf: 'stretch',
+    width: 1,
+  },
+  separatorVertical: {
+    height: 1,
+    width: 52,
+  },
+  switchButtonInner: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+  },
+})

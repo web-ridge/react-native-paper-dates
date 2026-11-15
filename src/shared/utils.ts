@@ -1,6 +1,28 @@
 import { useMemo, useRef } from 'react'
-import { useWindowDimensions } from 'react-native'
+import { Platform, useWindowDimensions, type ViewStyle } from 'react-native'
 import { type Theme, useTheme } from 'react-native-paper'
+
+export type PaperTheme = Theme
+type Rgb = {
+  a: number
+  b: number
+  g: number
+  r: number
+}
+
+export const supportedOrientations: (
+  | 'portrait'
+  | 'portrait-upside-down'
+  | 'landscape'
+  | 'landscape-left'
+  | 'landscape-right'
+)[] = [
+  'portrait',
+  'portrait-upside-down',
+  'landscape',
+  'landscape-left',
+  'landscape-right',
+]
 
 function channelByte(value: number) {
   return Math.max(0, Math.min(255, Number(value.toFixed(0))))
@@ -69,8 +91,6 @@ export function isDarkColor(color: string) {
   return yiq < 128
 }
 
-export type PaperTheme = Theme
-
 function parseColor(input: string): Rgb {
   const value = input.trim()
   const hex = /^#([\da-f]{3,8})$/i.exec(value)
@@ -107,13 +127,6 @@ export function range(start: number, end: number) {
   return Array(end - start + 1)
     .fill(null)
     .map((_, i) => start + i)
-}
-
-type Rgb = {
-  a: number
-  b: number
-  g: number
-  r: number
 }
 
 export function rememberLayout<
@@ -160,19 +173,10 @@ export function scrimColor(color: unknown) {
   return rgbaString({ ...parseColor(themeColor(color)), a: 0.32 })
 }
 
-export const supportedOrientations: (
-  | 'portrait'
-  | 'portrait-upside-down'
-  | 'landscape'
-  | 'landscape-left'
-  | 'landscape-right'
-)[] = [
-  'portrait',
-  'portrait-upside-down',
-  'landscape',
-  'landscape-left',
-  'landscape-right',
-]
+export function scrollbarThumb(color: unknown): ViewStyle | null {
+  if (Platform.OS !== 'web' || typeof color !== 'string') return null
+  return { scrollbarColor: `${color} transparent` } as ViewStyle
+}
 
 export function themeColor(color: unknown) {
   return typeof color === 'string' ? color : '#000000'

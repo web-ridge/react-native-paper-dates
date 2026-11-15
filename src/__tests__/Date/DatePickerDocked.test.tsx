@@ -1,5 +1,6 @@
-import { Platform } from 'react-native'
 import { render } from '@testing-library/react-native'
+import { Platform } from 'react-native'
+
 import DatePickerDocked, { placeDockedCard } from '../../Date/DatePickerDocked'
 import DatePickerInput from '../../Date/DatePickerInput'
 import { useDatePickerKeys } from '../../Date/datePickerKeys'

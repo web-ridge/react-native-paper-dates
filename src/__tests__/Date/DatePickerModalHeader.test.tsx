@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
+
 import DatePickerModalHeader from '../../Date/DatePickerModalHeader'
 
 it('renders DatePickerModalHeader', async () => {

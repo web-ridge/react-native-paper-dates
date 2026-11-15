@@ -26,4 +26,5 @@ const fi: TranslationsType = {
   toggleKeyboard: 'Vaihda näppäimistöä',
   typeInDate: 'Syötä päivämäärä',
 }
+
 export default fi

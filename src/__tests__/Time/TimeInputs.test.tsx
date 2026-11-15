@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react-native'
+
 import TimeInputs from '../../Time/TimeInputs'
 import en from '../../translations/en'
 import { registerTranslation } from '../../translations/utils'

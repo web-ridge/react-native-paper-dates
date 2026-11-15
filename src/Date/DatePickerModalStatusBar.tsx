@@ -1,16 +1,17 @@
 import { memo } from 'react'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import {
-  isDarkColor,
-  themeColor,
-  useHeaderBackgroundColor,
-} from '../shared/utils'
 import {
   StatusBar,
   type StatusBarProps,
   type StatusBarStyle,
   View,
 } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+
+import {
+  isDarkColor,
+  themeColor,
+  useHeaderBackgroundColor,
+} from '../shared/utils'
 
 function DatePickerModalStatusBar({
   disableSafeTop,

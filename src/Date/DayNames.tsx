@@ -1,9 +1,12 @@
-import { StyleSheet, View } from 'react-native'
-import DayName from './DayName'
-import { useTheme } from 'react-native-paper'
-import { showWeekDay } from './dateUtils'
-import type { DisableWeekDaysType } from './types'
 import { memo, useMemo } from 'react'
+import { StyleSheet, View } from 'react-native'
+import { useTheme } from 'react-native-paper'
+
+import { showWeekDay } from './dateUtils'
+import DayName from './DayName'
+import type { DisableWeekDaysType } from './types'
+
+export const dayNamesHeight = 48
 
 function DayNames({
   backgroundColor,
@@ -36,7 +39,6 @@ function DayNames({
     })
     return weekdays.map((date) => formatter.format(date))
   }, [locale, startWeekOnMonday])
-
   const theme = useTheme()
 
   return (
@@ -59,8 +61,6 @@ function DayNames({
   )
 }
 
-export const dayNamesHeight = 48
-
 const styles = StyleSheet.create({
   dayNames: {
     alignItems: 'center',
@@ -68,4 +68,5 @@ const styles = StyleSheet.create({
     height: dayNamesHeight,
   },
 })
+
 export default memo(DayNames)

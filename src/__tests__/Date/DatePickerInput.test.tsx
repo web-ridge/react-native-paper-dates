@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react-native'
+
 import DatePickerInput from '../../Date/DatePickerInput'
 
 it('renders DatePickerInput', async () => {

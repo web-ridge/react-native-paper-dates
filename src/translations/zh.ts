@@ -25,4 +25,5 @@ const zh: TranslationsType = {
   toggleKeyboard: '切换键盘',
   typeInDate: '输入日期',
 }
+
 export default zh

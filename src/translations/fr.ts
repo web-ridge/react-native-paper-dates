@@ -26,4 +26,5 @@ const fr: TranslationsType = {
   toggleKeyboard: 'Basculer le clavier',
   typeInDate: 'Entrer la date',
 }
+
 export default fr

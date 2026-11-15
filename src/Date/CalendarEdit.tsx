@@ -1,15 +1,17 @@
-import { Keyboard, StyleSheet, View } from 'react-native'
-import type { TextInputInstance } from 'react-native'
+import { memo, type Ref, useCallback, useEffect, useRef } from 'react'
+import {
+  Keyboard,
+  StyleSheet,
+  type TextInputInstance,
+  View,
+} from 'react-native'
+import { type TextInputHandles, useTheme } from 'react-native-paper'
 
+import { sharedStyles } from '../shared/styles'
+import DatePickerInputWithoutModal from './DatePickerInputWithoutModal'
 import type { LocalState } from './DatePickerModalContent'
 import type { DisableWeekDaysType, ModeType, ValidRangeType } from './types'
-
-import DatePickerInputWithoutModal from './DatePickerInputWithoutModal'
 import { weekdaySpan, weekdaySpanOvershoot } from './weekdayColumns'
-import { memo, type Ref, useCallback, useEffect, useRef } from 'react'
-import { useTheme } from 'react-native-paper'
-import { sharedStyles } from '../shared/styles'
-import type { TextInputHandles } from 'react-native-paper'
 
 function CalendarEdit({
   collapsed,
@@ -67,7 +69,6 @@ function CalendarEdit({
       inputsToFocus.forEach((ip) => ip.focus())
     }
   }, [mode, startInput, endInput, dateInput, collapsed])
-
   const onSubmitStartInput = useCallback(() => {
     endInput.current?.focus()
   }, [endInput])
@@ -167,6 +168,7 @@ function CalendarDateField({
 
   return (
     <DatePickerInputWithoutModal
+      ref={inputRef}
       autoComplete="off"
       inputEnabled={inputEnabled}
       inputMode={inputMode}
@@ -175,7 +177,6 @@ function CalendarDateField({
       onChange={onChange}
       onSubmitEditing={onSubmitEditing}
       placeholder={placeholder}
-      ref={inputRef}
       returnKeyType={returnKeyType}
       theme={inputTheme}
       validRange={validRange}

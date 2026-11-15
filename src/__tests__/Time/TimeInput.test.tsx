@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react-native'
+
 import TimeInput from '../../Time/TimeInput'
 import { clockTypes } from '../../Time/timeUtils'
 

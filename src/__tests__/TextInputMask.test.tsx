@@ -1,4 +1,5 @@
 import { act, render } from '@testing-library/react-native'
+
 import TextInputWithMask from '../TextInputMask'
 
 const noop = () => null

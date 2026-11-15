@@ -1,11 +1,26 @@
 import {
+  memo,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   ScrollView,
+  type ScrollViewInstance,
   StyleSheet,
   View,
 } from 'react-native'
-import type { ScrollViewInstance } from 'react-native'
+
+import { sharedStyles } from '../shared/styles'
+import AutoSizer from './AutoSizer'
+import { verticalScrollbarGutter } from './CalendarHeader'
+import { useDatePickerKeys } from './datePickerKeys'
+import { addMonths, getBeginOffset, getRealIndex } from './dateUtils'
 import {
   getIndexFromVerticalOffset,
   getMonthHeight,
@@ -14,7 +29,6 @@ import {
   getVerticalMonthsOffset,
   horizontalMonthScrolls,
 } from './Month'
-
 import {
   getMaxIndex,
   getMinIndex,
@@ -25,20 +39,18 @@ import {
   useFocusDate,
   useYearChange,
 } from './SwiperUtils'
-import { addMonths, getBeginOffset, getRealIndex } from './dateUtils'
-import { useDatePickerKeys } from './datePickerKeys'
-import AutoSizer from './AutoSizer'
-import {
-  memo,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
-import { sharedStyles } from '../shared/styles'
-import { verticalScrollbarGutter } from './CalendarHeader'
+
+const HORIZONTAL_PAGES = 3
+
+function Swiper(props: SwiperProps) {
+  return (
+    <AutoSizer initialLayout={props.initialLayout}>
+      {({ height, width }) => (
+        <SwiperInner {...props} height={height} width={width} />
+      )}
+    </AutoSizer>
+  )
+}
 
 function clampIndex(i: number, startYear?: number, endYear?: number) {
   if (isIndexWithinRange(i, startYear, endYear)) {
@@ -66,24 +78,6 @@ function getVisibleArray(
     return [i - 1, i, i + 1]
   }
   return getVerticalWindow(i, startYear, endYear)
-}
-
-const HORIZONTAL_PAGES = 3
-
-const styles = StyleSheet.create({
-  inner: {
-    position: 'relative',
-  },
-})
-
-function Swiper(props: SwiperProps) {
-  return (
-    <AutoSizer initialLayout={props.initialLayout}>
-      {({ height, width }) => (
-        <SwiperInner {...props} height={height} width={width} />
-      )}
-    </AutoSizer>
-  )
 }
 
 function SwiperInner({
@@ -198,9 +192,7 @@ function SwiperInner({
   const scrollToCurrent = useCallback(() => {
     scrollTo(idx.current, false)
   }, [scrollTo])
-
   useEffect(scrollToCurrent, [scrollToCurrent])
-
   useLayoutEffect(() => {
     const pending = pendingScroll.current
     if (pending) {
@@ -258,7 +250,6 @@ function SwiperInner({
     },
     [endYear, startWeekOnMonday, startYear, verticalMetrics.origin]
   )
-
   const onMomentumScrollEnd = useCallback(
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
       const contentOffset = e.nativeEvent.contentOffset
@@ -288,7 +279,6 @@ function SwiperInner({
     },
     [endYear, isHorizontal, restX, startYear, syncVerticalIndex, width]
   )
-
   const onScroll = useCallback(
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
       if (isHorizontal) {
@@ -298,14 +288,12 @@ function SwiperInner({
     },
     [isHorizontal, syncVerticalIndex]
   )
-
   const moveMonth = useCallback(
     (delta: number) => {
       scrollTo(idx.current + delta, false)
     },
     [scrollTo]
   )
-
   useFocusDate(
     (newIndex) => {
       if (
@@ -322,7 +310,6 @@ function SwiperInner({
       startYear,
     }
   )
-
   useDatePickerKeys(keyboardEnabled, {
     getVisibleMonth: () =>
       addMonths(new Date(), getRealIndex(idx.current, startYear, endYear)),
@@ -333,7 +320,6 @@ function SwiperInner({
     onOpenMonthMenu,
     onOpenYearMenu,
   })
-
   useYearChange(
     (newIndex) => {
       if (newIndex && isIndexWithinRange(newIndex, startYear, endYear)) {
@@ -354,6 +340,7 @@ function SwiperInner({
   return (
     <>
       <ScrollView
+        ref={parentRef}
         contentOffset={initialContentOffset}
         decelerationRate={isHorizontal ? 'fast' : 'normal'}
         directionalLockEnabled={isHorizontal}
@@ -364,7 +351,6 @@ function SwiperInner({
         onScroll={isHorizontal ? undefined : onScroll}
         onScrollEndDrag={onMomentumScrollEnd}
         pagingEnabled={isHorizontal}
-        ref={parentRef}
         scrollEventThrottle={16}
         scrollsToTop={false}
         showsHorizontalScrollIndicator={false}
@@ -434,5 +420,11 @@ function SwiperInner({
     </>
   )
 }
+
+const styles = StyleSheet.create({
+  inner: {
+    position: 'relative',
+  },
+})
 
 export default memo(Swiper)

@@ -1,8 +1,3 @@
-import { TextInput, useTheme } from 'react-native-paper'
-import type { TextInputHandles } from 'react-native-paper'
-import { StyleSheet, View } from 'react-native'
-import useDateInput from './inputUtils'
-import type { DatePickerInputProps } from './DatePickerInput.shared'
 import {
   cloneElement,
   forwardRef,
@@ -10,6 +5,11 @@ import {
   type ReactNode,
   type Ref,
 } from 'react'
+import { StyleSheet, View } from 'react-native'
+import { TextInput, type TextInputHandles, useTheme } from 'react-native-paper'
+
+import type { DatePickerInputProps } from './DatePickerInput.shared'
+import useDateInput from './inputUtils'
 
 function DatePickerInputWithoutModal(
   {
@@ -61,7 +61,6 @@ function DatePickerInputWithoutModal(
     validRange,
     value,
   })
-
   const theme = useTheme()
 
   if (inputEnabled !== undefined) {
@@ -81,6 +80,7 @@ function DatePickerInputWithoutModal(
         <View style={styles.inputContainer}>
           <TextInput
             {...rest}
+            ref={ref}
             disabled={disabled}
             endAccessory={
               isValidElement(inputButton)
@@ -114,7 +114,6 @@ function DatePickerInputWithoutModal(
               rest.onSubmitEditing?.(event)
             }}
             placeholder={rest.placeholder ?? inputFormat}
-            ref={ref}
             style={style}
             supportingText={helperText}
             value={displayedValue}
@@ -155,4 +154,5 @@ const styles = StyleSheet.create({
     width: '100%',
   },
 })
+
 export default forwardRef(DatePickerInputWithoutModal)

@@ -26,4 +26,5 @@ const ja: TranslationsType = {
   toggleKeyboard: 'キーボードに切り替え',
   typeInDate: '日付を入力',
 }
+
 export default ja

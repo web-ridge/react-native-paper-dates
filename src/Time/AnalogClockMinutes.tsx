@@ -1,8 +1,9 @@
 import { memo } from 'react'
 import { useTheme } from 'react-native-paper'
+
+import { getTranslation } from '../translations/utils'
 import ClockNumber from './ClockNumber'
 import { circleSize, clockNumbers } from './timeUtils'
-import { getTranslation } from '../translations/utils'
 
 const minuteNumbers = clockNumbers(12, 2.5, circleSize, -Math.PI / 2)
 
@@ -34,8 +35,8 @@ function AnalogClockMinutes({
           : currentMinutes - 1 <= minutes && currentMinutes + 1 >= minutes
         return (
           <ClockNumber
-            accessibilityLabel={minuteOf(currentMinutes, 60)}
             key={index}
+            accessibilityLabel={minuteOf(currentMinutes, 60)}
             left={left}
             onPress={() => onPress?.(currentMinutes)}
             selected={selected}

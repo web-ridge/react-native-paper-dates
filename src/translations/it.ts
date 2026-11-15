@@ -26,4 +26,5 @@ const it: TranslationsType = {
   toggleKeyboard: 'Passa alla tastiera',
   typeInDate: 'Digita la data',
 }
+
 export default it

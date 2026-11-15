@@ -26,4 +26,5 @@ const el: TranslationsType = {
   toggleKeyboard: 'Εναλλαγή πληκτρολογίου',
   typeInDate: 'Πληκτρολογήστε την ημερομηνία',
 }
+
 export default el

@@ -26,4 +26,5 @@ const cs: TranslationsType = {
   toggleKeyboard: 'Přepnout klávesnici',
   typeInDate: 'Zadejte datum',
 }
+
 export default cs

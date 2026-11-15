@@ -2,6 +2,7 @@ import React from 'react'
 import { Dimensions, Platform, Pressable } from 'react-native'
 import { DarkTheme, ThemeProvider } from 'react-native-paper'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
+
 import Calendar from '../Date/Calendar'
 import CalendarEdit from '../Date/CalendarEdit'
 import DatePickerInputWithoutModal from '../Date/DatePickerInputWithoutModal'
@@ -11,15 +12,15 @@ import DatePickerModalContentHeader, {
   HeaderContentMulti,
   HeaderContentRange,
 } from '../Date/DatePickerModalContentHeader'
-import Month from '../Date/Month'
-import YearPicker from '../Date/YearPicker'
 import { getInitialIndex, getStartAtIndex } from '../Date/dateUtils'
+import Month from '../Date/Month'
 import Swiper from '../Date/Swiper'
+import YearPicker from '../Date/YearPicker'
+import { act, findPress, pressTestId, render, walkFibers } from '../testUtils'
 import TimeInput from '../Time/TimeInput'
 import TimeInputs from '../Time/TimeInputs'
 import TimePicker from '../Time/TimePicker'
 import TimePickerModal from '../Time/TimePickerModal'
-import { act, findPress, pressTestId, render, walkFibers } from '../testUtils'
 import en from '../translations/en'
 import { registerTranslation } from '../translations/utils'
 
@@ -29,7 +30,9 @@ const metrics = {
   frame: { height: 800, width: 360, x: 0, y: 0 },
   insets: { bottom: 0, left: 0, right: 0, top: 0 },
 }
+
 const originalOS = Platform.OS
+
 const savedWindow = Dimensions.get('window')
 
 afterEach(async () => {

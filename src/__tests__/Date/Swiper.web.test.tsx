@@ -1,11 +1,12 @@
+import { act, render } from '@testing-library/react-native'
 import type { ComponentType } from 'react'
 import { Pressable, Text } from 'react-native'
-import { act, render } from '@testing-library/react-native'
 import { DarkTheme, ThemeProvider } from 'react-native-paper'
-import { pressNode } from '../../testUtils'
+
 import { getStartAtIndex } from '../../Date/dateUtils'
 import { getVerticalMonthsOffset } from '../../Date/Month'
 import { getMaxIndex, isIndexWithinRange } from '../../Date/SwiperUtils'
+import { pressNode } from '../../testUtils'
 
 jest.mock('../../Date/SwiperUtils', () => {
   const actual = jest.requireActual('../../Date/SwiperUtils') as {

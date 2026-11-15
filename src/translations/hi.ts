@@ -26,4 +26,5 @@ const hi: TranslationsType = {
   toggleKeyboard: 'कीबोर्ड बदलें',
   typeInDate: 'तारीख़ लिखें',
 }
+
 export default hi

@@ -26,4 +26,5 @@ const ru: TranslationsType = {
   toggleKeyboard: 'Переключить клавиатуру',
   typeInDate: 'Ввод в дате',
 }
+
 export default ru

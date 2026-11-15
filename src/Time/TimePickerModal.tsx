@@ -1,3 +1,4 @@
+import { memo, useCallback, useEffect, useState } from 'react'
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -8,9 +9,12 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native'
-
 import { Button, IconButton, useTheme } from 'react-native-paper'
 
+import ModalScrim from '../shared/ModalScrim'
+import { sharedStyles } from '../shared/styles'
+import { displayCase, supportedOrientations } from '../shared/utils'
+import { getTranslation } from '../translations/utils'
 import TimePicker from './TimePicker'
 import {
   clockTypes,
@@ -19,64 +23,9 @@ import {
   type PossibleClockTypes,
   type PossibleInputTypes,
   reverseInputTypes,
-  timeDialFits,
   type TimeChange,
+  timeDialFits,
 } from './timeUtils'
-import { memo, useCallback, useEffect, useState } from 'react'
-import { sharedStyles } from '../shared/styles'
-import ModalScrim from '../shared/ModalScrim'
-import { displayCase, supportedOrientations } from '../shared/utils'
-import { getTranslation } from '../translations/utils'
-
-function orNow(value: number | undefined | null, read: (date: Date) => number) {
-  return value ?? read(new Date())
-}
-
-const styles = StyleSheet.create({
-  bottom: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    paddingBottom: 16,
-    paddingHorizontal: 24,
-    paddingTop: 8,
-  },
-  center: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-  },
-  inputTypeToggle: {
-    margin: 0,
-  },
-  label: {
-    fontSize: 13,
-    letterSpacing: 1,
-  },
-  labelContainer: {
-    justifyContent: 'flex-end',
-    paddingLeft: 24,
-    paddingRight: 24,
-    paddingTop: 16,
-  },
-  modalContent: {
-    elevation: 3,
-    justifyContent: 'space-between',
-    paddingVertical: 8,
-    shadowColor: '#000',
-    shadowOffset: {
-      height: 5,
-      width: 0,
-    },
-    shadowOpacity: 0.34,
-    shadowRadius: 6.27,
-  },
-  timePickerContainer: {
-    paddingBottom: 16,
-    paddingLeft: 24,
-    paddingRight: 24,
-    paddingTop: 20,
-  },
-})
 
 export function TimePickerModal({
   animationType,
@@ -266,5 +215,55 @@ export function TimePickerModal({
     </Modal>
   )
 }
+
+function orNow(value: number | undefined | null, read: (date: Date) => number) {
+  return value ?? read(new Date())
+}
+
+const styles = StyleSheet.create({
+  bottom: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    paddingBottom: 16,
+    paddingHorizontal: 24,
+    paddingTop: 8,
+  },
+  center: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+  },
+  inputTypeToggle: {
+    margin: 0,
+  },
+  label: {
+    fontSize: 13,
+    letterSpacing: 1,
+  },
+  labelContainer: {
+    justifyContent: 'flex-end',
+    paddingLeft: 24,
+    paddingRight: 24,
+    paddingTop: 16,
+  },
+  modalContent: {
+    elevation: 3,
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+    shadowColor: '#000',
+    shadowOffset: {
+      height: 5,
+      width: 0,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+  },
+  timePickerContainer: {
+    paddingBottom: 16,
+    paddingLeft: 24,
+    paddingRight: 24,
+    paddingTop: 20,
+  },
+})
 
 export default memo(TimePickerModal)

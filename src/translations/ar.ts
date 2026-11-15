@@ -26,4 +26,5 @@ const ar: TranslationsType = {
   toggleKeyboard: 'تبديل لوحة المفاتيح',
   typeInDate: 'اكتب التاريخ',
 }
+
 export default ar

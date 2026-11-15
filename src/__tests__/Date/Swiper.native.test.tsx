@@ -1,11 +1,12 @@
-import React from 'react'
 import { act, render } from '@testing-library/react-native'
-import Swiper from '../../Date/Swiper'
+import React from 'react'
+
 import { getBeginOffset, getStartAtIndex } from '../../Date/dateUtils'
 import {
   getIndexFromVerticalOffset,
   getVerticalMonthsOffset,
 } from '../../Date/Month'
+import Swiper from '../../Date/Swiper'
 import { isIndexWithinRange } from '../../Date/SwiperUtils'
 
 jest.mock('../../Date/SwiperUtils', () => {

@@ -26,4 +26,5 @@ const noNO: TranslationsType = {
   toggleKeyboard: 'Bytt tastatur',
   typeInDate: 'Skriv inn dato',
 }
+
 export default noNO

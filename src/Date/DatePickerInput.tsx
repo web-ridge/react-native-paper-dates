@@ -1,20 +1,21 @@
-import { TextInput, type TextInputHandles } from 'react-native-paper'
-import DatePickerModal from './DatePickerModal'
-import DatePickerDocked, { type DatePickerAnchor } from './DatePickerDocked'
-import { useIsLargeScreen, useLatest } from '../shared/utils'
-import type { DatePickerInputProps } from './DatePickerInput.shared'
-import DatePickerInputWithoutModal from './DatePickerInputWithoutModal'
-import { Platform, StyleProp, View, ViewStyle } from 'react-native'
 import {
-  forwardRef,
   type ComponentRef,
+  forwardRef,
   type Ref,
   useCallback,
   useRef,
   useState,
 } from 'react'
-import type { CalendarDate } from './types'
+import { Platform, StyleProp, View, ViewStyle } from 'react-native'
+import { TextInput, type TextInputHandles } from 'react-native-paper'
+
+import { useIsLargeScreen, useLatest } from '../shared/utils'
+import DatePickerDocked, { type DatePickerAnchor } from './DatePickerDocked'
+import type { DatePickerInputProps } from './DatePickerInput.shared'
+import DatePickerInputWithoutModal from './DatePickerInputWithoutModal'
+import DatePickerModal from './DatePickerModal'
 import { defaultEndYear, defaultStartYear } from './dateUtils'
+import type { CalendarDate } from './types'
 
 function DatePickerInput(
   {
@@ -52,11 +53,9 @@ function DatePickerInput(
 
   const [anchor, setAnchor] = useState<DatePickerAnchor | null>(null)
   const [visible, setVisible] = useState(false)
-
   const onDismiss = useCallback(() => {
     setVisible(false)
   }, [])
-
   const openPicker = useCallback(() => {
     const node = anchorRef.current
     const rect = readAnchor(node)
@@ -79,7 +78,6 @@ function DatePickerInput(
       })
     }
   }, [])
-
   const onInnerConfirm = useCallback(
     ({ date }: { date: CalendarDate }) => {
       setVisible(false)
@@ -89,18 +87,10 @@ function DatePickerInput(
   )
 
   return (
-    <View collapsable={false} ref={anchorRef}>
+    <View ref={anchorRef} collapsable={false}>
       <DatePickerInputWithoutModal
         ref={ref}
         {...rest}
-        inputEnabled={inputEnabled}
-        inputMode={inputMode}
-        label={label}
-        locale={locale}
-        placeholder={placeholder}
-        validRange={validRange}
-        value={value}
-        withDateFormatInLabel={withDateFormatInLabel}
         inputButton={
           withModal ? (
             <TextInput.Icon
@@ -116,6 +106,10 @@ function DatePickerInput(
             />
           ) : null
         }
+        inputEnabled={inputEnabled}
+        inputMode={inputMode}
+        label={label}
+        locale={locale}
         modal={
           withModal && docked ? (
             <DatePickerDocked
@@ -161,6 +155,10 @@ function DatePickerInput(
             />
           ) : null
         }
+        placeholder={placeholder}
+        validRange={validRange}
+        value={value}
+        withDateFormatInLabel={withDateFormatInLabel}
       />
     </View>
   )

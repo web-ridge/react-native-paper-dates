@@ -11,6 +11,66 @@ import {
 } from 'react'
 import { TextInput, type TextInputHandles } from 'react-native-paper'
 
+function TextInputWithMask(
+  {
+    disabled,
+    inputButton,
+    mask,
+    onChange,
+    onChangeText,
+    value,
+    ...rest
+  }: ComponentProps<typeof TextInput> & {
+    inputButton: ReactNode
+    mask: string
+    value: string
+  },
+  ref: Ref<TextInputHandles>
+) {
+  const [controlledValue, setControlledValue] = useState(value || '')
+  useEffect(() => {
+    setControlledValue(value || '')
+  }, [value])
+  const layout = useMemo(() => maskLayout(mask), [mask])
+
+  const onInnerChange = (text: string) => {
+    const trimmedText = text.trim()
+    const isBackSpace = controlledValue.length > trimmedText.length
+    const next = isBackSpace
+      ? trimmedText
+      : formatDigits(
+          digitsFromText(trimmedText, layout.groups),
+          layout.groups,
+          layout.separators
+        )
+
+    if (next.length === mask.length) {
+      onChangeText?.(next)
+    }
+
+    setControlledValue(next)
+  }
+
+  return (
+    <TextInput
+      {...rest}
+      ref={ref}
+      disabled={disabled}
+      endAccessory={
+        isValidElement(inputButton)
+          ? (props) => cloneElement(inputButton, props)
+          : undefined
+      }
+      maxLength={mask.length}
+      onChange={(e) => {
+        onChange?.(e)
+      }}
+      onChangeText={onInnerChange}
+      value={controlledValue}
+    />
+  )
+}
+
 function digitsFromText(text: string, groups: number[]) {
   let count = 0
   let digits = ''
@@ -82,68 +142,6 @@ function maskLayout(mask: string) {
     separators.push(separator)
   }
   return { groups, separators }
-}
-
-function TextInputWithMask(
-  {
-    disabled,
-    inputButton,
-    mask,
-    onChange,
-    onChangeText,
-    value,
-    ...rest
-  }: ComponentProps<typeof TextInput> & {
-    inputButton: ReactNode
-    mask: string
-    value: string
-  },
-  ref: Ref<TextInputHandles>
-) {
-  const [controlledValue, setControlledValue] = useState(value || '')
-
-  useEffect(() => {
-    setControlledValue(value || '')
-  }, [value])
-
-  const layout = useMemo(() => maskLayout(mask), [mask])
-
-  const onInnerChange = (text: string) => {
-    const trimmedText = text.trim()
-    const isBackSpace = controlledValue.length > trimmedText.length
-    const next = isBackSpace
-      ? trimmedText
-      : formatDigits(
-          digitsFromText(trimmedText, layout.groups),
-          layout.groups,
-          layout.separators
-        )
-
-    if (next.length === mask.length) {
-      onChangeText?.(next)
-    }
-
-    setControlledValue(next)
-  }
-
-  return (
-    <TextInput
-      ref={ref}
-      {...rest}
-      disabled={disabled}
-      endAccessory={
-        isValidElement(inputButton)
-          ? (props) => cloneElement(inputButton, props)
-          : undefined
-      }
-      maxLength={mask.length}
-      onChange={(e) => {
-        onChange?.(e)
-      }}
-      onChangeText={onInnerChange}
-      value={controlledValue}
-    />
-  )
 }
 
 export default forwardRef(TextInputWithMask)

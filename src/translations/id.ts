@@ -26,4 +26,5 @@ const id: TranslationsType = {
   toggleKeyboard: 'Alihkan keyboard',
   typeInDate: 'Ketik tanggal',
 }
+
 export default id

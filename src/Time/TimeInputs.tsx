@@ -1,7 +1,16 @@
-import { StyleSheet, useWindowDimensions, View } from 'react-native'
-import type { TextInputInstance } from 'react-native'
+import { memo, type ReactNode, useCallback, useRef } from 'react'
+import {
+  StyleSheet,
+  type TextInputInstance,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 import { Text, useTheme } from 'react-native-paper'
 
+import { darkenColor, themeColor, useLatest } from '../shared/utils'
+import { getTranslation } from '../translations/utils'
+import AmPmSwitcher from './AmPmSwitcher'
+import TimeInput from './TimeInput'
 import {
   clockTypes,
   inputTypes,
@@ -17,52 +26,6 @@ import {
   toHourInputFormat,
   toHourOutputFormat,
 } from './timeUtils'
-import AmPmSwitcher from './AmPmSwitcher'
-import TimeInput from './TimeInput'
-import { darkenColor, themeColor, useLatest } from '../shared/utils'
-import { getTranslation } from '../translations/utils'
-import { memo, type ReactNode, useCallback, useRef } from 'react'
-
-const styles = StyleSheet.create({
-  column: {
-    alignItems: 'center',
-    flexDirection: 'column',
-  },
-  dot: {
-    borderRadius: 4,
-    height: 8,
-    width: 8,
-  },
-  dotGap: {
-    height: 6,
-  },
-  inputContainer: {
-    alignItems: 'flex-start',
-    flexDirection: 'row',
-  },
-  landscapeColumn: {
-    alignItems: 'flex-start',
-    flexDirection: 'column',
-  },
-  landscapeSwitcherSpacing: {
-    marginTop: 16,
-  },
-  periodGap: {
-    width: periodSelectorGap,
-  },
-  periodSwitcher: {
-    alignSelf: 'flex-start',
-  },
-  separator: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: timeSeparatorWidth,
-  },
-  supportingText: {
-    marginTop: 7,
-    textAlign: 'center',
-  },
-})
 
 function TimeInputs({
   focused,
@@ -86,7 +49,6 @@ function TimeInputs({
   onFocusInput: (type: PossibleClockTypes) => void
 }) {
   const dimensions = useWindowDimensions()
-
   const endInput = useRef<TextInputInstance | null>(null)
 
   const isLandscape = timePickerUsesLandscape(
@@ -96,7 +58,6 @@ function TimeInputs({
   )
 
   const minutesRef = useLatest(minutes)
-
   const onChangeHours = useCallback(
     (newHours: number) => {
       onChange({
@@ -107,13 +68,10 @@ function TimeInputs({
     },
     [onChange, minutesRef]
   )
-
   const onSubmitStartInput = useCallback(() => {
     endInput.current?.focus()
   }, [endInput])
-
   const startInput = useRef<TextInputInstance | null>(null)
-
   const theme = useTheme()
 
   const selectionColor = theme.dark
@@ -137,6 +95,7 @@ function TimeInputs({
     <View style={styles.inputContainer}>
       <TimeField caption={hourLabel} inputType={inputType} width={fieldWidth}>
         <TimeInput
+          ref={startInput}
           accessibilityLabel={hourLabel}
           blurOnSubmit={false}
           clockType={clockTypes.hours}
@@ -153,7 +112,6 @@ function TimeInputs({
           onPress={onFocusInput}
           onSubmitEditing={onSubmitStartInput}
           pressed={focused === clockTypes.hours}
-          ref={startInput}
           returnKeyType={'next'}
           selectionColor={selectionColor}
           value={toHourInputFormat(hours, is24Hour)}
@@ -171,6 +129,7 @@ function TimeInputs({
       </View>
       <TimeField caption={minuteLabel} inputType={inputType} width={fieldWidth}>
         <TimeInput
+          ref={endInput}
           accessibilityLabel={minuteLabel}
           clockType={clockTypes.minutes}
           inputFontSize={inputFontSize}
@@ -185,7 +144,6 @@ function TimeInputs({
           }}
           onPress={onFocusInput}
           pressed={focused === clockTypes.minutes}
-          ref={endInput}
           selectionColor={selectionColor}
           value={minutes}
           width={fieldWidth}
@@ -261,5 +219,46 @@ function TimeField({
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  column: {
+    alignItems: 'center',
+    flexDirection: 'column',
+  },
+  dot: {
+    borderRadius: 4,
+    height: 8,
+    width: 8,
+  },
+  dotGap: {
+    height: 6,
+  },
+  inputContainer: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+  },
+  landscapeColumn: {
+    alignItems: 'flex-start',
+    flexDirection: 'column',
+  },
+  landscapeSwitcherSpacing: {
+    marginTop: 16,
+  },
+  periodGap: {
+    width: periodSelectorGap,
+  },
+  periodSwitcher: {
+    alignSelf: 'flex-start',
+  },
+  separator: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: timeSeparatorWidth,
+  },
+  supportingText: {
+    marginTop: 7,
+    textAlign: 'center',
+  },
+})
 
 export default memo(TimeInputs)

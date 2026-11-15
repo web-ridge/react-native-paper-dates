@@ -1,5 +1,6 @@
-import { Platform } from 'react-native'
 import { useEffect } from 'react'
+import { Platform } from 'react-native'
+
 import { useLatest } from '../shared/utils'
 import { getDaysInMonth } from './dateUtils'
 

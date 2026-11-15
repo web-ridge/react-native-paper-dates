@@ -26,4 +26,5 @@ const ro: TranslationsType = {
   toggleKeyboard: 'Comută tastatura',
   typeInDate: 'Tipul în dată',
 }
+
 export default ro

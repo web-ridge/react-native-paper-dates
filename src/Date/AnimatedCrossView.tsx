@@ -1,6 +1,7 @@
-import { type ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { StyleSheet } from 'react-native'
 import { useTheme } from 'react-native-paper'
+
 import CrossFade from '../shared/CrossFade'
 import { sharedStyles } from '../shared/styles'
 

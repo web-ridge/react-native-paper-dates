@@ -1,5 +1,6 @@
 import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { useTheme } from 'react-native-paper'
+
 import { sharedStyles } from './styles'
 import { scrimColor } from './utils'
 

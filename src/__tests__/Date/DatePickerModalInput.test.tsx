@@ -1,11 +1,12 @@
-import type { ReactNode } from 'react'
 import { act } from '@testing-library/react-native'
+import type { ReactNode } from 'react'
 import { Dimensions } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
+
 import DatePickerModalInput from '../../Date/DatePickerModalInput'
+import { byTestId, pressTestId, render } from '../../testUtils'
 import en from '../../translations/en'
 import { registerTranslation } from '../../translations/utils'
-import { byTestId, pressTestId, render } from '../../testUtils'
 
 registerTranslation('en', en)
 

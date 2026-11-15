@@ -1,8 +1,6 @@
 import { type ReactNode, useEffect, useRef, useState } from 'react'
 import { Animated, type StyleProp, View, type ViewStyle } from 'react-native'
 
-type ScaleRange = [number, number]
-
 export type CrossFadeLayer = {
   node: ReactNode
   scale?: ScaleRange
@@ -10,6 +8,7 @@ export type CrossFadeLayer = {
   scaleY?: ScaleRange
   style?: StyleProp<ViewStyle>
 }
+type ScaleRange = [number, number]
 
 export default function CrossFade({
   collapsed,
@@ -34,7 +33,6 @@ export default function CrossFade({
   const [showPrimary, setShowPrimary] = useState(collapsed)
   const [showSecondary, setShowSecondary] = useState(!collapsed)
   const skipFirst = useRef(true)
-
   useEffect(() => {
     if (skipFirst.current) {
       skipFirst.current = false

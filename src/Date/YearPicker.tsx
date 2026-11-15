@@ -1,61 +1,13 @@
-import {
-  FlatList,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  View,
-  type ViewStyle,
-} from 'react-native'
-import { Icon, Text, TouchableRipple, useTheme } from 'react-native-paper'
-import { range, themeColor } from '../shared/utils'
 import { memo, useCallback, useMemo } from 'react'
+import { FlatList, ScrollView, StyleSheet, View } from 'react-native'
+import { Icon, Text, TouchableRipple, useTheme } from 'react-native-paper'
+
 import { sharedStyles } from '../shared/styles'
+import { range, scrollbarThumb } from '../shared/utils'
 import { defaultEndYear, defaultStartYear } from './dateUtils'
 
 const COLUMNS = 3
 const ROW_HEIGHT = 48
-
-const styles = StyleSheet.create({
-  cell: {
-    alignItems: 'center',
-    flex: 1,
-    height: ROW_HEIGHT,
-    justifyContent: 'center',
-  },
-  row: {
-    height: ROW_HEIGHT,
-  },
-  list: {
-    flex: 1,
-  },
-  menuCheck: {
-    width: 24,
-  },
-  menuInner: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 16,
-    minHeight: ROW_HEIGHT,
-    paddingHorizontal: 16,
-    width: '100%',
-  },
-  root: {
-    flex: 1,
-    top: 56,
-    zIndex: 100,
-  },
-  yearButton: {
-    borderRadius: 18,
-    overflow: 'hidden',
-  },
-  yearInner: {
-    alignItems: 'center',
-    borderRadius: 18,
-    height: 36,
-    justifyContent: 'center',
-    width: 72,
-  },
-})
 
 function YearPicker({
   embedded = false,
@@ -83,9 +35,7 @@ function YearPicker({
     }),
     []
   )
-
   const keyExtractor = useCallback((item: number) => `${item}`, [])
-
   const renderItem = useCallback(
     ({ item }: { item: number }) => (
       <Year
@@ -97,7 +47,6 @@ function YearPicker({
     ),
     [onPressYear, selectedYear, variant]
   )
-
   const renderScrollComponent = useCallback((sProps: object) => {
     return <ScrollView {...sProps} />
   }, [])
@@ -110,9 +59,7 @@ function YearPicker({
     }
     return Math.max(0, selectedYear - resolvedStartYear)
   }, [resolvedStartYear, selectedYear])
-
   const theme = useTheme()
-
   const years = useMemo(
     () => range(resolvedStartYear, isNaN(endYear) ? defaultEndYear : endYear),
     [endYear, resolvedStartYear]
@@ -126,23 +73,16 @@ function YearPicker({
 
   const list = (
     <FlatList<number>
+      key={variant}
       columnWrapperStyle={variant === 'grid' ? styles.row : undefined}
       data={years}
       getItemLayout={getItemLayout}
       initialScrollIndex={Math.max(initialScrollIndex, 0)}
-      key={variant}
       keyExtractor={keyExtractor}
       numColumns={columns}
       renderItem={renderItem}
       renderScrollComponent={renderScrollComponent}
-      style={[
-        styles.list,
-        Platform.OS === 'web' && typeof theme.colors.outline === 'string'
-          ? ({
-              scrollbarColor: `${themeColor(theme.colors.outline)} transparent`,
-            } as ViewStyle)
-          : null,
-      ]}
+      style={[styles.list, scrollbarThumb(theme.colors.outline)]}
     />
   )
 
@@ -240,5 +180,47 @@ function YearPure({
 }
 
 const Year = memo(YearPure)
+
+const styles = StyleSheet.create({
+  cell: {
+    alignItems: 'center',
+    flex: 1,
+    height: ROW_HEIGHT,
+    justifyContent: 'center',
+  },
+  list: {
+    flex: 1,
+  },
+  menuCheck: {
+    width: 24,
+  },
+  menuInner: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 16,
+    minHeight: ROW_HEIGHT,
+    paddingHorizontal: 16,
+    width: '100%',
+  },
+  root: {
+    flex: 1,
+    top: 56,
+    zIndex: 100,
+  },
+  row: {
+    height: ROW_HEIGHT,
+  },
+  yearButton: {
+    borderRadius: 18,
+    overflow: 'hidden',
+  },
+  yearInner: {
+    alignItems: 'center',
+    borderRadius: 18,
+    height: 36,
+    justifyContent: 'center',
+    width: 72,
+  },
+})
 
 export default memo(YearPicker)

@@ -1,3 +1,6 @@
+import { useEffect, useRef, useState } from 'react'
+
+import { getTranslation } from '../translations/utils'
 import {
   parseLooseDate,
   useInputFormat,
@@ -5,8 +8,6 @@ import {
   useRangeChecker,
 } from './dateUtils'
 import type { ValidRangeType } from './types'
-import { getTranslation } from '../translations/utils'
-import { useEffect, useRef, useState } from 'react'
 
 export default function useDateInput({
   inputMode,
@@ -44,7 +45,6 @@ export default function useDateInput({
     setError(null)
     onValidationErrorRef.current?.(null)
   }, [value])
-
   const { isDisabled, isWithinValidRange, validEnd, validStart } =
     useRangeChecker(validRange)
 

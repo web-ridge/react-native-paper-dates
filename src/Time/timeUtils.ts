@@ -1,5 +1,6 @@
 import type { ColorValue } from 'react-native'
 import { useTheme } from 'react-native-paper'
+
 import type {
   PossibleClockTypes,
   PossibleHourTypes,
@@ -7,35 +8,65 @@ import type {
   TimeChange,
 } from './types'
 
+export type ClockTypeMap = {
+  [clockType in PossibleClockTypes]: PossibleClockTypes
+}
+type HighlightColors = {
+  backgroundColor: ColorValue
+  color: ColorValue
+}
+export type HourTypeMap = {
+  [hourType in PossibleHourTypes]: PossibleHourTypes
+}
+type InputIconMap = {
+  [inputType in PossibleInputTypes]: string
+}
+export type InputTypeMap = {
+  [inputType in PossibleInputTypes]: PossibleInputTypes
+}
+export type {
+  PossibleClockTypes,
+  PossibleHourTypes,
+  PossibleInputTypes,
+  TimeChange,
+}
+
 const _12 = Math.PI / 30
-
 const _30 = Math.PI / 6
-
 const _90 = Math.PI / 2
-
 const _360 = Math.PI * 2
-
 export const circleSize = 256
-
-export const periodSelectorGap = 12
-
-export const periodSelectorVerticalWidth = 52
-
-export const timeInputFieldHeight = 72
-
-export const timeSelector24HourVerticalWidth = 114
-
-export const timeSelectorHeight = 80
-
-export const timeSelectorWidth = 96
-
-export const timeSeparatorWidth = 24
-
+export const clockTypes: ClockTypeMap = {
+  hours: 'hours',
+  minutes: 'minutes',
+}
+export const hourTypes: HourTypeMap = {
+  am: 'am',
+  pm: 'pm',
+}
+export const inputTypeIcons: InputIconMap = {
+  keyboard: 'keyboard-outline',
+  picker: 'clock-outline',
+}
+export const inputTypes: InputTypeMap = {
+  keyboard: 'keyboard',
+  picker: 'picker',
+}
 const landscapeDialChrome = 132
-
 const landscapeDialExtraWidth = 112
-
+const outerHeight = 34
+export const periodSelectorGap = 12
+export const periodSelectorVerticalWidth = 52
 const portraitDialChrome = 248
+export const reverseInputTypes: InputTypeMap = {
+  keyboard: 'picker',
+  picker: 'keyboard',
+}
+export const timeInputFieldHeight = 72
+export const timeSelector24HourVerticalWidth = 114
+export const timeSelectorHeight = 80
+export const timeSelectorWidth = 96
+export const timeSeparatorWidth = 24
 
 export function clockNumbers(
   count: number,
@@ -54,15 +85,6 @@ export function clockNumbers(
     angle += step
     return point
   })
-}
-
-export type ClockTypeMap = {
-  [clockType in PossibleClockTypes]: PossibleClockTypes
-}
-
-export const clockTypes: ClockTypeMap = {
-  hours: 'hours',
-  minutes: 'minutes',
 }
 
 export function getAngle(left: number, top: number, size: number) {
@@ -130,6 +152,16 @@ export function getMinutes(handAngle: number) {
   return minute
 }
 
+export const getTimeInputTypeIcon = (
+  inputType: PossibleInputTypes,
+  inputIconMap?: InputIconMap
+) => {
+  return (
+    inputIconMap?.[reverseInputTypes[inputType]] ||
+    inputTypeIcons?.[reverseInputTypes[inputType]]
+  )
+}
+
 export function isValidHourInput(hours: number, is24Hour: boolean) {
   if (!Number.isFinite(hours) || hours < 0) {
     return false
@@ -142,6 +174,18 @@ export function isValidHourInput(hours: number, is24Hour: boolean) {
 
 export function isValidMinuteInput(minutes: number) {
   return Number.isFinite(minutes) && minutes >= 0 && minutes <= 59
+}
+
+export function snap(angle: number, step: number) {
+  let a = angle
+  while (a < 0) a += _360
+  let diff = a % step
+
+  if (diff <= step / 2) {
+    return angle - diff
+  }
+
+  return angle - diff + step
 }
 
 export function timeDialFits(width: number, height: number) {
@@ -181,74 +225,6 @@ export function timeSelectorFieldWidth(
     return timeSelector24HourVerticalWidth
   }
   return timeSelectorWidth
-}
-
-type HighlightColors = {
-  backgroundColor: ColorValue
-  color: ColorValue
-}
-
-export type HourTypeMap = {
-  [hourType in PossibleHourTypes]: PossibleHourTypes
-}
-
-export const hourTypes: HourTypeMap = {
-  am: 'am',
-  pm: 'pm',
-}
-
-type InputIconMap = {
-  [inputType in PossibleInputTypes]: string
-}
-
-export const inputTypeIcons: InputIconMap = {
-  keyboard: 'keyboard-outline',
-  picker: 'clock-outline',
-}
-
-export type InputTypeMap = {
-  [inputType in PossibleInputTypes]: PossibleInputTypes
-}
-
-export const inputTypes: InputTypeMap = {
-  keyboard: 'keyboard',
-  picker: 'picker',
-}
-
-const outerHeight = 34
-
-export type {
-  PossibleClockTypes,
-  PossibleHourTypes,
-  PossibleInputTypes,
-  TimeChange,
-}
-
-export const reverseInputTypes: InputTypeMap = {
-  keyboard: 'picker',
-  picker: 'keyboard',
-}
-
-export const getTimeInputTypeIcon = (
-  inputType: PossibleInputTypes,
-  inputIconMap?: InputIconMap
-) => {
-  return (
-    inputIconMap?.[reverseInputTypes[inputType]] ||
-    inputTypeIcons?.[reverseInputTypes[inputType]]
-  )
-}
-
-export function snap(angle: number, step: number) {
-  let a = angle
-  while (a < 0) a += _360
-  let diff = a % step
-
-  if (diff <= step / 2) {
-    return angle - diff
-  }
-
-  return angle - diff + step
 }
 
 export function toHourInputFormat(hours: number, is24Hour: boolean): number {

@@ -1,10 +1,36 @@
+import { useMemo } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { IconButton, Text, useTheme } from 'react-native-paper'
-import type { DisableWeekDaysType, ModeType } from './types'
-import type { LocalState } from './DatePickerModalContent'
+
 import { displayCase, themeColor } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
-import { useMemo } from 'react'
+import type { LocalState } from './DatePickerModalContent'
+import type { DisableWeekDaysType, ModeType } from './types'
+
+export interface HeaderContentProps extends HeaderPickProps {
+  collapsed: boolean
+  disableWeekDays?: DisableWeekDaysType
+  locale: string | undefined
+  mode: ModeType
+  onToggle: () => void
+  state: LocalState
+}
+export interface HeaderPickProps {
+  allowEditing?: boolean
+  calendarIcon?: string
+  closeIcon?: string
+  editIcon?: string
+  emptyLabel?: string
+  endLabel?: string
+  headerSeparator?: string
+  label?: string
+  moreLabel?: string
+  placeholder?: string
+  saveLabel?: string
+  startLabel?: string
+  uppercase?: boolean
+  withDateFormatInLabel?: boolean
+}
 
 export default function DatePickerModalContentHeader(
   props: HeaderContentProps
@@ -198,32 +224,6 @@ function useShortDateLabel(locale: string | undefined, withWeekday = false) {
   return { formatter }
 }
 
-export interface HeaderPickProps {
-  allowEditing?: boolean
-  calendarIcon?: string
-  closeIcon?: string
-  editIcon?: string
-  emptyLabel?: string
-  endLabel?: string
-  headerSeparator?: string
-  label?: string
-  moreLabel?: string
-  placeholder?: string
-  saveLabel?: string
-  startLabel?: string
-  uppercase?: boolean
-  withDateFormatInLabel?: boolean
-}
-
-export interface HeaderContentProps extends HeaderPickProps {
-  collapsed: boolean
-  disableWeekDays?: DisableWeekDaysType
-  locale: string | undefined
-  mode: ModeType
-  onToggle: () => void
-  state: LocalState
-}
-
 const styles = StyleSheet.create({
   editButton: {
     height: 48,
@@ -239,14 +239,15 @@ const styles = StyleSheet.create({
     paddingStart: 24,
     paddingTop: 16,
   },
-  headlineText: {
-    includeFontPadding: false,
-  },
   headerContentContainer: {
     alignItems: 'center',
     flex: 1,
     flexDirection: 'row',
     minHeight: 40,
+  },
+  headerSeparator: {
+    paddingLeft: 6,
+    paddingRight: 6,
   },
   headlineRow: {
     alignItems: 'center',
@@ -254,8 +255,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
     minHeight: 40,
   },
-  headerSeparator: {
-    paddingLeft: 6,
-    paddingRight: 6,
+  headlineText: {
+    includeFontPadding: false,
   },
 })

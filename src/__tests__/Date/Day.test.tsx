@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react-native'
 import { LightTheme, Text } from 'react-native-paper'
-import Day from '../../Date/Day'
+
 import type { DayContentRenderer } from '../../Date/Calendar'
+import Day from '../../Date/Day'
 
 const defaultProps = {
   day: 15,

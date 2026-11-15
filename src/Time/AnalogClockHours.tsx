@@ -1,13 +1,12 @@
 import { memo } from 'react'
 import { useTheme } from 'react-native-paper'
+
+import { getTranslation } from '../translations/utils'
 import ClockNumber from './ClockNumber'
 import { circleSize, clockNumbers } from './timeUtils'
-import { getTranslation } from '../translations/utils'
 
 const hourStart = -Math.PI / 2 + Math.PI / 6
-
 const innerHourNumbers = clockNumbers(12, 4, circleSize, hourStart)
-
 const outerHourNumbers = clockNumbers(12, 2.5, circleSize, hourStart)
 
 function AnalogClockHours({
@@ -39,8 +38,8 @@ function AnalogClockHours({
         const selected = isOuterHourSelected(hours, is24Hour, label)
         return (
           <ClockNumber
-            accessibilityLabel={hourOf(hourValue, total)}
             key={index}
+            accessibilityLabel={hourOf(hourValue, total)}
             left={left}
             onPress={() => onPress?.(hourValue)}
             selected={selected}
@@ -59,8 +58,8 @@ function AnalogClockHours({
             const selected = hour === 24 ? hours === 12 : hour === hours
             return (
               <ClockNumber
-                accessibilityLabel={hourOf(hourValue, total)}
                 key={index}
+                accessibilityLabel={hourOf(hourValue, total)}
                 left={left}
                 onPress={() => onPress?.(hourValue)}
                 selected={selected}

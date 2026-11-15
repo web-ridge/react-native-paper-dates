@@ -1,12 +1,8 @@
-import {
-  Platform,
-  ScrollView,
-  StyleSheet,
-  View,
-  type ViewStyle,
-} from 'react-native'
-import { Icon, Text, TouchableRipple, useTheme } from 'react-native-paper'
 import { type ComponentRef, memo, useEffect, useMemo, useRef } from 'react'
+import { ScrollView, StyleSheet, View } from 'react-native'
+import { Icon, Text, TouchableRipple, useTheme } from 'react-native-paper'
+
+import { scrollbarThumb } from '../shared/utils'
 
 function MonthMenu({
   embedded = false,
@@ -44,17 +40,17 @@ function MonthMenu({
       ref={listRef}
       style={[
         embedded ? styles.fill : styles.overlayList,
-        scrollThumb(theme.colors.outline),
+        scrollbarThumb(theme.colors.outline),
       ]}
     >
       {months.map(({ label, month }) => {
         const selected = selectedMonth === month
         return (
           <TouchableRipple
+            key={month}
             accessibilityLabel={label}
             accessibilityRole="button"
             accessibilityState={{ selected }}
-            key={month}
             onPress={() => onPressMonth(month)}
           >
             <View
@@ -76,8 +72,8 @@ function MonthMenu({
               </View>
               <Text
                 maxFontSizeMultiplier={1.5}
-                variant="bodyLarge"
                 style={{ color: theme.colors.onSurface }}
+                variant="bodyLarge"
               >
                 {label}
               </Text>
@@ -101,11 +97,6 @@ function MonthMenu({
       {list}
     </View>
   )
-}
-
-function scrollThumb(color: unknown): ViewStyle | null {
-  if (Platform.OS !== 'web' || typeof color !== 'string') return null
-  return { scrollbarColor: `${color} transparent` } as ViewStyle
 }
 
 const styles = StyleSheet.create({

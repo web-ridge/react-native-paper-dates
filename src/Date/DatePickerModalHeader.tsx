@@ -1,13 +1,25 @@
 import { StyleSheet, View } from 'react-native'
 import { Button, IconButton, useTheme } from 'react-native-paper'
+
+import { sharedStyles } from '../shared/styles'
 import { displayCase, useHeaderTextColor } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
-import { sharedStyles } from '../shared/styles'
 import type { DisableWeekDaysType } from './types'
 import {
   alignIconToFirstWeekday,
   alignTextToLastWeekday,
 } from './weekdayColumns'
+
+export interface DatePickerModalHeaderProps {
+  closeIcon?: string
+  disableWeekDays?: DisableWeekDaysType
+  locale: string | undefined
+  onDismiss: () => void
+  onSave: () => void
+  saveLabel?: string
+  saveLabelDisabled?: boolean
+  uppercase?: boolean
+}
 
 export default function DatePickerModalHeader(
   props: DatePickerModalHeaderProps
@@ -42,17 +54,6 @@ export default function DatePickerModalHeader(
       </View>
     </View>
   )
-}
-
-export interface DatePickerModalHeaderProps {
-  closeIcon?: string
-  disableWeekDays?: DisableWeekDaysType
-  locale: string | undefined
-  onDismiss: () => void
-  onSave: () => void
-  saveLabel?: string
-  saveLabelDisabled?: boolean
-  uppercase?: boolean
 }
 
 const styles = StyleSheet.create({

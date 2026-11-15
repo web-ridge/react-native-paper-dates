@@ -1,5 +1,19 @@
 import { useCallback, useMemo } from 'react'
+
 import type { DisableWeekDaysType, ValidRangeType } from './types'
+
+export type { DisableWeekDaysType }
+
+export const dayCellSize = 48
+export const daySize = 40
+export const defaultEndYear = 2200
+export const defaultStartYear = 1800
+export const estimatedMonthHeight = 400
+const nativeDigits: Record<string, string> = {}
+const startAtIndexCache = new Map<string, number>()
+for (const [index, digit] of '٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹'.split('').entries()) {
+  nativeDigits[digit] = String(index % 10)
+}
 
 export function addMonths(date: Date, count: number) {
   const n = date.getDate()
@@ -58,14 +72,6 @@ export function dateToUnix(d: Date): number {
   return Math.trunc(d.getTime() / 1000)
 }
 
-export const dayCellSize = 48
-
-export const daySize = 40
-
-export const defaultEndYear = 2200
-
-export const defaultStartYear = 1800
-
 export function differenceInMonths(firstDate: Date, secondDate: Date) {
   let diffMonths = (secondDate.getFullYear() - firstDate.getFullYear()) * 12
   diffMonths -= firstDate.getMonth()
@@ -73,9 +79,22 @@ export function differenceInMonths(firstDate: Date, secondDate: Date) {
   return diffMonths
 }
 
-export type { DisableWeekDaysType }
-
-export const estimatedMonthHeight = 400
+export function fieldOrder(inputFormat: string): Array<'D' | 'M' | 'Y'> {
+  const yearIndex = Math.max(
+    inputFormat.indexOf('YYYY'),
+    inputFormat.indexOf('AAAA')
+  )
+  return (
+    [
+      { field: 'D' as const, index: inputFormat.indexOf('DD') },
+      { field: 'M' as const, index: inputFormat.indexOf('MM') },
+      { field: 'Y' as const, index: yearIndex },
+    ] as const
+  )
+    .filter((entry) => entry.index >= 0)
+    .sort((a, b) => a.index - b.index)
+    .map((entry) => entry.field)
+}
 
 export function getBeginOffset(startYear?: number, endYear?: number): number {
   return estimatedMonthHeight * getStartAtIndex(startYear, endYear)
@@ -224,29 +243,6 @@ export function isLeapYear({ year }: { year: number }) {
   return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0
 }
 
-export function fieldOrder(inputFormat: string): Array<'D' | 'M' | 'Y'> {
-  const yearIndex = Math.max(
-    inputFormat.indexOf('YYYY'),
-    inputFormat.indexOf('AAAA')
-  )
-  return (
-    [
-      { field: 'D' as const, index: inputFormat.indexOf('DD') },
-      { field: 'M' as const, index: inputFormat.indexOf('MM') },
-      { field: 'Y' as const, index: yearIndex },
-    ] as const
-  )
-    .filter((entry) => entry.index >= 0)
-    .sort((a, b) => a.index - b.index)
-    .map((entry) => entry.field)
-}
-
-const nativeDigits: Record<string, string> = {}
-
-for (const [index, digit] of '٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹'.split('').entries()) {
-  nativeDigits[digit] = String(index % 10)
-}
-
 function normalizeDigits(text: string) {
   return text.replace(/[٠-٩۰-۹]/g, (digit) => nativeDigits[digit] ?? digit)
 }
@@ -308,8 +304,6 @@ export function showWeekDay(
   return !(disableWeekDays && disableWeekDays.some((di) => di === dayIndex))
 }
 
-const startAtIndexCache = new Map<string, number>()
-
 export function useInputFormat({
   formatter,
   locale,
@@ -356,7 +350,6 @@ export function useRangeChecker(validRange: ValidRangeType | undefined) {
     }
     return keys
   }, [disabledDates])
-
   const isDisabled = useCallback(
     (day: Date) => disabledKeys.has(calendarDateKey(day)),
     [disabledKeys]

@@ -1,19 +1,22 @@
+import { memo } from 'react'
 import { Platform, StyleSheet, View } from 'react-native'
 import { IconButton } from 'react-native-paper'
+
+import { sharedStyles } from '../shared/styles'
+import { getTranslation } from '../translations/utils'
 import DayNames, { dayNamesHeight } from './DayNames'
 import type { DisableWeekDaysType } from './types'
 import { centerIconOnLastWeekday } from './weekdayColumns'
-import { getTranslation } from '../translations/utils'
-import { sharedStyles } from '../shared/styles'
-import { memo } from 'react'
 
 const buttonContainerHeight = 56
-
 const buttonContainerMarginBottom = 8
-
 const buttonContainerMarginTop = 4
-
 let cachedLayoutScrollbarWidth: number | undefined
+export const verticalScrollbarGutter = Platform.select({
+  default: 14,
+  ios: 0,
+  web: 0,
+}) as number
 
 function CalendarHeader({
   disableWeekDays,
@@ -139,11 +142,5 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
 })
-
-export const verticalScrollbarGutter = Platform.select({
-  default: 14,
-  ios: 0,
-  web: 0,
-}) as number
 
 export default memo(CalendarHeader)

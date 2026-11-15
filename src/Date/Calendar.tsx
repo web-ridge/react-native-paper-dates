@@ -1,7 +1,10 @@
-import { View } from 'react-native'
-import type { StyleProp, ViewStyle } from 'react-native'
-import Swiper from './Swiper'
-import Month from './Month'
+import { memo, useCallback, useEffect, useState } from 'react'
+import { type StyleProp, View, type ViewStyle } from 'react-native'
+import { useTheme } from 'react-native-paper'
+
+import { sharedStyles } from '../shared/styles'
+import { themeColor, useLatest } from '../shared/utils'
+import CalendarHeader from './CalendarHeader'
 import {
   addMonths,
   areDatesOnSameDay,
@@ -12,7 +15,9 @@ import {
   getEndOfDay,
   getInitialIndex,
 } from './dateUtils'
+import Month from './Month'
 import MonthMenu from './MonthMenu'
+import Swiper from './Swiper'
 import type {
   CalendarDate,
   CalendarDates,
@@ -30,12 +35,7 @@ import type {
   SingleChange,
   ValidRangeType,
 } from './types'
-import CalendarHeader from './CalendarHeader'
-import { memo, useCallback, useEffect, useState } from 'react'
 import YearPicker from './YearPicker'
-import { useTheme } from 'react-native-paper'
-import { themeColor, useLatest } from '../shared/utils'
-import { sharedStyles } from '../shared/styles'
 
 export type BaseCalendarProps = {
   date?: CalendarDate
@@ -57,6 +57,31 @@ export type BaseCalendarProps = {
   startYear?: number
   validRange?: ValidRangeType
 }
+export type {
+  CalendarDate,
+  CalendarDates,
+  DayContentPosition,
+  DayContentRenderer,
+  ModeType,
+  MultiChange,
+  MultiConfirm,
+  RangeChange,
+  ScrollModeType,
+  SingleChange,
+  ValidRangeType,
+}
+export type CalendarMultiProps = BaseCalendarProps &
+  MultiCalendarMode & {
+    onChange: MultiChange
+  }
+export type CalendarRangeProps = BaseCalendarProps &
+  RangeCalendarMode & {
+    onChange: RangeChange
+  }
+export type CalendarSingleProps = BaseCalendarProps &
+  SingleCalendarMode & {
+    onChange: SingleChange
+  }
 
 function Calendar(
   props: CalendarSingleProps | CalendarRangeProps | CalendarMultiProps
@@ -75,8 +100,8 @@ function Calendar(
     keyboardEnabled = true,
     locale,
     mode,
-    onKeyboardConfirm,
     onChange,
+    onKeyboardConfirm,
     onSelectingYearChange,
     startDate,
     startWeekOnMonday,
@@ -98,7 +123,6 @@ function Calendar(
   )
   const [selectingMonth, setSelectingMonth] = useState(false)
   const [selectingYear, setSelectingYear] = useState(false)
-
   useEffect(() => {
     onSelectingYearChange?.(scrollMode === 'horizontal' && selectingYear)
   }, [onSelectingYearChange, scrollMode, selectingYear])
@@ -207,6 +231,7 @@ function Calendar(
   const renderItem = useCallback(
     ({ active, index }: { active?: boolean; index: number }) => (
       <Month
+        key={index}
         date={date}
         dates={dates}
         dayContent={dayContent}
@@ -217,7 +242,6 @@ function Calendar(
         endYear={endYear}
         focusedDate={focusedDate}
         index={index}
-        key={index}
         locale={locale}
         mode={mode}
         onNavigateToDate={active === false ? undefined : setNavigateDate}
@@ -300,34 +324,5 @@ function Calendar(
     </View>
   )
 }
-
-export type {
-  CalendarDate,
-  CalendarDates,
-  DayContentPosition,
-  DayContentRenderer,
-  ModeType,
-  MultiChange,
-  MultiConfirm,
-  RangeChange,
-  ScrollModeType,
-  SingleChange,
-  ValidRangeType,
-}
-
-export type CalendarMultiProps = BaseCalendarProps &
-  MultiCalendarMode & {
-    onChange: MultiChange
-  }
-
-export type CalendarRangeProps = BaseCalendarProps &
-  RangeCalendarMode & {
-    onChange: RangeChange
-  }
-
-export type CalendarSingleProps = BaseCalendarProps &
-  SingleCalendarMode & {
-    onChange: SingleChange
-  }
 
 export default memo(Calendar)

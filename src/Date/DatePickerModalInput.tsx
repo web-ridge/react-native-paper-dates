@@ -1,3 +1,4 @@
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   Modal,
   Platform,
@@ -6,7 +7,10 @@ import {
   View,
 } from 'react-native'
 import { Button, Divider, IconButton, Text, useTheme } from 'react-native-paper'
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+
+import ModalScrim from '../shared/ModalScrim'
+import { displayCase, supportedOrientations, themeColor } from '../shared/utils'
+import { getTranslation, translate } from '../translations/utils'
 import DatePickerInputWithoutModal from './DatePickerInputWithoutModal'
 import DatePickerModalContent from './DatePickerModalContent'
 import {
@@ -24,12 +28,16 @@ import type {
   SingleChange,
   ValidRangeType,
 } from './types'
-import ModalScrim from '../shared/ModalScrim'
-import { displayCase, supportedOrientations, themeColor } from '../shared/utils'
-import { getTranslation, translate } from '../translations/utils'
 
-const cardWidth = 360
-
+export type DatePickerModalInputProps =
+  | DatePickerModalInputRangeProps
+  | DatePickerModalInputSingleProps
+export type DatePickerModalInputRangeProps = DatePickerModalInputSharedProps & {
+  endDate?: CalendarDate
+  mode: 'range'
+  onConfirm: RangeChange
+  startDate?: CalendarDate
+}
 type DatePickerModalInputSharedProps = {
   calendarIcon?: string
   disableWeekDays?: DisableWeekDaysType
@@ -47,14 +55,6 @@ type DatePickerModalInputSharedProps = {
   validRange?: ValidRangeType
   visible: boolean
 }
-
-export type DatePickerModalInputRangeProps = DatePickerModalInputSharedProps & {
-  endDate?: CalendarDate
-  mode: 'range'
-  onConfirm: RangeChange
-  startDate?: CalendarDate
-}
-
 export type DatePickerModalInputSingleProps =
   DatePickerModalInputSharedProps & {
     date?: CalendarDate
@@ -62,9 +62,7 @@ export type DatePickerModalInputSingleProps =
     onConfirm: SingleChange
   }
 
-export type DatePickerModalInputProps =
-  | DatePickerModalInputRangeProps
-  | DatePickerModalInputSingleProps
+const cardWidth = 360
 
 function DatePickerModalInput(props: DatePickerModalInputProps) {
   const {
@@ -120,7 +118,6 @@ function DatePickerModalInput(props: DatePickerModalInputProps) {
     }
     wasVisible.current = visible
   }, [date, endDate, startDate, visible])
-
   const applyText = useCallback(
     (text: string | undefined, inputMode: 'end' | 'start') => {
       const next = readTypedDate(text ?? '', inputFormat, inputMode, {
@@ -141,7 +138,6 @@ function DatePickerModalInput(props: DatePickerModalInputProps) {
     },
     [inputFormat, isDisabled, isWithinValidRange, mode]
   )
-
   const confirm = useCallback(() => {
     if (invalid.start || (props.mode === 'range' && invalid.end)) return
     if (props.mode === 'single') {
@@ -150,12 +146,10 @@ function DatePickerModalInput(props: DatePickerModalInputProps) {
     }
     props.onConfirm({ endDate: draftEnd, startDate: draftStart })
   }, [draftDate, draftEnd, draftStart, invalid.end, invalid.start, props])
-
   const showCalendar = useCallback(() => {
     setInvalid({ end: false, start: false })
     setView('calendar')
   }, [])
-
   const showInput = useCallback(() => {
     setView('input')
   }, [])

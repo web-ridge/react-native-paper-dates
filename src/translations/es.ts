@@ -26,4 +26,5 @@ const es: TranslationsType = {
   toggleKeyboard: 'Alternar teclado',
   typeInDate: 'Escribir fecha',
 }
+
 export default es

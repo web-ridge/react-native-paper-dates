@@ -26,4 +26,5 @@ const ukUA: TranslationsType = {
   toggleKeyboard: 'Перемкнути клавіатуру',
   typeInDate: 'Введіть дату',
 }
+
 export default ukUA

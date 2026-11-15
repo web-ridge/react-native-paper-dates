@@ -1,4 +1,12 @@
 import {
+  forwardRef,
+  type ForwardRefExoticComponent,
+  type Ref,
+  type RefAttributes,
+  useEffect,
+  useState,
+} from 'react'
+import {
   Pressable,
   StyleSheet,
   Text,
@@ -8,6 +16,9 @@ import {
   View,
 } from 'react-native'
 import { useTheme } from 'react-native-paper'
+
+import { sharedStyles } from '../shared/styles'
+import StateLayer from './StateLayer'
 import {
   clockTypes,
   inputTypes,
@@ -20,34 +31,22 @@ import {
   timeSelectorWidth,
   useInputColors,
 } from './timeUtils'
-import {
-  forwardRef,
-  type ForwardRefExoticComponent,
-  type Ref,
-  type RefAttributes,
-  useEffect,
-  useState,
-} from 'react'
-import { sharedStyles } from '../shared/styles'
-import StateLayer from './StateLayer'
 
-const styles = StyleSheet.create({
-  input: {
-    borderWidth: 0,
-    outlineWidth: 0,
-    paddingHorizontal: 0,
-    textAlign: 'center',
-    width: '100%',
-  },
-  root: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-  },
-  value: {
-    textAlign: 'center',
-  },
-})
+interface TimeInputProps extends Omit<
+  Omit<Omit<TextInputProps, 'value'>, 'onFocus'>,
+  'onPress'
+> {
+  accessibilityLabel?: string
+  clockType: PossibleClockTypes
+  inputFontSize?: number
+  inputType: PossibleInputTypes
+  is24Hour?: boolean
+  onChanged: (n: number) => void
+  onPress?: (type: PossibleClockTypes) => void
+  pressed: boolean
+  value: number
+  width?: number
+}
 
 function TimeInput(
   {
@@ -66,17 +65,11 @@ function TimeInput(
   ref: Ref<TextInputInstance>
 ) {
   const [controlledValue, setControlledValue] = useState(`${value}`)
-
   const [editing, setEditing] = useState(false)
-
   const [hovered, setHovered] = useState(false)
-
   const [inputFocused, setInputFocused] = useState(false)
-
   const [pointerPressed, setPointerPressed] = useState(false)
-
   const [, setRejectedEdits] = useState(0)
-
   const [selectorFocused, setSelectorFocused] = useState(false)
 
   const isPicker = inputType === inputTypes.picker
@@ -93,7 +86,6 @@ function TimeInput(
         : !isValidMinuteInput(parsedValue)
 
   const { backgroundColor, color } = useInputColors(highlighted, invalid)
-
   const theme = useTheme()
 
   const typeface = isPicker
@@ -198,6 +190,7 @@ function TimeInput(
         </Text>
       ) : (
         <TextInput
+          ref={ref}
           accessibilityLabel={accessibilityLabel}
           keyboardAppearance={theme.dark ? 'dark' : 'default'}
           keyboardType="number-pad"
@@ -215,7 +208,6 @@ function TimeInput(
             setInputFocused(true)
           }}
           selectTextOnFocus
-          ref={ref}
           style={[
             styles.input,
             {
@@ -259,24 +251,26 @@ function TimeInput(
   )
 }
 
-interface TimeInputProps extends Omit<
-  Omit<Omit<TextInputProps, 'value'>, 'onFocus'>,
-  'onPress'
-> {
-  accessibilityLabel?: string
-  clockType: PossibleClockTypes
-  inputFontSize?: number
-  inputType: PossibleInputTypes
-  is24Hour?: boolean
-  onChanged: (n: number) => void
-  onPress?: (type: PossibleClockTypes) => void
-  pressed: boolean
-  value: number
-  width?: number
-}
-
 const TimeInputWithRef: ForwardRefExoticComponent<
   TimeInputProps & RefAttributes<TextInputInstance>
 > = forwardRef(TimeInput)
+
+const styles = StyleSheet.create({
+  input: {
+    borderWidth: 0,
+    outlineWidth: 0,
+    paddingHorizontal: 0,
+    textAlign: 'center',
+    width: '100%',
+  },
+  root: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  value: {
+    textAlign: 'center',
+  },
+})
 
 export default TimeInputWithRef

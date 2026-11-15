@@ -1,8 +1,9 @@
 import { render } from '@testing-library/react-native'
+
+import AmPmSwitcher from '../../Time/AmPmSwitcher'
+import { inputTypes } from '../../Time/timeUtils'
 import en from '../../translations/en'
 import { registerTranslation } from '../../translations/utils'
-import { inputTypes } from '../../Time/timeUtils'
-import AmPmSwitcher from '../../Time/AmPmSwitcher'
 
 registerTranslation('en', en)
 
