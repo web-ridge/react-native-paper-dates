@@ -1,10 +1,20 @@
 import { StatusBar } from 'expo-status-bar'
-import { type ComponentProps, type ReactNode, useMemo, useState } from 'react'
+import {
+  Children,
+  type ComponentProps,
+  isValidElement,
+  type ReactNode,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from 'react'
 import {
   type ColorValue,
   Image,
   Linking,
+  Platform,
   Pressable,
+  type PressableStateCallbackType,
   ScrollView,
   type StyleProp,
   StyleSheet,
@@ -32,6 +42,7 @@ import {
   da,
   DatePickerInput,
   DatePickerModal,
+  DatePickerModalInput,
   de,
   el,
   en,
@@ -70,6 +81,7 @@ import { libraryVersion } from './libraryVersion'
 
 export default function App() {
   const [dark, setDark] = useState(true)
+  useWebColorScheme(dark)
 
   return (
     <SafeAreaProvider>
@@ -79,6 +91,24 @@ export default function App() {
       </PaperProvider>
     </SafeAreaProvider>
   )
+}
+
+function useWebColorScheme(dark: boolean) {
+  useLayoutEffect(() => {
+    if (Platform.OS !== 'web') {
+      return
+    }
+    const root = document.documentElement
+    const { background, outline } = dark ? darkTheme.colors : lightTheme.colors
+    const previousScheme = root.style.colorScheme
+    const previousScrollbar = root.style.scrollbarColor
+    root.style.colorScheme = dark ? 'dark' : 'light'
+    root.style.scrollbarColor = `${outline} ${background}`
+    return () => {
+      root.style.colorScheme = previousScheme
+      root.style.scrollbarColor = previousScrollbar
+    }
+  }, [dark])
 }
 
 type AppColors = {
@@ -166,12 +196,17 @@ function createStyles(colors: AppColors) {
       borderRadius: 20,
       borderWidth: 1,
       gap: 12,
+      minHeight: 168,
       paddingHorizontal: 16,
       paddingVertical: 16,
     },
     cardCopy: {
       flex: 1,
       gap: 2,
+    },
+    cardFill: {
+      flex: 1,
+      width: '100%',
     },
     cardFooter: {
       marginTop: 'auto',
@@ -188,14 +223,16 @@ function createStyles(colors: AppColors) {
     cardValue: {
       color: colors.onSurfaceVariant,
     },
-    cardWide: {
-      minHeight: 168,
-    },
     dateInput: {
       backgroundColor: 'transparent',
     },
     description: {
       color: colors.onSurfaceVariant,
+      fontSize: 16,
+      lineHeight: 22,
+    },
+    descriptionLink: {
+      color: colors.primary,
       fontSize: 16,
       lineHeight: 22,
     },
@@ -210,24 +247,30 @@ function createStyles(colors: AppColors) {
       paddingHorizontal: 16,
       paddingVertical: 12,
     },
+    examples: {
+      gap: 32,
+    },
+    examplesWide: {
+      gap: 40,
+    },
     footer: {
       backgroundColor: colors.background,
       gap: 24,
       paddingTop: 8,
     },
     footerCol: {
+      alignItems: 'center',
       gap: 8,
-      paddingRight: 16,
       width: '50%',
     },
     footerCols: {
       flexDirection: 'row',
       flexWrap: 'wrap',
+      justifyContent: 'center',
       rowGap: 24,
     },
     footerColWide: {
       flex: 1,
-      paddingRight: 0,
       width: 'auto',
     },
     footerCopy: {
@@ -244,25 +287,34 @@ function createStyles(colors: AppColors) {
       fontSize: 14,
       fontWeight: '500',
       marginBottom: 4,
+      textAlign: 'center',
     },
     footerLink: {
       color: colors.onSurfaceVariant,
       fontSize: 13,
       lineHeight: 18,
+      textAlign: 'center',
+    },
+    footerLinkPressable: {
+      width: '100%',
     },
     footerLinkPressed: {
       color: colors.primary,
     },
-    grid: {
-      gap: 16,
-    },
-    gridCell: {
-      flex: 1,
-    },
-    gridRow: {
-      alignItems: 'stretch',
+    guidelineLink: {
+      alignItems: 'center',
       flexDirection: 'row',
-      gap: 16,
+      gap: 4,
+      minHeight: 32,
+    },
+    guidelineLinkText: {
+      color: colors.primary,
+      fontSize: 13,
+      fontWeight: '600',
+      lineHeight: 18,
+    },
+    guidelineLinkTextActive: {
+      textDecorationLine: 'underline',
     },
     header: {
       gap: 16,
@@ -272,6 +324,11 @@ function createStyles(colors: AppColors) {
       flexDirection: 'row',
       flexWrap: 'wrap',
       gap: 10,
+    },
+    libraryNote: {
+      color: colors.onSurfaceVariant,
+      fontSize: 13,
+      lineHeight: 18,
     },
     localeBar: {
       width: '100%',
@@ -354,6 +411,38 @@ function createStyles(colors: AppColors) {
     },
     searchInput: {
       color: colors.onSurface,
+    },
+    section: {
+      gap: 12,
+    },
+    sectionCell: {
+      flex: 1,
+      minWidth: 0,
+    },
+    sectionCopy: {
+      color: colors.onSurfaceVariant,
+      fontSize: 14,
+      lineHeight: 20,
+    },
+    sectionHeader: {
+      gap: 4,
+    },
+    sectionRow: {
+      alignItems: 'stretch',
+      flexDirection: 'row',
+      gap: 16,
+    },
+    sectionTitle: {
+      color: colors.onSurface,
+      flexShrink: 1,
+      fontWeight: '700',
+    },
+    sectionTitleRow: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: 8,
+      justifyContent: 'space-between',
     },
     stack: {
       gap: 14,
@@ -449,7 +538,7 @@ const darkTheme = {
     secondary: '#BEC6DC',
     secondaryContainer: '#3E4758',
     surface: '#1A1C1E',
-    surfaceVariant: '#1E2022',
+    surfaceVariant: '#49454F',
   },
 }
 
@@ -494,19 +583,24 @@ function DemoCard({
   )
 
   return (
-    <View style={[styles.card, wide && styles.cardWide, style]}>
+    <View style={[styles.card, style]}>
       <View style={styles.cardHeader}>
         <Icon color={theme.colors.primary} size={22} source={icon} />
         <View style={styles.cardCopy}>
           <AppText style={styles.cardTitle} variant="titleMedium">
             {title}
           </AppText>
-          <AppText style={styles.cardValue} variant="bodyMedium">
+          <AppText
+            ellipsizeMode="tail"
+            numberOfLines={2}
+            style={styles.cardValue}
+            variant="bodyMedium"
+          >
             {value}
           </AppText>
         </View>
       </View>
-      {wide ? <View style={styles.cardFooter}>{control}</View> : control}
+      <View style={styles.cardFooter}>{control}</View>
     </View>
   )
 }
@@ -526,13 +620,105 @@ const docsBase = 'https://web-ridge.github.io/react-native-paper-dates'
 
 const docsUrl = `${docsBase}/`
 
+const materialDateGuidelinesUrl =
+  'https://m3.material.io/components/date-pickers/guidelines'
+
+const materialTimeGuidelinesUrl =
+  'https://m3.material.io/components/time-pickers/guidelines'
+
+function ExampleSection({
+  children,
+  description,
+  guidelineUrl,
+  title,
+  wide,
+}: ExampleSectionProps) {
+  const styles = useAppStyles()
+  const theme = useTheme()
+  const cards = Children.toArray(children)
+
+  return (
+    <View style={styles.section}>
+      <View style={styles.sectionHeader}>
+        <View style={styles.sectionTitleRow}>
+          <AppText
+            accessibilityRole="header"
+            style={styles.sectionTitle}
+            variant="titleLarge"
+          >
+            {title}
+          </AppText>
+          {guidelineUrl ? (
+            <Pressable
+              accessibilityLabel={`Material guidelines for ${title}`}
+              accessibilityRole="link"
+              onPress={() => Linking.openURL(guidelineUrl)}
+            >
+              {(state: PressableStateCallbackType & { hovered?: boolean }) => (
+                <View style={styles.guidelineLink}>
+                  <AppText
+                    style={[
+                      styles.guidelineLinkText,
+                      (state.hovered || state.pressed) &&
+                        styles.guidelineLinkTextActive,
+                    ]}
+                  >
+                    Material guidelines
+                  </AppText>
+                  <Icon
+                    color={theme.colors.primary}
+                    size={16}
+                    source="open-in-new"
+                  />
+                </View>
+              )}
+            </Pressable>
+          ) : (
+            <AppText style={styles.libraryNote}>Unique to this library</AppText>
+          )}
+        </View>
+        <AppText style={styles.sectionCopy}>{description}</AppText>
+      </View>
+      <View style={wide ? styles.sectionRow : styles.stack}>
+        {cards.map((card) => (
+          <View
+            key={isValidElement(card) ? String(card.key) : undefined}
+            style={wide ? styles.sectionCell : undefined}
+          >
+            {card}
+          </View>
+        ))}
+        {wide && cards.length === 1 ? (
+          <View style={styles.sectionCell} />
+        ) : null}
+      </View>
+    </View>
+  )
+}
+
+type ExampleSectionProps = {
+  children: ReactNode
+  description: string
+  guidelineUrl?: string
+  title: string
+  wide: boolean
+}
+
 function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
   const [date, setDate] = useState<Date | undefined>(undefined)
+  const [dockedDate, setDockedDate] = useState<Date | undefined>(undefined)
   const [dates, setDates] = useState<Date[] | undefined>()
   const [dialog, setDialog] = useState<OpenDialog | null>(null)
   const futureDate = daysFromToday(5)
   const { height, width } = useWindowDimensions()
   const [inputDate, setInputDate] = useState<Date | undefined>(undefined)
+  const [modalInputDate, setModalInputDate] = useState<Date | undefined>(
+    undefined
+  )
+  const [modalInputRange, setModalInputRange] = useState<DateRange>({
+    endDate: undefined,
+    startDate: undefined,
+  })
   const insets = useSafeAreaInsets()
   const [locale, setLocale] = useState('en-GB')
   const dateFormatter = useMemo(
@@ -546,7 +732,13 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
   )
   const formatDate = (value: Date | undefined, empty = 'No date selected.') =>
     value ? dateFormatter.format(value) : empty
+  const dockedLabel = formatDate(dockedDate)
   const inputLabel = formatDate(inputDate)
+  const modalInputLabel = formatDate(modalInputDate)
+  const modalInputRangeLabel =
+    modalInputRange.startDate || modalInputRange.endDate
+      ? `${formatDate(modalInputRange.startDate, '')} - ${formatDate(modalInputRange.endDate, '')}`
+      : 'No dates selected.'
   const localeListMaxHeight = Math.min(
     420,
     Math.max(120, height - insets.top - insets.bottom - 248)
@@ -599,9 +791,6 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
   )
   const timeLabel = formatTime(time, timeFormatter)
   const wide = width >= wideBreakpoint
-  const cellStyle = wide ? styles.gridCell : undefined
-  const layoutStyle = wide ? styles.grid : styles.stack
-  const rowStyle = wide ? styles.gridRow : styles.stack
 
   return (
     <View style={styles.screen}>
@@ -650,8 +839,31 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
               </View>
             </View>
             <AppText style={styles.description}>
-              Cross-platform Material Design date and time pickers for React
-              Native Paper.
+              Cross-platform Material Design{' '}
+              <AppText
+                accessibilityRole="link"
+                onPress={() =>
+                  Linking.openURL(
+                    'https://m3.material.io/components/date-pickers/overview'
+                  )
+                }
+                style={styles.descriptionLink}
+              >
+                date pickers
+              </AppText>{' '}
+              and{' '}
+              <AppText
+                accessibilityRole="link"
+                onPress={() =>
+                  Linking.openURL(
+                    'https://m3.material.io/components/time-pickers/overview'
+                  )
+                }
+                style={styles.descriptionLink}
+              >
+                time pickers
+              </AppText>{' '}
+              for React Native Paper.
             </AppText>
             <View style={styles.headerActions}>
               <Button
@@ -772,20 +984,16 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
             </Dialog>
           </View>
 
-          <View style={layoutStyle}>
-            <View style={rowStyle}>
-              <DemoCard
-                actionLabel="Pick time"
-                icon="clock-outline"
-                onPress={() => setDialog('time')}
-                style={cellStyle}
-                title="Time"
-                value={timeLabel}
-                wide={wide}
-              />
+          <View style={[styles.examples, wide && styles.examplesWide]}>
+            <ExampleSection
+              description="Type a date in the field. The calendar opens beneath it, or full screen on a small display."
+              guidelineUrl={materialDateGuidelinesUrl}
+              title="Docked date picker"
+              wide={wide}
+            >
               <DemoCard
                 icon="calendar-month-outline"
-                style={cellStyle}
+                style={wide ? styles.cardFill : undefined}
                 title="Date input"
                 value={inputLabel}
                 wide={wide}
@@ -803,35 +1011,106 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
                 />
               </DemoCard>
               <DemoCard
+                icon="calendar-cursor"
+                style={wide ? styles.cardFill : undefined}
+                title="Docked date"
+                value={dockedLabel}
+                wide={wide}
+              >
+                <DatePickerInput
+                  iconColor={inputIconColor}
+                  inputMode="start"
+                  locale={locale}
+                  onChange={setDockedDate}
+                  presentation="docked"
+                  style={styles.dateInput}
+                  theme={{ colors: { background: theme.colors.surface } }}
+                  value={dockedDate}
+                  variant="outlined"
+                />
+              </DemoCard>
+            </ExampleSection>
+            <ExampleSection
+              description="Select one date, or a start and end date, from a calendar dialog."
+              guidelineUrl={materialDateGuidelinesUrl}
+              title="Modal date picker"
+              wide={wide}
+            >
+              <DemoCard
                 actionLabel="Pick single date"
                 icon="calendar-check-outline"
                 onPress={() => setDialog('single')}
-                style={cellStyle}
+                style={wide ? styles.cardFill : undefined}
                 title="Single date"
                 value={singleLabel}
-                wide={wide}
-              />
-            </View>
-            <View style={rowStyle}>
-              <DemoCard
-                actionLabel="Pick multiple dates"
-                icon="calendar-multiple"
-                onPress={() => setDialog('multi')}
-                style={cellStyle}
-                title="Multiple dates"
-                value={multiLabel}
                 wide={wide}
               />
               <DemoCard
                 actionLabel="Pick range"
                 icon="calendar-plus"
                 onPress={() => setDialog('range')}
-                style={cellStyle}
+                style={wide ? styles.cardFill : undefined}
                 title="Date range"
                 value={rangeLabel}
                 wide={wide}
               />
-            </View>
+            </ExampleSection>
+            <ExampleSection
+              description="Enter a date or a range with the keyboard when a calendar is not needed first."
+              guidelineUrl={materialDateGuidelinesUrl}
+              title="Modal date input"
+              wide={wide}
+            >
+              <DemoCard
+                actionLabel="Enter date"
+                icon="calendar-edit"
+                onPress={() => setDialog('modalInput')}
+                style={wide ? styles.cardFill : undefined}
+                title="Single date input"
+                value={modalInputLabel}
+                wide={wide}
+              />
+              <DemoCard
+                actionLabel="Enter dates"
+                icon="calendar-range"
+                onPress={() => setDialog('modalInputRange')}
+                style={wide ? styles.cardFill : undefined}
+                title="Date range input"
+                value={modalInputRangeLabel}
+                wide={wide}
+              />
+            </ExampleSection>
+            <ExampleSection
+              description="Select any number of individual dates from the calendar."
+              title="Multiple dates"
+              wide={wide}
+            >
+              <DemoCard
+                actionLabel="Pick multiple dates"
+                icon="calendar-multiple"
+                onPress={() => setDialog('multi')}
+                style={wide ? styles.cardFill : undefined}
+                title="Multiple dates"
+                value={multiLabel}
+                wide={wide}
+              />
+            </ExampleSection>
+            <ExampleSection
+              description="Set a time on the dial, or type the hours and minutes."
+              guidelineUrl={materialTimeGuidelinesUrl}
+              title="Time picker"
+              wide={wide}
+            >
+              <DemoCard
+                actionLabel="Pick time"
+                icon="clock-outline"
+                onPress={() => setDialog('time')}
+                style={wide ? styles.cardFill : undefined}
+                title="Time"
+                value={timeLabel}
+                wide={wide}
+              />
+            </ExampleSection>
           </View>
 
           <Divider style={styles.divider} />
@@ -876,6 +1155,29 @@ function Example({ onToggleTheme }: { onToggleTheme: () => void }) {
         onDismiss={closeDialog}
         validRange={{ startDate: new Date() }}
         visible={dialog === 'multi'}
+      />
+      <DatePickerModalInput
+        date={modalInputDate}
+        locale={locale}
+        mode="single"
+        onConfirm={({ date: nextDate }) => {
+          closeDialog()
+          setModalInputDate(nextDate)
+        }}
+        onDismiss={closeDialog}
+        visible={dialog === 'modalInput'}
+      />
+      <DatePickerModalInput
+        endDate={modalInputRange.endDate}
+        locale={locale}
+        mode="range"
+        onConfirm={({ endDate, startDate }) => {
+          closeDialog()
+          setModalInputRange({ endDate, startDate })
+        }}
+        onDismiss={closeDialog}
+        startDate={modalInputRange.startDate}
+        visible={dialog === 'modalInputRange'}
       />
       <TimePickerModal
         hours={time.hours}
@@ -983,7 +1285,7 @@ const lightTheme = {
     secondary: '#565E71',
     secondaryContainer: '#DAE2F9',
     surface: '#FFFFFF',
-    surfaceVariant: '#E8EEF6',
+    surfaceVariant: '#E7E0EC',
   },
 }
 
@@ -1272,7 +1574,14 @@ function narrowRibbons(dark: boolean): WaveLayout {
   }
 }
 
-type OpenDialog = 'locale' | 'multi' | 'range' | 'single' | 'time'
+type OpenDialog =
+  | 'locale'
+  | 'modalInput'
+  | 'modalInputRange'
+  | 'multi'
+  | 'range'
+  | 'single'
+  | 'time'
 
 function RibbonGradient({
   id: gradientId,
@@ -1408,6 +1717,7 @@ function SiteFooter({ wide }: WideProps) {
                 accessibilityRole="link"
                 key={link.label}
                 onPress={() => Linking.openURL(link.url)}
+                style={styles.footerLinkPressable}
               >
                 {({ pressed }) => (
                   <AppText
