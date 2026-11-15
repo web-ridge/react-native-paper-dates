@@ -29,8 +29,10 @@ const actionPaddingTop = 8
 const headerPaddingBottom = 30
 const menuDividerOffset = 20
 const weekdayRowHeight = 24
+const weekdayGridGap = (dayCellSize - weekdayRowHeight) / 2
 const menuHeight =
   weekdayRowHeight +
+  weekdayGridGap +
   dayCellSize * 6 +
   actionPaddingTop +
   actionHeight +
@@ -196,13 +198,15 @@ function MonthCalendar({
       ) : null}
       {menu === 'day' ? (
         <View style={styles.grid}>
-          <DayNames
-            backgroundColor="transparent"
-            disableWeekDays={disableWeekDays}
-            height={weekdayRowHeight}
-            locale={locale}
-            startWeekOnMonday={monday}
-          />
+          <View style={styles.weekdays}>
+            <DayNames
+              backgroundColor="transparent"
+              disableWeekDays={disableWeekDays}
+              height={weekdayRowHeight}
+              locale={locale}
+              startWeekOnMonday={monday}
+            />
+          </View>
           <Month
             date={draft}
             disableWeekDays={disableWeekDays}
@@ -249,6 +253,9 @@ const styles = StyleSheet.create({
     height: menuHeight,
     marginTop: headerPaddingBottom - menuDividerOffset,
     paddingBottom: 20,
+  },
+  weekdays: {
+    marginBottom: weekdayGridGap,
   },
 })
 
