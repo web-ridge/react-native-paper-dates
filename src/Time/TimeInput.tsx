@@ -20,7 +20,14 @@ import {
   timeSelectorWidth,
   useInputColors,
 } from './timeUtils'
-import { forwardRef, type Ref, useEffect, useState } from 'react'
+import {
+  forwardRef,
+  type ForwardRefExoticComponent,
+  type Ref,
+  type RefAttributes,
+  useEffect,
+  useState,
+} from 'react'
 import { sharedStyles } from '../shared/styles'
 import StateLayer from './StateLayer'
 
@@ -268,4 +275,8 @@ interface TimeInputProps extends Omit<
   width?: number
 }
 
-export default forwardRef(TimeInput)
+const TimeInputWithRef: ForwardRefExoticComponent<
+  TimeInputProps & RefAttributes<TextInputInstance>
+> = forwardRef(TimeInput)
+
+export default TimeInputWithRef
