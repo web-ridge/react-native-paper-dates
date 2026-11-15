@@ -13,10 +13,10 @@ import {
   IconButton,
   Surface,
   Text,
-  TouchableRipple,
   useTheme,
 } from 'react-native-paper'
 
+import StateLayer from '../shared/StateLayer'
 import { displayCase, supportedOrientations, themeColor } from '../shared/utils'
 import { getTranslation, translate } from '../translations/utils'
 import Calendar from './Calendar'
@@ -253,6 +253,7 @@ function DockedStepper({
   testID: string
 }) {
   const theme = useTheme()
+  const [hovered, setHovered] = useState(false)
   const labelColor = disabled
     ? theme.colors.onSurface
     : theme.colors.onSurfaceVariant
@@ -272,12 +273,14 @@ function DockedStepper({
     </Text>
   )
   const menuControl = disabled ? (
-    <View style={styles.menuButtonInner}>{labelText}</View>
+    <View style={styles.menuButton}>{labelText}</View>
   ) : (
-    <TouchableRipple
+    <Pressable
       accessibilityHint={hint}
       accessibilityRole="button"
       accessibilityState={{ expanded: open }}
+      onHoverIn={() => setHovered(true)}
+      onHoverOut={() => setHovered(false)}
       onPress={onOpen}
       style={[
         styles.menuButton,
@@ -285,11 +288,10 @@ function DockedStepper({
       ]}
       testID={testID}
     >
-      <View style={styles.menuButtonInner}>
-        {labelText}
-        <Icon color={labelColor} size={18} source="menu-down" />
-      </View>
-    </TouchableRipple>
+      <StateLayer color={labelColor} hovered={hovered} />
+      {labelText}
+      <Icon color={labelColor} size={18} source="menu-down" />
+    </Pressable>
   )
 
   if (!showArrows) return menuControl
@@ -389,13 +391,11 @@ const styles = StyleSheet.create({
     width: headerRowHeight,
   },
   menuButton: {
-    overflow: 'hidden',
-  },
-  menuButtonInner: {
     alignItems: 'center',
     flexDirection: 'row',
     gap: menuIconGap,
     height: headerRowHeight,
+    overflow: 'hidden',
     paddingHorizontal: menuButtonPadding,
   },
   menuLabel: {
