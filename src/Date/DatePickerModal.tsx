@@ -14,6 +14,7 @@ import {
   supportedOrientations,
   useIsLargeScreen,
 } from '../shared/utils'
+import { datePickerCardMaxHeight } from './dateUtils'
 import { dateInputCardWidth } from './DatePickerInputForm'
 import DatePickerModalContent, {
   DatePickerModalContentMultiProps,
@@ -167,14 +168,14 @@ const styles = StyleSheet.create({
   },
   modalContentBig: {
     borderRadius: 28,
-    maxHeight: 568,
+    maxHeight: datePickerCardMaxHeight,
     maxWidth: 360,
     overflow: 'hidden',
     width: '100%',
   },
   modalContentFormSheet: {
     borderRadius: 28,
-    maxHeight: 568,
+    maxHeight: datePickerCardMaxHeight,
     maxWidth: 360,
     overflow: 'hidden',
     width: '100%',

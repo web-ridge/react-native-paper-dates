@@ -7,6 +7,7 @@ import Month, {
   getVerticalListMetrics,
   getVerticalMonthsOffset,
   horizontalMonthScrolls,
+  horizontalWeekHeight,
 } from '../../Date/Month'
 import { getMaxIndex, getMinIndex } from '../../Date/SwiperUtils'
 
@@ -31,7 +32,14 @@ const defaultProps = {
   startWeekOnMonday: false,
 }
 
-it('scrolls day numbers independently of the month title in single mode', async () => {
+it('fits every week of a single month without scrolling the days', () => {
+  expect(horizontalWeekHeight(0)).toBe(48)
+  expect(horizontalWeekHeight(288)).toBe(48)
+  expect(horizontalWeekHeight(240)).toBe(40)
+  expect(horizontalWeekHeight(240) * 6).toBeLessThanOrEqual(240)
+})
+
+it('keeps the month title outside the day grid in single mode', async () => {
   const { getByTestId, getByText } = await render(
     <Month
       {...defaultProps}

@@ -18,7 +18,6 @@ import {
 
 import { sharedStyles } from '../shared/styles'
 import AutoSizer from './AutoSizer'
-import { verticalScrollbarGutter } from './CalendarHeader'
 import { useDatePickerKeys } from './datePickerKeys'
 import { addMonths, getBeginOffset, getRealIndex } from './dateUtils'
 import {
@@ -27,7 +26,6 @@ import {
   getVerticalListMetrics,
   getVerticalMonthScrollY,
   getVerticalMonthsOffset,
-  horizontalMonthScrolls,
 } from './Month'
 import {
   getMaxIndex,
@@ -208,20 +206,6 @@ function SwiperInner({
       parentRef.current?.scrollTo({ animated: false, x: restX, y: 0 })
     }
   }, [restX, visibleIndexes])
-
-  const needsMonthScroll =
-    isHorizontal &&
-    visibleIndexes.some(
-      (monthIndex) =>
-        isIndexWithinRange(monthIndex, startYear, endYear) &&
-        horizontalMonthScrolls(
-          height,
-          monthIndex,
-          startWeekOnMonday,
-          startYear,
-          endYear
-        )
-    )
 
   const renderProps = {
     index: 0,
@@ -410,11 +394,7 @@ function SwiperInner({
           })}
         </View>
       </ScrollView>
-      {renderHeader &&
-        renderHeader({
-          ...renderProps,
-          endInset: needsMonthScroll ? verticalScrollbarGutter : 0,
-        })}
+      {renderHeader && renderHeader(renderProps)}
       {renderFooter && renderFooter(renderProps)}
     </>
   )

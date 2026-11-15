@@ -1,7 +1,6 @@
-import { memo, useMemo } from 'react'
+import { memo, useMemo, useState } from 'react'
 import {
-  Platform,
-  ScrollView,
+  type LayoutChangeEvent,
   type StyleProp,
   StyleSheet,
   View,
@@ -84,7 +83,8 @@ type VerticalLayout = {
 
 const menuButtonInset = 8
 export const monthHeaderHeight = 56
-export const monthHeaderSingleMarginBottom = 8 + dayNamesHeight + 12
+export const monthHeaderSingleMarginBottom = 8 + dayNamesHeight
+const maxWeekRows = 6
 export const monthHeaderSingleMarginTop = 4
 const horizontalMonthChrome =
   monthHeaderSingleMarginTop + monthHeaderHeight + monthHeaderSingleMarginBottom
@@ -307,9 +307,20 @@ function Month(props: BaseMonthProps & CalendarMode) {
   const textFont = theme.fonts.titleSmall
 
   const renderOutsideDays = showOutsideDays ?? isHorizontal
+  const [daysHeight, setDaysHeight] = useState(0)
+  const rowHeight = horizontalWeekHeight(daysHeight)
+  const onDaysLayout = (event: LayoutChangeEvent) => {
+    const next = event.nativeEvent.layout.height
+    setDaysHeight((current) =>
+      Math.abs(current - next) < 0.5 ? current : next
+    )
+  }
 
   const weeks = grid.map(({ generatedDays, weekIndex }) => (
-    <View key={weekIndex} style={styles.week}>
+    <View
+      key={weekIndex}
+      style={[styles.week, isHorizontal ? { height: rowHeight } : null]}
+    >
       {generatedDays
         .filter((gd) => showWeekDay(gd.dayIndex, disableWeekDays))
         .map((gd) =>
@@ -318,6 +329,7 @@ function Month(props: BaseMonthProps & CalendarMode) {
           ) : (
             <Day
               key={gd.dayIndex}
+              cellHeight={isHorizontal ? rowHeight : undefined}
               day={gd.dayOfMonth}
               dayContent={dayContent}
               dayContentPosition={dayContentPosition}
@@ -439,22 +451,13 @@ function Month(props: BaseMonthProps & CalendarMode) {
       {hideHeader ? (
         <View>{weeks}</View>
       ) : isHorizontal ? (
-        <ScrollView
-          alwaysBounceVertical={false}
-          directionalLockEnabled
-          keyboardShouldPersistTaps="handled"
-          nestedScrollEnabled
-          style={[
-            sharedStyles.root,
-            sharedStyles.minHeightZero,
-            Platform.OS === 'web'
-              ? ({ colorScheme: theme.dark ? 'dark' : 'light' } as ViewStyle)
-              : null,
-          ]}
+        <View
+          onLayout={onDaysLayout}
+          style={[sharedStyles.root, sharedStyles.minHeightZero]}
           testID="react-native-paper-dates-month-days-scroll"
         >
           {weeks}
-        </ScrollView>
+        </View>
       ) : (
         weeks
       )}
@@ -600,6 +603,11 @@ export function getVerticalMonthsOffset(
   const c = monthsHeight + count * (dayNamesHeight + monthHeaderHeight)
 
   return c + dynamicBeginOffset
+}
+
+export function horizontalWeekHeight(daysHeight: number) {
+  if (daysHeight <= 0) return dayCellSize
+  return Math.min(dayCellSize, daysHeight / maxWeekRows)
 }
 
 export function horizontalMonthScrolls(

@@ -14,7 +14,6 @@ import { useTheme } from 'react-native-paper'
 import { themeColor, useLatest } from '../shared/utils'
 import AutoSizer from './AutoSizer'
 import {
-  layoutScrollbarWidth,
   overlayScrollbarPadding,
   weekdayScrollbarInset,
 } from './CalendarHeader'
@@ -32,7 +31,6 @@ import {
   getVerticalListMetrics,
   getVerticalMonthScrollY,
   getVerticalMonthsOffset,
-  horizontalMonthScrolls,
 } from './Month'
 import {
   getMaxIndex,
@@ -131,31 +129,17 @@ function Swiper({
     <>
       {isHorizontal ? (
         <AutoSizer initialLayout={initialLayout}>
-          {({ height }) => {
-            const overflow = horizontalMonthScrolls(
-              height,
-              index,
-              startWeekOnMonday,
-              startYear,
-              endYear
-            )
-            return (
-              <>
-                {renderItem({
-                  active: true,
-                  index,
-                  onNext,
-                  onPrev,
-                })}
-                {renderHeader
-                  ? renderHeader({
-                      ...renderProps,
-                      endInset: overflow ? layoutScrollbarWidth() : 0,
-                    })
-                  : null}
-              </>
-            )
-          }}
+          {() => (
+            <>
+              {renderItem({
+                active: true,
+                index,
+                onNext,
+                onPrev,
+              })}
+              {renderHeader ? renderHeader(renderProps) : null}
+            </>
+          )}
         </AutoSizer>
       ) : (
         <>

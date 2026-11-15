@@ -13,6 +13,7 @@ import {
   IconButton,
   Surface,
   Text,
+  TouchableRipple,
   useTheme,
 } from 'react-native-paper'
 
@@ -62,7 +63,7 @@ const headerRowHeight = 24
 const menuButtonPadding = 12
 const menuDividerOffset = 20
 const menuIconGap = 8
-const menuLabelInset = 16 + 24 + 16
+const menuLabelInset = 16 + 24 + 16 - menuButtonPadding
 const screenInset = 8
 const stepperGap = 8
 
@@ -271,19 +272,24 @@ function DockedStepper({
     </Text>
   )
   const menuControl = disabled ? (
-    <View style={styles.menuButton}>{labelText}</View>
+    <View style={styles.menuButtonInner}>{labelText}</View>
   ) : (
-    <Pressable
+    <TouchableRipple
       accessibilityHint={hint}
       accessibilityRole="button"
       accessibilityState={{ expanded: open }}
       onPress={onOpen}
-      style={styles.menuButton}
+      style={[
+        styles.menuButton,
+        { borderRadius: theme.shapes.corner.extraSmall },
+      ]}
       testID={testID}
     >
-      {labelText}
-      <Icon color={labelColor} size={18} source="menu-down" />
-    </Pressable>
+      <View style={styles.menuButtonInner}>
+        {labelText}
+        <Icon color={labelColor} size={18} source="menu-down" />
+      </View>
+    </TouchableRipple>
   )
 
   if (!showArrows) return menuControl
@@ -304,7 +310,7 @@ function DockedStepper({
             : 'react-native-paper-dates-docked-year-prev'
         }
       />
-      <View style={styles.stepperLabel}>{menuControl}</View>
+      {menuControl}
       <IconButton
         accessibilityHint={hint === 'Shift+M' ? 'Page Down' : 'Shift+Page Down'}
         accessibilityLabel={getTranslation(undefined, 'next')}
@@ -383,10 +389,14 @@ const styles = StyleSheet.create({
     width: headerRowHeight,
   },
   menuButton: {
+    overflow: 'hidden',
+  },
+  menuButtonInner: {
     alignItems: 'center',
     flexDirection: 'row',
     gap: menuIconGap,
     height: headerRowHeight,
+    paddingHorizontal: menuButtonPadding,
   },
   menuLabel: {
     includeFontPadding: false,
@@ -396,6 +406,7 @@ const styles = StyleSheet.create({
     opacity: 0.38,
   },
   menuMonth: {
+    alignItems: 'flex-start',
     flex: 1,
     justifyContent: 'center',
     paddingLeft: menuLabelInset,
@@ -412,9 +423,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     gap: stepperGap,
-  },
-  stepperLabel: {
-    paddingHorizontal: menuButtonPadding,
   },
   toolbar: {
     alignItems: 'center',

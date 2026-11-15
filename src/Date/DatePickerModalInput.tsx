@@ -23,7 +23,11 @@ import DatePickerInputForm, {
   releaseFieldFocus,
 } from './DatePickerInputForm'
 import DatePickerModalContent from './DatePickerModalContent'
-import { defaultEndYear, defaultStartYear } from './dateUtils'
+import {
+  datePickerCardMaxHeight,
+  defaultEndYear,
+  defaultStartYear,
+} from './dateUtils'
 import type {
   CalendarDate,
   DisableWeekDaysType,
@@ -158,7 +162,10 @@ function DatePickerModalInput(props: DatePickerModalInputProps) {
   )
 
   const width = dateInputCardWidth(windowWidth)
-  const calendarHeight = Math.min(568, Math.max(windowHeight - 32, 0))
+  const calendarHeight = Math.min(
+    datePickerCardMaxHeight,
+    Math.max(windowHeight - 32, 0)
+  )
   const surface = theme.colors.elevation.level3
 
   return (

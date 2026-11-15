@@ -79,6 +79,29 @@ it('docks a calendar under the field and confirms or dismisses it', async () => 
   expect(onDismiss).toHaveBeenCalled()
 })
 
+it('uses a rounded-square hover target for the month and year', async () => {
+  const docked = await render(
+    <DatePickerDocked
+      anchor={anchor}
+      date={new Date(2026, 5, 2)}
+      locale="en"
+      onConfirm={jest.fn()}
+      onDismiss={jest.fn()}
+      visible
+    />
+  )
+
+  for (const id of [
+    'react-native-paper-dates-docked-month',
+    'react-native-paper-dates-docked-year',
+  ]) {
+    expect(docked.getByTestId(id)).toHaveStyle({
+      borderRadius: 4,
+      overflow: 'hidden',
+    })
+  }
+})
+
 it('maps web keyboard shortcuts onto the date picker', async () => {
   const previousPlatform = Platform.OS
   Platform.OS = 'web'

@@ -15,6 +15,7 @@ import DayRange from './DayRange'
 import type { DayContentPosition, DayContentRenderer } from './types'
 
 function Day(props: {
+  cellHeight?: number
   day: number
   dayContent?: DayContentRenderer
   dayContentPosition?: DayContentPosition
@@ -37,6 +38,7 @@ function Day(props: {
   year: number
 }) {
   const {
+    cellHeight = dayCellSize,
     day,
     dayContent,
     dayContentPosition,
@@ -94,6 +96,7 @@ function Day(props: {
   }, [onPressDate, year, month, day])
 
   const textFont = theme.fonts.bodyLarge
+  const circle = Math.min(daySize, cellHeight)
 
   return (
     <View style={styles.root}>
@@ -115,12 +118,22 @@ function Day(props: {
         onPress={disabled ? undefined : onPress}
         onPressIn={() => setPressed(true)}
         onPressOut={() => setPressed(false)}
-        style={styles.button}
+        style={[
+          styles.button,
+          cellHeight === dayCellSize ? null : { height: cellHeight },
+        ]}
         testID={`react-native-paper-dates-day-${year}-${month}-${day}`}
       >
         <View
           style={[
             styles.day,
+            circle === daySize
+              ? null
+              : {
+                  borderRadius: circle / 2,
+                  height: circle,
+                  width: circle,
+                },
             isToday && !selected && !disabled
               ? { borderColor: theme.colors.primary }
               : null,
@@ -161,6 +174,7 @@ function Day(props: {
             pointerEvents="none"
             style={[
               styles.content,
+              circle === daySize ? null : { height: circle, width: circle },
               contentPositions[dayContentPosition || 'bottom'],
               dayContentStyle,
             ]}

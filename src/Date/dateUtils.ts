@@ -7,6 +7,7 @@ export type TypedDateIssue = 'disabled' | 'format' | 'range'
 
 export const dayCellSize = 48
 export const daySize = 40
+export const datePickerCardMaxHeight = 584
 export const defaultEndYear = 2200
 export const defaultStartYear = 1800
 export const estimatedMonthHeight = 400
