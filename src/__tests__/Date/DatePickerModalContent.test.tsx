@@ -1,5 +1,5 @@
-import { act, render } from '@testing-library/react-native'
-import { Dimensions } from 'react-native'
+import { act, fireEvent, render } from '@testing-library/react-native'
+import { Dimensions, StyleSheet } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 import DatePickerInputForm from '../../Date/DatePickerInputForm'
@@ -129,6 +129,67 @@ it('shows the shared date input form for a single date and a range', async () =>
     expect(range.getByText('Enter dates')).toBeTruthy()
     expect(range.getByText('End date')).toBeTruthy()
     expect(range.getByTestId('react-native-paper-dates-save')).toBeTruthy()
+  } finally {
+    await act(async () => {
+      Dimensions.set({ screen: saved, window: saved })
+    })
+  }
+})
+
+it('lets the year selector fill the phone sheet', async () => {
+  const saved = Dimensions.get('window')
+  const metrics = {
+    frame: { height: 844, width: 390, x: 0, y: 0 },
+    insets: { bottom: 34, left: 0, right: 0, top: 47 },
+  }
+  const renderAt = (width: number, height: number) =>
+    render(
+      <SafeAreaProvider
+        initialMetrics={{
+          ...metrics,
+          frame: { height, width, x: 0, y: 0 },
+        }}
+      >
+        <DatePickerModalContent
+          date={new Date(2026, 10, 16)}
+          initialLayout={{ height: 360, width }}
+          locale="en"
+          mode="single"
+          onConfirm={() => null}
+          onDismiss={() => null}
+        />
+      </SafeAreaProvider>
+    )
+
+  try {
+    await act(async () => {
+      Dimensions.set({
+        screen: { fontScale: 1, height: 844, scale: 2, width: 390 },
+        window: { fontScale: 1, height: 844, scale: 2, width: 390 },
+      })
+    })
+    const phone = await renderAt(390, 844)
+    await fireEvent.press(phone.getByLabelText('November 2026'))
+    const picker = phone.getByTestId('react-native-paper-dates-year-picker')
+    const pickerStyle = StyleSheet.flatten(picker.props.style)
+    expect(pickerStyle?.position).toBe('absolute')
+    expect(pickerStyle?.bottom).toBe(0)
+    expect(StyleSheet.flatten(picker.parent?.props.style)?.flex).toBe(1)
+
+    await act(async () => {
+      Dimensions.set({
+        screen: { fontScale: 1, height: 1366, scale: 2, width: 1024 },
+        window: { fontScale: 1, height: 1366, scale: 2, width: 1024 },
+      })
+    })
+    const tablet = await renderAt(1024, 1366)
+    await fireEvent.press(tablet.getByLabelText('November 2026'))
+    const tabletPicker = tablet.getByTestId(
+      'react-native-paper-dates-year-picker'
+    )
+    expect(StyleSheet.flatten(tabletPicker.parent?.props.style)?.flexGrow).toBe(
+      0
+    )
   } finally {
     await act(async () => {
       Dimensions.set({ screen: saved, window: saved })

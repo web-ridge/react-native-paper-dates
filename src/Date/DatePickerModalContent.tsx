@@ -120,7 +120,8 @@ export function DatePickerModalContent(
   const cardLayout = layout === 'card'
   const insets = useSafeAreaInsets()
   const isLargeScreen = useIsLargeScreen()
-  const hugCalendar = mode === 'single'
+  const fillYearList = mode === 'single' && selectingYear && !isLargeScreen
+  const hugCalendar = mode === 'single' && !fillYearList
   const showFooter = isLargeScreen || cardLayout
   const showSheetHeader = !isLargeScreen && !cardLayout
   const theme = useTheme()
@@ -337,6 +338,7 @@ export function DatePickerModalContent(
               disableWeekDays={disableWeekDays}
               endDate={state.endDate}
               endYear={endYear}
+              fill={fillYearList}
               initialLayout={initialLayout}
               keyboardEnabled={collapsed}
               locale={locale}

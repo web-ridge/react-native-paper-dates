@@ -52,6 +52,7 @@ export type BaseCalendarProps = {
   disableWeekDays?: DisableWeekDaysType
   endDate?: CalendarDate
   endYear?: number
+  fill?: boolean
   initialLayout?: { height: number; width: number }
   keyboardEnabled?: boolean
   locale: string
@@ -127,6 +128,7 @@ function ScrollCalendar(
     disableWeekDays,
     endDate,
     endYear,
+    fill = false,
     initialLayout,
     keyboardEnabled = true,
     locale,
@@ -301,7 +303,7 @@ function ScrollCalendar(
   return (
     <View
       style={
-        scrollMode === 'horizontal'
+        scrollMode === 'horizontal' && !fill
           ? sharedStyles.hug
           : [sharedStyles.root, sharedStyles.minHeightZero]
       }
