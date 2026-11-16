@@ -47,6 +47,14 @@ jobs:
       - name: Run unit tests
         run: bun run test --maxWorkers=2 --coverage
 
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage
+          if-no-files-found: ignore
+
   build:
     runs-on: ubuntu-latest
     steps:

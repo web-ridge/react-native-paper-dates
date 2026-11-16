@@ -147,6 +147,39 @@ it('rejects a typed date outside the allowed range', async () => {
   expect(onChange).not.toHaveBeenCalled()
 })
 
+it('parses a Gregorian date typed for the Thai locale', async () => {
+  const onChange = jest.fn()
+  const screen = await render(
+    <DatePickerInputWithoutModal
+      inputMode="start"
+      locale="th"
+      onChange={onChange}
+      testID="date"
+      value={undefined}
+    />
+  )
+
+  expect(screen.getByTestId('date').props.placeholder).toBe('DD/MM/YYYY')
+  await commitText(screen, '05/01/2024')
+  expect(onChange).toHaveBeenCalledWith(new Date(2024, 0, 5))
+})
+
+it('parses Arabic-Indic digits in a typed date', async () => {
+  const onChange = jest.fn()
+  const screen = await render(
+    <DatePickerInputWithoutModal
+      inputMode="start"
+      locale="en"
+      onChange={onChange}
+      testID="date"
+      value={undefined}
+    />
+  )
+
+  await commitText(screen, '٠١/١٥/٢٠٢٤')
+  expect(onChange).toHaveBeenCalledWith(new Date(2024, 0, 15))
+})
+
 it('clears a typed-date error when the saved date changes', async () => {
   const onValidationError = jest.fn()
   const screen = await render(

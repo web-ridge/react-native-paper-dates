@@ -40,6 +40,7 @@ registerTranslation('pl', {
   enterDates: 'Enter dates',
   hour: 'Hour',
   hourOf: (hour, total) => `Hour ${hour} of ${total}`,
+  invalidTime: 'Invalid time',
   minute: 'Minute',
   minuteOf: (minute, total) => `Minute ${minute} of ${total}`,
   mustBeBetween: (startDate, endDate) =>
@@ -81,6 +82,7 @@ registerTranslation('dynamic', () => {
     enterDates: translate('Enter dates'),
     hour: translate('Hour'),
     hourOf: (hour, total) => translate(`Hour ${hour} of ${total}`),
+    invalidTime: translate('Invalid time'),
     minute: translate('Minute'),
     minuteOf: (minute, total) => translate(`Minute ${minute} of ${total}`),
     mustBeBetween: (startDate, endDate) =>

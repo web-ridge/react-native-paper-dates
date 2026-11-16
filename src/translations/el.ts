@@ -10,6 +10,7 @@ const el: TranslationsType = {
   enterDates: 'Εισαγωγή ημερομηνιών',
   hour: 'ώρα',
   hourOf: (hour, total) => `Ώρα ${hour} από ${total}`,
+  invalidTime: 'Μη έγκυρη ώρα',
   minute: 'λεπτό',
   minuteOf: (minute, total) => `Λεπτό ${minute} από ${total}`,
   mustBeBetween: (startDate, endDate) =>

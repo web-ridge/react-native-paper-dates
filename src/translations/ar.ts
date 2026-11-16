@@ -10,6 +10,7 @@ const ar: TranslationsType = {
   enterDates: 'أدخل التواريخ',
   hour: 'ساعة',
   hourOf: (hour, total) => `ساعة ${hour} من ${total}`,
+  invalidTime: 'وقت غير صالح',
   minute: 'دقيقة',
   minuteOf: (minute, total) => `دقيقة ${minute} من ${total}`,
   mustBeBetween: (startDate, endDate) =>

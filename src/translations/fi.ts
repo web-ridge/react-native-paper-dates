@@ -10,6 +10,7 @@ const fi: TranslationsType = {
   enterDates: 'Anna päivämäärät',
   hour: 'Tunti',
   hourOf: (hour, total) => `Tunti ${hour} / ${total}`,
+  invalidTime: 'Virheellinen aika',
   minute: 'Minuutti',
   minuteOf: (minute, total) => `Minuutti ${minute} / ${total}`,
   mustBeBetween: (startDate, endDate) =>

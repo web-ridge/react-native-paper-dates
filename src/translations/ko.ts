@@ -10,6 +10,7 @@ const ko: TranslationsType = {
   enterDates: '날짜 입력',
   hour: '시',
   hourOf: (hour, total) => `${hour}시 / ${total}`,
+  invalidTime: '잘못된 시간',
   minute: '분',
   minuteOf: (minute, total) => `${minute}분 / ${total}`,
   mustBeBetween: (startDate, endDate) =>

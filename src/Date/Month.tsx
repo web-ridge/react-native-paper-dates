@@ -310,7 +310,6 @@ function Month(props: BaseMonthProps & CalendarMode) {
           ]}
         >
           <TouchableRipple
-            accessibilityHint="Shift+Y"
             accessibilityLabel={`${monthName} ${year}`}
             accessibilityRole="button"
             disabled={!isHorizontal}

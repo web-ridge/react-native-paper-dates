@@ -10,6 +10,7 @@ const da: TranslationsType = {
   enterDates: 'Indtast datoer',
   hour: 'Time',
   hourOf: (hour, total) => `Time ${hour} af ${total}`,
+  invalidTime: 'Ugyldigt tidspunkt',
   minute: 'Minut',
   minuteOf: (minute, total) => `Minut ${minute} af ${total}`,
   mustBeBetween: (startDate, endDate) =>

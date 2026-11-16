@@ -10,6 +10,7 @@ const ro: TranslationsType = {
   enterDates: 'Introduceți datele',
   hour: 'Oră',
   hourOf: (hour, total) => `Ora ${hour} din ${total}`,
+  invalidTime: 'Oră nevalidă',
   minute: 'Minut',
   minuteOf: (minute, total) => `Minutul ${minute} din ${total}`,
   mustBeBetween: (startDate, endDate) =>

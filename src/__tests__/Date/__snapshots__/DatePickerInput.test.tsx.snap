@@ -239,6 +239,7 @@ exports[`renders DatePickerInput 1`] = `
               {
                 "alignItems": "center",
                 "justifyContent": "center",
+                "zIndex": 1,
               }
             }
           >
@@ -258,7 +259,6 @@ exports[`renders DatePickerInput 1`] = `
                 [
                   {
                     "margin": 6,
-                    "overflow": "hidden",
                   },
                   {
                     "backgroundColor": undefined,
@@ -285,6 +285,7 @@ exports[`renders DatePickerInput 1`] = `
                       },
                       false,
                     ],
+                    null,
                   ],
                 ]
               }
@@ -292,7 +293,6 @@ exports[`renders DatePickerInput 1`] = `
                 [
                   {
                     "margin": 6,
-                    "overflow": "hidden",
                   },
                   {
                     "backgroundColor": undefined,
@@ -316,6 +316,7 @@ exports[`renders DatePickerInput 1`] = `
                     "width": 24,
                   },
                   false,
+                  null,
                 ]
               }
             >
@@ -343,10 +344,10 @@ exports[`renders DatePickerInput 1`] = `
                 focusable={true}
                 hitSlop={
                   {
-                    "bottom": 6,
-                    "left": 6,
-                    "right": 6,
-                    "top": 6,
+                    "bottom": 12,
+                    "left": 12,
+                    "right": 12,
+                    "top": 12,
                   }
                 }
                 multiline={false}
@@ -368,8 +369,14 @@ exports[`renders DatePickerInput 1`] = `
                     [
                       {
                         "alignItems": "center",
-                        "flexGrow": 1,
+                        "flex": 1,
                         "justifyContent": "center",
+                      },
+                      {
+                        "borderRadius": 20,
+                      },
+                      {
+                        "overflow": "hidden",
                       },
                       undefined,
                     ],

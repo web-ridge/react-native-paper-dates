@@ -11,10 +11,12 @@ export default function DatePickerModalHeaderBackground({
   children,
   disableWeekDays,
   divider = true,
+  insetHorizontal = false,
 }: {
   children: ReactNode
   disableWeekDays?: DisableWeekDaysType
   divider?: boolean
+  insetHorizontal?: boolean
 }) {
   const backgroundColor = useHeaderBackgroundColor()
   const { height, width } = useWindowDimensions()
@@ -26,11 +28,10 @@ export default function DatePickerModalHeaderBackground({
     <View
       style={[
         styles.background,
-        {
-          backgroundColor,
-          paddingLeft: insets.left,
-          paddingRight: insets.right,
-        },
+        { backgroundColor },
+        insetHorizontal
+          ? { paddingLeft: insets.left, paddingRight: insets.right }
+          : null,
       ]}
     >
       {children}

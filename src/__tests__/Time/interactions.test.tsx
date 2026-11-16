@@ -666,9 +666,8 @@ describe('time picker modal', () => {
     const hour = modal.getByLabelText('Hour')
     await fireEvent(hour, 'focus')
     await fireEvent.changeText(hour, '99')
-    expect(modal.getByLabelText('Hour').props.accessibilityHint).toBe(
-      'Invalid time'
-    )
+    expect(modal.getByText('Invalid time')).toBeTruthy()
+    expect(modal.getByLabelText('Hour').props.accessibilityHint).toBeUndefined()
     await fireEvent.press(modal.getByText('OK'))
     expect(onConfirm).not.toHaveBeenCalled()
   })

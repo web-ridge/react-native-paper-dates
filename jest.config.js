@@ -10,6 +10,14 @@ module.exports = {
     '!**/translations/**',
   ],
   coverageReporters: ['clover', 'json', 'lcov', ['text', { skipEmpty: true }]],
+  coverageThreshold: {
+    global: {
+      branches: 93,
+      functions: 92,
+      lines: 96,
+      statements: 95,
+    },
+  },
   modulePathIgnorePatterns: [
     '<rootDir>/example/node_modules',
     '<rootDir>/lib/',

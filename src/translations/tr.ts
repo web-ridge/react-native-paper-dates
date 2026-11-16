@@ -10,6 +10,7 @@ const tr: TranslationsType = {
   enterDates: 'Tarihleri girin',
   hour: 'Saat',
   hourOf: (hour, total) => `Saat ${hour} / ${total}`,
+  invalidTime: 'Geçersiz saat',
   minute: 'Dakika',
   minuteOf: (minute, total) => `Dakika ${minute} / ${total}`,
   mustBeBetween: (startDate, endDate) =>

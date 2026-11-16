@@ -13,6 +13,7 @@ export type TranslationsType = {
   enterDates: string
   hour: string
   hourOf: (hour: number, total: number) => string
+  invalidTime: string
   minute: string
   minuteOf: (minute: number, total: number) => string
   mustBeBetween: (startDate: string, endDate: string) => string

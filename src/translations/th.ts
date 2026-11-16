@@ -10,6 +10,7 @@ const th: TranslationsType = {
   enterDates: 'ป้อนวันที่',
   hour: 'ชั่วโมง',
   hourOf: (hour, total) => `ชั่วโมง ${hour} จาก ${total}`,
+  invalidTime: 'เวลาไม่ถูกต้อง',
   minute: 'นาที',
   minuteOf: (minute, total) => `นาที ${minute} จาก ${total}`,
   mustBeBetween: (startDate, endDate) =>

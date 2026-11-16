@@ -10,6 +10,7 @@ const cs: TranslationsType = {
   enterDates: 'Zadejte data',
   hour: 'hodina',
   hourOf: (hour, total) => `Hodina ${hour} z ${total}`,
+  invalidTime: 'Neplatný čas',
   minute: 'minuta',
   minuteOf: (minute, total) => `Minuta ${minute} z ${total}`,
   mustBeBetween: (startDate, endDate) =>

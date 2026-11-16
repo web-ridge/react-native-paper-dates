@@ -170,7 +170,6 @@ function DatePickerDocked({
                     >
                       <DockedStepper
                         disabled={nav.menu === 'year'}
-                        hint="Shift+M"
                         label={new Intl.DateTimeFormat(locale, {
                           month: 'short',
                         }).format(nav.visibleMonth)}
@@ -179,6 +178,7 @@ function DatePickerDocked({
                         onPrev={() => nav.moveMonth(-1)}
                         open={nav.menu === 'month'}
                         testID="react-native-paper-dates-docked-month"
+                        unit="month"
                       />
                     </View>
                     {nav.menu === 'day' ? <View style={styles.spacer} /> : null}
@@ -190,13 +190,13 @@ function DatePickerDocked({
                     >
                       <DockedStepper
                         disabled={nav.menu === 'month'}
-                        hint="Shift+Y"
                         label={String(nav.visibleMonth.getFullYear())}
                         onNext={() => nav.moveYear(1)}
                         onOpen={nav.toggleYear}
                         onPrev={() => nav.moveYear(-1)}
                         open={nav.menu === 'year'}
                         testID="react-native-paper-dates-docked-year"
+                        unit="year"
                       />
                     </View>
                   </View>
@@ -247,22 +247,22 @@ function DatePickerDocked({
 
 function DockedStepper({
   disabled,
-  hint,
   label,
   onNext,
   onOpen,
   onPrev,
   open,
   testID,
+  unit,
 }: {
   disabled: boolean
-  hint: string
   label: string
   onNext: () => void
   onOpen: () => void
   onPrev: () => void
   open: boolean
   testID: string
+  unit: 'month' | 'year'
 }) {
   const theme = useTheme()
   const [hovered, setHovered] = useState(false)
@@ -288,7 +288,6 @@ function DockedStepper({
     <View style={styles.menuButton}>{labelText}</View>
   ) : (
     <Pressable
-      accessibilityHint={hint}
       accessibilityRole="button"
       accessibilityState={{ expanded: open }}
       onHoverIn={() => setHovered(true)}
@@ -311,7 +310,6 @@ function DockedStepper({
   return (
     <View style={styles.stepper}>
       <IconButton
-        accessibilityHint={hint === 'Shift+M' ? 'Page Up' : 'Shift+Page Up'}
         accessibilityLabel={getTranslation(undefined, 'previous')}
         hitSlop={iconHitSlop}
         icon="chevron-left"
@@ -320,14 +318,13 @@ function DockedStepper({
         size={24}
         style={styles.iconButton}
         testID={
-          hint === 'Shift+M'
+          unit === 'month'
             ? 'react-native-paper-dates-docked-prev'
             : 'react-native-paper-dates-docked-year-prev'
         }
       />
       {menuControl}
       <IconButton
-        accessibilityHint={hint === 'Shift+M' ? 'Page Down' : 'Shift+Page Down'}
         accessibilityLabel={getTranslation(undefined, 'next')}
         hitSlop={iconHitSlop}
         icon="chevron-right"
@@ -336,7 +333,7 @@ function DockedStepper({
         size={24}
         style={styles.iconButton}
         testID={
-          hint === 'Shift+M'
+          unit === 'month'
             ? 'react-native-paper-dates-docked-next'
             : 'react-native-paper-dates-docked-year-next'
         }

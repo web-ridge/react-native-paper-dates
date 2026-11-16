@@ -10,6 +10,7 @@ const ukUA: TranslationsType = {
   enterDates: 'Введіть дати',
   hour: 'Година',
   hourOf: (hour, total) => `Година ${hour} з ${total}`,
+  invalidTime: 'Неприпустимий час',
   minute: 'Хвилина',
   minuteOf: (minute, total) => `Хвилина ${minute} з ${total}`,
   mustBeBetween: (startDate: string, endDate: string) =>

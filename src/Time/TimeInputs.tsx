@@ -104,11 +104,17 @@ function TimeInputs({
   const fieldWidth = timeSelectorFieldWidth(inputType, is24Hour, isLandscape)
 
   const hourLabel = getTranslation(locale, 'hour', 'Hour')
+  const invalidTime = getTranslation(locale, 'invalidTime', 'Invalid time')
   const minuteLabel = getTranslation(locale, 'minute', 'Minute')
 
   const hourMinuteRow = (
     <View style={styles.inputContainer}>
-      <TimeField caption={hourLabel} inputType={inputType} width={fieldWidth}>
+      <TimeField
+        caption={hourLabel}
+        error={hourInvalid ? invalidTime : undefined}
+        inputType={inputType}
+        width={fieldWidth}
+      >
         <TimeInput
           ref={startInput}
           accessibilityLabel={hourLabel}
@@ -143,7 +149,12 @@ function TimeInputs({
           style={[styles.dot, { backgroundColor: theme.colors.onSurface }]}
         />
       </View>
-      <TimeField caption={minuteLabel} inputType={inputType} width={fieldWidth}>
+      <TimeField
+        caption={minuteLabel}
+        error={minuteInvalid ? invalidTime : undefined}
+        inputType={inputType}
+        width={fieldWidth}
+      >
         <TimeInput
           ref={endInput}
           accessibilityLabel={minuteLabel}
@@ -206,11 +217,13 @@ function TimeInputs({
 function TimeField({
   caption,
   children,
+  error,
   inputType,
   width,
 }: {
   caption: string
   children: ReactNode
+  error?: string
   inputType: PossibleInputTypes
   width: number
 }) {
@@ -221,16 +234,17 @@ function TimeField({
       {children}
       {inputType === inputTypes.keyboard ? (
         <Text
+          {...(error ? { accessibilityLiveRegion: 'polite' as const } : null)}
           maxFontSizeMultiplier={1.5}
           style={[
             styles.supportingText,
             {
-              color: theme.colors.onSurfaceVariant,
+              color: error ? theme.colors.error : theme.colors.onSurfaceVariant,
             },
           ]}
           variant="bodySmall"
         >
-          {caption}
+          {error ?? caption}
         </Text>
       ) : null}
     </View>

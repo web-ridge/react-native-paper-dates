@@ -92,6 +92,16 @@ describe('dateUtils', () => {
       year: 2026,
     })
     expect(parseLooseDate('1 2', 'MM/DD/YYYY')).toBeNull()
+    expect(parseLooseDate('٠٥/٠١/٢٠٢٤', 'DD/MM/YYYY')).toEqual({
+      day: 5,
+      month: 1,
+      year: 2024,
+    })
+    expect(parseLooseDate('۰۵/۰۱/۲۰۲۴', 'DD/MM/YYYY')).toEqual({
+      day: 5,
+      month: 1,
+      year: 2024,
+    })
   })
 
   it('should return correct gridCount for October 2021', () => {

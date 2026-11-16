@@ -10,6 +10,7 @@ const he: TranslationsType = {
   enterDates: 'הזן תאריכים',
   hour: 'שעה',
   hourOf: (hour, total) => `שעה ${hour} מתוך ${total}`,
+  invalidTime: 'זמן לא תקין',
   minute: 'דקה',
   minuteOf: (minute, total) => `דקה ${minute} מתוך ${total}`,
   mustBeBetween: (startDate, endDate) =>

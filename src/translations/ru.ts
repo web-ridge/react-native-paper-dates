@@ -10,6 +10,7 @@ const ru: TranslationsType = {
   enterDates: 'Введите даты',
   hour: 'Час',
   hourOf: (hour, total) => `Час ${hour} из ${total}`,
+  invalidTime: 'Недопустимое время',
   minute: 'Минута',
   minuteOf: (minute, total) => `Минута ${minute} из ${total}`,
   mustBeBetween: (startDate, endDate) =>

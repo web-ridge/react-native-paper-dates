@@ -10,6 +10,7 @@ const zh: TranslationsType = {
   enterDates: '输入日期',
   hour: '小时',
   hourOf: (hour, total) => `小时 ${hour} / ${total}`,
+  invalidTime: '时间无效',
   minute: '分钟',
   minuteOf: (minute, total) => `分钟 ${minute} / ${total}`,
   mustBeBetween: (startDate, endDate) =>

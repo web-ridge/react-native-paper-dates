@@ -10,6 +10,7 @@ const ca: TranslationsType = {
   enterDates: 'Introdueix les dates',
   hour: 'Hora',
   hourOf: (hour, total) => `Hora ${hour} de ${total}`,
+  invalidTime: 'Hora no vàlida',
   minute: 'Minut',
   minuteOf: (minute, total) => `Minut ${minute} de ${total}`,
   mustBeBetween: (startDate, endDate) =>

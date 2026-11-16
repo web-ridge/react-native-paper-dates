@@ -10,6 +10,17 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import DatePickerModal from '../../Date/DatePickerModal'
 import { pressTestId } from '../../testUtils'
 
+function viewsWithPadding(
+  root: { queryAll: Function } | null,
+  paddingLeft: number
+) {
+  if (!root) return []
+  return root.queryAll((node: { props?: { style?: unknown } }) => {
+    const flat = StyleSheet.flatten(node.props?.style as StyleProp<ViewStyle>)
+    return flat?.paddingLeft === paddingLeft
+  })
+}
+
 function viewsWithHeight(root: { queryAll: Function } | null, height: number) {
   if (!root) return []
   return root.queryAll((node: { props?: { style?: unknown } }) => {
@@ -151,6 +162,48 @@ it('uses cancel and ok at the bottom of the centered tablet dialog', async () =>
     expect(tablet.queryByTestId('react-native-paper-dates-close')).toBeNull()
     expect(tablet.getByTestId('react-native-paper-dates-cancel')).toBeTruthy()
     expect(tablet.getByTestId('react-native-paper-dates-confirm')).toBeTruthy()
+  } finally {
+    await act(async () => {
+      Dimensions.set({ screen: saved, window: saved })
+    })
+  }
+})
+
+it('pads the phone sheet with side insets and leaves the centered card alone', async () => {
+  const saved = Dimensions.get('window')
+  const side = 34
+
+  const renderAt = async (width: number, height: number) => {
+    await act(async () => {
+      Dimensions.set({
+        screen: { fontScale: 1, height, scale: 2, width },
+        window: { fontScale: 1, height, scale: 2, width },
+      })
+    })
+    return render(
+      <SafeAreaProvider
+        initialMetrics={{
+          frame: { height, width, x: 0, y: 0 },
+          insets: { bottom: 0, left: side, right: side, top: 0 },
+        }}
+      >
+        <DatePickerModal
+          locale="en"
+          mode="single"
+          onConfirm={() => null}
+          onDismiss={() => null}
+          visible
+        />
+      </SafeAreaProvider>
+    )
+  }
+
+  try {
+    const phone = await renderAt(390, 844)
+    expect(viewsWithPadding(phone.root, side).length).toBeGreaterThan(0)
+
+    const tablet = await renderAt(1024, 1366)
+    expect(viewsWithPadding(tablet.root, side)).toHaveLength(0)
   } finally {
     await act(async () => {
       Dimensions.set({ screen: saved, window: saved })

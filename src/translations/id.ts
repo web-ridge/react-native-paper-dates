@@ -10,6 +10,7 @@ const id: TranslationsType = {
   enterDates: 'Masukkan tanggal',
   hour: 'Jam',
   hourOf: (hour, total) => `Jam ${hour} dari ${total}`,
+  invalidTime: 'Waktu tidak valid',
   minute: 'Menit',
   minuteOf: (minute, total) => `Menit ${minute} dari ${total}`,
   mustBeBetween: (startDate, endDate) =>

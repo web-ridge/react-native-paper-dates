@@ -10,6 +10,7 @@ const noNO: TranslationsType = {
   enterDates: 'Skriv inn datoer',
   hour: 'Time',
   hourOf: (hour, total) => `Time ${hour} av ${total}`,
+  invalidTime: 'Ugyldig tid',
   minute: 'Minutt',
   minuteOf: (minute, total) => `Minutt ${minute} av ${total}`,
   mustBeBetween: (startDate, endDate) =>

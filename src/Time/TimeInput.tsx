@@ -197,9 +197,7 @@ function TimeInput(
       ) : (
         <TextInput
           ref={ref}
-          accessibilityHint={invalid ? 'Invalid time' : undefined}
           accessibilityLabel={accessibilityLabel}
-          accessibilityLiveRegion={invalid ? 'polite' : 'none'}
           keyboardAppearance={theme.dark ? 'dark' : 'default'}
           keyboardType="number-pad"
           maxFontSizeMultiplier={1.5}

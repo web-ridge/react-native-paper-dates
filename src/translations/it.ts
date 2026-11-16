@@ -10,6 +10,7 @@ const it: TranslationsType = {
   enterDates: 'Inserisci le date',
   hour: 'Ora',
   hourOf: (hour, total) => `Ora ${hour} di ${total}`,
+  invalidTime: 'Orario non valido',
   minute: 'Minuto',
   minuteOf: (minute, total) => `Minuto ${minute} di ${total}`,
   mustBeBetween: (startDate, endDate) =>

@@ -10,6 +10,7 @@ const ja: TranslationsType = {
   enterDates: '日付を入力',
   hour: '時',
   hourOf: (hour, total) => `${hour} 時 / ${total}`,
+  invalidTime: '無効な時刻',
   minute: '分',
   minuteOf: (minute, total) => `${minute} 分 / ${total}`,
   mustBeBetween: (startDate, endDate) =>

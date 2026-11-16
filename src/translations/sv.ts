@@ -10,6 +10,7 @@ const sv: TranslationsType = {
   enterDates: 'Ange datum',
   hour: 'Timme',
   hourOf: (hour, total) => `Timme ${hour} av ${total}`,
+  invalidTime: 'Ogiltig tid',
   minute: 'Minut',
   minuteOf: (minute, total) => `Minut ${minute} av ${total}`,
   mustBeBetween: (startDate, endDate) =>

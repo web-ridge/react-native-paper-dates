@@ -163,15 +163,19 @@ export function DatePickerModalContent(
     setCollapsed(nextCollapsed)
     reportDisplayMode(nextCollapsed)
   }, [displayMode, mode, reportDisplayMode])
+  const horizontalInset = showSheetHeader
+    ? { paddingLeft: insets.left, paddingRight: insets.right }
+    : null
   const onCalendarContainerLayout = useCallback(
     (event: LayoutChangeEvent) => {
       const { height, width } = event.nativeEvent.layout
-      const calendarWidth = width - insets.left - insets.right
+      const inset = showSheetHeader ? insets.left + insets.right : 0
+      const calendarWidth = width - inset
       if (onCalendarLayout && calendarWidth > 0 && height > 0) {
         onCalendarLayout({ height, width: calendarWidth })
       }
     },
-    [onCalendarLayout, insets.left, insets.right]
+    [insets.left, insets.right, onCalendarLayout, showSheetHeader]
   )
   const onInnerChange = useCallback(
     (params: Partial<LocalState>) => {
@@ -243,6 +247,7 @@ export function DatePickerModalContent(
         <DatePickerModalHeaderBackground
           disableWeekDays={disableWeekDays}
           divider={false}
+          insetHorizontal
         >
           <DatePickerModalStatusBar
             disableSafeTop={!!disableSafeTop}
@@ -262,21 +267,17 @@ export function DatePickerModalContent(
             uppercase={uppercase}
           />
         </DatePickerModalHeaderBackground>
-        <View
-          style={[
-            sharedStyles.root,
-            { paddingLeft: insets.left, paddingRight: insets.right },
-          ]}
-        >
-          {form}
-        </View>
+        <View style={[sharedStyles.root, horizontalInset]}>{form}</View>
       </View>
     )
   }
 
   return (
     <>
-      <DatePickerModalHeaderBackground disableWeekDays={disableWeekDays}>
+      <DatePickerModalHeaderBackground
+        disableWeekDays={disableWeekDays}
+        insetHorizontal={showSheetHeader}
+      >
         <DatePickerModalStatusBar
           disableSafeTop={!!disableSafeTop}
           disableStatusBar={!!disableStatusBar}
@@ -322,7 +323,7 @@ export function DatePickerModalContent(
           hugCalendar ? sharedStyles.hug : sharedStyles.root,
           sharedStyles.minHeightZero,
           sharedStyles.overflowHidden,
-          { paddingLeft: insets.left, paddingRight: insets.right },
+          horizontalInset,
         ]}
       >
         <AnimatedCrossView

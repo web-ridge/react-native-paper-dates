@@ -65,7 +65,6 @@ function CalendarHeader({
               ]}
             >
               <IconButton
-                accessibilityHint="Page Up"
                 accessibilityLabel={getTranslation(locale, 'previous')}
                 icon="chevron-left"
                 onPress={onPrev}
@@ -74,7 +73,6 @@ function CalendarHeader({
                 testID="react-native-paper-dates-prev-month"
               />
               <IconButton
-                accessibilityHint="Page Down"
                 accessibilityLabel={getTranslation(locale, 'next')}
                 icon="chevron-right"
                 onPress={onNext}

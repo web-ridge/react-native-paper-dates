@@ -10,6 +10,7 @@ const nl: TranslationsType = {
   enterDates: 'Voer datums in',
   hour: 'Uur',
   hourOf: (hour, total) => `Uur ${hour} van ${total}`,
+  invalidTime: 'Ongeldige tijd',
   minute: 'Minuut',
   minuteOf: (minute, total) => `Minuut ${minute} van ${total}`,
   mustBeBetween: (startDate, endDate) =>

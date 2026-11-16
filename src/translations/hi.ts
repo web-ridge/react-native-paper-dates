@@ -10,6 +10,7 @@ const hi: TranslationsType = {
   enterDates: 'तारीखें दर्ज करें',
   hour: 'घंटा',
   hourOf: (hour, total) => `घंटा ${hour} / ${total}`,
+  invalidTime: 'अमान्य समय',
   minute: 'मिनट',
   minuteOf: (minute, total) => `मिनट ${minute} / ${total}`,
   mustBeBetween: (startDate, endDate) =>

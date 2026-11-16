@@ -31,7 +31,7 @@ const headerPaddingBottom = 0
 const menuDividerOffset = 0
 const menuPadding = 20
 const weekdayRowHeight = 24
-const weekdayGridGap = 0
+const weekdayGridGap = 16
 const menuHeight =
   weekdayRowHeight +
   weekdayGridGap +
