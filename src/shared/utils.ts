@@ -97,7 +97,7 @@ export function themeColor(color: unknown) {
 
 export function useHeaderBackgroundColor() {
   const theme = useTheme()
-  return theme.colors.elevation.level3
+  return theme.colors.surfaceContainerHigh
 }
 
 export function useHeaderTextColor() {

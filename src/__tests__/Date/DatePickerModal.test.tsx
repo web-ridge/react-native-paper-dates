@@ -132,7 +132,7 @@ it('uses cancel and ok at the bottom of the centered tablet dialog', async () =>
     expect(viewsWithHeight(phone.root, topInset).length).toBeGreaterThan(0)
     await pressTestId(phone, 'react-native-paper-dates-toggle-edit')
     expect(phone.getByText('Enter date')).toBeTruthy()
-    expect(phone.getByText('Date')).toBeTruthy()
+    expect(phone.getByLabelText('Date, mm/dd/yyyy')).toBeTruthy()
     expect(phone.getByTestId('react-native-paper-dates-close')).toBeTruthy()
     expect(phone.getByTestId('react-native-paper-dates-save')).toBeTruthy()
     expect(viewsWithHeight(phone.root, topInset).length).toBeGreaterThan(0)

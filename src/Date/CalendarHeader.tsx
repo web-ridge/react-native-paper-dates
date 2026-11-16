@@ -8,9 +8,10 @@ import DayNames, { dayNamesHeight } from './DayNames'
 import type { DisableWeekDaysType } from './types'
 import { centerIconOnLastWeekday } from './weekdayColumns'
 
-const buttonContainerHeight = 56
-const buttonContainerMarginBottom = 8
-const buttonContainerMarginTop = 4
+export const calendarArrowSize = 48
+export const calendarControlInset = 4
+export const calendarControlHeight = calendarControlInset + calendarArrowSize
+const buttonContainerHeight = calendarArrowSize
 const overlayScrollbarWidth = 15
 let cachedLayoutScrollbarWidth: number | undefined
 export const verticalScrollbarGutter = Platform.select({
@@ -44,8 +45,12 @@ function CalendarHeader({
     <View
       pointerEvents={'box-none'}
       style={
-        endInset
-          ? [styles.datePickerHeader, { right: endInset }]
+        isHorizontal || endInset
+          ? [
+              styles.datePickerHeader,
+              isHorizontal ? { top: calendarControlInset } : null,
+              endInset ? { right: endInset } : null,
+            ]
           : styles.datePickerHeader
       }
     >
@@ -92,12 +97,7 @@ function CalendarHeader({
 
 export function getCalendarHeaderHeight(scrollMode: 'horizontal' | 'vertical') {
   if (scrollMode === 'horizontal') {
-    return (
-      buttonContainerHeight +
-      buttonContainerMarginTop +
-      buttonContainerMarginBottom +
-      dayNamesHeight
-    )
+    return calendarControlInset + buttonContainerHeight + dayNamesHeight
   }
   return dayNamesHeight
 }
@@ -141,8 +141,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     height: buttonContainerHeight,
-    marginBottom: buttonContainerMarginBottom,
-    marginTop: buttonContainerMarginTop,
   },
   datePickerHeader: {
     left: 0,

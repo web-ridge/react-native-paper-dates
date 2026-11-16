@@ -26,8 +26,8 @@ const en: TranslationsType = {
   selectMultiple: 'Select dates',
   selectRange: 'Select period',
   selectSingle: 'Select date',
-  toggleClock: 'Toggle clock',
-  toggleKeyboard: 'Toggle keyboard',
+  toggleClock: 'Toggle dial picker',
+  toggleKeyboard: 'Toggle input picker',
   typeInDate: 'Type in date',
 }
 

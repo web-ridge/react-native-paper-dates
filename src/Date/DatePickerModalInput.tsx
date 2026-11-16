@@ -24,7 +24,9 @@ import DatePickerInputForm, {
 } from './DatePickerInputForm'
 import DatePickerModalContent from './DatePickerModalContent'
 import {
-  datePickerCardMaxHeight,
+  dateInputMaxHeight,
+  datePickerRangeMaxHeight,
+  datePickerSingleMaxHeight,
   defaultEndYear,
   defaultStartYear,
 } from './dateUtils'
@@ -163,14 +165,16 @@ function DatePickerModalInput(props: DatePickerModalInputProps) {
 
   const width = dateInputCardWidth(windowWidth)
   const calendarHeight = Math.min(
-    datePickerCardMaxHeight,
+    props.mode === 'single'
+      ? datePickerSingleMaxHeight
+      : datePickerRangeMaxHeight,
     Math.max(windowHeight - 32, 0)
   )
-  const surface = theme.colors.elevation.level3
+  const surface = theme.colors.surfaceContainerHigh
 
   return (
     <Modal
-      animationType={Platform.select({ default: 'slide', web: 'none' })}
+      animationType="none"
       onRequestClose={dismiss}
       onShow={focusField}
       statusBarTranslucent
@@ -191,7 +195,7 @@ function DatePickerModalInput(props: DatePickerModalInputProps) {
               ? props.mode === 'single'
                 ? { maxHeight: calendarHeight }
                 : { height: calendarHeight }
-              : null,
+              : { maxHeight: Math.min(dateInputMaxHeight, windowHeight - 32) },
           ]}
           testID="react-native-paper-dates-modal-input-surface"
         >
@@ -298,7 +302,6 @@ function rememberPageScroll() {
 const styles = StyleSheet.create({
   card: {
     borderRadius: 28,
-    elevation: 3,
     maxWidth: dateInputCardMaxWidth,
     overflow: 'hidden',
   },

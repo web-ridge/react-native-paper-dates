@@ -34,7 +34,7 @@ export default function AnimatedCrossView({
         scale: [1, 0.95],
         style: [
           styles.calendarEdit,
-          { backgroundColor: theme.colors.elevation.level3 },
+          { backgroundColor: theme.colors.surfaceContainerHigh },
         ],
       }}
     />

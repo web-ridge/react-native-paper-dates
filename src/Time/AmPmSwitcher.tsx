@@ -39,6 +39,8 @@ export default function AmPmSwitcher({
 
   return (
     <View
+      accessibilityRole="radiogroup"
+      role="radiogroup"
       style={[
         isHorizontal ? styles.rootHorizontal : styles.rootVertical,
         {
@@ -104,8 +106,9 @@ function SwitchButton({
   return (
     <Pressable
       accessibilityLabel={label}
-      accessibilityRole="button"
-      accessibilityState={{ selected }}
+      accessibilityRole="radio"
+      accessibilityState={{ checked: selected, selected }}
+      role="radio"
       onBlur={() => setFocused(false)}
       onFocus={() => setFocused(true)}
       onHoverIn={() => setHovered(true)}

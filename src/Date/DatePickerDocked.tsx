@@ -56,16 +56,19 @@ const actionPaddingBottom = 12
 const actionPaddingTop = 8
 const anchorGap = 8
 const cardWidth = 360
+const cornerRadius = 28
 const dayHeaderInset = 12
-const headerPaddingBottom = 30
+const headerGap = 16
 const headerPaddingTop = 20
-const headerRowHeight = 24
-const menuButtonPadding = 12
-const menuDividerOffset = 20
+const headerRowHeight = 30
+const iconButtonSize = 24
+const iconHitSlop = (headerRowHeight - iconButtonSize) / 2
+const menuButtonHeight = headerRowHeight
+const menuButtonPadding = 8
 const menuIconGap = 8
 const menuLabelInset = 16 + 24 + 16 - menuButtonPadding
 const screenInset = 8
-const stepperGap = 8
+const stepperGap = 0
 
 function DatePickerDocked({
   anchor,
@@ -108,7 +111,6 @@ function DatePickerDocked({
     saveLabel || translate(locale, 'confirm', 'OK'),
     !!uppercase
   )
-  const radius = theme.shapes.corner.large
 
   return (
     <Modal
@@ -126,7 +128,7 @@ function DatePickerDocked({
         />
         <Surface
           backgroundColor={theme.colors.surfaceContainerHigh}
-          borderRadius={radius}
+          borderRadius={cornerRadius}
           elevation={3}
           onLayout={(event) => {
             const next = event.nativeEvent.layout.height
@@ -135,7 +137,7 @@ function DatePickerDocked({
           style={[styles.card, { left, top, width }]}
           testID="react-native-paper-dates-docked-surface"
         >
-          <View style={[styles.clip, { borderRadius: radius }]}>
+          <View style={[styles.clip, { borderRadius: cornerRadius }]}>
             <Calendar
               date={date}
               dateMode={dateMode}
@@ -160,7 +162,12 @@ function DatePickerDocked({
                         : styles.toolbarMenu,
                     ]}
                   >
-                    <View style={nav.menu === 'day' ? null : styles.menuMonth}>
+                    <View
+                      style={[
+                        styles.toolbarSide,
+                        nav.menu === 'day' ? null : styles.menuMonth,
+                      ]}
+                    >
                       <DockedStepper
                         disabled={nav.menu === 'year'}
                         hint="Shift+M"
@@ -175,7 +182,12 @@ function DatePickerDocked({
                       />
                     </View>
                     {nav.menu === 'day' ? <View style={styles.spacer} /> : null}
-                    <View style={nav.menu === 'day' ? null : styles.menuYear}>
+                    <View
+                      style={[
+                        styles.toolbarSide,
+                        nav.menu === 'day' ? null : styles.menuYear,
+                      ]}
+                    >
                       <DockedStepper
                         disabled={nav.menu === 'month'}
                         hint="Shift+Y"
@@ -301,6 +313,7 @@ function DockedStepper({
       <IconButton
         accessibilityHint={hint === 'Shift+M' ? 'Page Up' : 'Shift+Page Up'}
         accessibilityLabel={getTranslation(undefined, 'previous')}
+        hitSlop={iconHitSlop}
         icon="chevron-left"
         iconColor={labelColor}
         onPress={onPrev}
@@ -316,6 +329,7 @@ function DockedStepper({
       <IconButton
         accessibilityHint={hint === 'Shift+M' ? 'Page Down' : 'Shift+Page Down'}
         accessibilityLabel={getTranslation(undefined, 'next')}
+        hitSlop={iconHitSlop}
         icon="chevron-right"
         iconColor={labelColor}
         onPress={onNext}
@@ -386,19 +400,23 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   iconButton: {
-    height: headerRowHeight,
+    flexShrink: 0,
+    height: iconButtonSize,
     margin: 0,
-    width: headerRowHeight,
+    width: iconButtonSize,
   },
   menuButton: {
     alignItems: 'center',
     flexDirection: 'row',
+    flexShrink: 1,
     gap: menuIconGap,
-    height: headerRowHeight,
+    height: menuButtonHeight,
+    minWidth: 0,
     overflow: 'hidden',
     paddingHorizontal: menuButtonPadding,
   },
   menuLabel: {
+    flexShrink: 1,
     includeFontPadding: false,
     textAlignVertical: 'center',
   },
@@ -422,20 +440,27 @@ const styles = StyleSheet.create({
   stepper: {
     alignItems: 'center',
     flexDirection: 'row',
+    flexShrink: 1,
     gap: stepperGap,
+    minWidth: 0,
+  },
+  toolbarSide: {
+    flexShrink: 1,
+    maxWidth: '100%',
+    minWidth: 0,
   },
   toolbar: {
     alignItems: 'center',
     flexDirection: 'row',
     height: headerRowHeight,
-    marginBottom: headerPaddingBottom,
+    marginBottom: headerGap,
     marginTop: headerPaddingTop,
   },
   toolbarDay: {
     paddingHorizontal: dayHeaderInset,
   },
   toolbarMenu: {
-    marginBottom: menuDividerOffset,
+    marginBottom: 0,
   },
 })
 

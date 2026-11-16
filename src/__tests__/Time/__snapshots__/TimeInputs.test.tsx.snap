@@ -50,6 +50,7 @@ exports[`renders TimeInputs 1`] = `
     >
       <TextInput
         accessibilityLabel="Hour"
+        accessibilityLiveRegion="none"
         blurOnSubmit={false}
         keyboardAppearance="default"
         keyboardType="number-pad"
@@ -215,6 +216,7 @@ exports[`renders TimeInputs 1`] = `
     >
       <TextInput
         accessibilityLabel="Minute"
+        accessibilityLiveRegion="none"
         keyboardAppearance="default"
         keyboardType="number-pad"
         maxFontSizeMultiplier={1.2}

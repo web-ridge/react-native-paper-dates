@@ -7,6 +7,7 @@ import { useDatePickerKeys } from './datePickerKeys'
 import {
   addMonths,
   dayCellSize,
+  daySize,
   defaultEndYear,
   defaultStartYear,
   getEndOfDay,
@@ -26,10 +27,11 @@ import YearPicker from './YearPicker'
 const actionHeight = 36
 const actionPaddingBottom = 12
 const actionPaddingTop = 8
-const headerPaddingBottom = 30
-const menuDividerOffset = 20
+const headerPaddingBottom = 0
+const menuDividerOffset = 0
+const menuPadding = 20
 const weekdayRowHeight = 24
-const weekdayGridGap = (dayCellSize - weekdayRowHeight) / 2
+const weekdayGridGap = 0
 const menuHeight =
   weekdayRowHeight +
   weekdayGridGap +
@@ -197,7 +199,7 @@ function MonthCalendar({
         </View>
       ) : null}
       {menu === 'day' ? (
-        <View style={styles.grid}>
+        <View accessibilityRole="grid" role="grid" style={styles.grid}>
           <View style={styles.weekdays}>
             <DayNames
               backgroundColor="transparent"
@@ -227,6 +229,7 @@ function MonthCalendar({
             startWeekOnMonday={monday}
             startYear={resolvedStartYear}
             validRange={validRange}
+            indicatorSize={daySize}
           />
         </View>
       ) : null}
@@ -252,7 +255,8 @@ const styles = StyleSheet.create({
   menu: {
     height: menuHeight,
     marginTop: headerPaddingBottom - menuDividerOffset,
-    paddingBottom: 20,
+    paddingBottom: menuPadding,
+    paddingTop: menuPadding,
   },
   weekdays: {
     marginBottom: weekdayGridGap,

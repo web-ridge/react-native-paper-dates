@@ -56,8 +56,8 @@ registerTranslation('pl', {
   selectMultiple: 'Select dates',
   selectRange: 'Select period',
   selectSingle: 'Select date',
-  toggleClock: 'Toggle clock',
-  toggleKeyboard: 'Toggle keyboard',
+  toggleClock: 'Toggle dial picker',
+  toggleKeyboard: 'Toggle input picker',
   typeInDate: 'Type in date',
 })
 ```
@@ -97,8 +97,8 @@ registerTranslation('dynamic', () => {
     selectMultiple: translate('Select dates'),
     selectRange: translate('Select period'),
     selectSingle: translate('Select date'),
-    toggleClock: translate('Toggle clock'),
-    toggleKeyboard: translate('Toggle keyboard'),
+    toggleClock: translate('Toggle dial picker'),
+    toggleKeyboard: translate('Toggle input picker'),
     typeInDate: translate('Type in date'),
   }
 })

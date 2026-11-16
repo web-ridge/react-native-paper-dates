@@ -1,4 +1,11 @@
-import { memo, type ReactNode, useCallback, useRef } from 'react'
+import {
+  memo,
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import {
   StyleSheet,
   type TextInputInstance,
@@ -37,6 +44,7 @@ function TimeInputs({
   minutes,
   onChange,
   onFocusInput,
+  onInputInvalidChange,
 }: {
   focused: PossibleClockTypes
   hours: number
@@ -47,9 +55,16 @@ function TimeInputs({
   minutes: number
   onChange: TimeChange
   onFocusInput: (type: PossibleClockTypes) => void
+  onInputInvalidChange?: (invalid: boolean) => void
 }) {
   const dimensions = useWindowDimensions()
   const endInput = useRef<TextInputInstance | null>(null)
+  const [hourInvalid, setHourInvalid] = useState(false)
+  const [minuteInvalid, setMinuteInvalid] = useState(false)
+
+  useEffect(() => {
+    onInputInvalidChange?.(hourInvalid || minuteInvalid)
+  }, [hourInvalid, minuteInvalid, onInputInvalidChange])
 
   const isLandscape = timePickerUsesLandscape(
     dimensions.width,
@@ -109,6 +124,7 @@ function TimeInputs({
               minutes,
             })
           }}
+          onInvalidChange={setHourInvalid}
           onPress={onFocusInput}
           onSubmitEditing={onSubmitStartInput}
           pressed={focused === clockTypes.hours}
@@ -142,6 +158,7 @@ function TimeInputs({
               minutes: newMinutesFromInput,
             })
           }}
+          onInvalidChange={setMinuteInvalid}
           onPress={onFocusInput}
           pressed={focused === clockTypes.minutes}
           selectionColor={selectionColor}

@@ -270,7 +270,7 @@ function VerticalScroller({
     paddingRight: contentInset,
     overflowAnchor: 'none',
     scrollbarColor: `${themeColor(theme.colors.outline)} ${themeColor(
-      theme.colors.elevation.level3
+      theme.colors.surfaceContainerHigh
     )}`,
     width,
   }

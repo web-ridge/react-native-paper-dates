@@ -22,12 +22,12 @@ import {
 } from './dateUtils'
 import Day, { EmptyDay } from './Day'
 import { useRangeChecker } from './inputFormat'
+import { calendarArrowSize, calendarControlInset } from './CalendarHeader'
 import {
   getMonthHeight,
   horizontalWeekHeight,
   monthHeaderHeight,
   monthHeaderSingleMarginBottom,
-  monthHeaderSingleMarginTop,
   monthWeekCount,
   weekMargin,
 } from './monthLayout'
@@ -56,6 +56,7 @@ interface BaseMonthProps {
   focusedDate?: CalendarDate
   hideHeader?: boolean
   index: number
+  indicatorSize?: number
   locale: string | undefined
   mode: ModeType
   onNavigateToDate?: (date: Date) => void
@@ -88,6 +89,7 @@ function Month(props: BaseMonthProps & CalendarMode) {
     focusedDate,
     hideHeader,
     index,
+    indicatorSize,
     locale,
     mode,
     onNavigateToDate,
@@ -237,6 +239,7 @@ function Month(props: BaseMonthProps & CalendarMode) {
   const weeks = grid.map(({ generatedDays, weekIndex }) => (
     <View
       key={weekIndex}
+      role="row"
       style={[styles.week, isHorizontal ? { height: rowHeight } : null]}
     >
       {generatedDays
@@ -255,6 +258,7 @@ function Month(props: BaseMonthProps & CalendarMode) {
               disabled={gd.disabled}
               focused={gd.focused}
               inRange={gd.inRange}
+              indicatorSize={indicatorSize}
               isToday={gd.isToday}
               leftCrop={gd.leftCrop}
               locale={locale}
@@ -298,8 +302,9 @@ function Month(props: BaseMonthProps & CalendarMode) {
             styles.monthHeader,
             isHorizontal
               ? {
+                  height: calendarArrowSize,
                   marginBottom: monthHeaderSingleMarginBottom,
-                  marginTop: monthHeaderSingleMarginTop,
+                  marginTop: calendarControlInset,
                 }
               : null,
           ]}
@@ -352,22 +357,29 @@ function Month(props: BaseMonthProps & CalendarMode) {
           </TouchableRipple>
         </View>
       )}
-      {hideHeader ? (
-        <View>{weeks}</View>
-      ) : isHorizontal ? (
-        <View
-          onLayout={onDaysLayout}
-          style={[
-            styles.days,
-            { flexBasis: naturalDaysHeight, maxHeight: naturalDaysHeight },
-          ]}
-          testID="react-native-paper-dates-month-days-scroll"
-        >
-          {weeks}
-        </View>
-      ) : (
-        weeks
-      )}
+      <View
+        accessibilityRole={hideHeader ? undefined : 'grid'}
+        onLayout={isHorizontal ? onDaysLayout : undefined}
+        role={hideHeader ? undefined : 'grid'}
+        style={
+          isHorizontal
+            ? [
+                styles.days,
+                {
+                  flexBasis: naturalDaysHeight,
+                  maxHeight: naturalDaysHeight,
+                },
+              ]
+            : undefined
+        }
+        testID={
+          isHorizontal
+            ? 'react-native-paper-dates-month-days-scroll'
+            : undefined
+        }
+      >
+        {weeks}
+      </View>
     </View>
   )
 }
@@ -418,6 +430,8 @@ const styles = StyleSheet.create({
   },
   yearButton: {
     alignSelf: 'flex-start',
+    height: 40,
+    justifyContent: 'center',
   },
   yearButtonInner: {
     alignItems: 'center',

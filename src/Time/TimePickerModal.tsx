@@ -63,6 +63,7 @@ export function TimePickerModal({
   visible: boolean | undefined
 }) {
   const [focused, setFocused] = useState<PossibleClockTypes>(clockTypes.hours)
+  const [inputInvalid, setInputInvalid] = useState(false)
   const [inputType, setInputType] = useState<PossibleInputTypes>(
     defaultInputType || inputTypes.picker
   )
@@ -81,6 +82,12 @@ export function TimePickerModal({
     setLocalHours(orNow(hours, (date) => date.getHours()))
     setLocalMinutes(orNow(minutes, (date) => date.getMinutes()))
   }, [hours, minutes])
+
+  useEffect(() => {
+    if (!visible) {
+      setInputInvalid(false)
+    }
+  }, [visible])
 
   const animation =
     animationType ||
@@ -109,7 +116,7 @@ export function TimePickerModal({
   const textFont = theme.fonts.labelMedium
   const uppercase = _uppercase ?? false
 
-  const color = theme.colors.elevation.level3
+  const color = theme.colors.surfaceContainerHigh
 
   return (
     <Modal
@@ -161,6 +168,7 @@ export function TimePickerModal({
                   minutes={localMinutes}
                   onChange={onChange}
                   onFocusInput={onFocusInput}
+                  onInputInvalidChange={setInputInvalid}
                   use24HourClock={use24HourClock}
                 />
               </View>
@@ -172,9 +180,13 @@ export function TimePickerModal({
                         ? getTranslation(
                             locale,
                             'toggleKeyboard',
-                            'Toggle keyboard'
+                            'Toggle input picker'
                           )
-                        : getTranslation(locale, 'toggleClock', 'Toggle clock')
+                        : getTranslation(
+                            locale,
+                            'toggleClock',
+                            'Toggle dial picker'
+                          )
                     }
                     icon={getTimeInputTypeIcon(inputType, {
                       keyboard: keyboardIcon,
@@ -194,10 +206,12 @@ export function TimePickerModal({
                   {displayCase(cancelLabel, uppercase)}
                 </Button>
                 <Button
+                  disabled={inputInvalid}
                   mode="text"
-                  onPress={() =>
+                  onPress={() => {
+                    if (inputInvalid) return
                     onConfirm({ hours: localHours, minutes: localMinutes })
-                  }
+                  }}
                 >
                   {displayCase(confirmLabel, uppercase)}
                 </Button>
@@ -251,11 +265,11 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     shadowColor: '#000',
     shadowOffset: {
-      height: 5,
+      height: 1,
       width: 0,
     },
-    shadowOpacity: 0.34,
-    shadowRadius: 6.27,
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
   },
   pickerModal: {
     minWidth: 328,

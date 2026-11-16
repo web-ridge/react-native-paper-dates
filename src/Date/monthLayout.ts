@@ -22,8 +22,8 @@ type VerticalLayout = {
 const verticalLayoutCache = new Map<string, VerticalLayout>()
 
 export const monthHeaderHeight = 56
-export const monthHeaderSingleMarginBottom = 8 + dayNamesHeight
-export const monthHeaderSingleMarginTop = 4
+export const monthHeaderSingleMarginBottom = dayNamesHeight
+export const monthHeaderSingleMarginTop = 0
 export const monthHeaderSingleHeight =
   monthHeaderSingleMarginTop + monthHeaderSingleMarginBottom
 export const weekMargin = 0

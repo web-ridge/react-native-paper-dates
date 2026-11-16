@@ -42,6 +42,7 @@ interface TimeInputProps extends Omit<
   inputType: PossibleInputTypes
   is24Hour?: boolean
   onChanged: (n: number) => void
+  onInvalidChange?: (invalid: boolean) => void
   onPress?: (type: PossibleClockTypes) => void
   pressed: boolean
   value: number
@@ -56,6 +57,7 @@ function TimeInput(
     inputType,
     is24Hour = false,
     onChanged,
+    onInvalidChange,
     onPress,
     pressed,
     value,
@@ -102,6 +104,10 @@ function TimeInput(
       return `${value}`
     })
   }, [value])
+
+  useEffect(() => {
+    onInvalidChange?.(invalid)
+  }, [invalid, onInvalidChange])
 
   const onInnerChange = (text: string) => {
     if (text !== '' && !/^\d{1,2}$/.test(text)) {
@@ -191,7 +197,9 @@ function TimeInput(
       ) : (
         <TextInput
           ref={ref}
+          accessibilityHint={invalid ? 'Invalid time' : undefined}
           accessibilityLabel={accessibilityLabel}
+          accessibilityLiveRegion={invalid ? 'polite' : 'none'}
           keyboardAppearance={theme.dark ? 'dark' : 'default'}
           keyboardType="number-pad"
           maxFontSizeMultiplier={1.5}

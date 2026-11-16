@@ -28,6 +28,7 @@ function TimePicker({
   minutes,
   onChange,
   onFocusInput,
+  onInputInvalidChange,
   use24HourClock,
 }: {
   focused: PossibleClockTypes
@@ -38,6 +39,7 @@ function TimePicker({
   minutes: number
   onChange: TimeChange
   onFocusInput: (type: PossibleClockTypes) => void
+  onInputInvalidChange?: (invalid: boolean) => void
   use24HourClock?: boolean
 }) {
   const dimensions = useWindowDimensions()
@@ -68,7 +70,7 @@ function TimePicker({
   }, [hours])
 
   const clockWidth =
-    inputType === inputTypes.picker ? circleSize + (isLandscape ? 64 : 0) : 0
+    inputType === inputTypes.picker ? circleSize + (isLandscape ? 52 : 0) : 0
 
   const displayModeValue = useMemo(
     () => ({ mode: displayMode, setMode: setDisplayMode }),
@@ -112,6 +114,7 @@ function TimePicker({
           minutes={minutes}
           onChange={onChange}
           onFocusInput={onFocusInput}
+          onInputInvalidChange={onInputInvalidChange}
         />
         {inputType === inputTypes.picker ? (
           <View
@@ -142,7 +145,7 @@ const styles = StyleSheet.create({
     paddingTop: 36,
   },
   clockContainerLandscape: {
-    paddingLeft: 64,
+    paddingLeft: 52,
     paddingRight: 0,
     paddingTop: 0,
   },

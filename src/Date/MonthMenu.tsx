@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet, View } from 'react-native'
 import { Icon, Text, TouchableRipple, useTheme } from 'react-native-paper'
 
 import { scrollbarThumb } from '../shared/utils'
+import { calendarControlHeight } from './CalendarHeader'
 
 function MonthMenu({
   embedded = false,
@@ -91,7 +92,7 @@ function MonthMenu({
       style={[
         StyleSheet.absoluteFill,
         styles.overlay,
-        { backgroundColor: theme.colors.elevation.level3 },
+        { backgroundColor: theme.colors.surfaceContainerHigh },
       ]}
     >
       {list}
@@ -114,7 +115,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   overlay: {
-    top: 56,
+    top: calendarControlHeight,
     zIndex: 100,
   },
   overlayList: {

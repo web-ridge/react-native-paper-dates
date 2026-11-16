@@ -58,6 +58,7 @@ exports[`renders TimePicker 1`] = `
       >
         <TextInput
           accessibilityLabel="Hour"
+          accessibilityLiveRegion="none"
           blurOnSubmit={false}
           keyboardAppearance="default"
           keyboardType="number-pad"
@@ -223,6 +224,7 @@ exports[`renders TimePicker 1`] = `
       >
         <TextInput
           accessibilityLabel="Minute"
+          accessibilityLiveRegion="none"
           keyboardAppearance="default"
           keyboardType="number-pad"
           maxFontSizeMultiplier={1.2}
@@ -309,6 +311,8 @@ exports[`renders TimePicker 1`] = `
       }
     >
       <View
+        accessibilityRole="radiogroup"
+        role="radiogroup"
         style={
           [
             {
@@ -326,11 +330,11 @@ exports[`renders TimePicker 1`] = `
       >
         <View
           accessibilityLabel="AM"
-          accessibilityRole="button"
+          accessibilityRole="radio"
           accessibilityState={
             {
               "busy": undefined,
-              "checked": undefined,
+              "checked": true,
               "disabled": undefined,
               "expanded": undefined,
               "selected": true,
@@ -356,6 +360,7 @@ exports[`renders TimePicker 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          role="radio"
           style={
             {
               "flex": 1,
@@ -425,11 +430,11 @@ exports[`renders TimePicker 1`] = `
         />
         <View
           accessibilityLabel="PM"
-          accessibilityRole="button"
+          accessibilityRole="radio"
           accessibilityState={
             {
               "busy": undefined,
-              "checked": undefined,
+              "checked": false,
               "disabled": undefined,
               "expanded": undefined,
               "selected": false,
@@ -455,6 +460,7 @@ exports[`renders TimePicker 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          role="radio"
           style={
             {
               "flex": 1,

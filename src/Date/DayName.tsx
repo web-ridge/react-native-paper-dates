@@ -1,17 +1,20 @@
 import { memo } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { Platform, StyleSheet, View } from 'react-native'
 import { Text, useTheme } from 'react-native-paper'
 
-function DayName({ label }: { label: string }) {
+function DayName({ label, name }: { label: string; name?: string }) {
   const theme = useTheme()
 
   const textFont = theme.fonts.bodyLarge
+  const accessibleName = name ?? label
 
   return (
     <View
-      accessibilityElementsHidden
-      importantForAccessibility="no-hide-descendants"
+      accessibilityLabel={accessibleName}
+      focusable={false}
+      role="columnheader"
       style={styles.dayName}
+      {...(Platform.OS === 'web' ? { title: accessibleName } : null)}
     >
       <Text
         maxFontSizeMultiplier={1.5}

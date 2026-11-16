@@ -14,7 +14,11 @@ import {
   supportedOrientations,
   useIsLargeScreen,
 } from '../shared/utils'
-import { datePickerCardMaxHeight } from './dateUtils'
+import {
+  dateInputMaxHeight,
+  datePickerRangeMaxHeight,
+  datePickerSingleMaxHeight,
+} from './dateUtils'
 import { dateInputCardWidth } from './DatePickerInputForm'
 import DatePickerModalContent, {
   DatePickerModalContentMultiProps,
@@ -81,10 +85,12 @@ export function DatePickerModal(
   const { height: windowHeight, width: windowWidth } = useWindowDimensions()
   const inputWidth = dateInputCardWidth(windowWidth)
   const singleCard = props.mode === 'single' && !inputMode
-  const cardMaxHeight = Math.min(
-    datePickerCardMaxHeight,
-    Math.max(windowHeight - 32, 0)
-  )
+  const specMaxHeight = inputMode
+    ? dateInputMaxHeight
+    : props.mode === 'single'
+      ? datePickerSingleMaxHeight
+      : datePickerRangeMaxHeight
+  const cardMaxHeight = Math.min(specMaxHeight, Math.max(windowHeight - 32, 0))
   const windowKey = `${windowWidth}x${windowHeight}`
   const onCalendarLayout = useCallback(
     ({ height, width }: { height: number; width: number }) => {
@@ -131,16 +137,19 @@ export function DatePickerModal(
                 : singleCard && isLargeScreen
                   ? styles.singleCard
                   : styles.modalContent,
-              { backgroundColor: theme.colors.elevation.level3 },
+              { backgroundColor: theme.colors.surfaceContainerHigh },
               inputMode && isLargeScreen && !useFormSheet
-                ? { width: inputWidth }
-                : singleCard && isLargeScreen
-                  ? { maxHeight: cardMaxHeight }
-                  : isLargeScreen
-                    ? useFormSheet
-                      ? styles.modalContentFormSheet
-                      : styles.modalContentBig
-                    : null,
+                ? { maxHeight: cardMaxHeight, width: inputWidth }
+                : isLargeScreen
+                  ? [
+                      useFormSheet
+                        ? styles.modalContentFormSheet
+                        : singleCard
+                          ? styles.singleCard
+                          : styles.modalContentBig,
+                      { maxHeight: cardMaxHeight },
+                    ]
+                  : null,
             ]}
           >
             <DatePickerModalContent
@@ -165,9 +174,9 @@ export function DatePickerModal(
 const styles = StyleSheet.create({
   inputCard: {
     borderRadius: 28,
-    elevation: 3,
     flexGrow: 0,
-    maxWidth: 360,
+    maxHeight: dateInputMaxHeight,
+    maxWidth: 328,
     overflow: 'hidden',
   },
   modalContent: {
@@ -177,14 +186,12 @@ const styles = StyleSheet.create({
   },
   modalContentBig: {
     borderRadius: 28,
-    maxHeight: datePickerCardMaxHeight,
     maxWidth: 360,
     overflow: 'hidden',
     width: '100%',
   },
   modalContentFormSheet: {
     borderRadius: 28,
-    maxHeight: datePickerCardMaxHeight,
     maxWidth: 360,
     overflow: 'hidden',
     width: '100%',

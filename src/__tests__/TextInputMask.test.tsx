@@ -53,10 +53,16 @@ describe('TextInputMask', () => {
       input.props.onChangeText('1')
       input.props.onChangeText('1/')
       input.props.onChangeText('01/02/2020')
+    })
+    expect(onChangeText).not.toHaveBeenCalled()
+    await act(() => {
+      input.props.onBlur()
+    })
+    expect(onChangeText).toHaveBeenCalledWith('01/02/2020')
+    await act(() => {
       input.props.onChangeText('01/02/202')
       input.props.onChange({ nativeEvent: { text: '01/02/2020' } })
     })
-    expect(onChangeText).toHaveBeenCalledWith('01/02/2020')
     expect(onChange).toHaveBeenCalled()
 
     const dotted = await render(
@@ -106,6 +112,10 @@ describe('TextInputMask', () => {
       )
       await act(() => {
         masked.getByTestId(mask).props.onChangeText(typed)
+      })
+      expect(onMaskedChange).not.toHaveBeenCalled()
+      await act(() => {
+        masked.getByTestId(mask).props.onSubmitEditing()
       })
       expect(onMaskedChange).toHaveBeenCalledWith(formatted)
     }

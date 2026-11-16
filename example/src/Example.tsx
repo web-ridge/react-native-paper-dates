@@ -557,6 +557,7 @@ export default function Example({
                   locale={locale}
                   onChange={setInputDate}
                   style={styles.dateInput}
+                  supportingText=""
                   theme={{ colors: { background: theme.colors.surface } }}
                   value={inputDate}
                   variant="outlined"
@@ -577,6 +578,7 @@ export default function Example({
                   onChange={setDockedDate}
                   presentation="docked"
                   style={styles.dateInput}
+                  supportingText=""
                   theme={{ colors: { background: theme.colors.surface } }}
                   value={dockedDate}
                   variant="outlined"

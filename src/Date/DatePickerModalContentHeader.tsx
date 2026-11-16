@@ -59,20 +59,20 @@ export default function DatePickerModalContentHeader(
   const textFont = theme.fonts.labelLarge
 
   return (
-    <View style={[styles.header, compactRange && styles.rangeHeader]}>
-      <Text
-        maxFontSizeMultiplier={1.5}
-        style={[
-          textFont,
-          compactRange && styles.rangeSupporting,
-          { color: supportingTextColor },
-        ]}
-      >
-        {displayCase(label, !!uppercase)}
-      </Text>
-      <View
-        style={[styles.headlineRow, compactRange && styles.rangeHeadlineRow]}
-      >
+    <View style={[styles.header, compactRange && styles.compactRangeHeader]}>
+      <View style={styles.supporting}>
+        <Text
+          maxFontSizeMultiplier={1.5}
+          style={[
+            textFont,
+            styles.supportingText,
+            { color: supportingTextColor },
+          ]}
+        >
+          {displayCase(label, !!uppercase)}
+        </Text>
+      </View>
+      <View style={styles.headlineRow}>
         <View
           style={[
             styles.headerContentContainer,
@@ -245,6 +245,7 @@ function useShortDateLabel(locale: string | undefined, withWeekday = false) {
 
 const styles = StyleSheet.create({
   editButton: {
+    alignSelf: 'flex-end',
     height: 48,
     marginBottom: 0,
     marginEnd: 0,
@@ -262,7 +263,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     flexDirection: 'row',
-    minHeight: 40,
+    height: 40,
   },
   headerSeparator: {
     marginHorizontal: 4,
@@ -270,8 +271,8 @@ const styles = StyleSheet.create({
   headlineRow: {
     alignItems: 'center',
     flexDirection: 'row',
-    marginTop: 16,
-    minHeight: 40,
+    height: 40,
+    marginTop: 0,
   },
   headlineText: {
     includeFontPadding: false,
@@ -283,23 +284,22 @@ const styles = StyleSheet.create({
     top: '50%',
     transform: [{ translateY: -24 }],
   },
-  rangeHeader: {
-    paddingBottom: 12,
+  compactRangeHeader: {
     paddingEnd: 12,
     paddingStart: 64,
-    paddingTop: 8,
   },
   rangeHeaderContent: {
-    minHeight: 28,
+    height: 40,
   },
   rangeHeaderContentWithToggle: {
     paddingEnd: 60,
   },
-  rangeHeadlineRow: {
-    marginTop: 0,
-    minHeight: 28,
+  supporting: {
+    height: 36,
+    justifyContent: 'center',
   },
-  rangeSupporting: {
+  supportingText: {
     includeFontPadding: false,
+    lineHeight: 20,
   },
 })

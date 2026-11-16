@@ -14,7 +14,8 @@ exports[`renders CalendarHeader 1`] = `
   }
 >
   <View
-    pointerEvents="none"
+    pointerEvents="box-none"
+    role="row"
     style={
       [
         {
@@ -29,8 +30,9 @@ exports[`renders CalendarHeader 1`] = `
     }
   >
     <View
-      accessibilityElementsHidden={true}
-      importantForAccessibility="no-hide-descendants"
+      accessibilityLabel="Sunday"
+      focusable={false}
+      role="columnheader"
       style={
         {
           "alignItems": "center",
@@ -74,8 +76,9 @@ exports[`renders CalendarHeader 1`] = `
       </Text>
     </View>
     <View
-      accessibilityElementsHidden={true}
-      importantForAccessibility="no-hide-descendants"
+      accessibilityLabel="Monday"
+      focusable={false}
+      role="columnheader"
       style={
         {
           "alignItems": "center",
@@ -119,8 +122,9 @@ exports[`renders CalendarHeader 1`] = `
       </Text>
     </View>
     <View
-      accessibilityElementsHidden={true}
-      importantForAccessibility="no-hide-descendants"
+      accessibilityLabel="Tuesday"
+      focusable={false}
+      role="columnheader"
       style={
         {
           "alignItems": "center",
@@ -164,8 +168,9 @@ exports[`renders CalendarHeader 1`] = `
       </Text>
     </View>
     <View
-      accessibilityElementsHidden={true}
-      importantForAccessibility="no-hide-descendants"
+      accessibilityLabel="Wednesday"
+      focusable={false}
+      role="columnheader"
       style={
         {
           "alignItems": "center",
@@ -209,8 +214,9 @@ exports[`renders CalendarHeader 1`] = `
       </Text>
     </View>
     <View
-      accessibilityElementsHidden={true}
-      importantForAccessibility="no-hide-descendants"
+      accessibilityLabel="Thursday"
+      focusable={false}
+      role="columnheader"
       style={
         {
           "alignItems": "center",
@@ -254,8 +260,9 @@ exports[`renders CalendarHeader 1`] = `
       </Text>
     </View>
     <View
-      accessibilityElementsHidden={true}
-      importantForAccessibility="no-hide-descendants"
+      accessibilityLabel="Friday"
+      focusable={false}
+      role="columnheader"
       style={
         {
           "alignItems": "center",
@@ -299,8 +306,9 @@ exports[`renders CalendarHeader 1`] = `
       </Text>
     </View>
     <View
-      accessibilityElementsHidden={true}
-      importantForAccessibility="no-hide-descendants"
+      accessibilityLabel="Saturday"
+      focusable={false}
+      role="columnheader"
       style={
         {
           "alignItems": "center",

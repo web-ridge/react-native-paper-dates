@@ -21,7 +21,7 @@ function DayNames({
   locale: string | undefined
   startWeekOnMonday: boolean
 }) {
-  const shortDayNames = useMemo<string[]>(() => {
+  const dayNames = useMemo(() => {
     const weekdays = [
       new Date(2020, 7, 2),
       new Date(2020, 7, 3),
@@ -34,28 +34,35 @@ function DayNames({
     if (startWeekOnMonday) {
       weekdays.push(weekdays.shift() as Date)
     }
-    const formatter = new Intl.DateTimeFormat(locale, {
-      weekday: 'narrow',
-    })
-    return weekdays.map((date) => formatter.format(date))
+    const narrow = new Intl.DateTimeFormat(locale, { weekday: 'narrow' })
+    const long = new Intl.DateTimeFormat(locale, { weekday: 'long' })
+    return weekdays.map((date) => ({
+      label: narrow.format(date),
+      name: long.format(date),
+    }))
   }, [locale, startWeekOnMonday])
   const theme = useTheme()
 
   return (
     <View
-      pointerEvents="none"
+      pointerEvents="box-none"
+      role="row"
       style={[
         styles.dayNames,
         {
-          backgroundColor: backgroundColor ?? theme.colors.elevation.level3,
+          backgroundColor: backgroundColor ?? theme.colors.surfaceContainerHigh,
         },
         ...(height === dayNamesHeight ? [] : [{ height }]),
       ]}
     >
-      {shortDayNames
+      {dayNames
         .filter((_, dayIndex) => showWeekDay(dayIndex, disableWeekDays))
         .map((dayName, i) => (
-          <DayName key={`${dayName}_${i}`} label={dayName} />
+          <DayName
+            key={`${dayName.label}_${i}`}
+            label={dayName.label}
+            name={dayName.name}
+          />
         ))}
     </View>
   )

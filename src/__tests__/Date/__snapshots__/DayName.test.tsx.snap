@@ -2,8 +2,9 @@
 
 exports[`renders DayName 1`] = `
 <View
-  accessibilityElementsHidden={true}
-  importantForAccessibility="no-hide-descendants"
+  accessibilityLabel="Monday"
+  focusable={false}
+  role="columnheader"
   style={
     {
       "alignItems": "center",

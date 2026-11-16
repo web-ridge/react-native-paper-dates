@@ -25,6 +25,7 @@ function Day(props: {
   disabled: boolean
   focused?: boolean
   inRange: boolean
+  indicatorSize?: number
   isToday: boolean
   leftCrop: boolean
   locale?: string
@@ -48,6 +49,7 @@ function Day(props: {
     disabled,
     focused,
     inRange,
+    indicatorSize = daySize,
     isToday,
     leftCrop,
     locale,
@@ -92,7 +94,9 @@ function Day(props: {
   }, [onPressDate, year, month, day])
 
   const textFont = theme.fonts.bodyLarge
-  const circle = Math.min(daySize, cellHeight)
+  const circle = Math.min(indicatorSize, cellHeight)
+  const stateSize = Math.min(daySize, circle)
+  const stateOffset = (circle - stateSize) / 2
 
   return (
     <View style={styles.root}>
@@ -142,12 +146,26 @@ function Day(props: {
               : null,
           ]}
         >
-          <StateLayer
-            color={stateLayerColor}
-            focused={!disabled && (focused || inputFocused)}
-            hovered={!disabled && hovered}
-            pressed={!disabled && pressed}
-          />
+          <View
+            pointerEvents="none"
+            style={[
+              styles.stateLayer,
+              {
+                borderRadius: stateSize / 2,
+                height: stateSize,
+                left: stateOffset,
+                top: stateOffset,
+                width: stateSize,
+              },
+            ]}
+          >
+            <StateLayer
+              color={stateLayerColor}
+              focused={!disabled && (focused || inputFocused)}
+              hovered={!disabled && hovered}
+              pressed={!disabled && pressed}
+            />
+          </View>
           <Text
             maxFontSizeMultiplier={1.5}
             selectable={false}
@@ -259,6 +277,10 @@ const styles = StyleSheet.create({
   },
   muted: {
     opacity: 0.38,
+  },
+  stateLayer: {
+    overflow: 'hidden',
+    position: 'absolute',
   },
   root: {
     alignItems: 'center',

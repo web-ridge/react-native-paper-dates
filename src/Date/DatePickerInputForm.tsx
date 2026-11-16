@@ -28,7 +28,7 @@ import {
 } from './inputFormat'
 import type { CalendarDate, ValidRangeType } from './types'
 
-export const dateInputCardMaxWidth = 360
+export const dateInputCardMaxWidth = 328
 
 export function dateInputCardWidth(windowWidth: number) {
   return Math.min(dateInputCardMaxWidth, Math.max(windowWidth - 16, 0))
@@ -189,7 +189,7 @@ function DatePickerInputForm({
     uppercase
   )
   const resolvedPlaceholder = placeholder ?? inputFormat.toLowerCase()
-  const surface = theme.colors.elevation.level3
+  const surface = theme.colors.surfaceContainerHigh as string
   const startCaption = displayCase(
     mode === 'range' ? (startLabel ?? 'Date') : (label ?? 'Date'),
     uppercase
@@ -199,40 +199,47 @@ function DatePickerInputForm({
   return (
     <>
       <View style={styles.header}>
-        <Text
-          maxFontSizeMultiplier={1.5}
-          style={[
-            theme.fonts.labelLarge,
-            styles.supporting,
-            { color: theme.colors.onSurfaceVariant },
-          ]}
-        >
-          {supporting}
-        </Text>
-        <View style={styles.headlineRow}>
+        <View style={styles.supporting}>
           <Text
             maxFontSizeMultiplier={1.5}
-            numberOfLines={1}
             style={[
-              theme.fonts.headlineLarge,
-              styles.headline,
+              theme.fonts.labelLarge,
+              styles.supportingText,
               { color: theme.colors.onSurfaceVariant },
             ]}
           >
-            {headline}
+            {supporting}
           </Text>
-          <IconButton
-            accessibilityLabel={getTranslation(locale, 'pickDateFromCalendar')}
-            icon={calendarIcon}
-            iconColor={themeColor(theme.colors.onSurfaceVariant)}
-            onPress={requestCalendar}
-            size={24}
-            style={styles.iconButton}
-            testID="react-native-paper-dates-modal-input-calendar"
-          />
+        </View>
+        <View>
+          <View style={styles.headlineRow}>
+            <Text
+              maxFontSizeMultiplier={1.5}
+              numberOfLines={1}
+              style={[
+                theme.fonts.headlineLarge,
+                styles.headline,
+                { color: theme.colors.onSurfaceVariant },
+              ]}
+            >
+              {headline}
+            </Text>
+            <IconButton
+              accessibilityLabel={getTranslation(
+                locale,
+                'pickDateFromCalendar'
+              )}
+              icon={calendarIcon}
+              iconColor={themeColor(theme.colors.onSurfaceVariant)}
+              onPress={requestCalendar}
+              size={24}
+              style={styles.iconButton}
+              testID="react-native-paper-dates-modal-input-calendar"
+            />
+          </View>
+          <Divider style={{ backgroundColor: theme.colors.outlineVariant }} />
         </View>
       </View>
-      <Divider style={{ backgroundColor: theme.colors.outlineVariant }} />
       <View style={styles.fields}>
         <DateField
           inputEnabled={inputEnabled}
@@ -339,45 +346,30 @@ function DateField({
   value: CalendarDate
   withDateFormatInLabel?: boolean
 }) {
-  const theme = useTheme()
-  const showFormatInLabel = Boolean(withDateFormatInLabel && label)
-  const input = (
-    <DatePickerInputWithoutModal
-      ref={inputRef}
-      aria-label={`${label}, ${placeholder}`}
-      autoComplete="off"
-      inputEnabled={inputEnabled}
-      inputMode={inputMode}
-      label={showFormatInLabel ? label : undefined}
-      locale={locale}
-      onChange={onChange}
-      onChangeText={onChangeText}
-      onSubmitEditing={onSubmitEditing}
-      onValidationError={onValidationError}
-      placeholder={placeholder}
-      returnKeyType={returnKeyType}
-      supportingText=""
-      testID={testID}
-      theme={{ colors: { background: surface } }}
-      validRange={validRange}
-      value={value}
-      variant="outlined"
-      withDateFormatInLabel={withDateFormatInLabel}
-    />
-  )
-
   return (
     <View style={styles.field}>
-      {showFormatInLabel ? null : (
-        <Text
-          maxFontSizeMultiplier={1.5}
-          style={[styles.caption, { color: theme.colors.onSurfaceVariant }]}
-          variant="bodySmall"
-        >
-          {label}
-        </Text>
-      )}
-      {input}
+      <DatePickerInputWithoutModal
+        ref={inputRef}
+        aria-label={`${label}, ${placeholder}`}
+        autoComplete="off"
+        inputEnabled={inputEnabled}
+        inputMode={inputMode}
+        label={label}
+        locale={locale}
+        onChange={onChange}
+        onChangeText={onChangeText}
+        onSubmitEditing={onSubmitEditing}
+        onValidationError={onValidationError}
+        placeholder={placeholder}
+        returnKeyType={returnKeyType}
+        supportingText=""
+        testID={testID}
+        theme={{ colors: { background: surface } }}
+        validRange={validRange}
+        value={value}
+        variant="outlined"
+        withDateFormatInLabel={withDateFormatInLabel}
+      />
     </View>
   )
 }
@@ -438,13 +430,11 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     paddingBottom: 12,
     paddingRight: 16,
-    paddingTop: 12,
-  },
-  caption: {
-    marginBottom: 4,
+    paddingTop: 0,
   },
   field: {
     flex: 1,
+    minWidth: 0,
   },
   fields: {
     flexDirection: 'row',
@@ -454,31 +444,32 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   header: {
-    paddingBottom: 12,
-    paddingHorizontal: 24,
-    paddingTop: 16,
+    justifyContent: 'space-between',
+    minHeight: 120,
   },
   headline: {
     flex: 1,
     includeFontPadding: false,
     lineHeight: 40,
-    marginRight: 36,
+    marginRight: 12,
   },
   headlineRow: {
     alignItems: 'center',
     flexDirection: 'row',
-    height: 40,
-    marginTop: 32,
+    paddingBottom: 12,
+    paddingLeft: 24,
+    paddingRight: 12,
   },
   iconButton: {
     height: 48,
     margin: 0,
-    position: 'absolute',
-    right: -12,
-    top: -4,
     width: 48,
   },
   supporting: {
+    paddingHorizontal: 24,
+    paddingTop: 16,
+  },
+  supportingText: {
     includeFontPadding: false,
     lineHeight: 20,
   },

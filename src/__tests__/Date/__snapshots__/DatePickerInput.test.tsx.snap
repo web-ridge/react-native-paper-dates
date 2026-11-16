@@ -10,6 +10,7 @@ exports[`renders DatePickerInput 1`] = `
         "alignItems": "flex-start",
         "flexGrow": 1,
         "justifyContent": "center",
+        "minWidth": 0,
         "width": "100%",
       }
     }
@@ -20,6 +21,7 @@ exports[`renders DatePickerInput 1`] = `
           "alignItems": "stretch",
           "alignSelf": "stretch",
           "flexGrow": 1,
+          "minWidth": 0,
           "width": "100%",
         }
       }
@@ -192,7 +194,7 @@ exports[`renders DatePickerInput 1`] = `
             <TextInput
               aria-disabled={false}
               aria-invalid={false}
-              aria-label=""
+              aria-label="MM/DD/YYYY"
               cursorColor="rgba(103, 80, 164, 1)"
               keyboardAppearance="default"
               keyboardType="default"
@@ -221,7 +223,12 @@ exports[`renders DatePickerInput 1`] = `
                   undefined,
                   false,
                   false,
-                  undefined,
+                  [
+                    {
+                      "minWidth": 0,
+                    },
+                    undefined,
+                  ],
                 ]
               }
               value="01/15/2025"
@@ -424,7 +431,30 @@ exports[`renders DatePickerInput 1`] = `
               "flexDirection": "row",
             }
           }
-        />
+        >
+          <Text
+            aria-hidden={true}
+            style={
+              [
+                {
+                  "flex": 1,
+                  "fontSize": 12,
+                  "fontWeight": "400",
+                  "marginTop": 4,
+                  "paddingHorizontal": 16,
+                  "textAlign": "left",
+                },
+                {
+                  "color": "rgba(73, 69, 79, 1)",
+                  "writingDirection": "ltr",
+                },
+                false,
+              ]
+            }
+          >
+            MM/DD/YYYY
+          </Text>
+        </View>
       </View>
     </View>
   </View>

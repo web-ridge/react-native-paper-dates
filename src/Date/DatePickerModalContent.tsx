@@ -403,6 +403,7 @@ const styles = StyleSheet.create({
   },
   actions: {
     flexDirection: 'row',
+    gap: 8,
     justifyContent: 'flex-end',
     paddingBottom: 12,
     paddingHorizontal: 12,

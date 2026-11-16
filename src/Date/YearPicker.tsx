@@ -5,6 +5,7 @@ import { Icon, Text, TouchableRipple, useTheme } from 'react-native-paper'
 import StateLayer from '../shared/StateLayer'
 import { sharedStyles } from '../shared/styles'
 import { range, scrollbarThumb } from '../shared/utils'
+import { calendarControlHeight } from './CalendarHeader'
 import { defaultEndYear, defaultStartYear } from './dateUtils'
 
 const COLUMNS = 3
@@ -100,7 +101,7 @@ function YearPicker({
       style={[
         StyleSheet.absoluteFill,
         styles.root,
-        { backgroundColor: theme.colors.elevation.level3 },
+        { backgroundColor: theme.colors.surfaceContainerHigh },
         selectingYear ? sharedStyles.opacity1 : sharedStyles.opacity0,
       ]}
     >
@@ -238,7 +239,7 @@ const styles = StyleSheet.create({
   },
   root: {
     flex: 1,
-    top: 56,
+    top: calendarControlHeight,
     zIndex: 100,
   },
   row: {

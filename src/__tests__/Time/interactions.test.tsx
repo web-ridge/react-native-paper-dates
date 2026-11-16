@@ -579,7 +579,7 @@ describe('time picker modal', () => {
         visible
       />
     )
-    await fireEvent.press(modal.getByLabelText('Toggle clock'))
+    await fireEvent.press(modal.getByLabelText('Toggle dial picker'))
     await fireEvent.press(modal.getByText('OK'))
     await fireEvent.press(modal.getByText('CANCEL'))
     expect(onConfirm).toHaveBeenCalled()
@@ -645,7 +645,31 @@ describe('time picker modal', () => {
     const compact = await render(
       <TimePickerModal onConfirm={onConfirm} onDismiss={onDismiss} visible />
     )
-    expect(compact.queryByLabelText('Toggle keyboard')).toBeNull()
-    expect(compact.queryByLabelText('Toggle clock')).toBeNull()
+    expect(compact.queryByLabelText('Toggle input picker')).toBeNull()
+    expect(compact.queryByLabelText('Toggle dial picker')).toBeNull()
+  })
+
+  it('does not confirm an out-of-range keyboard time', async () => {
+    const onConfirm = jest.fn()
+    const modal = await render(
+      <TimePickerModal
+        defaultInputType="keyboard"
+        hours={10}
+        locale="en"
+        minutes={15}
+        onConfirm={onConfirm}
+        onDismiss={jest.fn()}
+        use24HourClock
+        visible
+      />
+    )
+    const hour = modal.getByLabelText('Hour')
+    await fireEvent(hour, 'focus')
+    await fireEvent.changeText(hour, '99')
+    expect(modal.getByLabelText('Hour').props.accessibilityHint).toBe(
+      'Invalid time'
+    )
+    await fireEvent.press(modal.getByText('OK'))
+    expect(onConfirm).not.toHaveBeenCalled()
   })
 })

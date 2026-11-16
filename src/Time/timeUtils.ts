@@ -53,7 +53,7 @@ export const inputTypes: InputTypeMap = {
   picker: 'picker',
 }
 const landscapeDialChrome = 132
-const landscapeDialExtraWidth = 112
+const landscapeDialExtraWidth = 100
 const outerHeight = 34
 export const periodSelectorGap = 12
 export const periodSelectorVerticalWidth = 52

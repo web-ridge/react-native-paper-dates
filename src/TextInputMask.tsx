@@ -7,6 +7,7 @@ import {
   type Ref,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react'
 import { TextInput, type TextInputHandles } from 'react-native-paper'
@@ -16,8 +17,10 @@ function TextInputWithMask(
     disabled,
     inputButton,
     mask,
+    onBlur,
     onChange,
     onChangeText,
+    onSubmitEditing,
     value,
     ...rest
   }: ComponentProps<typeof TextInput> & {
@@ -28,27 +31,29 @@ function TextInputWithMask(
   ref: Ref<TextInputHandles>
 ) {
   const [controlledValue, setControlledValue] = useState(value || '')
+  const valueRef = useRef(value || '')
   useEffect(() => {
+    valueRef.current = value || ''
     setControlledValue(value || '')
   }, [value])
   const layout = useMemo(() => maskLayout(mask), [mask])
 
-  const onInnerChange = (text: string) => {
-    const trimmedText = text.trim()
-    const isBackSpace = controlledValue.length > trimmedText.length
-    const next = isBackSpace
-      ? trimmedText
-      : formatDigits(
-          digitsFromText(trimmedText, layout.groups),
-          layout.groups,
-          layout.separators
-        )
-
-    if (next.length === mask.length) {
-      onChangeText?.(next)
+  const commit = (text: string) => {
+    const formatted = formatDigits(
+      digitsFromText(text.trim(), layout.groups),
+      layout.groups,
+      layout.separators
+    )
+    valueRef.current = formatted
+    setControlledValue(formatted)
+    if (formatted.length === mask.length) {
+      onChangeText?.(formatted)
     }
+  }
 
-    setControlledValue(next)
+  const onInnerChange = (text: string) => {
+    valueRef.current = text
+    setControlledValue(text)
   }
 
   return (
@@ -62,10 +67,18 @@ function TextInputWithMask(
           : undefined
       }
       maxLength={mask.length}
+      onBlur={(event) => {
+        commit(valueRef.current)
+        onBlur?.(event)
+      }}
       onChange={(e) => {
         onChange?.(e)
       }}
       onChangeText={onInnerChange}
+      onSubmitEditing={(event) => {
+        commit(valueRef.current)
+        onSubmitEditing?.(event)
+      }}
       value={controlledValue}
     />
   )

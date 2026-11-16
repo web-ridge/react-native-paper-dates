@@ -1,6 +1,6 @@
 # Input Date Picker
 
-The input date picker provides a text field for typing a date, plus a calendar icon that opens a picker. On compact screens the icon opens a full-screen modal. On medium and expanded screens (width and height over 650) it opens a docked calendar under the field. Set `presentation` to `'docked'` for the [docked date picker](./docked-date-picker), which always anchors that calendar to the field. Typed text is kept as entered and formatted only after blur or submit. The field accepts `/`, `-`, `.`, and spaces, including a single-digit month or day.
+The input date picker provides a text field for typing a date, plus a calendar icon that opens a picker. On compact screens the icon opens a full-screen modal. On medium and expanded screens (width and height over 650) it opens a docked calendar under the field. Set `presentation` to `'docked'` for the [docked date picker](./docked-date-picker), which always anchors that calendar to the field. Typed text is kept as entered and formatted only after blur or submit. The field accepts `/`, `-`, `.`, and spaces, including a single-digit month or day. Supporting text shows the expected date format unless `supportingText` is set. Pass an empty string to hide it.
 
 ## Usage
 
@@ -147,6 +147,10 @@ When `true`, the calendar grid starts on Monday. Defaults to `false`.
 `Type: number | undefined`  
 The first year available in the year picker. Defaults to `1800`.
 
+**supportingText**  
+`Type: string | undefined`  
+Text under the field. Defaults to the expected date format. Pass `''` to hide it, or another string to replace the format. A validation error replaces this text unless `hideValidationErrors` is set.
+
 **uppercase**  
 `Type: boolean | undefined`  
 Whether modal action labels are uppercased. Defaults to `false`.
@@ -165,7 +169,7 @@ The current date value.
 
 **withDateFormatInLabel**  
 `Type: boolean | undefined`  
-When `true`, appends the expected date format to the label. Defaults to `false`. The format is the field placeholder unless `placeholder` is set.
+When `true`, appends the expected date format to the label. Defaults to `false`. The same format is the field placeholder unless `placeholder` is set.
 
 **withModal**  
 `Type: boolean | undefined`  

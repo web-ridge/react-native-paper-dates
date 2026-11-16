@@ -98,7 +98,7 @@ Initial minutes value. Defaults to the current minutes.
 
 **onConfirm (Required)**  
 `Type: (params: { hours: number, minutes: number }) => void`  
-Called when the user confirms the selected time.
+Called when the user confirms the selected time. The confirm button stays disabled while a typed hour or minute is invalid.
 
 **onDismiss (Required)**  
 `Type: () => void`  

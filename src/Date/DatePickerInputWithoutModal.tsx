@@ -68,7 +68,9 @@ function DatePickerInputWithoutModal(
   }
 
   const helperText =
-    error && !hideValidationErrors ? error : rest.supportingText
+    error && !hideValidationErrors
+      ? error
+      : (rest.supportingText ?? inputFormat)
 
   return (
     <>
@@ -110,7 +112,7 @@ function DatePickerInputWithoutModal(
               rest.onSubmitEditing?.(event)
             }}
             placeholder={rest.placeholder ?? inputFormat}
-            style={style}
+            style={[styles.input, style]}
             supportingText={helperText}
             value={displayedValue}
           />
@@ -137,16 +139,24 @@ function getLabel({
 }
 
 const styles = StyleSheet.create({
+  input: {
+    // The web input's default min-content width is wider than half the range
+    // dialog. Without this, focusing either field scrolls the clipped card and
+    // pushes the other field outside it.
+    minWidth: 0,
+  },
   inputContainer: {
     alignItems: 'stretch',
     alignSelf: 'stretch',
     flexGrow: 1,
+    minWidth: 0,
     width: '100%',
   },
   root: {
     alignItems: 'flex-start',
     flexGrow: 1,
     justifyContent: 'center',
+    minWidth: 0,
     width: '100%',
   },
 })

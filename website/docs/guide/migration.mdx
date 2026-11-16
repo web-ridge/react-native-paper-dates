@@ -77,7 +77,7 @@ Do not pass `right` or `endAccessory`. The calendar icon uses `endAccessory`. Ch
 
 ### Supporting text
 
-Paper 6 removed `HelperText`. If your app rendered helper text next to `DatePickerInput`, pass `supportingText` on the input instead.
+Paper 6 removed `HelperText`. `DatePickerInput` shows the expected date format as supporting text when `supportingText` is omitted. Pass `supportingText=""` to hide it, or pass your own string to replace the format.
 
 ```jsx
 // Before
