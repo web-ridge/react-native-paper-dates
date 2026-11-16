@@ -1,15 +1,22 @@
 import {
   cloneElement,
   forwardRef,
+  type ForwardRefExoticComponent,
   isValidElement,
   type ReactNode,
   type Ref,
+  type RefAttributes,
 } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { TextInput, type TextInputHandles, useTheme } from 'react-native-paper'
 
 import type { DateFieldProps } from './DatePickerInput.shared'
 import useDateInput from './inputUtils'
+
+type DatePickerInputWithoutModalProps = DateFieldProps & {
+  inputButton?: ReactNode
+  modal?: ReactNode
+}
 
 function DatePickerInputWithoutModal(
   {
@@ -29,10 +36,7 @@ function DatePickerInputWithoutModal(
     value,
     withDateFormatInLabel = false,
     ...rest
-  }: DateFieldProps & {
-    inputButton?: ReactNode
-    modal?: ReactNode
-  },
+  }: DatePickerInputWithoutModalProps,
   ref: Ref<TextInputHandles>
 ) {
   let disabled
@@ -147,4 +151,8 @@ const styles = StyleSheet.create({
   },
 })
 
-export default forwardRef(DatePickerInputWithoutModal)
+const DatePickerInputWithoutModalWithRef: ForwardRefExoticComponent<
+  DatePickerInputWithoutModalProps & RefAttributes<TextInputHandles>
+> = forwardRef(DatePickerInputWithoutModal)
+
+export default DatePickerInputWithoutModalWithRef
