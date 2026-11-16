@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react'
+import { useRef } from 'react'
 import { Platform, useWindowDimensions, type ViewStyle } from 'react-native'
 import { type Theme, useTheme } from 'react-native-paper'
 
@@ -28,67 +28,8 @@ function channelByte(value: number) {
   return Math.max(0, Math.min(255, Number(value.toFixed(0))))
 }
 
-export function darkenColor(color: string, ratio: number) {
-  const { b, g, r } = parseColor(color)
-  const [hue, saturation, lightness] = rgbToHsl(r, g, b)
-  const [red, green, blue] = hslToRgb(
-    hue,
-    saturation,
-    lightness - lightness * ratio
-  )
-  return hexColor(`rgb(${red}, ${green}, ${blue})`)
-}
-
 export function displayCase(text: string, uppercase: boolean) {
   return uppercase ? text.toUpperCase() : text
-}
-
-export function fadeColor(color: string, ratio: number) {
-  const parsed = parseColor(color)
-  return rgbaString({ ...parsed, a: parsed.a * (1 - ratio) })
-}
-
-export function hexColor(color: string) {
-  const { b, g, r } = parseColor(color)
-  return `#${[r, g, b]
-    .map((channel) => channelByte(channel).toString(16).padStart(2, '0'))
-    .join('')
-    .toUpperCase()}`
-}
-
-function hslToRgb(
-  hue: number,
-  saturation: number,
-  lightness: number
-): [number, number, number] {
-  const h = hue / 360
-  const l = lightness / 100
-  const s = saturation / 100
-  if (s === 0) {
-    const value = l * 255
-    return [value, value, value]
-  }
-
-  const rgb: [number, number, number] = [0, 0, 0]
-  const t2 = l < 0.5 ? l * (1 + s) : l + s - l * s
-  const t1 = 2 * l - t2
-  for (let index = 0; index < 3; index += 1) {
-    let t3 = h + (1 / 3) * -(index - 1)
-    if (t3 < 0) t3 += 1
-    if (t3 > 1) t3 -= 1
-    let value = t1
-    if (6 * t3 < 1) value = t1 + (t2 - t1) * 6 * t3
-    else if (2 * t3 < 1) value = t2
-    else if (3 * t3 < 2) value = t1 + (t2 - t1) * (2 / 3 - t3) * 6
-    rgb[index] = value * 255
-  }
-  return rgb
-}
-
-export function isDarkColor(color: string) {
-  const { b, g, r } = parseColor(color)
-  const yiq = (r * 2126 + g * 7152 + b * 722) / 10000
-  return yiq < 128
 }
 
 function parseColor(input: string): Rgb {
@@ -145,34 +86,6 @@ function rgbaString({ a, b, g, r }: Rgb) {
   return `rgba(${channelByte(r)}, ${channelByte(g)}, ${channelByte(b)}, ${alpha})`
 }
 
-function rgbToHsl(r: number, g: number, b: number): [number, number, number] {
-  const blue = b / 255
-  const green = g / 255
-  let hue = 0
-  const red = r / 255
-  const max = Math.max(red, green, blue)
-  const min = Math.min(red, green, blue)
-  const delta = max - min
-  if (max !== min) {
-    if (max === red) hue = (green - blue) / delta
-    else if (max === green) hue = 2 + (blue - red) / delta
-    else hue = 4 + (red - green) / delta
-  }
-  hue = Math.min(hue * 60, 360)
-  if (hue < 0) hue += 360
-  const lightness = (min + max) / 2
-  let saturation = 0
-  if (max !== min) {
-    saturation =
-      lightness <= 0.5 ? delta / (max + min) : delta / (2 - max - min)
-  }
-  return [hue, saturation * 100, lightness * 100]
-}
-
-export function scrimColor(color: unknown) {
-  return rgbaString({ ...parseColor(themeColor(color)), a: 0.32 })
-}
-
 export function scrollbarThumb(color: unknown): ViewStyle | null {
   if (Platform.OS !== 'web' || typeof color !== 'string') return null
   return { scrollbarColor: `${color} transparent` } as ViewStyle
@@ -205,17 +118,7 @@ export function useLatest<T>(value: T) {
 
 export function useTextColorOnPrimary() {
   const theme = useTheme()
-  const isThemeDark = theme.dark
-  const onPrimary = themeColor(theme.colors.onPrimary)
-  const onSurface = themeColor(theme.colors.onSurface)
-  const primary = themeColor(theme.colors.primary)
-
-  return useMemo(() => {
-    if (isDarkColor(primary) && isThemeDark) {
-      return onSurface
-    }
-    return onPrimary
-  }, [isThemeDark, onPrimary, onSurface, primary])
+  return themeColor(theme.colors.onPrimary)
 }
 
 export function withAlpha(color: string, alpha: number) {

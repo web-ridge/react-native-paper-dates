@@ -1,11 +1,15 @@
 import { act, render } from '@testing-library/react-native'
 import React from 'react'
 
-import { getBeginOffset, getStartAtIndex } from '../../Date/dateUtils'
+import {
+  estimatedMonthHeight,
+  getBeginOffset,
+  getStartAtIndex,
+} from '../../Date/dateUtils'
 import {
   getIndexFromVerticalOffset,
   getVerticalMonthsOffset,
-} from '../../Date/Month'
+} from '../../Date/monthLayout'
 import Swiper from '../../Date/Swiper'
 import { isIndexWithinRange } from '../../Date/SwiperUtils'
 
@@ -83,22 +87,15 @@ function indexAt(first: number, y: number) {
   return getIndexFromVerticalOffset(base + y - begin, false, startYear, endYear)
 }
 
-function offsetFor(target: number, first: number) {
+function scrollY(target: number, first: number) {
   const base = getVerticalMonthsOffset(first, false, startYear, endYear)
   const begin = getBeginOffset(startYear, endYear)
-  for (let y = 0; y < 8000; y += 1) {
-    if (
-      getIndexFromVerticalOffset(
-        base + y - begin,
-        false,
-        startYear,
-        endYear
-      ) === target
-    ) {
-      return y
-    }
-  }
-  throw new Error(`no scroll offset for ${target}`)
+  return (
+    getVerticalMonthsOffset(target, false, startYear, endYear) -
+    estimatedMonthHeight * getStartAtIndex(startYear, endYear) -
+    base +
+    begin
+  )
 }
 
 function scrollEvent(x: number, y: number) {
@@ -176,18 +173,13 @@ describe('native swiper gaps', () => {
     }
 
     const first = windowStart(initialIndex)
-    const sameY = offsetFor(initialIndex, first)
-    let farY = sameY + 4000
-    for (let y = 0; y < 12000; y += 20) {
-      const next = indexAt(first, y)
-      if (
-        next !== initialIndex &&
-        isIndexWithinRange(next, startYear, endYear)
-      ) {
-        farY = y
-        break
-      }
-    }
+    const nextIndex = isIndexWithinRange(initialIndex + 1, startYear, endYear)
+      ? initialIndex + 1
+      : initialIndex - 1
+    const sameY = scrollY(initialIndex, first)
+    const farY = scrollY(nextIndex, first)
+    expect(indexAt(first, sameY)).toBe(initialIndex)
+    expect(indexAt(first, farY)).toBe(nextIndex)
 
     await act(async () => {
       scroll.props.onScroll?.(scrollEvent(0, sameY))

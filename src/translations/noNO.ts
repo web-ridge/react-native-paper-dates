@@ -1,9 +1,13 @@
-import type { TranslationsType } from './utils'
+import { registerTranslation, type TranslationsType } from './utils'
 
 const noNO: TranslationsType = {
   am: 'AM',
+  cancel: 'Avbryt',
   close: 'Lukk',
+  confirm: 'OK',
   dateIsDisabled: 'Denne dagen er ikke tillatt',
+  enterDate: 'Skriv inn dato',
+  enterDates: 'Skriv inn datoer',
   hour: 'Time',
   hourOf: (hour, total) => `Time ${hour} av ${total}`,
   minute: 'Minutt',
@@ -28,3 +32,5 @@ const noNO: TranslationsType = {
 }
 
 export default noNO
+
+registerTranslation('no-NO', noNO)

@@ -1,9 +1,13 @@
-import type { TranslationsType } from './utils'
+import { registerTranslation, type TranslationsType } from './utils'
 
 const th: TranslationsType = {
   am: 'AM',
+  cancel: 'ยกเลิก',
   close: 'ปิด',
+  confirm: 'ตกลง',
   dateIsDisabled: 'ไม่สามารถใช้วันที่นี้ได้',
+  enterDate: 'ป้อนวันที่',
+  enterDates: 'ป้อนวันที่',
   hour: 'ชั่วโมง',
   hourOf: (hour, total) => `ชั่วโมง ${hour} จาก ${total}`,
   minute: 'นาที',
@@ -27,3 +31,5 @@ const th: TranslationsType = {
 }
 
 export default th
+
+registerTranslation('th', th)

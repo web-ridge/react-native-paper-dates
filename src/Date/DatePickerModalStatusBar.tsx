@@ -5,13 +5,10 @@ import {
   type StatusBarStyle,
   View,
 } from 'react-native'
+import { useTheme } from 'react-native-paper'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import {
-  isDarkColor,
-  themeColor,
-  useHeaderBackgroundColor,
-} from '../shared/utils'
+import { useHeaderBackgroundColor } from '../shared/utils'
 
 function DatePickerModalStatusBar({
   disableSafeTop,
@@ -24,8 +21,8 @@ function DatePickerModalStatusBar({
 }) {
   const headerBackgroundColor = useHeaderBackgroundColor()
   const insets = useSafeAreaInsets()
-  const onDarkBackground =
-    isDarkColor(themeColor(headerBackgroundColor)) || statusBarOnTopOfBackdrop
+  const theme = useTheme()
+  const onDarkBackground = theme.dark || statusBarOnTopOfBackdrop
   const statusBarBackground = statusBarOnTopOfBackdrop
     ? 'transparent'
     : headerBackgroundColor

@@ -5,6 +5,7 @@ import {
   RenderResult,
 } from '@testing-library/react-native'
 import { ReactElement } from 'react'
+import { Platform } from 'react-native'
 import { PaperProvider } from 'react-native-paper'
 
 type Fiber = {
@@ -94,6 +95,43 @@ async function render(
       </PaperProvider>
     ),
   })
+}
+
+export function installDateKeyListener() {
+  const previousPlatform = Platform.OS
+  Platform.OS = 'web'
+  const listeners = new Map<string, (event: KeyboardEvent) => void>()
+  const host = globalThis as { window?: Window & typeof globalThis }
+  const previousWindow = host.window
+  host.window = {
+    addEventListener(type: string, listener: EventListener) {
+      listeners.set(type, listener as (event: KeyboardEvent) => void)
+    },
+    removeEventListener(type: string) {
+      listeners.delete(type)
+    },
+  } as unknown as Window & typeof globalThis
+
+  return {
+    async press(key: string, shiftKey = false) {
+      const handler = listeners.get('keydown')
+      if (!handler) {
+        throw new Error('missing keydown listener')
+      }
+      await act(() => {
+        handler({
+          key,
+          preventDefault() {},
+          shiftKey,
+          target: null,
+        } as unknown as KeyboardEvent)
+      })
+    },
+    restore() {
+      Platform.OS = previousPlatform
+      host.window = previousWindow
+    },
+  }
 }
 
 export function walkFibers(

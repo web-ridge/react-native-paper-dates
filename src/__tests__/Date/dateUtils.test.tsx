@@ -20,10 +20,12 @@ import {
   isLeapYear,
   parseLooseDate,
   showWeekDay,
+} from '../../Date/dateUtils'
+import {
   useInputFormat,
   useInputFormatter,
   useRangeChecker,
-} from '../../Date/dateUtils'
+} from '../../Date/inputFormat'
 
 describe('dateUtils', () => {
   it('should return true for weekday', () => {
@@ -185,7 +187,9 @@ describe('dateUtils', () => {
       isDateWithinOptionalRange(new Date(-1000), { startUnix: 0 })
     ).toBeFalsy()
     expect(isDateWithinOptionalRange(epoch, { startUnix: 0 })).toBeTruthy()
-    expect(isDateWithinOptionalRange(new Date(1000), { endUnix: 0 })).toBeFalsy()
+    expect(
+      isDateWithinOptionalRange(new Date(1000), { endUnix: 0 })
+    ).toBeFalsy()
     expect(isDateWithinOptionalRange(epoch, { endUnix: 0 })).toBeTruthy()
   })
 
@@ -202,7 +206,9 @@ describe('dateUtils', () => {
     expect(result.current.isDisabled(new Date(2022, 5, 14))).toBeFalsy()
     expect(result.current.isWithinValidRange(new Date(2022, 5, 1))).toBeFalsy()
     expect(result.current.isWithinValidRange(new Date(2022, 5, 28))).toBeFalsy()
-    expect(result.current.isWithinValidRange(new Date(2022, 5, 12))).toBeTruthy()
+    expect(
+      result.current.isWithinValidRange(new Date(2022, 5, 12))
+    ).toBeTruthy()
 
     const open = await renderHook(() => useRangeChecker(undefined))
     expect(open.result.current.isDisabled(disabled)).toBeFalsy()
@@ -211,9 +217,22 @@ describe('dateUtils', () => {
   })
 
   it('builds input masks for western, portuguese, and arabic digits', async () => {
+    const parts = (
+      values: Array<['day' | 'literal' | 'month' | 'year', string]>
+    ): Intl.DateTimeFormat =>
+      ({
+        formatToParts: () => values.map(([type, value]) => ({ type, value })),
+      }) as Intl.DateTimeFormat
+
     const western = await renderHook(() =>
       useInputFormat({
-        formatter: { format: () => '10/01/2020' } as Intl.DateTimeFormat,
+        formatter: parts([
+          ['month', '10'],
+          ['literal', '/'],
+          ['day', '01'],
+          ['literal', '/'],
+          ['year', '2020'],
+        ]),
         locale: 'en',
       })
     )
@@ -221,7 +240,13 @@ describe('dateUtils', () => {
 
     const portuguese = await renderHook(() =>
       useInputFormat({
-        formatter: { format: () => '10/01/2020' } as Intl.DateTimeFormat,
+        formatter: parts([
+          ['month', '10'],
+          ['literal', '/'],
+          ['day', '01'],
+          ['literal', '/'],
+          ['year', '2020'],
+        ]),
         locale: 'pt',
       })
     )
@@ -229,7 +254,13 @@ describe('dateUtils', () => {
 
     const arabic = await renderHook(() =>
       useInputFormat({
-        formatter: { format: () => '٠١/١٠/٢٠٢٠' } as Intl.DateTimeFormat,
+        formatter: parts([
+          ['day', '٠١'],
+          ['literal', '/'],
+          ['month', '١٠'],
+          ['literal', '/'],
+          ['year', '٢٠٢٠'],
+        ]),
         locale: 'ar',
       })
     )

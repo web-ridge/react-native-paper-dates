@@ -15,13 +15,13 @@ it('tracks focus and hover and selects a year from the menu', async () => {
     />
   )
   const year = grid.getByLabelText('2025')
-  fireEvent(year, 'focus')
-  fireEvent(year, 'hoverIn')
-  fireEvent(year, 'pressIn')
-  fireEvent.press(year)
-  fireEvent(year, 'pressOut')
-  fireEvent(year, 'hoverOut')
-  fireEvent(year, 'blur')
+  await fireEvent(year, 'focus')
+  await fireEvent(year, 'hoverIn')
+  await fireEvent(year, 'pressIn')
+  await fireEvent.press(year)
+  await fireEvent(year, 'pressOut')
+  await fireEvent(year, 'hoverOut')
+  await fireEvent(year, 'blur')
 
   const menu = await render(
     <YearPicker
@@ -33,7 +33,7 @@ it('tracks focus and hover and selects a year from the menu', async () => {
       variant="menu"
     />
   )
-  fireEvent.press(menu.getByLabelText('2026'))
+  await fireEvent.press(menu.getByLabelText('2026'))
   expect(onPressYear).toHaveBeenCalledWith(2025)
   expect(onPressYear).toHaveBeenCalledWith(2026)
 })

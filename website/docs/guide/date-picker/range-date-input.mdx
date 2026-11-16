@@ -10,10 +10,9 @@ The calendar modal for a range is documented on the [range date picker](./range-
 import React from 'react';
 import { View } from 'react-native';
 import { Button, PaperProvider } from 'react-native-paper';
-import { DatePickerModalInput, en, registerTranslation } from 'react-native-paper-dates';
+import { DatePickerModalInput } from 'react-native-paper-dates';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-registerTranslation('en', en);
 
 export default function App() {
   const [range, setRange] = React.useState({ startDate: undefined, endDate: undefined });

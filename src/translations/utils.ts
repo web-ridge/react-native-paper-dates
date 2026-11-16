@@ -1,14 +1,16 @@
+import en from './en'
+
 export type TranslationResolver = (
   locale: string | undefined
 ) => TranslationsType
 export type TranslationsType = {
   am: string
-  cancel?: string
+  cancel: string
   close: string
-  confirm?: string
+  confirm: string
   dateIsDisabled: string
-  enterDate?: string
-  enterDates?: string
+  enterDate: string
+  enterDates: string
   hour: string
   hourOf: (hour: number, total: number) => string
   minute: string
@@ -33,7 +35,9 @@ export type TranslationsType = {
 let translationsPerLocale: Record<
   string,
   TranslationsType | TranslationResolver
-> = {}
+> = {
+  en,
+}
 
 function translationTable(locale: string | undefined) {
   const table = translationsPerLocale[locale || 'en']

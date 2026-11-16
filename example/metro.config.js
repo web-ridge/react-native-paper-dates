@@ -56,6 +56,18 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
     }
   }
 
+  const translationsPrefix = `${pak.name}/translations/`
+  if (moduleName.startsWith(translationsPrefix)) {
+    return {
+      filePath: path.join(
+        librarySrc,
+        'translations',
+        `${moduleName.slice(translationsPrefix.length)}.ts`
+      ),
+      type: 'sourceFile',
+    }
+  }
+
   if (moduleName === '@react-native-vector-icons/material-design-icons') {
     return context.resolveRequest(
       context,

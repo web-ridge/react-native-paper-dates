@@ -21,6 +21,7 @@ import DatePickerModalHeader from './DatePickerModalHeader'
 import DatePickerModalHeaderBackground from './DatePickerModalHeaderBackground'
 import DatePickerModalStatusBar from './DatePickerModalStatusBar'
 import { areDatesOnSameDay } from './dateUtils'
+import { confirmDates } from './selection'
 import type {
   CalendarDate,
   CalendarDates,
@@ -185,27 +186,9 @@ export function DatePickerModalContent(
     !!state.endDate &&
     areDatesOnSameDay(state.startDate, state.endDate)
   const onInnerConfirm = useCallback(() => {
-    if (mode === 'single') {
-      ;(onConfirm as DatePickerModalContentSingleProps['onConfirm'])({
-        date: state.date,
-      })
-    } else if (mode === 'range') {
-      if (
-        state.startDate &&
-        state.endDate &&
-        areDatesOnSameDay(state.startDate, state.endDate)
-      ) {
-        return
-      }
-      ;(onConfirm as DatePickerModalContentRangeProps['onConfirm'])({
-        endDate: state.endDate,
-        startDate: state.startDate,
-      })
-    } else if (mode === 'multiple') {
-      ;(onConfirm as DatePickerModalContentMultiProps['onConfirm'])({
-        dates: state.dates || [],
-      })
-    }
+    const confirmed = confirmDates(mode, state, true)
+    if (!confirmed) return
+    ;(onConfirm as (value: typeof confirmed) => void)(confirmed)
   }, [state, mode, onConfirm])
   const onInputValidityChange = useCallback((valid: boolean) => {
     setInputValid(valid)

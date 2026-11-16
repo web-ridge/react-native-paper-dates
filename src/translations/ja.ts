@@ -1,9 +1,13 @@
-import type { TranslationsType } from './utils'
+import { registerTranslation, type TranslationsType } from './utils'
 
 const ja: TranslationsType = {
   am: '午前',
+  cancel: 'キャンセル',
   close: '閉じる',
+  confirm: 'OK',
   dateIsDisabled: '日付は入力できません',
+  enterDate: '日付を入力',
+  enterDates: '日付を入力',
   hour: '時',
   hourOf: (hour, total) => `${hour} 時 / ${total}`,
   minute: '分',
@@ -28,3 +32,5 @@ const ja: TranslationsType = {
 }
 
 export default ja
+
+registerTranslation('ja', ja)

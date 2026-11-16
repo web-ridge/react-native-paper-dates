@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 
 import { getTranslation } from '../translations/utils'
+import { interpretTypedDate } from './dateUtils'
 import {
-  interpretTypedDate,
   useInputFormat,
   useInputFormatter,
   useRangeChecker,
-} from './dateUtils'
+} from './inputFormat'
 import type { ValidRangeType } from './types'
 
 export default function useDateInput({

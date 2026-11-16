@@ -17,21 +17,14 @@ import {
   overlayScrollbarPadding,
   weekdayScrollbarInset,
 } from './CalendarHeader'
-import { useDatePickerKeys } from './datePickerKeys'
+import { defaultEndYear, defaultStartYear } from './dateUtils'
 import {
-  addMonths,
-  defaultEndYear,
-  defaultStartYear,
-  getBeginOffset,
-  getRealIndex,
-} from './dateUtils'
-import {
-  getIndexFromVerticalOffset,
   getMonthHeight,
   getVerticalListMetrics,
   getVerticalMonthScrollY,
   getVerticalMonthsOffset,
-} from './Month'
+  indexFromVerticalScroll,
+} from './monthLayout'
 import {
   getMaxIndex,
   getMinIndex,
@@ -40,6 +33,7 @@ import {
   nextVisibleIndexes,
   type RenderProps,
   type SwiperProps,
+  useCalendarKeyboard,
   useFocusDate,
   useYearChange,
 } from './SwiperUtils'
@@ -101,15 +95,15 @@ function Swiper({
       startYear,
     }
   )
-  useDatePickerKeys(keyboardEnabled, {
-    getVisibleMonth: () =>
-      addMonths(new Date(), getRealIndex(indexRef.current, startYear, endYear)),
+  useCalendarKeyboard(keyboardEnabled, indexRef, {
+    endYear,
     onConfirm: onKeyboardConfirm,
     onFocusDate,
     onMoveFocus,
     onMoveMonth: shiftIndex,
     onOpenMonthMenu,
     onOpenYearMenu,
+    startYear,
   })
   useYearChange(
     (newIndex) => {
@@ -242,10 +236,9 @@ function VerticalScroller({
         return
       }
 
-      const index = getIndexFromVerticalOffset(
-        verticalMetrics.origin +
-          top -
-          getBeginOffset(effectiveStartYear, effectiveEndYear),
+      const index = indexFromVerticalScroll(
+        top,
+        verticalMetrics.origin,
         startWeekOnMonday,
         effectiveStartYear,
         effectiveEndYear

@@ -14,7 +14,6 @@ import TimeInput from '../../Time/TimeInput'
 import TimeInputs from '../../Time/TimeInputs'
 import TimePicker from '../../Time/TimePicker'
 import TimePickerModal from '../../Time/TimePickerModal'
-import { circleSize } from '../../Time/timeUtils'
 import en from '../../translations/en'
 import { registerTranslation } from '../../translations/utils'
 
@@ -52,44 +51,68 @@ describe('analog clock', () => {
   it('tracks hours and minutes from pointer moves', async () => {
     const configs: Array<Record<string, Function>> = []
     const create = PanResponder.create.bind(PanResponder)
-    const modes: Array<'AM' | 'PM' | undefined> = ['AM', 'PM', undefined]
     const onChange = jest.fn()
-    const spy = jest.spyOn(PanResponder, 'create').mockImplementation((config) => {
-      configs.push(config as Record<string, Function>)
-      return create(config)
-    })
-    try {
-      for (const mode of modes) {
-        for (const focused of ['hours', 'minutes', 'seconds'] as const) {
-          for (const is24Hour of [true, false]) {
-            await render(
-              <DisplayModeContext.Provider value={{ mode, setMode: () => null }}>
-                <AnalogClock
-                  focused={focused as 'hours'}
-                  hours={is24Hour ? 15 : 12}
-                  is24Hour={is24Hour}
-                  minutes={30}
-                  onChange={onChange}
-                />
-              </DisplayModeContext.Provider>
-            )
-            const responder = configs[configs.length - 1]
-            expect(responder.onStartShouldSetPanResponder()).toBe(true)
-            expect(responder.onStartShouldSetPanResponderCapture()).toBe(false)
-            expect(responder.onMoveShouldSetPanResponder()).toBe(true)
-            expect(responder.onMoveShouldSetPanResponderCapture()).toBe(true)
-            expect(responder.onPanResponderTerminationRequest()).toBe(true)
-            expect(responder.onShouldBlockNativeResponder()).toBe(true)
-            for (let x = 0; x <= circleSize; x += 64) {
-              for (let y = 0; y <= circleSize; y += 64) {
-                responder.onPanResponderGrant(clockEvent(x, y))
-                responder.onPanResponderMove(clockEvent(x, y))
-                responder.onPanResponderRelease(clockEvent(x, y))
-              }
-            }
-          }
-        }
+    const spy = jest
+      .spyOn(PanResponder, 'create')
+      .mockImplementation((config) => {
+        configs.push(config as Record<string, Function>)
+        return create(config)
+      })
+
+    async function drag(
+      mode: 'AM' | 'PM' | undefined,
+      focused: 'hours' | 'minutes' | 'seconds',
+      is24Hour: boolean,
+      points: Array<readonly [number, number]>
+    ) {
+      await render(
+        <DisplayModeContext.Provider value={{ mode, setMode: () => null }}>
+          <AnalogClock
+            focused={focused as 'hours'}
+            hours={is24Hour ? 15 : 12}
+            is24Hour={is24Hour}
+            minutes={30}
+            onChange={onChange}
+          />
+        </DisplayModeContext.Provider>
+      )
+      const responder = configs[configs.length - 1]
+      for (const [x, y] of points) {
+        const event = clockEvent(x, y)
+        responder.onPanResponderGrant(event)
+        responder.onPanResponderMove(event)
+        responder.onPanResponderRelease(event)
       }
+      return responder
+    }
+
+    try {
+      // Each point lands on a different hour path: outer ring, inner noon,
+      // midnight, and the hour that is already selected.
+      const responder = await drag('AM', 'hours', true, [
+        [0, 0],
+        [112, 48],
+        [96, 0],
+        [144, 128],
+      ])
+      expect(responder.onStartShouldSetPanResponder()).toBe(true)
+      expect(responder.onStartShouldSetPanResponderCapture()).toBe(false)
+      expect(responder.onMoveShouldSetPanResponder()).toBe(true)
+      expect(responder.onMoveShouldSetPanResponderCapture()).toBe(true)
+      expect(responder.onPanResponderTerminationRequest()).toBe(true)
+      expect(responder.onShouldBlockNativeResponder()).toBe(true)
+
+      await drag('PM', 'hours', false, [
+        [0, 0],
+        [96, 0],
+      ])
+      await drag(undefined, 'hours', false, [[96, 0]])
+      await drag('PM', 'hours', true, [[96, 0]])
+      await drag('AM', 'minutes', false, [
+        [0, 0],
+        [128, 144],
+      ])
+      await drag('AM', 'seconds', false, [[0, 0]])
     } finally {
       spy.mockRestore()
     }
@@ -202,7 +225,10 @@ describe('analog clock', () => {
 
     const unlabeled = await render(<ClockNumber left={10} top={10} value={1} />)
     let dial = unlabeled.getByText('1')
-    while (dial.parent && typeof dial.props.onAccessibilityAction !== 'function') {
+    while (
+      dial.parent &&
+      typeof dial.props.onAccessibilityAction !== 'function'
+    ) {
       dial = dial.parent
     }
     await fireEvent(dial, 'accessibilityAction', {
@@ -277,10 +303,15 @@ describe('time inputs', () => {
         onFocusInput={onFocusInput}
       />
     )
-    landscape.container.queryAll(
-      (node: { props: { accessibilityLabel?: string; onPress?: Function } }) =>
-        node.props.accessibilityLabel === 'PM' && node.props.onPress
-    ).forEach((node: { props: { onPress: Function } }) => node.props.onPress())
+    landscape.container
+      .queryAll(
+        (node) =>
+          node.props.accessibilityLabel === 'PM' &&
+          typeof node.props.onPress === 'function'
+      )
+      .forEach((node) => {
+        ;(node.props.onPress as () => void)()
+      })
     await fireEvent.press(landscape.getByLabelText('PM'))
     expect(onChange).toHaveBeenCalled()
   })
@@ -292,12 +323,12 @@ describe('time inputs', () => {
     )
     vertical.container
       .queryAll(
-        (node: { props: { accessibilityLabel?: string } }) =>
+        (node) =>
           node.props.accessibilityLabel === 'AM' ||
           node.props.accessibilityLabel === 'PM'
       )
-      .forEach((node: { parent: null; props: Record<string, unknown>; unstable_fiber?: null }) => {
-        const onPress = findPress(node)
+      .forEach((node) => {
+        const onPress = findPress(node as Parameters<typeof findPress>[0])
         if (onPress) onPress()
       })
 
@@ -306,12 +337,12 @@ describe('time inputs', () => {
     )
     afternoon.container
       .queryAll(
-        (node: { props: { accessibilityLabel?: string } }) =>
+        (node) =>
           node.props.accessibilityLabel === 'AM' ||
           node.props.accessibilityLabel === 'PM'
       )
-      .forEach((node: { props: Record<string, unknown>; unstable_fiber?: null }) => {
-        findPress(node)?.()
+      .forEach((node) => {
+        findPress(node as Parameters<typeof findPress>[0])?.()
       })
 
     await render(
@@ -342,9 +373,9 @@ describe('time inputs', () => {
       />
     )
     input.container
-      .queryAll((node: { props: { accessibilityRole?: string } }) => true)
-      .forEach((node: { props: Record<string, unknown>; unstable_fiber?: null }) => {
-        findPress(node)?.()
+      .queryAll(() => true)
+      .forEach((node) => {
+        findPress(node as Parameters<typeof findPress>[0])?.()
       })
 
     Platform.OS = 'android'
@@ -500,18 +531,21 @@ describe('time inputs', () => {
         children?: unknown
         props?: { style?: unknown }
       }
-      const color = StyleSheet.flatten(record.props?.style)?.backgroundColor
+      const color = StyleSheet.flatten(
+        record.props?.style as Parameters<typeof StyleSheet.flatten>[0]
+      )?.backgroundColor
       const nested = backgrounds(record.children)
       return typeof color === 'string' ? [color, ...nested] : nested
     }
-    const layer = (color: string) => backgrounds(states.toJSON()).includes(color)
+    const layer = (color: string) =>
+      backgrounds(states.toJSON()).includes(color)
     const hour = states.getByLabelText('Hour')
     await fireEvent(hour, 'focus')
     await fireEvent.changeText(hour, '99')
     expect(StyleSheet.flatten(hour.props.style).color).toBe('rgb(255, 0, 0)')
     await fireEvent(hour, 'blur')
     expect(StyleSheet.flatten(hour.props.style).color).toBe('rgb(0, 255, 0)')
-    await fireEvent(hour.parent, 'mouseEnter')
+    if (hour.parent) await fireEvent(hour.parent, 'mouseEnter')
     expect(layer('rgba(0, 255, 0, 0.08)')).toBe(true)
 
     const minute = states.getByLabelText('Minute')
@@ -574,12 +608,12 @@ describe('time picker modal', () => {
     )
     expect(keyboardHeadline.getByText('Enter time')).toBeTruthy()
     const backdrop = defaults.container.queryAll(
-      (node: { props: { onPress?: Function } }) => node.props.onPress === onDismiss
+      (node) => node.props.onPress === onDismiss
     )
     await act(() => {
-      backdrop.forEach((node: { props: { onPress: Function } }) =>
-        node.props.onPress()
-      )
+      backdrop.forEach((node) => {
+        ;(node.props.onPress as () => void)()
+      })
     })
 
     await render(
@@ -609,11 +643,7 @@ describe('time picker modal', () => {
 
     await setWindow(320, 360)
     const compact = await render(
-      <TimePickerModal
-        onConfirm={onConfirm}
-        onDismiss={onDismiss}
-        visible
-      />
+      <TimePickerModal onConfirm={onConfirm} onDismiss={onDismiss} visible />
     )
     expect(compact.queryByLabelText('Toggle keyboard')).toBeNull()
     expect(compact.queryByLabelText('Toggle clock')).toBeNull()

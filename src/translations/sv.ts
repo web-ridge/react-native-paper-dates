@@ -1,9 +1,13 @@
-import type { TranslationsType } from './utils'
+import { registerTranslation, type TranslationsType } from './utils'
 
 const sv: TranslationsType = {
   am: 'fm',
+  cancel: 'Avbryt',
   close: 'Stäng',
+  confirm: 'OK',
   dateIsDisabled: 'Datumet är inte tillåtet',
+  enterDate: 'Ange datum',
+  enterDates: 'Ange datum',
   hour: 'Timme',
   hourOf: (hour, total) => `Timme ${hour} av ${total}`,
   minute: 'Minut',
@@ -28,3 +32,5 @@ const sv: TranslationsType = {
 }
 
 export default sv
+
+registerTranslation('sv', sv)

@@ -116,6 +116,12 @@ export default function DatePickerModalContentHeader(
   )
 }
 
+const selectionLabel = {
+  multiple: 'selectMultiple',
+  range: 'selectRange',
+  single: 'selectSingle',
+} as const
+
 function getLabel(
   locale: string | undefined,
   mode: ModeType,
@@ -124,16 +130,11 @@ function getLabel(
   if (configuredLabel) {
     return configuredLabel
   }
-  if (mode === 'range') {
-    return getTranslation(locale, 'selectRange')
+  const key = selectionLabel[mode]
+  if (!key) {
+    return ''
   }
-  if (mode === 'multiple') {
-    return getTranslation(locale, 'selectMultiple')
-  }
-  if (mode === 'single') {
-    return getTranslation(locale, 'selectSingle')
-  }
-  return '...?'
+  return getTranslation(locale, key)
 }
 
 export function HeaderContentMulti({

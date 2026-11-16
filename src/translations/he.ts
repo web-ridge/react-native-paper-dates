@@ -1,9 +1,13 @@
-import type { TranslationsType } from './utils'
+import { registerTranslation, type TranslationsType } from './utils'
 
 const he: TranslationsType = {
   am: 'AM',
+  cancel: 'ביטול',
   close: 'סגור',
+  confirm: 'אישור',
   dateIsDisabled: 'יום לא מורשה',
+  enterDate: 'הזן תאריך',
+  enterDates: 'הזן תאריכים',
   hour: 'שעה',
   hourOf: (hour, total) => `שעה ${hour} מתוך ${total}`,
   minute: 'דקה',
@@ -28,3 +32,5 @@ const he: TranslationsType = {
 }
 
 export default he
+
+registerTranslation('he', he)

@@ -27,42 +27,40 @@ import {
   useTheme,
 } from 'react-native-paper'
 import {
-  ar,
-  ca,
-  cs,
-  da,
   DatePickerInput,
   DatePickerModal,
   DatePickerModalInput,
-  de,
-  el,
-  en,
-  enGB,
-  es,
-  fi,
-  fr,
-  he,
-  hi,
-  id,
-  it,
-  ja,
-  ko,
-  nl,
-  noNO,
-  pl,
-  pt,
-  registerTranslation,
-  ro,
-  ru,
-  sv,
-  th,
   TimePickerModal,
-  tr,
-  type TranslationsType,
-  ukUA,
-  zh,
-  zhTW,
 } from 'react-native-paper-dates'
+import 'react-native-paper-dates/translations/ar'
+import 'react-native-paper-dates/translations/ca'
+import 'react-native-paper-dates/translations/cs'
+import 'react-native-paper-dates/translations/da'
+import 'react-native-paper-dates/translations/de'
+import 'react-native-paper-dates/translations/el'
+import 'react-native-paper-dates/translations/en'
+import 'react-native-paper-dates/translations/enGB'
+import 'react-native-paper-dates/translations/es'
+import 'react-native-paper-dates/translations/fi'
+import 'react-native-paper-dates/translations/fr'
+import 'react-native-paper-dates/translations/he'
+import 'react-native-paper-dates/translations/hi'
+import 'react-native-paper-dates/translations/id'
+import 'react-native-paper-dates/translations/it'
+import 'react-native-paper-dates/translations/ja'
+import 'react-native-paper-dates/translations/ko'
+import 'react-native-paper-dates/translations/nl'
+import 'react-native-paper-dates/translations/noNO'
+import 'react-native-paper-dates/translations/pl'
+import 'react-native-paper-dates/translations/pt'
+import 'react-native-paper-dates/translations/ro'
+import 'react-native-paper-dates/translations/ru'
+import 'react-native-paper-dates/translations/sv'
+import 'react-native-paper-dates/translations/th'
+import 'react-native-paper-dates/translations/tr'
+import 'react-native-paper-dates/translations/ukUA'
+import 'react-native-paper-dates/translations/zh'
+import 'react-native-paper-dates/translations/zhTW'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { libraryVersion } from './libraryVersion'
@@ -299,7 +297,7 @@ export default function Example({
     startDate: undefined,
   })
   const insets = useSafeAreaInsets()
-  const [locale, setLocale] = useState('en-GB')
+  const [locale, setLocale] = useState('en')
   const dateFormatter = useMemo(
     () =>
       new Intl.DateTimeFormat(locale, {
@@ -797,7 +795,6 @@ type LocaleOption = {
   code: string
   english: string
   native?: string
-  translations: TranslationsType
 }
 
 const localeCatalog: LocaleOption[] = [
@@ -805,169 +802,141 @@ const localeCatalog: LocaleOption[] = [
     code: 'ar',
     english: 'Arabic',
     native: 'العربية',
-    translations: ar,
   },
   {
     code: 'ca',
     english: 'Catalan',
     native: 'català',
-    translations: ca,
   },
   {
     code: 'cs',
     english: 'Czech',
     native: 'čeština',
-    translations: cs,
   },
   {
     code: 'da',
     english: 'Danish',
     native: 'dansk',
-    translations: da,
   },
   {
     code: 'de',
     english: 'German',
     native: 'Deutsch',
-    translations: de,
   },
   {
     code: 'el',
     english: 'Greek',
     native: 'Ελληνικά',
-    translations: el,
   },
-  { code: 'en', english: 'English', translations: en },
+  { code: 'en', english: 'English' },
   {
     code: 'en-GB',
     english: 'English (United Kingdom)',
-    translations: enGB,
   },
   {
     code: 'es',
     english: 'Spanish',
     native: 'español',
-    translations: es,
   },
   {
     code: 'fi',
     english: 'Finnish',
     native: 'suomi',
-    translations: fi,
   },
   {
     code: 'fr',
     english: 'French',
     native: 'français',
-    translations: fr,
   },
   {
     code: 'he',
     english: 'Hebrew',
     native: 'עברית',
-    translations: he,
   },
   {
     code: 'hi',
     english: 'Hindi',
     native: 'हिन्दी',
-    translations: hi,
   },
   {
     code: 'id',
     english: 'Indonesian',
     native: 'Indonesia',
-    translations: id,
   },
   {
     code: 'it',
     english: 'Italian',
     native: 'italiano',
-    translations: it,
   },
   {
     code: 'ja',
     english: 'Japanese',
     native: '日本語',
-    translations: ja,
   },
   {
     code: 'ko',
     english: 'Korean',
     native: '한국어',
-    translations: ko,
   },
   {
     code: 'nl',
     english: 'Dutch',
     native: 'Nederlands',
-    translations: nl,
   },
   {
     code: 'no-NO',
     english: 'Norwegian',
     native: 'norsk',
-    translations: noNO,
   },
   {
     code: 'pl',
     english: 'Polish',
     native: 'polski',
-    translations: pl,
   },
   {
     code: 'pt',
     english: 'Portuguese',
     native: 'português',
-    translations: pt,
   },
   {
     code: 'ro',
     english: 'Romanian',
     native: 'română',
-    translations: ro,
   },
   {
     code: 'ru',
     english: 'Russian',
     native: 'русский',
-    translations: ru,
   },
   {
     code: 'sv',
     english: 'Swedish',
     native: 'svenska',
-    translations: sv,
   },
   {
     code: 'th',
     english: 'Thai',
     native: 'ไทย',
-    translations: th,
   },
   {
     code: 'tr',
     english: 'Turkish',
     native: 'Türkçe',
-    translations: tr,
   },
   {
     code: 'uk-UA',
     english: 'Ukrainian',
     native: 'українська',
-    translations: ukUA,
   },
   {
     code: 'zh',
     english: 'Chinese',
     native: '中文',
-    translations: zh,
   },
   {
     code: 'zh-TW',
     english: 'Chinese (Taiwan)',
     native: '中文（台灣）',
-    translations: zhTW,
   },
 ]
 type OpenDialog =
@@ -982,6 +951,3 @@ type TimeValue = {
   hours: number | undefined
   minutes: number | undefined
 }
-localeCatalog.forEach(({ code, translations }) => {
-  registerTranslation(code, translations)
-})

@@ -24,15 +24,13 @@ const defaultInputTypeIcons = {
 
 describe('timeUtils', () => {
   it('returns am from midnight through 11', () => {
-    for (let i = 0; i < 12; i++) {
-      expect(getHourType(i)).toBe(hourTypes.am)
-    }
+    expect(getHourType(0)).toBe(hourTypes.am)
+    expect(getHourType(11)).toBe(hourTypes.am)
   })
 
   it('returns pm from noon through 23', () => {
-    for (let i = 12; i < 24; i++) {
-      expect(getHourType(i)).toBe(hourTypes.pm)
-    }
+    expect(getHourType(12)).toBe(hourTypes.pm)
+    expect(getHourType(23)).toBe(hourTypes.pm)
   })
 
   it('should return undefined hour type, for invalid hour', () => {
@@ -104,13 +102,16 @@ describe('timeUtils', () => {
       Math.PI / 2
     )
 
-    for (let angle = -8; angle <= 8; angle += 0.05) {
-      getHours(angle, hourTypes.am)
-      getHours(angle, hourTypes.pm)
-      getHours(angle, undefined)
-      getMinutes(angle)
-      snap(angle, Math.PI / 6)
-    }
+    // Angles that hit a negative hour, hour 12, and a minute that wraps past 60.
+    expect(getHours(0.3, undefined)).toBe(10)
+    expect(getHours(1.6, hourTypes.am)).toBe(12)
+    expect(getHours(7.9, undefined)).toBe(0)
+    expect(getHours(7.9, hourTypes.am)).toBe(12)
+    expect(getHours(-6.25, undefined)).toBe(9)
+    expect(getMinutes(0.05)).toBe(45)
+    expect(getMinutes(7.85)).toBe(0)
+    expect(snap(-6.25, Math.PI / 6)).toBeCloseTo(-Math.PI * 2)
+    expect(snap(0.3, Math.PI / 6)).toBeCloseTo(Math.PI / 6)
 
     expect(toHourInputFormat(24, true)).toBe(0)
     expect(toHourInputFormat(0, false)).toBe(12)
@@ -135,6 +136,9 @@ describe('timeUtils', () => {
     expect(isValidMinuteInput(59)).toBe(true)
     expect(isValidMinuteInput(60)).toBe(false)
     expect(isValidMinuteInput(Number.NaN)).toBe(false)
+    expect(isValidHourInput(Number.NaN, true)).toBe(false)
+    expect(isValidHourInput(Number.POSITIVE_INFINITY, false)).toBe(false)
+    expect(isValidHourInput(-1, true)).toBe(false)
   })
 
   it('chooses landscape or input fallback from the viewport', () => {

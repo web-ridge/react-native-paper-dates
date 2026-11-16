@@ -4,7 +4,7 @@ import { Pressable, Text } from 'react-native'
 import { DarkTheme, ThemeProvider } from 'react-native-paper'
 
 import { getStartAtIndex } from '../../Date/dateUtils'
-import { getVerticalMonthsOffset } from '../../Date/Month'
+import { getVerticalMonthsOffset } from '../../Date/monthLayout'
 import { getMaxIndex, isIndexWithinRange } from '../../Date/SwiperUtils'
 import { pressNode } from '../../testUtils'
 
@@ -20,14 +20,14 @@ jest.mock('../../Date/SwiperUtils', () => {
   }
 })
 
-const originalWindow = global.window
+const originalWindow = globalThis.window
 
 beforeAll(() => {
-  global.window = global as typeof globalThis & Window
+  globalThis.window = globalThis as typeof globalThis & Window
 })
 
 afterAll(() => {
-  global.window = originalWindow
+  globalThis.window = originalWindow
 })
 
 describe('web swiper', () => {
@@ -85,22 +85,26 @@ describe('web swiper', () => {
 
     const vertical = await render(
       <ThemeProvider theme={{ ...DarkTheme, roundness: 4 }}>
-      <SwiperWeb
-        endYear={2030}
-        initialIndex={getStartAtIndex(2020, 2030)}
-        initialLayout={{ height: 400, width: 280 }}
-        renderHeader={() => <Text>header</Text>}
-        renderItem={() => <Text>month</Text>}
-        scrollMode="vertical"
-        selectedYear={undefined}
-        startWeekOnMonday={false}
-        startYear={2020}
-      />
+        <SwiperWeb
+          endYear={2030}
+          initialIndex={getStartAtIndex(2020, 2030)}
+          initialLayout={{ height: 400, width: 280 }}
+          renderHeader={() => <Text>header</Text>}
+          renderItem={() => <Text>month</Text>}
+          scrollMode="vertical"
+          selectedYear={undefined}
+          startWeekOnMonday={false}
+          startYear={2020}
+        />
       </ThemeProvider>
     )
     const scrollers = vertical.container.queryAll(
-      (node: { props: { onScroll?: Function } }) => node.props.onScroll
-    ) as Array<{ props: { onScroll: Function } }>
+      (node) => typeof node.props.onScroll === 'function'
+    ) as unknown as Array<{
+      props: {
+        onScroll: (event: { currentTarget: { scrollTop?: number } }) => void
+      }
+    }>
     await act(async () => {
       scrollers.forEach((node) => {
         node.props.onScroll({ currentTarget: { scrollTop: 0 } })

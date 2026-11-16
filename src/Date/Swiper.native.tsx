@@ -18,15 +18,13 @@ import {
 
 import { sharedStyles } from '../shared/styles'
 import AutoSizer from './AutoSizer'
-import { useDatePickerKeys } from './datePickerKeys'
-import { addMonths, getBeginOffset, getRealIndex } from './dateUtils'
 import {
-  getIndexFromVerticalOffset,
   getMonthHeight,
   getVerticalListMetrics,
   getVerticalMonthScrollY,
   getVerticalMonthsOffset,
-} from './Month'
+  indexFromVerticalScroll,
+} from './monthLayout'
 import {
   getMaxIndex,
   getMinIndex,
@@ -34,6 +32,7 @@ import {
   isIndexWithinRange,
   nextVisibleIndexes,
   SwiperProps,
+  useCalendarKeyboard,
   useFocusDate,
   useYearChange,
 } from './SwiperUtils'
@@ -215,8 +214,9 @@ function SwiperInner({
 
   const syncVerticalIndex = useCallback(
     (scrollY: number) => {
-      const newIndex = getIndexFromVerticalOffset(
-        verticalMetrics.origin + scrollY - getBeginOffset(startYear, endYear),
+      const newIndex = indexFromVerticalScroll(
+        scrollY,
+        verticalMetrics.origin,
         startWeekOnMonday,
         startYear,
         endYear
@@ -289,15 +289,15 @@ function SwiperInner({
       startYear,
     }
   )
-  useDatePickerKeys(keyboardEnabled, {
-    getVisibleMonth: () =>
-      addMonths(new Date(), getRealIndex(idx.current, startYear, endYear)),
+  useCalendarKeyboard(keyboardEnabled, idx, {
+    endYear,
     onConfirm: onKeyboardConfirm,
     onFocusDate,
     onMoveFocus,
     onMoveMonth: moveMonth,
     onOpenMonthMenu,
     onOpenYearMenu,
+    startYear,
   })
   useYearChange(
     (newIndex) => {

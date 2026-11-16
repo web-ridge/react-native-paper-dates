@@ -1,9 +1,13 @@
-import type { TranslationsType } from './utils'
+import { registerTranslation, type TranslationsType } from './utils'
 
 const el: TranslationsType = {
   am: 'π.μ.',
+  cancel: 'Ακύρωση',
   close: 'Κλείσε',
+  confirm: 'OK',
   dateIsDisabled: 'Ημέρα δεν επιτρέπεται',
+  enterDate: 'Εισαγωγή ημερομηνίας',
+  enterDates: 'Εισαγωγή ημερομηνιών',
   hour: 'ώρα',
   hourOf: (hour, total) => `Ώρα ${hour} από ${total}`,
   minute: 'λεπτό',
@@ -28,3 +32,5 @@ const el: TranslationsType = {
 }
 
 export default el
+
+registerTranslation('el', el)

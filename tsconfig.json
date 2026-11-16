@@ -12,20 +12,13 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "paths": {
-      "react-native-paper-dates": ["./src/index"]
+      "react-native-paper-dates": ["./src/index"],
+      "react-native-paper-dates/translations/*": ["./src/translations/*"]
     },
     "skipLibCheck": true,
     "strict": true,
     "target": "esnext",
     "types": ["jest"]
   },
-  "exclude": [
-    "website",
-    "src/__tests__/gaps.test.tsx",
-    "src/__tests__/utilsCoverage.test.tsx",
-    "src/__tests__/Date/Swiper.web.test.tsx",
-    "src/__tests__/Date/dateUtils.test.tsx",
-    "src/__tests__/Date/interactions.test.tsx",
-    "src/__tests__/Time/interactions.test.tsx"
-  ]
+  "exclude": ["website"],
 }

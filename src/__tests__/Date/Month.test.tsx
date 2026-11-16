@@ -2,13 +2,14 @@ import { render, within } from '@testing-library/react-native'
 import { StyleSheet } from 'react-native'
 
 import { getInitialIndex, getStartAtIndex } from '../../Date/dateUtils'
-import Month, {
+import Month from '../../Date/Month'
+import {
   getMonthHeight,
   getVerticalListMetrics,
   getVerticalMonthsOffset,
   horizontalMonthScrolls,
   horizontalWeekHeight,
-} from '../../Date/Month'
+} from '../../Date/monthLayout'
 import { getMaxIndex, getMinIndex } from '../../Date/SwiperUtils'
 
 function bars(screen: { container: { queryAll: Function } }, color: string) {

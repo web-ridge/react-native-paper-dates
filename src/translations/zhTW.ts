@@ -1,9 +1,13 @@
-import type { TranslationsType } from './utils'
+import { registerTranslation, type TranslationsType } from './utils'
 
 const zhTW: TranslationsType = {
   am: '上午',
+  cancel: '取消',
   close: '關閉',
+  confirm: '確定',
   dateIsDisabled: '日期不可選',
+  enterDate: '輸入日期',
+  enterDates: '輸入日期',
   hour: '小時',
   hourOf: (hour, total) => `小時 ${hour} / ${total}`,
   minute: '分鐘',
@@ -27,3 +31,5 @@ const zhTW: TranslationsType = {
 }
 
 export default zhTW
+
+registerTranslation('zh-TW', zhTW)

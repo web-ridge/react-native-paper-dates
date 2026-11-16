@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react-native'
 
 import Calendar from '../../Date/Calendar'
-import { pressTestId } from '../../testUtils'
+import { installDateKeyListener, pressNode, pressTestId } from '../../testUtils'
 
 it('shows one month without a pager', async () => {
   const screen = await render(
@@ -98,4 +98,106 @@ it('does not complete a range on the same day', async () => {
     endDate: new Date(2026, 10, 12, 23, 59, 59, 999),
     startDate: start,
   })
+})
+
+function dayFocused(
+  screen: {
+    getAllByTestId: (testId: string) => Array<{
+      children?: Array<object | string>
+      props?: { pointerEvents?: string }
+    }>
+  },
+  testId: string
+) {
+  const focused = (node: {
+    children?: Array<object | string>
+    props?: { pointerEvents?: string }
+  }): boolean => {
+    if (node.props?.pointerEvents === 'none') return true
+    return (node.children ?? []).some(
+      (child) => typeof child !== 'string' && focused(child)
+    )
+  }
+  return screen.getAllByTestId(testId).some((day) => focused(day))
+}
+
+async function pressLabel(
+  screen: { container: { queryAll: Function } },
+  label: string
+) {
+  const node = screen.container.queryAll(
+    (item: { props: { accessibilityLabel?: string } }) =>
+      item.props.accessibilityLabel === label
+  )[0]
+  if (!node) {
+    throw new Error(`missing ${label}`)
+  }
+  await pressNode(node)
+}
+
+it('moves the focused day from the keyboard and clamps a short month', async () => {
+  const keys = installDateKeyListener()
+  const layout = { height: 400, width: 320 }
+  try {
+    const screen = await render(
+      <Calendar
+        date={new Date(2026, 0, 31)}
+        endYear={2028}
+        initialLayout={layout}
+        locale="en"
+        mode="single"
+        onChange={() => null}
+        startYear={2024}
+      />
+    )
+
+    await keys.press('m', true)
+    await pressLabel(screen, 'February')
+    expect(dayFocused(screen, 'react-native-paper-dates-day-2026-1-28')).toBe(
+      true
+    )
+    expect(screen.queryByLabelText('June')).toBeNull()
+
+    await keys.press('PageDown')
+    expect(dayFocused(screen, 'react-native-paper-dates-day-2026-2-28')).toBe(
+      true
+    )
+    expect(screen.getByText('March 2026')).toBeTruthy()
+
+    await keys.press('y', true)
+    await pressLabel(screen, '2027')
+    expect(screen.getByText('March 2027')).toBeTruthy()
+
+    const last = await render(
+      <Calendar
+        date={new Date(2026, 11, 15)}
+        endYear={2026}
+        initialLayout={layout}
+        locale="en"
+        mode="single"
+        onChange={() => null}
+        startYear={2026}
+      />
+    )
+    await keys.press('PageDown')
+    expect(last.getByText('December 2026')).toBeTruthy()
+    expect(last.queryByText('January 2027')).toBeNull()
+
+    const first = await render(
+      <Calendar
+        date={new Date(2026, 0, 15)}
+        endYear={2026}
+        initialLayout={layout}
+        locale="en"
+        mode="single"
+        onChange={() => null}
+        startYear={2026}
+      />
+    )
+    await keys.press('PageUp')
+    expect(first.getByText('January 2026')).toBeTruthy()
+    expect(first.queryByText('December 2025')).toBeNull()
+  } finally {
+    keys.restore()
+  }
 })

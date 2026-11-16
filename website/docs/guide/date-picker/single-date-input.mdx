@@ -10,10 +10,9 @@ The single date input opens a dialog on a text field, for a date such as a birth
 import React from 'react';
 import { View } from 'react-native';
 import { Button, PaperProvider } from 'react-native-paper';
-import { DatePickerModalInput, en, registerTranslation } from 'react-native-paper-dates';
+import { DatePickerModalInput } from 'react-native-paper-dates';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-registerTranslation('en', en);
 
 export default function App() {
   const [date, setDate] = React.useState(undefined);

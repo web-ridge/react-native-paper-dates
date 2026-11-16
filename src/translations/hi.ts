@@ -1,9 +1,13 @@
-import type { TranslationsType } from './utils'
+import { registerTranslation, type TranslationsType } from './utils'
 
 const hi: TranslationsType = {
   am: 'AM',
+  cancel: 'रद्द करें',
   close: 'बंद करें',
+  confirm: 'ठीक',
   dateIsDisabled: 'दिन की अनुमति नहीं है',
+  enterDate: 'तारीख दर्ज करें',
+  enterDates: 'तारीखें दर्ज करें',
   hour: 'घंटा',
   hourOf: (hour, total) => `घंटा ${hour} / ${total}`,
   minute: 'मिनट',
@@ -28,3 +32,5 @@ const hi: TranslationsType = {
 }
 
 export default hi
+
+registerTranslation('hi', hi)

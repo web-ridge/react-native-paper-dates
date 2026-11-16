@@ -1,8 +1,10 @@
 import { type MutableRefObject, type ReactNode, useEffect } from 'react'
 
 import { useLatest } from '../shared/utils'
+import { useDatePickerKeys } from './datePickerKeys'
 import {
   addMonths,
+  currentCalendarMonth,
   defaultEndYear,
   defaultStartYear,
   differenceInMonths,
@@ -41,32 +43,48 @@ export type SwiperProps = {
 
 export const verticalMonthOverscan = 6
 export const verticalWindowEdge = 2
+const indexBoundCache = new Map<string, number>()
 
 export function getMaxIndex(startYear?: number, endYear?: number): number {
+  const { month, stamp, year } = currentCalendarMonth()
+  const key = `max:${startYear ?? ''}:${endYear ?? ''}:${endYear ? stamp : ''}`
+  const cached = indexBoundCache.get(key)
+  if (cached !== undefined) return cached
+
   const dynamicStartAtIndex = getStartAtIndex(startYear, endYear)
   const totalMonths = getTotalMonths(startYear, endYear)
-
-  if (!endYear) return totalMonths - 1
-
-  const endDate = new Date(endYear, 11, 31)
-  const today = new Date()
-  const months = differenceInMonths(today, endDate)
-  const maxIndex = dynamicStartAtIndex + months
-
-  return Math.max(0, Math.min(maxIndex, totalMonths - 1))
+  const value = endYear
+    ? Math.max(
+        0,
+        Math.min(
+          dynamicStartAtIndex + (endYear - year) * 12 - month + 11,
+          totalMonths - 1
+        )
+      )
+    : totalMonths - 1
+  indexBoundCache.set(key, value)
+  return value
 }
 
 export function getMinIndex(startYear?: number, endYear?: number): number {
   if (!startYear) return 0
 
-  const dynamicStartAtIndex = getStartAtIndex(startYear, endYear)
-  const startDate = new Date(startYear, 0, 1)
-  const today = new Date()
-  const months = differenceInMonths(today, startDate)
-  const minIndex = dynamicStartAtIndex + months
-  const totalMonths = getTotalMonths(startYear, endYear)
+  const { month, stamp, year } = currentCalendarMonth()
+  const key = `min:${startYear}:${endYear ?? ''}:${stamp}`
+  const cached = indexBoundCache.get(key)
+  if (cached !== undefined) return cached
 
-  return Math.max(0, Math.min(minIndex, totalMonths - 1))
+  const dynamicStartAtIndex = getStartAtIndex(startYear, endYear)
+  const totalMonths = getTotalMonths(startYear, endYear)
+  const value = Math.max(
+    0,
+    Math.min(
+      dynamicStartAtIndex + (startYear - year) * 12 - month,
+      totalMonths - 1
+    )
+  )
+  indexBoundCache.set(key, value)
+  return value
 }
 
 export function getVerticalWindow(
@@ -128,6 +146,41 @@ export function sameIndexes(left: number[], right: number[]) {
     }
   }
   return true
+}
+
+export function useCalendarKeyboard(
+  enabled: boolean,
+  indexRef: MutableRefObject<number>,
+  {
+    endYear,
+    onConfirm,
+    onFocusDate,
+    onMoveFocus,
+    onMoveMonth,
+    onOpenMonthMenu,
+    onOpenYearMenu,
+    startYear,
+  }: {
+    endYear?: number
+    onConfirm?: () => void
+    onFocusDate?: (date: Date) => void
+    onMoveFocus?: (deltaMonths: number) => void
+    onMoveMonth: (delta: number) => void
+    onOpenMonthMenu?: () => void
+    onOpenYearMenu?: () => void
+    startYear?: number
+  }
+) {
+  useDatePickerKeys(enabled, {
+    getVisibleMonth: () =>
+      addMonths(new Date(), getRealIndex(indexRef.current, startYear, endYear)),
+    onConfirm,
+    onFocusDate,
+    onMoveFocus,
+    onMoveMonth,
+    onOpenMonthMenu,
+    onOpenYearMenu,
+  })
 }
 
 export function useFocusDate(

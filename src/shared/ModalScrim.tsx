@@ -2,7 +2,7 @@ import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { useTheme } from 'react-native-paper'
 
 import { sharedStyles } from './styles'
-import { scrimColor } from './utils'
+import { themeColor, withAlpha } from './utils'
 
 export default function ModalScrim({ onDismiss }: { onDismiss: () => void }) {
   const theme = useTheme()
@@ -13,7 +13,9 @@ export default function ModalScrim({ onDismiss }: { onDismiss: () => void }) {
         style={[
           StyleSheet.absoluteFill,
           sharedStyles.root,
-          { backgroundColor: scrimColor(theme.colors.scrim) },
+          {
+            backgroundColor: withAlpha(themeColor(theme.colors.scrim), 0.32),
+          },
         ]}
       />
     </TouchableWithoutFeedback>

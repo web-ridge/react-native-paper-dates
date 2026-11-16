@@ -99,6 +99,27 @@ it('does not let day content swallow presses', async () => {
   )
 })
 
+it('shrinks the day when the row is shorter than the default cell', async () => {
+  const dayContent: DayContentRenderer = () => (
+    <Text testID="day-content">•</Text>
+  )
+  const view = await render(
+    <Day {...defaultProps} cellHeight={24} dayContent={dayContent} />
+  )
+  expect(
+    view.getByTestId('react-native-paper-dates-day-2025-0-15')
+  ).toHaveStyle({ height: 24 })
+  expect(view.getByText('15').parent).toHaveStyle({
+    borderRadius: 12,
+    height: 24,
+    width: 24,
+  })
+  expect(view.getByTestId('day-content').parent).toHaveStyle({
+    height: 24,
+    width: 24,
+  })
+})
+
 it('renders day content at the given position with extra styles', async () => {
   const dayContent: DayContentRenderer = () => (
     <Text testID="day-content">•</Text>

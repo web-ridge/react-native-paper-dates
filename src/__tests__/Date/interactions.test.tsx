@@ -20,13 +20,14 @@ import { getBeginOffset, getStartAtIndex } from '../../Date/dateUtils'
 import Day from '../../Date/Day'
 import DayNames from '../../Date/DayNames'
 import DayRange from '../../Date/DayRange'
-import Month, {
+import Month from '../../Date/Month'
+import {
   getIndexFromVerticalOffset,
   getMonthHeight,
   getVerticalListMetrics,
   getVerticalMonthsOffset,
   horizontalMonthScrolls,
-} from '../../Date/Month'
+} from '../../Date/monthLayout'
 import { getMaxIndex, getMinIndex } from '../../Date/SwiperUtils'
 import Swiper from '../../Date/Swiper'
 import YearPicker from '../../Date/YearPicker'
@@ -47,13 +48,15 @@ const day = new Date(2026, 10, 11)
 const layout = { height: 480, width: 320 }
 
 function layouts(root: { queryAll: Function }, width: number, height: number) {
-  root.queryAll((node: { props: { onLayout?: Function } }) => {
-    return typeof node.props.onLayout === 'function'
-  }).forEach((node: { props: { onLayout: Function } }) => {
-    node.props.onLayout({
-      nativeEvent: { layout: { height, width, x: 0, y: 0 } },
+  root
+    .queryAll((node: { props: { onLayout?: Function } }) => {
+      return typeof node.props.onLayout === 'function'
     })
-  })
+    .forEach((node: { props: { onLayout: Function } }) => {
+      node.props.onLayout({
+        nativeEvent: { layout: { height, width, x: 0, y: 0 } },
+      })
+    })
 }
 
 const metrics = {
@@ -70,28 +73,30 @@ function safe(children: ReactNode) {
 describe('month offset helpers', () => {
   it('measures vertical month positions', () => {
     const start = getStartAtIndex(2020, 2030)
-    expect(
-      getIndexFromVerticalOffset(0, false, 2020, 2030)
-    ).toEqual(expect.any(Number))
-    expect(
-      getIndexFromVerticalOffset(5000, true, 2020, 2030)
-    ).toEqual(expect.any(Number))
-    expect(
-      getVerticalMonthsOffset(start, false, 2020, 2030)
-    ).toEqual(expect.any(Number))
-    expect(
-      getVerticalMonthsOffset(start + 2, false, 2020, 2030)
-    ).toEqual(expect.any(Number))
-    expect(
-      getVerticalMonthsOffset(start - 2, true, 2020, 2030)
-    ).toEqual(expect.any(Number))
+    expect(getIndexFromVerticalOffset(0, false, 2020, 2030)).toEqual(
+      expect.any(Number)
+    )
+    expect(getIndexFromVerticalOffset(5000, true, 2020, 2030)).toEqual(
+      expect.any(Number)
+    )
+    expect(getVerticalMonthsOffset(start, false, 2020, 2030)).toEqual(
+      expect.any(Number)
+    )
+    expect(getVerticalMonthsOffset(start + 2, false, 2020, 2030)).toEqual(
+      expect.any(Number)
+    )
+    expect(getVerticalMonthsOffset(start - 2, true, 2020, 2030)).toEqual(
+      expect.any(Number)
+    )
     const monthHeight = getMonthHeight('horizontal', start, false, 2020, 2030)
     expect(monthHeight).toBeGreaterThan(0)
     expect(
       horizontalMonthScrolls(monthHeight - 1, start, false, 2020, 2030)
     ).toBe(false)
     expect(horizontalMonthScrolls(0, start, false, 2020, 2030)).toBe(true)
-    expect(getMonthHeight('vertical', start, true, 2020, 2030)).toBeGreaterThan(0)
+    expect(getMonthHeight('vertical', start, true, 2020, 2030)).toBeGreaterThan(
+      0
+    )
   })
 
   it('finds the month that occupies a far scroll position', () => {
@@ -195,7 +200,6 @@ describe('calendar interactions', () => {
     await pressDays(multi, 2)
     await pressTestId(multi, 'react-native-paper-dates-day-2026-10-10')
 
-
     const empty = await render(
       <Calendar
         dates={undefined}
@@ -251,7 +255,12 @@ describe('calendar interactions', () => {
       startWeekOnMonday: true,
     }
     const single = await render(
-      <Month {...shared} date={new Date()} mode="single" scrollMode="horizontal" />
+      <Month
+        {...shared}
+        date={new Date()}
+        mode="single"
+        scrollMode="horizontal"
+      />
     )
     await pressDays(single, 1)
 
@@ -448,11 +457,14 @@ describe('date picker modal', () => {
     })
     const backdrop = screen.container.queryAll(
       (node: { props: { onPress?: Function; onRequestClose?: Function } }) =>
-        node.props.onPress === onDismiss || node.props.onRequestClose === onDismiss
+        node.props.onPress === onDismiss ||
+        node.props.onRequestClose === onDismiss
     )
     await act(() => {
       backdrop.forEach(
-        (node: { props: { onPress?: Function; onRequestClose?: Function } }) => {
+        (node: {
+          props: { onPress?: Function; onRequestClose?: Function }
+        }) => {
           if (node.props.onPress === onDismiss) node.props.onPress()
           else node.props.onRequestClose?.()
         }
@@ -558,13 +570,19 @@ describe('inputs, headers, and pickers', () => {
       />
     )
     const field = byTestId(plain, 'plain')[0]
-    await act(() => {
-      field.props.onChangeText?.('1/2/2026')
-    })
+    const changeText = field?.props.onChangeText
+    if (typeof changeText === 'function') {
+      await act(() => {
+        changeText('1/2/2026')
+      })
+    }
     const updated = byTestId(plain, 'plain')[0]
-    await act(() => {
-      updated.props.onBlur?.({})
-    })
+    const blur = updated?.props.onBlur
+    if (typeof blur === 'function') {
+      await act(() => {
+        blur({})
+      })
+    }
     expect(onChange).toHaveBeenCalledWith(new Date(2026, 0, 2))
 
     await render(
@@ -666,7 +684,11 @@ describe('inputs, headers, and pickers', () => {
     await render(
       safe(
         <>
-          <DatePickerModalHeader locale="en" onDismiss={() => null} onSave={() => null} />
+          <DatePickerModalHeader
+            locale="en"
+            onDismiss={() => null}
+            onSave={() => null}
+          />
 
           <DatePickerModalHeaderBackground>
             <DatePickerModalStatusBar
@@ -727,7 +749,11 @@ describe('inputs, headers, and pickers', () => {
     expect(onPressYear).toHaveBeenCalled()
 
     const collapsed = await render(
-      <AnimatedCrossView calendar={<Text>cal</Text>} calendarEdit={<Text>edit</Text>} collapsed />
+      <AnimatedCrossView
+        calendar={<Text>cal</Text>}
+        calendarEdit={<Text>edit</Text>}
+        collapsed
+      />
     )
     await collapsed.rerender(
       <AnimatedCrossView
@@ -747,14 +773,29 @@ describe('inputs, headers, and pickers', () => {
     })
     await render(<AutoSizer>{() => <Text>later</Text>}</AutoSizer>)
 
-    await render(<DayNames disableWeekDays={[0]} locale="en" startWeekOnMonday />)
+    await render(
+      <DayNames disableWeekDays={[0]} locale="en" startWeekOnMonday />
+    )
   })
 
   it('renders every day-range shape and day text color', async () => {
-    await render(<DayRange inRange={false} leftCrop={false} rightCrop={false} selectColor="blue" />)
-    await render(<DayRange inRange leftCrop={false} rightCrop={false} selectColor="blue" />)
-    await render(<DayRange inRange leftCrop rightCrop={false} selectColor="blue" />)
-    await render(<DayRange inRange leftCrop={false} rightCrop selectColor="blue" />)
+    await render(
+      <DayRange
+        inRange={false}
+        leftCrop={false}
+        rightCrop={false}
+        selectColor="blue"
+      />
+    )
+    await render(
+      <DayRange inRange leftCrop={false} rightCrop={false} selectColor="blue" />
+    )
+    await render(
+      <DayRange inRange leftCrop rightCrop={false} selectColor="blue" />
+    )
+    await render(
+      <DayRange inRange leftCrop={false} rightCrop selectColor="blue" />
+    )
     await render(<DayRange inRange leftCrop rightCrop selectColor="blue" />)
 
     const theme = {
@@ -816,11 +857,11 @@ describe('native month swiper', () => {
         startYear={2024}
       />
     )
-    const next = swiper.container.queryAll(
-      (node: Instance) => String(node.props.testID).startsWith('next-')
+    const next = swiper.container.queryAll((node: Instance) =>
+      String(node.props.testID).startsWith('next-')
     )[0]
-    const prev = swiper.container.queryAll(
-      (node: Instance) => String(node.props.testID).startsWith('prev-')
+    const prev = swiper.container.queryAll((node: Instance) =>
+      String(node.props.testID).startsWith('prev-')
     )[0]
     const scroll = swiper.container.queryAll(
       (node: { props: { onMomentumScrollEnd?: Function } }) =>

@@ -8,14 +8,11 @@ import {
 import { StyleSheet, View } from 'react-native'
 import { TextInput, type TextInputHandles, useTheme } from 'react-native-paper'
 
-import type { DatePickerInputProps } from './DatePickerInput.shared'
+import type { DateFieldProps } from './DatePickerInput.shared'
 import useDateInput from './inputUtils'
 
 function DatePickerInputWithoutModal(
   {
-    disableStatusBar: _disableStatusBar,
-    disableStatusBarPadding: _disableStatusBarPadding,
-    endYear: _endYear,
     hasError,
     hideValidationErrors,
     inputButton,
@@ -27,17 +24,12 @@ function DatePickerInputWithoutModal(
     onChange,
     onChangeText,
     onValidationError,
-    saveLabel: _saveLabel,
-    saveLabelDisabled: _saveLabelDisabled,
-    startWeekOnMonday: _startWeekOnMonday,
-    startYear: _startYear,
     style,
-    uppercase: _uppercase,
     validRange,
     value,
     withDateFormatInLabel = false,
     ...rest
-  }: DatePickerInputProps & {
+  }: DateFieldProps & {
     inputButton?: ReactNode
     modal?: ReactNode
   },

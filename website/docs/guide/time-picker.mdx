@@ -8,10 +8,9 @@ The time picker provides a modal allowing the selection or input of a time.
 import React from 'react';
 import { View } from 'react-native';
 import { Button, PaperProvider } from 'react-native-paper';
-import { TimePickerModal, en, registerTranslation } from 'react-native-paper-dates';
+import { TimePickerModal } from 'react-native-paper-dates';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-registerTranslation('en', en);
 
 export default function App() {
   const [visible, setVisible] = React.useState(false);

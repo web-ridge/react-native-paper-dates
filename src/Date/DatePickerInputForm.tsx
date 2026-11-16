@@ -20,13 +20,12 @@ import {
 import { displayCase, themeColor } from '../shared/utils'
 import { getTranslation, translate } from '../translations/utils'
 import DatePickerInputWithoutModal from './DatePickerInputWithoutModal'
+import { areDatesOnSameDay, interpretTypedDate } from './dateUtils'
 import {
-  areDatesOnSameDay,
-  interpretTypedDate,
   useInputFormat,
   useInputFormatter,
   useRangeChecker,
-} from './dateUtils'
+} from './inputFormat'
 import type { CalendarDate, ValidRangeType } from './types'
 
 export const dateInputCardMaxWidth = 360

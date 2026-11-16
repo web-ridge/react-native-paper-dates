@@ -8,10 +8,9 @@ The input date picker provides a text field for typing a date, plus a calendar i
 import React from 'react';
 import { View } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
-import { DatePickerInput, en, registerTranslation } from 'react-native-paper-dates';
+import { DatePickerInput } from 'react-native-paper-dates';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-registerTranslation('en', en);
 
 export default function App() {
   const [inputDate, setInputDate] = React.useState(undefined);

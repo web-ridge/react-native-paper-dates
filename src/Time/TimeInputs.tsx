@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 import { Text, useTheme } from 'react-native-paper'
 
-import { darkenColor, themeColor, useLatest } from '../shared/utils'
+import { useLatest } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
 import AmPmSwitcher from './AmPmSwitcher'
 import TimeInput from './TimeInput'
@@ -75,8 +75,8 @@ function TimeInputs({
   const theme = useTheme()
 
   const selectionColor = theme.dark
-    ? darkenColor(themeColor(theme.colors.primary), 0.2)
-    : themeColor(theme.colors.primary)
+    ? theme.colors.primaryContainer
+    : theme.colors.primary
 
   const useHorizontalAmPm =
     !is24Hour && isLandscape && inputType === inputTypes.picker

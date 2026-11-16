@@ -1,9 +1,13 @@
-import type { TranslationsType } from './utils'
+import { registerTranslation, type TranslationsType } from './utils'
 
 const ukUA: TranslationsType = {
   am: 'дп',
+  cancel: 'Скасувати',
   close: 'Закрити',
+  confirm: 'ОК',
   dateIsDisabled: 'Цей день не дозволено обирати',
+  enterDate: 'Введіть дату',
+  enterDates: 'Введіть дати',
   hour: 'Година',
   hourOf: (hour, total) => `Година ${hour} з ${total}`,
   minute: 'Хвилина',
@@ -28,3 +32,5 @@ const ukUA: TranslationsType = {
 }
 
 export default ukUA
+
+registerTranslation('uk-UA', ukUA)

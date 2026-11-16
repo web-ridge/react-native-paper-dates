@@ -1,9 +1,13 @@
-import type { TranslationsType } from './utils'
+import { registerTranslation, type TranslationsType } from './utils'
 
 const es: TranslationsType = {
   am: 'a.m.',
+  cancel: 'Cancelar',
   close: 'Cerrar',
+  confirm: 'Aceptar',
   dateIsDisabled: 'Día no permitido',
+  enterDate: 'Introducir fecha',
+  enterDates: 'Introducir fechas',
   hour: 'Hora',
   hourOf: (hour, total) => `Hora ${hour} de ${total}`,
   minute: 'Minuto',
@@ -28,3 +32,5 @@ const es: TranslationsType = {
 }
 
 export default es
+
+registerTranslation('es', es)

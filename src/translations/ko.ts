@@ -1,9 +1,13 @@
-import type { TranslationsType } from './utils'
+import { registerTranslation, type TranslationsType } from './utils'
 
 const ko: TranslationsType = {
   am: '오전',
+  cancel: '취소',
   close: '닫기',
+  confirm: '확인',
   dateIsDisabled: '날짜는 허용되지 않습니다',
+  enterDate: '날짜 입력',
+  enterDates: '날짜 입력',
   hour: '시',
   hourOf: (hour, total) => `${hour}시 / ${total}`,
   minute: '분',
@@ -28,3 +32,5 @@ const ko: TranslationsType = {
 }
 
 export default ko
+
+registerTranslation('ko', ko)

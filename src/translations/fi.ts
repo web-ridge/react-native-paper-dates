@@ -1,9 +1,13 @@
-import type { TranslationsType } from './utils'
+import { registerTranslation, type TranslationsType } from './utils'
 
 const fi: TranslationsType = {
   am: 'ap.',
+  cancel: 'Peruuta',
   close: 'Sulje',
+  confirm: 'OK',
   dateIsDisabled: 'Päivä ei ole sallittu',
+  enterDate: 'Anna päivämäärä',
+  enterDates: 'Anna päivämäärät',
   hour: 'Tunti',
   hourOf: (hour, total) => `Tunti ${hour} / ${total}`,
   minute: 'Minuutti',
@@ -28,3 +32,5 @@ const fi: TranslationsType = {
 }
 
 export default fi
+
+registerTranslation('fi', fi)

@@ -7,14 +7,10 @@ import { themeColor, useLatest } from '../shared/utils'
 import CalendarHeader from './CalendarHeader'
 import {
   addMonths,
-  areDatesOnSameDay,
-  dateToUnix,
   defaultEndYear,
   defaultStartYear,
   getDaysInMonth,
-  getEndOfDay,
   getInitialIndex,
-  getStartOfDay,
 } from './dateUtils'
 import Month from './Month'
 import MonthCalendar, {
@@ -22,6 +18,7 @@ import MonthCalendar, {
   renderMonthBody,
 } from './MonthCalendar'
 import MonthMenu from './MonthMenu'
+import { type PressedDate, pressDate } from './selection'
 import Swiper from './Swiper'
 import type {
   CalendarDate,
@@ -199,37 +196,19 @@ function ScrollCalendar(
   )
   const startDateRef = useLatest<CalendarDate>(startDate)
   const onPressDate = useCallback(
-    (d: Date) => {
-      if (mode === 'single') {
-        ;(onChangeRef.current as SingleChange)({
-          date: dateMode === 'start' ? d : getEndOfDay(d),
-        })
-      } else if (mode === 'range') {
-        const ed = endDateRef.current
-        const sd = startDateRef.current
-        const extendsRange =
-          !!sd &&
-          (!ed || areDatesOnSameDay(sd, ed)) &&
-          dateToUnix(getStartOfDay(d)) > dateToUnix(getStartOfDay(sd))
-        ;(onChangeRef.current as RangeChange)({
-          endDate: extendsRange ? getEndOfDay(d) : undefined,
-          startDate: extendsRange ? sd : d,
-        })
-      } else if (mode === 'multiple') {
-        datesRef.current = datesRef.current || []
-        const exists = datesRef.current.some((ed) => areDatesOnSameDay(ed, d))
-
-        const newDates = exists
-          ? datesRef.current.filter((ed) => !areDatesOnSameDay(ed, d))
-          : [...datesRef.current, d]
-
-        newDates.sort((a, b) => a.getTime() - b.getTime())
-        ;(onChangeRef.current as MultiChange)({
-          change: exists ? 'removed' : 'added',
-          datePressed: d,
-          dates: newDates,
-        })
-      }
+    (pressed: Date) => {
+      const next = pressDate(
+        {
+          dateMode,
+          dates: datesRef.current,
+          endDate: endDateRef.current,
+          mode,
+          startDate: startDateRef.current,
+        },
+        pressed
+      )
+      if (next.dates) datesRef.current = next.dates
+      ;(onChangeRef.current as (value: PressedDate) => void)(next)
     },
     [mode, dateMode, onChangeRef, startDateRef, endDateRef, datesRef]
   )

@@ -1,7 +1,7 @@
 process.env.TZ = 'GMT'
 
 module.exports = {
-  collectCoverage: true,
+  collectCoverage: false,
   collectCoverageFrom: [
     '**/src/**',
     '!**/src/__tests__/**',
