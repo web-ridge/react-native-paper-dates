@@ -1,5 +1,10 @@
 import { useRef } from 'react'
-import { Platform, useWindowDimensions, type ViewStyle } from 'react-native'
+import {
+  Platform,
+  useWindowDimensions,
+  type ColorValue,
+  type ViewStyle,
+} from 'react-native'
 import { type Theme, useTheme } from 'react-native-paper'
 
 export type PaperTheme = Theme
@@ -95,7 +100,7 @@ export function themeColor(color: unknown) {
   return typeof color === 'string' ? color : '#000000'
 }
 
-export function useHeaderBackgroundColor() {
+export function useHeaderBackgroundColor(): ColorValue {
   const theme = useTheme()
   return theme.colors.surfaceContainerHigh
 }
