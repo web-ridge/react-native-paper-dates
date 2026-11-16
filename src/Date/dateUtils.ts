@@ -9,14 +9,14 @@ export const datePickerCardMaxHeight = 584
 export const defaultEndYear = 2200
 export const defaultStartYear = 1800
 export const estimatedMonthHeight = 400
-const nativeDigits: Record<string, string> = {}
-const startAtIndexCache = new Map<string, number>()
 const calendarMonth = {
   expiresAt: 0,
   month: 0,
   stamp: '',
   year: 0,
 }
+const nativeDigits: Record<string, string> = {}
+const startAtIndexCache = new Map<string, number>()
 for (const [index, digit] of '٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹'.split('').entries()) {
   nativeDigits[digit] = String(index % 10)
 }
@@ -76,17 +76,17 @@ export function calendarDayKey(
 
 export function currentCalendarMonth() {
   const now = Date.now()
-  if (now < calendarMonth.expiresAt) return calendarMonth
+  if (now < calendarMonth.expiresAt) {
+    return calendarMonth
+  }
 
   const today = new Date(now)
-  calendarMonth.year = today.getFullYear()
-  calendarMonth.month = today.getMonth()
-  calendarMonth.stamp = `${calendarMonth.year}-${calendarMonth.month}`
-  calendarMonth.expiresAt = new Date(
-    calendarMonth.year,
-    calendarMonth.month + 1,
-    1
-  ).getTime()
+  const month = today.getMonth()
+  const year = today.getFullYear()
+  calendarMonth.expiresAt = new Date(year, month + 1, 1).getTime()
+  calendarMonth.month = month
+  calendarMonth.stamp = `${year}-${month}`
+  calendarMonth.year = year
   return calendarMonth
 }
 

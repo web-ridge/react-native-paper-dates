@@ -187,7 +187,11 @@ function DatePickerModalInput(props: DatePickerModalInputProps) {
               backgroundColor: surface,
               width,
             },
-            view === 'calendar' ? { height: calendarHeight } : null,
+            view === 'calendar'
+              ? props.mode === 'single'
+                ? { maxHeight: calendarHeight }
+                : { height: calendarHeight }
+              : null,
           ]}
           testID="react-native-paper-dates-modal-input-surface"
         >

@@ -23,6 +23,7 @@ import {
   getVerticalListMetrics,
   getVerticalMonthScrollY,
   getVerticalMonthsOffset,
+  horizontalContentHeight,
   indexFromVerticalScroll,
 } from './monthLayout'
 import {
@@ -41,7 +42,10 @@ const HORIZONTAL_PAGES = 3
 
 function Swiper(props: SwiperProps) {
   return (
-    <AutoSizer initialLayout={props.initialLayout}>
+    <AutoSizer
+      fill={props.scrollMode !== 'horizontal'}
+      initialLayout={props.initialLayout}
+    >
       {({ height, width }) => (
         <SwiperInner {...props} height={height} width={width} />
       )}
@@ -313,7 +317,15 @@ function SwiperInner({
     }
   )
 
-  const contentHeight = isHorizontal ? height : verticalMetrics.height
+  const pageHeight = isHorizontal
+    ? horizontalContentHeight(
+        visibleIndexes[1] ?? initialIndex,
+        startWeekOnMonday,
+        startYear,
+        endYear
+      )
+    : height
+  const contentHeight = isHorizontal ? pageHeight : verticalMetrics.height
   const contentWidth = isHorizontal ? width * HORIZONTAL_PAGES : width
 
   return (
@@ -334,7 +346,11 @@ function SwiperInner({
         scrollsToTop={false}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        style={[sharedStyles.root, sharedStyles.minHeightZero]}
+        style={
+          isHorizontal
+            ? [styles.horizontalPager, { height: pageHeight }]
+            : [sharedStyles.root, sharedStyles.minHeightZero]
+        }
       >
         <View
           style={[
@@ -371,7 +387,7 @@ function SwiperInner({
                   isHorizontal ? styles.monthHorizontal : styles.monthVertical,
                   isHorizontal
                     ? {
-                        height,
+                        height: pageHeight,
                         left: vi * width,
                         width,
                       }
@@ -401,6 +417,9 @@ function SwiperInner({
 }
 
 const styles = StyleSheet.create({
+  horizontalPager: {
+    flexGrow: 0,
+  },
   inner: {
     position: 'relative',
   },

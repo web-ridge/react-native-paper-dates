@@ -80,6 +80,11 @@ export function DatePickerModal(
   const useFormSheet = shouldUseSheet && isLargeScreen
   const { height: windowHeight, width: windowWidth } = useWindowDimensions()
   const inputWidth = dateInputCardWidth(windowWidth)
+  const singleCard = props.mode === 'single' && !inputMode
+  const cardMaxHeight = Math.min(
+    datePickerCardMaxHeight,
+    Math.max(windowHeight - 32, 0)
+  )
   const windowKey = `${windowWidth}x${windowHeight}`
   const onCalendarLayout = useCallback(
     ({ height, width }: { height: number; width: number }) => {
@@ -123,15 +128,19 @@ export function DatePickerModal(
             style={[
               inputMode && isLargeScreen && !useFormSheet
                 ? styles.inputCard
-                : styles.modalContent,
+                : singleCard && isLargeScreen
+                  ? styles.singleCard
+                  : styles.modalContent,
               { backgroundColor: theme.colors.elevation.level3 },
               inputMode && isLargeScreen && !useFormSheet
                 ? { width: inputWidth }
-                : isLargeScreen
-                  ? useFormSheet
-                    ? styles.modalContentFormSheet
-                    : styles.modalContentBig
-                  : null,
+                : singleCard && isLargeScreen
+                  ? { maxHeight: cardMaxHeight }
+                  : isLargeScreen
+                    ? useFormSheet
+                      ? styles.modalContentFormSheet
+                      : styles.modalContentBig
+                    : null,
             ]}
           >
             <DatePickerModalContent
@@ -176,6 +185,13 @@ const styles = StyleSheet.create({
   modalContentFormSheet: {
     borderRadius: 28,
     maxHeight: datePickerCardMaxHeight,
+    maxWidth: 360,
+    overflow: 'hidden',
+    width: '100%',
+  },
+  singleCard: {
+    borderRadius: 28,
+    flexGrow: 0,
     maxWidth: 360,
     overflow: 'hidden',
     width: '100%',

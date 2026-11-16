@@ -16,26 +16,6 @@ import type { DayContentPosition, DayContentRenderer } from './types'
 
 const dayLabelFormatters = new Map<string, Intl.DateTimeFormat>()
 
-function dayAccessibilityLabel(
-  locale: string | undefined,
-  year: number,
-  month: number,
-  day: number
-) {
-  const key = locale === undefined ? '\0' : locale
-  let formatter = dayLabelFormatters.get(key)
-  if (!formatter) {
-    formatter = new Intl.DateTimeFormat(locale, {
-      day: 'numeric',
-      month: 'long',
-      weekday: 'long',
-      year: 'numeric',
-    })
-    dayLabelFormatters.set(key, formatter)
-  }
-  return formatter.format(new Date(year, month, day))
-}
-
 function Day(props: {
   cellHeight?: number
   day: number
@@ -84,7 +64,7 @@ function Day(props: {
   } = props
 
   const accessibilityLabel = useMemo(
-    () => dayAccessibilityLabel(locale, year, month, day),
+    () => dayAccessibilityLabel(day, locale, month, year),
     [day, locale, month, year]
   )
 
@@ -209,6 +189,26 @@ function Day(props: {
       </Pressable>
     </View>
   )
+}
+
+function dayAccessibilityLabel(
+  day: number,
+  locale: string | undefined,
+  month: number,
+  year: number
+) {
+  const key = locale === undefined ? '\0' : locale
+  let formatter = dayLabelFormatters.get(key)
+  if (!formatter) {
+    formatter = new Intl.DateTimeFormat(locale, {
+      day: 'numeric',
+      month: 'long',
+      weekday: 'long',
+      year: 'numeric',
+    })
+    dayLabelFormatters.set(key, formatter)
+  }
+  return formatter.format(new Date(year, month, day))
 }
 
 function EmptyDayPure() {

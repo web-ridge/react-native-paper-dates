@@ -19,7 +19,6 @@ type VerticalLayout = {
   weekPrefix: number[]
 }
 
-const maxWeekRows = 6
 const verticalLayoutCache = new Map<string, VerticalLayout>()
 
 export const monthHeaderHeight = 56
@@ -198,9 +197,22 @@ export function horizontalMonthScrolls(
   return weekSize * weeks > viewportHeight - horizontalMonthChrome
 }
 
-export function horizontalWeekHeight(daysHeight: number) {
+export function horizontalContentHeight(
+  index: number,
+  startWeekOnMonday: boolean,
+  startYear?: number,
+  endYear?: number
+) {
+  return (
+    horizontalMonthChrome +
+    weekSize * monthWeekCount(index, startWeekOnMonday, startYear, endYear)
+  )
+}
+
+export function horizontalWeekHeight(daysHeight: number, weekCount: number) {
+  const weeks = Math.max(weekCount, 1)
   if (daysHeight <= 0) return dayCellSize
-  return Math.min(dayCellSize, daysHeight / maxWeekRows)
+  return Math.min(dayCellSize, daysHeight / weeks)
 }
 
 export function indexFromVerticalScroll(

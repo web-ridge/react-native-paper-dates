@@ -9,8 +9,10 @@ import {
   useRef,
   useState,
 } from 'react'
+import { View } from 'react-native'
 import { useTheme } from 'react-native-paper'
 
+import { sharedStyles } from '../shared/styles'
 import { themeColor, useLatest } from '../shared/utils'
 import AutoSizer from './AutoSizer'
 import {
@@ -122,19 +124,15 @@ function Swiper({
   return (
     <>
       {isHorizontal ? (
-        <AutoSizer initialLayout={initialLayout}>
-          {() => (
-            <>
-              {renderItem({
-                active: true,
-                index,
-                onNext,
-                onPrev,
-              })}
-              {renderHeader ? renderHeader(renderProps) : null}
-            </>
-          )}
-        </AutoSizer>
+        <View style={sharedStyles.hug}>
+          {renderItem({
+            active: true,
+            index,
+            onNext,
+            onPrev,
+          })}
+          {renderHeader ? renderHeader(renderProps) : null}
+        </View>
       ) : (
         <>
           {renderHeader &&

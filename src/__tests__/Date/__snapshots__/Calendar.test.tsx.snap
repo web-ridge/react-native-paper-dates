@@ -3,14 +3,11 @@
 exports[`renders Calendar 1`] = `
 <View
   style={
-    [
-      {
-        "flex": 1,
-      },
-      {
-        "minHeight": 0,
-      },
-    ]
+    {
+      "flexGrow": 0,
+      "flexShrink": 1,
+      "minHeight": 0,
+    }
   }
 >
   <View
@@ -22,11 +19,11 @@ exports[`renders Calendar 1`] = `
           "overflow": "hidden",
         },
         {
-          "flex": 1,
-        },
-        {
+          "flexGrow": 0,
+          "flexShrink": 1,
           "minHeight": 0,
         },
+        null,
       ]
     }
   />

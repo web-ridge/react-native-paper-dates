@@ -9,22 +9,25 @@ export default function AnimatedCrossView({
   calendar,
   calendarEdit,
   collapsed,
+  fill = true,
 }: {
   calendar: ReactNode
   calendarEdit: ReactNode
   collapsed: boolean
+  fill?: boolean
 }) {
+  const frame = fill ? sharedStyles.root : sharedStyles.hug
   const theme = useTheme()
 
   return (
     <CrossFade
       collapsed={collapsed}
-      containerStyle={[sharedStyles.root, sharedStyles.minHeightZero]}
+      containerStyle={[frame, sharedStyles.minHeightZero]}
       primary={{
         node: calendar,
         scaleX: [0.95, 1],
         scaleY: [0.85, 1],
-        style: [sharedStyles.minHeightZero, sharedStyles.root],
+        style: [sharedStyles.minHeightZero, frame],
       }}
       secondary={{
         node: calendarEdit,

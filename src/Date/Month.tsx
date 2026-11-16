@@ -44,18 +44,6 @@ import type {
 } from './types'
 import { alignTextToFirstWeekday } from './weekdayColumns'
 
-const monthNameFormatters = new Map<string, Intl.DateTimeFormat>()
-
-function monthTitle(locale: string | undefined, date: Date) {
-  const key = locale === undefined ? '\0' : locale
-  let formatter = monthNameFormatters.get(key)
-  if (!formatter) {
-    formatter = new Intl.DateTimeFormat(locale, { month: 'long' })
-    monthNameFormatters.set(key, formatter)
-  }
-  return formatter.format(date)
-}
-
 interface BaseMonthProps {
   date?: CalendarDate
   dates?: CalendarDates
@@ -85,6 +73,7 @@ interface BaseMonthProps {
   validRange?: ValidRangeType
 }
 const menuButtonInset = 8
+const monthNameFormatters = new Map<string, Intl.DateTimeFormat>()
 
 function Month(props: BaseMonthProps & CalendarMode) {
   const {
@@ -128,10 +117,10 @@ function Month(props: BaseMonthProps & CalendarMode) {
     const md = addMonths(new Date(), realIndex)
     return {
       month: md.getMonth(),
-      monthName: monthTitle(locale, md),
+      monthName: monthTitle(md, locale),
       year: md.getFullYear(),
     }
-  }, [realIndex, locale])
+  }, [locale, realIndex])
   const onDayPress = useCallback(
     (pressed: Date) => {
       onPressDate(pressed)
@@ -234,8 +223,10 @@ function Month(props: BaseMonthProps & CalendarMode) {
   const textFont = theme.fonts.titleSmall
 
   const renderOutsideDays = showOutsideDays ?? isHorizontal
+  const weekCount = Math.max(grid.length, 1)
+  const naturalDaysHeight = weekCount * dayCellSize
   const [daysHeight, setDaysHeight] = useState(0)
-  const rowHeight = horizontalWeekHeight(daysHeight)
+  const rowHeight = horizontalWeekHeight(daysHeight, weekCount)
   const onDaysLayout = (event: LayoutChangeEvent) => {
     const next = event.nativeEvent.layout.height
     setDaysHeight((current) =>
@@ -289,7 +280,7 @@ function Month(props: BaseMonthProps & CalendarMode) {
         hideHeader
           ? undefined
           : isHorizontal
-            ? styles.monthFill
+            ? sharedStyles.hug
             : {
                 height: getMonthHeight(
                   scrollMode,
@@ -366,7 +357,10 @@ function Month(props: BaseMonthProps & CalendarMode) {
       ) : isHorizontal ? (
         <View
           onLayout={onDaysLayout}
-          style={[sharedStyles.root, sharedStyles.minHeightZero]}
+          style={[
+            styles.days,
+            { flexBasis: naturalDaysHeight, maxHeight: naturalDaysHeight },
+          ]}
           testID="react-native-paper-dates-month-days-scroll"
         >
           {weeks}
@@ -393,13 +387,24 @@ const monthGrid = (
     })
 }
 
+function monthTitle(date: Date, locale: string | undefined) {
+  const key = locale === undefined ? '\0' : locale
+  let formatter = monthNameFormatters.get(key)
+  if (!formatter) {
+    formatter = new Intl.DateTimeFormat(locale, { month: 'long' })
+    monthNameFormatters.set(key, formatter)
+  }
+  return formatter.format(date)
+}
+
 const styles = StyleSheet.create({
+  days: {
+    flexGrow: 0,
+    flexShrink: 1,
+    minHeight: 0,
+  },
   iconWrapper: {
     padding: 8,
-  },
-  monthFill: {
-    flex: 1,
-    minHeight: 0,
   },
   monthHeader: {
     height: monthHeaderHeight,

@@ -120,6 +120,7 @@ export function DatePickerModalContent(
   const cardLayout = layout === 'card'
   const insets = useSafeAreaInsets()
   const isLargeScreen = useIsLargeScreen()
+  const hugCalendar = mode === 'single'
   const showFooter = isLargeScreen || cardLayout
   const showSheetHeader = !isLargeScreen && !cardLayout
   const theme = useTheme()
@@ -317,13 +318,14 @@ export function DatePickerModalContent(
       <View
         onLayout={Platform.OS === 'web' ? undefined : onCalendarContainerLayout}
         style={[
-          sharedStyles.root,
+          hugCalendar ? sharedStyles.hug : sharedStyles.root,
           sharedStyles.minHeightZero,
           sharedStyles.overflowHidden,
           { paddingLeft: insets.left, paddingRight: insets.right },
         ]}
       >
         <AnimatedCrossView
+          fill={!hugCalendar}
           calendar={
             <Calendar
               date={state.date}

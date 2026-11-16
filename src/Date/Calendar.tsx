@@ -299,7 +299,13 @@ function ScrollCalendar(
   )
 
   return (
-    <View style={[sharedStyles.root, sharedStyles.minHeightZero]}>
+    <View
+      style={
+        scrollMode === 'horizontal'
+          ? sharedStyles.hug
+          : [sharedStyles.root, sharedStyles.minHeightZero]
+      }
+    >
       <Swiper
         endYear={endYear}
         focusDate={navigateDate}

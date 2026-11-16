@@ -14,9 +14,11 @@ type WidthAndHeight = {
 
 export default function AutoSizer({
   children,
+  fill = true,
   initialLayout,
 }: {
   children: ({ height, width }: WidthAndHeight) => ReactNode
+  fill?: boolean
   initialLayout?: WidthAndHeight
 }) {
   const [measured, setMeasured] = useState<MeasuredLayout | null>(null)
@@ -24,13 +26,14 @@ export default function AutoSizer({
 
   const windowKey = `${windowWidth}x${windowHeight}`
 
-  const layout =
+  const measuredReady =
     measured &&
     measured.windowKey === windowKey &&
     measured.width > 0 &&
-    measured.height > 0
+    (fill ? measured.height > 0 : true)
       ? measured
-      : (initialLayout ?? null)
+      : null
+  const layout = measuredReady ?? initialLayout ?? null
 
   const onLayout = useCallback(
     (event: LayoutChangeEvent) => {
@@ -53,11 +56,13 @@ export default function AutoSizer({
       onLayout={onLayout}
       style={[
         sharedStyles.overflowHidden,
-        sharedStyles.root,
-        sharedStyles.minHeightZero,
+        fill ? sharedStyles.root : sharedStyles.hug,
+        fill ? sharedStyles.minHeightZero : null,
       ]}
     >
-      {layout ? children(layout) : null}
+      {layout && (fill ? layout.height > 0 : layout.width > 0)
+        ? children(layout)
+        : null}
     </View>
   )
 }

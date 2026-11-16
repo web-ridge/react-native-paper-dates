@@ -16,6 +16,11 @@ export type PressedDate = {
   endDate?: CalendarDate
   startDate?: CalendarDate
 }
+export type RangeBounds = {
+  endUnix?: number
+  sameDay: boolean
+  startUnix?: number
+}
 
 export function confirmDates(
   mode: ModeType,
@@ -42,23 +47,6 @@ export function confirmDates(
     return { endDate: state.endDate, startDate: state.startDate }
   }
   return { dates: state.dates || [] }
-}
-
-export type RangeBounds = {
-  endUnix?: number
-  sameDay: boolean
-  startUnix?: number
-}
-
-export function rangeBounds(
-  startDate: CalendarDate,
-  endDate: CalendarDate
-): RangeBounds {
-  return {
-    endUnix: endDate ? dateToUnix(getEndOfDay(endDate)) : undefined,
-    sameDay: !!startDate && !!endDate && areDatesOnSameDay(startDate, endDate),
-    startUnix: startDate ? dateToUnix(getStartOfDay(startDate)) : undefined,
-  }
 }
 
 export function dayMarks({
@@ -205,5 +193,16 @@ export function pressDate(
     change: exists ? 'removed' : 'added',
     datePressed: pressed,
     dates: nextDates,
+  }
+}
+
+export function rangeBounds(
+  startDate: CalendarDate,
+  endDate: CalendarDate
+): RangeBounds {
+  return {
+    endUnix: endDate ? dateToUnix(getEndOfDay(endDate)) : undefined,
+    sameDay: !!startDate && !!endDate && areDatesOnSameDay(startDate, endDate),
+    startUnix: startDate ? dateToUnix(getStartOfDay(startDate)) : undefined,
   }
 }

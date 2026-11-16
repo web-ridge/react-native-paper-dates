@@ -7,8 +7,10 @@ import {
   getMonthHeight,
   getVerticalListMetrics,
   getVerticalMonthsOffset,
+  horizontalContentHeight,
   horizontalMonthScrolls,
   horizontalWeekHeight,
+  monthWeekCount,
 } from '../../Date/monthLayout'
 import { getMaxIndex, getMinIndex } from '../../Date/SwiperUtils'
 
@@ -33,11 +35,18 @@ const defaultProps = {
   startWeekOnMonday: false,
 }
 
-it('fits every week of a single month without scrolling the days', () => {
-  expect(horizontalWeekHeight(0)).toBe(48)
-  expect(horizontalWeekHeight(288)).toBe(48)
-  expect(horizontalWeekHeight(240)).toBe(40)
-  expect(horizontalWeekHeight(240) * 6).toBeLessThanOrEqual(240)
+it('grows and shrinks a single month with its week count', () => {
+  const february = getInitialIndex(new Date(2026, 1, 1))
+  const january = getInitialIndex(new Date(2027, 0, 1))
+  expect(monthWeekCount(february, false)).toBe(4)
+  expect(monthWeekCount(january, false)).toBe(6)
+  expect(horizontalContentHeight(january, false)).toBe(
+    horizontalContentHeight(february, false) + 2 * 48
+  )
+  expect(horizontalWeekHeight(0, 4)).toBe(48)
+  expect(horizontalWeekHeight(240, 5)).toBe(48)
+  expect(horizontalWeekHeight(200, 5)).toBe(40)
+  expect(horizontalWeekHeight(200, 5) * 5).toBeLessThanOrEqual(200)
 })
 
 it('keeps the month title outside the day grid in single mode', async () => {
