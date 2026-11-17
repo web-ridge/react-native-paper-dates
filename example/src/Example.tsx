@@ -85,7 +85,6 @@ function DemoCard({
   actionLabel,
   children,
   docsUrl: cardDocsUrl,
-  icon,
   onPress,
   style,
   title,
@@ -114,7 +113,6 @@ function DemoCard({
   return (
     <View style={[styles.card, style]}>
       <View style={styles.cardHeader}>
-        <Icon color={theme.colors.primary} size={22} source={icon} />
         <View style={styles.cardCopy}>
           <AppText style={styles.cardTitle} variant="titleMedium">
             {title}
@@ -146,7 +144,6 @@ type DemoCardProps = {
   actionLabel?: string
   children?: ReactNode
   docsUrl?: string
-  icon: string
   onPress?: () => void
   style?: StyleProp<ViewStyle>
   title: string
@@ -485,7 +482,6 @@ export default function Example({
             >
               <DemoCard
                 docsUrl={inputDatePickerDocsUrl}
-                icon="calendar-month-outline"
                 style={wide ? styles.cardFill : undefined}
                 title="Date input"
                 value={inputLabel}
@@ -506,7 +502,6 @@ export default function Example({
               </DemoCard>
               <DemoCard
                 docsUrl={dockedDatePickerDocsUrl}
-                icon="calendar-cursor"
                 style={wide ? styles.cardFill : undefined}
                 title="Docked date"
                 value={dockedLabel}
@@ -535,7 +530,6 @@ export default function Example({
               <DemoCard
                 actionLabel="Pick single date"
                 docsUrl={singleDatePickerDocsUrl}
-                icon="calendar-check-outline"
                 onPress={() => setDialog('single')}
                 style={wide ? styles.cardFill : undefined}
                 title="Single date"
@@ -545,7 +539,6 @@ export default function Example({
               <DemoCard
                 actionLabel="Pick range"
                 docsUrl={rangeDatePickerDocsUrl}
-                icon="calendar-plus"
                 onPress={() => setDialog('range')}
                 style={wide ? styles.cardFill : undefined}
                 title="Date range"
@@ -562,7 +555,6 @@ export default function Example({
               <DemoCard
                 actionLabel="Enter date"
                 docsUrl={singleDateInputDocsUrl}
-                icon="calendar-edit"
                 onPress={() => setDialog('modalInput')}
                 style={wide ? styles.cardFill : undefined}
                 title="Single date input"
@@ -572,7 +564,6 @@ export default function Example({
               <DemoCard
                 actionLabel="Enter dates"
                 docsUrl={rangeDateInputDocsUrl}
-                icon="calendar-range"
                 onPress={() => setDialog('modalInputRange')}
                 style={wide ? styles.cardFill : undefined}
                 title="Date range input"
@@ -588,7 +579,6 @@ export default function Example({
               <DemoCard
                 actionLabel="Pick multiple dates"
                 docsUrl={multipleDatesPickerDocsUrl}
-                icon="calendar-multiple"
                 onPress={() => setDialog('multi')}
                 style={wide ? styles.cardFill : undefined}
                 title="Multiple dates"
@@ -605,7 +595,6 @@ export default function Example({
               <DemoCard
                 actionLabel="Pick time"
                 docsUrl={timePickerDocsUrl}
-                icon="clock-outline"
                 onPress={() => setDialog('time')}
                 style={wide ? styles.cardFill : undefined}
                 title="Time"
