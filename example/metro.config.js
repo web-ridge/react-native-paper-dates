@@ -5,18 +5,9 @@ const pak = require('../package.json')
 const path = require('path')
 const projectRoot = __dirname
 const nodeModules = path.join(projectRoot, 'node_modules')
-const versionModulePath = path.join(projectRoot, 'src', 'libraryVersion.ts')
-const versionModuleSource = `// Synced from the library package.json when Metro starts.\nexport const libraryVersion = '${pak.version}'\n`
 const workspaceRoot = path.resolve(projectRoot, '..')
 const librarySrc = path.join(workspaceRoot, 'src')
 const libraryEntry = fs.realpathSync(path.join(librarySrc, 'index.ts'))
-
-if (
-  !fs.existsSync(versionModulePath) ||
-  fs.readFileSync(versionModulePath, 'utf8') !== versionModuleSource
-) {
-  fs.writeFileSync(versionModulePath, versionModuleSource)
-}
 
 /** @type {import('expo/metro-config').MetroConfig} */
 const config = getDefaultConfig(projectRoot)

@@ -8,8 +8,7 @@ node_modules/
 *.log
 
 # Environment
-.env
-.env.*
+.env*
 !.env.example
 
 # Tests
@@ -24,21 +23,13 @@ lib/
 # Expo
 .expo/
 expo-env.d.ts
-web-build/
 example/dist/
 
 # Local native prebuild
 example/ios/
 example/android/
-Pods/
 
 # IDE
 .idea/
 .vscode/
 *.iml
-.gradle/
-local.properties
-xcuserdata/
-DerivedData/
-*.xcuserstate
-*.ipa

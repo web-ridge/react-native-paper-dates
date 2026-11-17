@@ -1,15 +1,8 @@
-import {
-  Children,
-  isValidElement,
-  type ReactNode,
-  useMemo,
-  useState,
-} from 'react'
+import { type ReactNode, useMemo, useState } from 'react'
 import {
   Image,
   Linking,
   Pressable,
-  type PressableStateCallbackType,
   ScrollView,
   type StyleProp,
   useWindowDimensions,
@@ -38,7 +31,6 @@ import 'react-native-paper-dates/translations/cs'
 import 'react-native-paper-dates/translations/da'
 import 'react-native-paper-dates/translations/de'
 import 'react-native-paper-dates/translations/el'
-import 'react-native-paper-dates/translations/en'
 import 'react-native-paper-dates/translations/enGB'
 import 'react-native-paper-dates/translations/es'
 import 'react-native-paper-dates/translations/fi'
@@ -63,17 +55,20 @@ import 'react-native-paper-dates/translations/zh'
 import 'react-native-paper-dates/translations/zhTW'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import { libraryVersion } from './libraryVersion'
 import {
   AppText,
   CornerWaves,
   docsBase,
   docsUrl,
+  ExternalLink,
   githubUrl,
   SiteFooter,
   useAppStyles,
   wideBreakpoint,
 } from './site'
+
+// babel.config.js replaces this with the version from the library package.json.
+const libraryVersion = '__LIBRARY_VERSION__'
 
 type DateRange = {
   endDate: Date | undefined
@@ -134,31 +129,12 @@ function DemoCard({
           </AppText>
         </View>
         {cardDocsUrl ? (
-          <Pressable
+          <ExternalLink
             accessibilityLabel={`Documentation for ${title}`}
-            accessibilityRole="link"
             hitSlop={8}
-            onPress={() => Linking.openURL(cardDocsUrl)}
-          >
-            {(state: PressableStateCallbackType & { hovered?: boolean }) => (
-              <View style={styles.cardDocsLink}>
-                <AppText
-                  style={[
-                    styles.cardDocsLinkText,
-                    (state.hovered || state.pressed) &&
-                      styles.cardDocsLinkTextActive,
-                  ]}
-                >
-                  Docs
-                </AppText>
-                <Icon
-                  color={theme.colors.primary}
-                  size={16}
-                  source="open-in-new"
-                />
-              </View>
-            )}
-          </Pressable>
+            label="Docs"
+            url={cardDocsUrl}
+          />
         ) : null}
       </View>
       <View style={styles.cardFooter}>{control}</View>
@@ -207,8 +183,6 @@ function ExampleSection({
   wide,
 }: ExampleSectionProps) {
   const styles = useAppStyles()
-  const theme = useTheme()
-  const cards = Children.toArray(children)
 
   return (
     <View style={styles.section}>
@@ -222,49 +196,18 @@ function ExampleSection({
             {title}
           </AppText>
           {guidelineUrl ? (
-            <Pressable
+            <ExternalLink
               accessibilityLabel={`Material guidelines for ${title}`}
-              accessibilityRole="link"
-              onPress={() => Linking.openURL(guidelineUrl)}
-            >
-              {(state: PressableStateCallbackType & { hovered?: boolean }) => (
-                <View style={styles.guidelineLink}>
-                  <AppText
-                    style={[
-                      styles.guidelineLinkText,
-                      (state.hovered || state.pressed) &&
-                        styles.guidelineLinkTextActive,
-                    ]}
-                  >
-                    Material guidelines
-                  </AppText>
-                  <Icon
-                    color={theme.colors.primary}
-                    size={16}
-                    source="open-in-new"
-                  />
-                </View>
-              )}
-            </Pressable>
+              label="Material guidelines"
+              url={guidelineUrl}
+            />
           ) : (
             <AppText style={styles.libraryNote}>Unique to this library</AppText>
           )}
         </View>
         <AppText style={styles.sectionCopy}>{description}</AppText>
       </View>
-      <View style={wide ? styles.sectionRow : styles.stack}>
-        {cards.map((card) => (
-          <View
-            key={isValidElement(card) ? String(card.key) : undefined}
-            style={wide ? styles.sectionCell : undefined}
-          >
-            {card}
-          </View>
-        ))}
-        {wide && cards.length === 1 ? (
-          <View style={styles.sectionCell} />
-        ) : null}
-      </View>
+      <View style={wide ? styles.sectionRow : styles.stack}>{children}</View>
     </View>
   )
 }
@@ -309,13 +252,14 @@ export default function Example({
   )
   const formatDate = (value: Date | undefined, empty = 'No date selected.') =>
     value ? dateFormatter.format(value) : empty
+  const formatRange = (value: DateRange) =>
+    value.startDate || value.endDate
+      ? `${formatDate(value.startDate, '')} - ${formatDate(value.endDate, '')}`
+      : 'No dates selected.'
   const dockedLabel = formatDate(dockedDate)
   const inputLabel = formatDate(inputDate)
   const modalInputLabel = formatDate(modalInputDate)
-  const modalInputRangeLabel =
-    modalInputRange.startDate || modalInputRange.endDate
-      ? `${formatDate(modalInputRange.startDate, '')} - ${formatDate(modalInputRange.endDate, '')}`
-      : 'No dates selected.'
+  const modalInputRangeLabel = formatRange(modalInputRange)
   const localeListMaxHeight = Math.min(
     420,
     Math.max(120, height - insets.top - insets.bottom - 248)
@@ -342,10 +286,7 @@ export default function Example({
     endDate: undefined,
     startDate: undefined,
   })
-  const rangeLabel =
-    range.startDate || range.endDate
-      ? `${formatDate(range.startDate, '')} - ${formatDate(range.endDate, '')}`
-      : 'No dates selected.'
+  const rangeLabel = formatRange(range)
   const [time, setTime] = useState<TimeValue>({
     hours: undefined,
     minutes: undefined,
@@ -383,7 +324,7 @@ export default function Example({
           <View style={styles.header}>
             <View style={styles.headerTop}>
               <View style={[styles.brandRow, !wide && styles.brandRowNarrow]}>
-                <Image source={require('./schedule.png')} style={styles.logo} />
+                <Image source={require('../favicon.png')} style={styles.logo} />
                 <View style={styles.brandCopy}>
                   <AppText
                     accessibilityHint="Opens the documentation"

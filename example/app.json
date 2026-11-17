@@ -1,24 +1,24 @@
 {
   "expo": {
-    "name": "react-native-paper-dates-example",
-    "slug": "react-native-paper-dates-example",
-    "description": "Example app for react-native-paper-dates",
-    "version": "1.0.0",
-    "ios": {
-      "supportsTablet": true
-    },
     "androidStatusBar": {
       "translucent": true
     },
-    "web": {
-      "favicon": "./favicon.png",
-      "name": "React Native Paper Dates",
-      "shortName": "PaperDates",
-      "description": "Example app for react-native-paper-dates"
-    },
-    "userInterfaceStyle": "automatic",
+    "description": "Example app for react-native-paper-dates",
     "experiments": {
       "onDemandFilesystem": false
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "name": "react-native-paper-dates-example",
+    "slug": "react-native-paper-dates-example",
+    "userInterfaceStyle": "automatic",
+    "version": "1.0.0",
+    "web": {
+      "description": "Example app for react-native-paper-dates",
+      "favicon": "./favicon.png",
+      "name": "React Native Paper Dates",
+      "shortName": "PaperDates"
     }
   }
 }
