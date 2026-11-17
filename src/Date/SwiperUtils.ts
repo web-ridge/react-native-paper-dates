@@ -87,6 +87,38 @@ export function getMinIndex(startYear?: number, endYear?: number): number {
   return value
 }
 
+export type MonthSlot = {
+  monthIndex: number
+  slot: number
+}
+
+export function assignMonthSlots(
+  previous: readonly MonthSlot[],
+  indexes: readonly number[]
+): MonthSlot[] {
+  const wanted = new Set(indexes)
+  const used = new Set<number>()
+  const kept: MonthSlot[] = []
+  for (const entry of previous) {
+    if (wanted.has(entry.monthIndex) && !used.has(entry.slot)) {
+      kept.push(entry)
+      used.add(entry.slot)
+    }
+  }
+  const keptMonths = new Set(kept.map((entry) => entry.monthIndex))
+  let slot = 0
+  const assigned = kept.slice()
+  for (const monthIndex of indexes) {
+    if (keptMonths.has(monthIndex)) continue
+    while (used.has(slot)) slot += 1
+    used.add(slot)
+    assigned.push({ monthIndex, slot })
+    slot += 1
+  }
+  assigned.sort((left, right) => left.slot - right.slot)
+  return assigned
+}
+
 export function getVerticalWindow(
   index: number,
   startYear?: number,

@@ -73,7 +73,7 @@ it('passes initialLayout to the calendar so the month draws on open', async () =
   expect(queryByText('January 2025')).toBeTruthy()
 })
 
-it('reuses the calendar size from the last open, so a reopen draws the month at once', async () => {
+it('draws the month on the first open and again after it closes', async () => {
   const metrics = {
     frame: { height: 640, width: 360, x: 0, y: 0 },
     insets: { bottom: 0, left: 0, right: 0, top: 0 },
@@ -92,7 +92,7 @@ it('reuses the calendar size from the last open, so a reopen draws the month at 
   )
 
   const { queryByText, rerender, root } = await render(renderModal(true))
-  expect(queryByText('January 2025')).toBeNull()
+  expect(queryByText('January 2025')).toBeTruthy()
 
   const calendarContainer = root!.queryAll(
     (node) => node.type === 'View' && !!node.props.onLayout

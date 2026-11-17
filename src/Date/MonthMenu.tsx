@@ -2,6 +2,7 @@ import { type ComponentRef, memo, useEffect, useMemo, useRef } from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
 import { Icon, Text, TouchableRipple, useTheme } from 'react-native-paper'
 
+import { dateTimeFormat } from '../shared/intl'
 import { scrollbarThumb } from '../shared/utils'
 import { calendarControlHeight } from './CalendarHeader'
 
@@ -29,7 +30,7 @@ function MonthMenu({
     return () => cancelAnimationFrame(frame)
   }, [selectedMonth])
   const months = useMemo(() => {
-    const formatter = new Intl.DateTimeFormat(locale, { month: 'long' })
+    const formatter = dateTimeFormat(locale, { month: 'long' })
     return Array.from({ length: 12 }, (_, month) => ({
       label: formatter.format(new Date(2020, month, 1)),
       month,

@@ -5,6 +5,7 @@ module.exports = function (api) {
 
   return {
     plugins: [
+      ['babel-plugin-react-compiler', { target: '19' }],
       function inlineLibraryVersion({ types: t }) {
         return {
           visitor: {

@@ -117,6 +117,7 @@ export function useIsLargeScreen() {
 
 export function useLatest<T>(value: T) {
   const ref = useRef(value)
+  // eslint-disable-next-line react-hooks/refs -- This hook exists to publish the latest value. Callers read it from events.
   ref.current = value
   return ref
 }

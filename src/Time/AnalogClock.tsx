@@ -93,6 +93,8 @@ function AnalogClock({
     },
     [focusedRef, is24HourRef, hoursRef, onChangeRef, minutesRef, modeRef]
   )
+  // The responder is created once and closes over the latest clock values.
+  /* eslint-disable react-hooks/refs */
   const panResponder = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: returnTrue,
@@ -106,6 +108,7 @@ function AnalogClock({
       onStartShouldSetPanResponderCapture: () => false,
     })
   ).current
+  /* eslint-enable react-hooks/refs */
   const pointerNumber = focused === clockTypes.hours ? hours : minutes
   const shortPointer = hours >= 12 && is24Hour
   const dynamicSize = focused === clockTypes.hours && shortPointer ? 33 : 0
@@ -114,6 +117,7 @@ function AnalogClock({
   return (
     <View
       ref={clockRef}
+      // eslint-disable-next-line react-hooks/refs -- panHandlers close over the latest clock values
       {...panResponder.panHandlers}
       style={[
         styles.clock,

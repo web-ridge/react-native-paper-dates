@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { IconButton, Text, useTheme } from 'react-native-paper'
 
+import { dateTimeFormat } from '../shared/intl'
 import { displayCase, themeColor, useIsLargeScreen } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
 import type { LocalState } from './DatePickerModalContent'
@@ -232,13 +233,15 @@ export function HeaderContentSingle({
 }
 
 function useShortDateLabel(locale: string | undefined, withWeekday = false) {
-  const formatter = useMemo(() => {
-    return new Intl.DateTimeFormat(locale, {
-      day: 'numeric',
-      month: 'short',
-      ...(withWeekday ? { weekday: 'short' as const } : {}),
-    })
-  }, [locale, withWeekday])
+  const formatter = useMemo(
+    () =>
+      dateTimeFormat(locale, {
+        day: 'numeric',
+        month: 'short',
+        ...(withWeekday ? { weekday: 'short' as const } : {}),
+      }),
+    [locale, withWeekday]
+  )
 
   return { formatter }
 }

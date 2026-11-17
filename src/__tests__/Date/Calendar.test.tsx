@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react-native'
+import { Dimensions } from 'react-native'
 
 import Calendar from '../../Date/Calendar'
 import { installDateKeyListener, pressNode, pressTestId } from '../../testUtils'
@@ -18,9 +19,9 @@ it('shows one month without a pager', async () => {
   ).toBeTruthy()
 })
 
-it('renders Calendar', async () => {
+it('renders the month on the first render', async () => {
   const fixedDate = new Date('2025-01-15')
-  const { toJSON } = await render(
+  const { getByText, root } = await render(
     <Calendar
       date={fixedDate}
       locale="en"
@@ -28,31 +29,12 @@ it('renders Calendar', async () => {
       onChange={() => null}
     />
   )
-  expect(toJSON()).toMatchSnapshot()
-})
-
-it('draws the month on the first render when initialLayout is given', async () => {
-  const fixedDate = new Date('2025-01-15')
-  const { queryByText, rerender } = await render(
-    <Calendar
-      date={fixedDate}
-      locale="en"
-      mode="single"
-      onChange={() => null}
-    />
-  )
-  expect(queryByText('January 2025')).toBeNull()
-
-  await rerender(
-    <Calendar
-      date={fixedDate}
-      initialLayout={{ height: 400, width: 320 }}
-      locale="en"
-      mode="single"
-      onChange={() => null}
-    />
-  )
-  expect(queryByText('January 2025')).toBeTruthy()
+  expect(getByText('January 2025')).toBeTruthy()
+  const pager = root!.queryAll((node) => node.type === 'RCTScrollView')[0]
+  expect(pager.props.contentOffset).toEqual({
+    x: Dimensions.get('window').width,
+    y: 0,
+  })
 })
 
 it('starts the month pager on the current month instead of at 0', async () => {

@@ -2,6 +2,7 @@ import { memo, useMemo } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { useTheme } from 'react-native-paper'
 
+import { dateTimeFormat } from '../shared/intl'
 import { showWeekDay } from './dateUtils'
 import DayName from './DayName'
 import type { DisableWeekDaysType } from './types'
@@ -34,8 +35,8 @@ function DayNames({
     if (startWeekOnMonday) {
       weekdays.push(weekdays.shift() as Date)
     }
-    const narrow = new Intl.DateTimeFormat(locale, { weekday: 'narrow' })
-    const long = new Intl.DateTimeFormat(locale, { weekday: 'long' })
+    const narrow = dateTimeFormat(locale, { weekday: 'narrow' })
+    const long = dateTimeFormat(locale, { weekday: 'long' })
     return weekdays.map((date) => ({
       label: narrow.format(date),
       name: long.format(date),

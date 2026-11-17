@@ -34,7 +34,10 @@ export default function useDateInput({
   const inputFormat = useInputFormat({ formatter, locale })
   const onValidationErrorRef = useRef(onValidationError)
   const reportedValue = useRef(value)
+  // Latest values for the input handler. Writing them during render is why the compiler skips this hook.
+  // eslint-disable-next-line react-hooks/refs
   errorRef.current = error
+  // eslint-disable-next-line react-hooks/refs
   onValidationErrorRef.current = onValidationError
 
   useEffect(() => {

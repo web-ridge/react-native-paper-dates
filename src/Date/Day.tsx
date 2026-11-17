@@ -8,13 +8,12 @@ import {
 } from 'react-native'
 import { Text } from 'react-native-paper'
 
+import { dateTimeFormat } from '../shared/intl'
 import StateLayer from '../shared/StateLayer'
 import { type PaperTheme, withAlpha } from '../shared/utils'
 import { dayCellSize, daySize } from './dateUtils'
 import DayRange from './DayRange'
 import type { DayContentPosition, DayContentRenderer } from './types'
-
-const dayLabelFormatters = new Map<string, Intl.DateTimeFormat>()
 
 function Day(props: {
   cellHeight?: number
@@ -215,18 +214,12 @@ function dayAccessibilityLabel(
   month: number,
   year: number
 ) {
-  const key = locale === undefined ? '\0' : locale
-  let formatter = dayLabelFormatters.get(key)
-  if (!formatter) {
-    formatter = new Intl.DateTimeFormat(locale, {
-      day: 'numeric',
-      month: 'long',
-      weekday: 'long',
-      year: 'numeric',
-    })
-    dayLabelFormatters.set(key, formatter)
-  }
-  return formatter.format(new Date(year, month, day))
+  return dateTimeFormat(locale, {
+    day: 'numeric',
+    month: 'long',
+    weekday: 'long',
+    year: 'numeric',
+  }).format(new Date(year, month, day))
 }
 
 function EmptyDayPure() {

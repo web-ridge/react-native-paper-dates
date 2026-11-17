@@ -153,6 +153,26 @@ export function getEndOfDay(d: Date): Date {
   return endOfDay
 }
 
+const weekdayOffsets = [0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4]
+
+export function gregorianWeekday(
+  year: number,
+  month: number,
+  day: number
+): number {
+  let weekdayYear = year
+  if (month < 2) weekdayYear -= 1
+  const weekday =
+    (weekdayYear +
+      Math.floor(weekdayYear / 4) -
+      Math.floor(weekdayYear / 100) +
+      Math.floor(weekdayYear / 400) +
+      weekdayOffsets[month] +
+      day) %
+    7
+  return weekday < 0 ? weekday + 7 : weekday
+}
+
 export function getFirstDayOfMonth({
   month,
   startWeekOnMonday,
@@ -162,7 +182,7 @@ export function getFirstDayOfMonth({
   startWeekOnMonday: boolean
   year: number
 }): number {
-  let dayOfWeek = new Date(year, month, 1).getDay()
+  let dayOfWeek = gregorianWeekday(year, month, 1)
   if (startWeekOnMonday) {
     dayOfWeek = (dayOfWeek + 6) % 7
   }
@@ -176,19 +196,38 @@ export function getGridCount(
   startYear?: number,
   endYear?: number
 ) {
-  const monthDate = addMonths(
-    new Date(),
-    getRealIndex(index, startYear, endYear)
-  )
-  return getGridCountForDate(monthDate, startWeekOnMonday)
+  const { month, year } = monthFromIndex(index, startYear, endYear)
+  return monthWeekRows(year, month, startWeekOnMonday)
 }
 
 export function getGridCountForDate(date: Date, startWeekOnMonday: boolean) {
-  const month = date.getMonth()
-  const year = date.getFullYear()
+  return monthWeekRows(date.getFullYear(), date.getMonth(), startWeekOnMonday)
+}
+
+export function monthFromIndex(
+  index: number,
+  startYear?: number,
+  endYear?: number
+): { month: number; year: number } {
+  const { month, year } = currentCalendarMonth()
+  const absolute =
+    year * 12 + month + (index - getStartAtIndex(startYear, endYear))
+  let nextYear = Math.floor(absolute / 12)
+  let nextMonth = absolute - nextYear * 12
+  if (nextMonth < 0) {
+    nextMonth += 12
+    nextYear -= 1
+  }
+  return { month: nextMonth, year: nextYear }
+}
+
+export function monthWeekRows(
+  year: number,
+  month: number,
+  startWeekOnMonday: boolean
+): number {
   const dayOfWeek = getFirstDayOfMonth({ month, startWeekOnMonday, year })
-  const daysInMonth = getDaysInMonth({ month, year })
-  return Math.ceil((daysInMonth + dayOfWeek) / 7)
+  return Math.ceil((getDaysInMonth({ month, year }) + dayOfWeek) / 7)
 }
 
 export function getInitialIndex(

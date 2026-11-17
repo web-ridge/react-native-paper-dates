@@ -1,7 +1,8 @@
-import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { StyleSheet, useWindowDimensions, View } from 'react-native'
 
 import { DisplayModeContext } from '../contexts/DisplayModeContext'
+import { dateTimeFormat } from '../shared/intl'
 import AnalogClock from './AnalogClock'
 import TimeInputs from './TimeInputs'
 import {
@@ -46,18 +47,17 @@ function TimePicker({
   const [displayMode, setDisplayMode] = useState<'AM' | 'PM' | undefined>(() =>
     hours >= 12 ? 'PM' : 'AM'
   )
-  const is24Hour = useMemo(() => {
-    if (use24HourClock !== undefined) {
-      return use24HourClock
-    }
-    const formatter = new Intl.DateTimeFormat(locale, {
+  let is24Hour = use24HourClock
+  if (is24Hour === undefined) {
+    const formatter = dateTimeFormat(locale, {
       hour: '2-digit',
       minute: '2-digit',
       timeZone: 'UTC',
     })
-    const formatted = formatter.format(new Date(Date.UTC(2020, 1, 1, 23)))
-    return formatted.includes('23')
-  }, [locale, use24HourClock])
+    is24Hour = formatter
+      .format(new Date(Date.UTC(2020, 1, 1, 23)))
+      .includes('23')
+  }
 
   const isLandscape = timePickerUsesLandscape(
     dimensions.width,
@@ -72,10 +72,7 @@ function TimePicker({
   const clockWidth =
     inputType === inputTypes.picker ? circleSize + (isLandscape ? 52 : 0) : 0
 
-  const displayModeValue = useMemo(
-    () => ({ mode: displayMode, setMode: setDisplayMode }),
-    [displayMode]
-  )
+  const displayModeValue = { mode: displayMode, setMode: setDisplayMode }
 
   const fieldWidth = timeSelectorFieldWidth(inputType, is24Hour, isLandscape)
   const inputsWidth =
@@ -85,15 +82,12 @@ function TimePicker({
       ? 0
       : periodSelectorGap + periodSelectorVerticalWidth)
 
-  const onInnerChange = useCallback<TimeChange>(
-    (params) => {
-      onChange({
-        ...params,
-        hours: toHourOutputFormat(params.hours, hours, is24Hour),
-      })
-    },
-    [onChange, hours, is24Hour]
-  )
+  const onInnerChange: TimeChange = (params) => {
+    onChange({
+      ...params,
+      hours: toHourOutputFormat(params.hours, hours, is24Hour),
+    })
+  }
 
   return (
     <DisplayModeContext.Provider value={displayModeValue}>

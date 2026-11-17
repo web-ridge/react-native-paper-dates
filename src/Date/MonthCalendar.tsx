@@ -29,7 +29,7 @@ const actionPaddingBottom = 12
 const actionPaddingTop = 8
 const headerPaddingBottom = 0
 const menuDividerOffset = 0
-const menuPadding = 20
+const menuPaddingBottom = 20
 const weekdayRowHeight = 24
 const weekdayGridGap = 16
 const menuHeight =
@@ -255,8 +255,7 @@ const styles = StyleSheet.create({
   menu: {
     height: menuHeight,
     marginTop: headerPaddingBottom - menuDividerOffset,
-    paddingBottom: menuPadding,
-    paddingTop: menuPadding,
+    paddingBottom: menuPaddingBottom,
   },
   weekdays: {
     marginBottom: weekdayGridGap,

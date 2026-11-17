@@ -33,7 +33,11 @@ export default function AutoSizer({
     (fill ? measured.height > 0 : true)
       ? measured
       : null
-  const layout = measuredReady ?? initialLayout ?? null
+  const windowLayout =
+    windowWidth > 0 && (!fill || windowHeight > 0)
+      ? { height: windowHeight, width: windowWidth }
+      : null
+  const layout = measuredReady ?? initialLayout ?? windowLayout
 
   const onLayout = useCallback(
     (event: LayoutChangeEvent) => {

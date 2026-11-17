@@ -27,10 +27,12 @@ import {
   indexFromVerticalScroll,
 } from './monthLayout'
 import {
+  assignMonthSlots,
   getMaxIndex,
   getMinIndex,
   getVerticalWindow,
   isIndexWithinRange,
+  type MonthSlot,
   nextVisibleIndexes,
   SwiperProps,
   useCalendarKeyboard,
@@ -81,6 +83,7 @@ function getVisibleArray(
   return getVerticalWindow(i, startYear, endYear)
 }
 
+/* eslint-disable react-hooks/refs -- The scroll index lives in a ref so handlers stay current. Passing those handlers to render props makes the compiler skip this component, so its manual memoization stays. */
 function SwiperInner({
   endYear,
   focusDate,
@@ -108,9 +111,23 @@ function SwiperInner({
   const restX = width
   const startIndex = clampIndex(initialIndex, startYear, endYear)
   const idx = useRef<number>(startIndex)
-  const [visibleIndexes, setVisibleIndexes] = useState<number[]>(
-    getVisibleArray(startIndex, { endYear, isHorizontal, startYear })
-  )
+  const [monthWindow, setMonthWindow] = useState<{
+    activeIndex: number
+    indexes: number[]
+    slots: MonthSlot[]
+  }>(() => {
+    const indexes = getVisibleArray(startIndex, {
+      endYear,
+      isHorizontal,
+      startYear,
+    })
+    return {
+      activeIndex: startIndex,
+      indexes,
+      slots: isHorizontal ? [] : assignMonthSlots([], indexes),
+    }
+  })
+  const visibleIndexes = monthWindow.indexes
   const verticalMetrics = useMemo(
     () =>
       getVerticalListMetrics(
@@ -158,9 +175,18 @@ function SwiperInner({
           ),
         }
       }
-      setVisibleIndexes(
-        getVisibleArray(index, { endYear, isHorizontal, startYear })
-      )
+      setMonthWindow((current) => {
+        const indexes = getVisibleArray(index, {
+          endYear,
+          isHorizontal,
+          startYear,
+        })
+        return {
+          activeIndex: index,
+          indexes,
+          slots: isHorizontal ? [] : assignMonthSlots(current.slots, indexes),
+        }
+      })
     },
     [
       endYear,
@@ -232,9 +258,20 @@ function SwiperInner({
         return
       }
       idx.current = newIndex
-      setVisibleIndexes((current) =>
-        nextVisibleIndexes(current, newIndex, startYear, endYear)
-      )
+      setMonthWindow((current) => {
+        const indexes = nextVisibleIndexes(
+          current.indexes,
+          newIndex,
+          startYear,
+          endYear
+        )
+        if (indexes === current.indexes) return current
+        return {
+          activeIndex: newIndex,
+          indexes,
+          slots: assignMonthSlots(current.slots, indexes),
+        }
+      })
     },
     [endYear, startWeekOnMonday, startYear, verticalMetrics.origin]
   )
@@ -257,13 +294,15 @@ function SwiperInner({
       }
       idx.current = newIndex
       pendingRecenter.current = true
-      setVisibleIndexes(
-        getVisibleArray(newIndex, {
+      setMonthWindow({
+        activeIndex: newIndex,
+        indexes: getVisibleArray(newIndex, {
           endYear,
           isHorizontal,
           startYear,
-        })
-      )
+        }),
+        slots: [],
+      })
     },
     [endYear, isHorizontal, restX, startYear, syncVerticalIndex, width]
   )
@@ -361,7 +400,13 @@ function SwiperInner({
             },
           ]}
         >
-          {visibleIndexes.map((monthIndex, vi) => {
+          {(isHorizontal
+            ? visibleIndexes.map((monthIndex, vi) => ({
+                monthIndex,
+                slot: vi,
+              }))
+            : monthWindow.slots
+          ).map(({ monthIndex, slot }) => {
             const inRange = isIndexWithinRange(monthIndex, startYear, endYear)
             const monthHeight = inRange
               ? getMonthHeight(
@@ -381,14 +426,14 @@ function SwiperInner({
               ) - verticalMetrics.origin
             return (
               <View
-                key={isHorizontal ? vi : monthIndex}
+                key={slot}
                 style={[
                   styles.month,
                   isHorizontal ? styles.monthHorizontal : styles.monthVertical,
                   isHorizontal
                     ? {
                         height: pageHeight,
-                        left: vi * width,
+                        left: slot * width,
                         width,
                       }
                     : {
@@ -399,7 +444,8 @@ function SwiperInner({
               >
                 {inRange
                   ? renderItem({
-                      active: !isHorizontal || monthIndex === idx.current,
+                      active:
+                        !isHorizontal || monthIndex === monthWindow.activeIndex,
                       index: monthIndex,
                       onNext: onNext,
                       onPrev: onPrev,
@@ -415,6 +461,8 @@ function SwiperInner({
     </>
   )
 }
+
+/* eslint-enable react-hooks/refs */
 
 const styles = StyleSheet.create({
   horizontalPager: {

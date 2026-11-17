@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -98,21 +98,15 @@ export function TimePickerModal({
   const headline =
     label ||
     (displayedInputType === inputTypes.keyboard ? 'Enter time' : 'Select time')
-  const onChange = useCallback<TimeChange>(
-    (params) => {
-      if (params.focused) {
-        setFocused(params.focused)
-      }
+  const onChange: TimeChange = (params) => {
+    if (params.focused) {
+      setFocused(params.focused)
+    }
 
-      setLocalHours(params.hours)
-      setLocalMinutes(params.minutes)
-    },
-    [setFocused, setLocalHours, setLocalMinutes]
-  )
-  const onFocusInput = useCallback(
-    (type: PossibleClockTypes) => setFocused(type),
-    []
-  )
+    setLocalHours(params.hours)
+    setLocalMinutes(params.minutes)
+  }
+  const onFocusInput = (type: PossibleClockTypes) => setFocused(type)
   const textFont = theme.fonts.labelMedium
   const uppercase = _uppercase ?? false
 

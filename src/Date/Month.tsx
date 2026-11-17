@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo, useState } from 'react'
+import { memo, useState } from 'react'
 import {
   type LayoutChangeEvent,
   type StyleProp,
@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import { Icon, Text, TouchableRipple, useTheme } from 'react-native-paper'
 
+import { dateTimeFormat } from '../shared/intl'
 import { sharedStyles } from '../shared/styles'
 import { useTextColorOnPrimary } from '../shared/utils'
 import {
@@ -74,7 +75,6 @@ interface BaseMonthProps {
   validRange?: ValidRangeType
 }
 const menuButtonInset = 8
-const monthNameFormatters = new Map<string, Intl.DateTimeFormat>()
 
 function Month(props: BaseMonthProps & CalendarMode) {
   const {
@@ -115,108 +115,80 @@ function Month(props: BaseMonthProps & CalendarMode) {
 
   const realIndex = getRealIndex(index, startYear, endYear)
 
-  const { month, monthName, year } = useMemo(() => {
-    const md = addMonths(new Date(), realIndex)
-    return {
-      month: md.getMonth(),
-      monthName: monthTitle(md, locale),
-      year: md.getFullYear(),
+  const monthDate = addMonths(new Date(), realIndex)
+  const month = monthDate.getMonth()
+  const monthName = monthTitle(monthDate, locale)
+  const year = monthDate.getFullYear()
+  const onDayPress = (pressed: Date) => {
+    onPressDate(pressed)
+    if (pressed.getFullYear() !== year || pressed.getMonth() !== month) {
+      onNavigateToDate?.(pressed)
     }
-  }, [locale, realIndex])
-  const onDayPress = useCallback(
-    (pressed: Date) => {
-      onPressDate(pressed)
-      if (pressed.getFullYear() !== year || pressed.getMonth() !== month) {
-        onNavigateToDate?.(pressed)
+  }
+  const selectedKeys = new Set<string>()
+  if (dates) {
+    for (const selected of dates) {
+      selectedKeys.add(calendarDateKey(selected))
+    }
+  }
+  const dayOfWeek = getFirstDayOfMonth({ month, startWeekOnMonday, year })
+  const daysInMonth = getDaysInMonth({ month, year })
+  const emptyDays = dayOfWeek
+  const range = mode === 'range' ? rangeBounds(startDate, endDate) : undefined
+  const today = new Date()
+  const grid = monthGrid(index, startWeekOnMonday, startYear, endYear).map(
+    ({ days, weekGrid }) => {
+      return {
+        generatedDays: days.map((_, dayIndex) => {
+          const dayOfMonth = weekGrid * 7 + dayIndex - emptyDays + 1
+          const afterWeekDay = dayOfMonth > daysInMonth
+          const day = new Date(year, month, dayOfMonth)
+          let disabled = isDisabled(day)
+          const isFirstWeek = weekGrid === 0
+          const isToday = areDatesOnSameDay(day, today)
+          const realDayIndex = emptyDays - dayIndex
+          const beforeWeekDay = isFirstWeek && realDayIndex > 0
+          const { inRange, leftCrop, rightCrop, selected } = dayMarks({
+            date,
+            day,
+            dayIndex,
+            dayOfMonth,
+            daysInMonth,
+            endDate,
+            mode,
+            month,
+            range,
+            selectedKeys,
+            startDate,
+            year,
+          })
+
+          if (!isWithinValidRange(day)) {
+            disabled = true
+          }
+
+          return {
+            afterWeekDay,
+            beforeWeekDay,
+            dayIndex,
+            dayOfMonth: day.getDate(),
+            disabled,
+            focused: !!focusedDate && areDatesOnSameDay(day, focusedDate),
+            inRange,
+            isToday,
+            leftCrop,
+            mode,
+            month: day.getMonth(),
+            outside: beforeWeekDay || afterWeekDay,
+            rightCrop,
+            selected,
+            year: day.getFullYear(),
+          }
+        }),
+        weekIndex: weekGrid,
       }
-    },
-    [month, onNavigateToDate, onPressDate, year]
+    }
   )
-  const selectedKeys = useMemo(() => {
-    const keys = new Set<string>()
-    if (dates) {
-      for (const selected of dates) {
-        keys.add(calendarDateKey(selected))
-      }
-    }
-    return keys
-  }, [dates])
-  const grid = useMemo(() => {
-    const dayOfWeek = getFirstDayOfMonth({ month, startWeekOnMonday, year })
-    const daysInMonth = getDaysInMonth({ month, year })
-    const emptyDays = dayOfWeek
-    const range = mode === 'range' ? rangeBounds(startDate, endDate) : undefined
-    const today = new Date()
-
-    return monthGrid(index, startWeekOnMonday, startYear, endYear).map(
-      ({ days, weekGrid }) => {
-        return {
-          generatedDays: days.map((_, dayIndex) => {
-            const dayOfMonth = weekGrid * 7 + dayIndex - emptyDays + 1
-            const afterWeekDay = dayOfMonth > daysInMonth
-            const day = new Date(year, month, dayOfMonth)
-            let disabled = isDisabled(day)
-            const isFirstWeek = weekGrid === 0
-            const isToday = areDatesOnSameDay(day, today)
-            const realDayIndex = emptyDays - dayIndex
-            const beforeWeekDay = isFirstWeek && realDayIndex > 0
-            const { inRange, leftCrop, rightCrop, selected } = dayMarks({
-              date,
-              day,
-              dayIndex,
-              dayOfMonth,
-              daysInMonth,
-              endDate,
-              mode,
-              month,
-              range,
-              selectedKeys,
-              startDate,
-              year,
-            })
-
-            if (!isWithinValidRange(day)) {
-              disabled = true
-            }
-
-            return {
-              afterWeekDay,
-              beforeWeekDay,
-              dayIndex,
-              dayOfMonth: day.getDate(),
-              disabled,
-              focused: !!focusedDate && areDatesOnSameDay(day, focusedDate),
-              inRange,
-              isToday,
-              leftCrop,
-              mode,
-              month: day.getMonth(),
-              outside: beforeWeekDay || afterWeekDay,
-              rightCrop,
-              selected,
-              year: day.getFullYear(),
-            }
-          }),
-          weekIndex: weekGrid,
-        }
-      }
-    )
-  }, [
-    date,
-    endDate,
-    endYear,
-    focusedDate,
-    index,
-    isDisabled,
-    isWithinValidRange,
-    mode,
-    month,
-    selectedKeys,
-    startDate,
-    startWeekOnMonday,
-    startYear,
-    year,
-  ])
   const textColorOnPrimary = useTextColorOnPrimary()
   const theme = useTheme()
 
@@ -399,13 +371,7 @@ const monthGrid = (
 }
 
 function monthTitle(date: Date, locale: string | undefined) {
-  const key = locale === undefined ? '\0' : locale
-  let formatter = monthNameFormatters.get(key)
-  if (!formatter) {
-    formatter = new Intl.DateTimeFormat(locale, { month: 'long' })
-    monthNameFormatters.set(key, formatter)
-  }
-  return formatter.format(date)
+  return dateTimeFormat(locale, { month: 'long' }).format(date)
 }
 
 const styles = StyleSheet.create({

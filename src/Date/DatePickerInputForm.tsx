@@ -17,6 +17,7 @@ import {
   useTheme,
 } from 'react-native-paper'
 
+import { dateTimeFormat } from '../shared/intl'
 import { displayCase, themeColor } from '../shared/utils'
 import { getTranslation, translate } from '../translations/utils'
 import DatePickerInputWithoutModal from './DatePickerInputWithoutModal'
@@ -98,7 +99,7 @@ function DatePickerInputForm({
   const inputFormat = useInputFormat({ formatter, locale })
   const headlineFormatter = useMemo(
     () =>
-      new Intl.DateTimeFormat(
+      dateTimeFormat(
         locale,
         mode === 'range'
           ? { day: 'numeric', month: 'short' }

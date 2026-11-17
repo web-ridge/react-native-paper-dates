@@ -1,4 +1,4 @@
-import { memo, type ReactNode, useCallback, useEffect, useState } from 'react'
+import { memo, type ReactNode, useEffect, useState } from 'react'
 import { type StyleProp, View, type ViewStyle } from 'react-native'
 import { useTheme } from 'react-native-paper'
 
@@ -159,145 +159,110 @@ function ScrollCalendar(
   useEffect(() => {
     onSelectingYearChange?.(scrollMode === 'horizontal' && selectingYear)
   }, [onSelectingYearChange, scrollMode, selectingYear])
-  const onMoveFocus = useCallback(
-    (delta: number) => {
-      setFocusedDate((prev) => addMonths(prev || date || new Date(), delta))
-    },
-    [date]
-  )
-  const onOpenMonthMenu = useCallback(() => {
+  const onMoveFocus = (delta: number) => {
+    setFocusedDate((prev) => addMonths(prev || date || new Date(), delta))
+  }
+  const onOpenMonthMenu = () => {
     setSelectingYear(false)
     setSelectingMonth((prev) => !prev)
-  }, [])
-  const onOpenYearMenu = useCallback(() => {
+  }
+  const onOpenYearMenu = () => {
     const year = (focusedDate || date || new Date()).getFullYear()
     setSelectedYear(year)
     setSelectingMonth(false)
     setSelectingYear(true)
-  }, [date, focusedDate])
-  const onPressMonth = useCallback(
-    (month: number) => {
-      const base = focusedDate || date || new Date()
-      const day = Math.min(
-        base.getDate(),
-        getDaysInMonth({ month, year: base.getFullYear() })
-      )
-      const next = new Date(base.getFullYear(), month, day)
-      setFocusedDate(next)
-      setNavigateDate(next)
-      setSelectingMonth(false)
-    },
-    [date, focusedDate]
-  )
-  const onPressYear = useCallback(
-    (year: number) => {
-      setSelectedYear(year)
-      setSelectingYear((prev) => !prev)
-    },
-    [setSelectingYear]
-  )
+  }
+  const onPressMonth = (month: number) => {
+    const base = focusedDate || date || new Date()
+    const day = Math.min(
+      base.getDate(),
+      getDaysInMonth({ month, year: base.getFullYear() })
+    )
+    const next = new Date(base.getFullYear(), month, day)
+    setFocusedDate(next)
+    setNavigateDate(next)
+    setSelectingMonth(false)
+  }
+  const onPressYear = (year: number) => {
+    setSelectedYear(year)
+    setSelectingYear((prev) => !prev)
+  }
   const startDateRef = useLatest<CalendarDate>(startDate)
-  const onPressDate = useCallback(
-    (pressed: Date) => {
-      const next = pressDate(
-        {
-          dateMode,
-          dates: datesRef.current,
-          endDate: endDateRef.current,
-          mode,
-          startDate: startDateRef.current,
-        },
-        pressed
-      )
-      if (next.dates) datesRef.current = next.dates
-      ;(onChangeRef.current as (value: PressedDate) => void)(next)
-    },
-    [mode, dateMode, onChangeRef, startDateRef, endDateRef, datesRef]
-  )
+  const onPressDate = (pressed: Date) => {
+    const next = pressDate(
+      {
+        dateMode,
+        dates: datesRef.current,
+        endDate: endDateRef.current,
+        mode,
+        startDate: startDateRef.current,
+      },
+      pressed
+    )
+    if (next.dates) datesRef.current = next.dates
+    ;(onChangeRef.current as (value: PressedDate) => void)(next)
+  }
   const startWeekOnMondayValue = startWeekOnMonday || false
-  const renderHeader = useCallback(
-    ({
-      endInset,
-      onNext,
-      onPrev,
-    }: {
-      endInset?: number
-      onNext: () => void
-      onPrev: () => void
-    }) => (
-      <CalendarHeader
-        disableWeekDays={disableWeekDays}
-        endInset={endInset}
-        locale={locale}
-        onNext={onNext}
-        onPrev={onPrev}
-        scrollMode={scrollMode}
-        selectingYear={selectingYear}
-        startWeekOnMonday={startWeekOnMondayValue}
-      />
-    ),
-    [disableWeekDays, locale, scrollMode, selectingYear, startWeekOnMondayValue]
+  const renderHeader = ({
+    endInset,
+    onNext,
+    onPrev,
+  }: {
+    endInset?: number
+    onNext: () => void
+    onPrev: () => void
+  }) => (
+    <CalendarHeader
+      disableWeekDays={disableWeekDays}
+      endInset={endInset}
+      locale={locale}
+      onNext={onNext}
+      onPrev={onPrev}
+      scrollMode={scrollMode}
+      selectingYear={selectingYear}
+      startWeekOnMonday={startWeekOnMondayValue}
+    />
   )
   const theme = useTheme()
   const primaryColor = themeColor(theme.colors.primary)
   const roundness = theme.shapes.corner.extraSmall
   const selectColor = theme.colors.secondaryContainer
   const selectColorValue = themeColor(selectColor)
-  const renderItem = useCallback(
-    ({ active, index }: { active?: boolean; index: number }) => (
-      <Month
-        key={index}
-        date={date}
-        dates={dates}
-        dayContent={dayContent}
-        dayContentPosition={dayContentPosition}
-        dayContentStyle={dayContentStyle}
-        disableWeekDays={disableWeekDays}
-        endDate={endDate}
-        endYear={endYear}
-        focusedDate={focusedDate}
-        index={index}
-        locale={locale}
-        mode={mode}
-        onNavigateToDate={active === false ? undefined : setNavigateDate}
-        onPressDate={onPressDate}
-        onPressYear={onPressYear}
-        primaryColor={primaryColor}
-        roundness={roundness}
-        scrollMode={scrollMode}
-        selectColor={selectColorValue}
-        selectingYear={selectingYear}
-        showOutsideDays={scrollMode === 'horizontal' && active !== false}
-        startDate={startDate}
-        startWeekOnMonday={startWeekOnMondayValue}
-        startYear={startYear}
-        validRange={validRange}
-      />
-    ),
-    [
-      date,
-      dates,
-      dayContent,
-      dayContentPosition,
-      dayContentStyle,
-      disableWeekDays,
-      endDate,
-      endYear,
-      focusedDate,
-      locale,
-      mode,
-      onPressDate,
-      onPressYear,
-      primaryColor,
-      roundness,
-      scrollMode,
-      selectColorValue,
-      selectingYear,
-      startDate,
-      startWeekOnMondayValue,
-      startYear,
-      validRange,
-    ]
+  const renderItem = ({
+    active,
+    index,
+  }: {
+    active?: boolean
+    index: number
+  }) => (
+    <Month
+      key={index}
+      date={date}
+      dates={dates}
+      dayContent={dayContent}
+      dayContentPosition={dayContentPosition}
+      dayContentStyle={dayContentStyle}
+      disableWeekDays={disableWeekDays}
+      endDate={endDate}
+      endYear={endYear}
+      focusedDate={focusedDate}
+      index={index}
+      locale={locale}
+      mode={mode}
+      onNavigateToDate={active === false ? undefined : setNavigateDate}
+      onPressDate={onPressDate}
+      onPressYear={onPressYear}
+      primaryColor={primaryColor}
+      roundness={roundness}
+      scrollMode={scrollMode}
+      selectColor={selectColorValue}
+      selectingYear={selectingYear}
+      showOutsideDays={scrollMode === 'horizontal' && active !== false}
+      startDate={startDate}
+      startWeekOnMonday={startWeekOnMondayValue}
+      startYear={startYear}
+      validRange={validRange}
+    />
   )
 
   return (

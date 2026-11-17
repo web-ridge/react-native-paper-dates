@@ -3,7 +3,6 @@ import {
   type CSSProperties,
   type ReactNode,
   type UIEvent,
-  useCallback,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -28,10 +27,12 @@ import {
   indexFromVerticalScroll,
 } from './monthLayout'
 import {
+  assignMonthSlots,
   getMaxIndex,
   getMinIndex,
   getVerticalWindow,
   isIndexWithinRange,
+  type MonthSlot,
   nextVisibleIndexes,
   type RenderProps,
   type SwiperProps,
@@ -67,19 +68,14 @@ function Swiper({
 
   const isHorizontal = scrollMode === 'horizontal'
 
-  const shiftIndex = useCallback(
-    (delta: number) => {
-      setIndex((prev) => {
-        const newIndex = prev + delta
-        return isIndexWithinRange(newIndex, startYear, endYear)
-          ? newIndex
-          : prev
-      })
-    },
-    [endYear, startYear]
-  )
-  const onNext = useCallback(() => shiftIndex(1), [shiftIndex])
-  const onPrev = useCallback(() => shiftIndex(-1), [shiftIndex])
+  const shiftIndex = (delta: number) => {
+    setIndex((prev) => {
+      const newIndex = prev + delta
+      return isIndexWithinRange(newIndex, startYear, endYear) ? newIndex : prev
+    })
+  }
+  const onNext = () => shiftIndex(1)
+  const onPrev = () => shiftIndex(-1)
 
   const renderProps = {
     index,
@@ -196,13 +192,17 @@ function VerticalScroller({
       )
   const idx = useRef<number>(constrainedInitialIndex)
   const parentRef = useRef<HTMLDivElement | null>(null)
-  const [visibleIndexes, setVisibleIndexes] = useState<number[]>(() =>
-    getVerticalWindow(
+  const [monthWindow, setMonthWindow] = useState<{
+    indexes: number[]
+    slots: MonthSlot[]
+  }>(() => {
+    const indexes = getVerticalWindow(
       constrainedInitialIndex,
       effectiveStartYear,
       effectiveEndYear
     )
-  )
+    return { indexes, slots: assignMonthSlots([], indexes) }
+  })
   const theme = useTheme()
   const verticalMetrics = getVerticalListMetrics(
     getMinIndex(effectiveStartYear, effectiveEndYear),
@@ -227,40 +227,42 @@ function VerticalScroller({
       ),
     })
   }, [])
-  const onScroll = useCallback(
-    (e: UIEvent) => {
-      const top = e.currentTarget?.scrollTop
-      if (top === undefined) {
-        return
-      }
+  const onScroll = (e: UIEvent) => {
+    const top = e.currentTarget?.scrollTop
+    if (top === undefined) {
+      return
+    }
 
-      const index = indexFromVerticalScroll(
-        top,
-        verticalMetrics.origin,
-        startWeekOnMonday,
+    const index = indexFromVerticalScroll(
+      top,
+      verticalMetrics.origin,
+      startWeekOnMonday,
+      effectiveStartYear,
+      effectiveEndYear
+    )
+
+    if (
+      !isIndexWithinRange(index, effectiveStartYear, effectiveEndYear) ||
+      idx.current === index
+    ) {
+      return
+    }
+
+    idx.current = index
+    setMonthWindow((current) => {
+      const indexes = nextVisibleIndexes(
+        current.indexes,
+        index,
         effectiveStartYear,
         effectiveEndYear
       )
-
-      if (
-        !isIndexWithinRange(index, effectiveStartYear, effectiveEndYear) ||
-        idx.current === index
-      ) {
-        return
+      if (indexes === current.indexes) return current
+      return {
+        indexes,
+        slots: assignMonthSlots(current.slots, indexes),
       }
-
-      idx.current = index
-      setVisibleIndexes((current) =>
-        nextVisibleIndexes(current, index, effectiveStartYear, effectiveEndYear)
-      )
-    },
-    [
-      effectiveEndYear,
-      effectiveStartYear,
-      startWeekOnMonday,
-      verticalMetrics.origin,
-    ]
-  )
+    })
+  }
 
   const scrollerStyle: CSSProperties = {
     boxSizing: 'border-box',
@@ -282,7 +284,7 @@ function VerticalScroller({
   return (
     <div onScroll={onScroll} ref={parentRef} style={scrollerStyle}>
       <div style={trackStyle}>
-        {visibleIndexes.map((monthIndex) => {
+        {monthWindow.slots.map(({ monthIndex, slot }) => {
           const monthStyle: CSSProperties = {
             height: getMonthHeight(
               'vertical',
@@ -305,7 +307,7 @@ function VerticalScroller({
             willChange: 'transform',
           }
           return (
-            <div key={monthIndex} style={monthStyle}>
+            <div key={slot} style={monthStyle}>
               {renderItem({
                 index: monthIndex,
                 onNext: empty,

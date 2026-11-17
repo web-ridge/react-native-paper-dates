@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/refs -- Animated values are created on refs and read while drawing the cross-fade. */
 import { type ReactNode, useEffect, useRef, useState } from 'react'
 import { Animated, type StyleProp, View, type ViewStyle } from 'react-native'
 

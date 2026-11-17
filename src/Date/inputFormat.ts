@@ -1,5 +1,7 @@
 import { useCallback, useMemo } from 'react'
 
+import { dateTimeFormat } from '../shared/intl'
+
 import type { ValidRangeType } from './types'
 import {
   calendarDateKey,
@@ -40,14 +42,16 @@ export function useInputFormat({
 }
 
 export function useInputFormatter({ locale }: { locale: string | undefined }) {
-  return useMemo(() => {
-    return new Intl.DateTimeFormat(locale, {
-      calendar: 'gregory',
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    })
-  }, [locale])
+  return useMemo(
+    () =>
+      dateTimeFormat(locale, {
+        calendar: 'gregory',
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      }),
+    [locale]
+  )
 }
 
 export function useRangeChecker(validRange: ValidRangeType | undefined) {

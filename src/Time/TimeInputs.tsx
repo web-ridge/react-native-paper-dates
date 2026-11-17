@@ -1,11 +1,4 @@
-import {
-  memo,
-  type ReactNode,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
+import { memo, type ReactNode, useEffect, useRef, useState } from 'react'
 import {
   StyleSheet,
   type TextInputInstance,
@@ -73,19 +66,16 @@ function TimeInputs({
   )
 
   const minutesRef = useLatest(minutes)
-  const onChangeHours = useCallback(
-    (newHours: number) => {
-      onChange({
-        focused: clockTypes.hours,
-        hours: newHours,
-        minutes: minutesRef.current,
-      })
-    },
-    [onChange, minutesRef]
-  )
-  const onSubmitStartInput = useCallback(() => {
+  const onChangeHours = (newHours: number) => {
+    onChange({
+      focused: clockTypes.hours,
+      hours: newHours,
+      minutes: minutesRef.current,
+    })
+  }
+  const onSubmitStartInput = () => {
     endInput.current?.focus()
-  }, [endInput])
+  }
   const startInput = useRef<TextInputInstance | null>(null)
   const theme = useTheme()
 

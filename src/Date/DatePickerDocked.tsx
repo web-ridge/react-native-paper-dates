@@ -16,6 +16,7 @@ import {
   useTheme,
 } from 'react-native-paper'
 
+import { dateTimeFormat } from '../shared/intl'
 import StateLayer from '../shared/StateLayer'
 import { displayCase, supportedOrientations, themeColor } from '../shared/utils'
 import { getTranslation, translate } from '../translations/utils'
@@ -64,6 +65,7 @@ const headerRowHeight = 30
 const iconButtonSize = 24
 const iconHitSlop = (headerRowHeight - iconButtonSize) / 2
 const menuButtonHeight = headerRowHeight
+const menuHeaderHeight = 24
 const menuButtonPadding = 8
 const menuIconGap = 8
 const menuLabelInset = 16 + 24 + 16 - menuButtonPadding
@@ -170,7 +172,7 @@ function DatePickerDocked({
                     >
                       <DockedStepper
                         disabled={nav.menu === 'year'}
-                        label={new Intl.DateTimeFormat(locale, {
+                        label={dateTimeFormat(locale, {
                           month: 'short',
                         }).format(nav.visibleMonth)}
                         onNext={() => nav.moveMonth(1)}
@@ -285,7 +287,7 @@ function DockedStepper({
     </Text>
   )
   const menuControl = disabled ? (
-    <View style={styles.menuButton}>{labelText}</View>
+    <View style={[styles.menuButton, styles.menuButtonMenu]}>{labelText}</View>
   ) : (
     <Pressable
       accessibilityRole="button"
@@ -295,6 +297,7 @@ function DockedStepper({
       onPress={onOpen}
       style={[
         styles.menuButton,
+        showArrows ? null : styles.menuButtonMenu,
         { borderRadius: theme.shapes.corner.extraSmall },
       ]}
       testID={testID}
@@ -412,6 +415,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     paddingHorizontal: menuButtonPadding,
   },
+  menuButtonMenu: {
+    height: menuHeaderHeight,
+  },
   menuLabel: {
     flexShrink: 1,
     includeFontPadding: false,
@@ -457,7 +463,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: dayHeaderInset,
   },
   toolbarMenu: {
-    marginBottom: 0,
+    height: menuHeaderHeight,
+    marginBottom: headerPaddingTop,
   },
 })
 

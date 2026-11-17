@@ -11,6 +11,7 @@ import {
   getFirstDayOfMonth,
   getGridCount,
   getGridCountForDate,
+  gregorianWeekday,
   getInitialIndex,
   getRealIndex,
   getStartAtIndex,
@@ -144,6 +145,32 @@ describe('dateUtils', () => {
   it('clamps the day when the target month is shorter', () => {
     expect(addMonths(new Date(2022, 0, 31), 1).getDate()).toBe(28)
     expect(addMonths(new Date(2022, 11, 15), 1).getMonth()).toBe(0)
+  })
+
+  it('matches Date.getDay across the supported year range', () => {
+    for (let year = 1800; year <= 2200; year += 1) {
+      for (let month = 0; month < 12; month += 1) {
+        expect(gregorianWeekday(year, month, 1)).toBe(
+          new Date(year, month, 1).getDay()
+        )
+      }
+    }
+    expect(gregorianWeekday(2024, 1, 1)).toBe(new Date(2024, 1, 1).getDay())
+    expect(gregorianWeekday(1900, 1, 1)).toBe(new Date(1900, 1, 1).getDay())
+    expect(gregorianWeekday(2000, 1, 1)).toBe(new Date(2000, 1, 1).getDay())
+  })
+
+  it('keeps index grid counts aligned with calendar dates', () => {
+    const start = getStartAtIndex(2020, 2030)
+    for (let index = start - 24; index <= start + 24; index += 1) {
+      const date = addMonths(new Date(), index - start)
+      expect(getGridCount(index, false, 2020, 2030)).toBe(
+        getGridCountForDate(date, false)
+      )
+      expect(getGridCount(index, true, 2020, 2030)).toBe(
+        getGridCountForDate(date, true)
+      )
+    }
   })
 
   it('shifts the first weekday when weeks start on Monday', () => {

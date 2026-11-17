@@ -188,7 +188,7 @@ export function pressDate(
     exists
       ? dates.filter((day) => !areDatesOnSameDay(day, pressed))
       : [...dates, pressed]
-  ).sort((left, right) => left.getTime() - right.getTime())
+  ).toSorted((left, right) => left.getTime() - right.getTime())
   return {
     change: exists ? 'removed' : 'added',
     datePressed: pressed,

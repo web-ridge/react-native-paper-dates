@@ -9,17 +9,20 @@ import {
   getGridCount,
   getStartAtIndex,
   getTotalMonths,
+  monthFromIndex,
+  monthWeekRows,
 } from './dateUtils'
 import { dayNamesHeight } from './DayNames'
 import { getMaxIndex, getMinIndex } from './SwiperUtils'
 
-type VerticalLayout = {
-  gridCount: number[]
+type MonthWeeks = {
+  prefix: number[]
+  rows: number[]
   startAtIndex: number
-  weekPrefix: number[]
+  total: number
 }
 
-const verticalLayoutCache = new Map<string, VerticalLayout>()
+const weekPrefixCache = new Map<string, MonthWeeks>()
 
 export const monthHeaderHeight = 56
 export const monthHeaderSingleMarginBottom = dayNamesHeight
@@ -45,32 +48,53 @@ function getIndexCount(
   return -(dynamicStartAtIndex - index)
 }
 
-function getVerticalLayout(
+function getWeekPrefix(
   startWeekOnMonday: boolean,
   startYear?: number,
   endYear?: number
-): VerticalLayout {
+): MonthWeeks {
   const end = endYear ?? defaultEndYear
   const start = startYear ?? defaultStartYear
-  const key = `${start}:${end}:${startWeekOnMonday ? 1 : 0}:${currentCalendarMonth().stamp}`
-  const cached = verticalLayoutCache.get(key)
-  if (cached) {
-    return cached
-  }
+  const { stamp } = currentCalendarMonth()
+  const key = `${start}:${end}:${startWeekOnMonday ? 1 : 0}:${stamp}`
+  const cached = weekPrefixCache.get(key)
+  if (cached) return cached
 
-  const startAtIndex = getStartAtIndex(start, end)
   const total = getTotalMonths(start, end)
-  const gridCount = new Array<number>(total)
-  const weekPrefix = new Array<number>(total + 1)
-  weekPrefix[0] = 0
-  for (let i = 0; i < total; i += 1) {
-    const count = getGridCount(i, startWeekOnMonday, start, end)
-    gridCount[i] = count
-    weekPrefix[i + 1] = weekPrefix[i] + count
+  const startAtIndex = getStartAtIndex(start, end)
+  const span = Math.max(total, startAtIndex)
+  const rows = new Array<number>(span)
+  const prefix = new Array<number>(span + 1)
+  prefix[0] = 0
+  let { month, year } = monthFromIndex(0, start, end)
+  let sum = 0
+  for (let index = 0; index < span; index += 1) {
+    const count = monthWeekRows(year, month, startWeekOnMonday)
+    rows[index] = count
+    sum += count
+    prefix[index + 1] = sum
+    month += 1
+    if (month === 12) {
+      month = 0
+      year += 1
+    }
   }
-  const layout = { gridCount, startAtIndex, weekPrefix }
-  verticalLayoutCache.set(key, layout)
+  const layout = { prefix, rows, startAtIndex, total }
+  weekPrefixCache.set(key, layout)
   return layout
+}
+
+function weekRows(
+  index: number,
+  startWeekOnMonday: boolean,
+  startYear?: number,
+  endYear?: number
+): number {
+  const layout = getWeekPrefix(startWeekOnMonday, startYear, endYear)
+  return (
+    layout.rows[index] ??
+    getGridCount(index, startWeekOnMonday, startYear, endYear)
+  )
 }
 
 function weeksOffset(
@@ -79,10 +103,9 @@ function weeksOffset(
   startYear?: number,
   endYear?: number
 ): number {
-  const layout = getVerticalLayout(startWeekOnMonday, startYear, endYear)
-  const max = layout.weekPrefix.length - 1
-  const clamped = Math.max(0, Math.min(index, max))
-  return layout.weekPrefix[clamped] - layout.weekPrefix[layout.startAtIndex]
+  const layout = getWeekPrefix(startWeekOnMonday, startYear, endYear)
+  const clamped = Math.max(0, Math.min(index, layout.total))
+  return layout.prefix[clamped] - layout.prefix[layout.startAtIndex]
 }
 
 export function getIndexFromVerticalOffset(
@@ -122,11 +145,8 @@ export function getMonthHeight(
   const calendarHeight = getCalendarHeaderHeight(scrollMode)
   const extraHeight =
     scrollMode === 'horizontal' ? monthHeaderSingleHeight : monthHeaderHeight
-  const layout = getVerticalLayout(startWeekOnMonday, startYear, endYear)
-  const gc =
-    layout.gridCount[index] ??
-    getGridCount(index, startWeekOnMonday, startYear, endYear)
-  const currentMonthHeight = weekSize * gc
+  const currentMonthHeight =
+    weekSize * weekRows(index, startWeekOnMonday, startYear, endYear)
   return calendarHeight + currentMonthHeight + extraHeight
 }
 
@@ -190,10 +210,7 @@ export function horizontalMonthScrolls(
   startYear?: number,
   endYear?: number
 ): boolean {
-  const layout = getVerticalLayout(startWeekOnMonday, startYear, endYear)
-  const weeks =
-    layout.gridCount[index] ??
-    getGridCount(index, startWeekOnMonday, startYear, endYear)
+  const weeks = weekRows(index, startWeekOnMonday, startYear, endYear)
   return weekSize * weeks > viewportHeight - horizontalMonthChrome
 }
 
@@ -236,9 +253,5 @@ export function monthWeekCount(
   startYear?: number,
   endYear?: number
 ) {
-  const layout = getVerticalLayout(startWeekOnMonday, startYear, endYear)
-  return (
-    layout.gridCount[index] ??
-    getGridCount(index, startWeekOnMonday, startYear, endYear)
-  )
+  return weekRows(index, startWeekOnMonday, startYear, endYear)
 }
