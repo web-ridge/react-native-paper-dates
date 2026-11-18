@@ -1,4 +1,4 @@
-import { dateTimeFormat } from '../shared/intl'
+import { dateTimeFormat, formatMonth } from '../shared/intl'
 
 describe('dateTimeFormat', () => {
   it('reuses a formatter for the same locale and options', () => {
@@ -6,6 +6,12 @@ describe('dateTimeFormat', () => {
     const second = dateTimeFormat('en', { month: 'long' })
     expect(second).toBe(first)
     expect(first.format(new Date(2020, 0, 1))).toBe('January')
+  })
+
+  it('reuses month names for a locale', () => {
+    expect(formatMonth('en', 0)).toBe('January')
+    expect(formatMonth('en', 11)).toBe('December')
+    expect(formatMonth('en', 0)).toBe('January')
   })
 
   it('keeps different option sets apart', () => {

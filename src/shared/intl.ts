@@ -1,4 +1,5 @@
 const formatters = new Map<string, Intl.DateTimeFormat>()
+const monthNames = new Map<string, readonly string[]>()
 
 function optionsKey(options: Intl.DateTimeFormatOptions): string {
   return Object.keys(options)
@@ -21,4 +22,17 @@ export function dateTimeFormat(
   const formatter = new Intl.DateTimeFormat(locale, options)
   formatters.set(key, formatter)
   return formatter
+}
+
+export function formatMonth(locale: string | undefined, month: number) {
+  const key = locale ?? ''
+  let names = monthNames.get(key)
+  if (!names) {
+    const formatter = dateTimeFormat(locale, { month: 'long' })
+    names = Array.from({ length: 12 }, (_, index) =>
+      formatter.format(new Date(2020, index, 1))
+    )
+    monthNames.set(key, names)
+  }
+  return names[month]
 }

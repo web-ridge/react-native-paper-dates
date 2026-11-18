@@ -11,12 +11,19 @@ export const datePickerSingleMaxHeight = 524
 export const defaultEndYear = 2200
 export const defaultStartYear = 1800
 export const estimatedMonthHeight = 400
+const calendarDay = {
+  day: 0,
+  expiresAt: 0,
+  month: 0,
+  year: 0,
+}
 const calendarMonth = {
   expiresAt: 0,
   month: 0,
   stamp: '',
   year: 0,
 }
+const monthLengths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 const nativeDigits: Record<string, string> = {}
 const startAtIndexCache = new Map<string, number>()
 for (const [index, digit] of '٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹'.split('').entries()) {
@@ -48,8 +55,8 @@ export function adjacentDayKey(
   if (shifted >= 1 && shifted <= getDaysInMonth({ month, year })) {
     return calendarDayKey(year, month, shifted)
   }
-  const overflow = new Date(year, month, shifted)
-  return calendarDateKey(overflow)
+  const overflow = resolveCalendarDay(year, month, shifted)
+  return calendarDayKey(overflow.year, overflow.month, overflow.day)
 }
 
 export function areDatesOnSameDay(a: Date, b?: Date | null | undefined) {
@@ -76,6 +83,27 @@ export function calendarDayKey(
   return `${year}-${month}-${day}`
 }
 
+export function calendarOrdinal(year: number, month: number, day: number) {
+  return year * 372 + month * 31 + day
+}
+
+export function currentCalendarDay() {
+  const now = Date.now()
+  if (now < calendarDay.expiresAt) {
+    return calendarDay
+  }
+
+  const today = new Date(now)
+  const day = today.getDate()
+  const month = today.getMonth()
+  const year = today.getFullYear()
+  calendarDay.day = day
+  calendarDay.expiresAt = new Date(year, month, day + 1).getTime()
+  calendarDay.month = month
+  calendarDay.year = year
+  return calendarDay
+}
+
 export function currentCalendarMonth() {
   const now = Date.now()
   if (now < calendarMonth.expiresAt) {
@@ -90,6 +118,10 @@ export function currentCalendarMonth() {
   calendarMonth.stamp = `${year}-${month}`
   calendarMonth.year = year
   return calendarMonth
+}
+
+export function dateOrdinal(date: Date) {
+  return calendarOrdinal(date.getFullYear(), date.getMonth(), date.getDate())
 }
 
 export function dateToUnix(d: Date): number {
@@ -131,20 +163,8 @@ export function getDaysInMonth({
   month: number
   year: number
 }): number {
-  return [
-    31,
-    isLeapYear({ year }) ? 29 : 28,
-    31,
-    30,
-    31,
-    30,
-    31,
-    31,
-    30,
-    31,
-    30,
-    31,
-  ][month]
+  if (month === 1 && isLeapYear({ year })) return 29
+  return monthLengths[month]
 }
 
 export function getEndOfDay(d: Date): Date {
@@ -202,6 +222,51 @@ export function getGridCount(
 
 export function getGridCountForDate(date: Date, startWeekOnMonday: boolean) {
   return monthWeekRows(date.getFullYear(), date.getMonth(), startWeekOnMonday)
+}
+
+export function resolveCalendarDay(year: number, month: number, day: number) {
+  let resolvedDay = day
+  let resolvedMonth = month
+  let resolvedYear = year
+  while (resolvedDay < 1) {
+    resolvedMonth -= 1
+    if (resolvedMonth < 0) {
+      resolvedMonth = 11
+      resolvedYear -= 1
+    }
+    resolvedDay += getDaysInMonth({
+      month: resolvedMonth,
+      year: resolvedYear,
+    })
+  }
+  let daysInMonth = getDaysInMonth({
+    month: resolvedMonth,
+    year: resolvedYear,
+  })
+  while (resolvedDay > daysInMonth) {
+    resolvedDay -= daysInMonth
+    resolvedMonth += 1
+    if (resolvedMonth > 11) {
+      resolvedMonth = 0
+      resolvedYear += 1
+    }
+    daysInMonth = getDaysInMonth({
+      month: resolvedMonth,
+      year: resolvedYear,
+    })
+  }
+  return { day: resolvedDay, month: resolvedMonth, year: resolvedYear }
+}
+
+export function shiftMonth(year: number, month: number, count: number) {
+  const absolute = year * 12 + month + count
+  let nextYear = Math.floor(absolute / 12)
+  let nextMonth = absolute - nextYear * 12
+  if (nextMonth < 0) {
+    nextMonth += 12
+    nextYear -= 1
+  }
+  return { month: nextMonth, year: nextYear }
 }
 
 export function monthFromIndex(

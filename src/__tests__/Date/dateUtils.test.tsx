@@ -14,6 +14,7 @@ import {
   gregorianWeekday,
   getInitialIndex,
   getRealIndex,
+  resolveCalendarDay,
   getStartAtIndex,
   getStartOfDay,
   getTotalMonths,
@@ -140,6 +141,21 @@ describe('dateUtils', () => {
     expect(isLeapYear({ year: 2000 })).toBeTruthy()
     expect(getDaysInMonth({ month: 1, year: 2024 })).toBe(29)
     expect(getDaysInMonth({ month: 1, year: 2022 })).toBe(28)
+  })
+
+  it('resolves days outside a month the same way Date does', () => {
+    for (const year of [2024, 2026]) {
+      for (let month = 0; month < 12; month += 1) {
+        for (let day = -6; day <= 40; day += 1) {
+          const date = new Date(year, month, day)
+          expect(resolveCalendarDay(year, month, day)).toEqual({
+            day: date.getDate(),
+            month: date.getMonth(),
+            year: date.getFullYear(),
+          })
+        }
+      }
+    }
   })
 
   it('clamps the day when the target month is shorter', () => {

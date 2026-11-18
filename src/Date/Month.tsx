@@ -1,4 +1,4 @@
-import { memo, useState } from 'react'
+import { memo, useCallback, useMemo, useState } from 'react'
 import {
   type LayoutChangeEvent,
   type StyleProp,
@@ -8,17 +8,22 @@ import {
 } from 'react-native'
 import { Icon, Text, TouchableRipple, useTheme } from 'react-native-paper'
 
-import { dateTimeFormat } from '../shared/intl'
+import { formatMonth } from '../shared/intl'
 import { sharedStyles } from '../shared/styles'
 import { useTextColorOnPrimary } from '../shared/utils'
 import {
-  addMonths,
-  areDatesOnSameDay,
   calendarDateKey,
+  calendarDayKey,
+  calendarOrdinal,
+  currentCalendarDay,
+  currentCalendarMonth,
+  dateOrdinal,
   dayCellSize,
   getDaysInMonth,
   getFirstDayOfMonth,
   getRealIndex,
+  resolveCalendarDay,
+  shiftMonth,
   showWeekDay,
 } from './dateUtils'
 import Day, { EmptyDay } from './Day'
@@ -75,6 +80,202 @@ interface BaseMonthProps {
   validRange?: ValidRangeType
 }
 const menuButtonInset = 8
+type MonthDayProps = CalendarMode &
+  Omit<BaseMonthProps, 'onPressYear' | 'roundness' | 'selectingYear'> & {
+    month: number
+    year: number
+  }
+
+function MonthDays({
+  date,
+  dates,
+  dayContent,
+  dayContentPosition,
+  dayContentStyle,
+  disableWeekDays,
+  endDate,
+  endYear,
+  focusedDate,
+  hideHeader,
+  index,
+  indicatorSize,
+  locale,
+  mode,
+  month,
+  onNavigateToDate,
+  onPressDate,
+  scrollMode,
+  selectColor,
+  showOutsideDays,
+  startDate,
+  startWeekOnMonday,
+  startYear,
+  validRange,
+  year,
+  primaryColor,
+}: MonthDayProps) {
+  const { disabledKeys, validEnd, validStart } = useRangeChecker(validRange)
+  const isHorizontal = scrollMode === 'horizontal'
+  const onDayPress = useCallback(
+    (pressed: Date) => {
+      onPressDate(pressed)
+      if (pressed.getFullYear() !== year || pressed.getMonth() !== month) {
+        onNavigateToDate?.(pressed)
+      }
+    },
+    [month, onNavigateToDate, onPressDate, year]
+  )
+  const selectedKeys = useMemo(() => {
+    const keys = new Set<string>()
+    if (dates) {
+      for (const selected of dates) {
+        keys.add(calendarDateKey(selected))
+      }
+    }
+    return keys
+  }, [dates])
+  const today = currentCalendarDay()
+  const todayDay = today.day
+  const todayMonth = today.month
+  const todayYear = today.year
+  const dayOfWeek = getFirstDayOfMonth({ month, startWeekOnMonday, year })
+  const daysInMonth = getDaysInMonth({ month, year })
+  const range = mode === 'range' ? rangeBounds(startDate, endDate) : undefined
+  const validEndOrdinal = validEnd ? dateOrdinal(validEnd) : undefined
+  const validStartOrdinal = validStart ? dateOrdinal(validStart) : undefined
+  const textColorOnPrimary = useTextColorOnPrimary()
+  const theme = useTheme()
+  const renderOutsideDays = showOutsideDays ?? isHorizontal
+  const weeksInMonth = Math.max(
+    monthWeekCount(index, startWeekOnMonday, startYear, endYear),
+    1
+  )
+  const naturalDaysHeight = weeksInMonth * dayCellSize
+  const [daysHeight, setDaysHeight] = useState(0)
+  const rowHeight = horizontalWeekHeight(daysHeight, weeksInMonth)
+  const onDaysLayout = useCallback((event: LayoutChangeEvent) => {
+    const next = event.nativeEvent.layout.height
+    setDaysHeight((current) =>
+      Math.abs(current - next) < 0.5 ? current : next
+    )
+  }, [])
+  const weeks = []
+  for (let weekGrid = 0; weekGrid < weeksInMonth; weekGrid += 1) {
+    const cells = []
+    for (let dayIndex = 0; dayIndex < 7; dayIndex += 1) {
+      if (!showWeekDay(dayIndex, disableWeekDays)) continue
+      const dayOfMonth = weekGrid * 7 + dayIndex - dayOfWeek + 1
+      const outside = dayOfMonth < 1 || dayOfMonth > daysInMonth
+      if (outside && !renderOutsideDays) {
+        cells.push(<EmptyDay key={dayIndex} />)
+        continue
+      }
+      const resolved = outside
+        ? resolveCalendarDay(year, month, dayOfMonth)
+        : undefined
+      const cellDay = resolved?.day ?? dayOfMonth
+      const cellMonth = resolved?.month ?? month
+      const cellYear = resolved?.year ?? year
+      let disabled = disabledKeys.has(
+        calendarDayKey(cellYear, cellMonth, cellDay)
+      )
+      const ordinal = calendarOrdinal(cellYear, cellMonth, cellDay)
+      if (
+        (validStartOrdinal !== undefined && ordinal < validStartOrdinal) ||
+        (validEndOrdinal !== undefined && ordinal > validEndOrdinal)
+      ) {
+        disabled = true
+      }
+      const marks = dayMarks({
+        cellDay,
+        cellMonth,
+        cellYear,
+        date,
+        dayIndex,
+        dayOfMonth,
+        daysInMonth,
+        endDate,
+        mode,
+        month,
+        range,
+        selectedKeys,
+        startDate,
+        year,
+      })
+      cells.push(
+        <Day
+          key={dayIndex}
+          cellHeight={isHorizontal ? rowHeight : undefined}
+          day={cellDay}
+          dayContent={dayContent}
+          dayContentPosition={dayContentPosition}
+          dayContentStyle={dayContentStyle}
+          disabled={disabled}
+          focused={
+            !!focusedDate &&
+            focusedDate.getFullYear() === cellYear &&
+            focusedDate.getMonth() === cellMonth &&
+            focusedDate.getDate() === cellDay
+          }
+          inRange={marks.inRange}
+          indicatorSize={indicatorSize}
+          isToday={
+            cellYear === todayYear &&
+            cellMonth === todayMonth &&
+            cellDay === todayDay
+          }
+          leftCrop={marks.leftCrop}
+          locale={locale}
+          month={cellMonth}
+          onPressDate={onDayPress}
+          outside={outside}
+          primaryColor={primaryColor}
+          rightCrop={marks.rightCrop}
+          selectColor={selectColor}
+          selected={marks.selected}
+          textColorOnPrimary={textColorOnPrimary}
+          theme={theme}
+          year={cellYear}
+        />
+      )
+    }
+    weeks.push(
+      <View
+        key={weekGrid}
+        role="row"
+        style={[styles.week, isHorizontal ? { height: rowHeight } : null]}
+      >
+        {cells}
+      </View>
+    )
+  }
+
+  return (
+    <View
+      accessibilityRole={hideHeader ? undefined : 'grid'}
+      onLayout={isHorizontal ? onDaysLayout : undefined}
+      role={hideHeader ? undefined : 'grid'}
+      style={
+        isHorizontal
+          ? [
+              styles.days,
+              {
+                flexBasis: naturalDaysHeight,
+                maxHeight: naturalDaysHeight,
+              },
+            ]
+          : undefined
+      }
+      testID={
+        isHorizontal ? 'react-native-paper-dates-month-days-scroll' : undefined
+      }
+    >
+      {weeks}
+    </View>
+  )
+}
+
+const MonthGrid = memo(MonthDays)
 
 function Month(props: BaseMonthProps & CalendarMode) {
   const {
@@ -108,147 +309,14 @@ function Month(props: BaseMonthProps & CalendarMode) {
   } = props
 
   const iconSource = selectingYear ? 'menu-up' : 'menu-down'
-
-  const { isDisabled, isWithinValidRange } = useRangeChecker(validRange)
-
   const isHorizontal = scrollMode === 'horizontal'
-
   const realIndex = getRealIndex(index, startYear, endYear)
-
-  const monthDate = addMonths(new Date(), realIndex)
-  const month = monthDate.getMonth()
-  const monthName = monthTitle(monthDate, locale)
-  const year = monthDate.getFullYear()
-  const onDayPress = (pressed: Date) => {
-    onPressDate(pressed)
-    if (pressed.getFullYear() !== year || pressed.getMonth() !== month) {
-      onNavigateToDate?.(pressed)
-    }
-  }
-  const selectedKeys = new Set<string>()
-  if (dates) {
-    for (const selected of dates) {
-      selectedKeys.add(calendarDateKey(selected))
-    }
-  }
-  const dayOfWeek = getFirstDayOfMonth({ month, startWeekOnMonday, year })
-  const daysInMonth = getDaysInMonth({ month, year })
-  const emptyDays = dayOfWeek
-  const range = mode === 'range' ? rangeBounds(startDate, endDate) : undefined
-  const today = new Date()
-  const grid = monthGrid(index, startWeekOnMonday, startYear, endYear).map(
-    ({ days, weekGrid }) => {
-      return {
-        generatedDays: days.map((_, dayIndex) => {
-          const dayOfMonth = weekGrid * 7 + dayIndex - emptyDays + 1
-          const afterWeekDay = dayOfMonth > daysInMonth
-          const day = new Date(year, month, dayOfMonth)
-          let disabled = isDisabled(day)
-          const isFirstWeek = weekGrid === 0
-          const isToday = areDatesOnSameDay(day, today)
-          const realDayIndex = emptyDays - dayIndex
-          const beforeWeekDay = isFirstWeek && realDayIndex > 0
-          const { inRange, leftCrop, rightCrop, selected } = dayMarks({
-            date,
-            day,
-            dayIndex,
-            dayOfMonth,
-            daysInMonth,
-            endDate,
-            mode,
-            month,
-            range,
-            selectedKeys,
-            startDate,
-            year,
-          })
-
-          if (!isWithinValidRange(day)) {
-            disabled = true
-          }
-
-          return {
-            afterWeekDay,
-            beforeWeekDay,
-            dayIndex,
-            dayOfMonth: day.getDate(),
-            disabled,
-            focused: !!focusedDate && areDatesOnSameDay(day, focusedDate),
-            inRange,
-            isToday,
-            leftCrop,
-            mode,
-            month: day.getMonth(),
-            outside: beforeWeekDay || afterWeekDay,
-            rightCrop,
-            selected,
-            year: day.getFullYear(),
-          }
-        }),
-        weekIndex: weekGrid,
-      }
-    }
-  )
-  const textColorOnPrimary = useTextColorOnPrimary()
+  const current = currentCalendarMonth()
+  const { month, year } = shiftMonth(current.year, current.month, realIndex)
+  const monthName = formatMonth(locale, month)
   const theme = useTheme()
-
   const iconColor = theme.colors.onSurfaceVariant
-
   const textFont = theme.fonts.titleSmall
-
-  const renderOutsideDays = showOutsideDays ?? isHorizontal
-  const weekCount = Math.max(grid.length, 1)
-  const naturalDaysHeight = weekCount * dayCellSize
-  const [daysHeight, setDaysHeight] = useState(0)
-  const rowHeight = horizontalWeekHeight(daysHeight, weekCount)
-  const onDaysLayout = (event: LayoutChangeEvent) => {
-    const next = event.nativeEvent.layout.height
-    setDaysHeight((current) =>
-      Math.abs(current - next) < 0.5 ? current : next
-    )
-  }
-
-  const weeks = grid.map(({ generatedDays, weekIndex }) => (
-    <View
-      key={weekIndex}
-      role="row"
-      style={[styles.week, isHorizontal ? { height: rowHeight } : null]}
-    >
-      {generatedDays
-        .filter((gd) => showWeekDay(gd.dayIndex, disableWeekDays))
-        .map((gd) =>
-          gd.outside && !renderOutsideDays ? (
-            <EmptyDay key={gd.dayIndex} />
-          ) : (
-            <Day
-              key={gd.dayIndex}
-              cellHeight={isHorizontal ? rowHeight : undefined}
-              day={gd.dayOfMonth}
-              dayContent={dayContent}
-              dayContentPosition={dayContentPosition}
-              dayContentStyle={dayContentStyle}
-              disabled={gd.disabled}
-              focused={gd.focused}
-              inRange={gd.inRange}
-              indicatorSize={indicatorSize}
-              isToday={gd.isToday}
-              leftCrop={gd.leftCrop}
-              locale={locale}
-              month={gd.month}
-              onPressDate={onDayPress}
-              outside={gd.outside}
-              primaryColor={primaryColor}
-              rightCrop={gd.rightCrop}
-              selectColor={selectColor}
-              selected={gd.selected}
-              textColorOnPrimary={textColorOnPrimary}
-              theme={theme}
-              year={gd.year}
-            />
-          )
-        )}
-    </View>
-  ))
 
   return (
     <View
@@ -328,50 +396,36 @@ function Month(props: BaseMonthProps & CalendarMode) {
           </TouchableRipple>
         </View>
       )}
-      <View
-        accessibilityRole={hideHeader ? undefined : 'grid'}
-        onLayout={isHorizontal ? onDaysLayout : undefined}
-        role={hideHeader ? undefined : 'grid'}
-        style={
-          isHorizontal
-            ? [
-                styles.days,
-                {
-                  flexBasis: naturalDaysHeight,
-                  maxHeight: naturalDaysHeight,
-                },
-              ]
-            : undefined
-        }
-        testID={
-          isHorizontal
-            ? 'react-native-paper-dates-month-days-scroll'
-            : undefined
-        }
-      >
-        {weeks}
-      </View>
+      <MonthGrid
+        date={date}
+        dates={dates}
+        dayContent={dayContent}
+        dayContentPosition={dayContentPosition}
+        dayContentStyle={dayContentStyle}
+        disableWeekDays={disableWeekDays}
+        endDate={endDate}
+        endYear={endYear}
+        focusedDate={focusedDate}
+        hideHeader={hideHeader}
+        index={index}
+        indicatorSize={indicatorSize}
+        locale={locale}
+        mode={mode}
+        month={month}
+        onNavigateToDate={onNavigateToDate}
+        onPressDate={onPressDate}
+        primaryColor={primaryColor}
+        scrollMode={scrollMode}
+        selectColor={selectColor}
+        showOutsideDays={showOutsideDays}
+        startDate={startDate}
+        startWeekOnMonday={startWeekOnMonday}
+        startYear={startYear}
+        validRange={validRange}
+        year={year}
+      />
     </View>
   )
-}
-
-const monthGrid = (
-  index: number,
-  startWeekOnMonday: boolean,
-  startYear?: number,
-  endYear?: number
-) => {
-  const weeks = monthWeekCount(index, startWeekOnMonday, startYear, endYear)
-  return Array(weeks)
-    .fill(null)
-    .map((_, weekGrid) => {
-      const days = Array(7).fill(null)
-      return { days, weekGrid }
-    })
-}
-
-function monthTitle(date: Date, locale: string | undefined) {
-  return dateTimeFormat(locale, { month: 'long' }).format(date)
 }
 
 const styles = StyleSheet.create({

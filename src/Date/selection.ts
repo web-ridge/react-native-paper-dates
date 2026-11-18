@@ -1,7 +1,9 @@
 import {
   adjacentDayKey,
   areDatesOnSameDay,
-  calendarDateKey,
+  calendarDayKey,
+  calendarOrdinal,
+  dateOrdinal,
   dateToUnix,
   getEndOfDay,
   getStartOfDay,
@@ -17,9 +19,9 @@ export type PressedDate = {
   startDate?: CalendarDate
 }
 export type RangeBounds = {
-  endUnix?: number
+  endOrdinal?: number
   sameDay: boolean
-  startUnix?: number
+  startOrdinal?: number
 }
 
 export function confirmDates(
@@ -50,8 +52,10 @@ export function confirmDates(
 }
 
 export function dayMarks({
+  cellDay,
+  cellMonth,
+  cellYear,
   date,
-  day,
   dayIndex,
   dayOfMonth,
   daysInMonth,
@@ -63,8 +67,10 @@ export function dayMarks({
   startDate,
   year,
 }: {
+  cellDay: number
+  cellMonth: number
+  cellYear: number
   date: CalendarDate
-  day: Date
   dayIndex: number
   dayOfMonth: number
   daysInMonth: number
@@ -84,19 +90,29 @@ export function dayMarks({
   const isLastDayOfMonth = dayOfMonth === daysInMonth
 
   if (mode === 'range') {
-    const rangeEndUnix = range?.endUnix
-    const rangeStartUnix = range?.startUnix
+    const rangeEnd = range?.endOrdinal
+    const rangeStart = range?.startOrdinal
     const sameDayRange = range?.sameDay === true
-    const selectedEndDay = areDatesOnSameDay(day, endDate)
-    const selectedStartDay = areDatesOnSameDay(day, startDate)
+    const selectedEndDay = sameCalendarDay(
+      cellYear,
+      cellMonth,
+      cellDay,
+      endDate
+    )
+    const selectedStartDay = sameCalendarDay(
+      cellYear,
+      cellMonth,
+      cellDay,
+      startDate
+    )
     selected = selectedStartDay || selectedEndDay
-    const dayUnix = dateToUnix(day)
+    const dayOrdinal = calendarOrdinal(cellYear, cellMonth, cellDay)
     inRange =
       !sameDayRange &&
-      rangeStartUnix !== undefined &&
-      rangeEndUnix !== undefined &&
-      dayUnix >= rangeStartUnix &&
-      dayUnix <= rangeEndUnix
+      rangeStart !== undefined &&
+      rangeEnd !== undefined &&
+      dayOrdinal >= rangeStart &&
+      dayOrdinal <= rangeEnd
     if (selectedStartDay) {
       leftCrop = true
     }
@@ -116,7 +132,7 @@ export function dayMarks({
       inRange = false
     }
   } else if (mode === 'multiple') {
-    const dayKey = calendarDateKey(day)
+    const dayKey = calendarDayKey(cellYear, cellMonth, cellDay)
     selected = selectedKeys.has(dayKey)
     const tomorrowSelected = selectedKeys.has(
       adjacentDayKey(year, month, dayOfMonth, 1)
@@ -148,7 +164,7 @@ export function dayMarks({
       }
     }
   } else {
-    selected = areDatesOnSameDay(day, date)
+    selected = sameCalendarDay(cellYear, cellMonth, cellDay, date)
   }
 
   return { inRange, leftCrop, rightCrop, selected }
@@ -196,13 +212,27 @@ export function pressDate(
   }
 }
 
+function sameCalendarDay(
+  year: number,
+  month: number,
+  day: number,
+  date: CalendarDate
+) {
+  return (
+    !!date &&
+    date.getFullYear() === year &&
+    date.getMonth() === month &&
+    date.getDate() === day
+  )
+}
+
 export function rangeBounds(
   startDate: CalendarDate,
   endDate: CalendarDate
 ): RangeBounds {
   return {
-    endUnix: endDate ? dateToUnix(getEndOfDay(endDate)) : undefined,
+    endOrdinal: endDate ? dateOrdinal(endDate) : undefined,
     sameDay: !!startDate && !!endDate && areDatesOnSameDay(startDate, endDate),
-    startUnix: startDate ? dateToUnix(getStartOfDay(startDate)) : undefined,
+    startOrdinal: startDate ? dateOrdinal(startDate) : undefined,
   }
 }
