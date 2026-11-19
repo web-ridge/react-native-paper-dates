@@ -1,8 +1,10 @@
 import { act, render } from '@testing-library/react-native'
+import { StyleSheet } from 'react-native'
 import { LightTheme, Text } from 'react-native-paper'
 
 import type { DayContentRenderer } from '../../Date/Calendar'
 import Day from '../../Date/Day'
+import { withAlpha } from '../../shared/utils'
 
 type Fiber = {
   memoizedProps?: Record<string, unknown>
@@ -118,6 +120,112 @@ it('shrinks the day when the row is shorter than the default cell', async () => 
     height: 24,
     width: 24,
   })
+})
+
+function painted(
+  node: {
+    children?: Array<object | string>
+    props?: { style?: unknown }
+  } | null
+): { background: string[]; border: string[] } {
+  if (!node) return { background: [], border: [] }
+  const style = StyleSheet.flatten(
+    node.props?.style as Parameters<typeof StyleSheet.flatten>[0]
+  )
+  const background =
+    typeof style?.backgroundColor === 'string' ? [style.backgroundColor] : []
+  const border =
+    typeof style?.borderColor === 'string' ? [style.borderColor] : []
+  for (const child of node.children ?? []) {
+    if (typeof child === 'string') continue
+    const nested = painted(child as typeof node)
+    background.push(...nested.background)
+    border.push(...nested.border)
+  }
+  return { background, border }
+}
+
+it('follows the material date states', async () => {
+  const unselected = await render(<Day {...defaultProps} />)
+  const button = dayHandlers(
+    unselected.getByTestId('react-native-paper-dates-day-2025-0-15')
+  )
+  expect(painted(unselected.toJSON()).border).not.toContain(
+    LightTheme.colors.secondary
+  )
+  await act(async () => {
+    ;(button.onHoverIn as () => void)()
+  })
+  expect(painted(unselected.toJSON()).background).toContain(
+    withAlpha(LightTheme.colors.onSurfaceVariant, 0.08)
+  )
+  await act(async () => {
+    ;(button.onFocus as () => void)()
+  })
+  expect(painted(unselected.toJSON()).border).toContain(
+    LightTheme.colors.secondary
+  )
+
+  const today = await render(<Day {...defaultProps} isToday />)
+  const todayButton = dayHandlers(
+    today.getByTestId('react-native-paper-dates-day-2025-0-15')
+  )
+  expect(today.getByText('15').parent).toHaveStyle({
+    borderColor: LightTheme.colors.primary,
+  })
+  expect(today.getByText('15')).toHaveStyle({
+    color: LightTheme.colors.primary,
+  })
+  await act(async () => {
+    ;(todayButton.onPressIn as () => void)()
+  })
+  expect(painted(today.toJSON()).background).toContain(
+    withAlpha(LightTheme.colors.primary, 0.1)
+  )
+
+  const disabledToday = await render(<Day {...defaultProps} disabled isToday />)
+  expect(disabledToday.getByText('15').parent).toHaveStyle({
+    borderColor: LightTheme.colors.primary,
+  })
+  expect(disabledToday.getByText('15')).toHaveStyle({ opacity: 0.38 })
+  const disabledButton = dayHandlers(
+    disabledToday.getByTestId('react-native-paper-dates-day-2025-0-15')
+  )
+  await act(async () => {
+    ;(disabledButton.onHoverIn as () => void)()
+    ;(disabledButton.onFocus as () => void)()
+  })
+  expect(painted(disabledToday.toJSON()).border).not.toContain(
+    LightTheme.colors.secondary
+  )
+  expect(painted(disabledToday.toJSON()).background).not.toContain(
+    withAlpha(LightTheme.colors.onSurfaceVariant, 0.08)
+  )
+
+  const range = await render(<Day {...defaultProps} inRange />)
+  const rangeButton = dayHandlers(
+    range.getByTestId('react-native-paper-dates-day-2025-0-15')
+  )
+  expect(range.getByText('15')).toHaveStyle({
+    color: LightTheme.colors.onSecondaryContainer,
+  })
+  await act(async () => {
+    ;(rangeButton.onHoverIn as () => void)()
+  })
+  expect(painted(range.toJSON()).background).toContain(
+    withAlpha(LightTheme.colors.onPrimaryContainer, 0.08)
+  )
+
+  const selected = await render(<Day {...defaultProps} selected />)
+  const selectedButton = dayHandlers(
+    selected.getByTestId('react-native-paper-dates-day-2025-0-15')
+  )
+  await act(async () => {
+    ;(selectedButton.onHoverIn as () => void)()
+  })
+  expect(painted(selected.toJSON()).background).toContain(
+    withAlpha(LightTheme.colors.onPrimary, 0.08)
+  )
 })
 
 it('renders day content at the given position with extra styles', async () => {

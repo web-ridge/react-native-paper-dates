@@ -936,7 +936,7 @@ describe('scroll time picker', () => {
       minutes: 59,
     })
     expect(fullDay.queryByLabelText('AM')).toBeNull()
-    expect(fullDay.queryByTestId('time-scroll-keyboard')).toBeNull()
+    expect(fullDay.getByTestId('time-scroll-keyboard')).toBeTruthy()
     await fireEvent(
       fullDay.getByTestId('time-scroll-hours-control', {
         includeHiddenElements: true,

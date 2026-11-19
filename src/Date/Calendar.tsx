@@ -257,7 +257,7 @@ function ScrollCalendar(
       scrollMode={scrollMode}
       selectColor={selectColorValue}
       selectingYear={selectingYear}
-      showOutsideDays={scrollMode === 'horizontal' && active !== false}
+      showOutsideDays={false}
       startDate={startDate}
       startWeekOnMonday={startWeekOnMondayValue}
       startYear={startYear}

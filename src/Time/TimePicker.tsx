@@ -110,6 +110,7 @@ function TimePicker({
           onChange={onChange}
           onFocusInput={onFocusInput}
           onToggleKeyboard={toggleKeyboard}
+          showKeyboardToggle={!is24Hour || !onToggleKeyboard}
         />
       </DisplayModeContext.Provider>
     )
@@ -190,7 +191,7 @@ function TimePicker({
           <View
             style={[
               styles.clockContainer,
-              !is24Hour && !isLandscape && styles.clockSideInset,
+              !isLandscape && styles.clockSideInset,
               isLandscape && styles.clockContainerLandscape,
             ]}
           >

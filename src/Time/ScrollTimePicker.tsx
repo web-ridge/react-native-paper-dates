@@ -9,6 +9,8 @@ import {
   View,
   type NativeScrollEvent,
   type NativeSyntheticEvent,
+  type StyleProp,
+  type ViewStyle,
 } from 'react-native'
 import { IconButton, Text, useTheme } from 'react-native-paper'
 
@@ -27,6 +29,7 @@ import {
   scrollFieldWidth,
   scrollItemHeight,
   type TimeChange,
+  timeColonSize,
   timeSeparatorWidth,
   toHourInputFormat,
   toHourOutputFormat,
@@ -45,6 +48,7 @@ function ScrollTimePicker({
   onChange,
   onFocusInput,
   onToggleKeyboard,
+  showKeyboardToggle = true,
 }: {
   disabled?: boolean
   focused: PossibleClockTypes
@@ -56,6 +60,7 @@ function ScrollTimePicker({
   onChange: TimeChange
   onFocusInput: (type: PossibleClockTypes) => void
   onToggleKeyboard: () => void
+  showKeyboardToggle?: boolean
 }) {
   const theme = useTheme()
   const dotColor = disabled
@@ -119,21 +124,25 @@ function ScrollTimePicker({
               })
             }}
           />
-          <IconButton
-            accessibilityLabel={getTranslation(
-              locale,
-              'toggleKeyboard',
-              'Toggle input picker'
-            )}
-            disabled={disabled}
-            icon={keyboardIcon}
-            iconColor={theme.colors.onSurfaceVariant}
-            onPress={onToggleKeyboard}
-            size={24}
-            style={styles.keyboard}
-            testID="time-scroll-keyboard"
-          />
+          {showKeyboardToggle ? (
+            <KeyboardToggle
+              disabled={disabled}
+              icon={keyboardIcon}
+              iconColor={theme.colors.onSurfaceVariant}
+              locale={locale}
+              onPress={onToggleKeyboard}
+            />
+          ) : null}
         </View>
+      ) : showKeyboardToggle ? (
+        <KeyboardToggle
+          disabled={disabled}
+          icon={keyboardIcon}
+          iconColor={theme.colors.onSurfaceVariant}
+          locale={locale}
+          onPress={onToggleKeyboard}
+          style={styles.sideKeyboard}
+        />
       ) : null}
     </View>
   )
@@ -362,6 +371,39 @@ function ScrollWheel({
   )
 }
 
+function KeyboardToggle({
+  disabled,
+  icon,
+  iconColor,
+  locale,
+  onPress,
+  style,
+}: {
+  disabled?: boolean
+  icon: string
+  iconColor: ColorValue
+  locale?: string
+  onPress: () => void
+  style?: StyleProp<ViewStyle>
+}) {
+  return (
+    <IconButton
+      accessibilityLabel={getTranslation(
+        locale,
+        'toggleKeyboard',
+        'Toggle input picker'
+      )}
+      disabled={disabled}
+      icon={icon}
+      iconColor={iconColor}
+      onPress={onPress}
+      size={24}
+      style={[styles.keyboard, style]}
+      testID="time-scroll-keyboard"
+    />
+  )
+}
+
 function SeparatorDots({ color }: { color: ColorValue }) {
   return (
     <>
@@ -409,9 +451,9 @@ const minuteValues = Array.from({ length: 60 }, (_, minute) => minute)
 
 const styles = StyleSheet.create({
   dot: {
-    borderRadius: 4,
-    height: 8,
-    width: 8,
+    borderRadius: timeColonSize / 2,
+    height: timeColonSize,
+    width: timeColonSize,
   },
   dotGap: {
     height: 6,
@@ -427,6 +469,10 @@ const styles = StyleSheet.create({
   },
   keyboard: {
     margin: 0,
+  },
+  sideKeyboard: {
+    alignSelf: 'center',
+    marginLeft: periodSelectorGap,
   },
   period: {
     alignItems: 'center',

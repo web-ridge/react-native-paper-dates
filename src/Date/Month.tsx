@@ -34,6 +34,8 @@ import {
   horizontalWeekHeight,
   monthHeaderHeight,
   monthHeaderSingleMarginBottom,
+  monthSubheadPaddingBottom,
+  monthSubheadPaddingTop,
   monthWeekCount,
   weekMargin,
 } from './monthLayout'
@@ -346,7 +348,10 @@ function Month(props: BaseMonthProps & CalendarMode) {
                   marginBottom: monthHeaderSingleMarginBottom,
                   marginTop: calendarControlInset,
                 }
-              : null,
+              : {
+                  paddingBottom: monthSubheadPaddingBottom,
+                  paddingTop: monthSubheadPaddingTop,
+                },
           ]}
         >
           <TouchableRipple
@@ -356,6 +361,7 @@ function Month(props: BaseMonthProps & CalendarMode) {
             onPress={isHorizontal ? () => onPressYear(year) : undefined}
             style={[
               styles.yearButton,
+              isHorizontal ? styles.yearButtonMenu : styles.subhead,
               {
                 borderRadius: roundness,
                 paddingStart: menuButtonInset,
@@ -384,14 +390,11 @@ function Month(props: BaseMonthProps & CalendarMode) {
               >
                 {monthName} {year}
               </Text>
-              <View
-                style={[
-                  styles.iconWrapper,
-                  isHorizontal ? sharedStyles.opacity1 : sharedStyles.opacity0,
-                ]}
-              >
-                <Icon color={iconColor} size={18} source={iconSource} />
-              </View>
+              {isHorizontal ? (
+                <View style={styles.iconWrapper}>
+                  <Icon color={iconColor} size={18} source={iconSource} />
+                </View>
+              ) : null}
             </View>
           </TouchableRipple>
         </View>
@@ -442,6 +445,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     overflow: 'hidden',
   },
+  subhead: {
+    height: 20,
+  },
   week: {
     flexDirection: 'row',
     height: dayCellSize,
@@ -449,8 +455,10 @@ const styles = StyleSheet.create({
   },
   yearButton: {
     alignSelf: 'flex-start',
-    height: 40,
     justifyContent: 'center',
+  },
+  yearButtonMenu: {
+    height: 40,
   },
   yearButtonInner: {
     alignItems: 'center',

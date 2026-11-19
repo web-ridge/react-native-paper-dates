@@ -440,9 +440,9 @@ const styles = StyleSheet.create({
   fields: {
     flexDirection: 'row',
     gap: 12,
-    paddingBottom: 16,
+    paddingBottom: 8,
     paddingHorizontal: 24,
-    paddingTop: 16,
+    paddingTop: 10,
   },
   header: {
     justifyContent: 'space-between',
@@ -457,7 +457,7 @@ const styles = StyleSheet.create({
   headlineRow: {
     alignItems: 'center',
     flexDirection: 'row',
-    paddingBottom: 12,
+    paddingBottom: 10,
     paddingLeft: 24,
     paddingRight: 12,
   },

@@ -10,7 +10,7 @@ import {
   inputTypes,
   type PossibleInputTypes,
   timeSelectorWidth,
-  timeSeparatorWidth,
+  horizontalPeriodGap,
   useSwitchColors,
 } from './timeUtils'
 
@@ -180,9 +180,9 @@ const styles = StyleSheet.create({
   },
   rootHorizontal: {
     flexDirection: 'row',
-    gap: timeSeparatorWidth,
+    gap: horizontalPeriodGap,
     height: horizontalPeriodHeight,
-    width: timeSelectorWidth * 2 + timeSeparatorWidth,
+    width: timeSelectorWidth * 2 + horizontalPeriodGap,
   },
   rootVertical: {
     gap: 8,

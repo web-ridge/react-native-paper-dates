@@ -1,13 +1,14 @@
-import { StyleSheet, View } from 'react-native'
+import { type ColorValue, StyleSheet, View } from 'react-native'
 import { useTheme } from 'react-native-paper'
 
-const focusRingOffset = 2
-const focusRingThickness = 3
+import { focusRingOffset, focusRingThickness } from './timeUtils'
 
 export default function FocusRing({
+  color,
   focused,
   radius,
 }: {
+  color?: ColorValue
   focused: boolean
   radius: number
 }) {
@@ -17,8 +18,8 @@ export default function FocusRing({
   const ringStyle = [
     styles.ring,
     {
-      borderColor: theme.colors.secondary,
-      borderRadius: radius > 100 ? radius : radius + focusRingOffset,
+      borderColor: color ?? theme.colors.secondary,
+      borderRadius: radius + focusRingOffset + focusRingThickness,
     },
   ]
 

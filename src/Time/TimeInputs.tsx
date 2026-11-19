@@ -23,6 +23,7 @@ import {
   timePickerUsesLandscape,
   timeSelectorFieldWidth,
   timeSelectorHeight,
+  timeColonSize,
   timeSeparatorWidth,
   toHourInputFormat,
   toHourOutputFormat,
@@ -103,12 +104,10 @@ function TimeInputs({
   const invalidTime = getTranslation(locale, 'invalidTime', 'Invalid time')
   const minuteLabel = getTranslation(locale, 'minute', 'Minute')
 
+  const error = hourInvalid || minuteInvalid ? invalidTime : undefined
   const hourMinuteRow = (
     <View style={styles.inputContainer}>
-      <TimeField
-        error={hourInvalid ? invalidTime : undefined}
-        width={fieldWidth}
-      >
+      <TimeField width={fieldWidth}>
         <TimeInput
           ref={startInput}
           accessibilityLabel={hourLabel}
@@ -140,10 +139,7 @@ function TimeInputs({
         <View style={styles.dotGap} />
         <View style={[styles.dot, { backgroundColor: dotColor }]} />
       </View>
-      <TimeField
-        error={minuteInvalid ? invalidTime : undefined}
-        width={fieldWidth}
-      >
+      <TimeField width={fieldWidth}>
         <TimeInput
           ref={endInput}
           accessibilityLabel={minuteLabel}
@@ -185,41 +181,27 @@ function TimeInputs({
     </View>
   )
 
-  if (useHorizontalAmPm) {
-    return (
-      <View style={styles.landscapeColumn}>
-        {hourMinuteRow}
-        <View style={styles.landscapeSwitcherSpacing}>
-          <AmPmSwitcher
-            direction="horizontal"
-            disabled={disabled}
-            hours={hours}
-            inputType={inputType}
-            locale={locale}
-            onChange={onChangeHours}
-          />
-        </View>
+  const fields = useHorizontalAmPm ? (
+    <View style={styles.landscapeColumn}>
+      {hourMinuteRow}
+      <View style={styles.landscapeSwitcherSpacing}>
+        <AmPmSwitcher
+          direction="horizontal"
+          disabled={disabled}
+          hours={hours}
+          inputType={inputType}
+          locale={locale}
+          onChange={onChangeHours}
+        />
       </View>
-    )
-  }
-
-  return hourMinuteRow
-}
-
-function TimeField({
-  children,
-  error,
-  width,
-}: {
-  children: ReactNode
-  error?: string
-  width: number
-}) {
-  const theme = useTheme()
+    </View>
+  ) : (
+    hourMinuteRow
+  )
 
   return (
-    <View style={[styles.column, { width }]}>
-      {children}
+    <View style={styles.fields}>
+      {fields}
       {error ? (
         <Text
           accessibilityLiveRegion="polite"
@@ -234,15 +216,28 @@ function TimeField({
   )
 }
 
+function TimeField({
+  children,
+  width,
+}: {
+  children: ReactNode
+  width: number
+}) {
+  return <View style={[styles.column, { width }]}>{children}</View>
+}
+
 const styles = StyleSheet.create({
   column: {
     alignItems: 'center',
     flexDirection: 'column',
   },
+  fields: {
+    alignItems: 'flex-start',
+  },
   dot: {
-    borderRadius: 4,
-    height: 8,
-    width: 8,
+    borderRadius: timeColonSize / 2,
+    height: timeColonSize,
+    width: timeColonSize,
   },
   dotGap: {
     height: 6,
@@ -270,6 +265,7 @@ const styles = StyleSheet.create({
     width: timeSeparatorWidth,
   },
   supportingText: {
+    alignSelf: 'stretch',
     marginTop: 7,
     textAlign: 'center',
   },

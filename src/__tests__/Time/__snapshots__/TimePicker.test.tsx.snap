@@ -13,432 +13,440 @@ exports[`renders TimePicker 1`] = `
     style={
       {
         "alignItems": "flex-start",
-        "flexDirection": "row",
       }
     }
   >
     <View
       style={
-        [
-          {
-            "alignItems": "center",
-            "flexDirection": "column",
-          },
-          {
-            "width": 100,
-          },
-        ]
-      }
-    >
-      <View
-        style={
-          {
-            "overflow": "visible",
-          }
+        {
+          "alignItems": "flex-start",
+          "flexDirection": "row",
         }
-      >
-        <View
-          onMouseEnter={[Function]}
-          onMouseLeave={[Function]}
-          onPointerCancel={[Function]}
-          onPointerDown={[Function]}
-          onPointerUp={[Function]}
-          style={
-            [
-              {
-                "alignItems": "center",
-                "borderWidth": 2,
-                "justifyContent": "center",
-                "overflow": "hidden",
-              },
-              {
-                "backgroundColor": "rgba(255, 255, 255, 1)",
-                "borderColor": "transparent",
-                "borderRadius": 12,
-                "height": 120,
-                "width": 100,
-              },
-            ]
-          }
-        >
-          <TextInput
-            accessibilityLabel="Hour"
-            blurOnSubmit={false}
-            keyboardAppearance="default"
-            keyboardType="number-pad"
-            maxFontSizeMultiplier={1.2}
-            maxLength={2}
-            multiline={false}
-            numberOfLines={1}
-            onBlur={[Function]}
-            onChangeText={[Function]}
-            onFocus={[Function]}
-            onSubmitEditing={[Function]}
-            returnKeyType="next"
-            selectTextOnFocus={true}
-            selectionColor="rgba(103, 80, 164, 1)"
-            style={
-              [
-                {
-                  "borderWidth": 0,
-                  "outlineWidth": 0,
-                  "paddingHorizontal": 0,
-                  "textAlign": "center",
-                  "width": "100%",
-                },
-                {
-                  "color": "rgba(29, 27, 32, 1)",
-                  "fontFamily": "System",
-                  "fontSize": 45,
-                  "fontWeight": "400",
-                  "height": 116,
-                  "lineHeight": 45,
-                  "paddingBottom": 35.5,
-                  "paddingTop": 35.5,
-                },
-              ]
-            }
-            textAlign="center"
-            value="06"
-          />
-        </View>
-      </View>
-    </View>
-    <View
-      style={
-        [
-          {
-            "alignItems": "center",
-            "justifyContent": "center",
-            "width": 16,
-          },
-          {
-            "height": 120,
-          },
-        ]
       }
     >
       <View
         style={
           [
             {
-              "borderRadius": 4,
-              "height": 8,
-              "width": 8,
+              "alignItems": "center",
+              "flexDirection": "column",
             },
             {
-              "backgroundColor": "rgba(29, 27, 32, 1)",
+              "width": 100,
             },
           ]
-        }
-      />
-      <View
-        style={
-          {
-            "height": 6,
-          }
-        }
-      />
-      <View
-        style={
-          [
-            {
-              "borderRadius": 4,
-              "height": 8,
-              "width": 8,
-            },
-            {
-              "backgroundColor": "rgba(29, 27, 32, 1)",
-            },
-          ]
-        }
-      />
-    </View>
-    <View
-      style={
-        [
-          {
-            "alignItems": "center",
-            "flexDirection": "column",
-          },
-          {
-            "width": 100,
-          },
-        ]
-      }
-    >
-      <View
-        style={
-          {
-            "overflow": "visible",
-          }
-        }
-      >
-        <View
-          onMouseEnter={[Function]}
-          onMouseLeave={[Function]}
-          onPointerCancel={[Function]}
-          onPointerDown={[Function]}
-          onPointerUp={[Function]}
-          style={
-            [
-              {
-                "alignItems": "center",
-                "borderWidth": 2,
-                "justifyContent": "center",
-                "overflow": "hidden",
-              },
-              {
-                "backgroundColor": "rgba(255, 255, 255, 1)",
-                "borderColor": "transparent",
-                "borderRadius": 12,
-                "height": 120,
-                "width": 100,
-              },
-            ]
-          }
-        >
-          <TextInput
-            accessibilityLabel="Minute"
-            keyboardAppearance="default"
-            keyboardType="number-pad"
-            maxFontSizeMultiplier={1.2}
-            maxLength={2}
-            multiline={false}
-            numberOfLines={1}
-            onBlur={[Function]}
-            onChangeText={[Function]}
-            onFocus={[Function]}
-            selectTextOnFocus={true}
-            selectionColor="rgba(103, 80, 164, 1)"
-            style={
-              [
-                {
-                  "borderWidth": 0,
-                  "outlineWidth": 0,
-                  "paddingHorizontal": 0,
-                  "textAlign": "center",
-                  "width": "100%",
-                },
-                {
-                  "color": "rgba(29, 27, 32, 1)",
-                  "fontFamily": "System",
-                  "fontSize": 45,
-                  "fontWeight": "400",
-                  "height": 116,
-                  "lineHeight": 45,
-                  "paddingBottom": 35.5,
-                  "paddingTop": 35.5,
-                },
-              ]
-            }
-            textAlign="center"
-            value="30"
-          />
-        </View>
-      </View>
-    </View>
-    <View
-      style={
-        {
-          "width": 8,
-        }
-      }
-    />
-    <View
-      style={
-        {
-          "alignSelf": "flex-start",
-        }
-      }
-    >
-      <View
-        accessibilityRole="radiogroup"
-        role="radiogroup"
-        style={
-          {
-            "gap": 8,
-          }
         }
       >
         <View
           style={
             {
-              "height": 56,
-              "width": 56,
+              "overflow": "visible",
             }
           }
         >
           <View
-            accessibilityLabel="AM"
-            accessibilityRole="radio"
-            accessibilityState={
-              {
-                "busy": undefined,
-                "checked": true,
-                "disabled": undefined,
-                "expanded": undefined,
-                "selected": true,
-              }
-            }
-            accessibilityValue={
-              {
-                "max": undefined,
-                "min": undefined,
-                "now": undefined,
-                "text": undefined,
-              }
-            }
-            accessible={true}
-            collapsable={false}
-            focusable={true}
-            onBlur={[Function]}
-            onClick={[Function]}
-            onFocus={[Function]}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
-            role="radio"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+            onPointerCancel={[Function]}
+            onPointerDown={[Function]}
+            onPointerUp={[Function]}
             style={
               [
                 {
                   "alignItems": "center",
+                  "borderWidth": 2,
                   "justifyContent": "center",
                   "overflow": "hidden",
                 },
-                null,
-                {
-                  "backgroundColor": "rgba(234, 221, 255, 1)",
-                  "borderRadius": 12,
-                  "height": 56,
-                  "width": 56,
-                },
-              ]
-            }
-          >
-            <Text
-              maxFontSizeMultiplier={1.5}
-              selectable={false}
-              style={
-                [
-                  {
-                    "textAlign": "left",
-                  },
-                  {
-                    "color": "rgba(29, 27, 32, 1)",
-                    "fontFamily": "System",
-                    "fontWeight": "400",
-                    "letterSpacing": 0,
-                  },
-                  {
-                    "writingDirection": "ltr",
-                  },
-                  {
-                    "color": "rgba(33, 0, 93, 1)",
-                    "fontFamily": "System",
-                    "fontSize": 16,
-                    "fontWeight": "500",
-                    "letterSpacing": 0.15,
-                    "lineHeight": 24,
-                  },
-                ]
-              }
-            >
-              AM
-            </Text>
-          </View>
-        </View>
-        <View
-          style={
-            {
-              "height": 56,
-              "width": 56,
-            }
-          }
-        >
-          <View
-            accessibilityLabel="PM"
-            accessibilityRole="radio"
-            accessibilityState={
-              {
-                "busy": undefined,
-                "checked": false,
-                "disabled": undefined,
-                "expanded": undefined,
-                "selected": false,
-              }
-            }
-            accessibilityValue={
-              {
-                "max": undefined,
-                "min": undefined,
-                "now": undefined,
-                "text": undefined,
-              }
-            }
-            accessible={true}
-            collapsable={false}
-            focusable={true}
-            onBlur={[Function]}
-            onClick={[Function]}
-            onFocus={[Function]}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
-            role="radio"
-            style={
-              [
-                {
-                  "alignItems": "center",
-                  "justifyContent": "center",
-                  "overflow": "hidden",
-                },
-                null,
                 {
                   "backgroundColor": "rgba(255, 255, 255, 1)",
-                  "borderRadius": 9999,
-                  "height": 56,
-                  "width": 56,
+                  "borderColor": "transparent",
+                  "borderRadius": 12,
+                  "height": 120,
+                  "width": 100,
                 },
               ]
             }
           >
-            <Text
-              maxFontSizeMultiplier={1.5}
-              selectable={false}
+            <TextInput
+              accessibilityLabel="Hour"
+              blurOnSubmit={false}
+              keyboardAppearance="default"
+              keyboardType="number-pad"
+              maxFontSizeMultiplier={1.2}
+              maxLength={2}
+              multiline={false}
+              numberOfLines={1}
+              onBlur={[Function]}
+              onChangeText={[Function]}
+              onFocus={[Function]}
+              onSubmitEditing={[Function]}
+              returnKeyType="next"
+              selectTextOnFocus={true}
+              selectionColor="rgba(103, 80, 164, 1)"
               style={
                 [
                   {
-                    "textAlign": "left",
+                    "borderWidth": 0,
+                    "outlineWidth": 0,
+                    "paddingHorizontal": 0,
+                    "textAlign": "center",
+                    "width": "100%",
                   },
                   {
                     "color": "rgba(29, 27, 32, 1)",
                     "fontFamily": "System",
+                    "fontSize": 45,
                     "fontWeight": "400",
-                    "letterSpacing": 0,
+                    "height": 116,
+                    "lineHeight": 45,
+                    "paddingBottom": 35.5,
+                    "paddingTop": 35.5,
+                  },
+                ]
+              }
+              textAlign="center"
+              value="06"
+            />
+          </View>
+        </View>
+      </View>
+      <View
+        style={
+          [
+            {
+              "alignItems": "center",
+              "justifyContent": "center",
+              "width": 22,
+            },
+            {
+              "height": 120,
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "borderRadius": 4,
+                "height": 8,
+                "width": 8,
+              },
+              {
+                "backgroundColor": "rgba(29, 27, 32, 1)",
+              },
+            ]
+          }
+        />
+        <View
+          style={
+            {
+              "height": 6,
+            }
+          }
+        />
+        <View
+          style={
+            [
+              {
+                "borderRadius": 4,
+                "height": 8,
+                "width": 8,
+              },
+              {
+                "backgroundColor": "rgba(29, 27, 32, 1)",
+              },
+            ]
+          }
+        />
+      </View>
+      <View
+        style={
+          [
+            {
+              "alignItems": "center",
+              "flexDirection": "column",
+            },
+            {
+              "width": 100,
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            {
+              "overflow": "visible",
+            }
+          }
+        >
+          <View
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+            onPointerCancel={[Function]}
+            onPointerDown={[Function]}
+            onPointerUp={[Function]}
+            style={
+              [
+                {
+                  "alignItems": "center",
+                  "borderWidth": 2,
+                  "justifyContent": "center",
+                  "overflow": "hidden",
+                },
+                {
+                  "backgroundColor": "rgba(255, 255, 255, 1)",
+                  "borderColor": "transparent",
+                  "borderRadius": 12,
+                  "height": 120,
+                  "width": 100,
+                },
+              ]
+            }
+          >
+            <TextInput
+              accessibilityLabel="Minute"
+              keyboardAppearance="default"
+              keyboardType="number-pad"
+              maxFontSizeMultiplier={1.2}
+              maxLength={2}
+              multiline={false}
+              numberOfLines={1}
+              onBlur={[Function]}
+              onChangeText={[Function]}
+              onFocus={[Function]}
+              selectTextOnFocus={true}
+              selectionColor="rgba(103, 80, 164, 1)"
+              style={
+                [
+                  {
+                    "borderWidth": 0,
+                    "outlineWidth": 0,
+                    "paddingHorizontal": 0,
+                    "textAlign": "center",
+                    "width": "100%",
                   },
                   {
-                    "writingDirection": "ltr",
-                  },
-                  {
-                    "color": "rgba(73, 69, 79, 1)",
+                    "color": "rgba(29, 27, 32, 1)",
                     "fontFamily": "System",
-                    "fontSize": 16,
-                    "fontWeight": "500",
-                    "letterSpacing": 0.15,
-                    "lineHeight": 24,
+                    "fontSize": 45,
+                    "fontWeight": "400",
+                    "height": 116,
+                    "lineHeight": 45,
+                    "paddingBottom": 35.5,
+                    "paddingTop": 35.5,
+                  },
+                ]
+              }
+              textAlign="center"
+              value="30"
+            />
+          </View>
+        </View>
+      </View>
+      <View
+        style={
+          {
+            "width": 8,
+          }
+        }
+      />
+      <View
+        style={
+          {
+            "alignSelf": "flex-start",
+          }
+        }
+      >
+        <View
+          accessibilityRole="radiogroup"
+          role="radiogroup"
+          style={
+            {
+              "gap": 8,
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "height": 56,
+                "width": 56,
+              }
+            }
+          >
+            <View
+              accessibilityLabel="AM"
+              accessibilityRole="radio"
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": true,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": true,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              onBlur={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              role="radio"
+              style={
+                [
+                  {
+                    "alignItems": "center",
+                    "justifyContent": "center",
+                    "overflow": "hidden",
+                  },
+                  null,
+                  {
+                    "backgroundColor": "rgba(234, 221, 255, 1)",
+                    "borderRadius": 12,
+                    "height": 56,
+                    "width": 56,
                   },
                 ]
               }
             >
-              PM
-            </Text>
+              <Text
+                maxFontSizeMultiplier={1.5}
+                selectable={false}
+                style={
+                  [
+                    {
+                      "textAlign": "left",
+                    },
+                    {
+                      "color": "rgba(29, 27, 32, 1)",
+                      "fontFamily": "System",
+                      "fontWeight": "400",
+                      "letterSpacing": 0,
+                    },
+                    {
+                      "writingDirection": "ltr",
+                    },
+                    {
+                      "color": "rgba(33, 0, 93, 1)",
+                      "fontFamily": "System",
+                      "fontSize": 16,
+                      "fontWeight": "500",
+                      "letterSpacing": 0.15,
+                      "lineHeight": 24,
+                    },
+                  ]
+                }
+              >
+                AM
+              </Text>
+            </View>
+          </View>
+          <View
+            style={
+              {
+                "height": 56,
+                "width": 56,
+              }
+            }
+          >
+            <View
+              accessibilityLabel="PM"
+              accessibilityRole="radio"
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": false,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": false,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              onBlur={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              role="radio"
+              style={
+                [
+                  {
+                    "alignItems": "center",
+                    "justifyContent": "center",
+                    "overflow": "hidden",
+                  },
+                  null,
+                  {
+                    "backgroundColor": "rgba(255, 255, 255, 1)",
+                    "borderRadius": 9999,
+                    "height": 56,
+                    "width": 56,
+                  },
+                ]
+              }
+            >
+              <Text
+                maxFontSizeMultiplier={1.5}
+                selectable={false}
+                style={
+                  [
+                    {
+                      "textAlign": "left",
+                    },
+                    {
+                      "color": "rgba(29, 27, 32, 1)",
+                      "fontFamily": "System",
+                      "fontWeight": "400",
+                      "letterSpacing": 0,
+                    },
+                    {
+                      "writingDirection": "ltr",
+                    },
+                    {
+                      "color": "rgba(73, 69, 79, 1)",
+                      "fontFamily": "System",
+                      "fontSize": 16,
+                      "fontWeight": "500",
+                      "letterSpacing": 0.15,
+                      "lineHeight": 24,
+                    },
+                  ]
+                }
+              >
+                PM
+              </Text>
+            </View>
           </View>
         </View>
       </View>

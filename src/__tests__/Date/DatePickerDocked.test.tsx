@@ -315,7 +315,7 @@ function dayFocused(
   return screen.getAllByTestId(testId).some((day) => focused(day))
 }
 
-it('uses a rounded-square hover target for the month and year', async () => {
+it('uses a pill target and state layers for the month and year', async () => {
   const docked = await render(
     <DatePickerDocked
       anchor={anchor}
@@ -332,7 +332,7 @@ it('uses a rounded-square hover target for the month and year', async () => {
     'react-native-paper-dates-docked-year',
   ]) {
     expect(docked.getByTestId(id)).toHaveStyle({
-      borderRadius: 4,
+      borderRadius: 12,
       overflow: 'hidden',
     })
   }

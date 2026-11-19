@@ -26,8 +26,11 @@ import {
   type TimeChange,
   resolve24HourClock,
   timeDialFits,
+  timePickerActionsGap,
+  timePickerHorizontalPadding,
   timePickerModalMinWidth,
   timePickerPadding,
+  timePickerUsesLandscape,
 } from './timeUtils'
 
 export function TimePickerModal({
@@ -143,7 +146,18 @@ export function TimePickerModal({
     setInputType(inputTypes.keyboard)
   }
 
-  const color = theme.colors.surfaceContainerHigh
+  const horizontalDial =
+    displayedInputType === inputTypes.picker &&
+    timePickerUsesLandscape(width, height, displayedInputType)
+  const framePadding = horizontalDial
+    ? timePickerHorizontalPadding
+    : timePickerPadding
+  const actionsGap = horizontalDial
+    ? timePickerHorizontalPadding
+    : displayedInputType === inputTypes.picker
+      ? timePickerPadding
+      : timePickerActionsGap
+  const color = theme.colors.surfaceContainer
 
   return (
     <Modal
@@ -175,22 +189,36 @@ export function TimePickerModal({
               ]}
             >
               {label ? (
-                <View style={styles.labelContainer}>
+                <View
+                  style={[
+                    styles.labelContainer,
+                    {
+                      paddingLeft: framePadding,
+                      paddingRight: framePadding,
+                      paddingTop: framePadding,
+                    },
+                  ]}
+                >
                   <Text
                     maxFontSizeMultiplier={1.5}
-                    style={[
-                      styles.label,
-                      {
-                        ...textFont,
-                        color: theme.colors.onSurfaceVariant,
-                      },
-                    ]}
+                    style={{
+                      ...textFont,
+                      color: theme.colors.onSurfaceVariant,
+                    }}
                   >
                     {displayCase(label, uppercase)}
                   </Text>
                 </View>
               ) : null}
-              <View style={styles.timePickerContainer}>
+              <View
+                style={[
+                  styles.timePickerContainer,
+                  {
+                    paddingHorizontal: framePadding,
+                    paddingTop: framePadding,
+                  },
+                ]}
+              >
                 <TimePicker
                   clockIcon={clockIcon}
                   disabled={disabled}
@@ -209,7 +237,16 @@ export function TimePickerModal({
                   use24HourClock={use24HourClock}
                 />
               </View>
-              <View style={styles.bottom}>
+              <View
+                style={[
+                  styles.bottom,
+                  {
+                    paddingBottom: framePadding,
+                    paddingHorizontal: framePadding,
+                    paddingTop: actionsGap,
+                  },
+                ]}
+              >
                 {keyboardToggleInPicker ? null : (
                   <IconButton
                     accessibilityLabel={
@@ -280,9 +317,6 @@ const styles = StyleSheet.create({
   bottom: {
     alignItems: 'center',
     flexDirection: 'row',
-    paddingBottom: 12,
-    paddingHorizontal: 12,
-    paddingTop: 12,
   },
   center: {
     alignItems: 'center',
@@ -292,15 +326,8 @@ const styles = StyleSheet.create({
   inputTypeToggle: {
     margin: 0,
   },
-  label: {
-    fontSize: 13,
-    letterSpacing: 1,
-  },
   labelContainer: {
     justifyContent: 'flex-end',
-    paddingLeft: timePickerPadding,
-    paddingRight: timePickerPadding,
-    paddingTop: timePickerPadding,
   },
   modalContent: {
     borderRadius: 28,
@@ -316,8 +343,6 @@ const styles = StyleSheet.create({
   },
   timePickerContainer: {
     paddingBottom: 0,
-    paddingHorizontal: timePickerPadding,
-    paddingTop: timePickerPadding,
   },
 })
 

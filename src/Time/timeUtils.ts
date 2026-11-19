@@ -45,6 +45,9 @@ export const circleSize = 256
 export const disabledContainerOpacity = 0.12
 export const disabledContentOpacity = 0.38
 export const clockSideInset = 12
+export const timePickerActionsGap = 8
+export const timePickerHorizontalPadding = 24
+export const timePickerMediumBreakpoint = 600
 export const timePickerPadding = 12
 export const clockTypes: ClockTypeMap = {
   hours: 'hours',
@@ -76,7 +79,19 @@ export const scrollItemHeight = 46
 export const timeInputFieldHeight = 120
 export const timeSelectorHeight = 120
 export const timeSelectorWidth = 100
-export const timeSeparatorWidth = 16
+export const focusRingOffset = 2
+export const focusRingThickness = 3
+export const timeColonSize = 8
+const colonClearance = 2
+const focusRingReach = focusRingOffset + focusRingThickness
+export const timeSeparatorWidth =
+  focusRingReach +
+  colonClearance +
+  timeColonSize +
+  colonClearance +
+  focusRingReach
+export const horizontalPeriodGap = 16
+export const verticalDial24HourFieldWidth = 132
 
 export function clockNumbers(
   count: number,
@@ -213,6 +228,10 @@ export function timeDialFits(width: number, height: number) {
   if (height >= circleSize + portraitDialChrome) {
     return true
   }
+  return horizontalDialFits(width, height)
+}
+
+export function horizontalDialFits(width: number, height: number) {
   return (
     height >= circleSize + landscapeDialChrome &&
     width >=
@@ -234,7 +253,9 @@ export function timePickerUsesLandscape(
   if (inputType !== inputTypes.picker) {
     return false
   }
-  return height < circleSize + portraitDialChrome && timeDialFits(width, height)
+  return (
+    width >= timePickerMediumBreakpoint && horizontalDialFits(width, height)
+  )
 }
 
 export function resolve24HourClock(
@@ -254,21 +275,27 @@ export function resolve24HourClock(
 }
 
 export function timePickerModalMinWidth(is24Hour: boolean, showsDial: boolean) {
+  const fieldWidth = timeSelectorFieldWidth(
+    showsDial ? inputTypes.picker : inputTypes.keyboard,
+    is24Hour,
+    false
+  )
   const fieldRow =
-    timeSelectorWidth * 2 +
+    fieldWidth * 2 +
     timeSeparatorWidth +
     (is24Hour ? 0 : periodSelectorGap + periodSelectorVerticalWidth)
-  const dialRow = showsDial
-    ? circleSize + (is24Hour ? 0 : clockSideInset * 2)
-    : 0
+  const dialRow = showsDial ? circleSize + clockSideInset * 2 : 0
   return Math.max(fieldRow, dialRow) + timePickerPadding * 2
 }
 
 export function timeSelectorFieldWidth(
-  _inputType: PossibleInputTypes,
-  _is24Hour: boolean,
-  _landscape: boolean
+  inputType: PossibleInputTypes,
+  is24Hour: boolean,
+  landscape: boolean
 ) {
+  if (inputType === inputTypes.picker && is24Hour && !landscape) {
+    return verticalDial24HourFieldWidth
+  }
   return timeSelectorWidth
 }
 

@@ -1,15 +1,19 @@
 import { memo, useCallback, useMemo, useState } from 'react'
 import { FlatList, Pressable, ScrollView, StyleSheet, View } from 'react-native'
-import { Icon, Text, TouchableRipple, useTheme } from 'react-native-paper'
+import { Text, useTheme } from 'react-native-paper'
 
 import StateLayer from '../shared/StateLayer'
 import { sharedStyles } from '../shared/styles'
 import { range, scrollbarThumb } from '../shared/utils'
+import FocusRing from '../Time/FocusRing'
 import { calendarControlHeight } from './CalendarHeader'
+import SelectionMenuItem from './SelectionMenuItem'
 import { defaultEndYear, defaultStartYear } from './dateUtils'
 
 const COLUMNS = 3
-const ROW_HEIGHT = 48
+const YEAR_HEIGHT = 36
+const YEAR_ROW_GAP = 16
+const ROW_HEIGHT = YEAR_HEIGHT + YEAR_ROW_GAP
 
 function YearPicker({
   embedded = false,
@@ -129,45 +133,19 @@ function YearPure({
   const theme = useTheme()
   const textFont = theme.fonts.bodyLarge
   const color = selected
-    ? menu
-      ? theme.colors.onSurface
-      : theme.colors.onPrimary
-    : current && !menu
+    ? theme.colors.onPrimary
+    : current
       ? theme.colors.primary
-      : menu
-        ? theme.colors.onSurface
-        : theme.colors.onSurfaceVariant
+      : theme.colors.onSurfaceVariant
   const label = String(year)
 
   if (menu) {
     return (
-      <TouchableRipple
-        accessibilityLabel={label}
-        accessibilityRole="button"
-        accessibilityState={{ selected }}
+      <SelectionMenuItem
+        label={label}
         onPress={() => onPressYear(year)}
-      >
-        <View
-          style={[
-            styles.menuInner,
-            selected ? { backgroundColor: theme.colors.surfaceVariant } : null,
-          ]}
-        >
-          <View style={styles.menuCheck}>
-            {selected ? (
-              <Icon color={theme.colors.onSurface} size={24} source="check" />
-            ) : null}
-          </View>
-          <Text
-            maxFontSizeMultiplier={1.5}
-            selectable={false}
-            style={{ color }}
-            variant="bodyLarge"
-          >
-            {year}
-          </Text>
-        </View>
-      </TouchableRipple>
+        selected={selected}
+      />
     )
   }
 
@@ -177,6 +155,7 @@ function YearPure({
         accessibilityLabel={label}
         accessibilityRole="button"
         accessibilityState={{ selected }}
+        android_ripple={{ color: 'transparent' }}
         onBlur={() => setInputFocused(false)}
         onFocus={() => setInputFocused(true)}
         onHoverIn={() => setHovered(true)}
@@ -195,7 +174,11 @@ function YearPure({
         >
           <StateLayer
             color={
-              selected ? theme.colors.onPrimary : theme.colors.onSurfaceVariant
+              selected
+                ? theme.colors.onPrimary
+                : current
+                  ? theme.colors.primary
+                  : theme.colors.onSurfaceVariant
             }
             focused={inputFocused}
             hovered={hovered}
@@ -209,6 +192,7 @@ function YearPure({
             {year}
           </Text>
         </View>
+        <FocusRing focused={inputFocused} radius={18} />
       </Pressable>
     </View>
   )
@@ -226,17 +210,6 @@ const styles = StyleSheet.create({
   list: {
     flex: 1,
   },
-  menuCheck: {
-    width: 24,
-  },
-  menuInner: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 16,
-    minHeight: ROW_HEIGHT,
-    paddingHorizontal: 16,
-    width: '100%',
-  },
   root: {
     flex: 1,
     top: calendarControlHeight,
@@ -246,8 +219,8 @@ const styles = StyleSheet.create({
     height: ROW_HEIGHT,
   },
   yearButton: {
-    borderRadius: 18,
-    overflow: 'hidden',
+    height: 36,
+    width: 72,
   },
   yearInner: {
     alignItems: 'center',

@@ -11,6 +11,7 @@ import { Text } from 'react-native-paper'
 import { dateTimeFormat } from '../shared/intl'
 import StateLayer from '../shared/StateLayer'
 import { type PaperTheme, withAlpha } from '../shared/utils'
+import FocusRing from '../Time/FocusRing'
 import { dayCellSize, daySize } from './dateUtils'
 import DayRange from './DayRange'
 import type { DayContentPosition, DayContentRenderer } from './types'
@@ -73,6 +74,7 @@ function Day(props: {
   const [inputFocused, setInputFocused] = useState(false)
   const [pressed, setPressed] = useState(false)
   const muted = (disabled || outside) && !selected
+  const showFocus = !disabled && (focused || inputFocused)
   const baseTextColor = selected
     ? textColorOnPrimary
     : inRange && !disabled
@@ -125,62 +127,74 @@ function Day(props: {
       >
         <View
           style={[
-            styles.day,
-            circle === daySize
-              ? null
-              : {
-                  borderRadius: circle / 2,
-                  height: circle,
-                  width: circle,
-                },
-            isToday && !selected && !disabled
-              ? { borderColor: theme.colors.primary }
-              : null,
-            selected
-              ? {
-                  backgroundColor: disabled
-                    ? withAlpha(primaryColor, 0.38)
-                    : primaryColor,
-                }
-              : null,
+            styles.indicator,
+            circle === daySize ? null : { height: circle, width: circle },
           ]}
         >
           <View
-            pointerEvents="none"
             style={[
-              styles.stateLayer,
-              {
-                borderRadius: stateSize / 2,
-                height: stateSize,
-                left: stateOffset,
-                top: stateOffset,
-                width: stateSize,
-              },
+              styles.day,
+              circle === daySize
+                ? null
+                : {
+                    borderRadius: circle / 2,
+                    height: circle,
+                    width: circle,
+                  },
+              isToday && !selected
+                ? { borderColor: theme.colors.primary }
+                : null,
+              selected
+                ? {
+                    backgroundColor: disabled
+                      ? withAlpha(primaryColor, 0.38)
+                      : primaryColor,
+                  }
+                : null,
             ]}
           >
-            <StateLayer
-              color={stateLayerColor}
-              focused={!disabled && (focused || inputFocused)}
-              hovered={!disabled && hovered}
-              pressed={!disabled && pressed}
-            />
+            <View
+              pointerEvents="none"
+              style={[
+                styles.stateLayer,
+                {
+                  borderRadius: stateSize / 2,
+                  height: stateSize,
+                  left: stateOffset,
+                  top: stateOffset,
+                  width: stateSize,
+                },
+              ]}
+            >
+              <StateLayer
+                color={stateLayerColor}
+                focused={showFocus}
+                hovered={!disabled && hovered}
+                pressed={!disabled && pressed}
+              />
+            </View>
+            <Text
+              maxFontSizeMultiplier={1.5}
+              selectable={false}
+              style={[
+                {
+                  color:
+                    selected && disabled
+                      ? withAlpha(textColorOnPrimary, 0.38)
+                      : textColor,
+                },
+                textFont,
+                muted && styles.muted,
+              ]}
+            >
+              {day}
+            </Text>
           </View>
-          <Text
-            maxFontSizeMultiplier={1.5}
-            selectable={false}
-            style={[
-              {
-                color:
-                  selected && disabled
-                    ? withAlpha(textColorOnPrimary, 0.38)
-                    : textColor,
-              },
-              textFont,
-              muted && styles.muted,
-            ]}
-          >
-            {day}
-          </Text>
+          <FocusRing
+            color={theme.colors.secondary}
+            focused={showFocus}
+            radius={circle / 2}
+          />
         </View>
         {dayContent ? (
           <View
@@ -267,6 +281,10 @@ const styles = StyleSheet.create({
   empty: {
     flex: 1,
     flexBasis: 0,
+  },
+  indicator: {
+    height: daySize,
+    width: daySize,
   },
   muted: {
     opacity: 0.38,

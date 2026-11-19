@@ -57,7 +57,7 @@ const actionPaddingBottom = 12
 const actionPaddingTop = 8
 const anchorGap = 8
 const cardWidth = 360
-const cornerRadius = 28
+const cornerRadius = 16
 const dayHeaderInset = 12
 const headerGap = 30
 const headerPaddingTop = 20
@@ -267,7 +267,9 @@ function DockedStepper({
   unit: 'month' | 'year'
 }) {
   const theme = useTheme()
+  const [focused, setFocused] = useState(false)
   const [hovered, setHovered] = useState(false)
+  const [pressed, setPressed] = useState(false)
   const labelColor = disabled
     ? theme.colors.onSurface
     : theme.colors.onSurfaceVariant
@@ -276,35 +278,43 @@ function DockedStepper({
     <Text
       maxFontSizeMultiplier={1.5}
       numberOfLines={1}
-      style={[
-        styles.menuLabel,
-        { color: labelColor },
-        disabled ? styles.menuLabelDisabled : null,
-      ]}
+      style={[styles.menuLabel, { color: labelColor }]}
       variant="labelLarge"
     >
       {label}
     </Text>
   )
-  const menuControl = disabled ? (
-    <View style={[styles.menuButton, styles.menuButtonMenu]}>{labelText}</View>
-  ) : (
+  const menuControl = (
     <Pressable
       accessibilityRole="button"
-      accessibilityState={{ expanded: open }}
+      accessibilityState={{ disabled, expanded: open }}
+      disabled={disabled}
+      onBlur={() => setFocused(false)}
+      onFocus={() => setFocused(true)}
       onHoverIn={() => setHovered(true)}
       onHoverOut={() => setHovered(false)}
       onPress={onOpen}
+      onPressIn={() => setPressed(true)}
+      onPressOut={() => setPressed(false)}
       style={[
         styles.menuButton,
         showArrows ? null : styles.menuButtonMenu,
-        { borderRadius: theme.shapes.corner.extraSmall },
+        { borderRadius: menuButtonHeight / 2 },
       ]}
       testID={testID}
     >
-      <StateLayer color={labelColor} hovered={hovered} />
-      {labelText}
-      <Icon color={labelColor} size={18} source="menu-down" />
+      <StateLayer
+        color={theme.colors.onSurfaceVariant}
+        focused={!disabled && focused}
+        hovered={!disabled && hovered}
+        pressed={!disabled && pressed}
+      />
+      <View
+        style={[styles.menuContent, disabled ? styles.menuLabelDisabled : null]}
+      >
+        {labelText}
+        <Icon color={labelColor} size={18} source="menu-down" />
+      </View>
     </Pressable>
   )
 
@@ -409,14 +419,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     flexShrink: 1,
-    gap: menuIconGap,
     height: menuButtonHeight,
+    justifyContent: 'center',
     minWidth: 0,
     overflow: 'hidden',
     paddingHorizontal: menuButtonPadding,
   },
   menuButtonMenu: {
     height: menuHeaderHeight,
+  },
+  menuContent: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    flexShrink: 1,
+    gap: menuIconGap,
+    minWidth: 0,
   },
   menuLabel: {
     flexShrink: 1,

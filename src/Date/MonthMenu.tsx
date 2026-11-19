@@ -1,10 +1,11 @@
 import { type ComponentRef, memo, useEffect, useMemo, useRef } from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
-import { Icon, Text, TouchableRipple, useTheme } from 'react-native-paper'
+import { useTheme } from 'react-native-paper'
 
 import { dateTimeFormat } from '../shared/intl'
 import { scrollbarThumb } from '../shared/utils'
 import { calendarControlHeight } from './CalendarHeader'
+import SelectionMenuItem from './SelectionMenuItem'
 
 function MonthMenu({
   embedded = false,
@@ -45,44 +46,14 @@ function MonthMenu({
         scrollbarThumb(theme.colors.outline),
       ]}
     >
-      {months.map(({ label, month }) => {
-        const selected = selectedMonth === month
-        return (
-          <TouchableRipple
-            key={month}
-            accessibilityLabel={label}
-            accessibilityRole="button"
-            accessibilityState={{ selected }}
-            onPress={() => onPressMonth(month)}
-          >
-            <View
-              style={[
-                styles.item,
-                selected
-                  ? { backgroundColor: theme.colors.surfaceVariant }
-                  : null,
-              ]}
-            >
-              <View style={styles.check}>
-                {selected ? (
-                  <Icon
-                    color={theme.colors.onSurface}
-                    size={24}
-                    source="check"
-                  />
-                ) : null}
-              </View>
-              <Text
-                maxFontSizeMultiplier={1.5}
-                style={{ color: theme.colors.onSurface }}
-                variant="bodyLarge"
-              >
-                {label}
-              </Text>
-            </View>
-          </TouchableRipple>
-        )
-      })}
+      {months.map(({ label, month }) => (
+        <SelectionMenuItem
+          key={month}
+          label={label}
+          onPress={() => onPressMonth(month)}
+          selected={selectedMonth === month}
+        />
+      ))}
     </ScrollView>
   )
 
@@ -102,18 +73,8 @@ function MonthMenu({
 }
 
 const styles = StyleSheet.create({
-  check: {
-    width: 24,
-  },
   fill: {
     flex: 1,
-  },
-  item: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 16,
-    minHeight: 48,
-    paddingHorizontal: 16,
   },
   overlay: {
     top: calendarControlHeight,

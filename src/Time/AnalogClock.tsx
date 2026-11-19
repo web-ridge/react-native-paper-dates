@@ -151,7 +151,7 @@ function AnalogClock({
   }
   const handleHoverStyle = [
     styles.handleHover,
-    { backgroundColor: withAlpha('#ffffff', 0.08) },
+    { backgroundColor: withAlpha(theme.colors.onPrimary, 0.08) },
   ]
 
   return (

@@ -5,228 +5,236 @@ exports[`renders TimeInputs 1`] = `
   style={
     {
       "alignItems": "flex-start",
-      "flexDirection": "row",
     }
   }
 >
   <View
     style={
-      [
-        {
-          "alignItems": "center",
-          "flexDirection": "column",
-        },
-        {
-          "width": 100,
-        },
-      ]
+      {
+        "alignItems": "flex-start",
+        "flexDirection": "row",
+      }
     }
   >
     <View
       style={
-        {
-          "overflow": "visible",
-        }
+        [
+          {
+            "alignItems": "center",
+            "flexDirection": "column",
+          },
+          {
+            "width": 100,
+          },
+        ]
       }
     >
       <View
-        onMouseEnter={[Function]}
-        onMouseLeave={[Function]}
-        onPointerCancel={[Function]}
-        onPointerDown={[Function]}
-        onPointerUp={[Function]}
         style={
-          [
-            {
-              "alignItems": "center",
-              "borderWidth": 2,
-              "justifyContent": "center",
-              "overflow": "hidden",
-            },
-            {
-              "backgroundColor": "rgba(255, 255, 255, 1)",
-              "borderColor": "transparent",
-              "borderRadius": 12,
-              "height": 120,
-              "width": 100,
-            },
-          ]
+          {
+            "overflow": "visible",
+          }
         }
       >
-        <TextInput
-          accessibilityLabel="Hour"
-          blurOnSubmit={false}
-          keyboardAppearance="default"
-          keyboardType="number-pad"
-          maxFontSizeMultiplier={1.2}
-          maxLength={2}
-          multiline={false}
-          numberOfLines={1}
-          onBlur={[Function]}
-          onChangeText={[Function]}
-          onFocus={[Function]}
-          onSubmitEditing={[Function]}
-          returnKeyType="next"
-          selectTextOnFocus={true}
-          selectionColor="rgba(103, 80, 164, 1)"
+        <View
+          onMouseEnter={[Function]}
+          onMouseLeave={[Function]}
+          onPointerCancel={[Function]}
+          onPointerDown={[Function]}
+          onPointerUp={[Function]}
           style={
             [
               {
-                "borderWidth": 0,
-                "outlineWidth": 0,
-                "paddingHorizontal": 0,
-                "textAlign": "center",
-                "width": "100%",
+                "alignItems": "center",
+                "borderWidth": 2,
+                "justifyContent": "center",
+                "overflow": "hidden",
               },
               {
-                "color": "rgba(29, 27, 32, 1)",
-                "fontFamily": "System",
-                "fontSize": 45,
-                "fontWeight": "400",
-                "height": 116,
-                "lineHeight": 45,
-                "paddingBottom": 35.5,
-                "paddingTop": 35.5,
+                "backgroundColor": "rgba(255, 255, 255, 1)",
+                "borderColor": "transparent",
+                "borderRadius": 12,
+                "height": 120,
+                "width": 100,
               },
             ]
           }
-          textAlign="center"
-          value="12"
-        />
+        >
+          <TextInput
+            accessibilityLabel="Hour"
+            blurOnSubmit={false}
+            keyboardAppearance="default"
+            keyboardType="number-pad"
+            maxFontSizeMultiplier={1.2}
+            maxLength={2}
+            multiline={false}
+            numberOfLines={1}
+            onBlur={[Function]}
+            onChangeText={[Function]}
+            onFocus={[Function]}
+            onSubmitEditing={[Function]}
+            returnKeyType="next"
+            selectTextOnFocus={true}
+            selectionColor="rgba(103, 80, 164, 1)"
+            style={
+              [
+                {
+                  "borderWidth": 0,
+                  "outlineWidth": 0,
+                  "paddingHorizontal": 0,
+                  "textAlign": "center",
+                  "width": "100%",
+                },
+                {
+                  "color": "rgba(29, 27, 32, 1)",
+                  "fontFamily": "System",
+                  "fontSize": 45,
+                  "fontWeight": "400",
+                  "height": 116,
+                  "lineHeight": 45,
+                  "paddingBottom": 35.5,
+                  "paddingTop": 35.5,
+                },
+              ]
+            }
+            textAlign="center"
+            value="12"
+          />
+        </View>
       </View>
     </View>
-  </View>
-  <View
-    style={
-      [
-        {
-          "alignItems": "center",
-          "justifyContent": "center",
-          "width": 16,
-        },
-        {
-          "height": 120,
-        },
-      ]
-    }
-  >
     <View
       style={
         [
           {
-            "borderRadius": 4,
-            "height": 8,
-            "width": 8,
+            "alignItems": "center",
+            "justifyContent": "center",
+            "width": 22,
           },
           {
-            "backgroundColor": "rgba(29, 27, 32, 1)",
+            "height": 120,
           },
         ]
-      }
-    />
-    <View
-      style={
-        {
-          "height": 6,
-        }
-      }
-    />
-    <View
-      style={
-        [
-          {
-            "borderRadius": 4,
-            "height": 8,
-            "width": 8,
-          },
-          {
-            "backgroundColor": "rgba(29, 27, 32, 1)",
-          },
-        ]
-      }
-    />
-  </View>
-  <View
-    style={
-      [
-        {
-          "alignItems": "center",
-          "flexDirection": "column",
-        },
-        {
-          "width": 100,
-        },
-      ]
-    }
-  >
-    <View
-      style={
-        {
-          "overflow": "visible",
-        }
       }
     >
       <View
-        onMouseEnter={[Function]}
-        onMouseLeave={[Function]}
-        onPointerCancel={[Function]}
-        onPointerDown={[Function]}
-        onPointerUp={[Function]}
         style={
           [
             {
-              "alignItems": "center",
-              "borderWidth": 2,
-              "justifyContent": "center",
-              "overflow": "hidden",
+              "borderRadius": 4,
+              "height": 8,
+              "width": 8,
             },
             {
-              "backgroundColor": "rgba(255, 255, 255, 1)",
-              "borderColor": "transparent",
-              "borderRadius": 12,
-              "height": 120,
-              "width": 100,
+              "backgroundColor": "rgba(29, 27, 32, 1)",
             },
           ]
         }
+      />
+      <View
+        style={
+          {
+            "height": 6,
+          }
+        }
+      />
+      <View
+        style={
+          [
+            {
+              "borderRadius": 4,
+              "height": 8,
+              "width": 8,
+            },
+            {
+              "backgroundColor": "rgba(29, 27, 32, 1)",
+            },
+          ]
+        }
+      />
+    </View>
+    <View
+      style={
+        [
+          {
+            "alignItems": "center",
+            "flexDirection": "column",
+          },
+          {
+            "width": 100,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          {
+            "overflow": "visible",
+          }
+        }
       >
-        <TextInput
-          accessibilityLabel="Minute"
-          keyboardAppearance="default"
-          keyboardType="number-pad"
-          maxFontSizeMultiplier={1.2}
-          maxLength={2}
-          multiline={false}
-          numberOfLines={1}
-          onBlur={[Function]}
-          onChangeText={[Function]}
-          onFocus={[Function]}
-          selectTextOnFocus={true}
-          selectionColor="rgba(103, 80, 164, 1)"
+        <View
+          onMouseEnter={[Function]}
+          onMouseLeave={[Function]}
+          onPointerCancel={[Function]}
+          onPointerDown={[Function]}
+          onPointerUp={[Function]}
           style={
             [
               {
-                "borderWidth": 0,
-                "outlineWidth": 0,
-                "paddingHorizontal": 0,
-                "textAlign": "center",
-                "width": "100%",
+                "alignItems": "center",
+                "borderWidth": 2,
+                "justifyContent": "center",
+                "overflow": "hidden",
               },
               {
-                "color": "rgba(29, 27, 32, 1)",
-                "fontFamily": "System",
-                "fontSize": 45,
-                "fontWeight": "400",
-                "height": 116,
-                "lineHeight": 45,
-                "paddingBottom": 35.5,
-                "paddingTop": 35.5,
+                "backgroundColor": "rgba(255, 255, 255, 1)",
+                "borderColor": "transparent",
+                "borderRadius": 12,
+                "height": 120,
+                "width": 100,
               },
             ]
           }
-          textAlign="center"
-          value="45"
-        />
+        >
+          <TextInput
+            accessibilityLabel="Minute"
+            keyboardAppearance="default"
+            keyboardType="number-pad"
+            maxFontSizeMultiplier={1.2}
+            maxLength={2}
+            multiline={false}
+            numberOfLines={1}
+            onBlur={[Function]}
+            onChangeText={[Function]}
+            onFocus={[Function]}
+            selectTextOnFocus={true}
+            selectionColor="rgba(103, 80, 164, 1)"
+            style={
+              [
+                {
+                  "borderWidth": 0,
+                  "outlineWidth": 0,
+                  "paddingHorizontal": 0,
+                  "textAlign": "center",
+                  "width": "100%",
+                },
+                {
+                  "color": "rgba(29, 27, 32, 1)",
+                  "fontFamily": "System",
+                  "fontSize": 45,
+                  "fontWeight": "400",
+                  "height": 116,
+                  "lineHeight": 45,
+                  "paddingBottom": 35.5,
+                  "paddingTop": 35.5,
+                },
+              ]
+            }
+            textAlign="center"
+            value="45"
+          />
+        </View>
       </View>
     </View>
   </View>

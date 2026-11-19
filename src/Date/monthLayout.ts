@@ -1,4 +1,8 @@
-import { getCalendarHeaderHeight } from './CalendarHeader'
+import {
+  calendarArrowSize,
+  calendarControlInset,
+  getCalendarHeaderHeight,
+} from './CalendarHeader'
 import {
   currentCalendarMonth,
   dayCellSize,
@@ -24,7 +28,10 @@ type MonthWeeks = {
 
 const weekPrefixCache = new Map<string, MonthWeeks>()
 
-export const monthHeaderHeight = 56
+export const monthSubheadPaddingTop = 16
+export const monthSubheadPaddingBottom = 12
+export const monthHeaderHeight =
+  monthSubheadPaddingTop + 20 + monthSubheadPaddingBottom
 export const monthHeaderSingleMarginBottom = dayNamesHeight
 export const monthHeaderSingleMarginTop = 0
 export const monthHeaderSingleHeight =
@@ -33,7 +40,7 @@ export const weekMargin = 0
 export const weekSize = dayCellSize + weekMargin
 
 const horizontalMonthChrome =
-  monthHeaderSingleMarginTop + monthHeaderHeight + monthHeaderSingleMarginBottom
+  calendarControlInset + calendarArrowSize + monthHeaderSingleMarginBottom
 
 function getIndexCount(
   index: number,
