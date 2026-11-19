@@ -7,12 +7,13 @@ import {
 } from 'react-native'
 import { Text, useTheme } from 'react-native-paper'
 
-import { useLatest } from '../shared/utils'
+import { useLatest, withAlpha } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
 import AmPmSwitcher from './AmPmSwitcher'
 import TimeInput from './TimeInput'
 import {
   clockTypes,
+  disabledContentOpacity,
   inputTypes,
   periodSelectorGap,
   type PossibleClockTypes,
@@ -28,6 +29,7 @@ import {
 } from './timeUtils'
 
 function TimeInputs({
+  disabled,
   focused,
   hours,
   inputFontSize,
@@ -39,6 +41,7 @@ function TimeInputs({
   onFocusInput,
   onInputInvalidChange,
 }: {
+  disabled?: boolean
   focused: PossibleClockTypes
   hours: number
   inputFontSize?: number
@@ -78,6 +81,9 @@ function TimeInputs({
   }
   const startInput = useRef<TextInputInstance | null>(null)
   const theme = useTheme()
+  const dotColor = disabled
+    ? withAlpha(theme.colors.onSurface, disabledContentOpacity)
+    : theme.colors.onSurface
 
   const selectionColor = theme.dark
     ? theme.colors.primaryContainer
@@ -100,9 +106,7 @@ function TimeInputs({
   const hourMinuteRow = (
     <View style={styles.inputContainer}>
       <TimeField
-        caption={hourLabel}
         error={hourInvalid ? invalidTime : undefined}
-        inputType={inputType}
         width={fieldWidth}
       >
         <TimeInput
@@ -110,6 +114,7 @@ function TimeInputs({
           accessibilityLabel={hourLabel}
           blurOnSubmit={false}
           clockType={clockTypes.hours}
+          disabled={disabled}
           inputFontSize={inputFontSize}
           inputType={inputType}
           is24Hour={is24Hour}
@@ -131,24 +136,19 @@ function TimeInputs({
         />
       </TimeField>
       <View style={[styles.separator, { height: fieldHeight }]}>
-        <View
-          style={[styles.dot, { backgroundColor: theme.colors.onSurface }]}
-        />
+        <View style={[styles.dot, { backgroundColor: dotColor }]} />
         <View style={styles.dotGap} />
-        <View
-          style={[styles.dot, { backgroundColor: theme.colors.onSurface }]}
-        />
+        <View style={[styles.dot, { backgroundColor: dotColor }]} />
       </View>
       <TimeField
-        caption={minuteLabel}
         error={minuteInvalid ? invalidTime : undefined}
-        inputType={inputType}
         width={fieldWidth}
       >
         <TimeInput
           ref={endInput}
           accessibilityLabel={minuteLabel}
           clockType={clockTypes.minutes}
+          disabled={disabled}
           inputFontSize={inputFontSize}
           inputType={inputType}
           is24Hour={is24Hour}
@@ -174,6 +174,7 @@ function TimeInputs({
         <View style={styles.periodSwitcher}>
           <AmPmSwitcher
             direction="vertical"
+            disabled={disabled}
             hours={hours}
             inputType={inputType}
             locale={locale}
@@ -191,6 +192,7 @@ function TimeInputs({
         <View style={styles.landscapeSwitcherSpacing}>
           <AmPmSwitcher
             direction="horizontal"
+            disabled={disabled}
             hours={hours}
             inputType={inputType}
             locale={locale}
@@ -205,16 +207,12 @@ function TimeInputs({
 }
 
 function TimeField({
-  caption,
   children,
   error,
-  inputType,
   width,
 }: {
-  caption: string
   children: ReactNode
   error?: string
-  inputType: PossibleInputTypes
   width: number
 }) {
   const theme = useTheme()
@@ -222,19 +220,14 @@ function TimeField({
   return (
     <View style={[styles.column, { width }]}>
       {children}
-      {inputType === inputTypes.keyboard ? (
+      {error ? (
         <Text
-          {...(error ? { accessibilityLiveRegion: 'polite' as const } : null)}
+          accessibilityLiveRegion="polite"
           maxFontSizeMultiplier={1.5}
-          style={[
-            styles.supportingText,
-            {
-              color: error ? theme.colors.error : theme.colors.onSurfaceVariant,
-            },
-          ]}
+          style={[styles.supportingText, { color: theme.colors.error }]}
           variant="bodySmall"
         >
-          {error ?? caption}
+          {error}
         </Text>
       ) : null}
     </View>

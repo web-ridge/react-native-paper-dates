@@ -1,24 +1,38 @@
 import { memo } from 'react'
 import { useTheme } from 'react-native-paper'
 
+import { withAlpha } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
 import ClockNumber from './ClockNumber'
-import { circleSize, clockNumbers } from './timeUtils'
+import { circleSize, clockNumbers, disabledContentOpacity } from './timeUtils'
 
 const minuteNumbers = clockNumbers(12, 2.5, circleSize, -Math.PI / 2)
 
+function minuteMatches(label: number, value: number) {
+  if (label === 0) return value >= 59 || value <= 1
+  return label - 1 <= value && value <= label + 1
+}
+
 function AnalogClockMinutes({
+  disabled,
+  hoveredMinute = null,
   locale,
   minutes,
   onPress,
 }: {
+  disabled?: boolean
+  hoveredMinute?: number | null
   locale?: string
   minutes: number
   onPress?: (minutes: number) => void
 }) {
   const theme = useTheme()
-  const selectedColor = theme.colors.onPrimary
-  const unselectedColor = theme.colors.onSurface
+  const selectedColor = disabled
+    ? withAlpha(theme.colors.onPrimary, disabledContentOpacity)
+    : theme.colors.onPrimary
+  const unselectedColor = disabled
+    ? withAlpha(theme.colors.onSurface, disabledContentOpacity)
+    : theme.colors.onSurface
   const minuteOf = getTranslation(
     locale,
     'minuteOf',
@@ -30,15 +44,17 @@ function AnalogClockMinutes({
       {minuteNumbers.map(([left, top], index) => {
         const currentMinutes = index * 5
         const isZero = currentMinutes === 0
-        const selected = isZero
-          ? minutes >= 59 || currentMinutes + 1 >= minutes
-          : currentMinutes - 1 <= minutes && currentMinutes + 1 >= minutes
+        const selected = minuteMatches(currentMinutes, minutes)
+        const hovered =
+          hoveredMinute !== null && minuteMatches(currentMinutes, hoveredMinute)
         return (
           <ClockNumber
             key={index}
             accessibilityLabel={minuteOf(currentMinutes, 60)}
+            disabled={disabled}
+            hovered={hovered}
             left={left}
-            onPress={() => onPress?.(currentMinutes)}
+            onPress={disabled ? undefined : () => onPress?.(currentMinutes)}
             selected={selected}
             textStyle={{
               color: selected ? selectedColor : unselectedColor,

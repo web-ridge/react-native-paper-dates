@@ -29,6 +29,7 @@ const he: TranslationsType = {
   selectSingle: 'בחר תאריך',
   toggleClock: 'החלף שעון',
   toggleKeyboard: 'החלף מקלדת',
+  toggleScroll: 'החלף גלילה',
   typeInDate: 'הקש תאריך',
 }
 

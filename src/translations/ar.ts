@@ -29,6 +29,7 @@ const ar: TranslationsType = {
   selectSingle: 'حدد تاريخ',
   toggleClock: 'تبديل الساعة',
   toggleKeyboard: 'تبديل لوحة المفاتيح',
+  toggleScroll: 'تبديل التمرير',
   typeInDate: 'اكتب التاريخ',
 }
 

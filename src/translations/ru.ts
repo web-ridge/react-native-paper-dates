@@ -29,6 +29,7 @@ const ru: TranslationsType = {
   selectSingle: 'Выбор даты',
   toggleClock: 'Переключить часы',
   toggleKeyboard: 'Переключить клавиатуру',
+  toggleScroll: 'Переключить прокрутку',
   typeInDate: 'Ввод в дате',
 }
 

@@ -29,6 +29,7 @@ const fi: TranslationsType = {
   selectSingle: 'Valitse päivämäärä',
   toggleClock: 'Vaihda kelloon',
   toggleKeyboard: 'Vaihda näppäimistöä',
+  toggleScroll: 'Vaihda vieritykseen',
   typeInDate: 'Syötä päivämäärä',
 }
 

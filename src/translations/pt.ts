@@ -29,6 +29,7 @@ const pt: TranslationsType = {
   selectSingle: 'Selecione a data',
   toggleClock: 'Alternar relógio',
   toggleKeyboard: 'Alternar teclado',
+  toggleScroll: 'Alternar rolagem',
   typeInDate: 'Digite a data',
 }
 

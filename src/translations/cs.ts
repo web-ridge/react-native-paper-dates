@@ -29,6 +29,7 @@ const cs: TranslationsType = {
   selectSingle: 'Vyberte datum',
   toggleClock: 'Přepnout hodiny',
   toggleKeyboard: 'Přepnout klávesnici',
+  toggleScroll: 'Přepnout posuvník',
   typeInDate: 'Zadejte datum',
 }
 

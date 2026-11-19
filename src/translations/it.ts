@@ -29,6 +29,7 @@ const it: TranslationsType = {
   selectSingle: 'Seleziona la data',
   toggleClock: 'Passa all’orologio',
   toggleKeyboard: 'Passa alla tastiera',
+  toggleScroll: 'Passa allo scorrimento',
   typeInDate: 'Digita la data',
 }
 

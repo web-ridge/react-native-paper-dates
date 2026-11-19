@@ -29,6 +29,7 @@ const en: TranslationsType = {
   selectSingle: 'Select date',
   toggleClock: 'Toggle dial picker',
   toggleKeyboard: 'Toggle input picker',
+  toggleScroll: 'Toggle scroll picker',
   typeInDate: 'Type in date',
 }
 

@@ -29,6 +29,7 @@ const el: TranslationsType = {
   selectSingle: 'Επιλέξτε ημερομηνία',
   toggleClock: 'Εναλλαγή ρολογιού',
   toggleKeyboard: 'Εναλλαγή πληκτρολογίου',
+  toggleScroll: 'Εναλλαγή κύλισης',
   typeInDate: 'Πληκτρολογήστε την ημερομηνία',
 }
 

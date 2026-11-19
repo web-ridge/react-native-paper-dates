@@ -385,7 +385,7 @@ const MODES = [
     name: 'Date range input',
   },
   {
-    detail: 'Clock and input modes aligned with Material time pickers.',
+    detail: 'Scroll, dial, and input modes aligned with Material time pickers.',
     href: '/guide/time-picker',
     name: 'Time picker',
   },

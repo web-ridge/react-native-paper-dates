@@ -29,6 +29,7 @@ const hi: TranslationsType = {
   selectSingle: 'तारीख़ चुनें',
   toggleClock: 'घड़ी बदलें',
   toggleKeyboard: 'कीबोर्ड बदलें',
+  toggleScroll: 'स्क्रॉल बदलें',
   typeInDate: 'तारीख़ लिखें',
 }
 

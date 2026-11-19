@@ -5,69 +5,65 @@ exports[`renders AmPmSwitcher 1`] = `
   accessibilityRole="radiogroup"
   role="radiogroup"
   style={
-    [
-      {
-        "borderWidth": 1,
-        "overflow": "hidden",
-        "width": 52,
-      },
-      {
-        "borderColor": "rgba(121, 116, 126, 1)",
-        "borderRadius": 8,
-        "height": 72,
-      },
-    ]
+    {
+      "gap": 8,
+    }
   }
 >
   <View
-    accessibilityLabel="AM"
-    accessibilityRole="radio"
-    accessibilityState={
-      {
-        "busy": undefined,
-        "checked": true,
-        "disabled": undefined,
-        "expanded": undefined,
-        "selected": true,
-      }
-    }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
-    accessible={true}
-    collapsable={false}
-    focusable={true}
-    onBlur={[Function]}
-    onClick={[Function]}
-    onFocus={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
-    role="radio"
     style={
       {
-        "flex": 1,
+        "height": 56,
+        "width": 56,
       }
     }
   >
     <View
+      accessibilityLabel="AM"
+      accessibilityRole="radio"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": true,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": true,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      role="radio"
       style={
         [
           {
             "alignItems": "center",
-            "flex": 1,
             "justifyContent": "center",
+            "overflow": "hidden",
           },
+          null,
           {
-            "backgroundColor": "rgba(255, 216, 228, 1)",
+            "backgroundColor": "rgba(234, 221, 255, 1)",
+            "borderRadius": 12,
+            "height": 56,
+            "width": 56,
           },
         ]
       }
@@ -89,16 +85,14 @@ exports[`renders AmPmSwitcher 1`] = `
             {
               "writingDirection": "ltr",
             },
-            [
-              {
-                "color": "rgba(49, 17, 29, 1)",
-                "fontFamily": "System",
-                "fontSize": 16,
-                "fontWeight": "500",
-                "letterSpacing": 0.15,
-                "lineHeight": 24,
-              },
-            ],
+            {
+              "color": "rgba(33, 0, 93, 1)",
+              "fontFamily": "System",
+              "fontSize": 16,
+              "fontWeight": "500",
+              "letterSpacing": 0.15,
+              "lineHeight": 24,
+            },
           ]
         }
       >
@@ -108,66 +102,58 @@ exports[`renders AmPmSwitcher 1`] = `
   </View>
   <View
     style={
-      [
-        {
-          "height": 1,
-          "width": 52,
-        },
-        {
-          "backgroundColor": "rgba(121, 116, 126, 1)",
-        },
-      ]
-    }
-  />
-  <View
-    accessibilityLabel="PM"
-    accessibilityRole="radio"
-    accessibilityState={
       {
-        "busy": undefined,
-        "checked": false,
-        "disabled": undefined,
-        "expanded": undefined,
-        "selected": false,
-      }
-    }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
-    accessible={true}
-    collapsable={false}
-    focusable={true}
-    onBlur={[Function]}
-    onClick={[Function]}
-    onFocus={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
-    role="radio"
-    style={
-      {
-        "flex": 1,
+        "height": 56,
+        "width": 56,
       }
     }
   >
     <View
+      accessibilityLabel="PM"
+      accessibilityRole="radio"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": false,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": false,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      role="radio"
       style={
         [
           {
             "alignItems": "center",
-            "flex": 1,
             "justifyContent": "center",
+            "overflow": "hidden",
           },
+          null,
           {
-            "backgroundColor": "transparent",
+            "backgroundColor": "rgba(255, 255, 255, 1)",
+            "borderRadius": 9999,
+            "height": 56,
+            "width": 56,
           },
         ]
       }
@@ -189,16 +175,14 @@ exports[`renders AmPmSwitcher 1`] = `
             {
               "writingDirection": "ltr",
             },
-            [
-              {
-                "color": "rgba(73, 69, 79, 1)",
-                "fontFamily": "System",
-                "fontSize": 16,
-                "fontWeight": "500",
-                "letterSpacing": 0.15,
-                "lineHeight": 24,
-              },
-            ],
+            {
+              "color": "rgba(73, 69, 79, 1)",
+              "fontFamily": "System",
+              "fontSize": 16,
+              "fontWeight": "500",
+              "letterSpacing": 0.15,
+              "lineHeight": 24,
+            },
           ]
         }
       >

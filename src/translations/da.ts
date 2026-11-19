@@ -29,6 +29,7 @@ const da: TranslationsType = {
   selectSingle: 'Vælg dato',
   toggleClock: 'Skift til ur',
   toggleKeyboard: 'Skift tastatur',
+  toggleScroll: 'Skift til rulle',
   typeInDate: 'Indtast dato',
 }
 

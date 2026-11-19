@@ -1,28 +1,37 @@
 import { memo } from 'react'
 import { useTheme } from 'react-native-paper'
 
+import { withAlpha } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
 import ClockNumber from './ClockNumber'
-import { circleSize, clockNumbers } from './timeUtils'
+import { circleSize, clockNumbers, disabledContentOpacity } from './timeUtils'
 
 const hourStart = -Math.PI / 2 + Math.PI / 6
 const innerHourNumbers = clockNumbers(12, 4, circleSize, hourStart)
 const outerHourNumbers = clockNumbers(12, 2.5, circleSize, hourStart)
 
 function AnalogClockHours({
+  disabled,
   hours,
+  hoveredHour = null,
   is24Hour,
   locale,
   onPress,
 }: {
+  disabled?: boolean
   hours: number
+  hoveredHour?: number | null
   is24Hour: boolean
   locale?: string
   onPress?: (hours: number) => void
 }) {
   const theme = useTheme()
-  const selectedColor = theme.colors.onPrimary
-  const unselectedColor = theme.colors.onSurface
+  const selectedColor = disabled
+    ? withAlpha(theme.colors.onPrimary, disabledContentOpacity)
+    : theme.colors.onPrimary
+  const unselectedColor = disabled
+    ? withAlpha(theme.colors.onSurface, disabledContentOpacity)
+    : theme.colors.onSurface
   const total = is24Hour ? 24 : 12
   const hourOf = getTranslation(
     locale,
@@ -40,8 +49,10 @@ function AnalogClockHours({
           <ClockNumber
             key={index}
             accessibilityLabel={hourOf(hourValue, total)}
+            disabled={disabled}
+            hovered={hoveredHour === hourValue}
             left={left}
-            onPress={() => onPress?.(hourValue)}
+            onPress={disabled ? undefined : () => onPress?.(hourValue)}
             selected={selected}
             textStyle={{
               color: selected ? selectedColor : unselectedColor,
@@ -60,8 +71,10 @@ function AnalogClockHours({
               <ClockNumber
                 key={index}
                 accessibilityLabel={hourOf(hourValue, total)}
+                disabled={disabled}
+                hovered={hoveredHour === hourValue}
                 left={left}
-                onPress={() => onPress?.(hourValue)}
+                onPress={disabled ? undefined : () => onPress?.(hourValue)}
                 selected={selected}
                 textStyle={{
                   color: selected ? selectedColor : unselectedColor,

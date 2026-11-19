@@ -29,6 +29,7 @@ const ro: TranslationsType = {
   selectSingle: 'Selectează data',
   toggleClock: 'Comută ceasul',
   toggleKeyboard: 'Comută tastatura',
+  toggleScroll: 'Comută derularea',
   typeInDate: 'Tipul în dată',
 }
 

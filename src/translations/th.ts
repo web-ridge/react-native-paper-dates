@@ -28,6 +28,7 @@ const th: TranslationsType = {
   selectSingle: 'เลือกวันที่',
   toggleClock: 'สลับนาฬิกา',
   toggleKeyboard: 'สลับแป้นพิมพ์',
+  toggleScroll: 'สลับการเลื่อน',
   typeInDate: 'พิมพ์วันที่',
 }
 

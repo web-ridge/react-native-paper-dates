@@ -29,6 +29,7 @@ const ja: TranslationsType = {
   selectSingle: '日付を選択',
   toggleClock: '時計に切り替え',
   toggleKeyboard: 'キーボードに切り替え',
+  toggleScroll: 'スクロールに切り替え',
   typeInDate: '日付を入力',
 }
 

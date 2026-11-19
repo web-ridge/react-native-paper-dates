@@ -19,6 +19,7 @@ import { useTheme } from 'react-native-paper'
 
 import { sharedStyles } from '../shared/styles'
 import StateLayer from '../shared/StateLayer'
+import FocusRing from './FocusRing'
 import {
   clockTypes,
   inputTypes,
@@ -38,6 +39,7 @@ interface TimeInputProps extends Omit<
 > {
   accessibilityLabel?: string
   clockType: PossibleClockTypes
+  disabled?: boolean
   inputFontSize?: number
   inputType: PossibleInputTypes
   is24Hour?: boolean
@@ -53,6 +55,7 @@ function TimeInput(
   {
     accessibilityLabel,
     clockType,
+    disabled,
     inputFontSize,
     inputType,
     is24Hour = false,
@@ -87,12 +90,14 @@ function TimeInput(
         ? !isValidHourInput(parsedValue, is24Hour)
         : !isValidMinuteInput(parsedValue)
 
-  const { backgroundColor, color } = useInputColors(highlighted, invalid)
+  const { backgroundColor, borderColor, color } = useInputColors(
+    highlighted,
+    invalid,
+    disabled
+  )
   const theme = useTheme()
 
-  const typeface = isPicker
-    ? theme.fonts.displayLarge
-    : theme.fonts.displayMedium
+  const typeface = theme.fonts.displayMedium
 
   const fontSize = inputFontSize ?? typeface.fontSize
 
@@ -110,6 +115,7 @@ function TimeInput(
   }, [invalid, onInvalidChange])
 
   const onInnerChange = (text: string) => {
+    if (disabled) return
     if (text !== '' && !/^\d{1,2}$/.test(text)) {
       setRejectedEdits((count) => count + 1)
       return
@@ -134,125 +140,141 @@ function TimeInput(
       ? `0${controlledValue}`
       : controlledValue
 
-  const showOutline = !isPicker && inputFocused
-
   const fieldHeight = isPicker ? timeSelectorHeight : timeInputFieldHeight
 
-  const textPadding = Math.max(
-    0,
-    (fieldHeight - (showOutline ? 4 : 0) - fontSize) / 2
-  )
+  const textPadding = Math.max(0, (fieldHeight - 4 - fontSize) / 2)
+
+  const fieldFocused = isPicker ? selectorFocused : inputFocused
+  const fieldStyle = [
+    styles.root,
+    {
+      backgroundColor,
+      borderColor,
+      borderRadius: theme.shapes.corner.medium,
+      height: fieldHeight,
+      width,
+    },
+  ]
 
   return (
-    <View
-      {...(isPicker
-        ? null
-        : {
-            onMouseEnter: () => setHovered(true),
-            onMouseLeave: () => {
-              setHovered(false)
-              setPointerPressed(false)
-            },
-            onPointerCancel: () => setPointerPressed(false),
-            onPointerDown: () => setPointerPressed(true),
-            onPointerUp: () => setPointerPressed(false),
-          })}
-      style={[
-        styles.root,
-        showOutline ? styles.rootOutline : styles.rootBorder,
-        {
-          backgroundColor,
-          borderColor: showOutline
-            ? invalid
-              ? theme.colors.error
-              : theme.colors.primary
-            : undefined,
-          borderRadius: theme.shapes.corner.small,
-          height: fieldHeight,
-          width,
-        },
-      ]}
-    >
-      <StateLayer
-        color={color}
-        focused={isPicker && selectorFocused}
-        hovered={hovered}
-        pressed={pointerPressed}
+    <View style={styles.frame}>
+      <FocusRing
+        focused={fieldFocused && !disabled}
+        radius={theme.shapes.corner.medium}
       />
-      {isPicker ? (
-        <Text
-          maxFontSizeMultiplier={1.5}
-          selectable={false}
-          style={[
-            styles.value,
-            {
-              ...typeface,
-              color,
-              fontSize,
-            },
-          ]}
-        >
-          {formattedValue}
-        </Text>
-      ) : (
-        <TextInput
-          ref={ref}
-          accessibilityLabel={accessibilityLabel}
-          keyboardAppearance={theme.dark ? 'dark' : 'default'}
-          keyboardType="number-pad"
-          maxFontSizeMultiplier={1.5}
-          maxLength={2}
-          multiline={false}
-          numberOfLines={1}
-          onBlur={() => {
-            setEditing(false)
-            setInputFocused(false)
-          }}
-          onChangeText={onInnerChange}
-          onFocus={() => {
-            setEditing(false)
-            setInputFocused(true)
-          }}
-          selectTextOnFocus
-          style={[
-            styles.input,
-            {
-              color,
-              fontFamily: typeface.fontFamily,
-              fontSize,
-              fontWeight: typeface.fontWeight,
-              height: fieldHeight - (showOutline ? 4 : 0),
-              lineHeight: fontSize,
-              paddingBottom: textPadding,
-              paddingTop: textPadding,
-            },
-          ]}
-          textAlign="center"
-          value={formattedValue}
-          {...rest}
+      <View
+        {...(isPicker
+          ? null
+          : {
+              onMouseEnter: () => setHovered(true),
+              onMouseLeave: () => {
+                setHovered(false)
+                setPointerPressed(false)
+              },
+              onPointerCancel: () => setPointerPressed(false),
+              onPointerDown: () => setPointerPressed(true),
+              onPointerUp: () => setPointerPressed(false),
+            })}
+        style={fieldStyle}
+      >
+        <StateLayer
+          color={theme.colors.onSurface}
+          focused={!disabled && fieldFocused}
+          hovered={!disabled && hovered}
+          pressed={!disabled && pointerPressed}
         />
-      )}
-      {isPicker ? (
-        <Pressable
-          accessibilityLabel={accessibilityLabel}
-          accessibilityRole="button"
-          accessibilityState={{ selected: pressed }}
-          onBlur={() => setSelectorFocused(false)}
-          onFocus={() => setSelectorFocused(true)}
-          onHoverIn={() => setHovered(true)}
-          onHoverOut={() => setHovered(false)}
-          onPress={() => onPress?.(clockType)}
-          onPressIn={() => setPointerPressed(true)}
-          onPressOut={() => setPointerPressed(false)}
-          style={[
-            StyleSheet.absoluteFill,
-            sharedStyles.overflowHidden,
-            {
-              borderRadius: theme.shapes.corner.small,
-            },
-          ]}
-        />
-      ) : null}
+        {isPicker ? (
+          <Text
+            maxFontSizeMultiplier={1.5}
+            selectable={false}
+            style={[
+              styles.value,
+              {
+                ...typeface,
+                color,
+                fontSize,
+              },
+            ]}
+          >
+            {formattedValue}
+          </Text>
+        ) : (
+          <TextInput
+            ref={ref}
+            accessibilityLabel={accessibilityLabel}
+            keyboardAppearance={theme.dark ? 'dark' : 'default'}
+            keyboardType="number-pad"
+            maxFontSizeMultiplier={1.5}
+            maxLength={2}
+            multiline={false}
+            numberOfLines={1}
+            onBlur={() => {
+              setEditing(false)
+              setInputFocused(false)
+            }}
+            onChangeText={onInnerChange}
+            onFocus={() => {
+              if (disabled) return
+              setEditing(false)
+              setInputFocused(true)
+            }}
+            selectTextOnFocus
+            style={[
+              styles.input,
+              {
+                color,
+                fontFamily: typeface.fontFamily,
+                fontSize,
+                fontWeight: typeface.fontWeight,
+                height: fieldHeight - 4,
+                lineHeight: fontSize,
+                paddingBottom: textPadding,
+                paddingTop: textPadding,
+              },
+            ]}
+            textAlign="center"
+            value={formattedValue}
+            {...rest}
+            {...(disabled
+              ? {
+                  'aria-disabled': true,
+                  'accessibilityState': { disabled: true },
+                  'caretHidden': true,
+                  'editable': false,
+                }
+              : null)}
+          />
+        )}
+        {isPicker ? (
+          <Pressable
+            accessibilityLabel={accessibilityLabel}
+            accessibilityRole="button"
+            accessibilityState={{
+              disabled: disabled || undefined,
+              selected: pressed,
+            }}
+            disabled={disabled}
+            onBlur={() => setSelectorFocused(false)}
+            onFocus={() => {
+              if (!disabled) setSelectorFocused(true)
+            }}
+            onHoverIn={() => setHovered(true)}
+            onHoverOut={() => setHovered(false)}
+            onPress={() => {
+              if (!disabled) onPress?.(clockType)
+            }}
+            onPressIn={() => setPointerPressed(true)}
+            onPressOut={() => setPointerPressed(false)}
+            style={[
+              StyleSheet.absoluteFill,
+              sharedStyles.overflowHidden,
+              {
+                borderRadius: theme.shapes.corner.medium,
+              },
+            ]}
+          />
+        ) : null}
+      </View>
     </View>
   )
 }
@@ -269,16 +291,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: '100%',
   },
+  frame: {
+    overflow: 'visible',
+  },
   root: {
     alignItems: 'center',
+    borderWidth: 2,
     justifyContent: 'center',
     overflow: 'hidden',
-  },
-  rootBorder: {
-    borderWidth: 0,
-  },
-  rootOutline: {
-    borderWidth: 2,
   },
   value: {
     textAlign: 'center',

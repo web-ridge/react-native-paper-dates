@@ -127,7 +127,7 @@ export function useTextColorOnPrimary() {
   return themeColor(theme.colors.onPrimary)
 }
 
-export function withAlpha(color: string, alpha: number) {
+export function withAlpha(color: unknown, alpha: number) {
   return rgbaString({
     ...parseColor(themeColor(color)),
     a: Math.max(0, Math.min(1, alpha)),

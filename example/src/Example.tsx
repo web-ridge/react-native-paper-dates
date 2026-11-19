@@ -23,6 +23,7 @@ import {
   DatePickerInput,
   DatePickerModal,
   DatePickerModalInput,
+  TimePicker,
   TimePickerModal,
 } from 'react-native-paper-dates'
 import 'react-native-paper-dates/translations/ar'
@@ -284,6 +285,10 @@ export default function Example({
     startDate: undefined,
   })
   const rangeLabel = formatRange(range)
+  const [scrollFocused, setScrollFocused] = useState<'hours' | 'minutes'>(
+    'hours'
+  )
+  const [scrollTime, setScrollTime] = useState({ hours: 9, minutes: 45 })
   const [time, setTime] = useState<TimeValue>({
     hours: undefined,
     minutes: undefined,
@@ -304,6 +309,7 @@ export default function Example({
       }),
     [locale]
   )
+  const scrollLabel = formatTime(scrollTime, timeFormatter)
   const timeLabel = formatTime(time, timeFormatter)
   const wide = width >= wideBreakpoint
 
@@ -587,17 +593,37 @@ export default function Example({
               />
             </ExampleSection>
             <ExampleSection
-              description="Set a time on the dial, or type the hours and minutes."
+              description="Scroll to a time inline, or open the dial and type the hours and minutes."
               guidelineUrl={materialTimeGuidelinesUrl}
               title="Time picker"
               wide={wide}
             >
               <DemoCard
+                docsUrl={timePickerDocsUrl}
+                style={wide ? styles.cardFill : undefined}
+                title="Scroll time"
+                value={scrollLabel}
+                wide={wide}
+              >
+                <TimePicker
+                  focused={scrollFocused}
+                  hours={scrollTime.hours}
+                  inputType="scroll"
+                  locale={locale}
+                  minutes={scrollTime.minutes}
+                  onChange={({ focused, hours, minutes }) => {
+                    if (focused) setScrollFocused(focused)
+                    setScrollTime({ hours, minutes })
+                  }}
+                  onFocusInput={setScrollFocused}
+                />
+              </DemoCard>
+              <DemoCard
                 actionLabel="Pick time"
                 docsUrl={timePickerDocsUrl}
                 onPress={() => setDialog('time')}
                 style={wide ? styles.cardFill : undefined}
-                title="Time"
+                title="Dial time"
                 value={timeLabel}
                 wide={wide}
               />

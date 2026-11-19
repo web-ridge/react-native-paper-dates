@@ -29,6 +29,7 @@ const ca: TranslationsType = {
   selectSingle: 'Seleccionar data',
   toggleClock: 'Alterna el rellotge',
   toggleKeyboard: 'Alterna el teclat',
+  toggleScroll: 'Alterna el desplaçament',
   typeInDate: 'Escriu la data',
 }
 

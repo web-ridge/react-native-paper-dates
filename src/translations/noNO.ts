@@ -29,6 +29,7 @@ const noNO: TranslationsType = {
   selectSingle: 'Velg dato',
   toggleClock: 'Bytt til klokke',
   toggleKeyboard: 'Bytt tastatur',
+  toggleScroll: 'Bytt til rulling',
   typeInDate: 'Skriv inn dato',
 }
 

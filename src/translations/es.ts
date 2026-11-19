@@ -29,6 +29,7 @@ const es: TranslationsType = {
   selectSingle: 'Seleccionar fecha',
   toggleClock: 'Alternar reloj',
   toggleKeyboard: 'Alternar teclado',
+  toggleScroll: 'Alternar desplazamiento',
   typeInDate: 'Escribir fecha',
 }
 

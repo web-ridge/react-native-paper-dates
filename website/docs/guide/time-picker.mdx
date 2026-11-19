@@ -1,6 +1,6 @@
 # Time Picker
 
-The time picker provides a modal allowing the selection or input of a time.
+The time picker selects a time with the expressive Material scroll, input, and dial variants. Use the scroll picker inline. Open the dial in a modal, and switch either one to keyboard input.
 
 ## Usage
 
@@ -62,15 +62,19 @@ Dismiss button label. Defaults to `'Cancel'`.
 
 **clockIcon**  
 `Type: string | undefined`  
-Icon used to switch back to the clock face. Defaults to `'clock-outline'`. Pass a name from [MaterialCommunityIcons](https://materialdesignicons.com/).
+Icon used to switch back to the dial. Defaults to `'clock'`. Pass a name from [MaterialCommunityIcons](https://materialdesignicons.com/).
 
 **confirmLabel**  
 `Type: string | undefined`  
 Confirm button label. Defaults to `'Ok'`.
 
 **defaultInputType**  
-`Type: 'picker' | 'keyboard' | undefined`  
-Initial input mode. Defaults to `'picker'` (clock face).
+`Type: 'picker' | 'keyboard' | 'scroll' | undefined`  
+Initial input mode. Defaults to `'picker'` (dial). `'scroll'` is the compact wheel, for inline use or a short modal. Keyboard input toggles back to the dial or the scroll wheel it came from.
+
+**disabled**  
+`Type: boolean | undefined`  
+Disables the time controls. Fields, period buttons, the dial, and the mode toggle draw the disabled state and ignore input. Confirm stays disabled. Cancel still closes the modal. `TimePicker` accepts the same prop.
 
 **hours**  
 `Type: number | undefined`  
@@ -82,11 +86,15 @@ Font size of the time input. Defaults to `57`. Useful when using a custom font.
 
 **keyboardIcon**  
 `Type: string | undefined`  
-Icon used to switch to keyboard input. Defaults to `'keyboard-outline'`. Pass a name from [MaterialCommunityIcons](https://materialdesignicons.com/).
+Icon used to switch to keyboard input. Defaults to `'keyboard'`. Pass a name from [MaterialCommunityIcons](https://materialdesignicons.com/).
 
 **label**  
 `Type: string | undefined`  
-Header label. Defaults to `'Select time'` (or `'Enter time'` when using keyboard input with no label).
+Optional header label. Omitted unless you pass one.
+
+**scrollIcon**  
+`Type: string | undefined`  
+Icon used to switch back to the scroll wheel. Defaults to `'gesture-swipe-vertical'`. Pass a name from [MaterialCommunityIcons](https://materialdesignicons.com/).
 
 **locale**  
 `Type: string | undefined`  

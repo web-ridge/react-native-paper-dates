@@ -29,6 +29,7 @@ const tr: TranslationsType = {
   selectSingle: 'Tarih seç',
   toggleClock: 'Saate geç',
   toggleKeyboard: 'Klavyeyi değiştir',
+  toggleScroll: 'Kaydırmaya geç',
   typeInDate: 'Tarihi yazın',
 }
 

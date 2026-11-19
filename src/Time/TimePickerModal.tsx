@@ -20,27 +20,32 @@ import {
   clockTypes,
   getTimeInputTypeIcon,
   inputTypes,
+  type PickerInputType,
   type PossibleClockTypes,
   type PossibleInputTypes,
-  reverseInputTypes,
   type TimeChange,
+  resolve24HourClock,
   timeDialFits,
+  timePickerModalMinWidth,
+  timePickerPadding,
 } from './timeUtils'
 
 export function TimePickerModal({
   animationType,
   cancelLabel = 'Cancel',
-  clockIcon = 'clock-outline',
+  clockIcon = 'clock',
   confirmLabel = 'OK',
   defaultInputType,
+  disabled,
   hours,
   inputFontSize,
-  keyboardIcon = 'keyboard-outline',
+  keyboardIcon = 'keyboard',
   label,
   locale,
   minutes,
   onConfirm,
   onDismiss,
+  scrollIcon = 'gesture-swipe-vertical',
   uppercase: _uppercase,
   use24HourClock,
   visible,
@@ -50,6 +55,7 @@ export function TimePickerModal({
   clockIcon?: string
   confirmLabel?: string
   defaultInputType?: PossibleInputTypes
+  disabled?: boolean
   hours?: number
   inputFontSize?: number
   keyboardIcon?: string
@@ -58,6 +64,7 @@ export function TimePickerModal({
   minutes?: number
   onConfirm: (hoursAndMinutes: { hours: number; minutes: number }) => void
   onDismiss: () => void
+  scrollIcon?: string
   uppercase?: boolean
   use24HourClock?: boolean
   visible: boolean | undefined
@@ -67,6 +74,11 @@ export function TimePickerModal({
   const [inputType, setInputType] = useState<PossibleInputTypes>(
     defaultInputType || inputTypes.picker
   )
+  const [pickerMode, setPickerMode] = useState<PickerInputType>(
+    defaultInputType === inputTypes.scroll
+      ? inputTypes.scroll
+      : inputTypes.picker
+  )
   const [localHours, setLocalHours] = useState(() =>
     orNow(hours, (date) => date.getHours())
   )
@@ -75,8 +87,18 @@ export function TimePickerModal({
   )
   const theme = useTheme()
   const { height, width } = useWindowDimensions()
+  const is24Hour = resolve24HourClock(use24HourClock, locale)
   const canShowDial = timeDialFits(width, height)
-  const displayedInputType = canShowDial ? inputType : inputTypes.keyboard
+  const displayedInputType =
+    inputType === inputTypes.picker && !canShowDial
+      ? inputTypes.scroll
+      : inputType
+  const storedMode: PickerInputType =
+    inputType === inputTypes.scroll ? inputTypes.scroll : pickerMode
+  const iconMode: PickerInputType =
+    storedMode === inputTypes.picker && !canShowDial
+      ? inputTypes.scroll
+      : storedMode
 
   useEffect(() => {
     setLocalHours(orNow(hours, (date) => date.getHours()))
@@ -95,9 +117,6 @@ export function TimePickerModal({
       default: 'slide',
       web: 'none',
     })
-  const headline =
-    label ||
-    (displayedInputType === inputTypes.keyboard ? 'Enter time' : 'Select time')
   const onChange: TimeChange = (params) => {
     if (params.focused) {
       setFocused(params.focused)
@@ -109,6 +128,20 @@ export function TimePickerModal({
   const onFocusInput = (type: PossibleClockTypes) => setFocused(type)
   const textFont = theme.fonts.labelMedium
   const uppercase = _uppercase ?? false
+  const keyboardToggleInPicker =
+    !is24Hour && displayedInputType === inputTypes.scroll
+  const toggleInputType = () => {
+    if (disabled) return
+    Keyboard.dismiss()
+    if (displayedInputType === inputTypes.keyboard) {
+      setInputType(storedMode)
+      return
+    }
+    setPickerMode(
+      inputType === inputTypes.scroll ? inputTypes.scroll : inputTypes.picker
+    )
+    setInputType(inputTypes.keyboard)
+  }
 
   const color = theme.colors.surfaceContainerHigh
 
@@ -132,78 +165,99 @@ export function TimePickerModal({
             <View
               style={[
                 styles.modalContent,
-                displayedInputType === inputTypes.keyboard
-                  ? styles.keyboardModal
-                  : styles.pickerModal,
-                { backgroundColor: color },
+                {
+                  backgroundColor: color,
+                  minWidth: timePickerModalMinWidth(
+                    is24Hour,
+                    displayedInputType === inputTypes.picker
+                  ),
+                },
               ]}
             >
-              <View style={styles.labelContainer}>
-                <Text
-                  maxFontSizeMultiplier={1.5}
-                  style={[
-                    styles.label,
-                    {
-                      ...textFont,
-                      color: theme.colors.onSurfaceVariant,
-                    },
-                  ]}
-                >
-                  {displayCase(headline, uppercase)}
-                </Text>
-              </View>
+              {label ? (
+                <View style={styles.labelContainer}>
+                  <Text
+                    maxFontSizeMultiplier={1.5}
+                    style={[
+                      styles.label,
+                      {
+                        ...textFont,
+                        color: theme.colors.onSurfaceVariant,
+                      },
+                    ]}
+                  >
+                    {displayCase(label, uppercase)}
+                  </Text>
+                </View>
+              ) : null}
               <View style={styles.timePickerContainer}>
                 <TimePicker
+                  clockIcon={clockIcon}
+                  disabled={disabled}
                   focused={focused}
                   hours={localHours}
                   inputFontSize={inputFontSize}
                   inputType={displayedInputType}
+                  keyboardIcon={keyboardIcon}
                   locale={locale}
                   minutes={localMinutes}
                   onChange={onChange}
                   onFocusInput={onFocusInput}
                   onInputInvalidChange={setInputInvalid}
+                  onToggleKeyboard={toggleInputType}
+                  scrollIcon={scrollIcon}
                   use24HourClock={use24HourClock}
                 />
               </View>
               <View style={styles.bottom}>
-                {canShowDial ? (
+                {keyboardToggleInPicker ? null : (
                   <IconButton
                     accessibilityLabel={
-                      inputType === inputTypes.picker
-                        ? getTranslation(
+                      displayedInputType === inputTypes.keyboard
+                        ? iconMode === inputTypes.scroll
+                          ? getTranslation(
+                              locale,
+                              'toggleScroll',
+                              'Toggle scroll picker'
+                            )
+                          : getTranslation(
+                              locale,
+                              'toggleClock',
+                              'Toggle dial picker'
+                            )
+                        : getTranslation(
                             locale,
                             'toggleKeyboard',
                             'Toggle input picker'
                           )
-                        : getTranslation(
-                            locale,
-                            'toggleClock',
-                            'Toggle dial picker'
-                          )
                     }
-                    icon={getTimeInputTypeIcon(inputType, {
-                      keyboard: keyboardIcon,
-                      picker: clockIcon,
-                    })}
+                    disabled={disabled}
+                    icon={
+                      getTimeInputTypeIcon(
+                        displayedInputType,
+                        {
+                          keyboard: keyboardIcon,
+                          picker: clockIcon,
+                          scroll: scrollIcon,
+                        },
+                        iconMode
+                      ) ?? keyboardIcon
+                    }
                     iconColor={theme.colors.onSurfaceVariant}
-                    onPress={() => {
-                      Keyboard.dismiss()
-                      setInputType(reverseInputTypes[inputType])
-                    }}
+                    onPress={toggleInputType}
                     size={24}
                     style={styles.inputTypeToggle}
                   />
-                ) : null}
+                )}
                 <View style={sharedStyles.root} />
                 <Button mode="text" onPress={onDismiss}>
                   {displayCase(cancelLabel, uppercase)}
                 </Button>
                 <Button
-                  disabled={inputInvalid}
+                  disabled={disabled || inputInvalid}
                   mode="text"
                   onPress={() => {
-                    if (inputInvalid) return
+                    if (disabled || inputInvalid) return
                     onConfirm({ hours: localHours, minutes: localMinutes })
                   }}
                 >
@@ -226,9 +280,9 @@ const styles = StyleSheet.create({
   bottom: {
     alignItems: 'center',
     flexDirection: 'row',
-    paddingBottom: 16,
-    paddingHorizontal: 24,
-    paddingTop: 8,
+    paddingBottom: 12,
+    paddingHorizontal: 12,
+    paddingTop: 12,
   },
   center: {
     alignItems: 'center',
@@ -238,25 +292,20 @@ const styles = StyleSheet.create({
   inputTypeToggle: {
     margin: 0,
   },
-  keyboardModal: {
-    height: 252,
-    minWidth: 280,
-  },
   label: {
     fontSize: 13,
     letterSpacing: 1,
   },
   labelContainer: {
     justifyContent: 'flex-end',
-    paddingLeft: 24,
-    paddingRight: 24,
-    paddingTop: 16,
+    paddingLeft: timePickerPadding,
+    paddingRight: timePickerPadding,
+    paddingTop: timePickerPadding,
   },
   modalContent: {
     borderRadius: 28,
     elevation: 3,
     justifyContent: 'space-between',
-    paddingVertical: 8,
     shadowColor: '#000',
     shadowOffset: {
       height: 1,
@@ -265,14 +314,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
   },
-  pickerModal: {
-    minWidth: 328,
-  },
   timePickerContainer: {
-    paddingBottom: 16,
-    paddingLeft: 24,
-    paddingRight: 24,
-    paddingTop: 20,
+    paddingBottom: 0,
+    paddingHorizontal: timePickerPadding,
+    paddingTop: timePickerPadding,
   },
 })
 

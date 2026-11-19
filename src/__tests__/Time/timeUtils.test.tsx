@@ -11,6 +11,7 @@ import {
   isValidMinuteInput,
   snap,
   timeDialFits,
+  timePickerModalMinWidth,
   timePickerUsesLandscape,
   timeSelectorFieldWidth,
   toHourInputFormat,
@@ -18,8 +19,8 @@ import {
 } from '../../Time/timeUtils'
 
 const defaultInputTypeIcons = {
-  keyboard: 'keyboard-outline',
-  picker: 'clock-outline',
+  keyboard: 'keyboard',
+  picker: 'clock',
 }
 
 describe('timeUtils', () => {
@@ -40,15 +41,29 @@ describe('timeUtils', () => {
   })
 
   it('should return keyboard icon for picker input', () => {
-    expect(getTimeInputTypeIcon('picker', defaultInputTypeIcons)).toMatch(
-      'keyboard-outline'
+    expect(getTimeInputTypeIcon('picker', defaultInputTypeIcons)).toBe(
+      'keyboard'
     )
   })
 
   it('should return clock icon for keyboard input', () => {
-    expect(getTimeInputTypeIcon('keyboard', defaultInputTypeIcons)).toMatch(
-      'clock-outline'
+    expect(getTimeInputTypeIcon('keyboard', defaultInputTypeIcons)).toBe(
+      'clock'
     )
+  })
+
+  it('returns the keyboard icon for scroll and the scroll icon when leaving input', () => {
+    expect(getTimeInputTypeIcon('scroll')).toBe('keyboard')
+    expect(getTimeInputTypeIcon('keyboard', undefined, 'scroll')).toBe(
+      'gesture-swipe-vertical'
+    )
+    expect(
+      getTimeInputTypeIcon(
+        'scroll',
+        { keyboard: 'keys', picker: 'face', scroll: 'swipe' },
+        'scroll'
+      )
+    ).toBe('keys')
   })
 
   it('should snap angle to given step', () => {
@@ -120,8 +135,8 @@ describe('timeUtils', () => {
     expect(toHourOutputFormat(13, 0, false)).toBe(1)
     expect(toHourOutputFormat(0, 0, false)).toBe(0)
     expect(toHourOutputFormat(15, 14, false)).toBe(15)
-    expect(getTimeInputTypeIcon('picker')).toBe('keyboard-outline')
-    expect(getTimeInputTypeIcon('keyboard', {} as never)).toBe('clock-outline')
+    expect(getTimeInputTypeIcon('picker')).toBe('keyboard')
+    expect(getTimeInputTypeIcon('keyboard', {} as never)).toBe('clock')
     expect(getTimeInputTypeIcon('nope' as 'picker')).toBeUndefined()
   })
 
@@ -148,8 +163,12 @@ describe('timeUtils', () => {
     expect(timePickerUsesLandscape(900, 400, 'picker')).toBe(true)
     expect(timePickerUsesLandscape(400, 800, 'picker')).toBe(false)
     expect(timePickerUsesLandscape(900, 400, 'keyboard')).toBe(true)
-    expect(timeSelectorFieldWidth('picker', true, false)).toBe(114)
-    expect(timeSelectorFieldWidth('picker', true, true)).toBe(96)
-    expect(timeSelectorFieldWidth('keyboard', true, false)).toBe(96)
+    expect(timeSelectorFieldWidth('picker', true, false)).toBe(100)
+    expect(timeSelectorFieldWidth('picker', true, true)).toBe(100)
+    expect(timeSelectorFieldWidth('keyboard', true, false)).toBe(100)
+    expect(timePickerModalMinWidth(false, true)).toBe(304)
+    expect(timePickerModalMinWidth(false, false)).toBe(304)
+    expect(timePickerModalMinWidth(true, true)).toBe(280)
+    expect(timePickerModalMinWidth(true, false)).toBe(240)
   })
 })

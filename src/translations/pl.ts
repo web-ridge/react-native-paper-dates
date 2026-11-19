@@ -28,6 +28,7 @@ const pl: TranslationsType = {
   selectSingle: 'Wybierz datę',
   toggleClock: 'Przełącz zegar',
   toggleKeyboard: 'Przełącz klawiaturę',
+  toggleScroll: 'Przełącz przewijanie',
   typeInDate: 'Wpisz datę',
 }
 

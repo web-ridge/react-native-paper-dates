@@ -25,112 +25,84 @@ exports[`renders TimePicker 1`] = `
             "flexDirection": "column",
           },
           {
-            "width": 96,
+            "width": 100,
           },
         ]
       }
     >
       <View
-        onMouseEnter={[Function]}
-        onMouseLeave={[Function]}
-        onPointerCancel={[Function]}
-        onPointerDown={[Function]}
-        onPointerUp={[Function]}
         style={
-          [
-            {
-              "alignItems": "center",
-              "justifyContent": "center",
-              "overflow": "hidden",
-            },
-            {
-              "borderWidth": 0,
-            },
-            {
-              "backgroundColor": "rgba(230, 224, 233, 1)",
-              "borderColor": undefined,
-              "borderRadius": 8,
-              "height": 72,
-              "width": 96,
-            },
-          ]
+          {
+            "overflow": "visible",
+          }
         }
       >
-        <TextInput
-          accessibilityLabel="Hour"
-          blurOnSubmit={false}
-          keyboardAppearance="default"
-          keyboardType="number-pad"
-          maxFontSizeMultiplier={1.2}
-          maxLength={2}
-          multiline={false}
-          numberOfLines={1}
-          onBlur={[Function]}
-          onChangeText={[Function]}
-          onFocus={[Function]}
-          onSubmitEditing={[Function]}
-          returnKeyType="next"
-          selectTextOnFocus={true}
-          selectionColor="rgba(103, 80, 164, 1)"
+        <View
+          onMouseEnter={[Function]}
+          onMouseLeave={[Function]}
+          onPointerCancel={[Function]}
+          onPointerDown={[Function]}
+          onPointerUp={[Function]}
           style={
             [
               {
-                "borderWidth": 0,
-                "outlineWidth": 0,
-                "paddingHorizontal": 0,
-                "textAlign": "center",
-                "width": "100%",
+                "alignItems": "center",
+                "borderWidth": 2,
+                "justifyContent": "center",
+                "overflow": "hidden",
               },
               {
-                "color": "rgba(29, 27, 32, 1)",
-                "fontFamily": "System",
-                "fontSize": 45,
-                "fontWeight": "400",
-                "height": 72,
-                "lineHeight": 45,
-                "paddingBottom": 13.5,
-                "paddingTop": 13.5,
+                "backgroundColor": "rgba(255, 255, 255, 1)",
+                "borderColor": "transparent",
+                "borderRadius": 12,
+                "height": 120,
+                "width": 100,
               },
             ]
           }
-          textAlign="center"
-          value="06"
-        />
-      </View>
-      <Text
-        maxFontSizeMultiplier={1.5}
-        style={
-          [
-            {
-              "textAlign": "left",
-            },
-            {
-              "color": "rgba(29, 27, 32, 1)",
-              "writingDirection": "ltr",
-            },
-            [
-              {
-                "fontFamily": "System",
-                "fontSize": 12,
-                "fontWeight": "400",
-                "letterSpacing": 0.4,
-                "lineHeight": 16,
-              },
+        >
+          <TextInput
+            accessibilityLabel="Hour"
+            blurOnSubmit={false}
+            keyboardAppearance="default"
+            keyboardType="number-pad"
+            maxFontSizeMultiplier={1.2}
+            maxLength={2}
+            multiline={false}
+            numberOfLines={1}
+            onBlur={[Function]}
+            onChangeText={[Function]}
+            onFocus={[Function]}
+            onSubmitEditing={[Function]}
+            returnKeyType="next"
+            selectTextOnFocus={true}
+            selectionColor="rgba(103, 80, 164, 1)"
+            style={
               [
                 {
-                  "marginTop": 7,
+                  "borderWidth": 0,
+                  "outlineWidth": 0,
+                  "paddingHorizontal": 0,
                   "textAlign": "center",
+                  "width": "100%",
                 },
                 {
-                  "color": "rgba(73, 69, 79, 1)",
+                  "color": "rgba(29, 27, 32, 1)",
+                  "fontFamily": "System",
+                  "fontSize": 45,
+                  "fontWeight": "400",
+                  "height": 116,
+                  "lineHeight": 45,
+                  "paddingBottom": 35.5,
+                  "paddingTop": 35.5,
                 },
-              ],
-            ],
-          ]
-        }
-      >
-        Hour
-      </Text>
+              ]
+            }
+            textAlign="center"
+            value="06"
+          />
+        </View>
+      </View>
     </View>
     <View
       style={
@@ -138,10 +110,10 @@ exports[`renders TimePicker 1`] = `
           {
             "alignItems": "center",
             "justifyContent": "center",
-            "width": 24,
+            "width": 16,
           },
           {
-            "height": 72,
+            "height": 120,
           },
         ]
       }
@@ -190,114 +162,86 @@ exports[`renders TimePicker 1`] = `
             "flexDirection": "column",
           },
           {
-            "width": 96,
+            "width": 100,
           },
         ]
       }
     >
       <View
-        onMouseEnter={[Function]}
-        onMouseLeave={[Function]}
-        onPointerCancel={[Function]}
-        onPointerDown={[Function]}
-        onPointerUp={[Function]}
         style={
-          [
-            {
-              "alignItems": "center",
-              "justifyContent": "center",
-              "overflow": "hidden",
-            },
-            {
-              "borderWidth": 0,
-            },
-            {
-              "backgroundColor": "rgba(230, 224, 233, 1)",
-              "borderColor": undefined,
-              "borderRadius": 8,
-              "height": 72,
-              "width": 96,
-            },
-          ]
+          {
+            "overflow": "visible",
+          }
         }
       >
-        <TextInput
-          accessibilityLabel="Minute"
-          keyboardAppearance="default"
-          keyboardType="number-pad"
-          maxFontSizeMultiplier={1.2}
-          maxLength={2}
-          multiline={false}
-          numberOfLines={1}
-          onBlur={[Function]}
-          onChangeText={[Function]}
-          onFocus={[Function]}
-          selectTextOnFocus={true}
-          selectionColor="rgba(103, 80, 164, 1)"
+        <View
+          onMouseEnter={[Function]}
+          onMouseLeave={[Function]}
+          onPointerCancel={[Function]}
+          onPointerDown={[Function]}
+          onPointerUp={[Function]}
           style={
             [
               {
-                "borderWidth": 0,
-                "outlineWidth": 0,
-                "paddingHorizontal": 0,
-                "textAlign": "center",
-                "width": "100%",
+                "alignItems": "center",
+                "borderWidth": 2,
+                "justifyContent": "center",
+                "overflow": "hidden",
               },
               {
-                "color": "rgba(29, 27, 32, 1)",
-                "fontFamily": "System",
-                "fontSize": 45,
-                "fontWeight": "400",
-                "height": 72,
-                "lineHeight": 45,
-                "paddingBottom": 13.5,
-                "paddingTop": 13.5,
+                "backgroundColor": "rgba(255, 255, 255, 1)",
+                "borderColor": "transparent",
+                "borderRadius": 12,
+                "height": 120,
+                "width": 100,
               },
             ]
           }
-          textAlign="center"
-          value="30"
-        />
-      </View>
-      <Text
-        maxFontSizeMultiplier={1.5}
-        style={
-          [
-            {
-              "textAlign": "left",
-            },
-            {
-              "color": "rgba(29, 27, 32, 1)",
-              "writingDirection": "ltr",
-            },
-            [
-              {
-                "fontFamily": "System",
-                "fontSize": 12,
-                "fontWeight": "400",
-                "letterSpacing": 0.4,
-                "lineHeight": 16,
-              },
+        >
+          <TextInput
+            accessibilityLabel="Minute"
+            keyboardAppearance="default"
+            keyboardType="number-pad"
+            maxFontSizeMultiplier={1.2}
+            maxLength={2}
+            multiline={false}
+            numberOfLines={1}
+            onBlur={[Function]}
+            onChangeText={[Function]}
+            onFocus={[Function]}
+            selectTextOnFocus={true}
+            selectionColor="rgba(103, 80, 164, 1)"
+            style={
               [
                 {
-                  "marginTop": 7,
+                  "borderWidth": 0,
+                  "outlineWidth": 0,
+                  "paddingHorizontal": 0,
                   "textAlign": "center",
+                  "width": "100%",
                 },
                 {
-                  "color": "rgba(73, 69, 79, 1)",
+                  "color": "rgba(29, 27, 32, 1)",
+                  "fontFamily": "System",
+                  "fontSize": 45,
+                  "fontWeight": "400",
+                  "height": 116,
+                  "lineHeight": 45,
+                  "paddingBottom": 35.5,
+                  "paddingTop": 35.5,
                 },
-              ],
-            ],
-          ]
-        }
-      >
-        Minute
-      </Text>
+              ]
+            }
+            textAlign="center"
+            value="30"
+          />
+        </View>
+      </View>
     </View>
     <View
       style={
         {
-          "width": 12,
+          "width": 8,
         }
       }
     />
@@ -312,69 +256,65 @@ exports[`renders TimePicker 1`] = `
         accessibilityRole="radiogroup"
         role="radiogroup"
         style={
-          [
-            {
-              "borderWidth": 1,
-              "overflow": "hidden",
-              "width": 52,
-            },
-            {
-              "borderColor": "rgba(121, 116, 126, 1)",
-              "borderRadius": 8,
-              "height": 72,
-            },
-          ]
+          {
+            "gap": 8,
+          }
         }
       >
         <View
-          accessibilityLabel="AM"
-          accessibilityRole="radio"
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": true,
-              "disabled": undefined,
-              "expanded": undefined,
-              "selected": true,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onBlur={[Function]}
-          onClick={[Function]}
-          onFocus={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          role="radio"
           style={
             {
-              "flex": 1,
+              "height": 56,
+              "width": 56,
             }
           }
         >
           <View
+            accessibilityLabel="AM"
+            accessibilityRole="radio"
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": true,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": true,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            role="radio"
             style={
               [
                 {
                   "alignItems": "center",
-                  "flex": 1,
                   "justifyContent": "center",
+                  "overflow": "hidden",
                 },
+                null,
                 {
-                  "backgroundColor": "rgba(255, 216, 228, 1)",
+                  "backgroundColor": "rgba(234, 221, 255, 1)",
+                  "borderRadius": 12,
+                  "height": 56,
+                  "width": 56,
                 },
               ]
             }
@@ -396,16 +336,14 @@ exports[`renders TimePicker 1`] = `
                   {
                     "writingDirection": "ltr",
                   },
-                  [
-                    {
-                      "color": "rgba(49, 17, 29, 1)",
-                      "fontFamily": "System",
-                      "fontSize": 16,
-                      "fontWeight": "500",
-                      "letterSpacing": 0.15,
-                      "lineHeight": 24,
-                    },
-                  ],
+                  {
+                    "color": "rgba(33, 0, 93, 1)",
+                    "fontFamily": "System",
+                    "fontSize": 16,
+                    "fontWeight": "500",
+                    "letterSpacing": 0.15,
+                    "lineHeight": 24,
+                  },
                 ]
               }
             >
@@ -415,66 +353,58 @@ exports[`renders TimePicker 1`] = `
         </View>
         <View
           style={
-            [
-              {
-                "height": 1,
-                "width": 52,
-              },
-              {
-                "backgroundColor": "rgba(121, 116, 126, 1)",
-              },
-            ]
-          }
-        />
-        <View
-          accessibilityLabel="PM"
-          accessibilityRole="radio"
-          accessibilityState={
             {
-              "busy": undefined,
-              "checked": false,
-              "disabled": undefined,
-              "expanded": undefined,
-              "selected": false,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onBlur={[Function]}
-          onClick={[Function]}
-          onFocus={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          role="radio"
-          style={
-            {
-              "flex": 1,
+              "height": 56,
+              "width": 56,
             }
           }
         >
           <View
+            accessibilityLabel="PM"
+            accessibilityRole="radio"
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": false,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": false,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            role="radio"
             style={
               [
                 {
                   "alignItems": "center",
-                  "flex": 1,
                   "justifyContent": "center",
+                  "overflow": "hidden",
                 },
+                null,
                 {
-                  "backgroundColor": "transparent",
+                  "backgroundColor": "rgba(255, 255, 255, 1)",
+                  "borderRadius": 9999,
+                  "height": 56,
+                  "width": 56,
                 },
               ]
             }
@@ -496,16 +426,14 @@ exports[`renders TimePicker 1`] = `
                   {
                     "writingDirection": "ltr",
                   },
-                  [
-                    {
-                      "color": "rgba(73, 69, 79, 1)",
-                      "fontFamily": "System",
-                      "fontSize": 16,
-                      "fontWeight": "500",
-                      "letterSpacing": 0.15,
-                      "lineHeight": 24,
-                    },
-                  ],
+                  {
+                    "color": "rgba(73, 69, 79, 1)",
+                    "fontFamily": "System",
+                    "fontSize": 16,
+                    "fontWeight": "500",
+                    "letterSpacing": 0.15,
+                    "lineHeight": 24,
+                  },
                 ]
               }
             >

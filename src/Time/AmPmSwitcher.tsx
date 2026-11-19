@@ -4,56 +4,55 @@ import { Text, useTheme } from 'react-native-paper'
 
 import { DisplayModeContext } from '../contexts/DisplayModeContext'
 import StateLayer from '../shared/StateLayer'
-import { sharedStyles } from '../shared/styles'
+import FocusRing from './FocusRing'
 import { getTranslation } from '../translations/utils'
 import {
   inputTypes,
   type PossibleInputTypes,
+  timeSelectorWidth,
+  timeSeparatorWidth,
   useSwitchColors,
 } from './timeUtils'
 
+const periodSelectorRoundRadius = 9999
+const periodButtonSize = 56
+const scrollPeriodButtonSize = 40
+const horizontalPeriodHeight = 40
+
 export default function AmPmSwitcher({
   direction = 'vertical',
+  disabled,
   hours,
   inputType,
   locale,
   onChange,
 }: {
   direction?: 'vertical' | 'horizontal'
+  disabled?: boolean
   hours: number
   inputType: PossibleInputTypes
   locale?: string
   onChange: (newHours: number) => void
 }) {
   const isHorizontal = direction === 'horizontal'
-
-  const height = isHorizontal ? 38 : inputType === inputTypes.keyboard ? 72 : 80
-
+  const buttonSize =
+    inputType === inputTypes.scroll ? scrollPeriodButtonSize : periodButtonSize
   const { mode, setMode } = useContext(DisplayModeContext)
-
   const isAM = mode === 'AM'
-
   const theme = useTheme()
-
-  const backgroundColor = theme.colors.outline
 
   return (
     <View
       accessibilityRole="radiogroup"
       role="radiogroup"
-      style={[
-        isHorizontal ? styles.rootHorizontal : styles.rootVertical,
-        {
-          borderColor: backgroundColor,
-          borderRadius: theme.shapes.corner.small,
-          height,
-        },
-      ]}
+      style={isHorizontal ? styles.rootHorizontal : styles.rootVertical}
     >
       <SwitchButton
+        disabled={disabled}
+        height={isHorizontal ? horizontalPeriodHeight : buttonSize}
         label={getTranslation(locale, 'am', 'AM')}
         onPress={() => {
-          if (isAM) {
+          if (disabled || isAM) {
             return
           }
           setMode('AM')
@@ -61,18 +60,16 @@ export default function AmPmSwitcher({
             onChange(hours - 12)
           }
         }}
+        radius={isAM ? theme.shapes.corner.medium : periodSelectorRoundRadius}
         selected={isAM}
-      />
-      <View
-        style={[
-          isHorizontal ? styles.separatorHorizontal : styles.separatorVertical,
-          { backgroundColor },
-        ]}
+        width={isHorizontal ? undefined : buttonSize}
       />
       <SwitchButton
+        disabled={disabled}
+        height={isHorizontal ? horizontalPeriodHeight : buttonSize}
         label={getTranslation(locale, 'pm', 'PM')}
         onPress={() => {
-          if (!isAM) {
+          if (disabled || !isAM) {
             return
           }
           setMode('PM')
@@ -80,91 +77,114 @@ export default function AmPmSwitcher({
             onChange(hours + 12)
           }
         }}
+        radius={isAM ? periodSelectorRoundRadius : theme.shapes.corner.medium}
         selected={!isAM}
+        width={isHorizontal ? undefined : buttonSize}
       />
     </View>
   )
 }
 
 function SwitchButton({
+  disabled,
+  height,
   label,
   onPress,
+  radius,
   selected,
+  width,
 }: {
+  disabled?: boolean
+  height: number
   label: string
   onPress: (() => void) | undefined
+  radius: number
   selected: boolean
+  width?: number
 }) {
   const [focused, setFocused] = useState(false)
   const [hovered, setHovered] = useState(false)
   const [pressed, setPressed] = useState(false)
-  const { backgroundColor, color } = useSwitchColors(selected)
+  const { backgroundColor, color } = useSwitchColors(selected, disabled)
   const theme = useTheme()
-
   const textFont = theme.fonts.titleMedium
+  const buttonStyle = [
+    styles.button,
+    width === undefined ? styles.buttonFill : null,
+    {
+      backgroundColor,
+      borderRadius: radius,
+      height,
+      width,
+    },
+  ]
+  const labelStyle = {
+    ...textFont,
+    color,
+  }
+  const frameStyle = width === undefined ? styles.frameFill : { height, width }
 
   return (
-    <Pressable
-      accessibilityLabel={label}
-      accessibilityRole="radio"
-      accessibilityState={{ checked: selected, selected }}
-      role="radio"
-      onBlur={() => setFocused(false)}
-      onFocus={() => setFocused(true)}
-      onHoverIn={() => setHovered(true)}
-      onHoverOut={() => setHovered(false)}
-      onPress={onPress}
-      onPressIn={() => setPressed(true)}
-      onPressOut={() => setPressed(false)}
-      style={sharedStyles.root}
-    >
-      <View style={[styles.switchButtonInner, { backgroundColor }]}>
+    <View style={frameStyle}>
+      <FocusRing focused={focused && !disabled} radius={radius} />
+      <Pressable
+        accessibilityLabel={label}
+        accessibilityRole="radio"
+        accessibilityState={{
+          checked: selected,
+          disabled: disabled || undefined,
+          selected,
+        }}
+        disabled={disabled}
+        role="radio"
+        onBlur={() => setFocused(false)}
+        onFocus={() => {
+          if (!disabled) setFocused(true)
+        }}
+        onHoverIn={() => setHovered(true)}
+        onHoverOut={() => setHovered(false)}
+        onPress={onPress}
+        onPressIn={() => {
+          if (!disabled) setPressed(true)
+        }}
+        onPressOut={() => setPressed(false)}
+        style={buttonStyle}
+      >
         <StateLayer
-          color={color}
-          focused={focused}
-          hovered={hovered}
-          pressed={pressed}
+          color={
+            selected ? theme.colors.onPrimaryContainer : theme.colors.onSurface
+          }
+          focused={!disabled && focused}
+          hovered={!disabled && hovered}
+          pressed={!disabled && pressed}
         />
-        <Text
-          maxFontSizeMultiplier={1.5}
-          selectable={false}
-          style={[
-            {
-              ...textFont,
-              color: color,
-            },
-          ]}
-        >
+        <Text maxFontSizeMultiplier={1.5} selectable={false} style={labelStyle}>
           {label}
         </Text>
-      </View>
-    </Pressable>
+      </Pressable>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
-  rootHorizontal: {
-    borderWidth: 1,
-    flexDirection: 'row',
+  button: {
+    alignItems: 'center',
+    justifyContent: 'center',
     overflow: 'hidden',
-    width: 216,
+  },
+  buttonFill: {
+    flex: 1,
+  },
+  frameFill: {
+    flex: 1,
+  },
+  rootHorizontal: {
+    flexDirection: 'row',
+    gap: timeSeparatorWidth,
+    height: horizontalPeriodHeight,
+    width: timeSelectorWidth * 2 + timeSeparatorWidth,
   },
   rootVertical: {
-    borderWidth: 1,
-    overflow: 'hidden',
-    width: 52,
-  },
-  separatorHorizontal: {
-    alignSelf: 'stretch',
-    width: 1,
-  },
-  separatorVertical: {
-    height: 1,
-    width: 52,
-  },
-  switchButtonInner: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
+    gap: 8,
   },
 })

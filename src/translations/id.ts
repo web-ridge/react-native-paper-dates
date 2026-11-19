@@ -29,6 +29,7 @@ const id: TranslationsType = {
   selectSingle: 'Pilih tanggal',
   toggleClock: 'Alihkan jam',
   toggleKeyboard: 'Alihkan keyboard',
+  toggleScroll: 'Alihkan gulir',
   typeInDate: 'Ketik tanggal',
 }
 

@@ -29,6 +29,7 @@ const sv: TranslationsType = {
   selectSingle: 'Välj datum',
   toggleClock: 'Växla klocka',
   toggleKeyboard: 'Växla tangentbord',
+  toggleScroll: 'Växla rullning',
   typeInDate: 'Skriv datum',
 }
 

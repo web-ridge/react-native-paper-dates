@@ -29,6 +29,7 @@ const ukUA: TranslationsType = {
   selectSingle: 'Оберіть дату',
   toggleClock: 'Перемкнути годинник',
   toggleKeyboard: 'Перемкнути клавіатуру',
+  toggleScroll: 'Перемкнути прокрутку',
   typeInDate: 'Введіть дату',
 }
 

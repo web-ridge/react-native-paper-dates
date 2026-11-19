@@ -30,6 +30,7 @@ export type TranslationsType = {
   selectSingle: string
   toggleClock: string
   toggleKeyboard: string
+  toggleScroll: string
   typeInDate: string
 }
 

@@ -29,6 +29,7 @@ const nl: TranslationsType = {
   selectSingle: 'Selecteer datum',
   toggleClock: 'Naar klok wisselen',
   toggleKeyboard: 'Toetsenbord wisselen',
+  toggleScroll: 'Naar scrollen wisselen',
   typeInDate: 'Typ datum',
 }
 

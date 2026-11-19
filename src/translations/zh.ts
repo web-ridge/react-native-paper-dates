@@ -28,6 +28,7 @@ const zh: TranslationsType = {
   selectSingle: '选择日期',
   toggleClock: '切换时钟',
   toggleKeyboard: '切换键盘',
+  toggleScroll: '切换滚动',
   typeInDate: '输入日期',
 }
 

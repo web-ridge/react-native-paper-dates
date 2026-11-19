@@ -1,4 +1,4 @@
-import { memo, useCallback, useContext, useRef } from 'react'
+import { memo, useCallback, useContext, useRef, useState } from 'react'
 import {
   GestureResponderEvent,
   PanResponder,
@@ -9,13 +9,15 @@ import {
 import { useTheme } from 'react-native-paper'
 
 import { DisplayModeContext } from '../contexts/DisplayModeContext'
-import { useLatest } from '../shared/utils'
+import { useLatest, withAlpha } from '../shared/utils'
+import FocusRing from './FocusRing'
 import AnalogClockHours from './AnalogClockHours'
 import AnalogClockMinutes from './AnalogClockMinutes'
 import AnimatedClockSwitcher from './AnimatedClockSwitcher'
 import {
   circleSize,
   clockTypes,
+  disabledContentOpacity,
   getAngle,
   getHours,
   getHourType,
@@ -27,6 +29,7 @@ import {
 } from './timeUtils'
 
 function AnalogClock({
+  disabled,
   focused,
   hours,
   is24Hour,
@@ -34,6 +37,7 @@ function AnalogClock({
   minutes,
   onChange,
 }: {
+  disabled?: boolean
   focused: PossibleClockTypes
   hours: number
   is24Hour: boolean
@@ -42,6 +46,7 @@ function AnalogClock({
   onChange: TimeChange
 }) {
   const clockRef = useRef<ViewInstance | null>(null)
+  const disabledRef = useLatest(disabled)
   const degreesPerNumber = focused === clockTypes.hours ? 30 : 6
   const focusedRef = useLatest(focused)
   const hoursRef = useLatest(hours)
@@ -52,6 +57,7 @@ function AnalogClock({
   const onChangeRef = useLatest(onChange)
   const onPointerMove = useCallback(
     (e: GestureResponderEvent, final: boolean) => {
+      if (disabledRef.current) return
       let x = e.nativeEvent.locationX
       let y = e.nativeEvent.locationY
       let angle = getAngle(x, y, circleSize)
@@ -91,20 +97,28 @@ function AnalogClock({
         }
       }
     },
-    [focusedRef, is24HourRef, hoursRef, onChangeRef, minutesRef, modeRef]
+    [
+      disabledRef,
+      focusedRef,
+      is24HourRef,
+      hoursRef,
+      onChangeRef,
+      minutesRef,
+      modeRef,
+    ]
   )
   // The responder is created once and closes over the latest clock values.
   /* eslint-disable react-hooks/refs */
   const panResponder = useRef(
     PanResponder.create({
-      onMoveShouldSetPanResponder: returnTrue,
-      onMoveShouldSetPanResponderCapture: returnTrue,
+      onMoveShouldSetPanResponder: () => !disabledRef.current,
+      onMoveShouldSetPanResponderCapture: () => !disabledRef.current,
       onPanResponderGrant: (e) => onPointerMove(e, false),
       onPanResponderMove: (e) => onPointerMove(e, false),
       onPanResponderRelease: (e) => onPointerMove(e, true),
       onPanResponderTerminationRequest: returnTrue,
       onShouldBlockNativeResponder: returnTrue,
-      onStartShouldSetPanResponder: returnTrue,
+      onStartShouldSetPanResponder: () => !disabledRef.current,
       onStartShouldSetPanResponderCapture: () => false,
     })
   ).current
@@ -113,16 +127,62 @@ function AnalogClock({
   const shortPointer = hours >= 12 && is24Hour
   const dynamicSize = focused === clockTypes.hours && shortPointer ? 33 : 0
   const theme = useTheme()
+  const selectorColor = disabled
+    ? withAlpha(theme.colors.primary, disabledContentOpacity)
+    : theme.colors.primary
+  const [clockFocused, setClockFocused] = useState(false)
+  const [hoveredValue, setHoveredValue] = useState<number | null>(null)
+  const selectionAt = (x: number, y: number) => {
+    const angle = getAngle(x, y, circleSize)
+    if (focusedRef.current === clockTypes.hours) {
+      const hours24 = is24HourRef.current
+      const hours12AndPm = !hours24 && modeRef.current === 'PM'
+      const hourTypeFromOffset = getHourTypeFromOffset(x, y, circleSize)
+      const hours24AndPM = hours24 && hourTypeFromOffset === hourTypes.pm
+      let pickedHours = getHours(angle, getHourType(hoursRef.current))
+      if (hours12AndPm || hours24AndPM) pickedHours += 12
+      if ((modeRef.current === 'AM' || hours24) && pickedHours === 12) {
+        pickedHours = 0
+      }
+      if (pickedHours === 24) pickedHours = 12
+      return pickedHours
+    }
+    return getMinutes(angle)
+  }
+  const handleHoverStyle = [
+    styles.handleHover,
+    { backgroundColor: withAlpha('#ffffff', 0.08) },
+  ]
 
   return (
     <View
       ref={clockRef}
       // eslint-disable-next-line react-hooks/refs -- panHandlers close over the latest clock values
       {...panResponder.panHandlers}
+      {...(disabled
+        ? {
+            'accessibilityState': { disabled: true },
+            'aria-disabled': true,
+            'pointerEvents': 'none' as const,
+          }
+        : null)}
+      accessible
+      focusable={!disabled}
+      onBlur={() => setClockFocused(false)}
+      onFocus={() => {
+        if (!disabled) setClockFocused(true)
+      }}
+      onMouseLeave={() => setHoveredValue(null)}
+      onPointerMove={(event) => {
+        if (disabled) return
+        setHoveredValue(
+          selectionAt(event.nativeEvent.offsetX, event.nativeEvent.offsetY)
+        )
+      }}
       style={[
         styles.clock,
         {
-          backgroundColor: theme.colors.surfaceContainerHighest,
+          backgroundColor: theme.colors.surfaceContainerLowest,
         },
       ]}
     >
@@ -131,7 +191,7 @@ function AnalogClock({
         style={[
           styles.line,
           {
-            backgroundColor: theme.colors.primary,
+            backgroundColor: selectorColor,
             transform: [
               { rotate: -90 + pointerNumber * degreesPerNumber + 'deg' },
               {
@@ -150,9 +210,12 @@ function AnalogClock({
           },
         ]}
       >
-        <View
-          style={[styles.endPoint, { backgroundColor: theme.colors.primary }]}
-        />
+        <View style={[styles.endPoint, { backgroundColor: selectorColor }]}>
+          {hoveredValue === pointerNumber && !disabled ? (
+            <View pointerEvents="none" style={handleHoverStyle} />
+          ) : null}
+          <FocusRing focused={clockFocused && !disabled} radius={24} />
+        </View>
       </View>
       <View
         pointerEvents="none"
@@ -162,7 +225,7 @@ function AnalogClock({
           style={[
             styles.middlePoint,
             {
-              backgroundColor: theme.colors.primary,
+              backgroundColor: selectorColor,
             },
           ]}
         />
@@ -171,10 +234,15 @@ function AnalogClock({
         focused={focused}
         hours={
           <AnalogClockHours
+            disabled={disabled}
             hours={hours}
+            hoveredHour={
+              disabled || focused !== clockTypes.hours ? null : hoveredValue
+            }
             is24Hour={is24Hour}
             locale={locale}
             onPress={(nextHours) => {
+              if (disabled) return
               onChange({
                 focused: clockTypes.minutes,
                 hours: nextHours,
@@ -185,9 +253,14 @@ function AnalogClock({
         }
         minutes={
           <AnalogClockMinutes
+            disabled={disabled}
+            hoveredMinute={
+              disabled || focused !== clockTypes.minutes ? null : hoveredValue
+            }
             locale={locale}
             minutes={minutes}
             onPress={(nextMinutes) => {
+              if (disabled) return
               onChange({
                 hours,
                 minutes: nextMinutes,
@@ -217,6 +290,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     position: 'relative',
     width: circleSize,
+  },
+  handleHover: {
+    ...StyleSheet.absoluteFill,
+    borderRadius: 24,
   },
   endPoint: {
     borderRadius: 24,

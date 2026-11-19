@@ -3,6 +3,7 @@ import { Dimensions, PanResponder, Platform, StyleSheet } from 'react-native'
 import { DarkTheme, ThemeProvider } from 'react-native-paper'
 
 import { DisplayModeContext } from '../../contexts/DisplayModeContext'
+import { withAlpha } from '../../shared/utils'
 import { findPress } from '../../testUtils'
 import AmPmSwitcher from '../../Time/AmPmSwitcher'
 import AnalogClock from '../../Time/AnalogClock'
@@ -14,6 +15,7 @@ import TimeInput from '../../Time/TimeInput'
 import TimeInputs from '../../Time/TimeInputs'
 import TimePicker from '../../Time/TimePicker'
 import TimePickerModal from '../../Time/TimePickerModal'
+import { scrollItemHeight } from '../../Time/timeUtils'
 import en from '../../translations/en'
 import { registerTranslation } from '../../translations/utils'
 
@@ -493,6 +495,8 @@ describe('time inputs', () => {
         errorContainer: 'rgb(0, 0, 255)',
         onErrorContainer: 'rgb(0, 255, 0)',
         onPrimaryContainer: 'rgb(1, 2, 3)',
+        onSurface: 'rgb(20, 21, 22)',
+        primary: 'rgb(4, 5, 6)',
         onSurfaceVariant: 'rgb(7, 8, 9)',
         onTertiaryContainer: 'rgb(10, 11, 12)',
       },
@@ -546,17 +550,17 @@ describe('time inputs', () => {
     await fireEvent(hour, 'blur')
     expect(StyleSheet.flatten(hour.props.style).color).toBe('rgb(0, 255, 0)')
     if (hour.parent) await fireEvent(hour.parent, 'mouseEnter')
-    expect(layer('rgba(0, 255, 0, 0.08)')).toBe(true)
+    expect(layer('rgba(20, 21, 22, 0.08)')).toBe(true)
 
     const minute = states.getByLabelText('Minute')
     await fireEvent(minute, 'hoverIn')
     await fireEvent(minute, 'focus')
     await fireEvent(minute, 'pressIn')
-    expect(layer('rgba(1, 2, 3, 0.28)')).toBe(true)
+    expect(layer('rgba(20, 21, 22, 0.28)')).toBe(true)
 
     const morning = states.getByLabelText('AM')
     await fireEvent(morning, 'hoverIn')
-    expect(layer('rgba(10, 11, 12, 0.08)')).toBe(true)
+    expect(layer('rgba(1, 2, 3, 0.08)')).toBe(true)
   })
 })
 
@@ -594,7 +598,7 @@ describe('time picker modal', () => {
         visible
       />
     )
-    expect(defaults.getByText('Select time')).toBeTruthy()
+    expect(defaults.queryByText('Select time')).toBeNull()
     expect(defaults.getByText('OK')).toBeTruthy()
     const keyboardHeadline = await render(
       <TimePickerModal
@@ -606,7 +610,18 @@ describe('time picker modal', () => {
         visible
       />
     )
-    expect(keyboardHeadline.getByText('Enter time')).toBeTruthy()
+    expect(keyboardHeadline.queryByText('Enter time')).toBeNull()
+    const labeled = await render(
+      <TimePickerModal
+        hours={8}
+        label="Alarm"
+        minutes={15}
+        onConfirm={onConfirm}
+        onDismiss={onDismiss}
+        visible
+      />
+    )
+    expect(labeled.getByText('Alarm')).toBeTruthy()
     const backdrop = defaults.container.queryAll(
       (node) => node.props.onPress === onDismiss
     )
@@ -643,10 +658,26 @@ describe('time picker modal', () => {
 
     await setWindow(320, 360)
     const compact = await render(
-      <TimePickerModal onConfirm={onConfirm} onDismiss={onDismiss} visible />
+      <TimePickerModal
+        hours={9}
+        minutes={45}
+        onConfirm={onConfirm}
+        onDismiss={onDismiss}
+        use24HourClock={false}
+        visible
+      />
     )
-    expect(compact.queryByLabelText('Toggle input picker')).toBeNull()
-    expect(compact.queryByLabelText('Toggle dial picker')).toBeNull()
+    expect(
+      compact.getByTestId('time-scroll-hours', { includeHiddenElements: true })
+    ).toBeTruthy()
+    expect(compact.getByLabelText('Toggle input picker')).toBeTruthy()
+    await fireEvent.press(compact.getByLabelText('Toggle input picker'))
+    expect(compact.getByLabelText('Hour')).toBeTruthy()
+    expect(compact.getByLabelText('Toggle scroll picker')).toBeTruthy()
+    await fireEvent.press(compact.getByLabelText('Toggle scroll picker'))
+    expect(
+      compact.getByTestId('time-scroll-hours', { includeHiddenElements: true })
+    ).toBeTruthy()
   })
 
   it('does not confirm an out-of-range keyboard time', async () => {
@@ -670,5 +701,505 @@ describe('time picker modal', () => {
     expect(modal.getByLabelText('Hour').props.accessibilityHint).toBeUndefined()
     await fireEvent.press(modal.getByText('OK'))
     expect(onConfirm).not.toHaveBeenCalled()
+  })
+
+  it('switches an inline scroll picker to the keyboard and back', async () => {
+    const picker = await render(
+      <TimePicker
+        focused="hours"
+        hours={9}
+        inputType="scroll"
+        locale="en"
+        minutes={45}
+        onChange={jest.fn()}
+        onFocusInput={jest.fn()}
+        use24HourClock={false}
+      />
+    )
+    await fireEvent.press(picker.getByLabelText('Toggle input picker'))
+    expect(picker.getByLabelText('Hour')).toBeTruthy()
+    await fireEvent.press(picker.getByLabelText('Toggle scroll picker'))
+    expect(
+      picker.getByTestId('time-scroll-hours', { includeHiddenElements: true })
+    ).toBeTruthy()
+    expect(picker.queryByLabelText('Hour')).toBeNull()
+  })
+
+  it('toggles a scroll modal back to the wheels', async () => {
+    const modal = await render(
+      <TimePickerModal
+        defaultInputType="scroll"
+        hours={9}
+        locale="en"
+        minutes={45}
+        onConfirm={jest.fn()}
+        onDismiss={jest.fn()}
+        use24HourClock={false}
+        visible
+      />
+    )
+    await fireEvent.press(modal.getByLabelText('Toggle input picker'))
+    expect(modal.getByLabelText('Hour')).toBeTruthy()
+    await fireEvent.press(modal.getByLabelText('Toggle scroll picker'))
+    expect(
+      modal.getByTestId('time-scroll-hours', { includeHiddenElements: true })
+    ).toBeTruthy()
+    expect(modal.queryByLabelText('Hour')).toBeNull()
+  })
+})
+
+describe('scroll time picker', () => {
+  async function renderScroll({
+    focused = 'hours' as 'hours' | 'minutes',
+    hours = 9,
+    is24Hour = false,
+    minutes = 45,
+    onChange = jest.fn(),
+    onFocusInput = jest.fn(),
+  } = {}) {
+    return {
+      onChange,
+      onFocusInput,
+      ...(await render(
+        <TimePicker
+          focused={focused}
+          hours={hours}
+          inputType="scroll"
+          locale="en"
+          minutes={minutes}
+          onChange={onChange}
+          onFocusInput={onFocusInput}
+          use24HourClock={is24Hour}
+        />
+      )),
+    }
+  }
+
+  function scrollEvent(y: number, velocityY = 0) {
+    return {
+      nativeEvent: {
+        contentOffset: { x: 0, y },
+        velocity: { x: 0, y: velocityY },
+      },
+    }
+  }
+
+  it('steps hours and minutes from neighbors, actions, and the wheels', async () => {
+    const picker = await renderScroll()
+    expect(picker.getByTestId('time-scroll-keyboard')).toBeTruthy()
+    await fireEvent.press(
+      picker.getByTestId('time-scroll-hours-next', {
+        includeHiddenElements: true,
+      })
+    )
+    expect(picker.onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ focused: 'hours', hours: 10, minutes: 45 })
+    )
+    await fireEvent.press(
+      picker.getByTestId('time-scroll-hours-previous', {
+        includeHiddenElements: true,
+      })
+    )
+    expect(picker.onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ hours: 8, minutes: 45 })
+    )
+    await fireEvent(
+      picker.getByTestId('time-scroll-minutes-control', {
+        includeHiddenElements: true,
+      }),
+      'accessibilityAction',
+      { nativeEvent: { actionName: 'increment' } }
+    )
+    expect(picker.onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ focused: 'minutes', minutes: 46 })
+    )
+    await fireEvent(
+      picker.getByTestId('time-scroll-minutes-control', {
+        includeHiddenElements: true,
+      }),
+      'accessibilityAction',
+      { nativeEvent: { actionName: 'decrement' } }
+    )
+    expect(picker.onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ minutes: 44 })
+    )
+    await fireEvent(
+      picker.getByTestId('time-scroll-hours-control', {
+        includeHiddenElements: true,
+      }),
+      'accessibilityAction',
+      { nativeEvent: { actionName: 'activate' } }
+    )
+    await fireEvent(
+      picker.getByTestId('time-scroll-hours-control', {
+        includeHiddenElements: true,
+      }),
+      'touchStart'
+    )
+    expect(picker.onFocusInput).toHaveBeenCalledWith('hours')
+
+    const hours = picker.getByTestId('time-scroll-hours', {
+      includeHiddenElements: true,
+    })
+    const callsBeforeRecenter = picker.onChange.mock.calls.length
+    await fireEvent.scroll(hours, scrollEvent(8 * scrollItemHeight))
+    await fireEvent(
+      hours,
+      'momentumScrollEnd',
+      scrollEvent(8 * scrollItemHeight)
+    )
+    await fireEvent(
+      hours,
+      'momentumScrollEnd',
+      scrollEvent(20 * scrollItemHeight)
+    )
+    hours.props.onScrollEndDrag(scrollEvent(9 * scrollItemHeight, 2))
+    expect(picker.onChange.mock.calls.length).toBe(callsBeforeRecenter)
+    await fireEvent(
+      hours,
+      'scrollEndDrag',
+      scrollEvent(9 * scrollItemHeight, 0)
+    )
+    expect(picker.onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ hours: 10 })
+    )
+    await fireEvent(
+      hours,
+      'momentumScrollEnd',
+      scrollEvent(21 * scrollItemHeight)
+    )
+    await fireEvent.press(picker.getByLabelText('PM'))
+    expect(picker.onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ hours: 21 })
+    )
+  })
+
+  it('keeps 12 on the current side of noon and wraps a 24-hour wheel', async () => {
+    const morning = await renderScroll({ hours: 8, minutes: 0 })
+    await fireEvent(
+      morning.getByTestId('time-scroll-hours-control', {
+        includeHiddenElements: true,
+      }),
+      'accessibilityAction',
+      { nativeEvent: { actionName: 'increment' } }
+    )
+    morning.onChange.mockClear()
+    const noon = await renderScroll({ hours: 0, minutes: 15 })
+    await fireEvent.press(
+      noon.getByTestId('time-scroll-hours-previous', {
+        includeHiddenElements: true,
+      })
+    )
+    expect(noon.onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ hours: 11 })
+    )
+    await fireEvent.press(
+      noon.getByTestId('time-scroll-hours-next', {
+        includeHiddenElements: true,
+      })
+    )
+    expect(noon.onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ hours: 1 })
+    )
+    const evening = await renderScroll({ hours: 12, minutes: 0 })
+    await fireEvent.press(
+      evening.getByTestId('time-scroll-hours-previous', {
+        includeHiddenElements: true,
+      })
+    )
+    expect(evening.onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ hours: 23 })
+    )
+
+    const beforeNoon = await renderScroll({ hours: 11, minutes: 0 })
+    await fireEvent.press(
+      beforeNoon.getByTestId('time-scroll-hours-next', {
+        includeHiddenElements: true,
+      })
+    )
+    expect(beforeNoon.onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ hours: 0 })
+    )
+    const afterNoon = await renderScroll({ hours: 13, minutes: 0 })
+    await fireEvent.press(
+      afterNoon.getByTestId('time-scroll-hours-previous', {
+        includeHiddenElements: true,
+      })
+    )
+    expect(afterNoon.onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ hours: 12 })
+    )
+
+    const fullDay = await renderScroll({
+      hours: 23,
+      is24Hour: true,
+      minutes: 59,
+    })
+    expect(fullDay.queryByLabelText('AM')).toBeNull()
+    expect(fullDay.queryByTestId('time-scroll-keyboard')).toBeNull()
+    await fireEvent(
+      fullDay.getByTestId('time-scroll-hours-control', {
+        includeHiddenElements: true,
+      }),
+      'accessibilityAction',
+      { nativeEvent: { actionName: 'increment' } }
+    )
+    expect(fullDay.onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ hours: 0, minutes: 59 })
+    )
+    await fireEvent(
+      fullDay.getByTestId('time-scroll-hours-control', {
+        includeHiddenElements: true,
+      }),
+      'accessibilityAction',
+      { nativeEvent: { actionName: 'decrement' } }
+    )
+    expect(fullDay.onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ hours: 22 })
+    )
+  })
+
+  it('moves the focused wheel from the arrow keys on web', async () => {
+    const previousOS = Platform.OS
+    Platform.OS = 'web'
+    const listeners = new Set<(event: KeyboardEvent) => void>()
+    const previousWindow = globalThis.window
+    Object.defineProperty(globalThis, 'window', {
+      configurable: true,
+      value: {
+        addEventListener: (
+          _type: string,
+          listener: (event: KeyboardEvent) => void
+        ) => {
+          listeners.add(listener)
+        },
+        removeEventListener: (
+          _type: string,
+          listener: (event: KeyboardEvent) => void
+        ) => {
+          listeners.delete(listener)
+        },
+      },
+    })
+    const key = (name: string, target: EventTarget | null = null) =>
+      ({
+        key: name,
+        preventDefault: jest.fn(),
+        target,
+      }) as unknown as KeyboardEvent
+
+    try {
+      const picker = await renderScroll({
+        hours: 9,
+        is24Hour: true,
+        minutes: 30,
+      })
+      expect(listeners.size).toBe(1)
+      const hourListener = [...listeners][0]
+      hourListener(key('ArrowLeft'))
+      hourListener(
+        key('ArrowDown', { tagName: 'INPUT' } as unknown as EventTarget)
+      )
+      hourListener(
+        key('ArrowDown', { tagName: 'TEXTAREA' } as unknown as EventTarget)
+      )
+      hourListener(key('ArrowDown', 1 as unknown as EventTarget))
+      hourListener(key('ArrowDown'))
+      hourListener(key('ArrowDown', {} as unknown as EventTarget))
+      hourListener(key('ArrowUp'))
+      hourListener(
+        key('ArrowDown', { tagName: 'DIV' } as unknown as EventTarget)
+      )
+      expect(picker.onChange).toHaveBeenCalledWith(
+        expect.objectContaining({ hours: 10 })
+      )
+      expect(picker.onChange).toHaveBeenCalledWith(
+        expect.objectContaining({ hours: 8 })
+      )
+
+      const idle = await renderScroll({
+        focused: 'minutes',
+        hours: 9,
+        is24Hour: true,
+        minutes: 30,
+      })
+      const minuteListener = [...listeners].find(
+        (listener) => listener !== hourListener
+      )
+      minuteListener?.(key('ArrowDown'))
+      expect(idle.onChange).toHaveBeenCalledWith(
+        expect.objectContaining({ focused: 'minutes', minutes: 31 })
+      )
+
+      Object.defineProperty(globalThis, 'window', {
+        configurable: true,
+        value: {},
+      })
+      await renderScroll({ hours: 4, is24Hour: true, minutes: 0 })
+    } finally {
+      Platform.OS = previousOS
+      Object.defineProperty(globalThis, 'window', {
+        configurable: true,
+        value: previousWindow,
+      })
+    }
+  })
+})
+
+describe('disabled time picker', () => {
+  const theme = {
+    ...DarkTheme,
+    colors: {
+      ...DarkTheme.colors,
+      onPrimary: 'rgb(30, 31, 32)',
+      onSurface: 'rgb(20, 21, 22)',
+      primary: 'rgb(4, 5, 6)',
+    },
+  }
+  const content = withAlpha(theme.colors.onSurface, 0.38)
+  const container = withAlpha(theme.colors.onSurface, 0.12)
+
+  function paint(
+    node: unknown,
+    key: 'backgroundColor' | 'borderColor' | 'color'
+  ): string[] {
+    if (Array.isArray(node)) return node.flatMap((child) => paint(child, key))
+    if (!node || typeof node !== 'object') return []
+    const record = node as { children?: unknown; props?: { style?: unknown } }
+    const value = StyleSheet.flatten(
+      record.props?.style as Parameters<typeof StyleSheet.flatten>[0]
+    )?.[key]
+    const nested = paint(record.children, key)
+    return typeof value === 'string' ? [value, ...nested] : nested
+  }
+
+  it('fades the fields and ignores edits', async () => {
+    const onChange = jest.fn()
+    const picker = await render(
+      <ThemeProvider theme={theme}>
+        <TimePicker
+          disabled
+          focused="hours"
+          hours={9}
+          inputType="scroll"
+          locale="en"
+          minutes={45}
+          onChange={onChange}
+          onFocusInput={jest.fn()}
+        />
+      </ThemeProvider>
+    )
+    expect(paint(picker.toJSON(), 'color')).toContain(content)
+    expect(paint(picker.toJSON(), 'backgroundColor')).toContain(container)
+
+    await fireEvent.press(
+      picker.getByTestId('time-scroll-hours-next', {
+        includeHiddenElements: true,
+      })
+    )
+    await fireEvent(
+      picker.getByTestId('time-scroll-hours-control', {
+        includeHiddenElements: true,
+      }),
+      'accessibilityAction',
+      { nativeEvent: { actionName: 'increment' } }
+    )
+    await fireEvent.press(picker.getByLabelText('PM'))
+    await fireEvent.press(picker.getByLabelText('Toggle input picker'))
+    expect(onChange).not.toHaveBeenCalled()
+    expect(picker.queryByLabelText('Hour')).toBeNull()
+
+    const keyboard = await render(
+      <ThemeProvider theme={theme}>
+        <TimePicker
+          disabled
+          focused="hours"
+          hours={9}
+          inputType="keyboard"
+          locale="en"
+          minutes={45}
+          onChange={onChange}
+          onFocusInput={jest.fn()}
+        />
+      </ThemeProvider>
+    )
+    const hour = keyboard.getByLabelText('Hour')
+    expect(hour.props.editable).toBe(false)
+    expect(StyleSheet.flatten(hour.props.style).color).toBe(content)
+    expect(paint(keyboard.toJSON(), 'borderColor')).toContain(content)
+    await fireEvent.changeText(hour, '11')
+    await fireEvent.press(keyboard.getByLabelText('PM'))
+    expect(onChange).not.toHaveBeenCalled()
+    expect(hour.props.value).toBe('09')
+  })
+
+  it('blocks the dial and the modal confirm button', async () => {
+    const configs: Array<Record<string, Function>> = []
+    const create = PanResponder.create.bind(PanResponder)
+    const onChange = jest.fn()
+    const spy = jest
+      .spyOn(PanResponder, 'create')
+      .mockImplementation((config) => {
+        configs.push(config as Record<string, Function>)
+        return create(config)
+      })
+    const onConfirm = jest.fn()
+    const onDismiss = jest.fn()
+
+    try {
+      await setWindow(800, 900)
+      const dial = await render(
+        <ThemeProvider theme={theme}>
+          <TimePicker
+            disabled
+            focused="hours"
+            hours={9}
+            inputType="picker"
+            locale="en"
+            minutes={30}
+            onChange={onChange}
+            onFocusInput={jest.fn()}
+          />
+        </ThemeProvider>
+      )
+      const responder = configs[configs.length - 1]
+      expect(responder.onStartShouldSetPanResponder()).toBe(false)
+      responder.onPanResponderGrant(clockEvent(0, 0))
+      responder.onPanResponderRelease(clockEvent(96, 0))
+      await fireEvent(
+        dial.getByLabelText('Hour 3 of 12'),
+        'accessibilityAction',
+        { nativeEvent: { actionName: 'activate' } }
+      )
+      expect(onChange).not.toHaveBeenCalled()
+      expect(paint(dial.toJSON(), 'color')).toContain(
+        withAlpha(theme.colors.onPrimary, 0.38)
+      )
+      expect(paint(dial.toJSON(), 'backgroundColor')).toContain(
+        withAlpha(theme.colors.primary, 0.38)
+      )
+
+      const modal = await render(
+        <TimePickerModal
+          defaultInputType="keyboard"
+          disabled
+          hours={10}
+          locale="en"
+          minutes={15}
+          onConfirm={onConfirm}
+          onDismiss={onDismiss}
+          use24HourClock
+          visible
+        />
+      )
+      await fireEvent.press(modal.getByText('OK'))
+      await fireEvent.press(modal.getByLabelText('Toggle dial picker'))
+      expect(onConfirm).not.toHaveBeenCalled()
+      expect(modal.getByLabelText('Hour')).toBeTruthy()
+      await fireEvent.press(modal.getByText('Cancel'))
+      expect(onDismiss).toHaveBeenCalledTimes(1)
+    } finally {
+      spy.mockRestore()
+    }
   })
 })

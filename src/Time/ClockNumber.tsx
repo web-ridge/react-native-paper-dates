@@ -5,10 +5,16 @@ import {
   type TextStyle,
   View,
 } from 'react-native'
-import { Text } from 'react-native-paper'
+import { Text, useTheme } from 'react-native-paper'
+
+import { withAlpha } from '../shared/utils'
+import FocusRing from './FocusRing'
 
 export default function ClockNumber({
   accessibilityLabel,
+  disabled = false,
+  focused = false,
+  hovered = false,
   left,
   onPress,
   selected = false,
@@ -17,6 +23,9 @@ export default function ClockNumber({
   value,
 }: {
   accessibilityLabel?: string
+  disabled?: boolean
+  focused?: boolean
+  hovered?: boolean
   left: number
   onPress?: () => void
   selected?: boolean
@@ -24,23 +33,38 @@ export default function ClockNumber({
   top: number
   value: number | string
 }) {
+  const theme = useTheme()
+  const hoverStyle = [
+    styles.hover,
+    { backgroundColor: withAlpha(theme.colors.onSurface, 0.08) },
+  ]
+
   return (
     <Pressable
       accessibilityActions={onPress ? [{ name: 'activate' }] : undefined}
       accessibilityLabel={accessibilityLabel}
       accessibilityRole={accessibilityLabel ? 'button' : undefined}
-      accessibilityState={accessibilityLabel ? { selected } : undefined}
+      accessibilityState={
+        accessibilityLabel
+          ? { disabled: disabled || undefined, selected }
+          : undefined
+      }
       accessible={Boolean(accessibilityLabel)}
       importantForAccessibility={accessibilityLabel ? 'yes' : 'no'}
       onAccessibilityAction={(event) => {
+        if (disabled) return
         if (event.nativeEvent.actionName === 'activate') {
           onPress?.()
         }
       }}
-      onPress={onPress}
+      onPress={disabled ? undefined : onPress}
       pointerEvents="none"
       style={[styles.root, { left, top }]}
     >
+      <FocusRing focused={focused && !selected && !disabled} radius={24} />
+      {hovered && !selected && !disabled ? (
+        <View pointerEvents="none" style={hoverStyle} />
+      ) : null}
       <View style={styles.inner}>
         <Text
           maxFontSizeMultiplier={1.5}
@@ -56,6 +80,10 @@ export default function ClockNumber({
 }
 
 const styles = StyleSheet.create({
+  hover: {
+    ...StyleSheet.absoluteFill,
+    borderRadius: 24,
+  },
   inner: {
     borderRadius: 24,
   },

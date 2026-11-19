@@ -29,6 +29,7 @@ const de: TranslationsType = {
   selectSingle: 'Wähle Datum',
   toggleClock: 'Zur Uhr umschalten',
   toggleKeyboard: 'Tastatur umschalten',
+  toggleScroll: 'Zur Bildlaufauswahl umschalten',
   typeInDate: 'Datum eingeben',
 }
 

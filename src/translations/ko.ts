@@ -29,6 +29,7 @@ const ko: TranslationsType = {
   selectSingle: '날짜 선택',
   toggleClock: '시계로 전환',
   toggleKeyboard: '키보드 전환',
+  toggleScroll: '스크롤로 전환',
   typeInDate: '날짜 입력',
 }
 
