@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState } from 'react'
+import { memo, useContext, useEffect, useRef, useState } from 'react'
 import {
   type ColorValue,
   type NativeScrollEvent,
@@ -14,6 +14,7 @@ import {
 } from 'react-native'
 import { IconButton, Text, useTheme } from 'react-native-paper'
 
+import { TimePickerPlacementContext } from '../contexts/TimePickerPlacementContext'
 import StateLayer from '../shared/StateLayer'
 import { useLatest, withAlpha } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
@@ -23,6 +24,7 @@ import {
   clockTypes,
   disabledContentOpacity,
   inputTypes,
+  modalScrollFieldHeight,
   periodSelectorGap,
   type PossibleClockTypes,
   scrollFieldHeight,
@@ -125,6 +127,9 @@ function ScrollTimePicker({
   showKeyboardToggle?: boolean
 }) {
   const theme = useTheme()
+  const placement = useContext(TimePickerPlacementContext)
+  const fieldHeight =
+    placement === 'modal' ? modalScrollFieldHeight : scrollFieldHeight
   const dotColor = disabled
     ? withAlpha(theme.colors.onSurface, disabledContentOpacity)
     : theme.colors.onSurface
@@ -138,6 +143,7 @@ function ScrollTimePicker({
       <ScrollWheel
         accessibilityLabel={rangeLabel(hourLabel, hourValues)}
         disabled={disabled}
+        fieldHeight={fieldHeight}
         focused={focused === clockTypes.hours}
         onChange={(wheelHourNext) => {
           onChange({
@@ -151,12 +157,13 @@ function ScrollTimePicker({
         value={wheelHour}
         values={hourValues}
       />
-      <View style={styles.separator}>
+      <View style={[styles.separator, { height: fieldHeight }]}>
         <SeparatorDots color={dotColor} />
       </View>
       <ScrollWheel
         accessibilityLabel={rangeLabel(minuteLabel, minuteValues)}
         disabled={disabled}
+        fieldHeight={fieldHeight}
         focused={focused === clockTypes.minutes}
         onChange={(nextMinutes) => {
           onChange({
@@ -246,6 +253,7 @@ function KeyboardToggle({
 function ScrollWheel({
   accessibilityLabel,
   disabled,
+  fieldHeight,
   focused,
   onChange,
   onFocus,
@@ -255,6 +263,7 @@ function ScrollWheel({
 }: {
   accessibilityLabel: string
   disabled?: boolean
+  fieldHeight: number
   focused: boolean
   onChange: (value: number) => void
   onFocus: () => void
@@ -370,13 +379,14 @@ function ScrollWheel({
   const wheelStyle = [
     styles.wheel,
     {
+      height: fieldHeight,
       backgroundColor: theme.colors.surfaceContainerLowest,
       borderRadius: theme.shapes.corner.medium,
     },
   ]
 
   return (
-    <View style={styles.wheelFrame}>
+    <View style={[styles.wheelFrame, { height: fieldHeight }]}>
       <FocusRing
         focused={focused && !disabled}
         radius={theme.shapes.corner.medium}
@@ -429,7 +439,9 @@ function ScrollWheel({
         />
         <ScrollView
           ref={listRef}
-          contentContainerStyle={styles.wheelContent}
+          contentContainerStyle={{
+            paddingVertical: (fieldHeight - scrollItemHeight) / 2,
+          }}
           bounces={false}
           contentOffset={initialOffset}
           decelerationRate="fast"
@@ -810,7 +822,6 @@ const styles = StyleSheet.create({
   },
   separator: {
     alignItems: 'center',
-    height: scrollFieldHeight,
     justifyContent: 'center',
     width: timeSeparatorWidth,
   },
@@ -823,15 +834,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   wheel: {
-    height: scrollFieldHeight,
     overflow: 'hidden',
     width: scrollFieldWidth,
   },
-  wheelContent: {
-    paddingVertical: (scrollFieldHeight - scrollItemHeight) / 2,
-  },
   wheelFrame: {
-    height: scrollFieldHeight,
     overflow: 'visible',
     width: scrollFieldWidth,
   },

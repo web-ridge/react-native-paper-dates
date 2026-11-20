@@ -758,6 +758,42 @@ describe('time picker modal', () => {
     expect(modal.queryByLabelText('Hour')).toBeNull()
   })
 
+  it('sizes the scroll field 140dp inline and 120dp in the modal (M3 Expressive)', async () => {
+    const wheelPadding = (screen: Awaited<ReturnType<typeof render>>) =>
+      StyleSheet.flatten(
+        screen.getByTestId('time-scroll-hours', { includeHiddenElements: true })
+          .props.contentContainerStyle
+      ).paddingVertical
+    const inline = await render(
+      <TimePicker
+        focused="hours"
+        hours={9}
+        inputType="scroll"
+        locale="en"
+        minutes={45}
+        onChange={jest.fn()}
+        onFocusInput={jest.fn()}
+        use24HourClock
+      />
+    )
+    expect(wheelPadding(inline)).toBe((140 - scrollItemHeight) / 2)
+    await inline.unmount()
+    const modal = await render(
+      <TimePickerModal
+        defaultInputType="scroll"
+        hours={9}
+        locale="en"
+        minutes={45}
+        onConfirm={jest.fn()}
+        onDismiss={jest.fn()}
+        use24HourClock
+        visible
+      />
+    )
+    expect(wheelPadding(modal)).toBe((120 - scrollItemHeight) / 2)
+    await modal.unmount()
+  })
+
   it('keeps minutes focused when AM or PM is pressed in dial mode', async () => {
     const modal = await render(
       <TimePickerModal

@@ -74,11 +74,13 @@ const ringClearance = 2
 export const periodSelectorGap = focusRingReach + ringClearance + focusRingReach
 export const periodSelectorVerticalWidth = 56
 const portraitDialChrome = 216
-// Three rows: the selected value with a fully visible neighbor above and
-// below. Each row fits the 64dp emphasized display large line and stays
-// above the 48dp minimum touch target.
+// md.comp.time-pickers.scroll-field: 120dp tall in the modal and at least
+// 140dp inline. Rows match the 64dp emphasized display large line, which
+// keeps each row above the 48dp minimum touch target and leaves the values
+// above and below cut off at the field's edges, as in the M3 spec.
 export const scrollItemHeight = 64
-export const scrollFieldHeight = scrollItemHeight * 3
+export const scrollFieldHeight = 140
+export const modalScrollFieldHeight = 120
 export const scrollFieldWidth = 100
 export const timeColonSize = 8
 export const timeInputFieldHeight = 120
@@ -358,13 +360,11 @@ export function useInputColors(
   }
 
   return {
-    backgroundColor: highlighted
-      ? theme.colors.primaryContainer
-      : theme.colors.surfaceContainerLowest,
+    // M3 Expressive keeps the field on surface-container-lowest and marks
+    // the active one with primary text and a primary outline.
+    backgroundColor: theme.colors.surfaceContainerLowest,
     borderColor: highlighted ? theme.colors.primary : 'transparent',
-    color: highlighted
-      ? theme.colors.onPrimaryContainer
-      : theme.colors.onSurface,
+    color: highlighted ? theme.colors.primary : theme.colors.onSurface,
   }
 }
 

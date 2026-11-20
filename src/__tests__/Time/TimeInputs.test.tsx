@@ -23,7 +23,7 @@ it('renders TimeInputs', async () => {
   expect(toJSON()).toMatchSnapshot()
 })
 
-it('labels each keyboard field with an Hour / Minute caption', async () => {
+it('shows no Hour / Minute captions in keyboard mode (M3 Expressive)', async () => {
   const screen = await render(
     <TimeInputs
       focused="hours"
@@ -37,13 +37,16 @@ it('labels each keyboard field with an Hour / Minute caption', async () => {
     />
   )
 
-  expect(screen.getByText('Hour', { includeHiddenElements: true })).toBeTruthy()
+  expect(screen.queryByText('Hour', { includeHiddenElements: true })).toBeNull()
   expect(
-    screen.getByText('Minute', { includeHiddenElements: true })
-  ).toBeTruthy()
+    screen.queryByText('Minute', { includeHiddenElements: true })
+  ).toBeNull()
+  // Fields stay labelled for assistive tech.
+  expect(screen.getByLabelText('Hour')).toBeTruthy()
+  expect(screen.getByLabelText('Minute')).toBeTruthy()
 })
 
-it('replaces the captions with the error when the time is invalid', async () => {
+it('shows the error text below the fields when the time is invalid', async () => {
   const screen = await render(
     <TimeInputs
       focused="hours"
