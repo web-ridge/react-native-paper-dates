@@ -1,4 +1,4 @@
-import { act, render } from '@testing-library/react-native'
+import { act, fireEvent, render } from '@testing-library/react-native'
 import { Platform, ScrollView } from 'react-native'
 
 import DatePickerDocked, { placeDockedCard } from '../../Date/DatePickerDocked'
@@ -427,6 +427,169 @@ it('uses a pill target and state layers for the month and year', async () => {
     ;(handlers.onHoverOut as () => void)()
   })
   expect(layers()).toHaveLength(0)
+})
+
+it('clears the month and year pills after a menu selection', async () => {
+  const previousPlatform = Platform.OS
+  Platform.OS = 'android'
+  const docked = await render(
+    <DatePickerDocked
+      anchor={anchor}
+      date={new Date(2026, 5, 2)}
+      locale="en"
+      onConfirm={jest.fn()}
+      onDismiss={jest.fn()}
+      visible
+    />
+  )
+
+  const layersOn = (id: string) => {
+    const node = docked.getByTestId(id)
+    const found: object[] = []
+    const walk = (current: {
+      children?: Array<object | string>
+      props?: { pointerEvents?: string; style?: unknown }
+      type?: string
+    }) => {
+      const styles = [current.props?.style].flat(Infinity)
+      const painted = styles.some(
+        (style) =>
+          !!style &&
+          typeof style === 'object' &&
+          'backgroundColor' in style &&
+          style.backgroundColor !== 'transparent'
+      )
+      if (
+        current.type === 'View' &&
+        current.props?.pointerEvents === 'none' &&
+        painted
+      ) {
+        found.push(current)
+      }
+      for (const child of current.children ?? []) {
+        if (typeof child !== 'string') walk(child)
+      }
+    }
+    walk(node)
+    return found
+  }
+
+  try {
+    await pressTestId(docked, 'react-native-paper-dates-docked-month')
+    const openHandlers = hoverHandlers(
+      docked.getByTestId('react-native-paper-dates-docked-month')
+    )
+    await act(() => {
+      ;(openHandlers.onPressIn as () => void)()
+      ;(openHandlers.onFocus as () => void)()
+    })
+    await fireEvent.press(docked.getByText('November'))
+    await act(() => {
+      ;(
+        hoverHandlers(
+          docked.getByTestId('react-native-paper-dates-docked-month')
+        ).onFocus as () => void
+      )()
+      ;(
+        hoverHandlers(
+          docked.getByTestId('react-native-paper-dates-docked-year')
+        ).onFocus as () => void
+      )()
+    })
+    expect(layersOn('react-native-paper-dates-docked-month')).toHaveLength(0)
+    expect(layersOn('react-native-paper-dates-docked-year')).toHaveLength(0)
+  } finally {
+    Platform.OS = previousPlatform
+  }
+})
+
+it('keeps a keyboard focus layer on the docked menu pills on web', async () => {
+  const previousPlatform = Platform.OS
+  Platform.OS = 'web'
+  const host = globalThis as { window?: Window & typeof globalThis }
+  const previousWindow = host.window
+  const listeners = new Map<string, EventListener[]>()
+  host.window = {
+    addEventListener: (type: string, listener: EventListener) => {
+      const list = listeners.get(type) ?? []
+      list.push(listener)
+      listeners.set(type, list)
+    },
+    removeEventListener: (type: string, listener: EventListener) => {
+      listeners.set(
+        type,
+        (listeners.get(type) ?? []).filter((item) => item !== listener)
+      )
+    },
+    dispatchEvent: (event: Event) => {
+      for (const listener of listeners.get(event.type) ?? []) {
+        listener(event)
+      }
+      return true
+    },
+  } as unknown as Window & typeof globalThis
+
+  const docked = await render(
+    <DatePickerDocked
+      anchor={anchor}
+      date={new Date(2026, 5, 2)}
+      locale="en"
+      onConfirm={jest.fn()}
+      onDismiss={jest.fn()}
+      visible
+    />
+  )
+
+  const month = docked.getByTestId('react-native-paper-dates-docked-month')
+  const handlers = hoverHandlers(month)
+  const layers = () => {
+    const found: object[] = []
+    const walk = (node: {
+      children?: Array<object | string>
+      props?: { pointerEvents?: string; style?: unknown }
+      type?: string
+    }) => {
+      const styles = [node.props?.style].flat(Infinity)
+      const painted = styles.some(
+        (style) =>
+          !!style &&
+          typeof style === 'object' &&
+          'backgroundColor' in style &&
+          style.backgroundColor !== 'transparent'
+      )
+      if (
+        node.type === 'View' &&
+        node.props?.pointerEvents === 'none' &&
+        painted
+      ) {
+        found.push(node)
+      }
+      for (const child of node.children ?? []) {
+        if (typeof child !== 'string') walk(child)
+      }
+    }
+    walk(month)
+    return found
+  }
+
+  try {
+    await act(() => {
+      host.window?.dispatchEvent({
+        type: 'keydown',
+        key: 'Tab',
+      } as unknown as Event)
+      ;(handlers.onFocus as () => void)()
+    })
+    expect(layers()).toHaveLength(1)
+    await act(() => {
+      ;(handlers.onBlur as () => void)()
+    })
+    expect(layers()).toHaveLength(0)
+  } finally {
+    docked.unmount()
+    Platform.OS = previousPlatform
+    host.window = previousWindow
+  }
 })
 
 it('maps web keyboard shortcuts onto the date picker', async () => {

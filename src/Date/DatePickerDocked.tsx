@@ -1,6 +1,7 @@
-import { memo, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import {
   Modal,
+  Platform,
   Pressable,
   StyleSheet,
   useWindowDimensions,
@@ -253,6 +254,99 @@ function DatePickerDocked({
   )
 }
 
+// Show a focus state layer only after keyboard focus, so a touch or click
+// that opens the month/year menu does not leave the pill highlighted when
+// the menu closes. Android also restores focus to the trigger, which would
+// otherwise keep the layer on.
+let lastInputWasKeyboard = false
+let focusVisibleListeners = 0
+
+function onFocusVisibleKeyDown(event: Event) {
+  const keyEvent = event as unknown as {
+    altKey?: boolean
+    ctrlKey?: boolean
+    metaKey?: boolean
+  }
+  if (keyEvent.metaKey || keyEvent.altKey || keyEvent.ctrlKey) return
+  lastInputWasKeyboard = true
+}
+
+function onFocusVisiblePointer() {
+  lastInputWasKeyboard = false
+}
+
+function listenForFocusVisibleInput() {
+  if (Platform.OS !== 'web' || typeof window === 'undefined') {
+    return () => {}
+  }
+  const target = window
+  if (typeof target.addEventListener !== 'function') {
+    return () => {}
+  }
+  if (focusVisibleListeners === 0) {
+    target.addEventListener('keydown', onFocusVisibleKeyDown, true)
+    target.addEventListener('mousedown', onFocusVisiblePointer, true)
+    target.addEventListener('pointerdown', onFocusVisiblePointer, true)
+    target.addEventListener('touchstart', onFocusVisiblePointer, true)
+  }
+  focusVisibleListeners += 1
+  return () => {
+    focusVisibleListeners -= 1
+    if (
+      focusVisibleListeners === 0 &&
+      typeof target.removeEventListener === 'function'
+    ) {
+      target.removeEventListener('keydown', onFocusVisibleKeyDown, true)
+      target.removeEventListener('mousedown', onFocusVisiblePointer, true)
+      target.removeEventListener('pointerdown', onFocusVisiblePointer, true)
+      target.removeEventListener('touchstart', onFocusVisiblePointer, true)
+    }
+  }
+}
+
+function useMenuButtonInteraction(disabled: boolean, open: boolean) {
+  const [focused, setFocused] = useState(false)
+  const [hovered, setHovered] = useState(false)
+  const [pressed, setPressed] = useState(false)
+
+  useEffect(() => listenForFocusVisibleInput(), [])
+
+  useEffect(() => {
+    setPressed(false)
+    setHovered(false)
+    if (Platform.OS !== 'web' || !lastInputWasKeyboard) {
+      setFocused(false)
+    }
+  }, [disabled, open])
+
+  return {
+    focused: !disabled && Platform.OS === 'web' && focused,
+    hovered: !disabled && hovered,
+    onBlur: () => setFocused(false),
+    onFocus: () => {
+      if (Platform.OS === 'web' && lastInputWasKeyboard) {
+        setFocused(true)
+        return
+      }
+      setFocused(false)
+    },
+    onHoverIn: () => setHovered(true),
+    onHoverOut: () => setHovered(false),
+    onPress: () => {
+      lastInputWasKeyboard = false
+      setPressed(false)
+      setHovered(false)
+      setFocused(false)
+    },
+    onPressIn: () => {
+      lastInputWasKeyboard = false
+      setPressed(true)
+    },
+    onPressOut: () => setPressed(false),
+    pressed: !disabled && pressed,
+  }
+}
+
 function DockedStepper({
   disabled,
   label,
@@ -273,9 +367,7 @@ function DockedStepper({
   unit: 'month' | 'year'
 }) {
   const theme = useTheme()
-  const [focused, setFocused] = useState(false)
-  const [hovered, setHovered] = useState(false)
-  const [pressed, setPressed] = useState(false)
+  const interaction = useMenuButtonInteraction(disabled, open)
   const labelColor = disabled
     ? theme.colors.onSurface
     : theme.colors.onSurfaceVariant
@@ -295,22 +387,25 @@ function DockedStepper({
       accessibilityRole="button"
       accessibilityState={{ disabled, expanded: open }}
       disabled={disabled}
-      onBlur={() => setFocused(false)}
-      onFocus={() => setFocused(true)}
-      onHoverIn={() => setHovered(true)}
-      onHoverOut={() => setHovered(false)}
-      onPress={onOpen}
-      onPressIn={() => setPressed(true)}
-      onPressOut={() => setPressed(false)}
+      onBlur={interaction.onBlur}
+      onFocus={interaction.onFocus}
+      onHoverIn={interaction.onHoverIn}
+      onHoverOut={interaction.onHoverOut}
+      onPress={() => {
+        interaction.onPress()
+        onOpen()
+      }}
+      onPressIn={interaction.onPressIn}
+      onPressOut={interaction.onPressOut}
       hitSlop={menuHitSlop}
       style={[styles.menuButton, { borderRadius: menuButtonHeight / 2 }]}
       testID={testID}
     >
       <StateLayer
         color={theme.colors.onSurfaceVariant}
-        focused={!disabled && focused}
-        hovered={!disabled && hovered}
-        pressed={!disabled && pressed}
+        focused={interaction.focused}
+        hovered={interaction.hovered}
+        pressed={interaction.pressed}
       />
       <View
         style={[styles.menuContent, disabled ? styles.menuLabelDisabled : null]}
