@@ -74,9 +74,12 @@ const ringClearance = 2
 export const periodSelectorGap = focusRingReach + ringClearance + focusRingReach
 export const periodSelectorVerticalWidth = 56
 const portraitDialChrome = 216
-export const scrollFieldHeight = 140
+// Three rows: the selected value with a fully visible neighbor above and
+// below. Each row fits the 64dp emphasized display large line and stays
+// above the 48dp minimum touch target.
+export const scrollItemHeight = 64
+export const scrollFieldHeight = scrollItemHeight * 3
 export const scrollFieldWidth = 100
-export const scrollItemHeight = 46
 export const timeColonSize = 8
 export const timeInputFieldHeight = 120
 export const timePickerActionsGap = 8
@@ -355,7 +358,9 @@ export function useInputColors(
   }
 
   return {
-    backgroundColor: theme.colors.surfaceContainerLowest,
+    backgroundColor: highlighted
+      ? theme.colors.primaryContainer
+      : theme.colors.surfaceContainerLowest,
     borderColor: highlighted ? theme.colors.primary : 'transparent',
     color: highlighted
       ? theme.colors.onPrimaryContainer

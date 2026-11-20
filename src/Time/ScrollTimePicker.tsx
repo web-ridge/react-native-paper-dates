@@ -534,18 +534,15 @@ const WheelRow = memo(function WheelRow({
     ? withAlpha(theme.colors.onSurface, disabledContentOpacity)
     : active
       ? theme.colors.onSurface
-      : theme.colors.onSurfaceVariant
-  const type = active ? theme.fonts.displayMedium : theme.fonts.headlineMedium
+      : theme.colors.outline
+  const type = active
+    ? theme.fonts.displayLargeEmphasized
+    : theme.fonts.displayMedium
   const text = (
     <Text
-      maxFontSizeMultiplier={1.5}
+      maxFontSizeMultiplier={1.2}
       selectable={false}
-      style={[
-        type,
-        styles.value,
-        active ? styles.selectedValue : styles.idleValue,
-        { color },
-      ]}
+      style={[type, styles.value, { color }]}
     >
       {label}
     </Text>
@@ -792,9 +789,6 @@ const styles = StyleSheet.create({
   dotGap: {
     height: 6,
   },
-  idleValue: {
-    fontSize: 28,
-  },
   item: {
     alignItems: 'center',
     height: scrollItemHeight,
@@ -813,9 +807,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     flexDirection: 'row',
     justifyContent: 'center',
-  },
-  selectedValue: {
-    fontSize: 45,
   },
   separator: {
     alignItems: 'center',

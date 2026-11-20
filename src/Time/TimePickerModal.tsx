@@ -11,6 +11,7 @@ import {
 } from 'react-native'
 import { Button, IconButton, useTheme } from 'react-native-paper'
 
+import { TimePickerPlacementContext } from '../contexts/TimePickerPlacementContext'
 import ModalScrim from '../shared/ModalScrim'
 import { sharedStyles } from '../shared/styles'
 import { displayCase, supportedOrientations } from '../shared/utils'
@@ -219,23 +220,25 @@ export function TimePickerModal({
                   },
                 ]}
               >
-                <TimePicker
-                  clockIcon={clockIcon}
-                  disabled={disabled}
-                  focused={focused}
-                  hours={localHours}
-                  inputFontSize={inputFontSize}
-                  inputType={displayedInputType}
-                  keyboardIcon={keyboardIcon}
-                  locale={locale}
-                  minutes={localMinutes}
-                  onChange={onChange}
-                  onFocusInput={onFocusInput}
-                  onInputInvalidChange={setInputInvalid}
-                  onToggleKeyboard={toggleInputType}
-                  scrollIcon={scrollIcon}
-                  use24HourClock={use24HourClock}
-                />
+                <TimePickerPlacementContext.Provider value="modal">
+                  <TimePicker
+                    clockIcon={clockIcon}
+                    disabled={disabled}
+                    focused={focused}
+                    hours={localHours}
+                    inputFontSize={inputFontSize}
+                    inputType={displayedInputType}
+                    keyboardIcon={keyboardIcon}
+                    locale={locale}
+                    minutes={localMinutes}
+                    onChange={onChange}
+                    onFocusInput={onFocusInput}
+                    onInputInvalidChange={setInputInvalid}
+                    onToggleKeyboard={toggleInputType}
+                    scrollIcon={scrollIcon}
+                    use24HourClock={use24HourClock}
+                  />
+                </TimePickerPlacementContext.Provider>
               </View>
               <View
                 style={[

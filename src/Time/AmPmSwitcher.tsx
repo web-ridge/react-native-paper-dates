@@ -1,8 +1,9 @@
 import { useContext, useState } from 'react'
-import { Pressable, StyleSheet, View } from 'react-native'
+import { Pressable, type PressableProps, StyleSheet, View } from 'react-native'
 import { Text, useTheme } from 'react-native-paper'
 
 import { DisplayModeContext } from '../contexts/DisplayModeContext'
+import { TimePickerPlacementContext } from '../contexts/TimePickerPlacementContext'
 import StateLayer from '../shared/StateLayer'
 import FocusRing from './FocusRing'
 import { getTranslation } from '../translations/utils'
@@ -16,8 +17,11 @@ import {
 
 const periodSelectorRoundRadius = 9999
 const periodButtonSize = 56
-const scrollPeriodButtonSize = 40
+const compactPeriodButtonSize = 40
 const horizontalPeriodHeight = 40
+const minTouchTarget = 48
+// Grows a 40dp period button to the 48dp minimum touch target.
+const compactHitSlop = (minTouchTarget - compactPeriodButtonSize) / 2
 
 export default function AmPmSwitcher({
   direction = 'vertical',
@@ -35,11 +39,26 @@ export default function AmPmSwitcher({
   onChange: (newHours: number) => void
 }) {
   const isHorizontal = direction === 'horizontal'
-  const buttonSize =
-    inputType === inputTypes.scroll ? scrollPeriodButtonSize : periodButtonSize
+  const placement = useContext(TimePickerPlacementContext)
+  // Inline scroll pickers use the 40dp inline period selector; modal and
+  // dial/input layouts use the 56dp modal one.
+  const compact =
+    !isHorizontal && inputType === inputTypes.scroll && placement === 'inline'
+  const buttonSize = compact ? compactPeriodButtonSize : periodButtonSize
   const { mode, setMode } = useContext(DisplayModeContext)
   const isAM = mode === 'AM'
   const theme = useTheme()
+  // M3: the modal period selector rounds the selected button with
+  // corner.large; the inline and horizontal dial ones use corner.medium.
+  const selectedRadius =
+    isHorizontal || compact
+      ? theme.shapes.corner.medium
+      : theme.shapes.corner.large
+  const hitSlop = isHorizontal
+    ? { bottom: compactHitSlop, top: compactHitSlop }
+    : compact
+      ? compactHitSlop
+      : undefined
 
   return (
     <View
@@ -50,6 +69,7 @@ export default function AmPmSwitcher({
       <SwitchButton
         disabled={disabled}
         height={isHorizontal ? horizontalPeriodHeight : buttonSize}
+        hitSlop={hitSlop}
         label={getTranslation(locale, 'am', 'AM')}
         onPress={() => {
           if (disabled || isAM) {
@@ -60,13 +80,14 @@ export default function AmPmSwitcher({
             onChange(hours - 12)
           }
         }}
-        radius={isAM ? theme.shapes.corner.medium : periodSelectorRoundRadius}
+        radius={isAM ? selectedRadius : periodSelectorRoundRadius}
         selected={isAM}
         width={isHorizontal ? undefined : buttonSize}
       />
       <SwitchButton
         disabled={disabled}
         height={isHorizontal ? horizontalPeriodHeight : buttonSize}
+        hitSlop={hitSlop}
         label={getTranslation(locale, 'pm', 'PM')}
         onPress={() => {
           if (disabled || !isAM) {
@@ -77,7 +98,7 @@ export default function AmPmSwitcher({
             onChange(hours + 12)
           }
         }}
-        radius={isAM ? periodSelectorRoundRadius : theme.shapes.corner.medium}
+        radius={isAM ? periodSelectorRoundRadius : selectedRadius}
         selected={!isAM}
         width={isHorizontal ? undefined : buttonSize}
       />
@@ -88,6 +109,7 @@ export default function AmPmSwitcher({
 function SwitchButton({
   disabled,
   height,
+  hitSlop,
   label,
   onPress,
   radius,
@@ -96,6 +118,7 @@ function SwitchButton({
 }: {
   disabled?: boolean
   height: number
+  hitSlop?: PressableProps['hitSlop']
   label: string
   onPress: (() => void) | undefined
   radius: number
@@ -107,7 +130,9 @@ function SwitchButton({
   const [pressed, setPressed] = useState(false)
   const { backgroundColor, color } = useSwitchColors(selected, disabled)
   const theme = useTheme()
-  const textFont = theme.fonts.titleMedium
+  const textFont = selected
+    ? theme.fonts.titleMediumEmphasized
+    : theme.fonts.titleMedium
   const buttonStyle = [
     styles.button,
     width === undefined ? styles.buttonFill : null,
@@ -136,6 +161,7 @@ function SwitchButton({
           selected,
         }}
         disabled={disabled}
+        hitSlop={hitSlop}
         role="radio"
         onBlur={() => setFocused(false)}
         onFocus={() => {

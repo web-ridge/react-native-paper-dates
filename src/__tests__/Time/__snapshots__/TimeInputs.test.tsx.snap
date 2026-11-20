@@ -114,6 +114,43 @@ exports[`renders TimeInputs 1`] = `
           </View>
         </View>
       </View>
+      <Text
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no"
+        maxFontSizeMultiplier={1.5}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "textAlign": "left",
+            },
+            {
+              "color": "rgba(29, 27, 32, 1)",
+              "writingDirection": "ltr",
+            },
+            [
+              {
+                "fontFamily": "System",
+                "fontSize": 12,
+                "fontWeight": "400",
+                "letterSpacing": 0.4,
+                "lineHeight": 16,
+              },
+              [
+                {
+                  "alignSelf": "stretch",
+                  "marginTop": 7,
+                },
+                {
+                  "color": "rgba(73, 69, 79, 1)",
+                },
+              ],
+            ],
+          ]
+        }
+      >
+        Hour
+      </Text>
     </View>
     <View
       style={
@@ -260,6 +297,43 @@ exports[`renders TimeInputs 1`] = `
           </View>
         </View>
       </View>
+      <Text
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no"
+        maxFontSizeMultiplier={1.5}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "textAlign": "left",
+            },
+            {
+              "color": "rgba(29, 27, 32, 1)",
+              "writingDirection": "ltr",
+            },
+            [
+              {
+                "fontFamily": "System",
+                "fontSize": 12,
+                "fontWeight": "400",
+                "letterSpacing": 0.4,
+                "lineHeight": 16,
+              },
+              [
+                {
+                  "alignSelf": "stretch",
+                  "marginTop": 7,
+                },
+                {
+                  "color": "rgba(73, 69, 79, 1)",
+                },
+              ],
+            ],
+          ]
+        }
+      >
+        Minute
+      </Text>
     </View>
   </View>
 </View>

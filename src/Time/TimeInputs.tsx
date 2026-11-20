@@ -105,9 +105,15 @@ function TimeInputs({
   const minuteLabel = getTranslation(locale, 'minute', 'Minute')
 
   const error = hourInvalid || minuteInvalid ? invalidTime : undefined
+  // M3 input time picker: "Hour" / "Minute" under each field, replaced by
+  // the error message below the picker when the time is invalid.
+  const showCaptions = inputType === inputTypes.keyboard && !error
   const hourMinuteRow = (
     <View style={styles.inputContainer}>
-      <TimeField width={fieldWidth}>
+      <TimeField
+        caption={showCaptions ? hourLabel : undefined}
+        width={fieldWidth}
+      >
         <TimeInput
           ref={startInput}
           accessibilityLabel={hourLabel}
@@ -139,7 +145,10 @@ function TimeInputs({
         <View style={styles.dotGap} />
         <View style={[styles.dot, { backgroundColor: dotColor }]} />
       </View>
-      <TimeField width={fieldWidth}>
+      <TimeField
+        caption={showCaptions ? minuteLabel : undefined}
+        width={fieldWidth}
+      >
         <TimeInput
           ref={endInput}
           accessibilityLabel={minuteLabel}
@@ -217,16 +226,40 @@ function TimeInputs({
 }
 
 function TimeField({
+  caption,
   children,
   width,
 }: {
+  caption?: string
   children: ReactNode
   width: number
 }) {
-  return <View style={[styles.column, { width }]}>{children}</View>
+  const theme = useTheme()
+
+  return (
+    <View style={[styles.column, { width }]}>
+      {children}
+      {caption ? (
+        <Text
+          accessibilityElementsHidden
+          importantForAccessibility="no"
+          maxFontSizeMultiplier={1.5}
+          numberOfLines={1}
+          style={[styles.caption, { color: theme.colors.onSurfaceVariant }]}
+          variant="bodySmall"
+        >
+          {caption}
+        </Text>
+      ) : null}
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({
+  caption: {
+    alignSelf: 'stretch',
+    marginTop: 7,
+  },
   column: {
     alignItems: 'center',
     flexDirection: 'column',

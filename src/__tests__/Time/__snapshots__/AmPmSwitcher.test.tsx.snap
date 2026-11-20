@@ -61,7 +61,7 @@ exports[`renders AmPmSwitcher 1`] = `
           null,
           {
             "backgroundColor": "rgba(234, 221, 255, 1)",
-            "borderRadius": 12,
+            "borderRadius": 16,
             "height": 56,
             "width": 56,
           },
@@ -89,7 +89,7 @@ exports[`renders AmPmSwitcher 1`] = `
               "color": "rgba(33, 0, 93, 1)",
               "fontFamily": "System",
               "fontSize": 16,
-              "fontWeight": "500",
+              "fontWeight": "700",
               "letterSpacing": 0.15,
               "lineHeight": 24,
             },
