@@ -2,6 +2,7 @@ import { memo, useCallback, useContext, useRef, useState } from 'react'
 import {
   GestureResponderEvent,
   PanResponder,
+  Platform,
   StyleSheet,
   View,
   type ViewInstance,
@@ -10,18 +11,18 @@ import { useTheme } from 'react-native-paper'
 
 import { DisplayModeContext } from '../contexts/DisplayModeContext'
 import { useLatest, withAlpha } from '../shared/utils'
-import FocusRing from './FocusRing'
 import AnalogClockHours from './AnalogClockHours'
 import AnalogClockMinutes from './AnalogClockMinutes'
 import AnimatedClockSwitcher from './AnimatedClockSwitcher'
+import FocusRing from './FocusRing'
 import {
   circleSize,
   clockTypes,
   disabledContentOpacity,
   getAngle,
-  getHours,
   getHourType,
   getHourTypeFromOffset,
+  getHours,
   getMinutes,
   hourTypes,
   type PossibleClockTypes,
@@ -132,6 +133,12 @@ function AnalogClock({
     : theme.colors.primary
   const [clockFocused, setClockFocused] = useState(false)
   const [hoveredValue, setHoveredValue] = useState<number | null>(null)
+  const [numberFocused, setNumberFocused] = useState(false)
+  const [selectedNumberFocused, setSelectedNumberFocused] = useState(false)
+  const onNumberFocus = (isFocused: boolean, selected: boolean) => {
+    setNumberFocused(isFocused)
+    if (selected) setSelectedNumberFocused(isFocused)
+  }
   const selectionAt = (x: number, y: number) => {
     const angle = getAngle(x, y, circleSize)
     if (focusedRef.current === clockTypes.hours) {
@@ -168,9 +175,18 @@ function AnalogClock({
         : null)}
       accessible
       focusable={!disabled}
-      onBlur={() => setClockFocused(false)}
-      onFocus={() => {
-        if (!disabled) setClockFocused(true)
+      onBlur={(event) => {
+        if (Platform.OS === 'web' && !isOwnFocus(event, clockRef.current)) {
+          return
+        }
+        setClockFocused(false)
+      }}
+      onFocus={(event) => {
+        if (disabled) return
+        if (Platform.OS === 'web' && !isOwnFocus(event, clockRef.current)) {
+          return
+        }
+        setClockFocused(true)
       }}
       onMouseLeave={() => setHoveredValue(null)}
       onPointerMove={(event) => {
@@ -214,7 +230,13 @@ function AnalogClock({
           {hoveredValue === pointerNumber && !disabled ? (
             <View pointerEvents="none" style={handleHoverStyle} />
           ) : null}
-          <FocusRing focused={clockFocused && !disabled} radius={24} />
+          <FocusRing
+            focused={
+              !disabled &&
+              (selectedNumberFocused || (clockFocused && !numberFocused))
+            }
+            radius={24}
+          />
         </View>
       </View>
       <View
@@ -241,6 +263,7 @@ function AnalogClock({
             }
             is24Hour={is24Hour}
             locale={locale}
+            onNumberFocus={onNumberFocus}
             onPress={(nextHours) => {
               if (disabled) return
               onChange({
@@ -259,6 +282,7 @@ function AnalogClock({
             }
             locale={locale}
             minutes={minutes}
+            onNumberFocus={onNumberFocus}
             onPress={(nextMinutes) => {
               if (disabled) return
               onChange({
@@ -271,6 +295,14 @@ function AnalogClock({
       />
     </View>
   )
+}
+
+function isOwnFocus(
+  event: { nativeEvent?: { target?: unknown } },
+  node: ViewInstance | null
+) {
+  const target = event.nativeEvent?.target
+  return target == null || node == null || target === node
 }
 
 function returnTrue() {
@@ -291,10 +323,6 @@ const styles = StyleSheet.create({
     position: 'relative',
     width: circleSize,
   },
-  handleHover: {
-    ...StyleSheet.absoluteFill,
-    borderRadius: 24,
-  },
   endPoint: {
     borderRadius: 24,
     bottom: -23,
@@ -302,6 +330,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 0,
     width: 48,
+  },
+  handleHover: {
+    ...StyleSheet.absoluteFill,
+    borderRadius: 24,
   },
   line: {
     borderRadius: 4,

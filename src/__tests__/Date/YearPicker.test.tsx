@@ -1,5 +1,5 @@
-import { fireEvent, render } from '@testing-library/react-native'
-import { StyleSheet } from 'react-native'
+import { act, fireEvent, render } from '@testing-library/react-native'
+import { FlatList, StyleSheet } from 'react-native'
 import { LightTheme } from 'react-native-paper'
 
 import { defaultEndYear, defaultStartYear } from '../../Date/dateUtils'
@@ -85,6 +85,100 @@ it('treats the current year like today and rings keyboard focus', async () => {
   expect(colors(selected).background).toContain(
     withAlpha(LightTheme.colors.onPrimary, 0.08)
   )
+})
+
+it('opens the menu on the selected year after the list is measured', async () => {
+  const scrollToIndex = jest
+    .spyOn(FlatList.prototype, 'scrollToIndex')
+    .mockImplementation(() => {})
+  const layout = {
+    height: 360,
+    width: 360,
+    x: 0,
+    y: 0,
+  }
+  try {
+    const menu = await render(
+      <YearPicker
+        endYear={2030}
+        onPressYear={() => null}
+        selectedYear={2026}
+        selectingYear
+        startYear={2020}
+        variant="menu"
+      />
+    )
+    const index = 2026 - 2020
+    const list = menu.container.queryAll(
+      (node: { props: { initialScrollIndex?: number } }) =>
+        node.props.initialScrollIndex === index
+    )[0]
+    expect(list.props.getItemLayout(null, index)).toEqual({
+      index,
+      length: 48,
+      offset: index * 48,
+    })
+    expect(list.props.contentOffset).toEqual({ x: 0, y: index * 48 })
+    await act(() => {
+      list.props.onLayout({ nativeEvent: { layout: { ...layout, height: 0 } } })
+      list.props.onContentSizeChange(360, 0)
+    })
+    expect(scrollToIndex).not.toHaveBeenCalled()
+    await act(() => {
+      list.props.onLayout({ nativeEvent: { layout } })
+      list.props.onContentSizeChange(360, index * 48)
+    })
+    expect(scrollToIndex).toHaveBeenCalledWith({ animated: false, index })
+    await act(() => {
+      jest.advanceTimersByTime(16)
+    })
+    expect(scrollToIndex).toHaveBeenCalledTimes(2)
+
+    scrollToIndex.mockClear()
+    const start = await render(
+      <YearPicker
+        endYear={2026}
+        onPressYear={() => null}
+        selectedYear={2026}
+        selectingYear
+        startYear={2026}
+        variant="menu"
+      />
+    )
+    const first = start.container.queryAll(
+      (node: { props: { initialScrollIndex?: number } }) =>
+        node.props.initialScrollIndex === 0
+    )[0]
+    await act(() => {
+      first.props.onLayout({ nativeEvent: { layout } })
+      first.props.onContentSizeChange(360, 48)
+    })
+    expect(scrollToIndex).not.toHaveBeenCalled()
+
+    const grid = await render(
+      <YearPicker
+        endYear={2026}
+        onPressYear={() => null}
+        selectedYear={2026}
+        selectingYear
+        startYear={2024}
+      />
+    )
+    const rows = grid.container.queryAll(
+      (node: {
+        props: {
+          getItemLayout?: (data: null, index: number) => { length: number }
+        }
+      }) => node.props.getItemLayout?.(null, 1)?.length === 52
+    )[0]
+    expect(rows.props.getItemLayout(null, 1)).toEqual({
+      index: 1,
+      length: 52,
+      offset: 52,
+    })
+  } finally {
+    scrollToIndex.mockRestore()
+  }
 })
 
 it('renders', async () => {

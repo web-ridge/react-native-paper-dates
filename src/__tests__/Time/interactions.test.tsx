@@ -1,5 +1,11 @@
 import { act, fireEvent, render } from '@testing-library/react-native'
-import { Dimensions, PanResponder, Platform, StyleSheet } from 'react-native'
+import {
+  Dimensions,
+  PanResponder,
+  Platform,
+  ScrollView,
+  StyleSheet,
+} from 'react-native'
 import { DarkTheme, ThemeProvider } from 'react-native-paper'
 
 import { DisplayModeContext } from '../../contexts/DisplayModeContext'
@@ -11,6 +17,11 @@ import AnalogClockHours from '../../Time/AnalogClockHours'
 import AnalogClockMinutes from '../../Time/AnalogClockMinutes'
 import AnimatedClockSwitcher from '../../Time/AnimatedClockSwitcher'
 import ClockNumber from '../../Time/ClockNumber'
+import {
+  asWheelTarget,
+  bindTrackpadWheel,
+  loopCopies,
+} from '../../Time/ScrollTimePicker'
 import TimeInput from '../../Time/TimeInput'
 import TimeInputs from '../../Time/TimeInputs'
 import TimePicker from '../../Time/TimePicker'
@@ -874,6 +885,53 @@ describe('scroll time picker', () => {
     )
   })
 
+  it('keeps an android fling inside the wheel', async () => {
+    Platform.OS = 'android'
+    const scrollTo = jest
+      .spyOn(ScrollView.prototype, 'scrollTo')
+      .mockImplementation(() => {})
+    try {
+      const picker = await renderScroll({ hours: 1, minutes: 0 })
+      expect(
+        picker.getAllByText('00', { includeHiddenElements: true }).length
+      ).toBe(loopCopies(60))
+      const hours = picker.getByTestId('time-scroll-hours', {
+        includeHiddenElements: true,
+      })
+      const home = hours.props.contentOffset.y as number
+      const end = (loopCopies(12) * 12 - 1) * scrollItemHeight - home
+      expect(end).toBeGreaterThanOrEqual(10000)
+
+      scrollTo.mockClear()
+      await fireEvent(hours, 'scrollBeginDrag', scrollEvent(home))
+      await fireEvent.scroll(
+        hours,
+        scrollEvent(home + 12 * scrollItemHeight - 1)
+      )
+      expect(scrollTo).not.toHaveBeenCalled()
+      await fireEvent.scroll(hours, scrollEvent(home + 13 * scrollItemHeight))
+      expect(scrollTo).toHaveBeenCalledWith({
+        animated: false,
+        y: home + scrollItemHeight,
+      })
+
+      scrollTo.mockClear()
+      await fireEvent(
+        hours,
+        'scrollEndDrag',
+        scrollEvent(home + scrollItemHeight, 4)
+      )
+      await fireEvent.scroll(hours, scrollEvent(home + 13 * scrollItemHeight))
+      expect(scrollTo).not.toHaveBeenCalled()
+
+      scrollTo.mockClear()
+      await fireEvent(hours, 'momentumScrollEnd', scrollEvent(home + 20))
+      expect(scrollTo).toHaveBeenCalledWith({ animated: false, y: home })
+    } finally {
+      scrollTo.mockRestore()
+    }
+  })
+
   it('wraps a spin past 12 without sticking on the last row', async () => {
     const picker = await renderScroll({ hours: 12, minutes: 0 })
     const hours = picker.getByTestId('time-scroll-hours', {
@@ -1072,6 +1130,341 @@ describe('scroll time picker', () => {
         value: previousWindow,
       })
     }
+  })
+
+  it('keeps a hard trackpad flick on the wheel', () => {
+    jest.useFakeTimers()
+    const listeners: {
+      capture: boolean
+      listener: (event: WheelEvent) => void
+      passive: boolean
+      type: string
+    }[] = []
+    const node = {
+      addEventListener: (
+        type: 'pointerenter' | 'pointerleave' | 'wheel',
+        listener: (event: WheelEvent) => void,
+        options?: boolean | AddEventListenerOptions
+      ) => {
+        const capture =
+          typeof options === 'boolean' ? options : options?.capture === true
+        const passive =
+          typeof options === 'object' && options?.passive === false
+            ? false
+            : true
+        listeners.push({ capture, listener, passive, type })
+      },
+      ownerDocument: {
+        defaultView: {
+          getComputedStyle: (el: { style?: { overflowY?: string } }) => ({
+            overflowY: el.style?.overflowY ?? 'visible',
+          }),
+        },
+      },
+      parentElement: {
+        clientHeight: 400,
+        ownerDocument: undefined as
+          | {
+              defaultView?: {
+                getComputedStyle?: (el: { style?: { overflowY?: string } }) => {
+                  overflowY?: string
+                }
+              }
+            }
+          | undefined,
+        parentElement: null,
+        scrollHeight: 2000,
+        scrollTop: 250,
+        style: { overflowY: 'auto' },
+      },
+      removeEventListener: (
+        _type: 'pointerenter' | 'pointerleave' | 'wheel',
+        listener: (event: WheelEvent) => void
+      ) => {
+        const index = listeners.findIndex((item) => item.listener === listener)
+        if (index >= 0) listeners.splice(index, 1)
+      },
+      scrollTop: 68 * scrollItemHeight,
+      style: {} as { overscrollBehavior?: string },
+    }
+    node.parentElement.ownerDocument = node.ownerDocument
+    const onFocus = jest.fn()
+    const onSettle = jest.fn()
+    const state = {
+      current: { copies: 11, count: 12, onFocus, onSettle },
+    }
+    const wheel = (deltaY: number, extra: Partial<WheelEvent> = {}) =>
+      ({
+        ctrlKey: false,
+        deltaMode: 0,
+        deltaX: 0,
+        deltaY,
+        preventDefault: jest.fn(),
+        stopPropagation: jest.fn(),
+        ...extra,
+      }) as WheelEvent
+
+    try {
+      expect(asWheelTarget(null)).toBeNull()
+      expect(asWheelTarget({ scrollTop: 0 })).toBeNull()
+      expect(asWheelTarget({ getScrollableNode: 1 })).toBeNull()
+      expect(asWheelTarget({ getScrollableNode: () => 4 })).toBeNull()
+      expect(
+        asWheelTarget({
+          getScrollableNode: () => {
+            throw new Error('native')
+          },
+        })
+      ).toBeNull()
+      expect(asWheelTarget(node)).toBe(node)
+      expect(asWheelTarget({ getScrollableNode: () => node })).toBe(node)
+
+      const unbind = bindTrackpadWheel(node, state)
+      expect(node.style.overscrollBehavior).toBe('none')
+      const wheelListener = listeners.find((item) => item.type === 'wheel')
+      expect(wheelListener).toEqual(
+        expect.objectContaining({
+          capture: true,
+          passive: false,
+          type: 'wheel',
+        })
+      )
+
+      const pinch = wheel(800, { ctrlKey: true })
+      wheelListener?.listener(pinch)
+      expect(pinch.preventDefault).not.toHaveBeenCalled()
+
+      const sideways = wheel(10, { deltaX: 40, deltaY: 4 })
+      wheelListener?.listener(sideways)
+      expect(node.parentElement.style.overflowY).toBe('hidden')
+      expect(sideways.preventDefault).toHaveBeenCalled()
+      expect(node.scrollTop).toBe(68 * scrollItemHeight + 4)
+      node.scrollTop = 68 * scrollItemHeight
+
+      const locked = wheel(500, { cancelable: false })
+      wheelListener?.listener(locked)
+      expect(locked.preventDefault).not.toHaveBeenCalled()
+      expect(locked.stopPropagation).toHaveBeenCalled()
+      expect(node.scrollTop).toBe(68 * scrollItemHeight)
+      node.parentElement.scrollTop = 900
+
+      const idle = wheel(0)
+      wheelListener?.listener(idle)
+      expect(idle.preventDefault).not.toHaveBeenCalled()
+
+      const flick = wheel(100 * scrollItemHeight)
+      wheelListener?.listener(flick)
+      expect(flick.preventDefault).toHaveBeenCalled()
+      expect(flick.stopPropagation).toHaveBeenCalled()
+      expect(onFocus).toHaveBeenCalled()
+      expect(node.scrollTop).toBe(60 * scrollItemHeight)
+      expect(node.parentElement.scrollTop).toBe(250)
+
+      const notch = wheel(2, { deltaMode: 1 })
+      wheelListener?.listener(notch)
+      expect(node.scrollTop).toBe(62 * scrollItemHeight)
+      wheelListener?.listener(wheel(1, { deltaMode: 2 }))
+
+      jest.advanceTimersByTime(120)
+      expect(onSettle).toHaveBeenCalledTimes(1)
+      expect(onSettle).toHaveBeenCalledWith(node.scrollTop)
+      expect(node.parentElement.style.overflowY).toBe('auto')
+
+      unbind()
+      expect(listeners).toHaveLength(0)
+      jest.advanceTimersByTime(120)
+      expect(onSettle).toHaveBeenCalledTimes(1)
+
+      const plain = { ...node, style: undefined }
+      bindTrackpadWheel(plain, state)()
+      expect(plain.style).toBeUndefined()
+    } finally {
+      jest.useRealTimers()
+    }
+  })
+
+  it('hides page scrolling while the pointer is over a wheel', () => {
+    const scrollListeners: (() => void)[] = []
+    const page = {
+      addEventListener: (_type: 'scroll', listener: () => void) => {
+        scrollListeners.push(listener)
+      },
+      clientHeight: 400,
+      parentElement: null,
+      removeEventListener: (_type: 'scroll', listener: () => void) => {
+        const index = scrollListeners.indexOf(listener)
+        if (index >= 0) scrollListeners.splice(index, 1)
+      },
+      scrollHeight: 2000,
+      scrollTop: 180,
+      style: { overflowY: 'auto' },
+    }
+    const listeners: Record<string, () => void> = {}
+    const node = {
+      addEventListener: (
+        type: 'pointerenter' | 'pointerleave' | 'wheel',
+        listener: (event: WheelEvent) => void
+      ) => {
+        listeners[type] = listener as () => void
+      },
+      ownerDocument: {
+        defaultView: {
+          getComputedStyle: (el: { style?: { overflowY?: string } }) => ({
+            overflowY: el.style?.overflowY ?? 'visible',
+          }),
+        },
+        scrollingElement: page,
+      },
+      parentElement: page,
+      removeEventListener: (
+        type: 'pointerenter' | 'pointerleave' | 'wheel',
+        _listener: (event: WheelEvent) => void
+      ) => {
+        delete listeners[type]
+      },
+      scrollTop: 0,
+      style: {} as { overscrollBehavior?: string },
+    }
+    const otherListeners: Record<string, () => void> = {}
+    const other = {
+      ...node,
+      addEventListener: (
+        type: 'pointerenter' | 'pointerleave' | 'wheel',
+        listener: (event: WheelEvent) => void
+      ) => {
+        otherListeners[type] = listener as () => void
+      },
+      removeEventListener: (
+        type: 'pointerenter' | 'pointerleave' | 'wheel',
+        _listener: (event: WheelEvent) => void
+      ) => {
+        delete otherListeners[type]
+      },
+      style: {} as { overscrollBehavior?: string },
+    }
+    const state = {
+      current: {
+        copies: 11,
+        count: 12,
+        onFocus: jest.fn(),
+        onSettle: jest.fn(),
+      },
+    }
+    const unbind = bindTrackpadWheel(node, state)
+    const unbindOther = bindTrackpadWheel(other, state)
+
+    listeners.pointerenter()
+    expect(page.style.overflowY).toBe('hidden')
+    otherListeners.pointerenter()
+    listeners.pointerleave()
+    expect(page.style.overflowY).toBe('hidden')
+
+    page.scrollTop = 900
+    scrollListeners.forEach((listener) => listener())
+    expect(page.scrollTop).toBe(180)
+
+    otherListeners.pointerleave()
+    expect(page.style.overflowY).toBe('auto')
+    expect(scrollListeners).toHaveLength(0)
+
+    unbind()
+    unbindOther()
+  })
+
+  it('applies a trackpad flick to the hour wheel on web', async () => {
+    Platform.OS = 'web'
+    const picker = await renderScroll({ hours: 9, minutes: 45 })
+    const nodes = ['time-scroll-hours', 'time-scroll-minutes'].map((id) => {
+      const bound: ((event: WheelEvent) => void)[] = []
+      const node = {
+        addEventListener: (
+          type: string,
+          listener: (event: WheelEvent) => void
+        ) => {
+          if (type === 'wheel') bound.push(listener)
+        },
+        bound,
+        removeEventListener: (
+          _type: string,
+          listener: (event: WheelEvent) => void
+        ) => {
+          const index = bound.indexOf(listener)
+          if (index >= 0) bound.splice(index, 1)
+        },
+        scrollTop: 68 * scrollItemHeight,
+        style: {} as { overscrollBehavior?: string },
+      }
+      const host = picker.getByTestId(id, { includeHiddenElements: true })
+      let fiber = (
+        host as {
+          unstable_fiber?: {
+            return: unknown
+            stateNode?: { getScrollableNode?: () => unknown }
+          } | null
+        }
+      ).unstable_fiber
+      let instance: { getScrollableNode?: () => unknown } | null = null
+      for (let depth = 0; fiber && depth < 8; depth += 1) {
+        if (typeof fiber.stateNode?.getScrollableNode === 'function') {
+          instance = fiber.stateNode
+          break
+        }
+        fiber = fiber.return as typeof fiber
+      }
+      if (!instance) throw new Error(`missing scroll view for ${id}`)
+      instance.getScrollableNode = () => node
+      return node
+    })
+    const props = {
+      focused: 'hours' as const,
+      hours: 9,
+      inputType: 'scroll' as const,
+      locale: 'en',
+      minutes: 45,
+      onChange: picker.onChange,
+      onFocusInput: picker.onFocusInput,
+    }
+    await picker.rerender(<TimePicker disabled {...props} />)
+    await picker.rerender(<TimePicker {...props} />)
+    const flick = {
+      ctrlKey: false,
+      deltaMode: 0,
+      deltaX: 0,
+      deltaY: scrollItemHeight,
+      preventDefault: jest.fn(),
+      stopPropagation: jest.fn(),
+    } as unknown as WheelEvent
+    const scrollTo = jest
+      .spyOn(ScrollView.prototype, 'scrollTo')
+      .mockImplementation(() => {})
+    jest.useFakeTimers()
+    try {
+      await act(async () => {
+        nodes[0].bound[0](flick)
+        jest.advanceTimersByTime(120)
+      })
+      const parked = nodes[0].scrollTop
+      scrollTo.mockClear()
+      await act(async () => {
+        nodes[0].bound[0](flick)
+      })
+      expect(nodes[0].scrollTop).not.toBe(parked)
+      await fireEvent.scroll(
+        picker.getByTestId('time-scroll-hours', {
+          includeHiddenElements: true,
+        }),
+        scrollEvent(nodes[0].scrollTop)
+      )
+      expect(scrollTo).not.toHaveBeenCalled()
+    } finally {
+      scrollTo.mockRestore()
+      jest.useRealTimers()
+    }
+    expect(flick.preventDefault).toHaveBeenCalled()
+    expect(picker.onFocusInput).toHaveBeenCalledWith('hours')
+    expect(picker.onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ focused: 'hours', hours: 10, minutes: 45 })
+    )
   })
 })
 

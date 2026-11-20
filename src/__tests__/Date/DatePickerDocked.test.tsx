@@ -1,8 +1,9 @@
 import { act, render } from '@testing-library/react-native'
-import { Platform } from 'react-native'
+import { Platform, ScrollView } from 'react-native'
 
 import DatePickerDocked, { placeDockedCard } from '../../Date/DatePickerDocked'
 import DatePickerInput from '../../Date/DatePickerInput'
+import MonthMenu from '../../Date/MonthMenu'
 import { useDatePickerKeys } from '../../Date/datePickerKeys'
 import { installDateKeyListener, pressNode, pressTestId } from '../../testUtils'
 
@@ -143,6 +144,55 @@ it('steps the year and stops at the first and last year', async () => {
   expect(year()).toHaveTextContent('2026', { exact: false })
   await pressTestId(screen, 'react-native-paper-dates-docked-year-prev')
   expect(year()).toHaveTextContent('2026', { exact: false })
+})
+
+it('opens the month menu on the selected month after android lays it out', async () => {
+  const scrollTo = jest
+    .spyOn(ScrollView.prototype, 'scrollTo')
+    .mockImplementation(() => {})
+  const layout = { height: 360, width: 360, x: 0, y: 0 }
+  try {
+    const screen = await render(dockedAt(new Date(2026, 7, 15)).view)
+    await pressTestId(screen, 'react-native-paper-dates-docked-month')
+    const list = screen.container.queryAll(
+      (node: { props: { contentOffset?: { y?: number } } }) =>
+        node.props.contentOffset?.y === 5 * 48
+    )[0]
+    expect(list).toBeTruthy()
+    await act(() => {
+      list.props.onLayout({ nativeEvent: { layout: { ...layout, height: 0 } } })
+      list.props.onContentSizeChange(360, 0)
+    })
+    expect(scrollTo).not.toHaveBeenCalled()
+    await act(() => {
+      list.props.onLayout({ nativeEvent: { layout } })
+      list.props.onContentSizeChange(360, 12 * 48)
+    })
+    expect(scrollTo).toHaveBeenCalledWith({ animated: false, y: 5 * 48 })
+
+    scrollTo.mockClear()
+    const empty = await render(
+      <MonthMenu
+        locale="en"
+        onPressMonth={() => null}
+        selectedMonth={undefined}
+      />
+    )
+    const top = empty.container.queryAll(
+      (node: { props: { contentOffset?: { y?: number } } }) =>
+        node.props.contentOffset?.y === 0
+    )[0]
+    await act(() => {
+      top.props.onLayout({ nativeEvent: { layout } })
+      top.props.onContentSizeChange(360, 12 * 48)
+    })
+    expect(scrollTo).toHaveBeenCalledWith({ animated: false, y: 0 })
+    await act(() => {
+      jest.advanceTimersByTime(16)
+    })
+  } finally {
+    scrollTo.mockRestore()
+  }
 })
 
 it('chooses a month and a year from the menus', async () => {

@@ -16,6 +16,7 @@ function AnalogClockHours({
   hoveredHour = null,
   is24Hour,
   locale,
+  onNumberFocus,
   onPress,
 }: {
   disabled?: boolean
@@ -23,6 +24,7 @@ function AnalogClockHours({
   hoveredHour?: number | null
   is24Hour: boolean
   locale?: string
+  onNumberFocus?: (focused: boolean, selected: boolean) => void
   onPress?: (hours: number) => void
 }) {
   const theme = useTheme()
@@ -52,6 +54,7 @@ function AnalogClockHours({
             disabled={disabled}
             hovered={hoveredHour === hourValue}
             left={left}
+            onFocusChange={(focused) => onNumberFocus?.(focused, selected)}
             onPress={disabled ? undefined : () => onPress?.(hourValue)}
             selected={selected}
             textStyle={{
@@ -74,6 +77,7 @@ function AnalogClockHours({
                 disabled={disabled}
                 hovered={hoveredHour === hourValue}
                 left={left}
+                onFocusChange={(focused) => onNumberFocus?.(focused, selected)}
                 onPress={disabled ? undefined : () => onPress?.(hourValue)}
                 selected={selected}
                 textStyle={{

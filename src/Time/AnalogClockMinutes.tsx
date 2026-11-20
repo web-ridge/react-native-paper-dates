@@ -18,12 +18,14 @@ function AnalogClockMinutes({
   hoveredMinute = null,
   locale,
   minutes,
+  onNumberFocus,
   onPress,
 }: {
   disabled?: boolean
   hoveredMinute?: number | null
   locale?: string
   minutes: number
+  onNumberFocus?: (focused: boolean, selected: boolean) => void
   onPress?: (minutes: number) => void
 }) {
   const theme = useTheme()
@@ -54,6 +56,7 @@ function AnalogClockMinutes({
             disabled={disabled}
             hovered={hovered}
             left={left}
+            onFocusChange={(focused) => onNumberFocus?.(focused, selected)}
             onPress={disabled ? undefined : () => onPress?.(currentMinutes)}
             selected={selected}
             textStyle={{

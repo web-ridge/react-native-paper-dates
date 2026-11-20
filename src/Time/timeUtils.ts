@@ -39,20 +39,20 @@ export type {
 
 const _12 = Math.PI / 30
 const _30 = Math.PI / 6
-const _90 = Math.PI / 2
 const _360 = Math.PI * 2
+const _90 = Math.PI / 2
 export const circleSize = 256
-export const disabledContainerOpacity = 0.12
-export const disabledContentOpacity = 0.38
 export const clockSideInset = 12
-export const timePickerActionsGap = 8
-export const timePickerHorizontalPadding = 24
-export const timePickerMediumBreakpoint = 600
-export const timePickerPadding = 12
 export const clockTypes: ClockTypeMap = {
   hours: 'hours',
   minutes: 'minutes',
 }
+export const disabledContainerOpacity = 0.12
+export const disabledContentOpacity = 0.38
+export const focusRingOffset = 2
+export const focusRingThickness = 3
+const focusRingReach = focusRingOffset + focusRingThickness
+export const horizontalPeriodGap = 16
 export const hourTypes: HourTypeMap = {
   am: 'am',
   pm: 'pm',
@@ -70,27 +70,27 @@ export const inputTypes = {
 const landscapeDialChrome = 132
 const landscapeDialExtraWidth = 100
 const outerHeight = 34
-export const periodSelectorGap = 8
+const ringClearance = 2
+export const periodSelectorGap = focusRingReach + ringClearance + focusRingReach
 export const periodSelectorVerticalWidth = 56
 const portraitDialChrome = 216
 export const scrollFieldHeight = 140
 export const scrollFieldWidth = 100
 export const scrollItemHeight = 46
+export const timeColonSize = 8
 export const timeInputFieldHeight = 120
+export const timePickerActionsGap = 8
+export const timePickerHorizontalPadding = 24
+export const timePickerMediumBreakpoint = 600
+export const timePickerPadding = 12
 export const timeSelectorHeight = 120
 export const timeSelectorWidth = 100
-export const focusRingOffset = 2
-export const focusRingThickness = 3
-export const timeColonSize = 8
-const colonClearance = 2
-const focusRingReach = focusRingOffset + focusRingThickness
 export const timeSeparatorWidth =
   focusRingReach +
-  colonClearance +
+  ringClearance +
   timeColonSize +
-  colonClearance +
+  ringClearance +
   focusRingReach
-export const horizontalPeriodGap = 16
 export const verticalDial24HourFieldWidth = 132
 
 export function clockNumbers(

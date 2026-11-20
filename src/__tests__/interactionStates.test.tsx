@@ -54,6 +54,16 @@ function rootOf(node: HostNode) {
   return fiber
 }
 
+function focusRings(screen: { container: { queryAll: Function } }) {
+  return hosts(screen, (node) => {
+    const style = node.props.style
+    const parts = (Array.isArray(style) ? style.flat(4) : [style]) as Array<
+      { borderWidth?: number } | null | undefined
+    >
+    return parts.some((part) => part?.borderWidth === 3)
+  })
+}
+
 function handler(node: HostNode, name: string) {
   const own = node.props[name]
   if (typeof own === 'function') return own as (...args: unknown[]) => void
@@ -404,6 +414,44 @@ it('follows the pointer around the dial, including noon and the inner ring', asy
     presses.forEach((onPress) => onPress(1))
   })
   expect(onChange).not.toHaveBeenCalled()
+})
+
+it('draws the dial focus ring on the focused label or the selected handle', async () => {
+  const screen = await render(
+    clock({
+      hours: 5,
+      is24Hour: false,
+      minutes: 0,
+      onChange: () => undefined,
+    })
+  )
+  const hour = screen.getByLabelText('Hour 10 of 12') as HostNode
+  await act(async () => {
+    handler(hour, 'onFocus')()
+  })
+  expect(focusRings(screen)).toHaveLength(1)
+
+  const selected = screen.getByLabelText('Hour 5 of 12') as HostNode
+  await act(async () => {
+    handler(hour, 'onBlur')()
+    handler(selected, 'onFocus')()
+  })
+  expect(focusRings(screen)).toHaveLength(1)
+
+  const surface = hosts(
+    screen,
+    (node) => typeof node.props.onPointerMove === 'function'
+  )[0]
+  await act(async () => {
+    handler(selected, 'onBlur')()
+    handler(surface, 'onFocus')()
+  })
+  expect(focusRings(screen)).toHaveLength(1)
+
+  await act(async () => {
+    handler(surface, 'onBlur')()
+  })
+  expect(focusRings(screen)).toHaveLength(0)
 })
 
 it('focuses a scroll wheel, ignores it while disabled, and hides the keyboard toggle', async () => {

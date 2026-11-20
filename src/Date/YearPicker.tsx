@@ -1,5 +1,12 @@
-import { memo, useCallback, useMemo, useState } from 'react'
-import { FlatList, Pressable, ScrollView, StyleSheet, View } from 'react-native'
+import { memo, useCallback, useMemo, useRef, useState } from 'react'
+import {
+  FlatList,
+  type LayoutChangeEvent,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native'
 import { Text, useTheme } from 'react-native-paper'
 
 import StateLayer from '../shared/StateLayer'
@@ -7,7 +14,7 @@ import { sharedStyles } from '../shared/styles'
 import { range, scrollbarThumb } from '../shared/utils'
 import FocusRing from '../Time/FocusRing'
 import { calendarControlHeight } from './CalendarHeader'
-import SelectionMenuItem from './SelectionMenuItem'
+import SelectionMenuItem, { selectionMenuItemHeight } from './SelectionMenuItem'
 import { defaultEndYear, defaultStartYear } from './dateUtils'
 
 const COLUMNS = 3
@@ -33,14 +40,15 @@ function YearPicker({
   variant?: 'grid' | 'menu'
 }) {
   const columns = variant === 'grid' ? COLUMNS : 1
+  const rowHeight = variant === 'menu' ? selectionMenuItemHeight : ROW_HEIGHT
   const todayYear = new Date().getFullYear()
   const getItemLayout = useCallback(
     (_: ArrayLike<number> | null | undefined, index: number) => ({
       index,
-      length: ROW_HEIGHT,
-      offset: index * ROW_HEIGHT,
+      length: rowHeight,
+      offset: index * rowHeight,
     }),
-    []
+    [rowHeight]
   )
   const keyExtractor = useCallback((item: number) => `${item}`, [])
   const renderItem = useCallback(
@@ -78,16 +86,65 @@ function YearPicker({
     Math.floor(selectedIndex / columns),
     rowCount - 1
   )
+  const scrollIndex = Math.max(initialScrollIndex, 0)
+  const [contentOffset] = useState(() => ({
+    x: 0,
+    y: scrollIndex * rowHeight,
+  }))
+  const listReady = useRef({ laidOut: false, sized: false })
+  const listRef = useRef<FlatList<number>>(null)
+  const revealed = useRef(false)
+  const revealYear = useCallback(() => {
+    if (
+      !listReady.current.laidOut ||
+      !listReady.current.sized ||
+      revealed.current
+    ) {
+      return
+    }
+    if (scrollIndex <= 0) {
+      revealed.current = true
+      return
+    }
+    if (!listRef.current) return
+    revealed.current = true
+    const scroll = () => {
+      listRef.current?.scrollToIndex({ animated: false, index: scrollIndex })
+    }
+    scroll()
+    requestAnimationFrame(scroll)
+  }, [scrollIndex])
+  const onListContentSizeChange = useCallback(
+    (_width: number, height: number) => {
+      if (height <= 0) return
+      listReady.current.sized = true
+      revealYear()
+    },
+    [revealYear]
+  )
+  const onListLayout = useCallback(
+    (event: LayoutChangeEvent) => {
+      if (event.nativeEvent.layout.height <= 0) return
+      listReady.current.laidOut = true
+      revealYear()
+    },
+    [revealYear]
+  )
 
   const list = (
     <FlatList<number>
       key={variant}
+      ref={listRef}
       columnWrapperStyle={variant === 'grid' ? styles.row : undefined}
+      contentOffset={contentOffset}
       data={years}
       getItemLayout={getItemLayout}
-      initialScrollIndex={Math.max(initialScrollIndex, 0)}
+      initialScrollIndex={scrollIndex}
       keyExtractor={keyExtractor}
       numColumns={columns}
+      onContentSizeChange={onListContentSizeChange}
+      onLayout={onListLayout}
+      removeClippedSubviews={false}
       renderItem={renderItem}
       renderScrollComponent={renderScrollComponent}
       style={[styles.list, scrollbarThumb(theme.colors.outline)]}

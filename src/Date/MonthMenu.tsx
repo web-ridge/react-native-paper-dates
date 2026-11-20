@@ -1,11 +1,24 @@
-import { type ComponentRef, memo, useEffect, useMemo, useRef } from 'react'
-import { ScrollView, StyleSheet, View } from 'react-native'
+import {
+  type ComponentRef,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import {
+  type LayoutChangeEvent,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native'
 import { useTheme } from 'react-native-paper'
 
 import { dateTimeFormat } from '../shared/intl'
 import { scrollbarThumb } from '../shared/utils'
 import { calendarControlHeight } from './CalendarHeader'
-import SelectionMenuItem from './SelectionMenuItem'
+import SelectionMenuItem, { selectionMenuItemHeight } from './SelectionMenuItem'
 
 function MonthMenu({
   embedded = false,
@@ -18,18 +31,42 @@ function MonthMenu({
   onPressMonth: (month: number) => void
   selectedMonth: number | undefined
 }) {
-  const listRef = useRef<ComponentRef<typeof ScrollView>>(null)
   const theme = useTheme()
+  const offset = monthScrollOffset(selectedMonth)
+  const [contentOffset] = useState(() => ({ x: 0, y: offset }))
+  const listRef = useRef<ComponentRef<typeof ScrollView>>(null)
+  const offsetRef = useRef(offset)
+  const ready = useRef({ laidOut: false, sized: false })
+  const shownOffset = useRef<number | null>(null)
+  const revealMonth = useCallback(() => {
+    if (!ready.current.laidOut || !ready.current.sized) return
+    const y = offsetRef.current
+    if (shownOffset.current === y || !listRef.current) return
+    shownOffset.current = y
+    const scroll = () => listRef.current?.scrollTo({ animated: false, y })
+    scroll()
+    requestAnimationFrame(scroll)
+  }, [])
   useEffect(() => {
-    if (selectedMonth == null) return
-    const frame = requestAnimationFrame(() => {
-      listRef.current?.scrollTo({
-        animated: false,
-        y: Math.max(0, (selectedMonth - 2) * 48),
-      })
-    })
-    return () => cancelAnimationFrame(frame)
-  }, [selectedMonth])
+    offsetRef.current = offset
+    revealMonth()
+  }, [offset, revealMonth])
+  const onContentSizeChange = useCallback(
+    (_width: number, height: number) => {
+      if (height <= 0) return
+      ready.current.sized = true
+      revealMonth()
+    },
+    [revealMonth]
+  )
+  const onLayout = useCallback(
+    (event: LayoutChangeEvent) => {
+      if (event.nativeEvent.layout.height <= 0) return
+      ready.current.laidOut = true
+      revealMonth()
+    },
+    [revealMonth]
+  )
   const months = useMemo(() => {
     const formatter = dateTimeFormat(locale, { month: 'long' })
     return Array.from({ length: 12 }, (_, month) => ({
@@ -41,6 +78,9 @@ function MonthMenu({
   const list = (
     <ScrollView
       ref={listRef}
+      contentOffset={contentOffset}
+      onContentSizeChange={onContentSizeChange}
+      onLayout={onLayout}
       style={[
         embedded ? styles.fill : styles.overlayList,
         scrollbarThumb(theme.colors.outline),
@@ -70,6 +110,11 @@ function MonthMenu({
       {list}
     </View>
   )
+}
+
+function monthScrollOffset(selectedMonth: number | undefined) {
+  if (selectedMonth == null) return 0
+  return Math.max(0, (selectedMonth - 2) * selectionMenuItemHeight)
 }
 
 const styles = StyleSheet.create({

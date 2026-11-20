@@ -4,6 +4,8 @@ import { Icon, Text, useTheme } from 'react-native-paper'
 
 import StateLayer from '../shared/StateLayer'
 
+export const selectionMenuItemHeight = 48
+
 function SelectionMenuItem({
   label,
   onPress,
@@ -76,7 +78,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     gap: 16,
-    minHeight: 48,
+    minHeight: selectionMenuItemHeight,
     overflow: 'hidden',
     paddingHorizontal: 16,
     width: '100%',
