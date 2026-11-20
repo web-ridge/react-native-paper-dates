@@ -318,7 +318,8 @@ function Month(props: BaseMonthProps & CalendarMode) {
   const monthName = formatMonth(locale, month)
   const theme = useTheme()
   const iconColor = theme.colors.onSurfaceVariant
-  const textFont = theme.fonts.titleSmall
+  // md.comp.date-picker menu-button.label-text: label large.
+  const textFont = theme.fonts.labelLarge
 
   return (
     <View
