@@ -568,7 +568,9 @@ describe('time inputs', () => {
     await fireEvent(minute, 'hoverIn')
     await fireEvent(minute, 'focus')
     await fireEvent(minute, 'pressIn')
-    expect(layer('rgba(20, 21, 22, 0.28)')).toBe(true)
+    // Hover, focus, and press don't stack: the strongest layer (10%) wins.
+    expect(layer('rgba(20, 21, 22, 0.1)')).toBe(true)
+    expect(layer('rgba(20, 21, 22, 0.28)')).toBe(false)
 
     const morning = states.getByLabelText('AM')
     await fireEvent(morning, 'hoverIn')
