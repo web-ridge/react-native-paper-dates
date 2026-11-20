@@ -349,7 +349,8 @@ export function useInputColors(
     return {
       backgroundColor: theme.colors.errorContainer,
       borderColor: theme.colors.error,
-      color: highlighted ? theme.colors.error : theme.colors.onErrorContainer,
+      // The focused field keeps on-error-container text (M3 time picker states).
+      color: theme.colors.onErrorContainer,
     }
   }
 

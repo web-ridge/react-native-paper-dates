@@ -1,8 +1,9 @@
-import { memo, useEffect, useState } from 'react'
+import { memo, useContext, useEffect, useState } from 'react'
 import { StyleSheet, useWindowDimensions, View } from 'react-native'
 import { IconButton, useTheme } from 'react-native-paper'
 
 import { DisplayModeContext } from '../contexts/DisplayModeContext'
+import { TimePickerPlacementContext } from '../contexts/TimePickerPlacementContext'
 import { getTranslation } from '../translations/utils'
 import AnalogClock from './AnalogClock'
 import ScrollTimePicker from './ScrollTimePicker'
@@ -58,6 +59,7 @@ function TimePicker({
 }) {
   const dimensions = useWindowDimensions()
   const theme = useTheme()
+  const placement = useContext(TimePickerPlacementContext)
   const [displayMode, setDisplayMode] = useState<'AM' | 'PM' | undefined>(() =>
     hours >= 12 ? 'PM' : 'AM'
   )
@@ -110,7 +112,11 @@ function TimePicker({
           onChange={onChange}
           onFocusInput={onFocusInput}
           onToggleKeyboard={toggleKeyboard}
-          showKeyboardToggle={!is24Hour || !onToggleKeyboard}
+          // The modal keeps its keyboard toggle bottom-left in the action
+          // row (M3), so only inline pickers show one beside the wheels.
+          showKeyboardToggle={
+            placement === 'inline' && (!is24Hour || !onToggleKeyboard)
+          }
         />
       </DisplayModeContext.Provider>
     )

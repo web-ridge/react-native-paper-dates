@@ -9,7 +9,7 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native'
-import { Button, IconButton, useTheme } from 'react-native-paper'
+import { Button, IconButton, Surface, useTheme } from 'react-native-paper'
 
 import { TimePickerPlacementContext } from '../contexts/TimePickerPlacementContext'
 import ModalScrim from '../shared/ModalScrim'
@@ -132,8 +132,6 @@ export function TimePickerModal({
   const onFocusInput = (type: PossibleClockTypes) => setFocused(type)
   const textFont = theme.fonts.labelMedium
   const uppercase = _uppercase ?? false
-  const keyboardToggleInPicker =
-    !is24Hour && displayedInputType === inputTypes.scroll
   const toggleInputType = () => {
     if (disabled) return
     Keyboard.dismiss()
@@ -177,11 +175,13 @@ export function TimePickerModal({
           style={[StyleSheet.absoluteFill, styles.center]}
         >
           <KeyboardAvoidingView behavior="padding" style={styles.center}>
-            <View
+            <Surface
+              backgroundColor={color}
+              borderRadius={modalCornerRadius}
+              elevation={3}
               style={[
                 styles.modalContent,
                 {
-                  backgroundColor: color,
                   minWidth: timePickerModalMinWidth(
                     is24Hour,
                     displayedInputType === inputTypes.picker
@@ -250,45 +250,43 @@ export function TimePickerModal({
                   },
                 ]}
               >
-                {keyboardToggleInPicker ? null : (
-                  <IconButton
-                    accessibilityLabel={
-                      displayedInputType === inputTypes.keyboard
-                        ? iconMode === inputTypes.scroll
-                          ? getTranslation(
-                              locale,
-                              'toggleScroll',
-                              'Toggle scroll picker'
-                            )
-                          : getTranslation(
-                              locale,
-                              'toggleClock',
-                              'Toggle dial picker'
-                            )
+                <IconButton
+                  accessibilityLabel={
+                    displayedInputType === inputTypes.keyboard
+                      ? iconMode === inputTypes.scroll
+                        ? getTranslation(
+                            locale,
+                            'toggleScroll',
+                            'Toggle scroll picker'
+                          )
                         : getTranslation(
                             locale,
-                            'toggleKeyboard',
-                            'Toggle input picker'
+                            'toggleClock',
+                            'Toggle dial picker'
                           )
-                    }
-                    disabled={disabled}
-                    icon={
-                      getTimeInputTypeIcon(
-                        displayedInputType,
-                        {
-                          keyboard: keyboardIcon,
-                          picker: clockIcon,
-                          scroll: scrollIcon,
-                        },
-                        iconMode
-                      ) ?? keyboardIcon
-                    }
-                    iconColor={theme.colors.onSurfaceVariant}
-                    onPress={toggleInputType}
-                    size={24}
-                    style={styles.inputTypeToggle}
-                  />
-                )}
+                      : getTranslation(
+                          locale,
+                          'toggleKeyboard',
+                          'Toggle input picker'
+                        )
+                  }
+                  disabled={disabled}
+                  icon={
+                    getTimeInputTypeIcon(
+                      displayedInputType,
+                      {
+                        keyboard: keyboardIcon,
+                        picker: clockIcon,
+                        scroll: scrollIcon,
+                      },
+                      iconMode
+                    ) ?? keyboardIcon
+                  }
+                  iconColor={theme.colors.onSurfaceVariant}
+                  onPress={toggleInputType}
+                  size={24}
+                  style={styles.inputTypeToggle}
+                />
                 <View style={sharedStyles.root} />
                 <Button mode="text" onPress={onDismiss}>
                   {displayCase(cancelLabel, uppercase)}
@@ -304,13 +302,18 @@ export function TimePickerModal({
                   {displayCase(confirmLabel, uppercase)}
                 </Button>
               </View>
-            </View>
+            </Surface>
           </KeyboardAvoidingView>
         </View>
       </>
     </Modal>
   )
 }
+
+// md.comp.time-pickers modal container: corner.extra-large on
+// surface-container. Expressive tokens list no elevation, so it uses the M3
+// dialog level 3 like the date picker.
+const modalCornerRadius = 28
 
 function orNow(value: number | undefined | null, read: (date: Date) => number) {
   return value ?? read(new Date())
@@ -333,16 +336,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   modalContent: {
-    borderRadius: 28,
-    elevation: 3,
     justifyContent: 'space-between',
-    shadowColor: '#000',
-    shadowOffset: {
-      height: 1,
-      width: 0,
-    },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
   },
   timePickerContainer: {
     paddingBottom: 0,

@@ -557,7 +557,8 @@ describe('time inputs', () => {
     const hour = states.getByLabelText('Hour')
     await fireEvent(hour, 'focus')
     await fireEvent.changeText(hour, '99')
-    expect(StyleSheet.flatten(hour.props.style).color).toBe('rgb(255, 0, 0)')
+    // Focused or not, an invalid field uses on-error-container text.
+    expect(StyleSheet.flatten(hour.props.style).color).toBe('rgb(0, 255, 0)')
     await fireEvent(hour, 'blur')
     expect(StyleSheet.flatten(hour.props.style).color).toBe('rgb(0, 255, 0)')
     if (hour.parent) await fireEvent(hour.parent, 'mouseEnter')
@@ -756,6 +757,24 @@ describe('time picker modal', () => {
       modal.getByTestId('time-scroll-hours', { includeHiddenElements: true })
     ).toBeTruthy()
     expect(modal.queryByLabelText('Hour')).toBeNull()
+  })
+
+  it('keeps the 12h scroll modal keyboard toggle in the action row', async () => {
+    const modal = await render(
+      <TimePickerModal
+        defaultInputType="scroll"
+        hours={9}
+        locale="en"
+        minutes={45}
+        onConfirm={jest.fn()}
+        onDismiss={jest.fn()}
+        use24HourClock={false}
+        visible
+      />
+    )
+    expect(modal.queryByTestId('time-scroll-keyboard')).toBeNull()
+    expect(modal.getAllByLabelText('Toggle input picker')).toHaveLength(1)
+    await modal.unmount()
   })
 
   it('sizes the scroll field 140dp inline and 120dp in the modal (M3 Expressive)', async () => {
