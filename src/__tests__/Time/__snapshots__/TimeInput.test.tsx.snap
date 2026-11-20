@@ -17,7 +17,7 @@ exports[`renders TimeInput 1`] = `
         {
           "backgroundColor": "rgba(255, 255, 255, 1)",
           "borderColor": "rgba(103, 80, 164, 1)",
-          "borderRadius": 12,
+          "borderRadius": 16,
           "height": 120,
           "width": 100,
         },
@@ -34,7 +34,7 @@ exports[`renders TimeInput 1`] = `
             "overflow": "hidden",
           },
           {
-            "borderRadius": 10,
+            "borderRadius": 14,
           },
         ]
       }
@@ -50,10 +50,10 @@ exports[`renders TimeInput 1`] = `
             {
               "color": "rgba(103, 80, 164, 1)",
               "fontFamily": "System",
-              "fontSize": 45,
+              "fontSize": 57,
               "fontWeight": "400",
-              "letterSpacing": 0,
-              "lineHeight": 52,
+              "letterSpacing": -0.25,
+              "lineHeight": 64,
             },
           ]
         }
@@ -104,7 +104,7 @@ exports[`renders TimeInput 1`] = `
               "overflow": "hidden",
             },
             {
-              "borderRadius": 10,
+              "borderRadius": 14,
             },
           ]
         }

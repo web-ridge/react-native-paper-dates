@@ -98,7 +98,7 @@ function TimeInput(
   )
   const theme = useTheme()
 
-  const typeface = theme.fonts.displayMedium
+  const typeface = theme.fonts.displayLarge
 
   const fontSize = inputFontSize ?? typeface.fontSize
 
@@ -143,7 +143,7 @@ function TimeInput(
 
   const fieldHeight = isPicker ? timeSelectorHeight : timeInputFieldHeight
   const outlineWidth = 2
-  const radius = theme.shapes.corner.medium
+  const radius = theme.shapes.corner.large
   // Clipping the outlined box cuts the stroke off at the corner, so the
   // inner edge looks sharper than the focus ring. Clip the fill instead,
   // on the stroke's inner radius.

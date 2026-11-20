@@ -23,7 +23,6 @@ import {
   timePickerUsesLandscape,
   timeSelectorFieldWidth,
   timeSelectorHeight,
-  timeColonSize,
   timeSeparatorWidth,
   toHourInputFormat,
   toHourOutputFormat,
@@ -135,9 +134,14 @@ function TimeInputs({
         />
       </TimeField>
       <View style={[styles.separator, { height: fieldHeight }]}>
-        <View style={[styles.dot, { backgroundColor: dotColor }]} />
-        <View style={styles.dotGap} />
-        <View style={[styles.dot, { backgroundColor: dotColor }]} />
+        <Text
+          accessible={false}
+          importantForAccessibility="no"
+          maxFontSizeMultiplier={1.2}
+          style={[theme.fonts.displayLarge, styles.colon, { color: dotColor }]}
+        >
+          :
+        </Text>
       </View>
       <TimeField width={fieldWidth}>
         <TimeInput
@@ -234,13 +238,8 @@ const styles = StyleSheet.create({
   fields: {
     alignItems: 'flex-start',
   },
-  dot: {
-    borderRadius: timeColonSize / 2,
-    height: timeColonSize,
-    width: timeColonSize,
-  },
-  dotGap: {
-    height: 6,
+  colon: {
+    textAlign: 'center',
   },
   inputContainer: {
     alignItems: 'flex-start',

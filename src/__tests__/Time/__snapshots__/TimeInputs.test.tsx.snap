@@ -50,7 +50,7 @@ exports[`renders TimeInputs 1`] = `
               {
                 "backgroundColor": "rgba(255, 255, 255, 1)",
                 "borderColor": "transparent",
-                "borderRadius": 12,
+                "borderRadius": 16,
                 "height": 120,
                 "width": 100,
               },
@@ -67,7 +67,7 @@ exports[`renders TimeInputs 1`] = `
                   "overflow": "hidden",
                 },
                 {
-                  "borderRadius": 10,
+                  "borderRadius": 14,
                 },
               ]
             }
@@ -100,7 +100,7 @@ exports[`renders TimeInputs 1`] = `
                   {
                     "color": "rgba(29, 27, 32, 1)",
                     "fontFamily": "System",
-                    "fontSize": 45,
+                    "fontSize": 57,
                     "fontWeight": "400",
                     "height": 116,
                     "paddingBottom": 0,
@@ -121,7 +121,7 @@ exports[`renders TimeInputs 1`] = `
           {
             "alignItems": "center",
             "justifyContent": "center",
-            "width": 22,
+            "width": 16,
           },
           {
             "height": 120,
@@ -129,41 +129,44 @@ exports[`renders TimeInputs 1`] = `
         ]
       }
     >
-      <View
+      <Text
+        accessible={false}
+        importantForAccessibility="no"
+        maxFontSizeMultiplier={1.2}
         style={
           [
             {
-              "borderRadius": 4,
-              "height": 8,
-              "width": 8,
+              "textAlign": "left",
             },
             {
-              "backgroundColor": "rgba(29, 27, 32, 1)",
+              "color": "rgba(29, 27, 32, 1)",
+              "fontFamily": "System",
+              "fontWeight": "400",
+              "letterSpacing": 0,
             },
+            {
+              "writingDirection": "ltr",
+            },
+            [
+              {
+                "fontFamily": "System",
+                "fontSize": 57,
+                "fontWeight": "400",
+                "letterSpacing": -0.25,
+                "lineHeight": 64,
+              },
+              {
+                "textAlign": "center",
+              },
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
+            ],
           ]
         }
-      />
-      <View
-        style={
-          {
-            "height": 6,
-          }
-        }
-      />
-      <View
-        style={
-          [
-            {
-              "borderRadius": 4,
-              "height": 8,
-              "width": 8,
-            },
-            {
-              "backgroundColor": "rgba(29, 27, 32, 1)",
-            },
-          ]
-        }
-      />
+      >
+        :
+      </Text>
     </View>
     <View
       style={
@@ -199,7 +202,7 @@ exports[`renders TimeInputs 1`] = `
               {
                 "backgroundColor": "rgba(255, 255, 255, 1)",
                 "borderColor": "transparent",
-                "borderRadius": 12,
+                "borderRadius": 16,
                 "height": 120,
                 "width": 100,
               },
@@ -216,7 +219,7 @@ exports[`renders TimeInputs 1`] = `
                   "overflow": "hidden",
                 },
                 {
-                  "borderRadius": 10,
+                  "borderRadius": 14,
                 },
               ]
             }
@@ -246,7 +249,7 @@ exports[`renders TimeInputs 1`] = `
                   {
                     "color": "rgba(29, 27, 32, 1)",
                     "fontFamily": "System",
-                    "fontSize": 45,
+                    "fontSize": 57,
                     "fontWeight": "400",
                     "height": 116,
                     "paddingBottom": 0,

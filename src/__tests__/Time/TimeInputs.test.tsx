@@ -108,3 +108,22 @@ it('does not move the focused field when AM or PM is pressed', async () => {
   expect(onChange).toHaveBeenCalledWith({ hours: 21, minutes: 45 })
   expect(onChange.mock.calls[0][0].focused).toBeUndefined()
 })
+
+it('separates hours and minutes with a colon hidden from assistive tech', async () => {
+  const screen = await render(
+    <TimeInputs
+      focused="hours"
+      hours={12}
+      inputType="keyboard"
+      is24Hour
+      locale="en"
+      minutes={45}
+      onChange={() => null}
+      onFocusInput={() => null}
+    />
+  )
+
+  const colon = screen.getByText(':', { includeHiddenElements: true })
+  expect(colon).toHaveProp('accessible', false)
+  expect(colon).toHaveProp('importantForAccessibility', 'no')
+})

@@ -31,7 +31,6 @@ import {
   scrollFieldWidth,
   scrollItemHeight,
   type TimeChange,
-  timeColonSize,
   timeSeparatorWidth,
   toHourInputFormat,
   toHourOutputFormat,
@@ -158,7 +157,7 @@ function ScrollTimePicker({
         values={hourValues}
       />
       <View style={[styles.separator, { height: fieldHeight }]}>
-        <SeparatorDots color={dotColor} />
+        <TimeSeparator color={dotColor} />
       </View>
       <ScrollWheel
         accessibilityLabel={rangeLabel(minuteLabel, minuteValues)}
@@ -381,7 +380,7 @@ function ScrollWheel({
     {
       height: fieldHeight,
       backgroundColor: theme.colors.surfaceContainerLowest,
-      borderRadius: theme.shapes.corner.medium,
+      borderRadius: theme.shapes.corner.large,
     },
   ]
 
@@ -389,7 +388,7 @@ function ScrollWheel({
     <View style={[styles.wheelFrame, { height: fieldHeight }]}>
       <FocusRing
         focused={focused && !disabled}
-        radius={theme.shapes.corner.medium}
+        radius={theme.shapes.corner.large}
       />
       <View
         accessibilityActions={[{ name: 'increment' }, { name: 'decrement' }]}
@@ -518,13 +517,18 @@ function ScrollWheel({
   )
 }
 
-function SeparatorDots({ color }: { color: ColorValue }) {
+// md.comp.time-pickers separator: a display large emphasized colon.
+function TimeSeparator({ color }: { color: ColorValue }) {
+  const theme = useTheme()
   return (
-    <>
-      <View style={[styles.dot, { backgroundColor: color }]} />
-      <View style={styles.dotGap} />
-      <View style={[styles.dot, { backgroundColor: color }]} />
-    </>
+    <Text
+      accessible={false}
+      importantForAccessibility="no"
+      maxFontSizeMultiplier={1.2}
+      style={[theme.fonts.displayLargeEmphasized, styles.colon, { color }]}
+    >
+      :
+    </Text>
   )
 }
 
@@ -793,13 +797,8 @@ function wrappedWheelOffset(offset: number, count: number, copies: number) {
 }
 
 const styles = StyleSheet.create({
-  dot: {
-    borderRadius: timeColonSize / 2,
-    height: timeColonSize,
-    width: timeColonSize,
-  },
-  dotGap: {
-    height: 6,
+  colon: {
+    textAlign: 'center',
   },
   item: {
     alignItems: 'center',
