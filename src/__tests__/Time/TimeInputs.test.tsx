@@ -84,3 +84,24 @@ it('has no captions outside keyboard mode', async () => {
 
   expect(screen.queryByText('Hour', { includeHiddenElements: true })).toBeNull()
 })
+
+it('does not move the focused field when AM or PM is pressed', async () => {
+  const onChange = jest.fn()
+  const screen = await render(
+    <TimeInputs
+      focused="minutes"
+      hours={9}
+      inputType="keyboard"
+      is24Hour={false}
+      locale="en"
+      minutes={45}
+      onChange={onChange}
+      onFocusInput={() => null}
+    />
+  )
+
+  await fireEvent.press(screen.getByLabelText('PM'))
+
+  expect(onChange).toHaveBeenCalledWith({ hours: 21, minutes: 45 })
+  expect(onChange.mock.calls[0][0].focused).toBeUndefined()
+})

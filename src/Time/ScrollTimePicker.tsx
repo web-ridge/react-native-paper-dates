@@ -179,8 +179,8 @@ function ScrollTimePicker({
             inputType={inputTypes.scroll}
             locale={locale}
             onChange={(nextHours) => {
+              // Keep the focused field; switching AM/PM only changes hours.
               onChange({
-                focused: clockTypes.hours,
                 hours: nextHours,
                 minutes,
               })

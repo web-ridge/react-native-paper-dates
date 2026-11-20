@@ -71,8 +71,8 @@ function TimeInputs({
 
   const minutesRef = useLatest(minutes)
   const onChangeHours = (newHours: number) => {
+    // Keep the focused field; switching AM/PM only changes hours.
     onChange({
-      focused: clockTypes.hours,
       hours: newHours,
       minutes: minutesRef.current,
     })

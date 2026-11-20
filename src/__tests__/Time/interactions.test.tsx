@@ -757,6 +757,38 @@ describe('time picker modal', () => {
     ).toBeTruthy()
     expect(modal.queryByLabelText('Hour')).toBeNull()
   })
+
+  it('keeps minutes focused when AM or PM is pressed in dial mode', async () => {
+    const modal = await render(
+      <TimePickerModal
+        defaultInputType="picker"
+        hours={9}
+        locale="en"
+        minutes={45}
+        onConfirm={jest.fn()}
+        onDismiss={jest.fn()}
+        use24HourClock={false}
+        visible
+      />
+    )
+
+    await fireEvent.press(modal.getByLabelText('Minute'))
+    expect(modal.getByLabelText('Minute')).toHaveProp(
+      'accessibilityState',
+      expect.objectContaining({ selected: true })
+    )
+
+    await fireEvent.press(modal.getByLabelText('PM'))
+
+    expect(modal.getByLabelText('Minute')).toHaveProp(
+      'accessibilityState',
+      expect.objectContaining({ selected: true })
+    )
+    expect(modal.getByLabelText('Hour')).toHaveProp(
+      'accessibilityState',
+      expect.objectContaining({ selected: false })
+    )
+  })
 })
 
 describe('scroll time picker', () => {
@@ -882,6 +914,60 @@ describe('scroll time picker', () => {
     await fireEvent.press(picker.getByLabelText('PM'))
     expect(picker.onChange).toHaveBeenCalledWith(
       expect.objectContaining({ hours: 21 })
+    )
+    expect(picker.onChange).not.toHaveBeenCalledWith(
+      expect.objectContaining({ focused: 'hours', hours: 21 })
+    )
+  })
+
+  it('keeps the minutes wheel focused when AM or PM is pressed', async () => {
+    const modal = await render(
+      <TimePickerModal
+        defaultInputType="scroll"
+        hours={9}
+        locale="en"
+        minutes={45}
+        onConfirm={jest.fn()}
+        onDismiss={jest.fn()}
+        use24HourClock={false}
+        visible
+      />
+    )
+
+    await fireEvent(
+      modal.getByTestId('time-scroll-minutes-control', {
+        includeHiddenElements: true,
+      }),
+      'touchStart'
+    )
+
+    const minutesWheel = () =>
+      modal.getByTestId('time-scroll-minutes-control', {
+        includeHiddenElements: true,
+      })
+    const hoursWheel = () =>
+      modal.getByTestId('time-scroll-hours-control', {
+        includeHiddenElements: true,
+      })
+
+    expect(minutesWheel()).toHaveProp(
+      'accessibilityState',
+      expect.objectContaining({ selected: true })
+    )
+    expect(hoursWheel()).toHaveProp(
+      'accessibilityState',
+      expect.objectContaining({ selected: false })
+    )
+
+    await fireEvent.press(modal.getByLabelText('PM'))
+
+    expect(minutesWheel()).toHaveProp(
+      'accessibilityState',
+      expect.objectContaining({ selected: true })
+    )
+    expect(hoursWheel()).toHaveProp(
+      'accessibilityState',
+      expect.objectContaining({ selected: false })
     )
   })
 
