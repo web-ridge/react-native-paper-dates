@@ -874,6 +874,35 @@ describe('scroll time picker', () => {
     )
   })
 
+  it('wraps a spin past 12 without sticking on the last row', async () => {
+    const picker = await renderScroll({ hours: 12, minutes: 0 })
+    const hours = picker.getByTestId('time-scroll-hours', {
+      includeHiddenElements: true,
+    })
+    const home = hours.props.contentOffset.y as number
+    await fireEvent(hours, 'scrollBeginDrag', scrollEvent(home))
+    await fireEvent.scroll(hours, scrollEvent(home))
+    await fireEvent(
+      hours,
+      'scrollEndDrag',
+      scrollEvent(home + scrollItemHeight, 1)
+    )
+    await fireEvent.scroll(hours, scrollEvent(home + scrollItemHeight))
+    await fireEvent.scroll(hours, scrollEvent(0))
+    await fireEvent.scroll(hours, scrollEvent(10000 * scrollItemHeight))
+    await fireEvent(
+      hours,
+      'momentumScrollEnd',
+      scrollEvent(home + scrollItemHeight)
+    )
+    expect(picker.onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ hours: 13 })
+    )
+    const calls = picker.onChange.mock.calls.length
+    await fireEvent(hours, 'momentumScrollEnd', scrollEvent(home))
+    expect(picker.onChange.mock.calls.length).toBe(calls)
+  })
+
   it('keeps 12 on the current side of noon and wraps a 24-hour wheel', async () => {
     const morning = await renderScroll({ hours: 8, minutes: 0 })
     await fireEvent(

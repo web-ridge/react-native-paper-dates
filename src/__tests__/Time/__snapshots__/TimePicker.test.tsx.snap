@@ -53,10 +53,7 @@ exports[`renders TimePicker 1`] = `
             style={
               [
                 {
-                  "alignItems": "center",
                   "borderWidth": 2,
-                  "justifyContent": "center",
-                  "overflow": "hidden",
                 },
                 {
                   "backgroundColor": "rgba(255, 255, 255, 1)",
@@ -68,46 +65,61 @@ exports[`renders TimePicker 1`] = `
               ]
             }
           >
-            <TextInput
-              accessibilityLabel="Hour"
-              blurOnSubmit={false}
-              keyboardAppearance="default"
-              keyboardType="number-pad"
-              maxFontSizeMultiplier={1.2}
-              maxLength={2}
-              multiline={false}
-              numberOfLines={1}
-              onBlur={[Function]}
-              onChangeText={[Function]}
-              onFocus={[Function]}
-              onSubmitEditing={[Function]}
-              returnKeyType="next"
-              selectTextOnFocus={true}
-              selectionColor="rgba(103, 80, 164, 1)"
+            <View
               style={
                 [
                   {
-                    "borderWidth": 0,
-                    "outlineWidth": 0,
-                    "paddingHorizontal": 0,
-                    "textAlign": "center",
-                    "width": "100%",
+                    "alignItems": "center",
+                    "flex": 1,
+                    "justifyContent": "center",
+                    "overflow": "hidden",
                   },
                   {
-                    "color": "rgba(29, 27, 32, 1)",
-                    "fontFamily": "System",
-                    "fontSize": 45,
-                    "fontWeight": "400",
-                    "height": 116,
-                    "lineHeight": 45,
-                    "paddingBottom": 35.5,
-                    "paddingTop": 35.5,
+                    "borderRadius": 10,
                   },
                 ]
               }
-              textAlign="center"
-              value="06"
-            />
+            >
+              <TextInput
+                accessibilityLabel="Hour"
+                blurOnSubmit={false}
+                keyboardAppearance="default"
+                keyboardType="number-pad"
+                maxFontSizeMultiplier={1.2}
+                maxLength={2}
+                multiline={false}
+                numberOfLines={1}
+                onBlur={[Function]}
+                onChangeText={[Function]}
+                onFocus={[Function]}
+                onSubmitEditing={[Function]}
+                returnKeyType="next"
+                selectTextOnFocus={true}
+                selectionColor="rgba(103, 80, 164, 1)"
+                style={
+                  [
+                    {
+                      "borderWidth": 0,
+                      "outlineWidth": 0,
+                      "paddingHorizontal": 0,
+                      "textAlign": "center",
+                      "width": "100%",
+                    },
+                    {
+                      "color": "rgba(29, 27, 32, 1)",
+                      "fontFamily": "System",
+                      "fontSize": 45,
+                      "fontWeight": "400",
+                      "height": 116,
+                      "paddingBottom": 0,
+                      "paddingTop": 0,
+                    },
+                  ]
+                }
+                textAlign="center"
+                value="06"
+              />
+            </View>
           </View>
         </View>
       </View>
@@ -190,10 +202,7 @@ exports[`renders TimePicker 1`] = `
             style={
               [
                 {
-                  "alignItems": "center",
                   "borderWidth": 2,
-                  "justifyContent": "center",
-                  "overflow": "hidden",
                 },
                 {
                   "backgroundColor": "rgba(255, 255, 255, 1)",
@@ -205,43 +214,58 @@ exports[`renders TimePicker 1`] = `
               ]
             }
           >
-            <TextInput
-              accessibilityLabel="Minute"
-              keyboardAppearance="default"
-              keyboardType="number-pad"
-              maxFontSizeMultiplier={1.2}
-              maxLength={2}
-              multiline={false}
-              numberOfLines={1}
-              onBlur={[Function]}
-              onChangeText={[Function]}
-              onFocus={[Function]}
-              selectTextOnFocus={true}
-              selectionColor="rgba(103, 80, 164, 1)"
+            <View
               style={
                 [
                   {
-                    "borderWidth": 0,
-                    "outlineWidth": 0,
-                    "paddingHorizontal": 0,
-                    "textAlign": "center",
-                    "width": "100%",
+                    "alignItems": "center",
+                    "flex": 1,
+                    "justifyContent": "center",
+                    "overflow": "hidden",
                   },
                   {
-                    "color": "rgba(29, 27, 32, 1)",
-                    "fontFamily": "System",
-                    "fontSize": 45,
-                    "fontWeight": "400",
-                    "height": 116,
-                    "lineHeight": 45,
-                    "paddingBottom": 35.5,
-                    "paddingTop": 35.5,
+                    "borderRadius": 10,
                   },
                 ]
               }
-              textAlign="center"
-              value="30"
-            />
+            >
+              <TextInput
+                accessibilityLabel="Minute"
+                keyboardAppearance="default"
+                keyboardType="number-pad"
+                maxFontSizeMultiplier={1.2}
+                maxLength={2}
+                multiline={false}
+                numberOfLines={1}
+                onBlur={[Function]}
+                onChangeText={[Function]}
+                onFocus={[Function]}
+                selectTextOnFocus={true}
+                selectionColor="rgba(103, 80, 164, 1)"
+                style={
+                  [
+                    {
+                      "borderWidth": 0,
+                      "outlineWidth": 0,
+                      "paddingHorizontal": 0,
+                      "textAlign": "center",
+                      "width": "100%",
+                    },
+                    {
+                      "color": "rgba(29, 27, 32, 1)",
+                      "fontFamily": "System",
+                      "fontSize": 45,
+                      "fontWeight": "400",
+                      "height": 116,
+                      "paddingBottom": 0,
+                      "paddingTop": 0,
+                    },
+                  ]
+                }
+                textAlign="center"
+                value="30"
+              />
+            </View>
           </View>
         </View>
       </View>

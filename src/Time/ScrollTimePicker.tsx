@@ -35,7 +35,13 @@ import {
   toHourOutputFormat,
 } from './timeUtils'
 
-const scrollCopies = 3
+// Shorter wheels need more repeats so a spin has about as much room as the
+// minute wheel before either end. The centered copy is restored after the
+// gesture, which keeps 12 followed by 01 instead of a blank edge.
+function loopCopies(count: number) {
+  const side = Math.max(1, Math.ceil(60 / count))
+  return side * 2 + 1
+}
 
 function ScrollTimePicker({
   disabled,
@@ -168,7 +174,10 @@ function ScrollWheel({
   values: readonly number[]
 }) {
   const count = values.length
-  const centeredIndex = count + values.indexOf(value)
+  const copies = loopCopies(count)
+  const centerCopy = Math.floor(copies / 2)
+  const valueIndex = values.indexOf(value)
+  const centeredIndex = centerCopy * count + Math.max(0, valueIndex)
   const listRef = useRef<ScrollViewInstance | null>(null)
   const [centered, setCentered] = useState(centeredIndex)
   const onChangeRef = useLatest(onChange)
@@ -177,8 +186,12 @@ function ScrollWheel({
   const theme = useTheme()
   const [hovered, setHovered] = useState(false)
   const [pressed, setPressed] = useState(false)
-  const selectedType = theme.fonts.displayMedium
-  const idleType = theme.fonts.headlineMedium
+  const dragging = useRef(false)
+  const spun = useRef(false)
+  const [initialOffset] = useState(() => ({
+    x: 0,
+    y: centeredIndex * scrollItemHeight,
+  }))
 
   useEffect(() => {
     listRef.current?.scrollTo({
@@ -210,21 +223,34 @@ function ScrollWheel({
     const normalized = ((index % count) + count) % count
     const next = values[normalized]
     if (next !== value) onChange(next)
-    const middle = count + normalized
+    const middle = centerCopy * count + normalized
+    setCentered(middle)
     if (index !== middle) {
       listRef.current?.scrollTo({
         animated: false,
         y: middle * scrollItemHeight,
       })
-      setCentered(middle)
     }
+  }
+
+  // While the wheel is coasting, jump by whole cycles before the blank edge.
+  // Repeated rows match, so 12 continues into 01 without a visible seam.
+  const shiftIntoCenter = (y: number) => {
+    if (dragging.current || !spun.current) return y
+    const margin = scrollItemHeight * 30
+    const limit = (copies * count - 1) * scrollItemHeight - margin
+    if (y >= margin && y <= limit) return y
+    const cycle = count * scrollItemHeight
+    const within = y - Math.floor(y / cycle) * cycle
+    const next = centerCopy * cycle + within
+    listRef.current?.scrollTo({ animated: false, y: next })
+    return next
   }
 
   const step = (delta: number) => {
     if (disabled) return
     onChange(values[(values.indexOf(value) + delta + count) % count])
   }
-  const contentColor = withAlpha(theme.colors.onSurface, disabledContentOpacity)
   const wheelStyle = [
     styles.wheel,
     {
@@ -288,80 +314,55 @@ function ScrollWheel({
         <ScrollView
           ref={listRef}
           contentContainerStyle={styles.wheelContent}
-          contentOffset={{ x: 0, y: centeredIndex * scrollItemHeight }}
+          bounces={false}
+          contentOffset={initialOffset}
           decelerationRate="fast"
-          disableIntervalMomentum
           importantForAccessibility="no-hide-descendants"
           nestedScrollEnabled
           onMomentumScrollEnd={(event) => selectIndex(offsetIndex(event))}
-          onScroll={(event) => setCentered(offsetIndex(event))}
+          onScroll={(event) => {
+            const y = shiftIntoCenter(event.nativeEvent.contentOffset.y)
+            if (y !== event.nativeEvent.contentOffset.y) return
+            setCentered(offsetIndex(event))
+          }}
+          onScrollBeginDrag={() => {
+            dragging.current = true
+            spun.current = true
+          }}
           onScrollEndDrag={(event) => {
+            dragging.current = false
             if ((event.nativeEvent.velocity?.y ?? 0) !== 0) return
             selectIndex(offsetIndex(event))
           }}
+          overScrollMode="never"
           scrollEnabled={!disabled}
           scrollEventThrottle={16}
+          scrollsToTop={false}
           showsVerticalScrollIndicator={false}
           snapToInterval={scrollItemHeight}
           style={styles.wheelScroller}
           testID={testID}
         >
-          {Array.from({ length: scrollCopies }, (_, copy) =>
+          {Array.from({ length: copies }, (_, copy) =>
             values.map((item, index) => {
               const listIndex = copy * count + index
-              const active = listIndex === centered
               const neighbor =
                 listIndex === centered - 1 || listIndex === centered + 1
-              const text = (
-                <Text
-                  maxFontSizeMultiplier={1.5}
-                  selectable={false}
-                  style={
-                    active
-                      ? [
-                          selectedType,
-                          styles.value,
-                          styles.selectedValue,
-                          {
-                            color: disabled
-                              ? contentColor
-                              : theme.colors.onSurface,
-                          },
-                        ]
-                      : [
-                          idleType,
-                          styles.value,
-                          styles.idleValue,
-                          {
-                            color: disabled
-                              ? contentColor
-                              : theme.colors.onSurfaceVariant,
-                          },
-                        ]
-                  }
-                >
-                  {padTime(item)}
-                </Text>
-              )
-              if (!neighbor) {
-                return (
-                  <View key={`${copy}-${item}`} style={styles.item}>
-                    {text}
-                  </View>
-                )
-              }
               return (
-                <Pressable
-                  key={`${copy}-${item}`}
-                  accessible={false}
+                <WheelRow
+                  active={listIndex === centered}
                   disabled={disabled}
-                  importantForAccessibility="no"
-                  onPress={() => step(listIndex - centered)}
-                  style={styles.item}
-                  testID={`${testID}-${listIndex < centered ? 'previous' : 'next'}`}
-                >
-                  {text}
-                </Pressable>
+                  key={`${copy}-${item}`}
+                  label={padTime(item)}
+                  onPress={
+                    neighbor ? () => step(listIndex - centered) : undefined
+                  }
+                  testID={
+                    neighbor
+                      ? `${testID}-${listIndex < centered ? 'previous' : 'next'}`
+                      : undefined
+                  }
+                />
               )
             })
           )}
@@ -370,6 +371,55 @@ function ScrollWheel({
     </View>
   )
 }
+
+const WheelRow = memo(function WheelRow({
+  active,
+  disabled,
+  label,
+  onPress,
+  testID,
+}: {
+  active: boolean
+  disabled?: boolean
+  label: string
+  onPress?: () => void
+  testID?: string
+}) {
+  const theme = useTheme()
+  const color = disabled
+    ? withAlpha(theme.colors.onSurface, disabledContentOpacity)
+    : active
+      ? theme.colors.onSurface
+      : theme.colors.onSurfaceVariant
+  const type = active ? theme.fonts.displayMedium : theme.fonts.headlineMedium
+  const text = (
+    <Text
+      maxFontSizeMultiplier={1.5}
+      selectable={false}
+      style={[
+        type,
+        styles.value,
+        active ? styles.selectedValue : styles.idleValue,
+        { color },
+      ]}
+    >
+      {label}
+    </Text>
+  )
+  if (!onPress) return <View style={styles.item}>{text}</View>
+  return (
+    <Pressable
+      accessible={false}
+      disabled={disabled}
+      importantForAccessibility="no"
+      onPress={onPress}
+      style={styles.item}
+      testID={testID}
+    >
+      {text}
+    </Pressable>
+  )
+})
 
 function KeyboardToggle({
   disabled,

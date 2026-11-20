@@ -7,6 +7,7 @@ import {
   useState,
 } from 'react'
 import {
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -141,16 +142,26 @@ function TimeInput(
       : controlledValue
 
   const fieldHeight = isPicker ? timeSelectorHeight : timeInputFieldHeight
+  const outlineWidth = 2
+  const radius = theme.shapes.corner.medium
+  // Clipping the outlined box cuts the stroke off at the corner, so the
+  // inner edge looks sharper than the focus ring. Clip the fill instead,
+  // on the stroke's inner radius.
+  const innerRadius = Math.max(0, radius - outlineWidth)
 
-  const textPadding = Math.max(0, (fieldHeight - 4 - fontSize) / 2)
+  const contentHeight = fieldHeight - outlineWidth * 2
+  const textPadding = Math.max(0, (contentHeight - fontSize) / 2)
+  // A line box locked to the font size clips the last glyph on iOS and
+  // draws the caret through it. UITextField centers the text itself.
+  const iosInput = Platform.OS === 'ios'
 
   const fieldFocused = isPicker ? selectorFocused : inputFocused
   const fieldStyle = [
-    styles.root,
+    styles.outline,
     {
       backgroundColor,
       borderColor,
-      borderRadius: theme.shapes.corner.medium,
+      borderRadius: radius,
       height: fieldHeight,
       width,
     },
@@ -158,10 +169,7 @@ function TimeInput(
 
   return (
     <View style={styles.frame}>
-      <FocusRing
-        focused={fieldFocused && !disabled}
-        radius={theme.shapes.corner.medium}
-      />
+      <FocusRing focused={fieldFocused && !disabled} radius={radius} />
       <View
         {...(isPicker
           ? null
@@ -177,103 +185,109 @@ function TimeInput(
             })}
         style={fieldStyle}
       >
-        <StateLayer
-          color={theme.colors.onSurface}
-          focused={!disabled && fieldFocused}
-          hovered={!disabled && hovered}
-          pressed={!disabled && pointerPressed}
-        />
-        {isPicker ? (
-          <Text
-            maxFontSizeMultiplier={1.5}
-            selectable={false}
-            style={[
-              styles.value,
-              {
-                ...typeface,
-                color,
-                fontSize,
-              },
-            ]}
-          >
-            {formattedValue}
-          </Text>
-        ) : (
-          <TextInput
-            ref={ref}
-            accessibilityLabel={accessibilityLabel}
-            keyboardAppearance={theme.dark ? 'dark' : 'default'}
-            keyboardType="number-pad"
-            maxFontSizeMultiplier={1.5}
-            maxLength={2}
-            multiline={false}
-            numberOfLines={1}
-            onBlur={() => {
-              setEditing(false)
-              setInputFocused(false)
-            }}
-            onChangeText={onInnerChange}
-            onFocus={() => {
-              if (disabled) return
-              setEditing(false)
-              setInputFocused(true)
-            }}
-            selectTextOnFocus
-            style={[
-              styles.input,
-              {
-                color,
-                fontFamily: typeface.fontFamily,
-                fontSize,
-                fontWeight: typeface.fontWeight,
-                height: fieldHeight - 4,
-                lineHeight: fontSize,
-                paddingBottom: textPadding,
-                paddingTop: textPadding,
-              },
-            ]}
-            textAlign="center"
-            value={formattedValue}
-            {...rest}
-            {...(disabled
-              ? {
-                  'aria-disabled': true,
-                  'accessibilityState': { disabled: true },
-                  'caretHidden': true,
-                  'editable': false,
-                }
-              : null)}
+        <View style={[styles.fill, { borderRadius: innerRadius }]}>
+          <StateLayer
+            color={theme.colors.onSurface}
+            focused={!disabled && fieldFocused}
+            hovered={!disabled && hovered}
+            pressed={!disabled && pointerPressed}
           />
-        )}
-        {isPicker ? (
-          <Pressable
-            accessibilityLabel={accessibilityLabel}
-            accessibilityRole="button"
-            accessibilityState={{
-              disabled: disabled || undefined,
-              selected: pressed,
-            }}
-            disabled={disabled}
-            onBlur={() => setSelectorFocused(false)}
-            onFocus={() => {
-              if (!disabled) setSelectorFocused(true)
-            }}
-            onHoverIn={() => setHovered(true)}
-            onHoverOut={() => setHovered(false)}
-            onPress={() => {
-              if (!disabled) onPress?.(clockType)
-            }}
-            onPressIn={() => setPointerPressed(true)}
-            onPressOut={() => setPointerPressed(false)}
-            style={[
-              StyleSheet.absoluteFill,
-              sharedStyles.overflowHidden,
-              {
-                borderRadius: theme.shapes.corner.medium,
-              },
-            ]}
-          />
-        ) : null}
+          {isPicker ? (
+            <Text
+              maxFontSizeMultiplier={1.5}
+              selectable={false}
+              style={[
+                styles.value,
+                {
+                  ...typeface,
+                  color,
+                  fontSize,
+                },
+              ]}
+            >
+              {formattedValue}
+            </Text>
+          ) : (
+            <TextInput
+              ref={ref}
+              accessibilityLabel={accessibilityLabel}
+              keyboardAppearance={theme.dark ? 'dark' : 'default'}
+              keyboardType="number-pad"
+              maxFontSizeMultiplier={1.5}
+              maxLength={2}
+              multiline={false}
+              numberOfLines={1}
+              onBlur={() => {
+                setEditing(false)
+                setInputFocused(false)
+              }}
+              onChangeText={onInnerChange}
+              onFocus={() => {
+                if (disabled) return
+                setEditing(false)
+                setInputFocused(true)
+              }}
+              selectTextOnFocus
+              style={[
+                styles.input,
+                {
+                  color,
+                  fontFamily: typeface.fontFamily,
+                  fontSize,
+                  fontWeight: typeface.fontWeight,
+                  height: contentHeight,
+                  ...(iosInput
+                    ? { paddingBottom: 0, paddingTop: 0 }
+                    : {
+                        lineHeight: fontSize,
+                        paddingBottom: textPadding,
+                        paddingTop: textPadding,
+                      }),
+                },
+              ]}
+              textAlign="center"
+              value={formattedValue}
+              {...rest}
+              {...(disabled
+                ? {
+                    'aria-disabled': true,
+                    'accessibilityState': { disabled: true },
+                    'caretHidden': true,
+                    'editable': false,
+                  }
+                : null)}
+            />
+          )}
+          {isPicker ? (
+            <Pressable
+              accessibilityLabel={accessibilityLabel}
+              accessibilityRole="button"
+              accessibilityState={{
+                disabled: disabled || undefined,
+                selected: pressed,
+              }}
+              disabled={disabled}
+              onBlur={() => setSelectorFocused(false)}
+              onFocus={() => {
+                if (!disabled) setSelectorFocused(true)
+              }}
+              onHoverIn={() => setHovered(true)}
+              onHoverOut={() => setHovered(false)}
+              onPress={() => {
+                if (!disabled) onPress?.(clockType)
+              }}
+              onPressIn={() => setPointerPressed(true)}
+              onPressOut={() => setPointerPressed(false)}
+              style={[
+                StyleSheet.absoluteFill,
+                sharedStyles.overflowHidden,
+                {
+                  borderRadius: innerRadius,
+                },
+              ]}
+            />
+          ) : null}
+        </View>
       </View>
     </View>
   )
@@ -291,14 +305,17 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: '100%',
   },
+  fill: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
   frame: {
     overflow: 'visible',
   },
-  root: {
-    alignItems: 'center',
+  outline: {
     borderWidth: 2,
-    justifyContent: 'center',
-    overflow: 'hidden',
   },
   value: {
     textAlign: 'center',
