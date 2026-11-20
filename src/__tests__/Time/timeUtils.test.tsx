@@ -10,10 +10,14 @@ import {
   isValidHourInput,
   isValidMinuteInput,
   snap,
+  focusRingReach,
+  periodSelectorGap,
   timeDialFits,
   timePickerModalMinWidth,
   timePickerUsesLandscape,
   timeSelectorFieldWidth,
+  timeSeparatorGlyphWidth,
+  timeSeparatorWidth,
   toHourInputFormat,
   toHourOutputFormat,
 } from '../../Time/timeUtils'
@@ -168,10 +172,22 @@ describe('timeUtils', () => {
     expect(timeSelectorFieldWidth('picker', true, false)).toBe(132)
     expect(timeSelectorFieldWidth('picker', true, true)).toBe(100)
     expect(timeSelectorFieldWidth('keyboard', true, false)).toBe(100)
-    // 16dp separator and 8dp field-to-period gap (Expressive) plus 24dp padding.
-    expect(timePickerModalMinWidth(false, true)).toBe(304)
-    expect(timePickerModalMinWidth(false, false)).toBe(304)
-    expect(timePickerModalMinWidth(true, true)).toBe(304)
-    expect(timePickerModalMinWidth(true, false)).toBe(240)
+    // Separator slot is 26dp (16dp glyph + 5dp focus-ring reach on each
+    // side) and the field-to-period gap stays 8dp, plus 24dp padding.
+    expect(timePickerModalMinWidth(false, true)).toBe(314)
+    expect(timePickerModalMinWidth(false, false)).toBe(314)
+    expect(timePickerModalMinWidth(true, true)).toBe(314)
+    expect(timePickerModalMinWidth(true, false)).toBe(250)
+  })
+
+  it('clears the 5dp focus ring around the 16dp colon and the AM/PM selector', () => {
+    expect(focusRingReach).toBe(5)
+    expect(timeSeparatorGlyphWidth).toBe(16)
+    expect(timeSeparatorWidth).toBe(
+      focusRingReach + timeSeparatorGlyphWidth + focusRingReach
+    )
+    // 8dp fields-to-period gap: the ring stops 3dp short of the AM/PM body.
+    expect(periodSelectorGap).toBe(8)
+    expect(periodSelectorGap).toBeGreaterThan(focusRingReach)
   })
 })

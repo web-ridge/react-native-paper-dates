@@ -1,6 +1,8 @@
 import { fireEvent, render } from '@testing-library/react-native'
+import { StyleSheet } from 'react-native'
 
 import TimeInputs from '../../Time/TimeInputs'
+import { timeSeparatorWidth } from '../../Time/timeUtils'
 import en from '../../translations/en'
 import { registerTranslation } from '../../translations/utils'
 
@@ -109,21 +111,27 @@ it('does not move the focused field when AM or PM is pressed', async () => {
   expect(onChange.mock.calls[0][0].focused).toBeUndefined()
 })
 
-it('separates hours and minutes with a colon hidden from assistive tech', async () => {
-  const screen = await render(
-    <TimeInputs
-      focused="hours"
-      hours={12}
-      inputType="keyboard"
-      is24Hour
-      locale="en"
-      minutes={45}
-      onChange={() => null}
-      onFocusInput={() => null}
-    />
-  )
+it.each(['keyboard', 'picker'] as const)(
+  'separates hours and minutes with a colon in %s mode',
+  async (inputType) => {
+    const screen = await render(
+      <TimeInputs
+        focused="hours"
+        hours={12}
+        inputType={inputType}
+        is24Hour
+        locale="en"
+        minutes={45}
+        onChange={() => null}
+        onFocusInput={() => null}
+      />
+    )
 
-  const colon = screen.getByText(':', { includeHiddenElements: true })
-  expect(colon).toHaveProp('accessible', false)
-  expect(colon).toHaveProp('importantForAccessibility', 'no')
-})
+    const colon = screen.getByText(':', { includeHiddenElements: true })
+    expect(colon).toHaveProp('accessible', false)
+    expect(colon).toHaveProp('importantForAccessibility', 'no')
+    expect(StyleSheet.flatten(colon.parent?.props.style).width).toBe(
+      timeSeparatorWidth
+    )
+  }
+)

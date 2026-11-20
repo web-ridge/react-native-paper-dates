@@ -26,7 +26,7 @@ import TimeInput from '../../Time/TimeInput'
 import TimeInputs from '../../Time/TimeInputs'
 import TimePicker from '../../Time/TimePicker'
 import TimePickerModal from '../../Time/TimePickerModal'
-import { scrollItemHeight } from '../../Time/timeUtils'
+import { scrollItemHeight, timeSeparatorWidth } from '../../Time/timeUtils'
 import en from '../../translations/en'
 import { registerTranslation } from '../../translations/utils'
 
@@ -759,6 +759,27 @@ describe('time picker modal', () => {
       modal.getByTestId('time-scroll-hours', { includeHiddenElements: true })
     ).toBeTruthy()
     expect(modal.queryByLabelText('Hour')).toBeNull()
+  })
+
+  it('separates the scroll wheels with a colon in a slot wider than the focus ring', async () => {
+    const picker = await render(
+      <TimePicker
+        focused="hours"
+        hours={9}
+        inputType="scroll"
+        locale="en"
+        minutes={45}
+        onChange={jest.fn()}
+        onFocusInput={jest.fn()}
+        use24HourClock
+      />
+    )
+    const colon = picker.getByText(':', { includeHiddenElements: true })
+    expect(colon).toHaveProp('accessible', false)
+    expect(StyleSheet.flatten(colon.parent?.props.style).width).toBe(
+      timeSeparatorWidth
+    )
+    await picker.unmount()
   })
 
   it('keeps the 12h scroll modal keyboard toggle in the action row', async () => {

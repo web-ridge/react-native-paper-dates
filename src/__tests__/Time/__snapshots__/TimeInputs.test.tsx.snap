@@ -121,7 +121,7 @@ exports[`renders TimeInputs 1`] = `
           {
             "alignItems": "center",
             "justifyContent": "center",
-            "width": 16,
+            "width": 26,
           },
           {
             "height": 120,
@@ -151,12 +151,14 @@ exports[`renders TimeInputs 1`] = `
               {
                 "fontFamily": "System",
                 "fontSize": 57,
-                "fontWeight": "400",
+                "fontWeight": "500",
                 "letterSpacing": -0.25,
                 "lineHeight": 64,
               },
               {
+                "includeFontPadding": false,
                 "textAlign": "center",
+                "textAlignVertical": "center",
               },
               {
                 "color": "rgba(29, 27, 32, 1)",

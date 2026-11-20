@@ -51,6 +51,7 @@ export const disabledContainerOpacity = 0.12
 export const disabledContentOpacity = 0.38
 export const focusRingOffset = 2
 export const focusRingThickness = 3
+export const focusRingReach = focusRingOffset + focusRingThickness
 export const horizontalPeriodGap = 16
 export const hourTypes: HourTypeMap = {
   am: 'am',
@@ -88,8 +89,13 @@ export const timePickerMediumBreakpoint = 600
 export const timePickerPadding = 12
 export const timeSelectorHeight = 120
 export const timeSelectorWidth = 100
-// md.comp.time-pickers separator width (Expressive).
-export const timeSeparatorWidth = 16
+// The Expressive separator token is 16dp for the ':' itself. The focus
+// ring reaches 5dp past each field (2dp offset + 3dp stroke), so the
+// slot adds that reach on both sides. This is a 10dp deviation from the
+// token so the ring never touches the glyph.
+export const timeSeparatorGlyphWidth = 16
+export const timeSeparatorWidth =
+  focusRingReach + timeSeparatorGlyphWidth + focusRingReach
 export const verticalDial24HourFieldWidth = 132
 
 export function clockNumbers(

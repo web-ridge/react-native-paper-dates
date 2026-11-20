@@ -20,6 +20,7 @@ import { useLatest, withAlpha } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
 import AmPmSwitcher from './AmPmSwitcher'
 import FocusRing from './FocusRing'
+import TimeSeparator from './TimeSeparator'
 import {
   clockTypes,
   disabledContentOpacity,
@@ -31,7 +32,6 @@ import {
   scrollFieldWidth,
   scrollItemHeight,
   type TimeChange,
-  timeSeparatorWidth,
   toHourInputFormat,
   toHourOutputFormat,
 } from './timeUtils'
@@ -156,9 +156,7 @@ function ScrollTimePicker({
         value={wheelHour}
         values={hourValues}
       />
-      <View style={[styles.separator, { height: fieldHeight }]}>
-        <TimeSeparator color={dotColor} />
-      </View>
+      <TimeSeparator color={dotColor} height={fieldHeight} />
       <ScrollWheel
         accessibilityLabel={rangeLabel(minuteLabel, minuteValues)}
         disabled={disabled}
@@ -517,21 +515,6 @@ function ScrollWheel({
   )
 }
 
-// md.comp.time-pickers separator: a display large emphasized colon.
-function TimeSeparator({ color }: { color: ColorValue }) {
-  const theme = useTheme()
-  return (
-    <Text
-      accessible={false}
-      importantForAccessibility="no"
-      maxFontSizeMultiplier={1.2}
-      style={[theme.fonts.displayLargeEmphasized, styles.colon, { color }]}
-    >
-      :
-    </Text>
-  )
-}
-
 const WheelRow = memo(function WheelRow({
   active,
   disabled,
@@ -797,9 +780,6 @@ function wrappedWheelOffset(offset: number, count: number, copies: number) {
 }
 
 const styles = StyleSheet.create({
-  colon: {
-    textAlign: 'center',
-  },
   item: {
     alignItems: 'center',
     height: scrollItemHeight,
@@ -818,11 +798,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     flexDirection: 'row',
     justifyContent: 'center',
-  },
-  separator: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: timeSeparatorWidth,
   },
   sideKeyboard: {
     alignSelf: 'center',

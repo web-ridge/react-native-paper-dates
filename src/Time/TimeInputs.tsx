@@ -11,6 +11,7 @@ import { useLatest, withAlpha } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
 import AmPmSwitcher from './AmPmSwitcher'
 import TimeInput from './TimeInput'
+import TimeSeparator from './TimeSeparator'
 import {
   clockTypes,
   disabledContentOpacity,
@@ -23,7 +24,6 @@ import {
   timePickerUsesLandscape,
   timeSelectorFieldWidth,
   timeSelectorHeight,
-  timeSeparatorWidth,
   toHourInputFormat,
   toHourOutputFormat,
 } from './timeUtils'
@@ -133,16 +133,7 @@ function TimeInputs({
           width={fieldWidth}
         />
       </TimeField>
-      <View style={[styles.separator, { height: fieldHeight }]}>
-        <Text
-          accessible={false}
-          importantForAccessibility="no"
-          maxFontSizeMultiplier={1.2}
-          style={[theme.fonts.displayLarge, styles.colon, { color: dotColor }]}
-        >
-          :
-        </Text>
-      </View>
+      <TimeSeparator color={dotColor} height={fieldHeight} />
       <TimeField width={fieldWidth}>
         <TimeInput
           ref={endInput}
@@ -238,9 +229,6 @@ const styles = StyleSheet.create({
   fields: {
     alignItems: 'flex-start',
   },
-  colon: {
-    textAlign: 'center',
-  },
   inputContainer: {
     alignItems: 'flex-start',
     flexDirection: 'row',
@@ -257,11 +245,6 @@ const styles = StyleSheet.create({
   },
   periodSwitcher: {
     alignSelf: 'flex-start',
-  },
-  separator: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: timeSeparatorWidth,
   },
   supportingText: {
     alignSelf: 'stretch',
