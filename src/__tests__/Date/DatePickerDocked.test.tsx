@@ -382,7 +382,7 @@ it('uses a pill target and state layers for the month and year', async () => {
     'react-native-paper-dates-docked-year',
   ]) {
     expect(docked.getByTestId(id)).toHaveStyle({
-      borderRadius: 12,
+      borderRadius: 20,
       overflow: 'hidden',
     })
   }

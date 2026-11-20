@@ -13,8 +13,8 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native'
-import { useTheme } from 'react-native-paper'
 
+import ElevatedCard from '../shared/ElevatedCard'
 import ModalScrim from '../shared/ModalScrim'
 import { supportedOrientations } from '../shared/utils'
 import DatePickerInputForm, {
@@ -93,7 +93,6 @@ function DatePickerModalInput(props: DatePickerModalInputProps) {
   const date = mode === 'single' ? props.date : undefined
   const endDate = mode === 'range' ? props.endDate : undefined
   const startDate = mode === 'range' ? props.startDate : undefined
-  const theme = useTheme()
   const { height: windowHeight, width: windowWidth } = useWindowDimensions()
   const pageScroll = useRef<(() => void) | null>(null)
   const [presented, setPresented] = useState(false)
@@ -170,7 +169,6 @@ function DatePickerModalInput(props: DatePickerModalInputProps) {
       : datePickerRangeMaxHeight,
     Math.max(windowHeight - 32, 0)
   )
-  const surface = theme.colors.surfaceContainerHigh
 
   return (
     <Modal
@@ -184,13 +182,10 @@ function DatePickerModalInput(props: DatePickerModalInputProps) {
     >
       <ModalScrim onDismiss={dismiss} />
       <View pointerEvents="box-none" style={styles.modalRoot}>
-        <View
+        <ElevatedCard
           style={[
             styles.card,
-            {
-              backgroundColor: surface,
-              width,
-            },
+            { width },
             view === 'calendar'
               ? props.mode === 'single'
                 ? { maxHeight: calendarHeight }
@@ -273,7 +268,7 @@ function DatePickerModalInput(props: DatePickerModalInputProps) {
               validRange={validRange}
             />
           )}
-        </View>
+        </ElevatedCard>
       </View>
     </Modal>
   )
@@ -301,9 +296,7 @@ function rememberPageScroll() {
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 28,
     maxWidth: dateInputCardMaxWidth,
-    overflow: 'hidden',
   },
   modalRoot: {
     alignItems: 'center',

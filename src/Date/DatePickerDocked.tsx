@@ -59,13 +59,19 @@ const anchorGap = 8
 const cardWidth = 360
 const cornerRadius = 16
 const dayHeaderInset = 12
-const headerGap = 30
-const headerPaddingTop = 20
-const headerRowHeight = 24
-const iconButtonSize = 24
-const iconHitSlop = (headerRowHeight - iconButtonSize) / 2
-const menuButtonHeight = headerRowHeight
-const menuHeaderHeight = 24
+// md.comp.date-picker.docked.header.height: 64dp = 8 + 48 + 8. The 48dp row
+// holds the 48dp touch targets of the 40dp menu and icon buttons.
+const headerPaddingTop = 8
+const headerRowHeight = 48
+const headerGap = 8
+const iconButtonSize = 40
+const minTouchTarget = 48
+const iconHitSlop = (minTouchTarget - iconButtonSize) / 2
+const menuButtonHeight = 40
+const menuHitSlop = {
+  bottom: (minTouchTarget - menuButtonHeight) / 2,
+  top: (minTouchTarget - menuButtonHeight) / 2,
+}
 const menuButtonPadding = 8
 const menuIconGap = 8
 const menuLabelInset = 16 + 24 + 16 - menuButtonPadding
@@ -296,11 +302,8 @@ function DockedStepper({
       onPress={onOpen}
       onPressIn={() => setPressed(true)}
       onPressOut={() => setPressed(false)}
-      style={[
-        styles.menuButton,
-        showArrows ? null : styles.menuButtonMenu,
-        { borderRadius: menuButtonHeight / 2 },
-      ]}
+      hitSlop={menuHitSlop}
+      style={[styles.menuButton, { borderRadius: menuButtonHeight / 2 }]}
       testID={testID}
     >
       <StateLayer
@@ -425,9 +428,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     paddingHorizontal: menuButtonPadding,
   },
-  menuButtonMenu: {
-    height: menuHeaderHeight,
-  },
   menuContent: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -480,8 +480,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: dayHeaderInset,
   },
   toolbarMenu: {
-    height: menuHeaderHeight,
-    marginBottom: headerPaddingTop,
+    marginBottom: headerGap,
   },
 })
 

@@ -1,6 +1,6 @@
 import { act } from '@testing-library/react-native'
 import type { ReactNode } from 'react'
-import { Dimensions } from 'react-native'
+import { Dimensions, StyleSheet } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 import DatePickerModalInput from '../../Date/DatePickerModalInput'
@@ -198,4 +198,29 @@ it('swaps to the calendar card and back', async () => {
       })
     })
   }
+})
+
+it('floats the card on a level 3 surface', async () => {
+  const screen = await render(
+    host(
+      <DatePickerModalInput
+        locale="en"
+        mode="single"
+        onConfirm={jest.fn()}
+        onDismiss={jest.fn()}
+        visible
+      />
+    )
+  )
+
+  const [card] = byTestId(
+    screen,
+    'react-native-paper-dates-modal-input-surface'
+  )
+  const style = StyleSheet.flatten(card?.props.style as object) as {
+    borderRadius?: number
+    shadowOpacity?: number
+  }
+  expect(style.borderRadius).toBe(28)
+  expect(style.shadowOpacity).toBeGreaterThan(0)
 })

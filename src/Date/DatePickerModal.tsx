@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import { useTheme } from 'react-native-paper'
 
+import ElevatedCard from '../shared/ElevatedCard'
 import ModalScrim from '../shared/ModalScrim'
 import {
   rememberLayout,
@@ -108,6 +109,40 @@ export function DatePickerModal(
     [lastCalendarLayout, windowKey]
   )
 
+  const cardStyle = [
+    inputMode && isLargeScreen && !useFormSheet
+      ? styles.inputCard
+      : singleCard && isLargeScreen
+        ? styles.singleCard
+        : styles.modalContent,
+    inputMode && isLargeScreen && !useFormSheet
+      ? { maxHeight: cardMaxHeight, width: inputWidth }
+      : isLargeScreen
+        ? [
+            useFormSheet
+              ? styles.modalContentFormSheet
+              : singleCard
+                ? styles.singleCard
+                : styles.modalContentBig,
+            { maxHeight: cardMaxHeight },
+          ]
+        : null,
+  ]
+  const content = (
+    <DatePickerModalContent
+      {...rest}
+      disableSafeTop={Boolean(disableStatusBarPadding) || centeredCard}
+      disableStatusBar={disableStatusBar}
+      initialLayout={rest.initialLayout ?? rememberedCalendarLayout}
+      inputEnabled={inputEnabled}
+      onCalendarLayout={onCalendarLayout}
+      onDisplayModeChange={onDisplayModeChange}
+      placeholder={props.placeholder}
+      statusBarOnTopOfBackdrop={isSheet || statusBarOnTopOfBackdrop}
+      withDateFormatInLabel={props.withDateFormatInLabel}
+    />
+  )
+
   return (
     <View pointerEvents="box-none" style={StyleSheet.absoluteFill}>
       <Modal
@@ -130,41 +165,18 @@ export function DatePickerModal(
           pointerEvents="box-none"
           style={[StyleSheet.absoluteFill, styles.modalRoot]}
         >
-          <View
-            style={[
-              inputMode && isLargeScreen && !useFormSheet
-                ? styles.inputCard
-                : singleCard && isLargeScreen
-                  ? styles.singleCard
-                  : styles.modalContent,
-              { backgroundColor: theme.colors.surfaceContainerHigh },
-              inputMode && isLargeScreen && !useFormSheet
-                ? { maxHeight: cardMaxHeight, width: inputWidth }
-                : isLargeScreen
-                  ? [
-                      useFormSheet
-                        ? styles.modalContentFormSheet
-                        : singleCard
-                          ? styles.singleCard
-                          : styles.modalContentBig,
-                      { maxHeight: cardMaxHeight },
-                    ]
-                  : null,
-            ]}
-          >
-            <DatePickerModalContent
-              {...rest}
-              disableSafeTop={Boolean(disableStatusBarPadding) || centeredCard}
-              disableStatusBar={disableStatusBar}
-              initialLayout={rest.initialLayout ?? rememberedCalendarLayout}
-              inputEnabled={inputEnabled}
-              onCalendarLayout={onCalendarLayout}
-              onDisplayModeChange={onDisplayModeChange}
-              placeholder={props.placeholder}
-              statusBarOnTopOfBackdrop={isSheet || statusBarOnTopOfBackdrop}
-              withDateFormatInLabel={props.withDateFormatInLabel}
-            />
-          </View>
+          {centeredCard ? (
+            <ElevatedCard style={cardStyle}>{content}</ElevatedCard>
+          ) : (
+            <View
+              style={[
+                cardStyle,
+                { backgroundColor: theme.colors.surfaceContainerHigh },
+              ]}
+            >
+              {content}
+            </View>
+          )}
         </View>
       </Modal>
     </View>
@@ -173,11 +185,9 @@ export function DatePickerModal(
 
 const styles = StyleSheet.create({
   inputCard: {
-    borderRadius: 28,
     flexGrow: 0,
     maxHeight: dateInputMaxHeight,
     maxWidth: 328,
-    overflow: 'hidden',
   },
   modalContent: {
     flex: 1,
@@ -185,9 +195,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   modalContentBig: {
-    borderRadius: 28,
     maxWidth: 360,
-    overflow: 'hidden',
     width: '100%',
   },
   modalContentFormSheet: {
@@ -197,10 +205,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   singleCard: {
-    borderRadius: 28,
     flexGrow: 0,
     maxWidth: 360,
-    overflow: 'hidden',
     width: '100%',
   },
   modalRoot: {
