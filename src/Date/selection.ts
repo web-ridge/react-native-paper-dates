@@ -200,11 +200,14 @@ export function pressDate(
 
   const dates = current.dates || []
   const exists = dates.some((day) => areDatesOnSameDay(day, pressed))
+  // Hermes in RN 0.81–0.83 (legacy) has no Array.prototype.toSorted.
   const nextDates = (
     exists
       ? dates.filter((day) => !areDatesOnSameDay(day, pressed))
       : [...dates, pressed]
-  ).toSorted((left, right) => left.getTime() - right.getTime())
+  )
+    .slice()
+    .sort((left, right) => left.getTime() - right.getTime())
   return {
     change: exists ? 'removed' : 'added',
     datePressed: pressed,
