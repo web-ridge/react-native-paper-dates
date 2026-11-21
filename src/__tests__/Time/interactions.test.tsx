@@ -21,6 +21,8 @@ import {
   asWheelTarget,
   bindTrackpadWheel,
   loopCopies,
+  wheelRowWindow,
+  wheelRows,
 } from '../../Time/ScrollTimePicker'
 import TimeInput from '../../Time/TimeInput'
 import TimeInputs from '../../Time/TimeInputs'
@@ -1056,9 +1058,11 @@ describe('scroll time picker', () => {
       .mockImplementation(() => {})
     try {
       const picker = await renderScroll({ hours: 1, minutes: 0 })
+      // The loop keeps its full scroll range, but only the rows around the
+      // center are mounted.
       expect(
         picker.getAllByText('00', { includeHiddenElements: true }).length
-      ).toBe(loopCopies(60))
+      ).toBe(1)
       const hours = picker.getByTestId('time-scroll-hours', {
         includeHiddenElements: true,
       })
@@ -1094,6 +1098,39 @@ describe('scroll time picker', () => {
     } finally {
       scrollTo.mockRestore()
     }
+  })
+
+  it('mounts only the rows around the centered one', async () => {
+    expect(wheelRows(5, 180)).toEqual({ end: 5 + wheelRowWindow + 1, start: 0 })
+    expect(wheelRows(90, 180)).toEqual({
+      end: 90 + wheelRowWindow + 1,
+      start: 90 - wheelRowWindow,
+    })
+    expect(wheelRows(179, 180)).toEqual({
+      end: 180,
+      start: 179 - wheelRowWindow,
+    })
+
+    const picker = await renderScroll({ focused: 'minutes', minutes: 0 })
+    const minutes = picker.getByTestId('time-scroll-minutes', {
+      includeHiddenElements: true,
+    })
+    const home = minutes.props.contentOffset.y as number
+    const hidden = { includeHiddenElements: true }
+    expect(picker.getAllByText('00', hidden)).toHaveLength(1)
+    expect(picker.queryByText('30', hidden)).toBeNull()
+
+    await fireEvent(minutes, 'scrollBeginDrag', scrollEvent(home))
+    await fireEvent.scroll(minutes, scrollEvent(home + 30 * scrollItemHeight))
+
+    // The window follows the wheel, so rows far from the center unmount and
+    // the rows the wheel reaches mount before they come into view.
+    expect(picker.getAllByText('30', hidden)).toHaveLength(1)
+    expect(picker.queryByText('00', hidden)).toBeNull()
+    expect(
+      picker.getByTestId('time-scroll-minutes-previous', hidden)
+    ).toBeTruthy()
+    expect(picker.getByTestId('time-scroll-minutes-next', hidden)).toBeTruthy()
   })
 
   it('wraps a spin past 12 without sticking on the last row', async () => {

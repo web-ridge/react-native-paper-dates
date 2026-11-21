@@ -346,6 +346,7 @@ function ScrollWheel({
     const next = center + within
     if (next === y) return y
     listRef.current?.scrollTo({ animated: false, y: next })
+    setCentered(Math.round(next / scrollItemHeight))
     return next
   }
 
@@ -373,6 +374,7 @@ function ScrollWheel({
     if (disabled) return
     onChange(values[(values.indexOf(value) + delta + count) % count])
   }
+  const rows = wheelRows(centered, copies * count)
   const wheelStyle = [
     styles.wheel,
     {
@@ -486,29 +488,33 @@ function ScrollWheel({
           style={styles.wheelScroller}
           testID={testID}
         >
-          {Array.from({ length: copies }, (_, copy) =>
-            values.map((item, index) => {
-              const listIndex = copy * count + index
-              const neighbor =
-                listIndex === centered - 1 || listIndex === centered + 1
-              return (
-                <WheelRow
-                  active={listIndex === centered}
-                  disabled={disabled}
-                  key={`${copy}-${item}`}
-                  label={padTime(item)}
-                  onPress={
-                    neighbor ? () => step(listIndex - centered) : undefined
-                  }
-                  testID={
-                    neighbor
-                      ? `${testID}-${listIndex < centered ? 'previous' : 'next'}`
-                      : undefined
-                  }
-                />
-              )
-            })
-          )}
+          <View style={{ height: rows.start * scrollItemHeight }} />
+          {Array.from({ length: rows.end - rows.start }, (_, offset) => {
+            const listIndex = rows.start + offset
+            const copy = Math.floor(listIndex / count)
+            const item = values[listIndex - copy * count]
+            const neighbor =
+              listIndex === centered - 1 || listIndex === centered + 1
+            return (
+              <WheelRow
+                active={listIndex === centered}
+                disabled={disabled}
+                key={`${copy}-${item}`}
+                label={padTime(item)}
+                onPress={
+                  neighbor ? () => step(listIndex - centered) : undefined
+                }
+                testID={
+                  neighbor
+                    ? `${testID}-${listIndex < centered ? 'previous' : 'next'}`
+                    : undefined
+                }
+              />
+            )
+          })}
+          <View
+            style={{ height: (copies * count - rows.end) * scrollItemHeight }}
+          />
         </ScrollView>
       </View>
     </View>
@@ -731,6 +737,19 @@ function isWheelTarget(node: unknown): node is WheelTarget {
     typeof candidate.removeEventListener === 'function' &&
     typeof candidate.scrollTop === 'number'
   )
+}
+
+// Rows mounted on each side of the centered row. The rest of the loop is two
+// spacers, so the scroll range and snapping stay the same while a wheel mounts
+// a few dozen rows instead of hundreds. The window follows the centered row,
+// which changes once per row crossed, and leaves room for a fast fling to run
+// a few frames ahead of JS before it reaches an unmounted row.
+export const wheelRowWindow = 12
+
+export function wheelRows(centered: number, total: number) {
+  const start = Math.max(0, Math.min(total, centered - wheelRowWindow))
+  const end = Math.max(start, Math.min(total, centered + wheelRowWindow + 1))
+  return { end, start }
 }
 
 export function loopCopies(count: number) {
