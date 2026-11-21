@@ -1,20 +1,29 @@
 process.env.TZ = 'GMT'
 
 module.exports = {
-  preset: '@react-native/jest-preset',
+  collectCoverage: false,
+  collectCoverageFrom: [
+    '**/src/**',
+    '!**/src/__tests__/**',
+    '!**/src/testUtils.tsx',
+    '!**/example/**',
+    '!**/translations/**',
+  ],
+  coverageReporters: ['clover', 'json', 'lcov', ['text', { skipEmpty: true }]],
   modulePathIgnorePatterns: [
     '<rootDir>/example/node_modules',
     '<rootDir>/lib/',
   ],
-  transformIgnorePatterns: [
-    'node_modules/(?!(@react-native|react-native(-.*)?|color|color-string|color-name|color-convert)/)',
-  ],
+  preset: '@react-native/jest-preset',
+  resolver: 'react-native-reanimated/jest/resolver',
   setupFiles: ['<rootDir>/testSetup.js'],
-  collectCoverage: true,
-  collectCoverageFrom: [
-    '**/src/**',
-    '!**/src/__tests__/**',
-    '!**/example/**',
-    '!**/translations/**',
+  transform: {
+    '^.+\\.(bmp|gif|jpg|jpeg|mp4|png|psd|svg|ttf|webp)$':
+      require.resolve('@react-native/jest-preset/jest/assetFileTransformer.js'),
+    '^.+\\.(js|ts|tsx)$': 'babel-jest',
+  },
+  transformIgnorePatterns: [
+    'node_modules/(?!(@react-native|@react-native-vector-icons|react-native(-.*)?|react-native-reanimated|react-native-worklets)/)',
   ],
+  watchman: false,
 }

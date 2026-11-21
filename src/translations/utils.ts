@@ -1,54 +1,71 @@
-export type TranslationsType = {
-  selectSingle: string
-  selectMultiple: string
-  selectRange: string
-  save: string
-  notAccordingToDateFormat: (inputFormat: string) => string
-  mustBeHigherThan: (date: string) => string
-  mustBeLowerThan: (date: string) => string
-  mustBeBetween: (startDate: string, endDate: string) => string
-  dateIsDisabled: string
-  previous: string
-  next: string
-  typeInDate: string
-  pickDateFromCalendar: string
-  close: string
-  hour: string
-  minute: string
-}
+import en from './en'
 
 export type TranslationResolver = (
   locale: string | undefined
 ) => TranslationsType
+export type TranslationsType = {
+  am: string
+  cancel: string
+  close: string
+  confirm: string
+  dateIsDisabled: string
+  enterDate: string
+  enterDates: string
+  hour: string
+  hourOf: (hour: number, total: number) => string
+  invalidTime: string
+  minute: string
+  minuteOf: (minute: number, total: number) => string
+  mustBeBetween: (startDate: string, endDate: string) => string
+  mustBeHigherThan: (date: string) => string
+  mustBeLowerThan: (date: string) => string
+  next: string
+  notAccordingToDateFormat: (inputFormat: string) => string
+  pickDateFromCalendar: string
+  pm: string
+  previous: string
+  save: string
+  selectMultiple: string
+  selectRange: string
+  selectSingle: string
+  toggleClock: string
+  toggleKeyboard: string
+  toggleScroll: string
+  typeInDate: string
+}
 
 let translationsPerLocale: Record<
   string,
   TranslationsType | TranslationResolver
-> = {}
+> = {
+  en,
+}
+
+function translationTable(locale: string | undefined) {
+  const table = translationsPerLocale[locale || 'en']
+  if (!table) return undefined
+  return typeof table === 'function' ? table(locale) : table
+}
 
 export function getTranslation<K extends keyof TranslationsType>(
   locale: string | undefined,
   key: K,
-  fallback?: any
-) {
-  const l = locale || 'en'
-  const translationForLocale = translationsPerLocale[l]
-  if (!translationForLocale) {
+  fallback?: TranslationsType[K]
+): TranslationsType[K] {
+  const table = translationTable(locale)
+  if (!table) {
     console.warn(
       `[react-native-paper-dates] The locale ${locale} is not registered, see README!, key: ${key}`
     )
-    return fallback || key
+    return (fallback || key) as TranslationsType[K]
   }
-  const translation: TranslationsType[K] =
-    typeof translationForLocale === 'function'
-      ? translationForLocale(locale)[key]
-      : translationForLocale[key]
+  const translation = table[key]
   if (!translation) {
     console.warn(
       `[react-native-paper-dates] The locale ${locale} is registered, but ${key} is missing`
     )
   }
-  return translation || fallback || key
+  return (translation || fallback || key) as TranslationsType[K]
 }
 
 export function registerTranslation(
@@ -56,4 +73,13 @@ export function registerTranslation(
   translations: TranslationsType | TranslationResolver
 ) {
   translationsPerLocale[locale] = translations
+}
+
+export function translate(
+  locale: string | undefined,
+  key: keyof TranslationsType,
+  fallback: string
+): string {
+  const value = translationTable(locale)?.[key]
+  return typeof value === 'string' && value ? value : fallback
 }

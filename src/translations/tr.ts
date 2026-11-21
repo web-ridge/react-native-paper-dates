@@ -1,23 +1,38 @@
-import type { TranslationsType } from './utils'
+import { registerTranslation, type TranslationsType } from './utils'
 
 const tr: TranslationsType = {
-  save: 'Kaydet',
-  selectSingle: 'Tarih seç',
-  selectMultiple: 'Tarihleri seç',
-  selectRange: 'Periyot seç',
-  notAccordingToDateFormat: (inputFormat) =>
-    `Tarih formatı ${inputFormat} olmalı`,
-  mustBeHigherThan: (date) => `${date} tarihinden sonra olmalı`,
-  mustBeLowerThan: (date) => `${date} tarihinden önce olmalı`,
+  am: 'ÖÖ',
+  cancel: 'İptal',
+  close: 'Kapat',
+  confirm: 'Tamam',
+  dateIsDisabled: 'Gün seçilemez',
+  enterDate: 'Tarih girin',
+  enterDates: 'Tarihleri girin',
+  hour: 'Saat',
+  hourOf: (hour, total) => `Saat ${hour} / ${total}`,
+  invalidTime: 'Geçersiz saat',
+  minute: 'Dakika',
+  minuteOf: (minute, total) => `Dakika ${minute} / ${total}`,
   mustBeBetween: (startDate, endDate) =>
     `${startDate} - ${endDate} tarihleri arasında olmalı`,
-  dateIsDisabled: 'Gün seçilemez',
-  previous: 'Önceki',
+  mustBeHigherThan: (date) => `${date} tarihinden sonra olmalı`,
+  mustBeLowerThan: (date) => `${date} tarihinden önce olmalı`,
   next: 'Sonraki',
-  typeInDate: 'Tarihi yazın',
+  notAccordingToDateFormat: (inputFormat) =>
+    `Tarih formatı ${inputFormat} olmalı`,
   pickDateFromCalendar: 'Takvimden tarih seçin',
-  close: 'Kapat',
-  minute: 'Dakika',
-  hour: 'Saat',
+  pm: 'ÖS',
+  previous: 'Önceki',
+  save: 'Kaydet',
+  selectMultiple: 'Tarihleri seç',
+  selectRange: 'Periyot seç',
+  selectSingle: 'Tarih seç',
+  toggleClock: 'Saate geç',
+  toggleKeyboard: 'Klavyeyi değiştir',
+  toggleScroll: 'Kaydırmaya geç',
+  typeInDate: 'Tarihi yazın',
 }
+
 export default tr
+
+registerTranslation('tr', tr)

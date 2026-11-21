@@ -1,8 +1,48 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`renders AnalogClockHours 1`] = `
 <>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Hour 1 of 24"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -13,10 +53,12 @@ exports[`renders AnalogClockHours 1`] = `
           "justifyContent": "center",
           "marginLeft": -24,
           "marginTop": -24,
+          "overflow": "visible",
           "position": "absolute",
           "width": 48,
           "zIndex": 20,
         },
+        null,
         {
           "left": 179,
           "top": 39,
@@ -40,7 +82,7 @@ exports[`renders AnalogClockHours 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "writingDirection": "ltr",
             },
             [
@@ -48,10 +90,12 @@ exports[`renders AnalogClockHours 1`] = `
                 "fontFamily": "System",
                 "fontSize": 16,
                 "fontWeight": "400",
-                "letterSpacing": 0.15,
+                "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              null,
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -61,6 +105,46 @@ exports[`renders AnalogClockHours 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Hour 2 of 24"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -71,10 +155,12 @@ exports[`renders AnalogClockHours 1`] = `
           "justifyContent": "center",
           "marginLeft": -24,
           "marginTop": -24,
+          "overflow": "visible",
           "position": "absolute",
           "width": 48,
           "zIndex": 20,
         },
+        null,
         {
           "left": 217,
           "top": 77,
@@ -98,7 +184,7 @@ exports[`renders AnalogClockHours 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "writingDirection": "ltr",
             },
             [
@@ -106,10 +192,12 @@ exports[`renders AnalogClockHours 1`] = `
                 "fontFamily": "System",
                 "fontSize": 16,
                 "fontWeight": "400",
-                "letterSpacing": 0.15,
+                "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              null,
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -119,6 +207,46 @@ exports[`renders AnalogClockHours 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Hour 3 of 24"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -129,10 +257,12 @@ exports[`renders AnalogClockHours 1`] = `
           "justifyContent": "center",
           "marginLeft": -24,
           "marginTop": -24,
+          "overflow": "visible",
           "position": "absolute",
           "width": 48,
           "zIndex": 20,
         },
+        null,
         {
           "left": 230,
           "top": 128,
@@ -156,7 +286,7 @@ exports[`renders AnalogClockHours 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "writingDirection": "ltr",
             },
             [
@@ -164,10 +294,12 @@ exports[`renders AnalogClockHours 1`] = `
                 "fontFamily": "System",
                 "fontSize": 16,
                 "fontWeight": "400",
-                "letterSpacing": 0.15,
+                "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              null,
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -177,6 +309,46 @@ exports[`renders AnalogClockHours 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Hour 4 of 24"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -187,10 +359,12 @@ exports[`renders AnalogClockHours 1`] = `
           "justifyContent": "center",
           "marginLeft": -24,
           "marginTop": -24,
+          "overflow": "visible",
           "position": "absolute",
           "width": 48,
           "zIndex": 20,
         },
+        null,
         {
           "left": 217,
           "top": 179,
@@ -214,7 +388,7 @@ exports[`renders AnalogClockHours 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "writingDirection": "ltr",
             },
             [
@@ -222,10 +396,12 @@ exports[`renders AnalogClockHours 1`] = `
                 "fontFamily": "System",
                 "fontSize": 16,
                 "fontWeight": "400",
-                "letterSpacing": 0.15,
+                "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              null,
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -235,6 +411,46 @@ exports[`renders AnalogClockHours 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Hour 5 of 24"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -245,10 +461,12 @@ exports[`renders AnalogClockHours 1`] = `
           "justifyContent": "center",
           "marginLeft": -24,
           "marginTop": -24,
+          "overflow": "visible",
           "position": "absolute",
           "width": 48,
           "zIndex": 20,
         },
+        null,
         {
           "left": 179,
           "top": 217,
@@ -272,7 +490,7 @@ exports[`renders AnalogClockHours 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "writingDirection": "ltr",
             },
             [
@@ -280,10 +498,12 @@ exports[`renders AnalogClockHours 1`] = `
                 "fontFamily": "System",
                 "fontSize": 16,
                 "fontWeight": "400",
-                "letterSpacing": 0.15,
+                "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              null,
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -293,6 +513,46 @@ exports[`renders AnalogClockHours 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Hour 6 of 24"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -303,10 +563,12 @@ exports[`renders AnalogClockHours 1`] = `
           "justifyContent": "center",
           "marginLeft": -24,
           "marginTop": -24,
+          "overflow": "visible",
           "position": "absolute",
           "width": 48,
           "zIndex": 20,
         },
+        null,
         {
           "left": 128,
           "top": 230,
@@ -330,7 +592,7 @@ exports[`renders AnalogClockHours 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "writingDirection": "ltr",
             },
             [
@@ -338,10 +600,12 @@ exports[`renders AnalogClockHours 1`] = `
                 "fontFamily": "System",
                 "fontSize": 16,
                 "fontWeight": "400",
-                "letterSpacing": 0.15,
+                "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              null,
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -351,6 +615,46 @@ exports[`renders AnalogClockHours 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Hour 7 of 24"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -361,10 +665,12 @@ exports[`renders AnalogClockHours 1`] = `
           "justifyContent": "center",
           "marginLeft": -24,
           "marginTop": -24,
+          "overflow": "visible",
           "position": "absolute",
           "width": 48,
           "zIndex": 20,
         },
+        null,
         {
           "left": 77,
           "top": 217,
@@ -388,7 +694,7 @@ exports[`renders AnalogClockHours 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "writingDirection": "ltr",
             },
             [
@@ -396,10 +702,12 @@ exports[`renders AnalogClockHours 1`] = `
                 "fontFamily": "System",
                 "fontSize": 16,
                 "fontWeight": "400",
-                "letterSpacing": 0.15,
+                "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              null,
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -409,6 +717,46 @@ exports[`renders AnalogClockHours 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Hour 8 of 24"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -419,10 +767,12 @@ exports[`renders AnalogClockHours 1`] = `
           "justifyContent": "center",
           "marginLeft": -24,
           "marginTop": -24,
+          "overflow": "visible",
           "position": "absolute",
           "width": 48,
           "zIndex": 20,
         },
+        null,
         {
           "left": 39,
           "top": 179,
@@ -446,7 +796,7 @@ exports[`renders AnalogClockHours 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "writingDirection": "ltr",
             },
             [
@@ -454,10 +804,12 @@ exports[`renders AnalogClockHours 1`] = `
                 "fontFamily": "System",
                 "fontSize": 16,
                 "fontWeight": "400",
-                "letterSpacing": 0.15,
+                "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              null,
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -467,6 +819,46 @@ exports[`renders AnalogClockHours 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Hour 9 of 24"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -477,10 +869,12 @@ exports[`renders AnalogClockHours 1`] = `
           "justifyContent": "center",
           "marginLeft": -24,
           "marginTop": -24,
+          "overflow": "visible",
           "position": "absolute",
           "width": 48,
           "zIndex": 20,
         },
+        null,
         {
           "left": 26,
           "top": 128,
@@ -504,7 +898,7 @@ exports[`renders AnalogClockHours 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "writingDirection": "ltr",
             },
             [
@@ -512,10 +906,12 @@ exports[`renders AnalogClockHours 1`] = `
                 "fontFamily": "System",
                 "fontSize": 16,
                 "fontWeight": "400",
-                "letterSpacing": 0.15,
+                "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              null,
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -525,6 +921,46 @@ exports[`renders AnalogClockHours 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Hour 10 of 24"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -535,10 +971,12 @@ exports[`renders AnalogClockHours 1`] = `
           "justifyContent": "center",
           "marginLeft": -24,
           "marginTop": -24,
+          "overflow": "visible",
           "position": "absolute",
           "width": 48,
           "zIndex": 20,
         },
+        null,
         {
           "left": 39,
           "top": 77,
@@ -562,7 +1000,7 @@ exports[`renders AnalogClockHours 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "writingDirection": "ltr",
             },
             [
@@ -570,10 +1008,12 @@ exports[`renders AnalogClockHours 1`] = `
                 "fontFamily": "System",
                 "fontSize": 16,
                 "fontWeight": "400",
-                "letterSpacing": 0.15,
+                "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              null,
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -583,6 +1023,46 @@ exports[`renders AnalogClockHours 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Hour 11 of 24"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -593,10 +1073,12 @@ exports[`renders AnalogClockHours 1`] = `
           "justifyContent": "center",
           "marginLeft": -24,
           "marginTop": -24,
+          "overflow": "visible",
           "position": "absolute",
           "width": 48,
           "zIndex": 20,
         },
+        null,
         {
           "left": 77,
           "top": 39,
@@ -620,7 +1102,7 @@ exports[`renders AnalogClockHours 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "writingDirection": "ltr",
             },
             [
@@ -628,10 +1110,12 @@ exports[`renders AnalogClockHours 1`] = `
                 "fontFamily": "System",
                 "fontSize": 16,
                 "fontWeight": "400",
-                "letterSpacing": 0.15,
+                "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              null,
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -641,6 +1125,46 @@ exports[`renders AnalogClockHours 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Hour 0 of 24"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -651,10 +1175,12 @@ exports[`renders AnalogClockHours 1`] = `
           "justifyContent": "center",
           "marginLeft": -24,
           "marginTop": -24,
+          "overflow": "visible",
           "position": "absolute",
           "width": 48,
           "zIndex": 20,
         },
+        null,
         {
           "left": 128,
           "top": 26,
@@ -678,7 +1204,7 @@ exports[`renders AnalogClockHours 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "writingDirection": "ltr",
             },
             [
@@ -686,10 +1212,12 @@ exports[`renders AnalogClockHours 1`] = `
                 "fontFamily": "System",
                 "fontSize": 16,
                 "fontWeight": "400",
-                "letterSpacing": 0.15,
+                "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              null,
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -699,6 +1227,46 @@ exports[`renders AnalogClockHours 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Hour 13 of 24"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -709,10 +1277,12 @@ exports[`renders AnalogClockHours 1`] = `
           "justifyContent": "center",
           "marginLeft": -24,
           "marginTop": -24,
+          "overflow": "visible",
           "position": "absolute",
           "width": 48,
           "zIndex": 20,
         },
+        null,
         {
           "left": 160,
           "top": 73,
@@ -736,7 +1306,7 @@ exports[`renders AnalogClockHours 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "writingDirection": "ltr",
             },
             [
@@ -744,12 +1314,12 @@ exports[`renders AnalogClockHours 1`] = `
                 "fontFamily": "System",
                 "fontSize": 16,
                 "fontWeight": "400",
-                "letterSpacing": 0.15,
+                "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              [
-                null,
-              ],
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -759,6 +1329,46 @@ exports[`renders AnalogClockHours 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Hour 14 of 24"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -769,10 +1379,12 @@ exports[`renders AnalogClockHours 1`] = `
           "justifyContent": "center",
           "marginLeft": -24,
           "marginTop": -24,
+          "overflow": "visible",
           "position": "absolute",
           "width": 48,
           "zIndex": 20,
         },
+        null,
         {
           "left": 183,
           "top": 96,
@@ -796,7 +1408,7 @@ exports[`renders AnalogClockHours 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "writingDirection": "ltr",
             },
             [
@@ -804,12 +1416,12 @@ exports[`renders AnalogClockHours 1`] = `
                 "fontFamily": "System",
                 "fontSize": 16,
                 "fontWeight": "400",
-                "letterSpacing": 0.15,
+                "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              [
-                null,
-              ],
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -819,6 +1431,46 @@ exports[`renders AnalogClockHours 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Hour 15 of 24"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -829,10 +1481,12 @@ exports[`renders AnalogClockHours 1`] = `
           "justifyContent": "center",
           "marginLeft": -24,
           "marginTop": -24,
+          "overflow": "visible",
           "position": "absolute",
           "width": 48,
           "zIndex": 20,
         },
+        null,
         {
           "left": 192,
           "top": 128,
@@ -856,7 +1510,7 @@ exports[`renders AnalogClockHours 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "writingDirection": "ltr",
             },
             [
@@ -864,12 +1518,12 @@ exports[`renders AnalogClockHours 1`] = `
                 "fontFamily": "System",
                 "fontSize": 16,
                 "fontWeight": "400",
-                "letterSpacing": 0.15,
+                "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              [
-                null,
-              ],
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -879,6 +1533,46 @@ exports[`renders AnalogClockHours 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Hour 16 of 24"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -889,10 +1583,12 @@ exports[`renders AnalogClockHours 1`] = `
           "justifyContent": "center",
           "marginLeft": -24,
           "marginTop": -24,
+          "overflow": "visible",
           "position": "absolute",
           "width": 48,
           "zIndex": 20,
         },
+        null,
         {
           "left": 183,
           "top": 160,
@@ -916,7 +1612,7 @@ exports[`renders AnalogClockHours 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "writingDirection": "ltr",
             },
             [
@@ -924,12 +1620,12 @@ exports[`renders AnalogClockHours 1`] = `
                 "fontFamily": "System",
                 "fontSize": 16,
                 "fontWeight": "400",
-                "letterSpacing": 0.15,
+                "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              [
-                null,
-              ],
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -939,6 +1635,46 @@ exports[`renders AnalogClockHours 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Hour 17 of 24"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -949,10 +1685,12 @@ exports[`renders AnalogClockHours 1`] = `
           "justifyContent": "center",
           "marginLeft": -24,
           "marginTop": -24,
+          "overflow": "visible",
           "position": "absolute",
           "width": 48,
           "zIndex": 20,
         },
+        null,
         {
           "left": 160,
           "top": 183,
@@ -976,7 +1714,7 @@ exports[`renders AnalogClockHours 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "writingDirection": "ltr",
             },
             [
@@ -984,12 +1722,12 @@ exports[`renders AnalogClockHours 1`] = `
                 "fontFamily": "System",
                 "fontSize": 16,
                 "fontWeight": "400",
-                "letterSpacing": 0.15,
+                "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              [
-                null,
-              ],
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -999,6 +1737,46 @@ exports[`renders AnalogClockHours 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Hour 18 of 24"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -1009,10 +1787,12 @@ exports[`renders AnalogClockHours 1`] = `
           "justifyContent": "center",
           "marginLeft": -24,
           "marginTop": -24,
+          "overflow": "visible",
           "position": "absolute",
           "width": 48,
           "zIndex": 20,
         },
+        null,
         {
           "left": 128,
           "top": 192,
@@ -1036,7 +1816,7 @@ exports[`renders AnalogClockHours 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "writingDirection": "ltr",
             },
             [
@@ -1044,12 +1824,12 @@ exports[`renders AnalogClockHours 1`] = `
                 "fontFamily": "System",
                 "fontSize": 16,
                 "fontWeight": "400",
-                "letterSpacing": 0.15,
+                "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              [
-                null,
-              ],
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -1059,6 +1839,46 @@ exports[`renders AnalogClockHours 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Hour 19 of 24"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -1069,10 +1889,12 @@ exports[`renders AnalogClockHours 1`] = `
           "justifyContent": "center",
           "marginLeft": -24,
           "marginTop": -24,
+          "overflow": "visible",
           "position": "absolute",
           "width": 48,
           "zIndex": 20,
         },
+        null,
         {
           "left": 96,
           "top": 183,
@@ -1096,7 +1918,7 @@ exports[`renders AnalogClockHours 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "writingDirection": "ltr",
             },
             [
@@ -1104,12 +1926,12 @@ exports[`renders AnalogClockHours 1`] = `
                 "fontFamily": "System",
                 "fontSize": 16,
                 "fontWeight": "400",
-                "letterSpacing": 0.15,
+                "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              [
-                null,
-              ],
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -1119,6 +1941,46 @@ exports[`renders AnalogClockHours 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Hour 20 of 24"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -1129,10 +1991,12 @@ exports[`renders AnalogClockHours 1`] = `
           "justifyContent": "center",
           "marginLeft": -24,
           "marginTop": -24,
+          "overflow": "visible",
           "position": "absolute",
           "width": 48,
           "zIndex": 20,
         },
+        null,
         {
           "left": 73,
           "top": 160,
@@ -1156,7 +2020,7 @@ exports[`renders AnalogClockHours 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "writingDirection": "ltr",
             },
             [
@@ -1164,12 +2028,12 @@ exports[`renders AnalogClockHours 1`] = `
                 "fontFamily": "System",
                 "fontSize": 16,
                 "fontWeight": "400",
-                "letterSpacing": 0.15,
+                "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              [
-                null,
-              ],
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -1179,6 +2043,46 @@ exports[`renders AnalogClockHours 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Hour 21 of 24"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -1189,10 +2093,12 @@ exports[`renders AnalogClockHours 1`] = `
           "justifyContent": "center",
           "marginLeft": -24,
           "marginTop": -24,
+          "overflow": "visible",
           "position": "absolute",
           "width": 48,
           "zIndex": 20,
         },
+        null,
         {
           "left": 64,
           "top": 128,
@@ -1216,7 +2122,7 @@ exports[`renders AnalogClockHours 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "writingDirection": "ltr",
             },
             [
@@ -1224,12 +2130,12 @@ exports[`renders AnalogClockHours 1`] = `
                 "fontFamily": "System",
                 "fontSize": 16,
                 "fontWeight": "400",
-                "letterSpacing": 0.15,
+                "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              [
-                null,
-              ],
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -1239,6 +2145,46 @@ exports[`renders AnalogClockHours 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Hour 22 of 24"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -1249,10 +2195,12 @@ exports[`renders AnalogClockHours 1`] = `
           "justifyContent": "center",
           "marginLeft": -24,
           "marginTop": -24,
+          "overflow": "visible",
           "position": "absolute",
           "width": 48,
           "zIndex": 20,
         },
+        null,
         {
           "left": 73,
           "top": 96,
@@ -1276,7 +2224,7 @@ exports[`renders AnalogClockHours 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "writingDirection": "ltr",
             },
             [
@@ -1284,12 +2232,12 @@ exports[`renders AnalogClockHours 1`] = `
                 "fontFamily": "System",
                 "fontSize": 16,
                 "fontWeight": "400",
-                "letterSpacing": 0.15,
+                "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              [
-                null,
-              ],
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -1299,6 +2247,46 @@ exports[`renders AnalogClockHours 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Hour 23 of 24"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -1309,10 +2297,12 @@ exports[`renders AnalogClockHours 1`] = `
           "justifyContent": "center",
           "marginLeft": -24,
           "marginTop": -24,
+          "overflow": "visible",
           "position": "absolute",
           "width": 48,
           "zIndex": 20,
         },
+        null,
         {
           "left": 96,
           "top": 73,
@@ -1336,7 +2326,7 @@ exports[`renders AnalogClockHours 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "writingDirection": "ltr",
             },
             [
@@ -1344,12 +2334,12 @@ exports[`renders AnalogClockHours 1`] = `
                 "fontFamily": "System",
                 "fontSize": 16,
                 "fontWeight": "400",
-                "letterSpacing": 0.15,
+                "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              [
-                null,
-              ],
+              {
+                "color": "rgba(29, 27, 32, 1)",
+              },
             ],
           ]
         }
@@ -1359,6 +2349,46 @@ exports[`renders AnalogClockHours 1`] = `
     </View>
   </View>
   <View
+    accessibilityActions={
+      [
+        {
+          "name": "activate",
+        },
+      ]
+    }
+    accessibilityLabel="Hour 12 of 24"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": true,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    importantForAccessibility="yes"
+    onAccessibilityAction={[Function]}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     pointerEvents="none"
     style={
       [
@@ -1369,10 +2399,12 @@ exports[`renders AnalogClockHours 1`] = `
           "justifyContent": "center",
           "marginLeft": -24,
           "marginTop": -24,
+          "overflow": "visible",
           "position": "absolute",
           "width": 48,
           "zIndex": 20,
         },
+        null,
         {
           "left": 128,
           "top": 64,
@@ -1396,7 +2428,7 @@ exports[`renders AnalogClockHours 1`] = `
               "textAlign": "left",
             },
             {
-              "color": "rgba(28, 27, 31, 1)",
+              "color": "rgba(29, 27, 32, 1)",
               "writingDirection": "ltr",
             },
             [
@@ -1404,14 +2436,12 @@ exports[`renders AnalogClockHours 1`] = `
                 "fontFamily": "System",
                 "fontSize": 16,
                 "fontWeight": "400",
-                "letterSpacing": 0.15,
+                "letterSpacing": 0.5,
                 "lineHeight": 24,
               },
-              [
-                {
-                  "color": "rgba(255, 255, 255, 1)",
-                },
-              ],
+              {
+                "color": "rgba(255, 255, 255, 1)",
+              },
             ],
           ]
         }

@@ -3,12 +3,12 @@ type Props = {
 }
 
 const GooglePlayIcon = ({ color }: Props) => (
-  <svg width="20px" height="23px" viewBox="0 0 20 23">
-    <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+  <svg height="23px" viewBox="0 0 20 23" width="20px">
+    <g fill="none" fillRule="evenodd" id="Page-1" stroke="none" strokeWidth="1">
       <g
+        fill={color}
         id="Store-Icons"
         transform="translate(-99.000000, -109.000000)"
-        fill={color}
       >
         <g
           id="circ_Google_download"

@@ -1,23 +1,38 @@
-import type { TranslationsType } from './utils'
+import { registerTranslation, type TranslationsType } from './utils'
 
 const da: TranslationsType = {
-  save: 'Gem',
-  selectSingle: 'Vælg dato',
-  selectMultiple: 'Vælg datoer',
-  selectRange: 'Vælg periode',
-  notAccordingToDateFormat: (inputFormat) =>
-    `Dato formatet skal være ${inputFormat}`,
-  mustBeHigherThan: (date) => `Skal ligge efter ${date}`,
-  mustBeLowerThan: (date) => `Skal ligge før ${date}`,
+  am: 'AM',
+  cancel: 'Annuller',
+  close: 'Luk',
+  confirm: 'OK',
+  dateIsDisabled: 'Denne dag er ikke gyldig',
+  enterDate: 'Indtast dato',
+  enterDates: 'Indtast datoer',
+  hour: 'Time',
+  hourOf: (hour, total) => `Time ${hour} af ${total}`,
+  invalidTime: 'Ugyldigt tidspunkt',
+  minute: 'Minut',
+  minuteOf: (minute, total) => `Minut ${minute} af ${total}`,
   mustBeBetween: (startDate, endDate) =>
     `Skal være mellem ${startDate} - ${endDate}`,
-  dateIsDisabled: 'Denne dag er ikke gyldig',
-  previous: 'Forrige',
+  mustBeHigherThan: (date) => `Skal ligge efter ${date}`,
+  mustBeLowerThan: (date) => `Skal ligge før ${date}`,
   next: 'Næste',
-  typeInDate: 'Indtast dato',
+  notAccordingToDateFormat: (inputFormat) =>
+    `Dato formatet skal være ${inputFormat}`,
   pickDateFromCalendar: 'Vælg en dato fra kalender',
-  close: 'Luk',
-  minute: 'Minut',
-  hour: 'Time',
+  pm: 'PM',
+  previous: 'Forrige',
+  save: 'Gem',
+  selectMultiple: 'Vælg datoer',
+  selectRange: 'Vælg periode',
+  selectSingle: 'Vælg dato',
+  toggleClock: 'Skift til ur',
+  toggleKeyboard: 'Skift tastatur',
+  toggleScroll: 'Skift til rulle',
+  typeInDate: 'Indtast dato',
 }
+
 export default da
+
+registerTranslation('da', da)

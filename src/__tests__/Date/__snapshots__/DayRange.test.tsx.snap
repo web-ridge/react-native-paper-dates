@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`renders DayRange 1`] = `
 <View
@@ -6,17 +6,17 @@ exports[`renders DayRange 1`] = `
   style={
     [
       {
-        "bottom": 0,
+        "height": 40,
         "left": 0,
         "position": "absolute",
         "right": 0,
-        "top": 0,
+        "top": 4,
       },
       {
         "flexDirection": "row",
       },
       {
-        "borderRadius": 23,
+        "borderRadius": 20,
       },
       {
         "backgroundColor": "blue",

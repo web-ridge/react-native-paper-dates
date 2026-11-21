@@ -1,8 +1,14 @@
 import { memo } from 'react'
+import {
+  StatusBar,
+  type StatusBarProps,
+  type StatusBarStyle,
+  View,
+} from 'react-native'
+import { useTheme } from 'react-native-paper'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+
 import { useHeaderBackgroundColor } from '../shared/utils'
-import Color from 'color'
-import { Animated, StatusBar, StatusBarStyle } from 'react-native'
 
 function DatePickerModalStatusBar({
   disableSafeTop,
@@ -13,35 +19,34 @@ function DatePickerModalStatusBar({
   disableStatusBar: boolean
   statusBarOnTopOfBackdrop: boolean
 }) {
-  const insets = useSafeAreaInsets()
   const headerBackgroundColor = useHeaderBackgroundColor()
-
-  const onDarkBackground =
-    Color(headerBackgroundColor).isDark() || statusBarOnTopOfBackdrop
-  const statusBarTheme: StatusBarStyle = onDarkBackground
-    ? 'light-content'
-    : 'dark-content'
+  const insets = useSafeAreaInsets()
+  const theme = useTheme()
+  const onDarkBackground = theme.dark || statusBarOnTopOfBackdrop
   const statusBarBackground = statusBarOnTopOfBackdrop
     ? 'transparent'
     : headerBackgroundColor
+  const statusBarTheme: StatusBarStyle = onDarkBackground
+    ? 'light-content'
+    : 'dark-content'
 
   return (
     <>
       {!disableSafeTop && !statusBarOnTopOfBackdrop && (
-        <Animated.View
-          style={[
-            {
-              backgroundColor: statusBarBackground,
-              height: insets.top || StatusBar.currentHeight,
-            },
-          ]}
+        <View
+          style={{
+            backgroundColor: statusBarBackground,
+            height: insets.top || StatusBar.currentHeight,
+          }}
         />
       )}
       {!disableStatusBar && (
         <StatusBar
-          barStyle={statusBarTheme}
-          translucent={true}
-          backgroundColor="transparent"
+          {...({
+            backgroundColor: 'transparent',
+            barStyle: statusBarTheme,
+            translucent: true,
+          } as StatusBarProps)}
         />
       )}
     </>

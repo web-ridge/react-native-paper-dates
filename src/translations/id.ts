@@ -1,23 +1,38 @@
-import type { TranslationsType } from './utils'
+import { registerTranslation, type TranslationsType } from './utils'
 
 const id: TranslationsType = {
-  save: 'Simpan',
-  selectSingle: 'Pilih tanggal',
-  selectMultiple: 'Pilih tanggal',
-  selectRange: 'Pilih periode',
-  notAccordingToDateFormat: (inputFormat) =>
-    `Format tanggal harus ${inputFormat}`,
-  mustBeHigherThan: (date) => `Harus lebih besar dari ${date}`,
-  mustBeLowerThan: (date) => `Harus lebih kecil dari ${date}`,
+  am: 'AM',
+  cancel: 'Batal',
+  close: 'Tutup',
+  confirm: 'OK',
+  dateIsDisabled: 'Hari tidak diperbolehkan',
+  enterDate: 'Masukkan tanggal',
+  enterDates: 'Masukkan tanggal',
+  hour: 'Jam',
+  hourOf: (hour, total) => `Jam ${hour} dari ${total}`,
+  invalidTime: 'Waktu tidak valid',
+  minute: 'Menit',
+  minuteOf: (minute, total) => `Menit ${minute} dari ${total}`,
   mustBeBetween: (startDate, endDate) =>
     `Harus di antara ${startDate} - ${endDate}`,
-  dateIsDisabled: 'Hari tidak diperbolehkan',
-  previous: 'Sebelumnya',
+  mustBeHigherThan: (date) => `Harus lebih besar dari ${date}`,
+  mustBeLowerThan: (date) => `Harus lebih kecil dari ${date}`,
   next: 'Berikutnya',
-  typeInDate: 'Ketik tanggal',
+  notAccordingToDateFormat: (inputFormat) =>
+    `Format tanggal harus ${inputFormat}`,
   pickDateFromCalendar: 'Pilih tanggal dari kalender',
-  close: 'Tutup',
-  minute: 'Menit',
-  hour: 'Jam',
+  pm: 'PM',
+  previous: 'Sebelumnya',
+  save: 'Simpan',
+  selectMultiple: 'Pilih tanggal',
+  selectRange: 'Pilih periode',
+  selectSingle: 'Pilih tanggal',
+  toggleClock: 'Alihkan jam',
+  toggleKeyboard: 'Alihkan keyboard',
+  toggleScroll: 'Alihkan gulir',
+  typeInDate: 'Ketik tanggal',
 }
+
 export default id
+
+registerTranslation('id', id)

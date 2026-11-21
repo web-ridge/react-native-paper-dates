@@ -1,69 +1,72 @@
-import { useCallback, useState } from 'react'
+import { type ReactNode, useCallback, useState } from 'react'
 import { LayoutChangeEvent, useWindowDimensions, View } from 'react-native'
-import { sharedStyles } from '../shared/styles'
 
-type WidthAndHeight = {
-  width: number
-  height: number
-}
+import { sharedStyles } from '../shared/styles'
+import { rememberLayout } from '../shared/utils'
 
 type MeasuredLayout = WidthAndHeight & {
   windowKey: string
 }
+type WidthAndHeight = {
+  height: number
+  width: number
+}
 
 export default function AutoSizer({
   children,
+  fill = true,
   initialLayout,
 }: {
-  children: ({ width, height }: WidthAndHeight) => any
-  /** Used until the first measurement, so children render on the first frame. */
+  children: ({ height, width }: WidthAndHeight) => ReactNode
+  fill?: boolean
   initialLayout?: WidthAndHeight
 }) {
-  const { width: windowWidth, height: windowHeight } = useWindowDimensions()
-  const windowKey = `${windowWidth}x${windowHeight}`
   const [measured, setMeasured] = useState<MeasuredLayout | null>(null)
+  const { height: windowHeight, width: windowWidth } = useWindowDimensions()
+
+  const windowKey = `${windowWidth}x${windowHeight}`
+
+  const measuredReady =
+    measured &&
+    measured.windowKey === windowKey &&
+    measured.width > 0 &&
+    (fill ? measured.height > 0 : true)
+      ? measured
+      : null
+  const windowLayout =
+    windowWidth > 0 && (!fill || windowHeight > 0)
+      ? { height: windowHeight, width: windowWidth }
+      : null
+  const layout = measuredReady ?? initialLayout ?? windowLayout
 
   const onLayout = useCallback(
     (event: LayoutChangeEvent) => {
       const nl = event.nativeEvent.layout
-      // https://github.com/necolas/react-native-web/issues/1704
-      setMeasured((prev) => {
-        if (
-          prev &&
-          prev.windowKey === windowKey &&
-          prev.width === nl.width &&
-          prev.height === nl.height
-        ) {
-          return prev
-        }
-        return { windowKey, width: nl.width, height: nl.height }
-      })
+      setMeasured((prev) =>
+        rememberLayout(prev, {
+          height: nl.height,
+          width: nl.width,
+          windowKey,
+        })
+      )
     },
     [windowKey]
   )
 
-  const layout =
-    measured &&
-    measured.windowKey === windowKey &&
-    measured.width > 0 &&
-    measured.height > 0
-      ? measured
-      : (initialLayout ?? null)
-
   return (
     <View
-      // Modals often skip onLayout during rotation. Keying by window size
-      // mounts a fresh sizer so the calendar gets the landscape viewport.
       key={windowKey}
       collapsable={false}
       onLayout={onLayout}
       style={[
         sharedStyles.overflowHidden,
-        sharedStyles.root,
-        sharedStyles.minHeightZero,
+        fill ? sharedStyles.root : sharedStyles.hug,
+        fill ? sharedStyles.minHeightZero : null,
       ]}
     >
-      {layout ? children(layout) : null}
+      {layout && (fill ? layout.height > 0 : layout.width > 0)
+        ? children(layout)
+        : null}
     </View>
   )
 }

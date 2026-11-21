@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
+
 import DatePickerModalHeader from '../../Date/DatePickerModalHeader'
 
 it('renders DatePickerModalHeader', async () => {
@@ -7,8 +8,8 @@ it('renders DatePickerModalHeader', async () => {
     <SafeAreaProvider>
       <DatePickerModalHeader
         locale="en"
-        onSave={() => null}
         onDismiss={() => null}
+        onSave={() => null}
         saveLabel="Save"
       />
     </SafeAreaProvider>

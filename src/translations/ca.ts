@@ -1,23 +1,38 @@
-import type { TranslationsType } from './utils'
+import { registerTranslation, type TranslationsType } from './utils'
 
 const ca: TranslationsType = {
-  save: 'Guardar',
-  selectSingle: 'Seleccionar data',
-  selectMultiple: 'Seleccionar dates',
-  selectRange: 'Seleccionar període',
-  notAccordingToDateFormat: (inputFormat) =>
-    `El format de la data ha de ser ${inputFormat}`,
-  mustBeHigherThan: (date) => `Ha de ser posterior a ${date}`,
-  mustBeLowerThan: (date) => `Ha de ser anterior a ${date}`,
+  am: 'a.m.',
+  cancel: 'Cancel·la',
+  close: 'Tancar',
+  confirm: "D'acord",
+  dateIsDisabled: 'Dia no permès',
+  enterDate: 'Introdueix la data',
+  enterDates: 'Introdueix les dates',
+  hour: 'Hora',
+  hourOf: (hour, total) => `Hora ${hour} de ${total}`,
+  invalidTime: 'Hora no vàlida',
+  minute: 'Minut',
+  minuteOf: (minute, total) => `Minut ${minute} de ${total}`,
   mustBeBetween: (startDate, endDate) =>
     `Ha d'estar entre ${startDate} - ${endDate}`,
-  dateIsDisabled: 'Dia no permès',
-  previous: 'Anterior',
+  mustBeHigherThan: (date) => `Ha de ser posterior a ${date}`,
+  mustBeLowerThan: (date) => `Ha de ser anterior a ${date}`,
   next: 'Següent',
-  typeInDate: 'Escriu la data',
+  notAccordingToDateFormat: (inputFormat) =>
+    `El format de la data ha de ser ${inputFormat}`,
   pickDateFromCalendar: 'Seleccionar la data del calendari',
-  close: 'Tancar',
-  minute: 'Minut',
-  hour: 'Hora',
+  pm: 'p.m.',
+  previous: 'Anterior',
+  save: 'Guardar',
+  selectMultiple: 'Seleccionar dates',
+  selectRange: 'Seleccionar període',
+  selectSingle: 'Seleccionar data',
+  toggleClock: 'Alterna el rellotge',
+  toggleKeyboard: 'Alterna el teclat',
+  toggleScroll: 'Alterna el desplaçament',
+  typeInDate: 'Escriu la data',
 }
+
 export default ca
+
+registerTranslation('ca', ca)

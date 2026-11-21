@@ -1,21 +1,25 @@
 import { memo } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { Platform, StyleSheet, View } from 'react-native'
 import { Text, useTheme } from 'react-native-paper'
 
-function DayName({ label }: { label: string }) {
+function DayName({ label, name }: { label: string; name?: string }) {
   const theme = useTheme()
 
-  const textFont = theme.fonts.bodySmall
+  const textFont = theme.fonts.bodyLarge
+  const accessibleName = name ?? label
 
   return (
-    <View style={styles.dayName}>
+    <View
+      accessibilityLabel={accessibleName}
+      focusable={false}
+      role="columnheader"
+      style={styles.dayName}
+      {...(Platform.OS === 'web' ? { title: accessibleName } : null)}
+    >
       <Text
         maxFontSizeMultiplier={1.5}
-        style={[
-          styles.dayNameLabel,
-          { ...textFont, color: theme.colors.onSurfaceVariant },
-        ]}
         selectable={false}
+        style={[textFont, { color: theme.colors.onSurface }]}
       >
         {label}
       </Text>
@@ -27,9 +31,6 @@ const styles = StyleSheet.create({
   dayName: {
     alignItems: 'center',
     flex: 1,
-  },
-  dayNameLabel: {
-    fontSize: 14,
   },
 })
 

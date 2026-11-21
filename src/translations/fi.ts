@@ -1,23 +1,38 @@
-import type { TranslationsType } from './utils'
+import { registerTranslation, type TranslationsType } from './utils'
 
 const fi: TranslationsType = {
-  save: 'Tallenna',
-  selectSingle: 'Valitse päivämäärä',
-  selectMultiple: 'Valitse päivämäärät',
-  selectRange: 'Valitse ajanjakso',
-  notAccordingToDateFormat: (inputFormat) =>
-    `Päivämäärän on oltava muodossa ${inputFormat}`,
-  mustBeHigherThan: (date) => `Oltava myöhempi kuin ${date}`,
-  mustBeLowerThan: (date) => `Oltava aikaisempi kuin ${date}`,
+  am: 'ap.',
+  cancel: 'Peruuta',
+  close: 'Sulje',
+  confirm: 'OK',
+  dateIsDisabled: 'Päivä ei ole sallittu',
+  enterDate: 'Anna päivämäärä',
+  enterDates: 'Anna päivämäärät',
+  hour: 'Tunti',
+  hourOf: (hour, total) => `Tunti ${hour} / ${total}`,
+  invalidTime: 'Virheellinen aika',
+  minute: 'Minuutti',
+  minuteOf: (minute, total) => `Minuutti ${minute} / ${total}`,
   mustBeBetween: (startDate, endDate) =>
     `Oltava välillä ${startDate} - ${endDate}`,
-  dateIsDisabled: 'Päivä ei ole sallittu',
-  previous: 'Edellinen',
+  mustBeHigherThan: (date) => `Oltava myöhempi kuin ${date}`,
+  mustBeLowerThan: (date) => `Oltava aikaisempi kuin ${date}`,
   next: 'Seuraava',
-  typeInDate: 'Syötä päivämäärä',
+  notAccordingToDateFormat: (inputFormat) =>
+    `Päivämäärän on oltava muodossa ${inputFormat}`,
   pickDateFromCalendar: 'Valitse päivämäärä kalenterista',
-  close: 'Sulje',
-  minute: 'Minuutti',
-  hour: 'Tunti',
+  pm: 'ip.',
+  previous: 'Edellinen',
+  save: 'Tallenna',
+  selectMultiple: 'Valitse päivämäärät',
+  selectRange: 'Valitse ajanjakso',
+  selectSingle: 'Valitse päivämäärä',
+  toggleClock: 'Vaihda kelloon',
+  toggleKeyboard: 'Vaihda näppäimistöä',
+  toggleScroll: 'Vaihda vieritykseen',
+  typeInDate: 'Syötä päivämäärä',
 }
+
 export default fi
+
+registerTranslation('fi', fi)

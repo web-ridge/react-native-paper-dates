@@ -1,23 +1,38 @@
-import type { TranslationsType } from './utils'
+import { registerTranslation, type TranslationsType } from './utils'
 
 const el: TranslationsType = {
-  save: 'Αποθηκεύσετε',
-  selectSingle: 'Επιλέξτε ημερομηνία',
-  selectMultiple: 'Επιλέξτε ημερομηνίες',
-  selectRange: 'Επιλέξτε περίοδο',
-  notAccordingToDateFormat: (inputFormat) =>
-    `Η μορφή ημερομηνίας πρέπει να είναι ${inputFormat}`,
-  mustBeHigherThan: (date) => `Πρέπει να είναι αργότερα${date}`,
-  mustBeLowerThan: (date) => `Πρέπει να είναι νωρίτερα τότε ${date}`,
+  am: 'π.μ.',
+  cancel: 'Ακύρωση',
+  close: 'Κλείσε',
+  confirm: 'OK',
+  dateIsDisabled: 'Ημέρα δεν επιτρέπεται',
+  enterDate: 'Εισαγωγή ημερομηνίας',
+  enterDates: 'Εισαγωγή ημερομηνιών',
+  hour: 'ώρα',
+  hourOf: (hour, total) => `Ώρα ${hour} από ${total}`,
+  invalidTime: 'Μη έγκυρη ώρα',
+  minute: 'λεπτό',
+  minuteOf: (minute, total) => `Λεπτό ${minute} από ${total}`,
   mustBeBetween: (startDate, endDate) =>
     `Πρέπει να είναι μεταξύ ${startDate} - ${endDate}`,
-  dateIsDisabled: 'Ημέρα δεν επιτρέπεται',
-  previous: 'Προηγούμενος',
+  mustBeHigherThan: (date) => `Πρέπει να είναι αργότερα${date}`,
+  mustBeLowerThan: (date) => `Πρέπει να είναι νωρίτερα τότε ${date}`,
   next: 'Επόμενο',
-  typeInDate: 'Πληκτρολογήστε την ημερομηνία',
+  notAccordingToDateFormat: (inputFormat) =>
+    `Η μορφή ημερομηνίας πρέπει να είναι ${inputFormat}`,
   pickDateFromCalendar: 'Επιλέξτε ημερομηνία από το ημερολόγιο',
-  close: 'Κλείσε',
-  minute: 'λεπτό',
-  hour: 'ώρα',
+  pm: 'μ.μ.',
+  previous: 'Προηγούμενος',
+  save: 'Αποθηκεύσετε',
+  selectMultiple: 'Επιλέξτε ημερομηνίες',
+  selectRange: 'Επιλέξτε περίοδο',
+  selectSingle: 'Επιλέξτε ημερομηνία',
+  toggleClock: 'Εναλλαγή ρολογιού',
+  toggleKeyboard: 'Εναλλαγή πληκτρολογίου',
+  toggleScroll: 'Εναλλαγή κύλισης',
+  typeInDate: 'Πληκτρολογήστε την ημερομηνία',
 }
+
 export default el
+
+registerTranslation('el', el)

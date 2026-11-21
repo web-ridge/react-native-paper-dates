@@ -5,25 +5,25 @@ Documentation site for [react-native-paper-dates](https://github.com/web-ridge/r
 ## Setup
 
 ```bash
-yarn install
+bun install
 ```
 
 ## Development
 
 ```bash
-yarn dev
+bun run dev
 ```
 
 ## Build
 
 ```bash
-yarn build
+bun run build
 ```
 
 ## Preview
 
 ```bash
-yarn preview
+bun run preview
 ```
 
 The production site is deployed to GitHub Pages at `https://web-ridge.github.io/react-native-paper-dates/`.

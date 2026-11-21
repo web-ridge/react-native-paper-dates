@@ -1,0 +1,127 @@
+# Range Date Input
+
+The range date input opens a dialog on start and end fields. The calendar icon switches to a range calendar in the same dialog. Each field accepts `/`, `-`, `.`, and spaces, including a single-digit month or day. The dialog is centered and at most 328dp wide.
+
+The calendar modal for a range is documented on the [range date picker](./range-date-picker) page. This component is the dialog that opens on the fields.
+
+## Usage
+
+```jsx
+import React from 'react';
+import { View } from 'react-native';
+import { Button, PaperProvider } from 'react-native-paper';
+import { DatePickerModalInput } from 'react-native-paper-dates';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+
+
+export default function App() {
+  const [range, setRange] = React.useState({ startDate: undefined, endDate: undefined });
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <PaperProvider>
+      <SafeAreaProvider>
+        <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
+          <Button onPress={() => setOpen(true)} mode="outlined">
+            Enter dates
+          </Button>
+          <DatePickerModalInput
+            locale="en"
+            mode="range"
+            visible={open}
+            onDismiss={() => setOpen(false)}
+            startDate={range.startDate}
+            endDate={range.endDate}
+            onConfirm={({ startDate, endDate }) => {
+              setOpen(false);
+              setRange({ startDate, endDate });
+            }}
+          />
+        </View>
+      </SafeAreaProvider>
+    </PaperProvider>
+  );
+}
+```
+
+## Live Example
+
+Try this and the other pickers on the [example site](https://www.reactnativepaperdates.com/).
+
+## Props
+
+**calendarIcon**  
+`Type: string | undefined`  
+Icon that switches from the text fields to the calendar. Defaults to `'calendar'`. Pass a name from [MaterialCommunityIcons](https://materialdesignicons.com/).
+
+**disableWeekDays**  
+`Type: number[] | undefined`  
+Weekday indexes to hide from the calendar (for example `[0, 6]` to hide Sunday and Saturday).
+
+**endDate**  
+`Type: Date | undefined`  
+The currently selected end date.
+
+**endLabel**  
+`Type: string | undefined`  
+Label on the end field. Defaults to `'End date'`.
+
+**endYear**  
+`Type: number | undefined`  
+The last year available in the year picker. Defaults to `2200`.
+
+**locale (Required)**  
+`Type: string`  
+Locale used for formatting and translations (for example `'en'` or `'de'`).
+
+**mode (Required)**  
+`Type: 'single' | 'range'`  
+Selection mode. Use `'range'` for this picker.
+
+**onConfirm (Required)**  
+`Type: (params: { startDate: Date | undefined, endDate: Date | undefined }) => void`  
+Called when the user confirms the range. The confirm button stays disabled while either field is invalid, and when the start and end dates are the same day.
+
+**onDismiss (Required)**  
+`Type: () => void`  
+Called when the dialog is dismissed.
+
+**saveLabel**  
+`Type: string | undefined`  
+Confirm button label. Defaults to the locale translation for `confirm` (English: `'OK'`).
+
+**saveLabelDisabled**  
+`Type: boolean | undefined`  
+Disables the confirm button. Defaults to `false`. The button is also disabled while either field is invalid, and when the start and end dates are the same day.
+
+**startDate**  
+`Type: Date | undefined`  
+The currently selected start date.
+
+**startLabel**  
+`Type: string | undefined`  
+Label on the start field. Defaults to `'Date'`.
+
+**startWeekOnMonday**  
+`Type: boolean | undefined`  
+When `true`, the calendar grid starts on Monday. Defaults to `false`.
+
+**startYear**  
+`Type: number | undefined`  
+The first year available in the year picker. Defaults to `1800`.
+
+**uppercase**  
+`Type: boolean | undefined`  
+Whether header, field, and action labels are uppercased. Defaults to `false`.
+
+**validRange**  
+`Type: {
+  startDate?: Date,
+  endDate?: Date,
+  disabledDates?: Date[]
+}`  
+Limits which dates can be confirmed. Dates outside the range fail validation.
+
+**visible (Required)**  
+`Type: boolean`  
+Whether the dialog is shown.

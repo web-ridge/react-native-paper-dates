@@ -1,38 +1,46 @@
+import { memo, useCallback, useMemo, useState } from 'react'
 import {
   Modal,
   Platform,
   StyleSheet,
-  TouchableWithoutFeedback,
   useWindowDimensions,
   View,
 } from 'react-native'
 import { useTheme } from 'react-native-paper'
+
+import ElevatedCard from '../shared/ElevatedCard'
+import ModalScrim from '../shared/ModalScrim'
+import {
+  rememberLayout,
+  supportedOrientations,
+  useIsLargeScreen,
+} from '../shared/utils'
+import {
+  dateInputMaxHeight,
+  datePickerRangeMaxHeight,
+  datePickerSingleMaxHeight,
+} from './dateUtils'
+import { dateInputCardWidth } from './DatePickerInputForm'
 import DatePickerModalContent, {
   DatePickerModalContentMultiProps,
   DatePickerModalContentRangeProps,
   DatePickerModalContentSingleProps,
 } from './DatePickerModalContent'
-import { memo, useCallback, useMemo, useState } from 'react'
-import { sharedStyles } from '../shared/styles'
-import { supportedOrientations, useIsLargeScreen } from '../shared/utils'
 
+export interface DatePickerModalMultiProps
+  extends DatePickerModalContentMultiProps, DatePickerModalProps {}
 interface DatePickerModalProps {
-  visible: boolean
   animationType?: 'slide' | 'fade' | 'none'
   disableStatusBar?: boolean
   disableStatusBarPadding?: boolean
   inputEnabled?: boolean
   presentationStyle?: 'pageSheet' | 'formSheet' | 'overFullScreen'
+  visible: boolean
 }
-
-export interface DatePickerModalSingleProps
-  extends DatePickerModalContentSingleProps, DatePickerModalProps {}
-
-export interface DatePickerModalMultiProps
-  extends DatePickerModalContentMultiProps, DatePickerModalProps {}
-
 export interface DatePickerModalRangeProps
   extends DatePickerModalContentRangeProps, DatePickerModalProps {}
+export interface DatePickerModalSingleProps
+  extends DatePickerModalContentSingleProps, DatePickerModalProps {}
 
 export function DatePickerModal(
   props:
@@ -41,42 +49,54 @@ export function DatePickerModal(
     | DatePickerModalMultiProps
 ) {
   const {
-    visible,
     animationType,
     disableStatusBar,
     disableStatusBarPadding,
     inputEnabled,
     presentationStyle,
     statusBarOnTopOfBackdrop,
+    visible,
     ...rest
   } = props
   const animationTypeCalculated =
     animationType ||
     Platform.select({
-      web: 'none',
       default: 'slide',
+      web: 'none',
     })
-
-  // The calendar unmounts when the modal closes. Keep its size from the last
-  // open, so the next open draws the month on the first frame instead of
-  // waiting for the calendar to measure itself. Only reused for the same window
-  // size, since rotating or resizing changes the layout.
-  const { width: windowWidth, height: windowHeight } = useWindowDimensions()
-  const windowKey = `${windowWidth}x${windowHeight}`
+  const [inputMode, setInputMode] = useState(
+    () => props.mode !== 'multiple' && props.displayMode === 'input'
+  )
+  const onDisplayModeChange = useCallback((next: 'calendar' | 'input') => {
+    setInputMode(next === 'input')
+  }, [])
+  const isLargeScreen = useIsLargeScreen()
   const [lastCalendarLayout, setLastCalendarLayout] = useState<{
-    windowKey: string
-    width: number
     height: number
+    width: number
+    windowKey: string
   } | null>(null)
+  const shouldUseSheet =
+    Platform.OS === 'ios' &&
+    (presentationStyle === 'pageSheet' || presentationStyle === 'formSheet')
+  const isSheet = shouldUseSheet
+  const centeredCard = isLargeScreen && !isSheet
+  const theme = useTheme()
+  const useFormSheet = shouldUseSheet && isLargeScreen
+  const { height: windowHeight, width: windowWidth } = useWindowDimensions()
+  const inputWidth = dateInputCardWidth(windowWidth)
+  const singleCard = props.mode === 'single' && !inputMode
+  const specMaxHeight = inputMode
+    ? dateInputMaxHeight
+    : props.mode === 'single'
+      ? datePickerSingleMaxHeight
+      : datePickerRangeMaxHeight
+  const cardMaxHeight = Math.min(specMaxHeight, Math.max(windowHeight - 32, 0))
+  const windowKey = `${windowWidth}x${windowHeight}`
   const onCalendarLayout = useCallback(
-    ({ width, height }: { width: number; height: number }) => {
+    ({ height, width }: { height: number; width: number }) => {
       setLastCalendarLayout((prev) =>
-        prev &&
-        prev.windowKey === windowKey &&
-        prev.width === width &&
-        prev.height === height
-          ? prev
-          : { windowKey, width, height }
+        rememberLayout(prev, { height, width, windowKey })
       )
     },
     [windowKey]
@@ -84,25 +104,49 @@ export function DatePickerModal(
   const rememberedCalendarLayout = useMemo(
     () =>
       lastCalendarLayout && lastCalendarLayout.windowKey === windowKey
-        ? { width: lastCalendarLayout.width, height: lastCalendarLayout.height }
+        ? { height: lastCalendarLayout.height, width: lastCalendarLayout.width }
         : undefined,
     [lastCalendarLayout, windowKey]
   )
 
-  const theme = useTheme()
-  const isLargeScreen = useIsLargeScreen()
-  const shouldUseSheet =
-    Platform.OS === 'ios' &&
-    (presentationStyle === 'pageSheet' || presentationStyle === 'formSheet')
-  const useFormSheet = shouldUseSheet && isLargeScreen
-  const isSheet = shouldUseSheet
+  const cardStyle = [
+    inputMode && isLargeScreen && !useFormSheet
+      ? styles.inputCard
+      : singleCard && isLargeScreen
+        ? styles.singleCard
+        : styles.modalContent,
+    inputMode && isLargeScreen && !useFormSheet
+      ? { maxHeight: cardMaxHeight, width: inputWidth }
+      : isLargeScreen
+        ? [
+            useFormSheet
+              ? styles.modalContentFormSheet
+              : singleCard
+                ? styles.singleCard
+                : styles.modalContentBig,
+            { maxHeight: cardMaxHeight },
+          ]
+        : null,
+  ]
+  const content = (
+    <DatePickerModalContent
+      {...rest}
+      disableSafeTop={Boolean(disableStatusBarPadding) || centeredCard}
+      disableStatusBar={disableStatusBar}
+      initialLayout={rest.initialLayout ?? rememberedCalendarLayout}
+      inputEnabled={inputEnabled}
+      onCalendarLayout={onCalendarLayout}
+      onDisplayModeChange={onDisplayModeChange}
+      placeholder={props.placeholder}
+      statusBarOnTopOfBackdrop={isSheet || statusBarOnTopOfBackdrop}
+      withDateFormatInLabel={props.withDateFormatInLabel}
+    />
+  )
 
   return (
-    <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
+    <View pointerEvents="box-none" style={StyleSheet.absoluteFill}>
       <Modal
         animationType={animationTypeCalculated}
-        transparent={!isSheet}
-        visible={visible}
         onRequestClose={rest.onDismiss}
         presentationStyle={
           useFormSheet
@@ -111,45 +155,28 @@ export function DatePickerModal(
               ? 'pageSheet'
               : 'overFullScreen'
         }
-        supportedOrientations={supportedOrientations}
         statusBarTranslucent={!disableStatusBar}
+        supportedOrientations={supportedOrientations}
+        transparent={!isSheet}
+        visible={visible}
       >
-        <TouchableWithoutFeedback onPress={rest.onDismiss}>
-          <View
-            style={[
-              StyleSheet.absoluteFill,
-              sharedStyles.root,
-              { backgroundColor: theme.colors.backdrop },
-            ]}
-          />
-        </TouchableWithoutFeedback>
+        <ModalScrim onDismiss={rest.onDismiss} />
         <View
-          style={[StyleSheet.absoluteFill, styles.modalRoot]}
           pointerEvents="box-none"
+          style={[StyleSheet.absoluteFill, styles.modalRoot]}
         >
-          <View
-            style={[
-              styles.modalContent,
-              { backgroundColor: theme.colors.elevation.level3 },
-              isLargeScreen
-                ? useFormSheet
-                  ? styles.modalContentFormSheet
-                  : styles.modalContentBig
-                : null,
-            ]}
-          >
-            <DatePickerModalContent
-              {...rest}
-              inputEnabled={inputEnabled}
-              disableSafeTop={disableStatusBarPadding}
-              disableStatusBar={disableStatusBar}
-              statusBarOnTopOfBackdrop={isSheet || statusBarOnTopOfBackdrop}
-              withDateFormatInLabel={props.withDateFormatInLabel}
-              placeholder={props.placeholder}
-              initialLayout={rest.initialLayout ?? rememberedCalendarLayout}
-              onCalendarLayout={onCalendarLayout}
-            />
-          </View>
+          {centeredCard ? (
+            <ElevatedCard style={cardStyle}>{content}</ElevatedCard>
+          ) : (
+            <View
+              style={[
+                cardStyle,
+                { backgroundColor: theme.colors.surfaceContainerHigh },
+              ]}
+            >
+              {content}
+            </View>
+          )}
         </View>
       </Modal>
     </View>
@@ -157,29 +184,35 @@ export function DatePickerModal(
 }
 
 const styles = StyleSheet.create({
+  inputCard: {
+    flexGrow: 0,
+    maxHeight: dateInputMaxHeight,
+    maxWidth: 328,
+  },
   modalContent: {
     flex: 1,
-    width: '100%',
     minHeight: 0,
+    width: '100%',
   },
   modalContentBig: {
-    maxWidth: 400,
-    maxHeight: 600,
-    borderRadius: 28,
+    maxWidth: 360,
     width: '100%',
-    overflow: 'hidden',
   },
   modalContentFormSheet: {
-    maxWidth: 520,
-    maxHeight: 600,
     borderRadius: 28,
-    width: '100%',
+    maxWidth: 360,
     overflow: 'hidden',
+    width: '100%',
+  },
+  singleCard: {
+    flexGrow: 0,
+    maxWidth: 360,
+    width: '100%',
   },
   modalRoot: {
-    justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
+    justifyContent: 'center',
   },
 })
 

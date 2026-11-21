@@ -1,206 +1,308 @@
+import { memo, useEffect, useState } from 'react'
 import {
-  Animated,
   Keyboard,
   KeyboardAvoidingView,
   Modal,
+  Platform,
   StyleSheet,
   Text,
-  TouchableWithoutFeedback,
+  useWindowDimensions,
   View,
 } from 'react-native'
+import { Button, IconButton, Surface, useTheme } from 'react-native-paper'
 
-import { Button, IconButton, useTheme } from 'react-native-paper'
-
+import { TimePickerPlacementContext } from '../contexts/TimePickerPlacementContext'
+import ModalScrim from '../shared/ModalScrim'
+import { sharedStyles } from '../shared/styles'
+import { displayCase, supportedOrientations } from '../shared/utils'
+import { getTranslation } from '../translations/utils'
 import TimePicker from './TimePicker'
 import {
   clockTypes,
   getTimeInputTypeIcon,
   inputTypes,
-  PossibleClockTypes,
-  PossibleInputTypes,
-  reverseInputTypes,
+  type PickerInputType,
+  type PossibleClockTypes,
+  type PossibleInputTypes,
+  type TimeChange,
+  resolve24HourClock,
+  timeDialFits,
+  timePickerActionsGap,
+  timePickerHorizontalPadding,
+  timePickerModalMinWidth,
+  timePickerPadding,
+  timePickerUsesLandscape,
 } from './timeUtils'
-import { memo, useCallback, useEffect, useState } from 'react'
-import { sharedStyles } from '../shared/styles'
-import { supportedOrientations } from '../shared/utils'
 
 export function TimePickerModal({
-  visible,
-  onDismiss,
-  onConfirm,
-  hours,
-  minutes,
-  label = 'Select time',
-  uppercase: _uppercase,
+  animationType,
   cancelLabel = 'Cancel',
-  confirmLabel = 'Ok',
-  animationType = 'none',
-  locale,
-  keyboardIcon = 'keyboard-outline',
-  clockIcon = 'clock-outline',
-  use24HourClock,
-  inputFontSize,
+  clockIcon = 'clock',
+  confirmLabel = 'OK',
   defaultInputType,
+  disabled,
+  hours,
+  inputFontSize,
+  keyboardIcon = 'keyboard',
+  label,
+  locale,
+  minutes,
+  onConfirm,
+  onDismiss,
+  scrollIcon = 'gesture-swipe-vertical',
+  uppercase: _uppercase,
+  use24HourClock,
+  visible,
 }: {
-  locale?: undefined | string
-  label?: string
-  uppercase?: boolean
-  cancelLabel?: string
-  confirmLabel?: string
-  hours?: number | undefined
-  minutes?: number | undefined
-  visible: boolean | undefined
-  onDismiss: () => any
-  onConfirm: (hoursAndMinutes: { hours: number; minutes: number }) => any
   animationType?: 'slide' | 'fade' | 'none'
-  keyboardIcon?: string
+  cancelLabel?: string
   clockIcon?: string
-  use24HourClock?: boolean
-  inputFontSize?: number
+  confirmLabel?: string
   defaultInputType?: PossibleInputTypes
+  disabled?: boolean
+  hours?: number
+  inputFontSize?: number
+  keyboardIcon?: string
+  label?: string
+  locale?: string
+  minutes?: number
+  onConfirm: (hoursAndMinutes: { hours: number; minutes: number }) => void
+  onDismiss: () => void
+  scrollIcon?: string
+  uppercase?: boolean
+  use24HourClock?: boolean
+  visible: boolean | undefined
 }) {
-  const theme = useTheme()
-
+  const [focused, setFocused] = useState<PossibleClockTypes>(clockTypes.hours)
+  const [inputInvalid, setInputInvalid] = useState(false)
   const [inputType, setInputType] = useState<PossibleInputTypes>(
     defaultInputType || inputTypes.picker
   )
-  const [focused, setFocused] = useState<PossibleClockTypes>(clockTypes.hours)
-  const [localHours, setLocalHours] = useState(getHours(hours))
-  const [localMinutes, setLocalMinutes] = useState(getMinutes(minutes))
+  const [pickerMode, setPickerMode] = useState<PickerInputType>(
+    defaultInputType === inputTypes.scroll
+      ? inputTypes.scroll
+      : inputTypes.picker
+  )
+  const [localHours, setLocalHours] = useState(() =>
+    orNow(hours, (date) => date.getHours())
+  )
+  const [localMinutes, setLocalMinutes] = useState(() =>
+    orNow(minutes, (date) => date.getMinutes())
+  )
+  const theme = useTheme()
+  const { height, width } = useWindowDimensions()
+  const is24Hour = resolve24HourClock(use24HourClock, locale)
+  const canShowDial = timeDialFits(width, height)
+  const displayedInputType =
+    inputType === inputTypes.picker && !canShowDial
+      ? inputTypes.scroll
+      : inputType
+  const storedMode: PickerInputType =
+    inputType === inputTypes.scroll ? inputTypes.scroll : pickerMode
+  const iconMode: PickerInputType =
+    storedMode === inputTypes.picker && !canShowDial
+      ? inputTypes.scroll
+      : storedMode
 
   useEffect(() => {
-    setLocalHours(getHours(hours))
-  }, [setLocalHours, hours])
+    setLocalHours(orNow(hours, (date) => date.getHours()))
+    setLocalMinutes(orNow(minutes, (date) => date.getMinutes()))
+  }, [hours, minutes])
 
   useEffect(() => {
-    setLocalMinutes(getMinutes(minutes))
-  }, [setLocalMinutes, minutes])
+    if (!visible) {
+      setInputInvalid(false)
+    }
+  }, [visible])
 
-  const onFocusInput = useCallback(
-    (type: PossibleClockTypes) => setFocused(type),
-    []
-  )
-  const onChange = useCallback(
-    (params: {
-      focused?: PossibleClockTypes | undefined
-      hours: number
-      minutes: number
-    }) => {
-      if (params.focused) {
-        setFocused(params.focused)
-      }
+  const animation =
+    animationType ||
+    Platform.select({
+      default: 'slide',
+      web: 'none',
+    })
+  const onChange: TimeChange = (params) => {
+    if (params.focused) {
+      setFocused(params.focused)
+    }
 
-      setLocalHours(params.hours)
-      setLocalMinutes(params.minutes)
-    },
-    [setFocused, setLocalHours, setLocalMinutes]
-  )
-
-  const uppercase = _uppercase ?? false
+    setLocalHours(params.hours)
+    setLocalMinutes(params.minutes)
+  }
+  const onFocusInput = (type: PossibleClockTypes) => setFocused(type)
   const textFont = theme.fonts.labelMedium
-  let labelText = label
-
-  if (inputType === inputTypes.keyboard && !label) {
-    labelText = 'Enter time'
+  const uppercase = _uppercase ?? false
+  const toggleInputType = () => {
+    if (disabled) return
+    Keyboard.dismiss()
+    if (displayedInputType === inputTypes.keyboard) {
+      setInputType(storedMode)
+      return
+    }
+    setPickerMode(
+      inputType === inputTypes.scroll ? inputTypes.scroll : inputTypes.picker
+    )
+    setInputType(inputTypes.keyboard)
   }
 
-  const color = theme.colors.elevation.level3
+  const horizontalDial =
+    displayedInputType === inputTypes.picker &&
+    timePickerUsesLandscape(width, height, displayedInputType)
+  const framePadding = horizontalDial
+    ? timePickerHorizontalPadding
+    : timePickerPadding
+  const actionsGap = horizontalDial
+    ? timePickerHorizontalPadding
+    : displayedInputType === inputTypes.picker
+      ? timePickerPadding
+      : timePickerActionsGap
+  const color = theme.colors.surfaceContainer
 
   return (
     <Modal
-      animationType={animationType}
-      transparent={true}
-      visible={visible}
+      animationType={animation}
       onRequestClose={onDismiss}
       presentationStyle="overFullScreen"
-      supportedOrientations={supportedOrientations}
       statusBarTranslucent={true}
+      supportedOrientations={supportedOrientations}
+      transparent={true}
+      visible={visible}
     >
       <>
-        <TouchableWithoutFeedback onPress={onDismiss}>
-          <View
-            style={[
-              StyleSheet.absoluteFill,
-              sharedStyles.root,
-              { backgroundColor: theme.colors?.backdrop },
-            ]}
-          />
-        </TouchableWithoutFeedback>
+        <ModalScrim onDismiss={onDismiss} />
         <View
-          style={[StyleSheet.absoluteFill, styles.center]}
           pointerEvents="box-none"
+          style={[StyleSheet.absoluteFill, styles.center]}
         >
-          <KeyboardAvoidingView style={styles.center} behavior="padding">
-            <Animated.View
+          <KeyboardAvoidingView behavior="padding" style={styles.center}>
+            <Surface
+              backgroundColor={color}
+              borderRadius={modalCornerRadius}
+              elevation={3}
               style={[
                 styles.modalContent,
-                // eslint-disable-next-line react-native/no-inline-styles
                 {
-                  backgroundColor: color,
-                  borderRadius: 28,
-                  minWidth: inputType === inputTypes.picker ? 328 : 280,
-                  ...(inputType === inputTypes.keyboard
-                    ? { height: 252 }
-                    : null),
+                  minWidth: timePickerModalMinWidth(
+                    is24Hour,
+                    displayedInputType === inputTypes.picker
+                  ),
                 },
               ]}
             >
-              <View style={styles.labelContainer}>
-                <Text
-                  maxFontSizeMultiplier={1.5}
+              {label ? (
+                <View
                   style={[
-                    styles.label,
+                    styles.labelContainer,
                     {
-                      ...textFont,
-                      color: theme.colors.onSurfaceVariant,
+                      paddingLeft: framePadding,
+                      paddingRight: framePadding,
+                      paddingTop: framePadding,
                     },
                   ]}
                 >
-                  {uppercase ? labelText.toUpperCase() : labelText}
-                </Text>
+                  <Text
+                    maxFontSizeMultiplier={1.5}
+                    style={{
+                      ...textFont,
+                      color: theme.colors.onSurfaceVariant,
+                    }}
+                  >
+                    {displayCase(label, uppercase)}
+                  </Text>
+                </View>
+              ) : null}
+              <View
+                style={[
+                  styles.timePickerContainer,
+                  {
+                    paddingHorizontal: framePadding,
+                    paddingTop: framePadding,
+                  },
+                ]}
+              >
+                <TimePickerPlacementContext.Provider value="modal">
+                  <TimePicker
+                    clockIcon={clockIcon}
+                    disabled={disabled}
+                    focused={focused}
+                    hours={localHours}
+                    inputFontSize={inputFontSize}
+                    inputType={displayedInputType}
+                    keyboardIcon={keyboardIcon}
+                    locale={locale}
+                    minutes={localMinutes}
+                    onChange={onChange}
+                    onFocusInput={onFocusInput}
+                    onInputInvalidChange={setInputInvalid}
+                    onToggleKeyboard={toggleInputType}
+                    scrollIcon={scrollIcon}
+                    use24HourClock={use24HourClock}
+                  />
+                </TimePickerPlacementContext.Provider>
               </View>
-              <View style={styles.timePickerContainer}>
-                <TimePicker
-                  locale={locale}
-                  inputType={inputType}
-                  use24HourClock={use24HourClock}
-                  inputFontSize={inputFontSize}
-                  focused={focused}
-                  hours={localHours}
-                  minutes={localMinutes}
-                  onChange={onChange}
-                  onFocusInput={onFocusInput}
-                />
-              </View>
-              <View style={styles.bottom}>
+              <View
+                style={[
+                  styles.bottom,
+                  {
+                    paddingBottom: framePadding,
+                    paddingHorizontal: framePadding,
+                    paddingTop: actionsGap,
+                  },
+                ]}
+              >
                 <IconButton
-                  iconColor={theme.colors.onSurface}
-                  icon={getTimeInputTypeIcon(inputType, {
-                    keyboard: keyboardIcon,
-                    picker: clockIcon,
-                  })}
-                  onPress={() => {
-                    Keyboard.dismiss()
-                    setInputType(reverseInputTypes[inputType])
-                  }}
+                  accessibilityLabel={
+                    displayedInputType === inputTypes.keyboard
+                      ? iconMode === inputTypes.scroll
+                        ? getTranslation(
+                            locale,
+                            'toggleScroll',
+                            'Toggle scroll picker'
+                          )
+                        : getTranslation(
+                            locale,
+                            'toggleClock',
+                            'Toggle dial picker'
+                          )
+                      : getTranslation(
+                          locale,
+                          'toggleKeyboard',
+                          'Toggle input picker'
+                        )
+                  }
+                  disabled={disabled}
+                  icon={
+                    getTimeInputTypeIcon(
+                      displayedInputType,
+                      {
+                        keyboard: keyboardIcon,
+                        picker: clockIcon,
+                        scroll: scrollIcon,
+                      },
+                      iconMode
+                    ) ?? keyboardIcon
+                  }
+                  iconColor={theme.colors.onSurfaceVariant}
+                  onPress={toggleInputType}
                   size={24}
                   style={styles.inputTypeToggle}
-                  accessibilityLabel="toggle keyboard"
                 />
                 <View style={sharedStyles.root} />
-                <Button onPress={onDismiss} uppercase={uppercase}>
-                  {cancelLabel}
+                <Button mode="text" onPress={onDismiss}>
+                  {displayCase(cancelLabel, uppercase)}
                 </Button>
                 <Button
-                  onPress={() =>
+                  disabled={disabled || inputInvalid}
+                  mode="text"
+                  onPress={() => {
+                    if (disabled || inputInvalid) return
                     onConfirm({ hours: localHours, minutes: localMinutes })
-                  }
-                  uppercase={uppercase}
+                  }}
                 >
-                  {confirmLabel}
+                  {displayCase(confirmLabel, uppercase)}
                 </Button>
               </View>
-            </Animated.View>
+            </Surface>
           </KeyboardAvoidingView>
         </View>
       </>
@@ -208,58 +310,36 @@ export function TimePickerModal({
   )
 }
 
-function getMinutes(minutes: number | undefined | null): number {
-  return minutes === undefined || minutes === null
-    ? new Date().getMinutes()
-    : minutes
-}
+// md.comp.time-pickers modal container: corner.extra-large on
+// surface-container. Expressive tokens list no elevation, so it uses the M3
+// dialog level 3 like the date picker.
+const modalCornerRadius = 28
 
-function getHours(hours: number | undefined | null): number {
-  return hours === undefined || hours === null ? new Date().getHours() : hours
+function orNow(value: number | undefined | null, read: (date: Date) => number) {
+  return value ?? read(new Date())
 }
 
 const styles = StyleSheet.create({
   bottom: {
-    flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 24,
-    paddingVertical: 8,
+    flexDirection: 'row',
   },
   center: {
-    justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
+    justifyContent: 'center',
   },
   inputTypeToggle: {
     margin: 0,
   },
   labelContainer: {
     justifyContent: 'flex-end',
-    paddingLeft: 24,
-    paddingRight: 24,
-    paddingTop: 16,
-  },
-  label: {
-    letterSpacing: 1,
-    fontSize: 13,
   },
   modalContent: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    shadowOpacity: 0.34,
-    shadowRadius: 6.27,
-    elevation: 3,
-    paddingVertical: 8,
     justifyContent: 'space-between',
   },
   timePickerContainer: {
-    paddingLeft: 24,
-    paddingTop: 20,
-    paddingBottom: 16,
-    paddingRight: 24,
+    paddingBottom: 0,
   },
 })
 

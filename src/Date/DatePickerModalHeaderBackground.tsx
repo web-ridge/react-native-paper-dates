@@ -1,43 +1,50 @@
-import { Animated, StyleSheet, useWindowDimensions, View } from 'react-native'
+import type { ReactNode } from 'react'
+import { StyleSheet, useWindowDimensions, View } from 'react-native'
 import { Divider } from 'react-native-paper'
-import { useHeaderBackgroundColor, useIsLargeScreen } from '../shared/utils'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import type { DisableWeekDaysType } from './dateUtils'
+
+import { useHeaderBackgroundColor, useIsLargeScreen } from '../shared/utils'
+import type { DisableWeekDaysType } from './types'
 import { weekdaySpan, weekdaySpanOvershoot } from './weekdayColumns'
 
 export default function DatePickerModalHeaderBackground({
   children,
   disableWeekDays,
+  divider = true,
+  insetHorizontal = false,
 }: {
-  children: any
+  children: ReactNode
   disableWeekDays?: DisableWeekDaysType
+  divider?: boolean
+  insetHorizontal?: boolean
 }) {
   const backgroundColor = useHeaderBackgroundColor()
+  const { height, width } = useWindowDimensions()
   const insets = useSafeAreaInsets()
-  const { width, height } = useWindowDimensions()
   const isLargeScreen = useIsLargeScreen()
   const isPhoneLandscape = width > height && !isLargeScreen
 
   return (
-    <Animated.View
+    <View
       style={[
         styles.background,
-        {
-          backgroundColor,
-          paddingLeft: insets.left,
-          paddingRight: insets.right,
-        },
+        { backgroundColor },
+        insetHorizontal
+          ? { paddingLeft: insets.left, paddingRight: insets.right }
+          : null,
       ]}
     >
       {children}
-      {isPhoneLandscape ? (
-        <View style={weekdaySpan(disableWeekDays)}>
-          <Divider style={weekdaySpanOvershoot} />
-        </View>
-      ) : (
-        <Divider />
-      )}
-    </Animated.View>
+      {divider ? (
+        isPhoneLandscape ? (
+          <View style={weekdaySpan(disableWeekDays)}>
+            <Divider style={weekdaySpanOvershoot} />
+          </View>
+        ) : (
+          <Divider />
+        )
+      ) : null}
+    </View>
   )
 }
 

@@ -8,22 +8,17 @@
   <img alt="Runs with Expo" src="https://img.shields.io/badge/Runs%20with%20Expo-4630EB.svg?style=flat-square&logo=EXPO&labelColor=f3f3f3&logoColor=000" />
 </p>
 
-Cross-platform [Material Design](https://m3.material.io/) date and time pickers for [React Native Paper](https://reactnativepaper.com/).
+Cross-platform [Material Design](https://m3.material.io/) date and time pickers for [React Native Paper](https://reactnativepaper.com/). Live demo: [reactnativepaperdates.com](https://www.reactnativepaperdates.com/).
 
-- Single, range, multiple, and input date pickers
+- Single, range, multiple, input, and docked date pickers, plus a modal date input
 - Time picker with clock face or keyboard input
-- Works on Android, iOS, and web (including Expo)
-- Uses the native `Intl` APIs for formatting and localization
-- Small bundle size and virtualized month scrolling
-- Built-in translations plus custom and dynamic locales
-
-## Demo
-
-Try the live demo at [reactnativepaperdates.com](https://www.reactnativepaperdates.com/).
+- Android, iOS, and web, including Expo
+- `Intl` formatting, built-in translations, and custom or dynamic locales
+- Small bundle with virtualized month scrolling
 
 ## Getting started
 
-See the [documentation](https://web-ridge.github.io/react-native-paper-dates/) for installation and usage.
+Requires React `>=19`, React Native `>=0.78`, [React Native Paper 6](https://oss.callstack.com/react-native-paper/6.x/docs/guides/getting-started) (`>=6.0.0-alpha.0 <7`), and [react-native-safe-area-context](https://github.com/AppAndFlow/react-native-safe-area-context) `>=5`. Paper 6 also requires [react-native-reanimated](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started/) `>= 4.3.0`. Installation, usage, and the [Paper 5 migration guide](https://web-ridge.github.io/react-native-paper-dates/guide/migration) are in the [documentation](https://web-ridge.github.io/react-native-paper-dates/).
 
 ## Maintainers
 

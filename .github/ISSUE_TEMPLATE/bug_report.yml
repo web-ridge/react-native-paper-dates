@@ -1,0 +1,53 @@
+name: 🐛 Report a bug
+description: Create a report to help us improve
+labels: ["bug"]
+body:
+  - type: textarea
+    id: current
+    attributes:
+      label: Current behaviour
+      description: Describe what happens.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+      description: Describe what you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: How to reproduce
+      description: Link a https://snack.expo.dev example or a GitHub repo, and list the steps. A link at the end of this field is fine.
+      placeholder: https://snack.expo.dev/
+    validations:
+      required: true
+  - type: textarea
+    id: preview
+    attributes:
+      label: Preview
+      description: Screenshots or video, if you have them.
+  - type: textarea
+    id: tried
+    attributes:
+      label: What have you tried so far?
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Fill in the versions you are using.
+      value: |
+        | software | version |
+        | --- | --- |
+        | ios | |
+        | android | |
+        | react-native | |
+        | react-native-paper | |
+        | react-native-paper-dates | |
+        | node | |
+        | package manager | |
+        | expo sdk | |
+    validations:
+      required: true

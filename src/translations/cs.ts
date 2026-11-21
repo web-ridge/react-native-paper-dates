@@ -1,23 +1,38 @@
-import type { TranslationsType } from './utils'
+import { registerTranslation, type TranslationsType } from './utils'
 
 const cs: TranslationsType = {
-  save: 'Uložit',
-  selectSingle: 'Vyberte datum',
-  selectMultiple: 'Vyberte data',
-  selectRange: 'Vyberte období',
-  notAccordingToDateFormat: (inputFormat) =>
-    `Formát data musí být ${inputFormat}`,
-  mustBeHigherThan: (date) => `Musí to být později ${date}`,
-  mustBeLowerThan: (date) => `Musí to být dříve ${date}`,
+  am: 'dop.',
+  cancel: 'Zrušit',
+  close: 'Zavřít',
+  confirm: 'OK',
+  dateIsDisabled: 'Den není povolen',
+  enterDate: 'Zadejte datum',
+  enterDates: 'Zadejte data',
+  hour: 'hodina',
+  hourOf: (hour, total) => `Hodina ${hour} z ${total}`,
+  invalidTime: 'Neplatný čas',
+  minute: 'minuta',
+  minuteOf: (minute, total) => `Minuta ${minute} z ${total}`,
   mustBeBetween: (startDate, endDate) =>
     `Musí být mezi ${startDate} - ${endDate}`,
-  dateIsDisabled: 'Den není povolen',
-  previous: 'Předchozí',
+  mustBeHigherThan: (date) => `Musí to být později ${date}`,
+  mustBeLowerThan: (date) => `Musí to být dříve ${date}`,
   next: 'další  ',
-  typeInDate: 'Zadejte datum',
+  notAccordingToDateFormat: (inputFormat) =>
+    `Formát data musí být ${inputFormat}`,
   pickDateFromCalendar: 'Vyberte datum z kalendáře',
-  close: 'Zavřít',
-  minute: 'minuta',
-  hour: 'hodina',
+  pm: 'odp.',
+  previous: 'Předchozí',
+  save: 'Uložit',
+  selectMultiple: 'Vyberte data',
+  selectRange: 'Vyberte období',
+  selectSingle: 'Vyberte datum',
+  toggleClock: 'Přepnout hodiny',
+  toggleKeyboard: 'Přepnout klávesnici',
+  toggleScroll: 'Přepnout posuvník',
+  typeInDate: 'Zadejte datum',
 }
+
 export default cs
+
+registerTranslation('cs', cs)

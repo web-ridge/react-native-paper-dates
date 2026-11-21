@@ -1,36 +1,47 @@
-import { ComponentProps, CSSProperties } from 'react'
-import type { ValidRangeType } from './Calendar'
+import type { ComponentProps, CSSProperties } from 'react'
 import type { TextInput } from 'react-native-paper'
 
-export type DatePickerInputProps = {
+import type { ValidRangeType } from './types'
+
+type TextFieldProps = Omit<
+  ComponentProps<typeof TextInput>,
+  'value' | 'onChange' | 'onChangeText' | 'inputMode' | 'endAccessory'
+>
+
+export type DateFieldProps = {
+  hasError?: boolean
+  hideValidationErrors?: boolean
+  inputEnabled?: boolean
   inputMode: 'start' | 'end'
   locale: string
   onChange: (date: Date | undefined) => void
+  onChangeText?: (text: string | undefined) => void
+  onValidationError?: (error: string | null) => void
+  validRange?: ValidRangeType
   value: Date | undefined
-  validRange?: ValidRangeType | undefined
-  withModal?: boolean
   withDateFormatInLabel?: boolean
-  hideValidationErrors?: boolean
-  hasError?: boolean
-  onValidationError?: ((error: string | null) => void) | undefined
+} & TextFieldProps
+
+export type DatePickerPresentationProps = {
+  animationType?: 'slide' | 'fade' | 'none'
   calendarIcon?: string
   disableCalendarIcon?: boolean
-  iconSize?: number
-  iconStyle?: CSSProperties
-  iconColor?: string
+  disableStatusBar?: boolean
+  disableStatusBarPadding?: boolean
+  endYear?: number
+  presentation?: 'auto' | 'modal' | 'docked'
+  presentationStyle?: 'pageSheet' | 'overFullScreen'
   saveLabel?: string
   saveLabelDisabled?: boolean
-  uppercase?: boolean
-  startYear?: number
-  endYear?: number
-  onChangeText?: (text: string | undefined) => void
-  inputEnabled?: boolean
-  disableStatusBarPadding?: boolean
-  disableStatusBar?: boolean
-  animationType?: 'slide' | 'fade' | 'none'
-  presentationStyle?: 'pageSheet' | 'overFullScreen'
   startWeekOnMonday?: boolean
-} & Omit<
-  ComponentProps<typeof TextInput>,
-  'value' | 'onChange' | 'onChangeText' | 'inputMode'
->
+  startYear?: number
+  uppercase?: boolean
+  withModal?: boolean
+}
+
+export type DatePickerInputProps = DateFieldProps &
+  DatePickerPresentationProps & {
+    iconColor?: string
+    iconSize?: number
+    iconStyle?: CSSProperties
+  }

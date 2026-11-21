@@ -1,90 +1,159 @@
 import {
+  memo,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   ScrollView,
+  type ScrollViewInstance,
   StyleSheet,
   View,
 } from 'react-native'
-import {
-  getHorizontalMonthOffset,
-  getIndexFromVerticalOffset,
-  getMonthHeight,
-  getVerticalMonthsOffset,
-  montHeaderHeight,
-} from './Month'
 
-import { SwiperProps, useYearChange, isIndexWithinRange } from './SwiperUtils'
-import {
-  estimatedMonthHeight,
-  getTotalMonths,
-  getBeginOffset,
-} from './dateUtils'
-import AutoSizer from './AutoSizer'
-import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { sharedStyles } from '../shared/styles'
-import { verticalScrollbarGutter } from './CalendarHeader'
+import AutoSizer from './AutoSizer'
+import {
+  getMonthHeight,
+  getVerticalListMetrics,
+  getVerticalMonthScrollY,
+  getVerticalMonthsOffset,
+  horizontalContentHeight,
+  indexFromVerticalScroll,
+} from './monthLayout'
+import {
+  assignMonthSlots,
+  getMaxIndex,
+  getMinIndex,
+  getVerticalWindow,
+  isIndexWithinRange,
+  type MonthSlot,
+  nextVisibleIndexes,
+  SwiperProps,
+  useCalendarKeyboard,
+  useFocusDate,
+  useYearChange,
+} from './SwiperUtils'
 
-function getVisibleArray(
-  i: number,
-  { isHorizontal, height }: { isHorizontal: boolean; height: number }
-) {
-  if (isHorizontal || height < 700) {
-    return [i - 1, i, i + 1]
-  }
-  return [i - 2, i - 1, i, i + 1, i + 2]
-}
+const HORIZONTAL_PAGES = 3
 
 function Swiper(props: SwiperProps) {
   return (
-    <AutoSizer initialLayout={props.initialLayout}>
-      {({ width, height }) => (
-        <SwiperInner {...props} width={width} height={height} />
+    <AutoSizer
+      fill={props.scrollMode !== 'horizontal'}
+      initialLayout={props.initialLayout}
+    >
+      {({ height, width }) => (
+        <SwiperInner {...props} height={height} width={width} />
       )}
     </AutoSizer>
   )
 }
 
+function clampIndex(i: number, startYear?: number, endYear?: number) {
+  if (isIndexWithinRange(i, startYear, endYear)) {
+    return i
+  }
+  return Math.max(
+    getMinIndex(startYear, endYear),
+    Math.min(getMaxIndex(startYear, endYear), i)
+  )
+}
+
+function getVisibleArray(
+  i: number,
+  {
+    endYear,
+    isHorizontal,
+    startYear,
+  }: {
+    endYear?: number
+    isHorizontal: boolean
+    startYear?: number
+  }
+) {
+  if (isHorizontal) {
+    return [i - 1, i, i + 1]
+  }
+  return getVerticalWindow(i, startYear, endYear)
+}
+
+/* eslint-disable react-hooks/refs -- The scroll index lives in a ref so handlers stay current. Passing those handlers to render props makes the compiler skip this component, so its manual memoization stays. */
 function SwiperInner({
-  scrollMode,
-  renderItem,
-  renderHeader,
-  renderFooter,
-  selectedYear,
-  initialIndex,
-  width,
+  endYear,
+  focusDate,
   height,
+  initialIndex,
+  keyboardEnabled = true,
+  onFocusDate,
+  onKeyboardConfirm,
+  onMoveFocus,
+  onOpenMonthMenu,
+  onOpenYearMenu,
+  renderFooter,
+  renderHeader,
+  renderItem,
+  scrollMode,
+  selectedYear,
   startWeekOnMonday,
   startYear,
-  endYear,
-}: SwiperProps & { width: number; height: number }) {
-  const idx = useRef<number>(initialIndex)
+  width,
+}: SwiperProps & { height: number; width: number }) {
   const isHorizontal = scrollMode === 'horizontal'
-  const [visibleIndexes, setVisibleIndexes] = useState<number[]>(
-    getVisibleArray(initialIndex, { isHorizontal, height })
-  )
-
-  const parentRef = useRef<ScrollView | null>(null)
-
-  // Start on the current month instead of at 0 (where no month is rendered)
-  // and then jumping there after mount. Later moves go through scrollTo.
-  const [initialContentOffset] = useState(() => {
-    if (!isIndexWithinRange(initialIndex, startYear, endYear)) {
-      return undefined
+  const parentRef = useRef<ScrollViewInstance | null>(null)
+  const pendingRecenter = useRef(false)
+  const pendingScroll = useRef<{ animated: boolean; y: number } | null>(null)
+  const restX = width
+  const startIndex = clampIndex(initialIndex, startYear, endYear)
+  const idx = useRef<number>(startIndex)
+  const [monthWindow, setMonthWindow] = useState<{
+    activeIndex: number
+    indexes: number[]
+    slots: MonthSlot[]
+  }>(() => {
+    const indexes = getVisibleArray(startIndex, {
+      endYear,
+      isHorizontal,
+      startYear,
+    })
+    return {
+      activeIndex: startIndex,
+      indexes,
+      slots: isHorizontal ? [] : assignMonthSlots([], indexes),
     }
-    return isHorizontal
-      ? { x: getHorizontalMonthOffset(initialIndex, width), y: 0 }
-      : {
-          x: 0,
-          y:
-            getVerticalMonthsOffset(
-              initialIndex,
-              startWeekOnMonday,
-              startYear,
-              endYear
-            ) - montHeaderHeight,
-        }
   })
-
+  const visibleIndexes = monthWindow.indexes
+  const verticalMetrics = useMemo(
+    () =>
+      getVerticalListMetrics(
+        getMinIndex(startYear, endYear),
+        getMaxIndex(startYear, endYear),
+        startWeekOnMonday,
+        startYear,
+        endYear
+      ),
+    [endYear, startWeekOnMonday, startYear]
+  )
+  const [initialContentOffset] = useState(() => {
+    if (isHorizontal) {
+      return { x: restX, y: 0 }
+    }
+    return {
+      x: 0,
+      y: getVerticalMonthScrollY(
+        startIndex,
+        verticalMetrics.origin,
+        startWeekOnMonday,
+        startYear,
+        endYear
+      ),
+    }
+  })
   const scrollTo = useCallback(
     (index: number, animated: boolean) => {
       if (!isIndexWithinRange(index, startYear, endYear)) {
@@ -92,115 +161,187 @@ function SwiperInner({
       }
 
       idx.current = index
-      setVisibleIndexes(getVisibleArray(index, { isHorizontal, height }))
-
-      if (!parentRef.current) {
-        return
-      }
-      const offset = isHorizontal
-        ? getHorizontalMonthOffset(index, width)
-        : getVerticalMonthsOffset(
+      if (isHorizontal) {
+        pendingRecenter.current = true
+      } else {
+        pendingScroll.current = {
+          animated,
+          y: getVerticalMonthScrollY(
             index,
+            verticalMetrics.origin,
             startWeekOnMonday,
             startYear,
             endYear
-          ) - montHeaderHeight
-
-      if (isHorizontal) {
-        parentRef.current.scrollTo({
-          y: 0,
-          x: offset,
-          animated,
-        })
-      } else {
-        parentRef.current.scrollTo({
-          y: offset,
-          x: 0,
-          animated,
-        })
+          ),
+        }
       }
+      setMonthWindow((current) => {
+        const indexes = getVisibleArray(index, {
+          endYear,
+          isHorizontal,
+          startYear,
+        })
+        return {
+          activeIndex: index,
+          indexes,
+          slots: isHorizontal ? [] : assignMonthSlots(current.slots, indexes),
+        }
+      })
     },
     [
-      parentRef,
+      endYear,
       isHorizontal,
-      width,
-      height,
       startWeekOnMonday,
       startYear,
-      endYear,
+      verticalMetrics.origin,
     ]
   )
-
-  const onPrev = useCallback(() => {
-    const newIndex = idx.current - 1
-    if (isIndexWithinRange(newIndex, startYear, endYear)) {
-      scrollTo(newIndex, true)
-    }
-  }, [scrollTo, idx, startYear, endYear])
-
   const onNext = useCallback(() => {
     const newIndex = idx.current + 1
     if (isIndexWithinRange(newIndex, startYear, endYear)) {
+      if (isHorizontal) {
+        parentRef.current?.scrollTo({ animated: true, x: restX * 2, y: 0 })
+        return
+      }
       scrollTo(newIndex, true)
     }
-  }, [scrollTo, idx, startYear, endYear])
-
+  }, [endYear, isHorizontal, restX, scrollTo, startYear])
+  const onPrev = useCallback(() => {
+    const newIndex = idx.current - 1
+    if (isIndexWithinRange(newIndex, startYear, endYear)) {
+      if (isHorizontal) {
+        parentRef.current?.scrollTo({ animated: true, x: 0, y: 0 })
+        return
+      }
+      scrollTo(newIndex, true)
+    }
+  }, [endYear, isHorizontal, scrollTo, startYear])
   const scrollToCurrent = useCallback(() => {
     scrollTo(idx.current, false)
   }, [scrollTo])
-
-  // onLayout can run against the previous page width during rotation, before
   useEffect(scrollToCurrent, [scrollToCurrent])
-
-  const onMomentumScrollEnd = useCallback(
-    (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const contentOffset = e.nativeEvent.contentOffset
-      const viewSize = e.nativeEvent.layoutMeasurement
-      const dynamicBeginOffset = getBeginOffset(startYear, endYear)
-      const newIndex = isHorizontal
-        ? Math.round(contentOffset.x / viewSize.width)
-        : getIndexFromVerticalOffset(
-            contentOffset.y - dynamicBeginOffset,
-            startWeekOnMonday,
-            startYear,
-            endYear
-          )
-
-      if (newIndex === 0) {
-        return
-      }
-
-      if (!isIndexWithinRange(newIndex, startYear, endYear)) {
-        return
-      }
-
-      if (idx.current !== newIndex) {
-        idx.current = newIndex
-        setVisibleIndexes(getVisibleArray(newIndex, { isHorizontal, height }))
-      }
-    },
-    [idx, height, isHorizontal, startWeekOnMonday, startYear, endYear]
-  )
+  useLayoutEffect(() => {
+    const pending = pendingScroll.current
+    if (pending) {
+      pendingScroll.current = null
+      parentRef.current?.scrollTo({
+        animated: pending.animated,
+        x: 0,
+        y: pending.y,
+      })
+    }
+    if (pendingRecenter.current) {
+      pendingRecenter.current = false
+      parentRef.current?.scrollTo({ animated: false, x: restX, y: 0 })
+    }
+  }, [restX, visibleIndexes])
 
   const renderProps = {
     index: 0,
-    onPrev,
     onNext,
+    onPrev,
   }
 
-  const needsMonthScroll =
-    isHorizontal &&
-    visibleIndexes.some(
-      (monthIndex) =>
-        getMonthHeight(
-          scrollMode,
-          monthIndex,
-          startWeekOnMonday,
+  const syncVerticalIndex = useCallback(
+    (scrollY: number) => {
+      const newIndex = indexFromVerticalScroll(
+        scrollY,
+        verticalMetrics.origin,
+        startWeekOnMonday,
+        startYear,
+        endYear
+      )
+      if (
+        newIndex === idx.current ||
+        !isIndexWithinRange(newIndex, startYear, endYear)
+      ) {
+        return
+      }
+      idx.current = newIndex
+      setMonthWindow((current) => {
+        const indexes = nextVisibleIndexes(
+          current.indexes,
+          newIndex,
           startYear,
           endYear
-        ) > height
-    )
-
+        )
+        if (indexes === current.indexes) return current
+        return {
+          activeIndex: newIndex,
+          indexes,
+          slots: assignMonthSlots(current.slots, indexes),
+        }
+      })
+    },
+    [endYear, startWeekOnMonday, startYear, verticalMetrics.origin]
+  )
+  const onMomentumScrollEnd = useCallback(
+    (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const contentOffset = e.nativeEvent.contentOffset
+      if (!isHorizontal) {
+        syncVerticalIndex(contentOffset.y)
+        return
+      }
+      const page = Math.round(contentOffset.x / width)
+      const delta = page - 1
+      if (!delta) {
+        return
+      }
+      const newIndex = idx.current + delta
+      if (!isIndexWithinRange(newIndex, startYear, endYear)) {
+        parentRef.current?.scrollTo({ animated: true, x: restX, y: 0 })
+        return
+      }
+      idx.current = newIndex
+      pendingRecenter.current = true
+      setMonthWindow({
+        activeIndex: newIndex,
+        indexes: getVisibleArray(newIndex, {
+          endYear,
+          isHorizontal,
+          startYear,
+        }),
+        slots: [],
+      })
+    },
+    [endYear, isHorizontal, restX, startYear, syncVerticalIndex, width]
+  )
+  const onScroll = useCallback(
+    (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+      if (isHorizontal) {
+        return
+      }
+      syncVerticalIndex(e.nativeEvent.contentOffset.y)
+    },
+    [isHorizontal, syncVerticalIndex]
+  )
+  const moveMonth = useCallback(
+    (delta: number) => {
+      scrollTo(idx.current + delta, false)
+    },
+    [scrollTo]
+  )
+  useFocusDate(
+    (newIndex) => {
+      scrollTo(newIndex, false)
+    },
+    {
+      currentIndexRef: idx,
+      endYear,
+      focusDate,
+      startYear,
+    }
+  )
+  useCalendarKeyboard(keyboardEnabled, idx, {
+    endYear,
+    onConfirm: onKeyboardConfirm,
+    onFocusDate,
+    onMoveFocus,
+    onMoveMonth: moveMonth,
+    onOpenMonthMenu,
+    onOpenYearMenu,
+    startYear,
+  })
   useYearChange(
     (newIndex) => {
       if (newIndex && isIndexWithinRange(newIndex, startYear, endYear)) {
@@ -208,104 +349,138 @@ function SwiperInner({
       }
     },
     {
-      selectedYear,
       currentIndexRef: idx,
-      startYear,
       endYear,
+      selectedYear,
+      startYear,
     }
   )
+
+  const pageHeight = isHorizontal
+    ? horizontalContentHeight(
+        visibleIndexes[1] ?? initialIndex,
+        startWeekOnMonday,
+        startYear,
+        endYear
+      )
+    : height
+  const contentHeight = isHorizontal ? pageHeight : verticalMetrics.height
+  const contentWidth = isHorizontal ? width * HORIZONTAL_PAGES : width
 
   return (
     <>
       <ScrollView
-        scrollsToTop={false}
         ref={parentRef}
-        horizontal={isHorizontal}
-        pagingEnabled={isHorizontal}
-        nestedScrollEnabled={isHorizontal}
-        directionalLockEnabled={isHorizontal}
-        style={[sharedStyles.root, sharedStyles.minHeightZero]}
-        onMomentumScrollEnd={onMomentumScrollEnd}
-        onScrollEndDrag={onMomentumScrollEnd}
-        onLayout={scrollToCurrent}
         contentOffset={initialContentOffset}
+        decelerationRate={isHorizontal ? 'fast' : 'normal'}
+        directionalLockEnabled={isHorizontal}
+        horizontal={isHorizontal}
+        nestedScrollEnabled={isHorizontal}
+        onLayout={isHorizontal ? scrollToCurrent : undefined}
+        onMomentumScrollEnd={onMomentumScrollEnd}
+        onScroll={isHorizontal ? undefined : onScroll}
+        onScrollEndDrag={onMomentumScrollEnd}
+        pagingEnabled={isHorizontal}
+        scrollEventThrottle={16}
+        scrollsToTop={false}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        decelerationRate="fast"
-        scrollEventThrottle={10}
+        style={
+          isHorizontal
+            ? [styles.horizontalPager, { height: pageHeight }]
+            : [sharedStyles.root, sharedStyles.minHeightZero]
+        }
       >
         <View
           style={[
             styles.inner,
             {
-              height: isHorizontal
-                ? height
-                : estimatedMonthHeight * getTotalMonths(startYear, endYear),
-              width: isHorizontal
-                ? width * getTotalMonths(startYear, endYear)
-                : width,
+              height: contentHeight,
+              width: contentWidth,
             },
           ]}
         >
-          {visibleIndexes
-            ? new Array(visibleIndexes.length).fill(undefined).map((_, vi) => {
-                const monthIndex = visibleIndexes[vi]
-                const monthHeight = getMonthHeight(
+          {(isHorizontal
+            ? visibleIndexes.map((monthIndex, vi) => ({
+                monthIndex,
+                slot: vi,
+              }))
+            : monthWindow.slots
+          ).map(({ monthIndex, slot }) => {
+            const inRange = isIndexWithinRange(monthIndex, startYear, endYear)
+            const monthHeight = inRange
+              ? getMonthHeight(
                   scrollMode,
                   monthIndex,
                   startWeekOnMonday,
                   startYear,
                   endYear
                 )
-                // Horizontal paging does not scroll inside a month. Bound the
-                // page to the dialog so the day grid can scroll in landscape.
-                return (
-                  <View
-                    key={vi}
-                    // eslint-disable-next-line react-native/no-inline-styles
-                    style={{
-                      top: isHorizontal
-                        ? 0
-                        : getVerticalMonthsOffset(
-                            monthIndex,
-                            startWeekOnMonday,
-                            startYear,
-                            endYear
-                          ),
-                      left: isHorizontal
-                        ? getHorizontalMonthOffset(monthIndex, width)
-                        : 0,
-                      right: isHorizontal ? undefined : 0,
-                      position: 'absolute',
-                      width: isHorizontal ? width : undefined,
-                      height: isHorizontal ? height : monthHeight,
-                      overflow: 'hidden',
-                    }}
-                  >
-                    {renderItem({
+              : height
+            const monthOffset =
+              getVerticalMonthsOffset(
+                monthIndex,
+                startWeekOnMonday,
+                startYear,
+                endYear
+              ) - verticalMetrics.origin
+            return (
+              <View
+                key={slot}
+                style={[
+                  styles.month,
+                  isHorizontal ? styles.monthHorizontal : styles.monthVertical,
+                  isHorizontal
+                    ? {
+                        height: pageHeight,
+                        left: slot * width,
+                        width,
+                      }
+                    : {
+                        height: monthHeight,
+                        top: monthOffset,
+                      },
+                ]}
+              >
+                {inRange
+                  ? renderItem({
+                      active:
+                        !isHorizontal || monthIndex === monthWindow.activeIndex,
                       index: monthIndex,
-                      onPrev: onPrev,
                       onNext: onNext,
-                    })}
-                  </View>
-                )
-              })
-            : null}
+                      onPrev: onPrev,
+                    })
+                  : null}
+              </View>
+            )
+          })}
         </View>
       </ScrollView>
-      {renderHeader &&
-        renderHeader({
-          ...renderProps,
-          endInset: needsMonthScroll ? verticalScrollbarGutter : 0,
-        })}
+      {renderHeader && renderHeader(renderProps)}
       {renderFooter && renderFooter(renderProps)}
     </>
   )
 }
 
+/* eslint-enable react-hooks/refs */
+
 const styles = StyleSheet.create({
+  horizontalPager: {
+    flexGrow: 0,
+  },
   inner: {
     position: 'relative',
+  },
+  month: {
+    overflow: 'hidden',
+    position: 'absolute',
+  },
+  monthHorizontal: {
+    top: 0,
+  },
+  monthVertical: {
+    left: 0,
+    right: 0,
   },
 })
 

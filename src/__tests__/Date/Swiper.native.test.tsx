@@ -1,0 +1,311 @@
+import { act, render } from '@testing-library/react-native'
+import React from 'react'
+
+import {
+  estimatedMonthHeight,
+  getBeginOffset,
+  getStartAtIndex,
+} from '../../Date/dateUtils'
+import {
+  getIndexFromVerticalOffset,
+  getVerticalMonthsOffset,
+} from '../../Date/monthLayout'
+import Swiper from '../../Date/Swiper'
+import { isIndexWithinRange } from '../../Date/SwiperUtils'
+
+jest.mock('../../Date/SwiperUtils', () => {
+  const actual = jest.requireActual('../../Date/SwiperUtils') as {
+    isIndexWithinRange: (...args: unknown[]) => boolean
+  }
+  return {
+    ...actual,
+    isIndexWithinRange: jest.fn((...args: unknown[]) =>
+      actual.isIndexWithinRange(...args)
+    ),
+  }
+})
+
+function detachScrollRef(screen: { container: { queryAll: Function } }) {
+  const seed = screen.container.queryAll(() => true)[0] as {
+    unstable_fiber?: Fiber
+  }
+  let root = seed.unstable_fiber
+  while (root?.return) root = root.return
+  const seen = new Set<Fiber>()
+  const stack: Fiber[] = root ? [root] : []
+  while (stack.length) {
+    const fiber = stack.pop()
+    if (!fiber || seen.has(fiber)) continue
+    seen.add(fiber)
+    const name = typeof fiber.type === 'function' ? fiber.type.name : ''
+    if (name === 'SwiperInner') {
+      let hook = fiber.memoizedState
+      while (hook) {
+        const state = hook.memoizedState
+        if (
+          state &&
+          typeof state === 'object' &&
+          state.current &&
+          typeof state.current === 'object'
+        ) {
+          Object.defineProperty(state, 'current', {
+            configurable: true,
+            get: () => null,
+            set() {},
+          })
+          return
+        }
+        hook = hook.next
+      }
+    }
+    if (fiber.child) stack.push(fiber.child)
+    if (fiber.sibling) stack.push(fiber.sibling)
+  }
+  throw new Error('missing scroll ref')
+}
+
+const endYear = 2030
+
+const height = 800
+
+type Hook = {
+  memoizedState?: { current?: unknown }
+  next?: Hook | null
+}
+
+type Fiber = {
+  child?: Fiber
+  memoizedState?: Hook | null
+  return?: Fiber
+  sibling?: Fiber
+  type?: { name?: string } | string
+}
+
+function indexAt(first: number, y: number) {
+  const base = getVerticalMonthsOffset(first, false, startYear, endYear)
+  const begin = getBeginOffset(startYear, endYear)
+  return getIndexFromVerticalOffset(base + y - begin, false, startYear, endYear)
+}
+
+function scrollY(target: number, first: number) {
+  const base = getVerticalMonthsOffset(first, false, startYear, endYear)
+  const begin = getBeginOffset(startYear, endYear)
+  return (
+    getVerticalMonthsOffset(target, false, startYear, endYear) -
+    estimatedMonthHeight * getStartAtIndex(startYear, endYear) -
+    base +
+    begin
+  )
+}
+
+function scrollEvent(x: number, y: number) {
+  return { nativeEvent: { contentOffset: { x, y } } }
+}
+
+type ScrollHandler = (event: ReturnType<typeof scrollEvent>) => void
+
+function scrollNodes(screen: { container: { queryAll: Function } }) {
+  return screen.container.queryAll(
+    (node: { props: Record<string, unknown> }) =>
+      typeof node.props.onMomentumScrollEnd === 'function'
+  ) as Array<{
+    props: {
+      onMomentumScrollEnd?: ScrollHandler
+      onScroll?: ScrollHandler
+      pagingEnabled?: boolean
+    }
+  }>
+}
+
+const startYear = 2020
+
+const width = 300
+
+function windowStart(index: number) {
+  const span = height < 700 ? 1 : 2
+  for (let offset = -span; offset <= span; offset += 1) {
+    if (isIndexWithinRange(index + offset, startYear, endYear)) {
+      return index + offset
+    }
+  }
+  return index
+}
+
+afterEach(() => {
+  const range = isIndexWithinRange as unknown as jest.Mock
+  range.mockImplementation((...args: unknown[]) =>
+    (
+      jest.requireActual('../../Date/SwiperUtils') as {
+        isIndexWithinRange: (...params: unknown[]) => boolean
+      }
+    ).isIndexWithinRange(...args)
+  )
+})
+
+describe('native swiper gaps', () => {
+  it('scrolls vertically, ignores a repeat, and rejects an out-of-range index', async () => {
+    const initialIndex = getStartAtIndex(startYear, endYear)
+    let onPrev: (() => void) | undefined
+    const screen = await render(
+      <Swiper
+        endYear={endYear}
+        initialIndex={initialIndex}
+        initialLayout={{ height, width }}
+        renderItem={({ onPrev: prev }) => {
+          onPrev = prev
+          return null
+        }}
+        scrollMode="vertical"
+        selectedYear={undefined}
+        startWeekOnMonday={false}
+        startYear={startYear}
+      />
+    )
+    await act(async () => {
+      onPrev?.()
+    })
+
+    const scroll = scrollNodes(screen).find(
+      (node) => typeof node.props.onScroll === 'function'
+    )
+    if (!scroll?.props.onScroll) {
+      throw new Error('missing vertical scroll')
+    }
+
+    const first = windowStart(initialIndex)
+    const nextIndex = isIndexWithinRange(initialIndex + 1, startYear, endYear)
+      ? initialIndex + 1
+      : initialIndex - 1
+    const sameY = scrollY(initialIndex, first)
+    const farY = scrollY(nextIndex, first)
+    expect(indexAt(first, sameY)).toBe(initialIndex)
+    expect(indexAt(first, farY)).toBe(nextIndex)
+
+    await act(async () => {
+      scroll.props.onScroll?.(scrollEvent(0, sameY))
+      scroll.props.onScroll?.(scrollEvent(0, farY))
+      scroll.props.onScroll?.(scrollEvent(0, farY))
+    })
+    jest.advanceTimersByTime(32)
+
+    const moved = scrollNodes(screen).find(
+      (node) => typeof node.props.onScroll === 'function'
+    )
+    await act(async () => {
+      moved?.props.onScroll?.(scrollEvent(0, -1_000_000))
+    })
+
+    await act(async () => {
+      onPrev?.()
+    })
+    await screen.rerender(
+      <Swiper
+        endYear={1800}
+        initialIndex={initialIndex}
+        initialLayout={{ height, width }}
+        renderItem={() => null}
+        scrollMode="vertical"
+        selectedYear={undefined}
+        startWeekOnMonday={false}
+        startYear={1800}
+      />
+    )
+  })
+
+  it('ignores a horizontal page that does not change', async () => {
+    const handlers: Array<
+      (event: {
+        nativeEvent: { contentOffset: { x: number; y: number } }
+      }) => void
+    > = []
+    const original = React.useCallback
+    const spy = jest.spyOn(React, 'useCallback').mockImplementation(((
+      fn: (...args: never[]) => unknown,
+      deps?: React.DependencyList
+    ) => {
+      const callback = original(fn, deps ?? [])
+      const source = Function.prototype.toString.call(fn)
+      if (
+        source.includes('syncVerticalIndex') &&
+        source.includes('nativeEvent.contentOffset.y')
+      ) {
+        handlers.push(
+          callback as (event: {
+            nativeEvent: { contentOffset: { x: number; y: number } }
+          }) => void
+        )
+      }
+      return callback
+    }) as typeof React.useCallback)
+
+    try {
+      const screen = await render(
+        <Swiper
+          endYear={endYear}
+          initialIndex={getStartAtIndex(startYear, endYear)}
+          initialLayout={{ height: 120, width }}
+          renderItem={() => null}
+          scrollMode="horizontal"
+          selectedYear={undefined}
+          startWeekOnMonday={false}
+          startYear={startYear}
+        />
+      )
+      const paging = scrollNodes(screen).find(
+        (node) => node.props.pagingEnabled
+      )
+      await act(async () => {
+        paging?.props.onMomentumScrollEnd?.(scrollEvent(width, 0))
+        handlers.forEach((handler) => handler(scrollEvent(0, 0)))
+      })
+      expect(handlers.length).toBeGreaterThan(0)
+    } finally {
+      spy.mockRestore()
+    }
+  })
+
+  it('skips recentering when the scroll view never attaches', async () => {
+    const screen = await render(
+      <Swiper
+        endYear={endYear}
+        initialIndex={getStartAtIndex(startYear, endYear)}
+        initialLayout={{ height, width }}
+        renderItem={() => null}
+        scrollMode="vertical"
+        selectedYear={undefined}
+        startWeekOnMonday={false}
+        startYear={startYear}
+      />
+    )
+    detachScrollRef(screen)
+    await screen.rerender(
+      <Swiper
+        endYear={2029}
+        initialIndex={getStartAtIndex(startYear, endYear)}
+        initialLayout={{ height, width }}
+        renderItem={() => null}
+        scrollMode="vertical"
+        selectedYear={undefined}
+        startWeekOnMonday={false}
+        startYear={startYear}
+      />
+    )
+  })
+
+  it('keeps one month when every index is out of range', async () => {
+    const range = isIndexWithinRange as unknown as jest.Mock
+    range.mockReturnValue(false)
+    await render(
+      <Swiper
+        endYear={2026}
+        initialIndex={0}
+        initialLayout={{ height: 400, width }}
+        renderItem={() => null}
+        scrollMode="vertical"
+        selectedYear={undefined}
+        startWeekOnMonday={false}
+        startYear={2026}
+      />
+    )
+  })
+})

@@ -18,5 +18,20 @@
     "type": "file",
     "name": "input-date-picker",
     "label": "Input"
+  },
+  {
+    "type": "file",
+    "name": "docked-date-picker",
+    "label": "Docked"
+  },
+  {
+    "type": "file",
+    "name": "single-date-input",
+    "label": "Single input"
+  },
+  {
+    "type": "file",
+    "name": "range-date-input",
+    "label": "Range input"
   }
 ]

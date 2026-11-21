@@ -3,12 +3,12 @@ type Props = {
 }
 
 const AppStoreIcon = ({ color }: Props) => (
-  <svg width="24px" height="23px" viewBox="-4 0 20 23">
-    <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+  <svg height="23px" viewBox="-4 0 20 23" width="24px">
+    <g fill="none" fillRule="evenodd" id="Page-1" stroke="none" strokeWidth="1">
       <g
+        fill={color}
         id="Store-Icons"
         transform="translate(-40.000000, -108.000000)"
-        fill={color}
       >
         <g
           id="circ_iPhone_download"

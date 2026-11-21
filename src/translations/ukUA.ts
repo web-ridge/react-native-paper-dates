@@ -1,23 +1,38 @@
-import type { TranslationsType } from './utils'
+import { registerTranslation, type TranslationsType } from './utils'
 
 const ukUA: TranslationsType = {
-  save: 'Зберегти',
-  selectSingle: 'Оберіть дату',
-  selectMultiple: 'Оберіть дати',
-  selectRange: 'Оберіть період',
-  notAccordingToDateFormat: (inputFormat: string) =>
-    `Формат дати має бути ${inputFormat}`,
-  mustBeHigherThan: (date: string) => `Має бути пізніше ніж ${date}`,
-  mustBeLowerThan: (date: string) => `Має бути раніше ніж ${date}`,
+  am: 'дп',
+  cancel: 'Скасувати',
+  close: 'Закрити',
+  confirm: 'ОК',
+  dateIsDisabled: 'Цей день не дозволено обирати',
+  enterDate: 'Введіть дату',
+  enterDates: 'Введіть дати',
+  hour: 'Година',
+  hourOf: (hour, total) => `Година ${hour} з ${total}`,
+  invalidTime: 'Неприпустимий час',
+  minute: 'Хвилина',
+  minuteOf: (minute, total) => `Хвилина ${minute} з ${total}`,
   mustBeBetween: (startDate: string, endDate: string) =>
     `Має бути між ${startDate} - ${endDate}`,
-  dateIsDisabled: 'Цей день не дозволено обирати',
-  previous: 'Попередній',
+  mustBeHigherThan: (date: string) => `Має бути пізніше ніж ${date}`,
+  mustBeLowerThan: (date: string) => `Має бути раніше ніж ${date}`,
   next: 'Наступний',
-  typeInDate: 'Введіть дату',
+  notAccordingToDateFormat: (inputFormat: string) =>
+    `Формат дати має бути ${inputFormat}`,
   pickDateFromCalendar: 'Оберіть дату з календаря',
-  close: 'Закрити',
-  hour: 'Година',
-  minute: 'Хвилина',
+  pm: 'пп',
+  previous: 'Попередній',
+  save: 'Зберегти',
+  selectMultiple: 'Оберіть дати',
+  selectRange: 'Оберіть період',
+  selectSingle: 'Оберіть дату',
+  toggleClock: 'Перемкнути годинник',
+  toggleKeyboard: 'Перемкнути клавіатуру',
+  toggleScroll: 'Перемкнути прокрутку',
+  typeInDate: 'Введіть дату',
 }
+
 export default ukUA
+
+registerTranslation('uk-UA', ukUA)

@@ -1,72 +1,63 @@
-import TextInputWithMask from '../TextInputMask'
-import { HelperText, useTheme } from 'react-native-paper'
+import {
+  cloneElement,
+  forwardRef,
+  type ForwardRefExoticComponent,
+  isValidElement,
+  type ReactNode,
+  type Ref,
+  type RefAttributes,
+} from 'react'
 import { StyleSheet, View } from 'react-native'
+import { TextInput, type TextInputHandles, useTheme } from 'react-native-paper'
+
+import type { DateFieldProps } from './DatePickerInput.shared'
 import useDateInput from './inputUtils'
-import type { DatePickerInputProps } from './DatePickerInput.shared'
-import { forwardRef, ReactNode } from 'react'
+
+type DatePickerInputWithoutModalProps = DateFieldProps & {
+  inputButton?: ReactNode
+  modal?: ReactNode
+}
 
 function DatePickerInputWithoutModal(
   {
-    label,
-    value,
-    onChange,
-    style,
-    locale,
-    validRange,
-    inputMode,
-    withDateFormatInLabel = true,
     hasError,
     hideValidationErrors,
-    onValidationError,
-    modal,
     inputButton,
-    saveLabel,
-    saveLabelDisabled,
-    uppercase,
-    startYear,
-    endYear,
-    onChangeText,
     inputEnabled,
-    disableStatusBarPadding,
-    disableStatusBar,
-    startWeekOnMonday,
-    ...rest
-  }: DatePickerInputProps & {
-    modal?: (params: {
-      value: DatePickerInputProps['value']
-      locale: DatePickerInputProps['locale']
-      inputMode: DatePickerInputProps['inputMode']
-      validRange: DatePickerInputProps['validRange']
-      saveLabel: DatePickerInputProps['saveLabel']
-      saveLabelDisabled: DatePickerInputProps['saveLabelDisabled']
-      uppercase: DatePickerInputProps['uppercase']
-      startYear: DatePickerInputProps['startYear']
-      endYear: DatePickerInputProps['endYear']
-      inputEnabled: DatePickerInputProps['inputEnabled']
-      disableStatusBarPadding: DatePickerInputProps['disableStatusBarPadding']
-      disableStatusBar: DatePickerInputProps['disableStatusBar']
-      startWeekOnMonday?: DatePickerInputProps['startWeekOnMonday']
-    }) => any
-    inputButton?: ReactNode
-  },
-  ref: any
-) {
-  const theme = useTheme()
-  const {
-    formattedValue,
-    inputFormat,
-    onChangeText: onDateInputChangeText,
-    error,
-  } = useDateInput({
-    locale,
-    value,
-    validRange,
     inputMode,
+    label,
+    locale,
+    modal,
+    onChange,
+    onChangeText,
+    onValidationError,
+    style,
+    validRange,
+    value,
+    withDateFormatInLabel = false,
+    ...rest
+  }: DatePickerInputWithoutModalProps,
+  ref: Ref<TextInputHandles>
+) {
+  let disabled
+
+  const {
+    displayedValue,
+    error,
+    inputFormat,
+    onBlur,
+    onChangeText: onDateInputChangeText,
+    onFocus,
+    onSubmitEditing,
+  } = useDateInput({
+    inputMode,
+    locale,
     onChange,
     onValidationError,
+    validRange,
+    value,
   })
-
-  let disabled
+  const theme = useTheme()
 
   if (inputEnabled !== undefined) {
     disabled = !inputEnabled
@@ -76,66 +67,70 @@ function DatePickerInputWithoutModal(
     disabled = rest.disabled
   }
 
+  const helperText =
+    error && !hideValidationErrors
+      ? error
+      : (rest.supportingText ?? inputFormat)
+
   return (
     <>
       <View style={styles.root}>
         <View style={styles.inputContainer}>
-          <TextInputWithMask
+          <TextInput
             {...rest}
             ref={ref}
-            label={getLabel({
-              // TODO: support label components?
-              label: label as any,
-              inputFormat,
-              withDateFormatInLabel,
-            })}
-            value={formattedValue}
-            keyboardType={rest.keyboardType ?? 'number-pad'}
-            mask={inputFormat}
             disabled={disabled}
-            onChangeText={onDateInputChangeText}
-            onChange={(e) => onChangeText && onChangeText(e.nativeEvent.text)}
+            endAccessory={
+              isValidElement(inputButton)
+                ? (props) => cloneElement(inputButton, props)
+                : undefined
+            }
+            error={(!!error && !hideValidationErrors) || !!hasError}
             keyboardAppearance={
               rest.keyboardAppearance ?? (theme.dark ? 'dark' : 'default')
             }
-            error={(!!error && !hideValidationErrors) || !!hasError}
+            keyboardType={rest.keyboardType ?? 'default'}
+            label={getLabel({
+              inputFormat,
+              label,
+              withDateFormatInLabel,
+            })}
+            onBlur={(event) => {
+              onBlur()
+              rest.onBlur?.(event)
+            }}
+            onChangeText={(text) => {
+              onDateInputChangeText(text)
+              onChangeText?.(text)
+            }}
+            onFocus={(event) => {
+              onFocus()
+              rest.onFocus?.(event)
+            }}
+            onSubmitEditing={(event) => {
+              onSubmitEditing()
+              rest.onSubmitEditing?.(event)
+            }}
+            placeholder={rest.placeholder ?? inputFormat}
             style={[styles.input, style]}
-            inputButton={inputButton}
+            supportingText={helperText}
+            value={displayedValue}
           />
         </View>
-        {error && !hideValidationErrors ? (
-          <HelperText type="error" visible={!!error}>
-            {error}
-          </HelperText>
-        ) : null}
       </View>
-      {modal?.({
-        value,
-        locale,
-        inputMode,
-        validRange,
-        saveLabel,
-        saveLabelDisabled,
-        uppercase,
-        startYear,
-        endYear,
-        inputEnabled,
-        disableStatusBarPadding,
-        disableStatusBar,
-        startWeekOnMonday,
-      })}
+      {modal}
     </>
   )
 }
 
 function getLabel({
-  withDateFormatInLabel,
   inputFormat,
   label,
+  withDateFormatInLabel,
 }: {
-  withDateFormatInLabel: boolean
   inputFormat: string
   label: string | undefined
+  withDateFormatInLabel: boolean
 }) {
   if (withDateFormatInLabel) {
     return label ? `${label} (${inputFormat})` : inputFormat
@@ -144,22 +139,30 @@ function getLabel({
 }
 
 const styles = StyleSheet.create({
-  root: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    width: '100%',
+  input: {
+    // The web input's default min-content width is wider than half the range
+    // dialog. Without this, focusing either field scrolls the clipped card and
+    // pushes the other field outside it.
+    minWidth: 0,
   },
   inputContainer: {
+    alignItems: 'stretch',
+    alignSelf: 'stretch',
     flexGrow: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
+    minWidth: 0,
     width: '100%',
   },
-  input: {
+  root: {
+    alignItems: 'flex-start',
     flexGrow: 1,
+    justifyContent: 'center',
+    minWidth: 0,
     width: '100%',
   },
 })
-export default forwardRef(DatePickerInputWithoutModal)
+
+const DatePickerInputWithoutModalWithRef: ForwardRefExoticComponent<
+  DatePickerInputWithoutModalProps & RefAttributes<TextInputHandles>
+> = forwardRef(DatePickerInputWithoutModal)
+
+export default DatePickerInputWithoutModalWithRef

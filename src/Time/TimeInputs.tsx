@@ -1,249 +1,255 @@
+import { memo, type ReactNode, useEffect, useRef, useState } from 'react'
 import {
   StyleSheet,
-  TextInput as TextInputNative,
+  type TextInputInstance,
   useWindowDimensions,
   View,
 } from 'react-native'
 import { Text, useTheme } from 'react-native-paper'
 
+import { useLatest, withAlpha } from '../shared/utils'
+import { getTranslation } from '../translations/utils'
+import AmPmSwitcher from './AmPmSwitcher'
+import TimeInput from './TimeInput'
+import TimeSeparator from './TimeSeparator'
 import {
   clockTypes,
+  disabledContentOpacity,
   inputTypes,
-  PossibleClockTypes,
-  PossibleInputTypes,
+  periodSelectorGap,
+  type PossibleClockTypes,
+  type PossibleInputTypes,
+  type TimeChange,
+  timeInputFieldHeight,
+  timePickerUsesLandscape,
+  timeSelectorFieldWidth,
+  timeSelectorHeight,
   toHourInputFormat,
   toHourOutputFormat,
 } from './timeUtils'
-import TimeInput from './TimeInput'
-import AmPmSwitcher from './AmPmSwitcher'
-import { useLatest } from '../shared/utils'
-import Color from 'color'
-import { getTranslation } from '../translations/utils'
-import { memo, useCallback, useRef } from 'react'
-import { sharedStyles } from '../shared/styles'
 
 function TimeInputs({
-  hours,
-  minutes,
-  onFocusInput,
+  disabled,
   focused,
-  inputType,
-  onChange,
-  is24Hour,
+  hours,
   inputFontSize,
+  inputType,
+  is24Hour,
   locale,
+  minutes,
+  onChange,
+  onFocusInput,
+  onInputInvalidChange,
 }: {
-  inputType: PossibleInputTypes
+  disabled?: boolean
   focused: PossibleClockTypes
   hours: number
-  minutes: number
-  onFocusInput: (type: PossibleClockTypes) => any
-  onChange: (hoursMinutesAndFocused: {
-    hours: number
-    minutes: number
-    focused?: undefined | PossibleClockTypes
-  }) => any
-  is24Hour: boolean
   inputFontSize?: number
+  inputType: PossibleInputTypes
+  is24Hour: boolean
   locale?: string
+  minutes: number
+  onChange: TimeChange
+  onFocusInput: (type: PossibleClockTypes) => void
+  onInputInvalidChange?: (invalid: boolean) => void
 }) {
-  const theme = useTheme()
-
-  const startInput = useRef<TextInputNative | null>(null)
-  const endInput = useRef<TextInputNative | null>(null)
   const dimensions = useWindowDimensions()
-  const isLandscape = dimensions.width > dimensions.height
-  const useHorizontalAmPm =
-    !is24Hour && isLandscape && inputType === inputTypes.picker
-  const minutesRef = useLatest(minutes)
+  const endInput = useRef<TextInputInstance | null>(null)
+  const [hourInvalid, setHourInvalid] = useState(false)
+  const [minuteInvalid, setMinuteInvalid] = useState(false)
 
-  const onSubmitStartInput = useCallback(() => {
-    if (endInput.current) {
-      endInput.current.focus()
-    }
-  }, [endInput])
+  useEffect(() => {
+    onInputInvalidChange?.(hourInvalid || minuteInvalid)
+  }, [hourInvalid, minuteInvalid, onInputInvalidChange])
 
-  const onSubmitEndInput = useCallback(() => {
-    // TODO: close modal and persist time
-  }, [])
-
-  const onChangeHours = useCallback(
-    (newHours: number) => {
-      onChange({
-        hours: newHours,
-        minutes: minutesRef.current,
-        focused: clockTypes.hours,
-      })
-    },
-    [onChange, minutesRef]
+  const isLandscape = timePickerUsesLandscape(
+    dimensions.width,
+    dimensions.height,
+    inputType
   )
 
+  const minutesRef = useLatest(minutes)
+  const onChangeHours = (newHours: number) => {
+    // Keep the focused field; switching AM/PM only changes hours.
+    onChange({
+      hours: newHours,
+      minutes: minutesRef.current,
+    })
+  }
+  const onSubmitStartInput = () => {
+    endInput.current?.focus()
+  }
+  const startInput = useRef<TextInputInstance | null>(null)
+  const theme = useTheme()
+  const dotColor = disabled
+    ? withAlpha(theme.colors.onSurface, disabledContentOpacity)
+    : theme.colors.onSurface
+
+  const selectionColor = theme.dark
+    ? theme.colors.primaryContainer
+    : theme.colors.primary
+
+  const useHorizontalAmPm =
+    !is24Hour && isLandscape && inputType === inputTypes.picker
+
+  const fieldHeight =
+    inputType === inputTypes.keyboard
+      ? timeInputFieldHeight
+      : timeSelectorHeight
+
+  const fieldWidth = timeSelectorFieldWidth(inputType, is24Hour, isLandscape)
+
+  const hourLabel = getTranslation(locale, 'hour', 'Hour')
+  const invalidTime = getTranslation(locale, 'invalidTime', 'Invalid time')
+  const minuteLabel = getTranslation(locale, 'minute', 'Minute')
+
+  const error = hourInvalid || minuteInvalid ? invalidTime : undefined
   const hourMinuteRow = (
     <View style={styles.inputContainer}>
-      <View style={styles.column}>
+      <TimeField width={fieldWidth}>
         <TimeInput
           ref={startInput}
-          inputFontSize={inputFontSize}
-          placeholder={'00'}
-          value={toHourInputFormat(hours, is24Hour)}
-          clockType={clockTypes.hours}
-          pressed={focused === clockTypes.hours}
-          onPress={onFocusInput}
-          inputType={inputType}
-          maxFontSizeMultiplier={1.2}
-          selectionColor={
-            theme.dark
-              ? Color(theme.colors.primary).darken(0.2).hex()
-              : theme.colors.primary
-          }
-          returnKeyType={'next'}
-          onSubmitEditing={onSubmitStartInput}
+          accessibilityLabel={hourLabel}
           blurOnSubmit={false}
+          clockType={clockTypes.hours}
+          disabled={disabled}
+          inputFontSize={inputFontSize}
+          inputType={inputType}
+          is24Hour={is24Hour}
+          maxFontSizeMultiplier={1.2}
           onChanged={(newHoursFromInput) => {
-            let newHours = toHourOutputFormat(
-              newHoursFromInput,
-              hours,
-              is24Hour
-            )
-            if (newHoursFromInput > 24) {
-              newHours = 24
-            }
             onChange({
-              hours: newHours,
+              hours: toHourOutputFormat(newHoursFromInput, hours, is24Hour),
               minutes,
             })
           }}
+          onInvalidChange={setHourInvalid}
+          onPress={onFocusInput}
+          onSubmitEditing={onSubmitStartInput}
+          pressed={focused === clockTypes.hours}
+          returnKeyType={'next'}
+          selectionColor={selectionColor}
+          value={toHourInputFormat(hours, is24Hour)}
+          width={fieldWidth}
         />
-        {inputType === 'keyboard' ? (
-          <Text maxFontSizeMultiplier={1.5} variant="bodySmall">
-            {getTranslation(locale, 'hour', 'Hour')}
-          </Text>
-        ) : null}
-      </View>
-      <View
-        style={[
-          styles.hoursAndMinutesSeparator,
-          // eslint-disable-next-line react-native/no-inline-styles
-          { marginBottom: inputType === 'keyboard' ? 16 : 0 },
-        ]}
-      >
-        <View style={sharedStyles.root} />
-        <View
-          style={[
-            styles.dot,
-            {
-              backgroundColor: theme.colors.onSurface,
-            },
-          ]}
-        />
-        <View style={styles.betweenDot} />
-        <View
-          style={[
-            styles.dot,
-            {
-              backgroundColor: theme.colors.onSurface,
-            },
-          ]}
-        />
-        <View style={sharedStyles.root} />
-      </View>
-      <View style={styles.column}>
+      </TimeField>
+      <TimeSeparator color={dotColor} height={fieldHeight} />
+      <TimeField width={fieldWidth}>
         <TimeInput
           ref={endInput}
-          inputFontSize={inputFontSize}
-          placeholder={'00'}
-          value={minutes}
+          accessibilityLabel={minuteLabel}
           clockType={clockTypes.minutes}
-          pressed={focused === clockTypes.minutes}
-          onPress={onFocusInput}
+          disabled={disabled}
+          inputFontSize={inputFontSize}
           inputType={inputType}
+          is24Hour={is24Hour}
           maxFontSizeMultiplier={1.2}
-          selectionColor={
-            theme.dark
-              ? Color(theme.colors.primary).darken(0.2).hex()
-              : theme.colors.primary
-          }
-          onSubmitEditing={onSubmitEndInput}
           onChanged={(newMinutesFromInput) => {
-            let newMinutes = newMinutesFromInput
-            if (newMinutesFromInput > 59) {
-              newMinutes = 59
-            }
             onChange({
               hours,
-              minutes: newMinutes,
+              minutes: newMinutesFromInput,
             })
           }}
+          onInvalidChange={setMinuteInvalid}
+          onPress={onFocusInput}
+          pressed={focused === clockTypes.minutes}
+          selectionColor={selectionColor}
+          value={minutes}
+          width={fieldWidth}
         />
-        {inputType === 'keyboard' ? (
-          <Text maxFontSizeMultiplier={1.5} variant="bodySmall">
-            {getTranslation(locale, 'minute', 'Minute')}
-          </Text>
-        ) : null}
-      </View>
+      </TimeField>
       {!is24Hour && !useHorizontalAmPm ? (
-        <>
-          <View style={styles.spaceBetweenInputsAndSwitcher} />
+        <View style={styles.periodGap} />
+      ) : null}
+      {!is24Hour && !useHorizontalAmPm ? (
+        <View style={styles.periodSwitcher}>
           <AmPmSwitcher
-            hours={hours}
-            onChange={onChangeHours}
-            inputType={inputType}
             direction="vertical"
+            disabled={disabled}
+            hours={hours}
+            inputType={inputType}
+            locale={locale}
+            onChange={onChangeHours}
           />
-        </>
+        </View>
       ) : null}
     </View>
   )
 
-  if (useHorizontalAmPm) {
-    return (
-      <View style={styles.landscapeColumn}>
-        {hourMinuteRow}
-        <View style={styles.landscapeSwitcherSpacing}>
-          <AmPmSwitcher
-            hours={hours}
-            onChange={onChangeHours}
-            inputType={inputType}
-            direction="horizontal"
-          />
-        </View>
+  const fields = useHorizontalAmPm ? (
+    <View style={styles.landscapeColumn}>
+      {hourMinuteRow}
+      <View style={styles.landscapeSwitcherSpacing}>
+        <AmPmSwitcher
+          direction="horizontal"
+          disabled={disabled}
+          hours={hours}
+          inputType={inputType}
+          locale={locale}
+          onChange={onChangeHours}
+        />
       </View>
-    )
-  }
+    </View>
+  ) : (
+    hourMinuteRow
+  )
 
-  return hourMinuteRow
+  return (
+    <View style={styles.fields}>
+      {fields}
+      {error ? (
+        <Text
+          accessibilityLiveRegion="polite"
+          maxFontSizeMultiplier={1.5}
+          style={[styles.supportingText, { color: theme.colors.error }]}
+          variant="bodySmall"
+        >
+          {error}
+        </Text>
+      ) : null}
+    </View>
+  )
+}
+
+function TimeField({
+  children,
+  width,
+}: {
+  children: ReactNode
+  width: number
+}) {
+  return <View style={[styles.column, { width }]}>{children}</View>
 }
 
 const styles = StyleSheet.create({
-  betweenDot: {
-    height: 12,
-  },
   column: {
+    alignItems: 'center',
     flexDirection: 'column',
   },
-  dot: {
-    width: 7,
-    height: 7,
-    borderRadius: 7 / 2,
-  },
-  hoursAndMinutesSeparator: {
-    fontSize: 65,
-    width: 24,
-    alignItems: 'center',
+  fields: {
+    alignItems: 'flex-start',
   },
   inputContainer: {
+    alignItems: 'flex-start',
     flexDirection: 'row',
-    alignItems: 'center',
   },
   landscapeColumn: {
-    flexDirection: 'column',
     alignItems: 'flex-start',
+    flexDirection: 'column',
   },
   landscapeSwitcherSpacing: {
     marginTop: 16,
   },
-  spaceBetweenInputsAndSwitcher: {
-    width: 12,
+  periodGap: {
+    width: periodSelectorGap,
+  },
+  periodSwitcher: {
+    alignSelf: 'flex-start',
+  },
+  supportingText: {
+    alignSelf: 'stretch',
+    marginTop: 7,
+    textAlign: 'center',
   },
 })
 

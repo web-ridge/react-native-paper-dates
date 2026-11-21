@@ -1,0 +1,121 @@
+import { useState } from 'react'
+import {
+  Pressable,
+  type StyleProp,
+  StyleSheet,
+  type TextStyle,
+  View,
+} from 'react-native'
+import { Text, useTheme } from 'react-native-paper'
+
+import { withAlpha } from '../shared/utils'
+import FocusRing from './FocusRing'
+
+export default function ClockNumber({
+  accessibilityLabel,
+  disabled = false,
+  hovered = false,
+  left,
+  onFocusChange,
+  onPress,
+  selected = false,
+  textStyle,
+  top,
+  value,
+}: {
+  accessibilityLabel?: string
+  disabled?: boolean
+  hovered?: boolean
+  left: number
+  onFocusChange?: (focused: boolean) => void
+  onPress?: () => void
+  selected?: boolean
+  textStyle?: StyleProp<TextStyle>
+  top: number
+  value: number | string
+}) {
+  const theme = useTheme()
+  const [focused, setFocused] = useState(false)
+  const hoverStyle = [
+    styles.hover,
+    { backgroundColor: withAlpha(theme.colors.onSurface, 0.08) },
+  ]
+  const showFocusRing = focused && !selected && !disabled
+
+  return (
+    <Pressable
+      accessibilityActions={onPress ? [{ name: 'activate' }] : undefined}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityRole={accessibilityLabel ? 'button' : undefined}
+      accessibilityState={
+        accessibilityLabel
+          ? { disabled: disabled || undefined, selected }
+          : undefined
+      }
+      accessible={Boolean(accessibilityLabel)}
+      importantForAccessibility={accessibilityLabel ? 'yes' : 'no'}
+      onAccessibilityAction={(event) => {
+        if (disabled) return
+        if (event.nativeEvent.actionName === 'activate') {
+          onPress?.()
+        }
+      }}
+      onBlur={() => {
+        setFocused(false)
+        onFocusChange?.(false)
+      }}
+      onFocus={() => {
+        if (disabled) return
+        setFocused(true)
+        onFocusChange?.(true)
+      }}
+      onPress={disabled ? undefined : onPress}
+      pointerEvents="none"
+      style={[
+        styles.root,
+        showFocusRing ? styles.focused : null,
+        { left, top },
+      ]}
+    >
+      <FocusRing focused={showFocusRing} radius={24} />
+      {hovered && !selected && !disabled ? (
+        <View pointerEvents="none" style={hoverStyle} />
+      ) : null}
+      <View style={styles.inner}>
+        <Text
+          maxFontSizeMultiplier={1.5}
+          selectable={false}
+          style={textStyle}
+          variant="bodyLarge"
+        >
+          {value}
+        </Text>
+      </View>
+    </Pressable>
+  )
+}
+
+const styles = StyleSheet.create({
+  focused: {
+    zIndex: 30,
+  },
+  hover: {
+    ...StyleSheet.absoluteFill,
+    borderRadius: 24,
+  },
+  inner: {
+    borderRadius: 24,
+  },
+  root: {
+    alignItems: 'center',
+    borderRadius: 24,
+    height: 48,
+    justifyContent: 'center',
+    marginLeft: -24,
+    marginTop: -24,
+    overflow: 'visible',
+    position: 'absolute',
+    width: 48,
+    zIndex: 20,
+  },
+})

@@ -1,74 +1,222 @@
+import type { ColorValue } from 'react-native'
 import { useTheme } from 'react-native-paper'
 
-export const circleSize = 256
+import { dateTimeFormat } from '../shared/intl'
+import { withAlpha } from '../shared/utils'
 
-export type PossibleHourTypes = 'am' | 'pm'
+import type {
+  PickerInputType,
+  PossibleClockTypes,
+  PossibleHourTypes,
+  PossibleInputTypes,
+  TimeChange,
+} from './types'
+
+export type ClockTypeMap = {
+  [clockType in PossibleClockTypes]: PossibleClockTypes
+}
+type HighlightColors = {
+  backgroundColor: ColorValue
+  borderColor: ColorValue
+  color: ColorValue
+}
 export type HourTypeMap = {
   [hourType in PossibleHourTypes]: PossibleHourTypes
 }
+type InputIconMap = {
+  [inputType in PossibleInputTypes]: string
+}
+export type InputTypeMap = {
+  [inputType in PossibleInputTypes]: PossibleInputTypes
+}
+export type {
+  PickerInputType,
+  PossibleClockTypes,
+  PossibleHourTypes,
+  PossibleInputTypes,
+  TimeChange,
+}
+
+const _12 = Math.PI / 30
+const _30 = Math.PI / 6
+const _360 = Math.PI * 2
+const _90 = Math.PI / 2
+export const circleSize = 256
+export const clockSideInset = 12
+export const clockTypes: ClockTypeMap = {
+  hours: 'hours',
+  minutes: 'minutes',
+}
+export const disabledContainerOpacity = 0.12
+export const disabledContentOpacity = 0.38
+export const focusRingOffset = 2
+export const focusRingThickness = 3
+export const focusRingReach = focusRingOffset + focusRingThickness
+export const horizontalPeriodGap = 16
 export const hourTypes: HourTypeMap = {
   am: 'am',
   pm: 'pm',
 }
+export const inputTypeIcons: InputIconMap = {
+  keyboard: 'keyboard',
+  picker: 'clock',
+  scroll: 'gesture-swipe-vertical',
+}
+export const inputTypes = {
+  keyboard: 'keyboard',
+  picker: 'picker',
+  scroll: 'scroll',
+} as const satisfies InputTypeMap
+const landscapeDialChrome = 132
+const landscapeDialExtraWidth = 100
+const outerHeight = 34
+// md.comp.time-pickers gap.fields-periods (Expressive).
+export const periodSelectorGap = 8
+export const periodSelectorVerticalWidth = 56
+const portraitDialChrome = 216
+// md.comp.time-pickers.scroll-field: 120dp tall in the modal and at least
+// 140dp inline. Rows match the 64dp emphasized display large line, which
+// keeps each row above the 48dp minimum touch target and leaves the values
+// above and below cut off at the field's edges, as in the M3 spec.
+export const scrollItemHeight = 64
+export const scrollFieldHeight = 140
+export const modalScrollFieldHeight = 120
+export const scrollFieldWidth = 100
+export const timeInputFieldHeight = 120
+export const timePickerActionsGap = 8
+export const timePickerHorizontalPadding = 24
+export const timePickerMediumBreakpoint = 600
+export const timePickerPadding = 12
+export const timeSelectorHeight = 120
+export const timeSelectorWidth = 100
+// The Expressive separator token is 16dp for the ':' itself. The focus
+// ring reaches 5dp past each field (2dp offset + 3dp stroke), so the
+// slot adds that reach on both sides. This is a 10dp deviation from the
+// token so the ring never touches the glyph.
+export const timeSeparatorGlyphWidth = 16
+export const timeSeparatorWidth =
+  focusRingReach + timeSeparatorGlyphWidth + focusRingReach
+export const verticalDial24HourFieldWidth = 132
+
+export function clockNumbers(
+  count: number,
+  radiusRatio: number,
+  size: number,
+  startAngle: number
+) {
+  let angle = startAngle
+  const radius = size / radiusRatio
+  const step = (2 * Math.PI) / count
+  return Array.from({ length: count }, () => {
+    const point = [
+      Math.round(size / 2 + radius * Math.cos(angle)),
+      Math.round(size / 2 + radius * Math.sin(angle)),
+    ]
+    angle += step
+    return point
+  })
+}
+
+export function getAngle(left: number, top: number, size: number) {
+  const x = size / 2 - left
+  const y = size / 2 - top
+
+  let angle = x ? Math.atan(y / x) : y < 0 ? -_90 : _90
+  if (x < 0) {
+    angle = -angle + 2 * (_90 + angle)
+  }
+
+  return angle
+}
+
+export function getHours(
+  handAngle: number,
+  hourType: PossibleHourTypes | undefined
+) {
+  handAngle = snap(handAngle, _30)
+
+  let hour = parseInt((((handAngle - _90) % _360) / _30).toFixed(), 10)
+  if (hour < 0) hour += 12
+  if (hour >= 12) hour -= 12
+
+  if (hourType === hourTypes.am || hourType === hourTypes.pm) {
+    if (hour <= 0) {
+      hour += 12
+    }
+  }
+
+  return hour
+}
 
 export function getHourType(hours: number): PossibleHourTypes | undefined {
-  if (hours >= 0 && hours <= 12) {
+  if (hours >= 0 && hours < 12) {
     return hourTypes.am
   }
-  if (hours > 12 && hours <= 24) {
+  if (hours >= 12 && hours < 24) {
     return hourTypes.pm
   }
   return undefined
 }
 
-export type PossibleInputTypes = 'keyboard' | 'picker'
-export type InputTypeMap = {
-  [inputType in PossibleInputTypes]: PossibleInputTypes
-}
-export const inputTypes: InputTypeMap = {
-  keyboard: 'keyboard',
-  picker: 'picker',
+export function getHourTypeFromOffset(
+  left: number,
+  top: number,
+  size: number
+): PossibleHourTypes {
+  const w = size / 2
+  const maxPm = w - outerHeight
+  const x = w - left
+  const y = size / 2 - top
+  const distance = Math.sqrt(x * x + y * y)
+
+  return distance > maxPm ? hourTypes.am : hourTypes.pm
 }
 
-export const reverseInputTypes: InputTypeMap = {
-  keyboard: 'picker',
-  picker: 'keyboard',
-}
-type InputIconMap = {
-  [inputType in PossibleInputTypes]: string
-}
-export const inputTypeIcons: InputIconMap = {
-  keyboard: 'keyboard-outline',
-  picker: 'clock-outline',
+export function getMinutes(handAngle: number) {
+  handAngle = snap(handAngle, _12)
+
+  let minute = parseInt((((handAngle - _90) % _360) / _12).toFixed(), 10)
+  while (minute < 0) minute += 60
+  while (minute >= 60) minute -= 60
+
+  return minute
 }
 
-export const getTimeInputTypeIcon = (
+export function getTimeInputTypeIcon(
   inputType: PossibleInputTypes,
-  inputIconMap?: InputIconMap
-) => {
-  return (
-    inputIconMap?.[reverseInputTypes[inputType]] ||
-    inputTypeIcons?.[reverseInputTypes[inputType]]
-  )
+  inputIconMap?: Partial<InputIconMap>,
+  pickerMode: PickerInputType = inputTypes.picker
+) {
+  const next = toggleInputType(inputType, pickerMode)
+  if (!next) return undefined
+  return inputIconMap?.[next] || inputTypeIcons[next]
 }
 
-export type PossibleClockTypes = 'hours' | 'minutes'
-export type ClockTypeMap = {
-  [clockType in PossibleClockTypes]: PossibleClockTypes
-}
-export const clockTypes: ClockTypeMap = {
-  minutes: 'minutes',
-  hours: 'hours',
+export function toggleInputType(
+  inputType: PossibleInputTypes,
+  pickerMode: PickerInputType
+): PossibleInputTypes | undefined {
+  if (inputType === inputTypes.keyboard) return pickerMode
+  if (inputType === inputTypes.picker || inputType === inputTypes.scroll) {
+    return inputTypes.keyboard
+  }
+  return undefined
 }
 
-// Code inspiration and copied from: https://github.com/ShaneGH/analogue-time-picker/blob/master/src/utils/angle.ts
-const outerHeight = 34
-const _30 = Math.PI / 6
-const _12 = Math.PI / 30
-const _360 = Math.PI * 2
-const _90 = Math.PI / 2
+export function isValidHourInput(hours: number, is24Hour: boolean) {
+  if (!Number.isFinite(hours) || hours < 0) {
+    return false
+  }
+  if (is24Hour) {
+    return hours <= 23
+  }
+  return hours >= 1 && hours <= 12
+}
 
-/** Snap an angle to a given step. E.g. if angle = 22° and step = 10°, round down to 20° */
+export function isValidMinuteInput(minutes: number) {
+  return Number.isFinite(minutes) && minutes >= 0 && minutes <= 59
+}
+
 export function snap(angle: number, step: number) {
   let a = angle
   while (a < 0) a += _360
@@ -81,100 +229,79 @@ export function snap(angle: number, step: number) {
   return angle - diff + step
 }
 
-// detect am / pm based on offset
-export function getHourTypeFromOffset(
-  left: number,
-  top: number,
-  size: number
-): PossibleHourTypes {
-  const w = size / 2
-  const x = w - left
-  const y = size / 2 - top
-
-  const distance = Math.sqrt(x * x + y * y)
-  const maxPm = w - outerHeight
-
-  return distance > maxPm ? hourTypes.am : hourTypes.pm
+export function timeDialFits(width: number, height: number) {
+  if (height >= circleSize + portraitDialChrome) {
+    return true
+  }
+  return horizontalDialFits(width, height)
 }
 
-// Calculate the minute from the hand angle
-export function getMinutes(handAngle: number) {
-  handAngle = snap(handAngle, _12)
-
-  let minute = parseInt((((handAngle - _90) % _360) / _12).toFixed(), 10)
-  while (minute < 0) minute += 60
-  while (minute >= 60) minute -= 60
-
-  return minute
+export function horizontalDialFits(width: number, height: number) {
+  return (
+    height >= circleSize + landscapeDialChrome &&
+    width >=
+      timeSelectorWidth * 2 +
+        timeSeparatorWidth +
+        circleSize +
+        landscapeDialExtraWidth
+  )
 }
 
-// Calculate the hour from the hand angle
-export function getHours(
-  handAngle: number,
-  hourType: PossibleHourTypes | undefined
+export function timePickerUsesLandscape(
+  width: number,
+  height: number,
+  inputType: PossibleInputTypes
 ) {
-  handAngle = snap(handAngle, _30)
-
-  let hour = parseInt((((handAngle - _90) % _360) / _30).toFixed(), 10)
-  if (hour < 0) hour += 12
-  if (hour >= 12) hour -= 12
-
-  if (hourType === hourTypes.am) {
-    if (hour <= 0) {
-      hour += 12
-    } else if (hour >= 12) {
-      hour -= 12
-    }
+  if (width > height) {
+    return true
   }
-  if (hourType === hourTypes.pm) {
-    if (hour <= 0) {
-      hour += 12
-    } else if (hour > 12) {
-      hour -= 12
-    }
+  if (inputType !== inputTypes.picker) {
+    return false
   }
-
-  return hour
+  return (
+    width >= timePickerMediumBreakpoint && horizontalDialFits(width, height)
+  )
 }
 
-/** Get the angle of the left/top co-ordinate from the center of the width.height box */
-export function getAngle(left: number, top: number, size: number) {
-  const x = size / 2 - left
-  const y = size / 2 - top
-
-  // tan O = y / x
-  let angle = x ? Math.atan(y / x) : y < 0 ? -_90 : _90
-  if (x < 0) {
-    // reflect along vertical axis
-    angle = -angle + 2 * (_90 + angle)
+export function resolve24HourClock(
+  use24HourClock: boolean | undefined,
+  locale?: string
+) {
+  if (use24HourClock !== undefined) {
+    return use24HourClock
   }
-
-  return angle
+  return dateTimeFormat(locale, {
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'UTC',
+  })
+    .format(new Date(Date.UTC(2020, 1, 1, 23)))
+    .includes('23')
 }
 
-export function useSwitchColors(highlighted: boolean) {
-  const theme = useTheme()
-  const backgroundColor = highlighted
-    ? theme.colors.tertiaryContainer
-    : 'transparent'
-  const color = highlighted
-    ? theme.colors.onTertiaryContainer
-    : theme.colors.onSurfaceVariant
-
-  return { backgroundColor, color }
+export function timePickerModalMinWidth(is24Hour: boolean, showsDial: boolean) {
+  const fieldWidth = timeSelectorFieldWidth(
+    showsDial ? inputTypes.picker : inputTypes.keyboard,
+    is24Hour,
+    false
+  )
+  const fieldRow =
+    fieldWidth * 2 +
+    timeSeparatorWidth +
+    (is24Hour ? 0 : periodSelectorGap + periodSelectorVerticalWidth)
+  const dialRow = showsDial ? circleSize + clockSideInset * 2 : 0
+  return Math.max(fieldRow, dialRow) + timePickerPadding * 2
 }
 
-export function useInputColors(highlighted: boolean) {
-  const theme = useTheme()
-  // M3: primaryContainer / surfaceContainerHighest (Paper: surfaceVariant)
-  const backgroundColor = highlighted
-    ? theme.colors.primaryContainer
-    : theme.colors.surfaceVariant
-  const color = highlighted
-    ? theme.colors.onPrimaryContainer
-    : theme.colors.onSurface
-
-  return { backgroundColor, color }
+export function timeSelectorFieldWidth(
+  inputType: PossibleInputTypes,
+  is24Hour: boolean,
+  landscape: boolean
+) {
+  if (inputType === inputTypes.picker && is24Hour && !landscape) {
+    return verticalDial24HourFieldWidth
+  }
+  return timeSelectorWidth
 }
 
 export function toHourInputFormat(hours: number, is24Hour: boolean): number {
@@ -208,4 +335,60 @@ export function toHourOutputFormat(
     return newHours + 12
   }
   return newHours
+}
+
+export function useInputColors(
+  highlighted: boolean,
+  invalid = false,
+  disabled = false
+): HighlightColors {
+  const theme = useTheme()
+  if (disabled) {
+    const content = withAlpha(theme.colors.onSurface, disabledContentOpacity)
+    return {
+      backgroundColor: theme.colors.surfaceContainerLowest,
+      borderColor: content,
+      color: content,
+    }
+  }
+  if (invalid) {
+    return {
+      backgroundColor: theme.colors.errorContainer,
+      borderColor: theme.colors.error,
+      // The focused field keeps on-error-container text (M3 time picker states).
+      color: theme.colors.onErrorContainer,
+    }
+  }
+
+  return {
+    // M3 Expressive keeps the field on surface-container-lowest and marks
+    // the active one with primary text and a primary outline.
+    backgroundColor: theme.colors.surfaceContainerLowest,
+    borderColor: highlighted ? theme.colors.primary : 'transparent',
+    color: highlighted ? theme.colors.primary : theme.colors.onSurface,
+  }
+}
+
+export function useSwitchColors(
+  highlighted: boolean,
+  disabled = false
+): HighlightColors {
+  const theme = useTheme()
+  if (disabled) {
+    return {
+      backgroundColor: highlighted
+        ? withAlpha(theme.colors.onSurface, disabledContainerOpacity)
+        : theme.colors.surfaceContainerLowest,
+      borderColor: 'transparent',
+      color: withAlpha(theme.colors.onSurface, disabledContentOpacity),
+    }
+  }
+  const backgroundColor = highlighted
+    ? theme.colors.primaryContainer
+    : theme.colors.surfaceContainerLowest
+  const color = highlighted
+    ? theme.colors.onPrimaryContainer
+    : theme.colors.onSurfaceVariant
+
+  return { backgroundColor, borderColor: 'transparent', color }
 }

@@ -1,23 +1,38 @@
-import type { TranslationsType } from './utils'
+import { registerTranslation, type TranslationsType } from './utils'
 
 const ru: TranslationsType = {
-  save: 'Сохранить',
-  selectSingle: 'Выбор даты',
-  selectMultiple: 'Выбор дат',
-  selectRange: 'Выбор диапазона',
-  notAccordingToDateFormat: (inputFormat) =>
-    `Формат даты должен быть ${inputFormat}`,
-  mustBeHigherThan: (date) => `Должен быть позже, чем ${date}`,
-  mustBeLowerThan: (date) => `Должен быть ранее, чем ${date}`,
+  am: 'ДП',
+  cancel: 'Отмена',
+  close: 'Закрыть',
+  confirm: 'ОК',
+  dateIsDisabled: 'День не разрешён',
+  enterDate: 'Введите дату',
+  enterDates: 'Введите даты',
+  hour: 'Час',
+  hourOf: (hour, total) => `Час ${hour} из ${total}`,
+  invalidTime: 'Недопустимое время',
+  minute: 'Минута',
+  minuteOf: (minute, total) => `Минута ${minute} из ${total}`,
   mustBeBetween: (startDate, endDate) =>
     `Должен быть между ${startDate} - ${endDate}`,
-  dateIsDisabled: 'День не разрешён',
-  previous: 'Предыдущий',
+  mustBeHigherThan: (date) => `Должен быть позже, чем ${date}`,
+  mustBeLowerThan: (date) => `Должен быть ранее, чем ${date}`,
   next: 'Следующий',
-  typeInDate: 'Ввод в дате',
+  notAccordingToDateFormat: (inputFormat) =>
+    `Формат даты должен быть ${inputFormat}`,
   pickDateFromCalendar: 'Выбор даты из календаря',
-  close: 'Закрыть',
-  hour: 'Час',
-  minute: 'Минута',
+  pm: 'ПП',
+  previous: 'Предыдущий',
+  save: 'Сохранить',
+  selectMultiple: 'Выбор дат',
+  selectRange: 'Выбор диапазона',
+  selectSingle: 'Выбор даты',
+  toggleClock: 'Переключить часы',
+  toggleKeyboard: 'Переключить клавиатуру',
+  toggleScroll: 'Переключить прокрутку',
+  typeInDate: 'Ввод в дате',
 }
+
 export default ru
+
+registerTranslation('ru', ru)

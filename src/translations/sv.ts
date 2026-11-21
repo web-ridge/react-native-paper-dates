@@ -1,23 +1,38 @@
-import type { TranslationsType } from './utils'
+import { registerTranslation, type TranslationsType } from './utils'
 
 const sv: TranslationsType = {
-  save: 'Spara',
-  selectSingle: 'Välj datum',
-  selectMultiple: 'Välj datum',
-  selectRange: 'Välj period',
-  notAccordingToDateFormat: (inputFormat) =>
-    `Datum måste vara i formatet ${inputFormat}`,
-  mustBeHigherThan: (date) => `Måste vara efter ${date}`,
-  mustBeLowerThan: (date) => `Måste vara före ${date}`,
+  am: 'fm',
+  cancel: 'Avbryt',
+  close: 'Stäng',
+  confirm: 'OK',
+  dateIsDisabled: 'Datumet är inte tillåtet',
+  enterDate: 'Ange datum',
+  enterDates: 'Ange datum',
+  hour: 'Timme',
+  hourOf: (hour, total) => `Timme ${hour} av ${total}`,
+  invalidTime: 'Ogiltig tid',
+  minute: 'Minut',
+  minuteOf: (minute, total) => `Minut ${minute} av ${total}`,
   mustBeBetween: (startDate, endDate) =>
     `Måste vara mellan ${startDate} - ${endDate}`,
-  dateIsDisabled: 'Datumet är inte tillåtet',
-  previous: 'Föregående',
+  mustBeHigherThan: (date) => `Måste vara efter ${date}`,
+  mustBeLowerThan: (date) => `Måste vara före ${date}`,
   next: 'Nästa',
-  typeInDate: 'Skriv datum',
+  notAccordingToDateFormat: (inputFormat) =>
+    `Datum måste vara i formatet ${inputFormat}`,
   pickDateFromCalendar: 'Välj datum i kalender',
-  close: 'Stäng',
-  minute: 'Minut',
-  hour: 'Timme',
+  pm: 'em',
+  previous: 'Föregående',
+  save: 'Spara',
+  selectMultiple: 'Välj datum',
+  selectRange: 'Välj period',
+  selectSingle: 'Välj datum',
+  toggleClock: 'Växla klocka',
+  toggleKeyboard: 'Växla tangentbord',
+  toggleScroll: 'Växla rullning',
+  typeInDate: 'Skriv datum',
 }
+
 export default sv
+
+registerTranslation('sv', sv)

@@ -1,92 +1,87 @@
-import { Platform, StyleSheet, View } from 'react-native'
-import { IconButton, useTheme } from 'react-native-paper'
-import DayNames, { dayNamesHeight } from './DayNames'
-import type { DisableWeekDaysType } from './dateUtils'
-import { centerIconOnLastWeekday } from './weekdayColumns'
-import { getTranslation } from '../translations/utils'
-import { sharedStyles } from '../shared/styles'
 import { memo } from 'react'
+import { Platform, StyleSheet, View } from 'react-native'
+import { IconButton } from 'react-native-paper'
 
-/** Space reserved so an overlay header does not paint over a vertical scrollbar. */
+import { sharedStyles } from '../shared/styles'
+import { getTranslation } from '../translations/utils'
+import DayNames, { dayNamesHeight } from './DayNames'
+import type { DisableWeekDaysType } from './types'
+import { centerIconOnLastWeekday } from './weekdayColumns'
+
+export const calendarArrowSize = 48
+export const calendarControlInset = 4
+export const calendarControlHeight = calendarControlInset + calendarArrowSize
+const buttonContainerHeight = calendarArrowSize
+const overlayScrollbarWidth = 15
+let cachedLayoutScrollbarWidth: number | undefined
 export const verticalScrollbarGutter = Platform.select({
-  ios: 0,
-  web: 16,
   default: 14,
+  ios: 0,
+  web: 0,
 }) as number
 
-const buttonContainerHeight = 56
-const buttonContainerMarginTop = 4
-const buttonContainerMarginBottom = 8
-
-export function getCalendarHeaderHeight(scrollMode: 'horizontal' | 'vertical') {
-  if (scrollMode === 'horizontal') {
-    return (
-      buttonContainerHeight +
-      buttonContainerMarginTop +
-      buttonContainerMarginBottom +
-      dayNamesHeight
-    )
-  }
-  return dayNamesHeight
-}
-
 function CalendarHeader({
-  scrollMode,
-  onPrev,
-  onNext,
   disableWeekDays,
-  locale,
-  startWeekOnMonday,
   endInset = 0,
+  locale,
+  onNext,
+  onPrev,
+  scrollMode,
+  selectingYear = false,
+  startWeekOnMonday,
 }: {
-  locale: undefined | string
-  scrollMode: 'horizontal' | 'vertical'
-  onPrev: () => any
-  onNext: () => any
   disableWeekDays?: DisableWeekDaysType
-  startWeekOnMonday: boolean
-  /** Shrink from the trailing edge so week names do not cover a vertical scrollbar. */
   endInset?: number
+  locale: string | undefined
+  onNext: () => void
+  onPrev: () => void
+  scrollMode: 'horizontal' | 'vertical'
+  selectingYear?: boolean
+  startWeekOnMonday: boolean
 }) {
   const isHorizontal = scrollMode === 'horizontal'
-  const theme = useTheme()
 
   return (
     <View
+      pointerEvents={'box-none'}
       style={
-        endInset
-          ? [styles.datePickerHeader, { right: endInset }]
+        isHorizontal || endInset
+          ? [
+              styles.datePickerHeader,
+              isHorizontal ? { top: calendarControlInset } : null,
+              endInset ? { right: endInset } : null,
+            ]
           : styles.datePickerHeader
       }
-      pointerEvents={'box-none'}
     >
       {isHorizontal ? (
-        <View style={styles.buttonContainer} pointerEvents={'box-none'}>
-          <View style={sharedStyles.root} pointerEvents={'box-none'} />
-          <View
-            style={[
-              styles.arrowGroup,
-              {
-                backgroundColor: theme.colors.elevation.level3,
-              },
-              centerIconOnLastWeekday(disableWeekDays),
-            ]}
-          >
-            <IconButton
-              icon="chevron-left"
-              accessibilityLabel={getTranslation(locale, 'previous')}
-              onPress={onPrev}
-              testID="react-native-paper-dates-prev-month"
-              style={styles.arrowButton}
-            />
-            <IconButton
-              icon="chevron-right"
-              accessibilityLabel={getTranslation(locale, 'next')}
-              onPress={onNext}
-              testID="react-native-paper-dates-next-month"
-              style={styles.arrowButton}
-            />
-          </View>
+        <View pointerEvents={'box-none'} style={styles.buttonContainer}>
+          <View pointerEvents={'box-none'} style={sharedStyles.root} />
+          {selectingYear ? null : (
+            <View
+              style={[
+                styles.arrowGroup,
+                centerIconOnLastWeekday(disableWeekDays),
+              ]}
+            >
+              <IconButton
+                accessibilityLabel={getTranslation(locale, 'previous')}
+                icon="chevron-left"
+                onPress={onPrev}
+                size={24}
+                style={styles.arrowButton}
+                testID="react-native-paper-dates-prev-month"
+              />
+              <IconButton
+                accessibilityLabel={getTranslation(locale, 'next')}
+                icon="chevron-right"
+                onPress={onNext}
+                size={24}
+                style={styles.arrowButton}
+                testID="react-native-paper-dates-next-month"
+              />
+            </View>
+          )}
         </View>
       ) : null}
       <DayNames
@@ -98,27 +93,59 @@ function CalendarHeader({
   )
 }
 
+export function getCalendarHeaderHeight(scrollMode: 'horizontal' | 'vertical') {
+  if (scrollMode === 'horizontal') {
+    return calendarControlInset + buttonContainerHeight + dayNamesHeight
+  }
+  return dayNamesHeight
+}
+
+export function layoutScrollbarWidth(): number {
+  if (cachedLayoutScrollbarWidth !== undefined) {
+    return cachedLayoutScrollbarWidth
+  }
+  if (typeof document === 'undefined' || !document.body) {
+    return 0
+  }
+  const probe = document.createElement('div')
+  probe.style.cssText =
+    'position:absolute;top:-9999px;width:100px;height:100px;overflow:scroll;visibility:hidden'
+  document.body.appendChild(probe)
+  const width = probe.offsetWidth - probe.clientWidth
+  probe.remove()
+  return (cachedLayoutScrollbarWidth = width > 0 ? width : 0)
+}
+
+export function overlayScrollbarPadding(): number {
+  return layoutScrollbarWidth() > 0 ? 0 : overlayScrollbarWidth
+}
+
+export function weekdayScrollbarInset(): number {
+  const measured = layoutScrollbarWidth()
+  return measured > 0 ? measured : overlayScrollbarWidth
+}
+
 const styles = StyleSheet.create({
-  datePickerHeader: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    left: 0,
-    zIndex: 10,
-  },
-  buttonContainer: {
-    height: buttonContainerHeight,
-    marginTop: buttonContainerMarginTop,
-    marginBottom: buttonContainerMarginBottom,
-    flexDirection: 'row',
-    alignItems: 'center',
+  arrowButton: {
+    height: 48,
+    margin: 0,
+    width: 48,
   },
   arrowGroup: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
   },
-  arrowButton: {
-    margin: 0,
+  buttonContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    height: buttonContainerHeight,
+  },
+  datePickerHeader: {
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    zIndex: 10,
   },
 })
 

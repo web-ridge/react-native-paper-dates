@@ -1,24 +1,28 @@
-import { StyleSheet, View } from 'react-native'
-import DayName from './DayName'
-import { useTheme } from 'react-native-paper'
-import { DisableWeekDaysType, showWeekDay } from './dateUtils'
 import { memo, useMemo } from 'react'
+import { StyleSheet, View } from 'react-native'
+import { useTheme } from 'react-native-paper'
 
-export const dayNamesHeight = 44
+import { dateTimeFormat } from '../shared/intl'
+import { showWeekDay } from './dateUtils'
+import DayName from './DayName'
+import type { DisableWeekDaysType } from './types'
+
+export const dayNamesHeight = 48
 
 function DayNames({
+  backgroundColor,
   disableWeekDays,
+  height = dayNamesHeight,
   locale,
   startWeekOnMonday,
 }: {
-  locale: undefined | string
+  backgroundColor?: string
   disableWeekDays?: DisableWeekDaysType
+  height?: number
+  locale: string | undefined
   startWeekOnMonday: boolean
 }) {
-  const theme = useTheme()
-
-  const shortDayNames = useMemo<string[]>(() => {
-    // TODO: wait for a better Intl api ;-)
+  const dayNames = useMemo(() => {
     const weekdays = [
       new Date(2020, 7, 2),
       new Date(2020, 7, 3),
@@ -31,28 +35,40 @@ function DayNames({
     if (startWeekOnMonday) {
       weekdays.push(weekdays.shift() as Date)
     }
-    const formatter = new Intl.DateTimeFormat(locale, {
-      weekday: 'narrow',
-    })
-    return weekdays.map((date) => formatter.format(date))
+    const narrow = dateTimeFormat(locale, { weekday: 'narrow' })
+    const long = dateTimeFormat(locale, { weekday: 'long' })
+    return weekdays.map((date) => ({
+      label: narrow.format(date),
+      name: long.format(date),
+    }))
   }, [locale, startWeekOnMonday])
+  const theme = useTheme()
 
   return (
     <View
+      pointerEvents="box-none"
+      role="row"
       style={[
         styles.dayNames,
-        { backgroundColor: theme.colors.elevation.level3 },
+        {
+          backgroundColor: backgroundColor ?? theme.colors.surfaceContainerHigh,
+        },
+        ...(height === dayNamesHeight ? [] : [{ height }]),
       ]}
-      pointerEvents="none"
     >
-      {shortDayNames
+      {dayNames
         .filter((_, dayIndex) => showWeekDay(dayIndex, disableWeekDays))
         .map((dayName, i) => (
-          <DayName key={`${dayName}_${i}`} label={dayName} />
+          <DayName
+            key={`${dayName.label}_${i}`}
+            label={dayName.label}
+            name={dayName.name}
+          />
         ))}
     </View>
   )
 }
+
 const styles = StyleSheet.create({
   dayNames: {
     alignItems: 'center',
@@ -60,4 +76,5 @@ const styles = StyleSheet.create({
     height: dayNamesHeight,
   },
 })
+
 export default memo(DayNames)

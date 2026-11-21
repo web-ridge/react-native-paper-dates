@@ -1,0 +1,11 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "semi": false,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "useTabs": false,
+  "trailingComma": "es5",
+  "quoteProps": "consistent",
+  "printWidth": 80,
+  "ignorePatterns": ["website/", "lib/", "coverage/"]
+}

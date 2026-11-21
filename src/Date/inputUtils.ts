@@ -1,67 +1,86 @@
-import { useInputFormat, useInputFormatter, useRangeChecker } from './dateUtils'
-import type { ValidRangeType } from './Calendar'
+import { useEffect, useRef, useState } from 'react'
+
 import { getTranslation } from '../translations/utils'
-import { useState } from 'react'
+import { interpretTypedDate } from './dateUtils'
+import {
+  useInputFormat,
+  useInputFormatter,
+  useRangeChecker,
+} from './inputFormat'
+import type { ValidRangeType } from './types'
 
 export default function useDateInput({
-  locale,
-  value,
-  validRange,
   inputMode,
+  locale,
   onChange,
   onValidationError,
+  validRange,
+  value,
 }: {
-  onChange: (d: Date) => void
-  locale: undefined | string
-  value: Date | undefined
-  validRange: ValidRangeType | undefined
   inputMode: 'start' | 'end'
-  onValidationError?: ((error: string | null) => void) | undefined
+  locale: string | undefined
+  onChange: (d: Date | undefined) => void
+  onValidationError?: (error: string | null) => void
+  validRange: ValidRangeType | undefined
+  value: Date | undefined
 }) {
-  const formatter = useInputFormatter({ locale })
-  const inputFormat = useInputFormat({ formatter, locale })
-  const formattedValue = value ? formatter.format(value) : ''
-
+  const [draft, setDraft] = useState('')
   const [error, setError] = useState<null | string>(null)
+  const [focused, setFocused] = useState(false)
+  const [rejected, setRejected] = useState<null | string>(null)
+  const errorRef = useRef(error)
+  const formatter = useInputFormatter({ locale })
+  const formattedValue = value ? formatter.format(value) : ''
+  const inputFormat = useInputFormat({ formatter, locale })
+  const onValidationErrorRef = useRef(onValidationError)
+  const reportedValue = useRef(value)
+  // Latest values for the input handler. Writing them during render is why the compiler skips this hook.
+  // eslint-disable-next-line react-hooks/refs
+  errorRef.current = error
+  // eslint-disable-next-line react-hooks/refs
+  onValidationErrorRef.current = onValidationError
 
-  const { isDisabled, isWithinValidRange, validStart, validEnd } =
+  useEffect(() => {
+    if (reportedValue.current === value) return
+    reportedValue.current = value
+    setRejected(null)
+    if (!errorRef.current) return
+    setError(null)
+    onValidationErrorRef.current?.(null)
+  }, [value])
+  const { isDisabled, isWithinValidRange, validEnd, validStart } =
     useRangeChecker(validRange)
 
-  const onChangeText = (date: string) => {
-    const dayIndex = inputFormat.indexOf('DD')
-    const monthIndex = inputFormat.indexOf('MM')
-    const yearIndex =
-      locale === 'pt'
-        ? inputFormat.indexOf('AAAA')
-        : inputFormat.indexOf('YYYY')
-    const day = Number(date.slice(dayIndex, dayIndex + 2))
-    const year = Number(date.slice(yearIndex, yearIndex + 4))
-    const month = Number(date.slice(monthIndex, monthIndex + 2))
+  const report = (inputError: string | null) => {
+    setError(inputError)
+    onValidationError?.(inputError)
+  }
 
-    if (Number.isNaN(day) || Number.isNaN(year) || Number.isNaN(month)) {
-      const inputError = getTranslation(
-        locale,
-        'notAccordingToDateFormat',
-        () => 'notAccordingToDateFormat'
-      )(inputFormat)
-      setError(inputError)
-      onValidationError && onValidationError(inputError)
+  const commit = (text: string) => {
+    const reject = (message: string) => {
+      report(message)
+      setRejected(text)
+    }
+    const next = interpretTypedDate(text, inputFormat, inputMode, {
+      isDisabled,
+      isWithinValidRange,
+    })
+    if (next.issue === 'disabled') {
+      reject(getTranslation(locale, 'dateIsDisabled'))
       return
     }
-
-    const finalDate =
-      inputMode === 'end'
-        ? new Date(year, month - 1, day, 23, 59, 59)
-        : new Date(year, month - 1, day)
-
-    if (isDisabled(finalDate)) {
-      const inputError = getTranslation(locale, 'dateIsDisabled')
-      setError(inputError)
-      onValidationError && onValidationError(inputError)
+    if (next.issue === 'format') {
+      reject(
+        getTranslation(
+          locale,
+          'notAccordingToDateFormat',
+          () => 'notAccordingToDateFormat'
+        )(inputFormat)
+      )
       return
     }
-    if (!isWithinValidRange(finalDate)) {
-      let errors =
+    if (next.issue === 'range') {
+      const errors =
         validStart && validEnd
           ? [
               `${getTranslation(
@@ -86,25 +105,41 @@ export default function useDateInput({
                   )(formatter.format(validEnd))
                 : '',
             ]
-      const inputError = errors.filter((n) => n).join(' ')
-      setError(errors.filter((n) => n).join(' '))
-      onValidationError && onValidationError(inputError)
+      reject(errors.filter((message) => message).join(' '))
       return
     }
 
-    setError(null)
-    onValidationError && onValidationError(null)
-    if (inputMode === 'end') {
-      onChange(finalDate)
-    } else {
-      onChange(finalDate)
-    }
+    report(null)
+    setRejected(null)
+    onChange(next.date)
   }
+
+  const onChangeText = (text: string) => {
+    setDraft(text)
+    if (rejected) setRejected(null)
+  }
+
+  const onFocus = () => {
+    setDraft(rejected ?? formattedValue)
+    setFocused(true)
+  }
+
+  const onBlur = () => {
+    setFocused(false)
+    commit(draft)
+  }
+
+  const displayedValue = focused ? draft : (rejected ?? formattedValue)
+
   return {
-    onChange,
+    displayedValue,
     error,
     formattedValue,
-    onChangeText,
     inputFormat,
+    onBlur,
+    onChange,
+    onChangeText,
+    onFocus,
+    onSubmitEditing: () => commit(focused ? draft : displayedValue),
   }
 }

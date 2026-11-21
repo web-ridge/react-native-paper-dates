@@ -1,10 +1,15 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`renders AnalogClock 1`] = `
 <View
-  cursor="pointer"
+  accessible={true}
+  focusable={true}
+  onBlur={[Function]}
+  onFocus={[Function]}
+  onMouseLeave={[Function]}
   onMoveShouldSetResponder={[Function]}
   onMoveShouldSetResponderCapture={[Function]}
+  onPointerMove={[Function]}
   onResponderEnd={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
@@ -20,13 +25,14 @@ exports[`renders AnalogClock 1`] = `
       {
         "alignItems": "center",
         "borderRadius": 128,
+        "cursor": "pointer",
         "height": 256,
         "justifyContent": "center",
         "position": "relative",
         "width": 256,
       },
       {
-        "backgroundColor": "rgba(231, 224, 236, 1)",
+        "backgroundColor": "rgba(255, 255, 255, 1)",
       },
     ]
   }
@@ -137,6 +143,46 @@ exports[`renders AnalogClock 1`] = `
       }
     >
       <View
+        accessibilityActions={
+          [
+            {
+              "name": "activate",
+            },
+          ]
+        }
+        accessibilityLabel="Hour 1 of 12"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        importantForAccessibility="yes"
+        onAccessibilityAction={[Function]}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
         pointerEvents="none"
         style={
           [
@@ -147,10 +193,12 @@ exports[`renders AnalogClock 1`] = `
               "justifyContent": "center",
               "marginLeft": -24,
               "marginTop": -24,
+              "overflow": "visible",
               "position": "absolute",
               "width": 48,
               "zIndex": 20,
             },
+            null,
             {
               "left": 179,
               "top": 39,
@@ -174,7 +222,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
-                  "color": "rgba(28, 27, 31, 1)",
+                  "color": "rgba(29, 27, 32, 1)",
                   "writingDirection": "ltr",
                 },
                 [
@@ -182,10 +230,12 @@ exports[`renders AnalogClock 1`] = `
                     "fontFamily": "System",
                     "fontSize": 16,
                     "fontWeight": "400",
-                    "letterSpacing": 0.15,
+                    "letterSpacing": 0.5,
                     "lineHeight": 24,
                   },
-                  null,
+                  {
+                    "color": "rgba(29, 27, 32, 1)",
+                  },
                 ],
               ]
             }
@@ -195,6 +245,46 @@ exports[`renders AnalogClock 1`] = `
         </View>
       </View>
       <View
+        accessibilityActions={
+          [
+            {
+              "name": "activate",
+            },
+          ]
+        }
+        accessibilityLabel="Hour 2 of 12"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        importantForAccessibility="yes"
+        onAccessibilityAction={[Function]}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
         pointerEvents="none"
         style={
           [
@@ -205,10 +295,12 @@ exports[`renders AnalogClock 1`] = `
               "justifyContent": "center",
               "marginLeft": -24,
               "marginTop": -24,
+              "overflow": "visible",
               "position": "absolute",
               "width": 48,
               "zIndex": 20,
             },
+            null,
             {
               "left": 217,
               "top": 77,
@@ -232,7 +324,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
-                  "color": "rgba(28, 27, 31, 1)",
+                  "color": "rgba(29, 27, 32, 1)",
                   "writingDirection": "ltr",
                 },
                 [
@@ -240,10 +332,12 @@ exports[`renders AnalogClock 1`] = `
                     "fontFamily": "System",
                     "fontSize": 16,
                     "fontWeight": "400",
-                    "letterSpacing": 0.15,
+                    "letterSpacing": 0.5,
                     "lineHeight": 24,
                   },
-                  null,
+                  {
+                    "color": "rgba(29, 27, 32, 1)",
+                  },
                 ],
               ]
             }
@@ -253,6 +347,46 @@ exports[`renders AnalogClock 1`] = `
         </View>
       </View>
       <View
+        accessibilityActions={
+          [
+            {
+              "name": "activate",
+            },
+          ]
+        }
+        accessibilityLabel="Hour 3 of 12"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        importantForAccessibility="yes"
+        onAccessibilityAction={[Function]}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
         pointerEvents="none"
         style={
           [
@@ -263,10 +397,12 @@ exports[`renders AnalogClock 1`] = `
               "justifyContent": "center",
               "marginLeft": -24,
               "marginTop": -24,
+              "overflow": "visible",
               "position": "absolute",
               "width": 48,
               "zIndex": 20,
             },
+            null,
             {
               "left": 230,
               "top": 128,
@@ -290,7 +426,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
-                  "color": "rgba(28, 27, 31, 1)",
+                  "color": "rgba(29, 27, 32, 1)",
                   "writingDirection": "ltr",
                 },
                 [
@@ -298,10 +434,12 @@ exports[`renders AnalogClock 1`] = `
                     "fontFamily": "System",
                     "fontSize": 16,
                     "fontWeight": "400",
-                    "letterSpacing": 0.15,
+                    "letterSpacing": 0.5,
                     "lineHeight": 24,
                   },
-                  null,
+                  {
+                    "color": "rgba(29, 27, 32, 1)",
+                  },
                 ],
               ]
             }
@@ -311,6 +449,46 @@ exports[`renders AnalogClock 1`] = `
         </View>
       </View>
       <View
+        accessibilityActions={
+          [
+            {
+              "name": "activate",
+            },
+          ]
+        }
+        accessibilityLabel="Hour 4 of 12"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        importantForAccessibility="yes"
+        onAccessibilityAction={[Function]}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
         pointerEvents="none"
         style={
           [
@@ -321,10 +499,12 @@ exports[`renders AnalogClock 1`] = `
               "justifyContent": "center",
               "marginLeft": -24,
               "marginTop": -24,
+              "overflow": "visible",
               "position": "absolute",
               "width": 48,
               "zIndex": 20,
             },
+            null,
             {
               "left": 217,
               "top": 179,
@@ -348,7 +528,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
-                  "color": "rgba(28, 27, 31, 1)",
+                  "color": "rgba(29, 27, 32, 1)",
                   "writingDirection": "ltr",
                 },
                 [
@@ -356,10 +536,12 @@ exports[`renders AnalogClock 1`] = `
                     "fontFamily": "System",
                     "fontSize": 16,
                     "fontWeight": "400",
-                    "letterSpacing": 0.15,
+                    "letterSpacing": 0.5,
                     "lineHeight": 24,
                   },
-                  null,
+                  {
+                    "color": "rgba(29, 27, 32, 1)",
+                  },
                 ],
               ]
             }
@@ -369,6 +551,46 @@ exports[`renders AnalogClock 1`] = `
         </View>
       </View>
       <View
+        accessibilityActions={
+          [
+            {
+              "name": "activate",
+            },
+          ]
+        }
+        accessibilityLabel="Hour 5 of 12"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        importantForAccessibility="yes"
+        onAccessibilityAction={[Function]}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
         pointerEvents="none"
         style={
           [
@@ -379,10 +601,12 @@ exports[`renders AnalogClock 1`] = `
               "justifyContent": "center",
               "marginLeft": -24,
               "marginTop": -24,
+              "overflow": "visible",
               "position": "absolute",
               "width": 48,
               "zIndex": 20,
             },
+            null,
             {
               "left": 179,
               "top": 217,
@@ -406,7 +630,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
-                  "color": "rgba(28, 27, 31, 1)",
+                  "color": "rgba(29, 27, 32, 1)",
                   "writingDirection": "ltr",
                 },
                 [
@@ -414,10 +638,12 @@ exports[`renders AnalogClock 1`] = `
                     "fontFamily": "System",
                     "fontSize": 16,
                     "fontWeight": "400",
-                    "letterSpacing": 0.15,
+                    "letterSpacing": 0.5,
                     "lineHeight": 24,
                   },
-                  null,
+                  {
+                    "color": "rgba(29, 27, 32, 1)",
+                  },
                 ],
               ]
             }
@@ -427,6 +653,46 @@ exports[`renders AnalogClock 1`] = `
         </View>
       </View>
       <View
+        accessibilityActions={
+          [
+            {
+              "name": "activate",
+            },
+          ]
+        }
+        accessibilityLabel="Hour 6 of 12"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        importantForAccessibility="yes"
+        onAccessibilityAction={[Function]}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
         pointerEvents="none"
         style={
           [
@@ -437,10 +703,12 @@ exports[`renders AnalogClock 1`] = `
               "justifyContent": "center",
               "marginLeft": -24,
               "marginTop": -24,
+              "overflow": "visible",
               "position": "absolute",
               "width": 48,
               "zIndex": 20,
             },
+            null,
             {
               "left": 128,
               "top": 230,
@@ -464,7 +732,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
-                  "color": "rgba(28, 27, 31, 1)",
+                  "color": "rgba(29, 27, 32, 1)",
                   "writingDirection": "ltr",
                 },
                 [
@@ -472,10 +740,12 @@ exports[`renders AnalogClock 1`] = `
                     "fontFamily": "System",
                     "fontSize": 16,
                     "fontWeight": "400",
-                    "letterSpacing": 0.15,
+                    "letterSpacing": 0.5,
                     "lineHeight": 24,
                   },
-                  null,
+                  {
+                    "color": "rgba(29, 27, 32, 1)",
+                  },
                 ],
               ]
             }
@@ -485,6 +755,46 @@ exports[`renders AnalogClock 1`] = `
         </View>
       </View>
       <View
+        accessibilityActions={
+          [
+            {
+              "name": "activate",
+            },
+          ]
+        }
+        accessibilityLabel="Hour 7 of 12"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        importantForAccessibility="yes"
+        onAccessibilityAction={[Function]}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
         pointerEvents="none"
         style={
           [
@@ -495,10 +805,12 @@ exports[`renders AnalogClock 1`] = `
               "justifyContent": "center",
               "marginLeft": -24,
               "marginTop": -24,
+              "overflow": "visible",
               "position": "absolute",
               "width": 48,
               "zIndex": 20,
             },
+            null,
             {
               "left": 77,
               "top": 217,
@@ -522,7 +834,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
-                  "color": "rgba(28, 27, 31, 1)",
+                  "color": "rgba(29, 27, 32, 1)",
                   "writingDirection": "ltr",
                 },
                 [
@@ -530,10 +842,12 @@ exports[`renders AnalogClock 1`] = `
                     "fontFamily": "System",
                     "fontSize": 16,
                     "fontWeight": "400",
-                    "letterSpacing": 0.15,
+                    "letterSpacing": 0.5,
                     "lineHeight": 24,
                   },
-                  null,
+                  {
+                    "color": "rgba(29, 27, 32, 1)",
+                  },
                 ],
               ]
             }
@@ -543,6 +857,46 @@ exports[`renders AnalogClock 1`] = `
         </View>
       </View>
       <View
+        accessibilityActions={
+          [
+            {
+              "name": "activate",
+            },
+          ]
+        }
+        accessibilityLabel="Hour 8 of 12"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        importantForAccessibility="yes"
+        onAccessibilityAction={[Function]}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
         pointerEvents="none"
         style={
           [
@@ -553,10 +907,12 @@ exports[`renders AnalogClock 1`] = `
               "justifyContent": "center",
               "marginLeft": -24,
               "marginTop": -24,
+              "overflow": "visible",
               "position": "absolute",
               "width": 48,
               "zIndex": 20,
             },
+            null,
             {
               "left": 39,
               "top": 179,
@@ -580,7 +936,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
-                  "color": "rgba(28, 27, 31, 1)",
+                  "color": "rgba(29, 27, 32, 1)",
                   "writingDirection": "ltr",
                 },
                 [
@@ -588,10 +944,12 @@ exports[`renders AnalogClock 1`] = `
                     "fontFamily": "System",
                     "fontSize": 16,
                     "fontWeight": "400",
-                    "letterSpacing": 0.15,
+                    "letterSpacing": 0.5,
                     "lineHeight": 24,
                   },
-                  null,
+                  {
+                    "color": "rgba(29, 27, 32, 1)",
+                  },
                 ],
               ]
             }
@@ -601,6 +959,46 @@ exports[`renders AnalogClock 1`] = `
         </View>
       </View>
       <View
+        accessibilityActions={
+          [
+            {
+              "name": "activate",
+            },
+          ]
+        }
+        accessibilityLabel="Hour 9 of 12"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        importantForAccessibility="yes"
+        onAccessibilityAction={[Function]}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
         pointerEvents="none"
         style={
           [
@@ -611,10 +1009,12 @@ exports[`renders AnalogClock 1`] = `
               "justifyContent": "center",
               "marginLeft": -24,
               "marginTop": -24,
+              "overflow": "visible",
               "position": "absolute",
               "width": 48,
               "zIndex": 20,
             },
+            null,
             {
               "left": 26,
               "top": 128,
@@ -638,7 +1038,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
-                  "color": "rgba(28, 27, 31, 1)",
+                  "color": "rgba(29, 27, 32, 1)",
                   "writingDirection": "ltr",
                 },
                 [
@@ -646,10 +1046,12 @@ exports[`renders AnalogClock 1`] = `
                     "fontFamily": "System",
                     "fontSize": 16,
                     "fontWeight": "400",
-                    "letterSpacing": 0.15,
+                    "letterSpacing": 0.5,
                     "lineHeight": 24,
                   },
-                  null,
+                  {
+                    "color": "rgba(29, 27, 32, 1)",
+                  },
                 ],
               ]
             }
@@ -659,6 +1061,46 @@ exports[`renders AnalogClock 1`] = `
         </View>
       </View>
       <View
+        accessibilityActions={
+          [
+            {
+              "name": "activate",
+            },
+          ]
+        }
+        accessibilityLabel="Hour 10 of 12"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        importantForAccessibility="yes"
+        onAccessibilityAction={[Function]}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
         pointerEvents="none"
         style={
           [
@@ -669,10 +1111,12 @@ exports[`renders AnalogClock 1`] = `
               "justifyContent": "center",
               "marginLeft": -24,
               "marginTop": -24,
+              "overflow": "visible",
               "position": "absolute",
               "width": 48,
               "zIndex": 20,
             },
+            null,
             {
               "left": 39,
               "top": 77,
@@ -696,7 +1140,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
-                  "color": "rgba(28, 27, 31, 1)",
+                  "color": "rgba(29, 27, 32, 1)",
                   "writingDirection": "ltr",
                 },
                 [
@@ -704,10 +1148,12 @@ exports[`renders AnalogClock 1`] = `
                     "fontFamily": "System",
                     "fontSize": 16,
                     "fontWeight": "400",
-                    "letterSpacing": 0.15,
+                    "letterSpacing": 0.5,
                     "lineHeight": 24,
                   },
-                  null,
+                  {
+                    "color": "rgba(29, 27, 32, 1)",
+                  },
                 ],
               ]
             }
@@ -717,6 +1163,46 @@ exports[`renders AnalogClock 1`] = `
         </View>
       </View>
       <View
+        accessibilityActions={
+          [
+            {
+              "name": "activate",
+            },
+          ]
+        }
+        accessibilityLabel="Hour 11 of 12"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        importantForAccessibility="yes"
+        onAccessibilityAction={[Function]}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
         pointerEvents="none"
         style={
           [
@@ -727,10 +1213,12 @@ exports[`renders AnalogClock 1`] = `
               "justifyContent": "center",
               "marginLeft": -24,
               "marginTop": -24,
+              "overflow": "visible",
               "position": "absolute",
               "width": 48,
               "zIndex": 20,
             },
+            null,
             {
               "left": 77,
               "top": 39,
@@ -754,7 +1242,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
-                  "color": "rgba(28, 27, 31, 1)",
+                  "color": "rgba(29, 27, 32, 1)",
                   "writingDirection": "ltr",
                 },
                 [
@@ -762,10 +1250,12 @@ exports[`renders AnalogClock 1`] = `
                     "fontFamily": "System",
                     "fontSize": 16,
                     "fontWeight": "400",
-                    "letterSpacing": 0.15,
+                    "letterSpacing": 0.5,
                     "lineHeight": 24,
                   },
-                  null,
+                  {
+                    "color": "rgba(29, 27, 32, 1)",
+                  },
                 ],
               ]
             }
@@ -775,6 +1265,46 @@ exports[`renders AnalogClock 1`] = `
         </View>
       </View>
       <View
+        accessibilityActions={
+          [
+            {
+              "name": "activate",
+            },
+          ]
+        }
+        accessibilityLabel="Hour 12 of 12"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": true,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        importantForAccessibility="yes"
+        onAccessibilityAction={[Function]}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
         pointerEvents="none"
         style={
           [
@@ -785,10 +1315,12 @@ exports[`renders AnalogClock 1`] = `
               "justifyContent": "center",
               "marginLeft": -24,
               "marginTop": -24,
+              "overflow": "visible",
               "position": "absolute",
               "width": 48,
               "zIndex": 20,
             },
+            null,
             {
               "left": 128,
               "top": 26,
@@ -812,7 +1344,7 @@ exports[`renders AnalogClock 1`] = `
                   "textAlign": "left",
                 },
                 {
-                  "color": "rgba(28, 27, 31, 1)",
+                  "color": "rgba(29, 27, 32, 1)",
                   "writingDirection": "ltr",
                 },
                 [
@@ -820,7 +1352,7 @@ exports[`renders AnalogClock 1`] = `
                     "fontFamily": "System",
                     "fontSize": 16,
                     "fontWeight": "400",
-                    "letterSpacing": 0.15,
+                    "letterSpacing": 0.5,
                     "lineHeight": 24,
                   },
                   {
@@ -831,724 +1363,6 @@ exports[`renders AnalogClock 1`] = `
             }
           >
             12
-          </Text>
-        </View>
-      </View>
-    </View>
-    <View
-      collapsable={false}
-      pointerEvents="none"
-      style={
-        {
-          "bottom": 0,
-          "left": 0,
-          "opacity": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-          "transform": [
-            {
-              "scale": 0.95,
-            },
-          ],
-        }
-      }
-    >
-      <View
-        pointerEvents="none"
-        style={
-          [
-            {
-              "alignItems": "center",
-              "borderRadius": 24,
-              "height": 48,
-              "justifyContent": "center",
-              "marginLeft": -24,
-              "marginTop": -24,
-              "position": "absolute",
-              "width": 48,
-              "zIndex": 20,
-            },
-            {
-              "left": 128,
-              "top": 26,
-            },
-          ]
-        }
-      >
-        <View
-          style={
-            {
-              "borderRadius": 24,
-            }
-          }
-        >
-          <Text
-            maxFontSizeMultiplier={1.5}
-            selectable={false}
-            style={
-              [
-                {
-                  "textAlign": "left",
-                },
-                {
-                  "color": "rgba(28, 27, 31, 1)",
-                  "writingDirection": "ltr",
-                },
-                [
-                  {
-                    "fontFamily": "System",
-                    "fontSize": 16,
-                    "fontWeight": "400",
-                    "letterSpacing": 0.15,
-                    "lineHeight": 24,
-                  },
-                  undefined,
-                ],
-              ]
-            }
-          >
-            00
-          </Text>
-        </View>
-      </View>
-      <View
-        pointerEvents="none"
-        style={
-          [
-            {
-              "alignItems": "center",
-              "borderRadius": 24,
-              "height": 48,
-              "justifyContent": "center",
-              "marginLeft": -24,
-              "marginTop": -24,
-              "position": "absolute",
-              "width": 48,
-              "zIndex": 20,
-            },
-            {
-              "left": 179,
-              "top": 39,
-            },
-          ]
-        }
-      >
-        <View
-          style={
-            {
-              "borderRadius": 24,
-            }
-          }
-        >
-          <Text
-            maxFontSizeMultiplier={1.5}
-            selectable={false}
-            style={
-              [
-                {
-                  "textAlign": "left",
-                },
-                {
-                  "color": "rgba(28, 27, 31, 1)",
-                  "writingDirection": "ltr",
-                },
-                [
-                  {
-                    "fontFamily": "System",
-                    "fontSize": 16,
-                    "fontWeight": "400",
-                    "letterSpacing": 0.15,
-                    "lineHeight": 24,
-                  },
-                  undefined,
-                ],
-              ]
-            }
-          >
-            5
-          </Text>
-        </View>
-      </View>
-      <View
-        pointerEvents="none"
-        style={
-          [
-            {
-              "alignItems": "center",
-              "borderRadius": 24,
-              "height": 48,
-              "justifyContent": "center",
-              "marginLeft": -24,
-              "marginTop": -24,
-              "position": "absolute",
-              "width": 48,
-              "zIndex": 20,
-            },
-            {
-              "left": 217,
-              "top": 77,
-            },
-          ]
-        }
-      >
-        <View
-          style={
-            {
-              "borderRadius": 24,
-            }
-          }
-        >
-          <Text
-            maxFontSizeMultiplier={1.5}
-            selectable={false}
-            style={
-              [
-                {
-                  "textAlign": "left",
-                },
-                {
-                  "color": "rgba(28, 27, 31, 1)",
-                  "writingDirection": "ltr",
-                },
-                [
-                  {
-                    "fontFamily": "System",
-                    "fontSize": 16,
-                    "fontWeight": "400",
-                    "letterSpacing": 0.15,
-                    "lineHeight": 24,
-                  },
-                  undefined,
-                ],
-              ]
-            }
-          >
-            10
-          </Text>
-        </View>
-      </View>
-      <View
-        pointerEvents="none"
-        style={
-          [
-            {
-              "alignItems": "center",
-              "borderRadius": 24,
-              "height": 48,
-              "justifyContent": "center",
-              "marginLeft": -24,
-              "marginTop": -24,
-              "position": "absolute",
-              "width": 48,
-              "zIndex": 20,
-            },
-            {
-              "left": 230,
-              "top": 128,
-            },
-          ]
-        }
-      >
-        <View
-          style={
-            {
-              "borderRadius": 24,
-            }
-          }
-        >
-          <Text
-            maxFontSizeMultiplier={1.5}
-            selectable={false}
-            style={
-              [
-                {
-                  "textAlign": "left",
-                },
-                {
-                  "color": "rgba(28, 27, 31, 1)",
-                  "writingDirection": "ltr",
-                },
-                [
-                  {
-                    "fontFamily": "System",
-                    "fontSize": 16,
-                    "fontWeight": "400",
-                    "letterSpacing": 0.15,
-                    "lineHeight": 24,
-                  },
-                  undefined,
-                ],
-              ]
-            }
-          >
-            15
-          </Text>
-        </View>
-      </View>
-      <View
-        pointerEvents="none"
-        style={
-          [
-            {
-              "alignItems": "center",
-              "borderRadius": 24,
-              "height": 48,
-              "justifyContent": "center",
-              "marginLeft": -24,
-              "marginTop": -24,
-              "position": "absolute",
-              "width": 48,
-              "zIndex": 20,
-            },
-            {
-              "left": 217,
-              "top": 179,
-            },
-          ]
-        }
-      >
-        <View
-          style={
-            {
-              "borderRadius": 24,
-            }
-          }
-        >
-          <Text
-            maxFontSizeMultiplier={1.5}
-            selectable={false}
-            style={
-              [
-                {
-                  "textAlign": "left",
-                },
-                {
-                  "color": "rgba(28, 27, 31, 1)",
-                  "writingDirection": "ltr",
-                },
-                [
-                  {
-                    "fontFamily": "System",
-                    "fontSize": 16,
-                    "fontWeight": "400",
-                    "letterSpacing": 0.15,
-                    "lineHeight": 24,
-                  },
-                  undefined,
-                ],
-              ]
-            }
-          >
-            20
-          </Text>
-        </View>
-      </View>
-      <View
-        pointerEvents="none"
-        style={
-          [
-            {
-              "alignItems": "center",
-              "borderRadius": 24,
-              "height": 48,
-              "justifyContent": "center",
-              "marginLeft": -24,
-              "marginTop": -24,
-              "position": "absolute",
-              "width": 48,
-              "zIndex": 20,
-            },
-            {
-              "left": 179,
-              "top": 217,
-            },
-          ]
-        }
-      >
-        <View
-          style={
-            {
-              "borderRadius": 24,
-            }
-          }
-        >
-          <Text
-            maxFontSizeMultiplier={1.5}
-            selectable={false}
-            style={
-              [
-                {
-                  "textAlign": "left",
-                },
-                {
-                  "color": "rgba(28, 27, 31, 1)",
-                  "writingDirection": "ltr",
-                },
-                [
-                  {
-                    "fontFamily": "System",
-                    "fontSize": 16,
-                    "fontWeight": "400",
-                    "letterSpacing": 0.15,
-                    "lineHeight": 24,
-                  },
-                  undefined,
-                ],
-              ]
-            }
-          >
-            25
-          </Text>
-        </View>
-      </View>
-      <View
-        pointerEvents="none"
-        style={
-          [
-            {
-              "alignItems": "center",
-              "borderRadius": 24,
-              "height": 48,
-              "justifyContent": "center",
-              "marginLeft": -24,
-              "marginTop": -24,
-              "position": "absolute",
-              "width": 48,
-              "zIndex": 20,
-            },
-            {
-              "left": 128,
-              "top": 230,
-            },
-          ]
-        }
-      >
-        <View
-          style={
-            {
-              "borderRadius": 24,
-            }
-          }
-        >
-          <Text
-            maxFontSizeMultiplier={1.5}
-            selectable={false}
-            style={
-              [
-                {
-                  "textAlign": "left",
-                },
-                {
-                  "color": "rgba(28, 27, 31, 1)",
-                  "writingDirection": "ltr",
-                },
-                [
-                  {
-                    "fontFamily": "System",
-                    "fontSize": 16,
-                    "fontWeight": "400",
-                    "letterSpacing": 0.15,
-                    "lineHeight": 24,
-                  },
-                  {
-                    "color": "rgba(255, 255, 255, 1)",
-                  },
-                ],
-              ]
-            }
-          >
-            30
-          </Text>
-        </View>
-      </View>
-      <View
-        pointerEvents="none"
-        style={
-          [
-            {
-              "alignItems": "center",
-              "borderRadius": 24,
-              "height": 48,
-              "justifyContent": "center",
-              "marginLeft": -24,
-              "marginTop": -24,
-              "position": "absolute",
-              "width": 48,
-              "zIndex": 20,
-            },
-            {
-              "left": 77,
-              "top": 217,
-            },
-          ]
-        }
-      >
-        <View
-          style={
-            {
-              "borderRadius": 24,
-            }
-          }
-        >
-          <Text
-            maxFontSizeMultiplier={1.5}
-            selectable={false}
-            style={
-              [
-                {
-                  "textAlign": "left",
-                },
-                {
-                  "color": "rgba(28, 27, 31, 1)",
-                  "writingDirection": "ltr",
-                },
-                [
-                  {
-                    "fontFamily": "System",
-                    "fontSize": 16,
-                    "fontWeight": "400",
-                    "letterSpacing": 0.15,
-                    "lineHeight": 24,
-                  },
-                  undefined,
-                ],
-              ]
-            }
-          >
-            35
-          </Text>
-        </View>
-      </View>
-      <View
-        pointerEvents="none"
-        style={
-          [
-            {
-              "alignItems": "center",
-              "borderRadius": 24,
-              "height": 48,
-              "justifyContent": "center",
-              "marginLeft": -24,
-              "marginTop": -24,
-              "position": "absolute",
-              "width": 48,
-              "zIndex": 20,
-            },
-            {
-              "left": 39,
-              "top": 179,
-            },
-          ]
-        }
-      >
-        <View
-          style={
-            {
-              "borderRadius": 24,
-            }
-          }
-        >
-          <Text
-            maxFontSizeMultiplier={1.5}
-            selectable={false}
-            style={
-              [
-                {
-                  "textAlign": "left",
-                },
-                {
-                  "color": "rgba(28, 27, 31, 1)",
-                  "writingDirection": "ltr",
-                },
-                [
-                  {
-                    "fontFamily": "System",
-                    "fontSize": 16,
-                    "fontWeight": "400",
-                    "letterSpacing": 0.15,
-                    "lineHeight": 24,
-                  },
-                  undefined,
-                ],
-              ]
-            }
-          >
-            40
-          </Text>
-        </View>
-      </View>
-      <View
-        pointerEvents="none"
-        style={
-          [
-            {
-              "alignItems": "center",
-              "borderRadius": 24,
-              "height": 48,
-              "justifyContent": "center",
-              "marginLeft": -24,
-              "marginTop": -24,
-              "position": "absolute",
-              "width": 48,
-              "zIndex": 20,
-            },
-            {
-              "left": 26,
-              "top": 128,
-            },
-          ]
-        }
-      >
-        <View
-          style={
-            {
-              "borderRadius": 24,
-            }
-          }
-        >
-          <Text
-            maxFontSizeMultiplier={1.5}
-            selectable={false}
-            style={
-              [
-                {
-                  "textAlign": "left",
-                },
-                {
-                  "color": "rgba(28, 27, 31, 1)",
-                  "writingDirection": "ltr",
-                },
-                [
-                  {
-                    "fontFamily": "System",
-                    "fontSize": 16,
-                    "fontWeight": "400",
-                    "letterSpacing": 0.15,
-                    "lineHeight": 24,
-                  },
-                  undefined,
-                ],
-              ]
-            }
-          >
-            45
-          </Text>
-        </View>
-      </View>
-      <View
-        pointerEvents="none"
-        style={
-          [
-            {
-              "alignItems": "center",
-              "borderRadius": 24,
-              "height": 48,
-              "justifyContent": "center",
-              "marginLeft": -24,
-              "marginTop": -24,
-              "position": "absolute",
-              "width": 48,
-              "zIndex": 20,
-            },
-            {
-              "left": 39,
-              "top": 77,
-            },
-          ]
-        }
-      >
-        <View
-          style={
-            {
-              "borderRadius": 24,
-            }
-          }
-        >
-          <Text
-            maxFontSizeMultiplier={1.5}
-            selectable={false}
-            style={
-              [
-                {
-                  "textAlign": "left",
-                },
-                {
-                  "color": "rgba(28, 27, 31, 1)",
-                  "writingDirection": "ltr",
-                },
-                [
-                  {
-                    "fontFamily": "System",
-                    "fontSize": 16,
-                    "fontWeight": "400",
-                    "letterSpacing": 0.15,
-                    "lineHeight": 24,
-                  },
-                  undefined,
-                ],
-              ]
-            }
-          >
-            50
-          </Text>
-        </View>
-      </View>
-      <View
-        pointerEvents="none"
-        style={
-          [
-            {
-              "alignItems": "center",
-              "borderRadius": 24,
-              "height": 48,
-              "justifyContent": "center",
-              "marginLeft": -24,
-              "marginTop": -24,
-              "position": "absolute",
-              "width": 48,
-              "zIndex": 20,
-            },
-            {
-              "left": 77,
-              "top": 39,
-            },
-          ]
-        }
-      >
-        <View
-          style={
-            {
-              "borderRadius": 24,
-            }
-          }
-        >
-          <Text
-            maxFontSizeMultiplier={1.5}
-            selectable={false}
-            style={
-              [
-                {
-                  "textAlign": "left",
-                },
-                {
-                  "color": "rgba(28, 27, 31, 1)",
-                  "writingDirection": "ltr",
-                },
-                [
-                  {
-                    "fontFamily": "System",
-                    "fontSize": 16,
-                    "fontWeight": "400",
-                    "letterSpacing": 0.15,
-                    "lineHeight": 24,
-                  },
-                  undefined,
-                ],
-              ]
-            }
-          >
-            55
           </Text>
         </View>
       </View>
