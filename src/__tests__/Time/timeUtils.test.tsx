@@ -121,7 +121,6 @@ describe('timeUtils', () => {
       Math.PI / 2
     )
 
-    // Angles that hit a negative hour, hour 12, and a minute that wraps past 60.
     expect(getHours(0.3, undefined)).toBe(10)
     expect(getHours(1.6, hourTypes.am)).toBe(12)
     expect(getHours(7.9, undefined)).toBe(0)
@@ -172,8 +171,6 @@ describe('timeUtils', () => {
     expect(timeSelectorFieldWidth('picker', true, false)).toBe(132)
     expect(timeSelectorFieldWidth('picker', true, true)).toBe(100)
     expect(timeSelectorFieldWidth('keyboard', true, false)).toBe(100)
-    // Separator slot is 26dp (16dp glyph + 5dp focus-ring reach on each
-    // side) and the field-to-period gap stays 8dp, plus 24dp padding.
     expect(timePickerModalMinWidth(false, true)).toBe(314)
     expect(timePickerModalMinWidth(false, false)).toBe(314)
     expect(timePickerModalMinWidth(true, true)).toBe(314)
@@ -186,7 +183,6 @@ describe('timeUtils', () => {
     expect(timeSeparatorWidth).toBe(
       focusRingReach + timeSeparatorGlyphWidth + focusRingReach
     )
-    // 8dp fields-to-period gap: the ring stops 3dp short of the AM/PM body.
     expect(periodSelectorGap).toBe(8)
     expect(periodSelectorGap).toBeGreaterThan(focusRingReach)
   })

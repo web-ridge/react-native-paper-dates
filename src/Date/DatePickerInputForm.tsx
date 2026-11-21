@@ -35,7 +35,7 @@ export function dateInputCardWidth(windowWidth: number) {
   return Math.min(dateInputCardMaxWidth, Math.max(windowWidth - 16, 0))
 }
 
-export type DatePickerInputFormChange = {
+type DatePickerInputFormChange = {
   date?: CalendarDate
   endDate?: CalendarDate
   startDate?: CalendarDate

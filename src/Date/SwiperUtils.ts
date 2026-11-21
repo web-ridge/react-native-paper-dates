@@ -41,8 +41,8 @@ export type SwiperProps = {
   startYear?: number
 }
 
-export const verticalMonthOverscan = 3
-export const verticalWindowEdge = 2
+const verticalMonthOverscan = 3
+const verticalWindowEdge = 2
 const indexBoundCache = new Map<string, number>()
 
 export function getMaxIndex(startYear?: number, endYear?: number): number {
@@ -168,7 +168,7 @@ export function nextVisibleIndexes(
   return sameIndexes(current, next) ? current : next
 }
 
-export function sameIndexes(left: number[], right: number[]) {
+function sameIndexes(left: number[], right: number[]) {
   if (left.length !== right.length) {
     return false
   }

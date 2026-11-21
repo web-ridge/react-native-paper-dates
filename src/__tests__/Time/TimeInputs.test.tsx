@@ -43,7 +43,6 @@ it('shows no Hour / Minute captions in keyboard mode (M3 Expressive)', async () 
   expect(
     screen.queryByText('Minute', { includeHiddenElements: true })
   ).toBeNull()
-  // Fields stay labelled for assistive tech.
   expect(screen.getByLabelText('Hour')).toBeTruthy()
   expect(screen.getByLabelText('Minute')).toBeTruthy()
 })

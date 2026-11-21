@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { Platform, StyleSheet, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { IconButton } from 'react-native-paper'
 
 import { sharedStyles } from '../shared/styles'
@@ -14,11 +14,6 @@ export const calendarControlHeight = calendarControlInset + calendarArrowSize
 const buttonContainerHeight = calendarArrowSize
 const overlayScrollbarWidth = 15
 let cachedLayoutScrollbarWidth: number | undefined
-export const verticalScrollbarGutter = Platform.select({
-  default: 14,
-  ios: 0,
-  web: 0,
-}) as number
 
 function CalendarHeader({
   disableWeekDays,

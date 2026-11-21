@@ -20,7 +20,6 @@ const periodButtonSize = 56
 const compactPeriodButtonSize = 40
 const horizontalPeriodHeight = 40
 const minTouchTarget = 48
-// Grows a 40dp period button to the 48dp minimum touch target.
 const compactHitSlop = (minTouchTarget - compactPeriodButtonSize) / 2
 
 export default function AmPmSwitcher({
@@ -40,16 +39,12 @@ export default function AmPmSwitcher({
 }) {
   const isHorizontal = direction === 'horizontal'
   const placement = useContext(TimePickerPlacementContext)
-  // Inline scroll pickers use the 40dp inline period selector; modal and
-  // dial/input layouts use the 56dp modal one.
   const compact =
     !isHorizontal && inputType === inputTypes.scroll && placement === 'inline'
   const buttonSize = compact ? compactPeriodButtonSize : periodButtonSize
   const { mode, setMode } = useContext(DisplayModeContext)
   const isAM = mode === 'AM'
   const theme = useTheme()
-  // M3: the modal period selector rounds the selected button with
-  // corner.large; the inline and horizontal dial ones use corner.medium.
   const selectedRadius =
     isHorizontal || compact
       ? theme.shapes.corner.medium

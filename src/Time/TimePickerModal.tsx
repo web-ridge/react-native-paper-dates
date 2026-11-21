@@ -309,9 +309,6 @@ export function TimePickerModal({
   )
 }
 
-// md.comp.time-pickers modal container: corner.extra-large on
-// surface-container. Expressive tokens list no elevation, so it uses the M3
-// dialog level 3 like the date picker.
 const modalCornerRadius = 28
 
 function orNow(value: number | undefined | null, read: (date: Date) => number) {

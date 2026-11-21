@@ -33,11 +33,11 @@ export const monthSubheadPaddingBottom = 12
 export const monthHeaderHeight =
   monthSubheadPaddingTop + 20 + monthSubheadPaddingBottom
 export const monthHeaderSingleMarginBottom = dayNamesHeight
-export const monthHeaderSingleMarginTop = 0
-export const monthHeaderSingleHeight =
+const monthHeaderSingleMarginTop = 0
+const monthHeaderSingleHeight =
   monthHeaderSingleMarginTop + monthHeaderSingleMarginBottom
 export const weekMargin = 0
-export const weekSize = dayCellSize + weekMargin
+const weekSize = dayCellSize + weekMargin
 
 const horizontalMonthChrome =
   calendarControlInset + calendarArrowSize + monthHeaderSingleMarginBottom

@@ -10,7 +10,7 @@ import {
   alignTextToLastWeekday,
 } from './weekdayColumns'
 
-export interface DatePickerModalHeaderProps {
+interface DatePickerModalHeaderProps {
   closeIcon?: string
   disableWeekDays?: DisableWeekDaysType
   locale: string | undefined

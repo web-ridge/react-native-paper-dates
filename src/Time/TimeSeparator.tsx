@@ -3,9 +3,6 @@ import { Text, useTheme } from 'react-native-paper'
 
 import { timeSeparatorWidth } from './timeUtils'
 
-// Shared hour/minute separator used by the scroll wheels, keyboard fields,
-// and dial fields. The slot is wider than the 16dp Expressive token so a
-// 5dp focus ring on either field cannot reach the colon.
 export default function TimeSeparator({
   color,
   height,

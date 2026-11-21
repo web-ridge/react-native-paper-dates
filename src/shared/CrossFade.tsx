@@ -3,7 +3,7 @@ import { Animated, type StyleProp, View, type ViewStyle } from 'react-native'
 
 import { useMotionScale } from './motion'
 
-export type CrossFadeLayer = {
+type CrossFadeLayer = {
   node: ReactNode
   scale?: ScaleRange
   scaleX?: ScaleRange

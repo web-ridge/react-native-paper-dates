@@ -4,7 +4,7 @@ import { Platform } from 'react-native'
 import { useLatest } from '../shared/utils'
 import { getDaysInMonth } from './dateUtils'
 
-export type DateKeyHandlers = {
+type DateKeyHandlers = {
   getVisibleMonth: () => Date
   onConfirm?: () => void
   onFocusDate?: (date: Date) => void

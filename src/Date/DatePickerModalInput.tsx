@@ -41,7 +41,7 @@ import type {
 export type DatePickerModalInputProps =
   | DatePickerModalInputRangeProps
   | DatePickerModalInputSingleProps
-export type DatePickerModalInputRangeProps = DatePickerModalInputSharedProps & {
+type DatePickerModalInputRangeProps = DatePickerModalInputSharedProps & {
   endDate?: CalendarDate
   mode: 'range'
   onConfirm: RangeChange
@@ -64,12 +64,11 @@ type DatePickerModalInputSharedProps = {
   validRange?: ValidRangeType
   visible: boolean
 }
-export type DatePickerModalInputSingleProps =
-  DatePickerModalInputSharedProps & {
-    date?: CalendarDate
-    mode: 'single'
-    onConfirm: SingleChange
-  }
+type DatePickerModalInputSingleProps = DatePickerModalInputSharedProps & {
+  date?: CalendarDate
+  mode: 'single'
+  onConfirm: SingleChange
+}
 
 function DatePickerModalInput(props: DatePickerModalInputProps) {
   const {

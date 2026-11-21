@@ -1,7 +1,7 @@
 import type { DisableWeekDaysType } from './types'
 
 export type { DisableWeekDaysType }
-export type TypedDateIssue = 'disabled' | 'format' | 'range'
+type TypedDateIssue = 'disabled' | 'format' | 'range'
 
 export const dayCellSize = 48
 export const daySize = 40
@@ -135,7 +135,7 @@ export function differenceInMonths(firstDate: Date, secondDate: Date) {
   return diffMonths
 }
 
-export function fieldOrder(inputFormat: string): Array<'D' | 'M' | 'Y'> {
+function fieldOrder(inputFormat: string): Array<'D' | 'M' | 'Y'> {
   const yearIndex = Math.max(
     inputFormat.indexOf('YYYY'),
     inputFormat.indexOf('AAAA')

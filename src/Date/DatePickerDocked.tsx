@@ -60,8 +60,6 @@ const anchorGap = 8
 const cardWidth = 360
 const cornerRadius = 16
 const dayHeaderInset = 12
-// md.comp.date-picker.docked.header.height: 64dp = 8 + 48 + 8. The 48dp row
-// holds the 48dp touch targets of the 40dp menu and icon buttons.
 const headerPaddingTop = 8
 const headerRowHeight = 48
 const headerGap = 8
@@ -254,10 +252,6 @@ function DatePickerDocked({
   )
 }
 
-// Show a focus state layer only after keyboard focus, so a touch or click
-// that opens the month/year menu does not leave the pill highlighted when
-// the menu closes. Android also restores focus to the trigger, which would
-// otherwise keep the layer on.
 let lastInputWasKeyboard = false
 let focusVisibleListeners = 0
 

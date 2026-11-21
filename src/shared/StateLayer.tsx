@@ -17,8 +17,6 @@ export default function StateLayer({
   hovered?: boolean
   pressed?: boolean
 }) {
-  // M3 shows one state layer at a time; the strongest active state wins
-  // rather than stacking (hover + press stays at 10%, not 18%).
   const opacity = Math.max(
     focused ? focusedStateLayerOpacity : 0,
     hovered ? hoveredStateLayerOpacity : 0,

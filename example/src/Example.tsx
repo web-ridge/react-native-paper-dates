@@ -68,7 +68,6 @@ import {
   wideBreakpoint,
 } from './site'
 
-// babel.config.js replaces this with the version from the library package.json.
 const libraryVersion = '__LIBRARY_VERSION__'
 
 type DateRange = {
@@ -456,9 +455,6 @@ export default function Example({
                     <RadioButton.Group
                       onValueChange={(code) => {
                         setLocale(code)
-                        // Close after this press ends. Unmounting the dialog
-                        // mid-click lets the release land on the trigger and
-                        // reopen it.
                         setTimeout(closeDialog, 0)
                       }}
                       value={locale}

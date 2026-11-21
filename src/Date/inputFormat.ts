@@ -13,7 +13,7 @@ import {
 
 const inputSample = new Date(2020, 9, 1)
 
-export function maskFromFormatter(
+function maskFromFormatter(
   formatter: Intl.DateTimeFormat,
   locale: string | undefined
 ) {

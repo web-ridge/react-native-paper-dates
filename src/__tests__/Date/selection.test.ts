@@ -5,7 +5,6 @@ it('sorts multiple dates without Array.prototype.toSorted', () => {
     toSorted?: typeof Array.prototype.toSorted
   }
   const original = proto.toSorted
-  // Simulate Hermes on RN 0.81–0.83, which does not implement toSorted.
   delete proto.toSorted
 
   try {

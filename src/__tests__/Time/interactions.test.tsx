@@ -152,8 +152,6 @@ describe('analog clock', () => {
     }
 
     try {
-      // Each point lands on a different hour path: outer ring, inner noon,
-      // midnight, and the hour that is already selected.
       const responder = await drag('AM', 'hours', true, [
         [0, 0],
         [112, 48],
@@ -609,7 +607,6 @@ describe('time inputs', () => {
     const hour = states.getByLabelText('Hour')
     await fireEvent(hour, 'focus')
     await fireEvent.changeText(hour, '99')
-    // Focused or not, an invalid field uses on-error-container text.
     expect(StyleSheet.flatten(hour.props.style).color).toBe('rgb(0, 255, 0)')
     await fireEvent(hour, 'blur')
     expect(StyleSheet.flatten(hour.props.style).color).toBe('rgb(0, 255, 0)')
@@ -620,7 +617,6 @@ describe('time inputs', () => {
     await fireEvent(minute, 'hoverIn')
     await fireEvent(minute, 'focus')
     await fireEvent(minute, 'pressIn')
-    // Hover, focus, and press don't stack: the strongest layer (10%) wins.
     expect(layer('rgba(20, 21, 22, 0.1)')).toBe(true)
     expect(layer('rgba(20, 21, 22, 0.28)')).toBe(false)
 

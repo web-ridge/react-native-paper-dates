@@ -5,7 +5,7 @@ export function useMotionScale() {
   return typeof scale === 'number' && scale >= 0 ? scale : 1
 }
 
-export function useReduceMotion() {
+function useReduceMotion() {
   return useMotionScale() === 0
 }
 

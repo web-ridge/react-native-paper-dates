@@ -12,7 +12,7 @@ import type {
   TimeChange,
 } from './types'
 
-export type ClockTypeMap = {
+type ClockTypeMap = {
   [clockType in PossibleClockTypes]: PossibleClockTypes
 }
 type HighlightColors = {
@@ -20,13 +20,13 @@ type HighlightColors = {
   borderColor: ColorValue
   color: ColorValue
 }
-export type HourTypeMap = {
+type HourTypeMap = {
   [hourType in PossibleHourTypes]: PossibleHourTypes
 }
 type InputIconMap = {
   [inputType in PossibleInputTypes]: string
 }
-export type InputTypeMap = {
+type InputTypeMap = {
   [inputType in PossibleInputTypes]: PossibleInputTypes
 }
 export type {
@@ -47,7 +47,7 @@ export const clockTypes: ClockTypeMap = {
   hours: 'hours',
   minutes: 'minutes',
 }
-export const disabledContainerOpacity = 0.12
+const disabledContainerOpacity = 0.12
 export const disabledContentOpacity = 0.38
 export const focusRingOffset = 2
 export const focusRingThickness = 3
@@ -57,7 +57,7 @@ export const hourTypes: HourTypeMap = {
   am: 'am',
   pm: 'pm',
 }
-export const inputTypeIcons: InputIconMap = {
+const inputTypeIcons: InputIconMap = {
   keyboard: 'keyboard',
   picker: 'clock',
   scroll: 'gesture-swipe-vertical',
@@ -70,14 +70,9 @@ export const inputTypes = {
 const landscapeDialChrome = 132
 const landscapeDialExtraWidth = 100
 const outerHeight = 34
-// md.comp.time-pickers gap.fields-periods (Expressive).
 export const periodSelectorGap = 8
 export const periodSelectorVerticalWidth = 56
 const portraitDialChrome = 216
-// md.comp.time-pickers.scroll-field: 120dp tall in the modal and at least
-// 140dp inline. Rows match the 64dp emphasized display large line, which
-// keeps each row above the 48dp minimum touch target and leaves the values
-// above and below cut off at the field's edges, as in the M3 spec.
 export const scrollItemHeight = 64
 export const scrollFieldHeight = 140
 export const modalScrollFieldHeight = 120
@@ -85,18 +80,14 @@ export const scrollFieldWidth = 100
 export const timeInputFieldHeight = 120
 export const timePickerActionsGap = 8
 export const timePickerHorizontalPadding = 24
-export const timePickerMediumBreakpoint = 600
+const timePickerMediumBreakpoint = 600
 export const timePickerPadding = 12
 export const timeSelectorHeight = 120
 export const timeSelectorWidth = 100
-// The Expressive separator token is 16dp for the ':' itself. The focus
-// ring reaches 5dp past each field (2dp offset + 3dp stroke), so the
-// slot adds that reach on both sides. This is a 10dp deviation from the
-// token so the ring never touches the glyph.
 export const timeSeparatorGlyphWidth = 16
 export const timeSeparatorWidth =
   focusRingReach + timeSeparatorGlyphWidth + focusRingReach
-export const verticalDial24HourFieldWidth = 132
+const verticalDial24HourFieldWidth = 132
 
 export function clockNumbers(
   count: number,
@@ -236,7 +227,7 @@ export function timeDialFits(width: number, height: number) {
   return horizontalDialFits(width, height)
 }
 
-export function horizontalDialFits(width: number, height: number) {
+function horizontalDialFits(width: number, height: number) {
   return (
     height >= circleSize + landscapeDialChrome &&
     width >=
@@ -355,14 +346,11 @@ export function useInputColors(
     return {
       backgroundColor: theme.colors.errorContainer,
       borderColor: theme.colors.error,
-      // The focused field keeps on-error-container text (M3 time picker states).
       color: theme.colors.onErrorContainer,
     }
   }
 
   return {
-    // M3 Expressive keeps the field on surface-container-lowest and marks
-    // the active one with primary text and a primary outline.
     backgroundColor: theme.colors.surfaceContainerLowest,
     borderColor: highlighted ? theme.colors.primary : 'transparent',
     color: highlighted ? theme.colors.primary : theme.colors.onSurface,

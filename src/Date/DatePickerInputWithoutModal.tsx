@@ -140,9 +140,6 @@ function getLabel({
 
 const styles = StyleSheet.create({
   input: {
-    // The web input's default min-content width is wider than half the range
-    // dialog. Without this, focusing either field scrolls the clipped card and
-    // pushes the other field outside it.
     minWidth: 0,
   },
   inputContainer: {

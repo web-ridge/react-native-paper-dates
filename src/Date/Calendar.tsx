@@ -78,15 +78,15 @@ export type {
   SingleChange,
   ValidRangeType,
 }
-export type CalendarMultiProps = BaseCalendarProps &
+type CalendarMultiProps = BaseCalendarProps &
   MultiCalendarMode & {
     onChange: MultiChange
   }
-export type CalendarRangeProps = BaseCalendarProps &
+type CalendarRangeProps = BaseCalendarProps &
   RangeCalendarMode & {
     onChange: RangeChange
   }
-export type CalendarSingleProps = BaseCalendarProps &
+type CalendarSingleProps = BaseCalendarProps &
   SingleCalendarMode & {
     onChange: SingleChange
   }

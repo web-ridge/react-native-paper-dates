@@ -205,7 +205,6 @@ function ScrollTimePicker({
             inputType={inputTypes.scroll}
             locale={locale}
             onChange={(nextHours) => {
-              // Keep the focused field; switching AM/PM only changes hours.
               onChange({
                 hours: nextHours,
                 minutes,
@@ -1092,13 +1091,13 @@ function isWheelTarget(node: unknown): node is WheelTarget {
   )
 }
 
-export function rowEmphasis(scrollY: number, listIndex: number) {
+function rowEmphasis(scrollY: number, listIndex: number) {
   'worklet'
   const distance = Math.abs(scrollY / scrollItemHeight - listIndex)
   return interpolate(distance, [0.25, 0.75], [1, 0], Extrapolation.CLAMP)
 }
 
-export function wheelShift(
+function wheelShift(
   y: number,
   count: number,
   copies: number,
@@ -1129,7 +1128,7 @@ export function wheelSpan(
   return side * 2 + rendered
 }
 
-export function blockOffset(
+function blockOffset(
   y: number,
   count: number,
   copies: number,

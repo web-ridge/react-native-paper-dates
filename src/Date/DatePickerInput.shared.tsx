@@ -22,7 +22,7 @@ export type DateFieldProps = {
   withDateFormatInLabel?: boolean
 } & TextFieldProps
 
-export type DatePickerPresentationProps = {
+type DatePickerPresentationProps = {
   animationType?: 'slide' | 'fade' | 'none'
   calendarIcon?: string
   disableCalendarIcon?: boolean

@@ -8,7 +8,7 @@ import { getTranslation } from '../translations/utils'
 import type { LocalState } from './DatePickerModalContent'
 import type { DisableWeekDaysType, ModeType } from './types'
 
-export interface HeaderContentProps extends HeaderPickProps {
+interface HeaderContentProps extends HeaderPickProps {
   collapsed: boolean
   disableWeekDays?: DisableWeekDaysType
   layout?: 'card'
@@ -138,7 +138,7 @@ function getLabel(
   return getTranslation(locale, key)
 }
 
-export function HeaderContentMulti({
+function HeaderContentMulti({
   color,
   emptyLabel = ' ',
   locale,
@@ -170,7 +170,7 @@ export function HeaderContentMulti({
   )
 }
 
-export function HeaderContentRange({
+function HeaderContentRange({
   color,
   endLabel = 'End',
   headerSeparator = '-',
@@ -212,7 +212,7 @@ export function HeaderContentRange({
   )
 }
 
-export function HeaderContentSingle({
+function HeaderContentSingle({
   color,
   emptyLabel = ' ',
   locale,

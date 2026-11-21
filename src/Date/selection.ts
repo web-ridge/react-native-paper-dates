@@ -18,7 +18,7 @@ export type PressedDate = {
   endDate?: CalendarDate
   startDate?: CalendarDate
 }
-export type RangeBounds = {
+type RangeBounds = {
   endOrdinal?: number
   sameDay: boolean
   startOrdinal?: number
@@ -200,7 +200,6 @@ export function pressDate(
 
   const dates = current.dates || []
   const exists = dates.some((day) => areDatesOnSameDay(day, pressed))
-  // Hermes in RN 0.81–0.83 (legacy) has no Array.prototype.toSorted.
   const nextDates = (
     exists
       ? dates.filter((day) => !areDatesOnSameDay(day, pressed))

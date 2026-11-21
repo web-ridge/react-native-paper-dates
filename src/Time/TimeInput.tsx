@@ -146,15 +146,10 @@ function TimeInput(
   const fieldHeight = isPicker ? timeSelectorHeight : timeInputFieldHeight
   const outlineWidth = 2
   const radius = theme.shapes.corner.large
-  // Clipping the outlined box cuts the stroke off at the corner, so the
-  // inner edge looks sharper than the focus ring. Clip the fill instead,
-  // on the stroke's inner radius.
   const innerRadius = Math.max(0, radius - outlineWidth)
 
   const contentHeight = fieldHeight - outlineWidth * 2
   const textPadding = Math.max(0, (contentHeight - fontSize) / 2)
-  // A line box locked to the font size clips the last glyph on iOS and
-  // draws the caret through it. UITextField centers the text itself.
   const iosInput = Platform.OS === 'ios'
 
   const fieldFocused = isPicker ? selectorFocused : inputFocused
