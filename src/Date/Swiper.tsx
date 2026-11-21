@@ -5,6 +5,7 @@ import {
   type UIEvent,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -204,12 +205,16 @@ function VerticalScroller({
     return { indexes, slots: assignMonthSlots([], indexes) }
   })
   const theme = useTheme()
-  const verticalMetrics = getVerticalListMetrics(
-    getMinIndex(effectiveStartYear, effectiveEndYear),
-    getMaxIndex(effectiveStartYear, effectiveEndYear),
-    startWeekOnMonday,
-    effectiveStartYear,
-    effectiveEndYear
+  const verticalMetrics = useMemo(
+    () =>
+      getVerticalListMetrics(
+        getMinIndex(effectiveStartYear, effectiveEndYear),
+        getMaxIndex(effectiveStartYear, effectiveEndYear),
+        startWeekOnMonday,
+        effectiveStartYear,
+        effectiveEndYear
+      ),
+    [effectiveEndYear, effectiveStartYear, startWeekOnMonday]
   )
 
   useIsomorphicLayoutEffect(() => {

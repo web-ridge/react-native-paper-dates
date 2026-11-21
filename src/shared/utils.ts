@@ -127,9 +127,21 @@ export function useTextColorOnPrimary() {
   return themeColor(theme.colors.onPrimary)
 }
 
+const alphaColors = new Map<string, string>()
+
+// Components call this while rendering, often for every cell, with a handful
+// of theme colors. Cache the parsed result for string colors.
 export function withAlpha(color: unknown, alpha: number) {
-  return rgbaString({
+  const key = typeof color === 'string' ? `${color}|${alpha}` : null
+  const cached = key === null ? undefined : alphaColors.get(key)
+  if (cached !== undefined) return cached
+  const value = rgbaString({
     ...parseColor(themeColor(color)),
     a: Math.max(0, Math.min(1, alpha)),
   })
+  if (key !== null) {
+    if (alphaColors.size >= 256) alphaColors.clear()
+    alphaColors.set(key, value)
+  }
+  return value
 }

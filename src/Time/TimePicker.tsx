@@ -1,4 +1,4 @@
-import { memo, useContext, useEffect, useState } from 'react'
+import { memo, useContext, useEffect, useMemo, useState } from 'react'
 import { StyleSheet, useWindowDimensions, View } from 'react-native'
 import { IconButton, useTheme } from 'react-native-paper'
 
@@ -86,7 +86,10 @@ function TimePicker({
       ? circleSize + (isLandscape ? 52 : 0)
       : 0
 
-  const displayModeValue = { mode: displayMode, setMode: setDisplayMode }
+  const displayModeValue = useMemo(
+    () => ({ mode: displayMode, setMode: setDisplayMode }),
+    [displayMode]
+  )
   const toggleKeyboard = () => {
     if (disabled) return
     if (onToggleKeyboard) {
