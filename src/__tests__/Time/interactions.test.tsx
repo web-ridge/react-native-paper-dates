@@ -1216,9 +1216,55 @@ describe('scroll time picker', () => {
       includeHiddenElements: true,
     }).props.contentOffset.y as number
     expect(height).toBe(wheelContentHeight(12))
-    // A 10,000 dp fling from the centered value still lands inside the loop.
-    expect(home).toBeGreaterThanOrEqual(10000)
-    expect(height - home).toBeGreaterThanOrEqual(10000)
+    // A 30,000 dp fling from the centered value still lands inside the loop.
+    expect(home).toBeGreaterThanOrEqual(30000)
+    expect(height - home).toBeGreaterThanOrEqual(30000)
+  })
+
+  it('keeps wrapping an Android wheel scroll that arrives without a drag', async () => {
+    Platform.OS = 'android'
+    const scrollTo = jest
+      .spyOn(ScrollView.prototype, 'scrollTo')
+      .mockImplementation(() => {})
+    try {
+      const picker = await renderScroll({ hours: 1, minutes: 0 })
+      const hours = picker.getByTestId('time-scroll-hours', {
+        includeHiddenElements: true,
+      })
+      const home = hours.props.contentOffset.y as number
+
+      // Settle once, then let the single-frame park guard release.
+      await fireEvent(hours, 'momentumScrollEnd', scrollEvent(home))
+      await act(() => {
+        jest.advanceTimersByTime(16)
+      })
+
+      // Generic pointer wheel / trackpad scrolls on Android emit momentum
+      // events without scrollBeginDrag/scrollEndDrag. The wheel must not snap
+      // back to `home` or disable wrapping.
+      scrollTo.mockClear()
+      await scrollWheel(hours, home + scrollItemHeight)
+      expect(scrollTo).not.toHaveBeenCalled()
+
+      await fireEvent(hours, 'momentumScrollBegin', scrollEvent(home))
+      await scrollWheel(hours, home + 13 * scrollItemHeight)
+      expect(scrollTo).toHaveBeenCalledWith({
+        animated: false,
+        y: home + scrollItemHeight,
+      })
+
+      await fireEvent(
+        hours,
+        'momentumScrollEnd',
+        scrollEvent(home + scrollItemHeight)
+      )
+      await flushWheel()
+      expect(picker.onChange).toHaveBeenCalledWith(
+        expect.objectContaining({ hours: 2 })
+      )
+    } finally {
+      scrollTo.mockRestore()
+    }
   })
 
   it('mounts only the rows around the centered one', async () => {
