@@ -56,12 +56,11 @@ function AnalogClockMinutes({
             disabled={disabled}
             hovered={hovered}
             left={left}
-            onFocusChange={(focused) => onNumberFocus?.(focused, selected)}
-            onPress={disabled ? undefined : () => onPress?.(currentMinutes)}
+            onFocusChange={onNumberFocus}
+            onPress={onPress}
+            pressValue={disabled ? undefined : currentMinutes}
             selected={selected}
-            textStyle={{
-              color: selected ? selectedColor : unselectedColor,
-            }}
+            color={selected ? selectedColor : unselectedColor}
             top={top}
             value={isZero ? '00' : currentMinutes}
           />

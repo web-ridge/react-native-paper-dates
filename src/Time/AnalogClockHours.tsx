@@ -54,12 +54,11 @@ function AnalogClockHours({
             disabled={disabled}
             hovered={hoveredHour === hourValue}
             left={left}
-            onFocusChange={(focused) => onNumberFocus?.(focused, selected)}
-            onPress={disabled ? undefined : () => onPress?.(hourValue)}
+            onFocusChange={onNumberFocus}
+            onPress={onPress}
+            pressValue={disabled ? undefined : hourValue}
             selected={selected}
-            textStyle={{
-              color: selected ? selectedColor : unselectedColor,
-            }}
+            color={selected ? selectedColor : unselectedColor}
             top={top}
             value={is24Hour && label === 12 ? '00' : label}
           />
@@ -77,12 +76,11 @@ function AnalogClockHours({
                 disabled={disabled}
                 hovered={hoveredHour === hourValue}
                 left={left}
-                onFocusChange={(focused) => onNumberFocus?.(focused, selected)}
-                onPress={disabled ? undefined : () => onPress?.(hourValue)}
+                onFocusChange={onNumberFocus}
+                onPress={onPress}
+                pressValue={disabled ? undefined : hourValue}
                 selected={selected}
-                textStyle={{
-                  color: selected ? selectedColor : unselectedColor,
-                }}
+                color={selected ? selectedColor : unselectedColor}
                 top={top}
                 value={hour === 24 ? '12' : hour}
               />

@@ -1,4 +1,4 @@
-import { memo, useCallback, useContext, useRef, useState } from 'react'
+import { memo, useContext, useRef, useState } from 'react'
 import {
   GestureResponderEvent,
   PanResponder,
@@ -47,83 +47,19 @@ function AnalogClock({
   onChange: TimeChange
 }) {
   const clockRef = useRef<ViewInstance | null>(null)
-  const disabledRef = useLatest(disabled)
   const degreesPerNumber = focused === clockTypes.hours ? 30 : 6
-  const focusedRef = useLatest(focused)
-  const hoursRef = useLatest(hours)
-  const is24HourRef = useLatest(is24Hour)
-  const minutesRef = useLatest(minutes)
   const { mode } = useContext(DisplayModeContext)
-  const modeRef = useLatest(mode)
-  const onChangeRef = useLatest(onChange)
-  const onPointerMove = useCallback(
-    (e: GestureResponderEvent, final: boolean) => {
-      if (disabledRef.current) return
-      let x = e.nativeEvent.locationX
-      let y = e.nativeEvent.locationY
-      let angle = getAngle(x, y, circleSize)
-      if (focusedRef.current === clockTypes.hours) {
-        let hours24 = is24HourRef.current
-        let hours12AndPm = !hours24 && modeRef.current === 'PM'
-        let hourTypeFromOffset = getHourTypeFromOffset(x, y, circleSize)
-        let hours24AndPM = hours24 && hourTypeFromOffset === hourTypes.pm
-        let previousHourType = getHourType(hoursRef.current)
-        let pickedHours = getHours(angle, previousHourType)
-
-        if (hours12AndPm || hours24AndPM) {
-          pickedHours += 12
-        }
-        if ((modeRef.current === 'AM' || hours24) && pickedHours === 12) {
-          pickedHours = 0
-        }
-
-        if (pickedHours === 24) {
-          pickedHours = 12
-        }
-
-        if (hoursRef.current !== pickedHours || final) {
-          onChangeRef.current({
-            focused: final ? clockTypes.minutes : undefined,
-            hours: pickedHours,
-            minutes: minutesRef.current,
-          })
-        }
-      } else if (focusedRef.current === clockTypes.minutes) {
-        let pickedMinutes = getMinutes(angle)
-        if (minutesRef.current !== pickedMinutes) {
-          onChangeRef.current({
-            hours: hoursRef.current,
-            minutes: pickedMinutes,
-          })
-        }
-      }
-    },
-    [
-      disabledRef,
-      focusedRef,
-      is24HourRef,
-      hoursRef,
-      onChangeRef,
-      minutesRef,
-      modeRef,
-    ]
-  )
-  // The responder is created once and closes over the latest clock values.
-  /* eslint-disable react-hooks/refs */
-  const panResponder = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: () => !disabledRef.current,
-      onMoveShouldSetPanResponderCapture: () => !disabledRef.current,
-      onPanResponderGrant: (e) => onPointerMove(e, false),
-      onPanResponderMove: (e) => onPointerMove(e, false),
-      onPanResponderRelease: (e) => onPointerMove(e, true),
-      onPanResponderTerminationRequest: returnTrue,
-      onShouldBlockNativeResponder: returnTrue,
-      onStartShouldSetPanResponder: () => !disabledRef.current,
-      onStartShouldSetPanResponderCapture: () => false,
-    })
-  ).current
-  /* eslint-enable react-hooks/refs */
+  const latest = useLatest<ClockValues>({
+    disabled,
+    focused,
+    hours,
+    is24Hour,
+    minutes,
+    mode,
+    onChange,
+  })
+  // Created once. Its handlers read the latest clock values when they run.
+  const [panResponder] = useState(() => createClockResponder(latest))
   const pointerNumber = focused === clockTypes.hours ? hours : minutes
   const shortPointer = hours >= 12 && is24Hour
   const dynamicSize = focused === clockTypes.hours && shortPointer ? 33 : 0
@@ -135,36 +71,30 @@ function AnalogClock({
   const [hoveredValue, setHoveredValue] = useState<number | null>(null)
   const [numberFocused, setNumberFocused] = useState(false)
   const [selectedNumberFocused, setSelectedNumberFocused] = useState(false)
+  // The compiler memoizes these, and they read the latest values through
+  // `latest`, so the dials' numbers keep stable callbacks.
   const onNumberFocus = (isFocused: boolean, selected: boolean) => {
     setNumberFocused(isFocused)
     if (selected) setSelectedNumberFocused(isFocused)
   }
-  const selectionAt = (x: number, y: number) => {
-    const angle = getAngle(x, y, circleSize)
-    if (focusedRef.current === clockTypes.hours) {
-      const hours24 = is24HourRef.current
-      const hours12AndPm = !hours24 && modeRef.current === 'PM'
-      const hourTypeFromOffset = getHourTypeFromOffset(x, y, circleSize)
-      const hours24AndPM = hours24 && hourTypeFromOffset === hourTypes.pm
-      let pickedHours = getHours(angle, getHourType(hoursRef.current))
-      if (hours12AndPm || hours24AndPM) pickedHours += 12
-      if ((modeRef.current === 'AM' || hours24) && pickedHours === 12) {
-        pickedHours = 0
-      }
-      if (pickedHours === 24) pickedHours = 12
-      return pickedHours
-    }
-    return getMinutes(angle)
+  const onHoursPress = (nextHours: number) => {
+    const current = latest.current
+    if (current.disabled) return
+    current.onChange({
+      focused: clockTypes.minutes,
+      hours: nextHours,
+      minutes: current.minutes,
+    })
   }
-  const handleHoverStyle = [
-    styles.handleHover,
-    { backgroundColor: withAlpha(theme.colors.onPrimary, 0.08) },
-  ]
+  const onMinutesPress = (nextMinutes: number) => {
+    const current = latest.current
+    if (current.disabled) return
+    current.onChange({ hours: current.hours, minutes: nextMinutes })
+  }
 
   return (
     <View
       ref={clockRef}
-      // eslint-disable-next-line react-hooks/refs -- panHandlers close over the latest clock values
       {...panResponder.panHandlers}
       {...(disabled
         ? {
@@ -192,7 +122,14 @@ function AnalogClock({
       onPointerMove={(event) => {
         if (disabled) return
         setHoveredValue(
-          selectionAt(event.nativeEvent.offsetX, event.nativeEvent.offsetY)
+          selectionAt(
+            event.nativeEvent.offsetX,
+            event.nativeEvent.offsetY,
+            focused,
+            hours,
+            is24Hour,
+            mode
+          )
         )
       }}
       style={[
@@ -228,7 +165,13 @@ function AnalogClock({
       >
         <View style={[styles.endPoint, { backgroundColor: selectorColor }]}>
           {hoveredValue === pointerNumber && !disabled ? (
-            <View pointerEvents="none" style={handleHoverStyle} />
+            <View
+              pointerEvents="none"
+              style={[
+                styles.handleHover,
+                { backgroundColor: withAlpha(theme.colors.onPrimary, 0.08) },
+              ]}
+            />
           ) : null}
           <FocusRing
             focused={
@@ -264,14 +207,7 @@ function AnalogClock({
             is24Hour={is24Hour}
             locale={locale}
             onNumberFocus={onNumberFocus}
-            onPress={(nextHours) => {
-              if (disabled) return
-              onChange({
-                focused: clockTypes.minutes,
-                hours: nextHours,
-                minutes,
-              })
-            }}
+            onPress={onHoursPress}
           />
         }
         minutes={
@@ -283,18 +219,85 @@ function AnalogClock({
             locale={locale}
             minutes={minutes}
             onNumberFocus={onNumberFocus}
-            onPress={(nextMinutes) => {
-              if (disabled) return
-              onChange({
-                hours,
-                minutes: nextMinutes,
-              })
-            }}
+            onPress={onMinutesPress}
           />
         }
       />
     </View>
   )
+}
+
+type ClockValues = {
+  disabled?: boolean
+  focused: PossibleClockTypes
+  hours: number
+  is24Hour: boolean
+  minutes: number
+  mode: string | undefined
+  onChange: TimeChange
+}
+
+function selectionAt(
+  x: number,
+  y: number,
+  focused: PossibleClockTypes,
+  hours: number,
+  is24Hour: boolean,
+  mode: string | undefined
+) {
+  const angle = getAngle(x, y, circleSize)
+  if (focused !== clockTypes.hours) return getMinutes(angle)
+  const hours12AndPm = !is24Hour && mode === 'PM'
+  const hourTypeFromOffset = getHourTypeFromOffset(x, y, circleSize)
+  const hours24AndPM = is24Hour && hourTypeFromOffset === hourTypes.pm
+  let pickedHours = getHours(angle, getHourType(hours))
+  if (hours12AndPm || hours24AndPM) pickedHours += 12
+  if ((mode === 'AM' || is24Hour) && pickedHours === 12) pickedHours = 0
+  if (pickedHours === 24) pickedHours = 12
+  return pickedHours
+}
+
+// The hand moves in whole numbers, so a drag commits to JS only when the
+// number under the finger changes, plus once on release for the hours dial,
+// which then moves focus to minutes.
+function createClockResponder(latest: { readonly current: ClockValues }) {
+  const onPointerMove = (e: GestureResponderEvent, final: boolean) => {
+    const current = latest.current
+    if (current.disabled) return
+    const { focused, hours, minutes, onChange } = current
+    if (focused !== clockTypes.hours && focused !== clockTypes.minutes) return
+    const picked = selectionAt(
+      e.nativeEvent.locationX,
+      e.nativeEvent.locationY,
+      focused,
+      hours,
+      current.is24Hour,
+      current.mode
+    )
+    if (focused === clockTypes.hours) {
+      if (hours !== picked || final) {
+        onChange({
+          focused: final ? clockTypes.minutes : undefined,
+          hours: picked,
+          minutes,
+        })
+      }
+    } else if (minutes !== picked) {
+      onChange({ hours, minutes: picked })
+    }
+  }
+  const enabled = () => !latest.current.disabled
+  return PanResponder.create({
+    onMoveShouldSetPanResponder: enabled,
+    onMoveShouldSetPanResponderCapture: enabled,
+    onPanResponderGrant: (e) => onPointerMove(e, false),
+    onPanResponderMove: (e) => onPointerMove(e, false),
+    onPanResponderRelease: (e) => onPointerMove(e, true),
+    onPanResponderTerminationRequest: returnTrue,
+    onShouldBlockNativeResponder: returnTrue,
+    onStartShouldSetPanResponder: enabled,
+    onStartShouldSetPanResponderCapture: () => false,
+  })
 }
 
 function isOwnFocus(

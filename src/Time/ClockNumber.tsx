@@ -1,50 +1,47 @@
-import { useState } from 'react'
-import {
-  Pressable,
-  type StyleProp,
-  StyleSheet,
-  type TextStyle,
-  View,
-} from 'react-native'
+import { memo, useState } from 'react'
+import { type ColorValue, Pressable, StyleSheet, View } from 'react-native'
 import { Text, useTheme } from 'react-native-paper'
 
 import { withAlpha } from '../shared/utils'
 import FocusRing from './FocusRing'
 
-export default function ClockNumber({
+// Props are primitives plus callbacks the dial keeps stable, so a selection
+// or hover change re-renders only the numbers whose state changed.
+function ClockNumber({
   accessibilityLabel,
+  color,
   disabled = false,
   hovered = false,
   left,
   onFocusChange,
   onPress,
+  pressValue,
   selected = false,
-  textStyle,
   top,
   value,
 }: {
   accessibilityLabel?: string
+  color?: ColorValue
   disabled?: boolean
   hovered?: boolean
   left: number
-  onFocusChange?: (focused: boolean) => void
-  onPress?: () => void
+  onFocusChange?: (focused: boolean, selected: boolean) => void
+  onPress?: (value: number) => void
+  pressValue?: number
   selected?: boolean
-  textStyle?: StyleProp<TextStyle>
   top: number
   value: number | string
 }) {
   const theme = useTheme()
   const [focused, setFocused] = useState(false)
-  const hoverStyle = [
-    styles.hover,
-    { backgroundColor: withAlpha(theme.colors.onSurface, 0.08) },
-  ]
+  // A number without a press value (a disabled dial) is not activatable.
+  const press =
+    pressValue === undefined ? undefined : () => onPress?.(pressValue)
   const showFocusRing = focused && !selected && !disabled
 
   return (
     <Pressable
-      accessibilityActions={onPress ? [{ name: 'activate' }] : undefined}
+      accessibilityActions={press ? [{ name: 'activate' }] : undefined}
       accessibilityLabel={accessibilityLabel}
       accessibilityRole={accessibilityLabel ? 'button' : undefined}
       accessibilityState={
@@ -57,19 +54,19 @@ export default function ClockNumber({
       onAccessibilityAction={(event) => {
         if (disabled) return
         if (event.nativeEvent.actionName === 'activate') {
-          onPress?.()
+          press?.()
         }
       }}
       onBlur={() => {
         setFocused(false)
-        onFocusChange?.(false)
+        onFocusChange?.(false, selected)
       }}
       onFocus={() => {
         if (disabled) return
         setFocused(true)
-        onFocusChange?.(true)
+        onFocusChange?.(true, selected)
       }}
-      onPress={disabled ? undefined : onPress}
+      onPress={disabled ? undefined : press}
       pointerEvents="none"
       style={[
         styles.root,
@@ -77,15 +74,21 @@ export default function ClockNumber({
         { left, top },
       ]}
     >
-      <FocusRing focused={showFocusRing} radius={24} />
+      {showFocusRing ? <FocusRing focused radius={24} /> : null}
       {hovered && !selected && !disabled ? (
-        <View pointerEvents="none" style={hoverStyle} />
+        <View
+          pointerEvents="none"
+          style={[
+            styles.hover,
+            { backgroundColor: withAlpha(theme.colors.onSurface, 0.08) },
+          ]}
+        />
       ) : null}
       <View style={styles.inner}>
         <Text
           maxFontSizeMultiplier={1.5}
           selectable={false}
-          style={textStyle}
+          style={color === undefined ? undefined : { color }}
           variant="bodyLarge"
         >
           {value}
@@ -94,6 +97,8 @@ export default function ClockNumber({
     </Pressable>
   )
 }
+
+export default memo(ClockNumber)
 
 const styles = StyleSheet.create({
   focused: {

@@ -1,4 +1,5 @@
 import { act, fireEvent, render } from '@testing-library/react-native'
+import { useState } from 'react'
 import {
   Dimensions,
   PanResponder,
@@ -63,6 +64,56 @@ async function setWindow(width: number, height: number) {
 }
 
 describe('analog clock', () => {
+  it('commits a drag only when the snapped minute changes', async () => {
+    const configs: Array<Record<string, Function>> = []
+    const create = PanResponder.create.bind(PanResponder)
+    const spy = jest
+      .spyOn(PanResponder, 'create')
+      .mockImplementation((config) => {
+        configs.push(config as Record<string, Function>)
+        return create(config)
+      })
+    const changes: number[] = []
+    function Harness() {
+      const [minutes, setMinutes] = useState(30)
+      return (
+        <AnalogClock
+          focused="minutes"
+          hours={9}
+          is24Hour={false}
+          minutes={minutes}
+          onChange={(next) => {
+            changes.push(next.minutes)
+            setMinutes(next.minutes)
+          }}
+        />
+      )
+    }
+    try {
+      await render(<Harness />)
+      const responder = configs[configs.length - 1]
+      await act(async () => {
+        responder.onPanResponderGrant(clockEvent(128, 0))
+      })
+      for (const x of [128.5, 129, 129.5]) {
+        await act(async () => {
+          responder.onPanResponderMove(clockEvent(x, 0))
+        })
+      }
+      await act(async () => {
+        responder.onPanResponderMove(clockEvent(256, 128))
+      })
+      await act(async () => {
+        responder.onPanResponderRelease(clockEvent(256, 128))
+      })
+      expect(changes).toEqual([0, 15])
+      // One responder for the clock's lifetime, reading the latest values.
+      expect(configs).toHaveLength(1)
+    } finally {
+      spy.mockRestore()
+    }
+  })
+
   it('tracks hours and minutes from pointer moves', async () => {
     const configs: Array<Record<string, Function>> = []
     const create = PanResponder.create.bind(PanResponder)
