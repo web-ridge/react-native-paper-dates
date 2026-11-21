@@ -1,6 +1,8 @@
 import { type ReactNode, useEffect, useRef, useState } from 'react'
 import { Animated, type StyleProp, View, type ViewStyle } from 'react-native'
 
+import { useMotionScale } from './motion'
+
 export type CrossFadeLayer = {
   node: ReactNode
   scale?: ScaleRange
@@ -21,12 +23,15 @@ export default function CrossFade({
   primary: CrossFadeLayer
   secondary: CrossFadeLayer
 }) {
+  const motionScale = useMotionScale()
   const [progress] = useState(() => new Animated.Value(collapsed ? 1 : 0))
   const [secondaryOpacity] = useState(() =>
     progress.interpolate({ inputRange: [0, 1], outputRange: [1, 0] })
   )
   const primaryTransform = useLayerTransform(progress, primary)
   const secondaryTransform = useLayerTransform(progress, secondary)
+  // Reduce Motion drops the scale and makes the swap immediate.
+  const reduceMotion = motionScale === 0
   const [showPrimary, setShowPrimary] = useState(collapsed)
   const [showSecondary, setShowSecondary] = useState(!collapsed)
   const skipFirst = useRef(true)
@@ -41,7 +46,7 @@ export default function CrossFade({
       setShowSecondary(true)
     }
     Animated.timing(progress, {
-      duration: 250,
+      duration: 250 * motionScale,
       toValue: collapsed ? 1 : 0,
       useNativeDriver: true,
     }).start(({ finished }) => {
@@ -54,7 +59,7 @@ export default function CrossFade({
         setShowPrimary(false)
       }
     })
-  }, [collapsed, progress])
+  }, [collapsed, motionScale, progress])
 
   return (
     <View style={containerStyle}>
@@ -63,7 +68,10 @@ export default function CrossFade({
           pointerEvents={collapsed ? 'auto' : 'none'}
           style={[
             primary.style,
-            { opacity: progress, transform: primaryTransform },
+            {
+              opacity: progress,
+              transform: reduceMotion ? undefined : primaryTransform,
+            },
           ]}
         >
           {primary.node}
@@ -74,7 +82,10 @@ export default function CrossFade({
           pointerEvents={collapsed ? 'none' : 'auto'}
           style={[
             secondary.style,
-            { opacity: secondaryOpacity, transform: secondaryTransform },
+            {
+              opacity: secondaryOpacity,
+              transform: reduceMotion ? undefined : secondaryTransform,
+            },
           ]}
         >
           {secondary.node}

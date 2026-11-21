@@ -13,6 +13,7 @@ import { Button, IconButton, Surface, useTheme } from 'react-native-paper'
 
 import { TimePickerPlacementContext } from '../contexts/TimePickerPlacementContext'
 import ModalScrim from '../shared/ModalScrim'
+import { useModalAnimation } from '../shared/motion'
 import { sharedStyles } from '../shared/styles'
 import { displayCase, supportedOrientations } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
@@ -115,12 +116,10 @@ export function TimePickerModal({
     }
   }, [visible])
 
-  const animation =
-    animationType ||
-    Platform.select({
-      default: 'slide',
-      web: 'none',
-    })
+  const animation = useModalAnimation(
+    animationType,
+    Platform.OS === 'web' ? 'none' : 'slide'
+  )
   const onChange: TimeChange = (params) => {
     if (params.focused) {
       setFocused(params.focused)

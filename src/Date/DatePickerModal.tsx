@@ -10,6 +10,7 @@ import { useTheme } from 'react-native-paper'
 
 import ElevatedCard from '../shared/ElevatedCard'
 import ModalScrim from '../shared/ModalScrim'
+import { useModalAnimation } from '../shared/motion'
 import {
   rememberLayout,
   supportedOrientations,
@@ -58,12 +59,10 @@ export function DatePickerModal(
     visible,
     ...rest
   } = props
-  const animationTypeCalculated =
-    animationType ||
-    Platform.select({
-      default: 'slide',
-      web: 'none',
-    })
+  const animationTypeCalculated = useModalAnimation(
+    animationType,
+    Platform.OS === 'web' ? 'none' : 'slide'
+  )
   const [inputMode, setInputMode] = useState(
     () => props.mode !== 'multiple' && props.displayMode === 'input'
   )
