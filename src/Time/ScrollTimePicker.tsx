@@ -301,14 +301,8 @@ function ScrollWheel({
   const scrollY = useSharedValue(centeredIndex * scrollItemHeight)
   const coastingValue = useSharedValue(false)
   const draggingValue = useSharedValue(false)
-  const gestureEpoch = useSharedValue(0)
   const wrapQueued = useSharedValue(false)
   const coasting = useRef(false)
-  const draggingRef = useRef(false)
-  const touchingRef = useRef(false)
-  const epochRef = useRef(0)
-  const workletLifecycle = useRef(false)
-  const wasVisibleRef = useRef(visible)
   const listRef = useAnimatedRef<Animated.ScrollView>()
   const onChangeRef = useLatest(onChange)
   const valueRef = useLatest(value)
@@ -323,20 +317,18 @@ function ScrollWheel({
     listRef.current?.scrollTo({ animated: false, y })
   }
 
+  // Bring the wheel to the value when it changes from outside (taps, typing,
+  // AM/PM) or when the wheel is shown again. Skip it when the row under the
+  // center already shows the value: that is a settle, and the wheel snaps
+  // and recenters itself (on Android from the UI thread, off the touch path).
   useEffect(() => {
-    const wasVisible = wasVisibleRef.current
-    wasVisibleRef.current = visible
-    if (!visible) return
-    if (draggingRef.current || touchingRef.current || draggingValue.get()) {
-      return
-    }
+    if (!visible || draggingValue.get()) return
+    const row = Math.round(scrollY.get() / scrollItemHeight)
+    if ((row - centeredIndex) % count === 0) return
     const y = centeredIndex * scrollItemHeight
-    if (wasVisible && Math.abs(scrollY.get() - y) < 0.5) {
-      return
-    }
     scrollY.set(y)
     listRef.current?.scrollTo({ animated: false, y })
-  }, [centeredIndex, draggingValue, listRef, scrollY, visible])
+  }, [centeredIndex, count, draggingValue, listRef, scrollY, visible])
 
   useEffect(() => {
     if (typeof requestAnimationFrame === 'function') {
@@ -386,13 +378,17 @@ function ScrollWheel({
     }
   }, [])
 
-  const selectIndex = (index: number) => {
+  const commitIndex = (index: number) => {
     if (disabled) return
     const normalized = ((index % count) + count) % count
     const next = values[normalized]
     if (next !== value) onChange(next)
-    const middle = centerCopy * count + normalized
-    scrollList(middle * scrollItemHeight)
+    return normalized
+  }
+  const selectIndex = (index: number) => {
+    const normalized = commitIndex(index)
+    if (normalized === undefined) return
+    scrollList((centerCopy * count + normalized) * scrollItemHeight)
   }
 
   const onWrapJs = useLatest((shifted: number) => {
@@ -400,31 +396,24 @@ function ScrollWheel({
     scrollList(shifted)
   })
   const onGestureJs = useLatest({
-    begin: (epoch?: number) => {
+    // The drag flag is mirrored here for scroll events that reach JS without
+    // the UI-thread handler; it is idempotent with the worklet's own writes.
+    begin: () => {
       pendingSettle.current = false
       clearSettleTimer()
-      if (epoch !== undefined) {
-        epochRef.current = epoch
-      } else {
-        epochRef.current += 1
-        gestureEpoch.set(epochRef.current)
-      }
-      draggingRef.current = true
+      draggingValue.set(true)
       setCoasting(false)
     },
     reset: () => {
       pendingSettle.current = false
       clearSettleTimer()
-      draggingRef.current = false
-      touchingRef.current = false
       setCoasting(false)
       draggingValue.set(false)
     },
     coast: () => {
       pendingSettle.current = false
       clearSettleTimer()
-      draggingRef.current = false
-      touchingRef.current = false
+      draggingValue.set(false)
       setCoasting(true)
     },
     // Android generic motion (trackpad/mouse wheel ACTION_SCROLL) emits
@@ -434,39 +423,32 @@ function ScrollWheel({
     momentumBegin: () => {
       pendingSettle.current = false
       clearSettleTimer()
-      draggingRef.current = false
-      touchingRef.current = false
+      draggingValue.set(false)
     },
-    settle: (y: number, epoch?: number) => {
+    settle: (y: number) => {
       pendingSettle.current = false
       clearSettleTimer()
       setCoasting(false)
-      if (
-        draggingRef.current ||
-        touchingRef.current ||
-        draggingValue.get() ||
-        (epoch !== undefined && epoch !== epochRef.current) ||
-        gestureEpoch.get() !== epochRef.current
-      ) {
-        return
-      }
-      selectIndex(Math.round(y / scrollItemHeight))
+      // A settle that lands after a new drag began is stale.
+      if (draggingValue.get()) return
+      // Android snaps and recenters on the UI thread (see onMomentumEnd), so
+      // the JS thread only commits. A JS scrollTo is queued for the next
+      // UI mount, which can run inside a touch move of the next swipe and
+      // hand the jump to the parent ScrollView.
+      if (isAndroid) commitIndex(Math.round(y / scrollItemHeight))
+      else selectIndex(Math.round(y / scrollItemHeight))
     },
     // Momentum may still start after a release with no velocity. Wait briefly
     // before settling, so a hard Android touch fling is not stopped by scrollTo.
-    release: (y: number, epoch?: number) => {
+    release: (y: number) => {
       if (pendingSettle.current) return
       clearSettleTimer()
-      draggingRef.current = false
-      touchingRef.current = false
+      draggingValue.set(false)
       setCoasting(true)
-      const scheduledEpoch = epoch ?? epochRef.current
       pendingSettle.current = true
       settleTimer.current = setTimeout(() => {
         settleTimer.current = null
-        if (pendingSettle.current) {
-          onGestureJs.current.settle(y, scheduledEpoch)
-        }
+        if (pendingSettle.current) onGestureJs.current.settle(y)
       }, 32)
     },
   })
@@ -477,58 +459,71 @@ function ScrollWheel({
   const [dispatchWrap] = useState(() => (shifted: number) => {
     onWrapJs.current(shifted)
   })
-  const [dispatchGesture] = useState(
-    () => (kind: number, y: number, epoch: number, fromWorklet: boolean) => {
-      if (fromWorklet) workletLifecycle.current = true
-      if (kind === 1) onGestureJs.current.coast()
-      else if (kind === 2) onGestureJs.current.settle(y, epoch)
-      else if (kind === 3) onGestureJs.current.release(y, epoch)
-      else if (kind === 4) onGestureJs.current.momentumBegin()
-      else onGestureJs.current.begin(epoch)
-    }
-  )
+  const [dispatchGesture] = useState(() => (kind: number, y: number) => {
+    if (kind === 1) onGestureJs.current.coast()
+    else if (kind === 2) onGestureJs.current.settle(y)
+    else if (kind === 3) onGestureJs.current.release(y)
+    else if (kind === 4) onGestureJs.current.momentumBegin()
+    else onGestureJs.current.begin()
+  })
+  // Android begin/end drag events fire outside the move that measures how far
+  // the ScrollView scrolled (on intercept, and on ACTION_UP before the fling),
+  // so a wrap here is not handed to the parent. The emulator turns a trackpad
+  // swipe into a chain of short touch swipes; each one ends before a queued
+  // drag wrap runs, so without this the wheel drifts to the end of its range
+  // and Android passes the rest of the swipe to the parent page.
+  const wrapAtGestureEdge = (y: number) => {
+    'worklet'
+    if (!isAndroid || !globalThis._WORKLET) return
+    const shifted = wheelShift(y, count, copies, true, false, false)
+    if (shifted === y) return
+    scrollY.set(shifted)
+    reanimatedScrollTo(listRef, 0, shifted, false)
+  }
   const scrollHandler = useAnimatedScrollHandler(
     {
-      onBeginDrag: () => {
+      onBeginDrag: (event) => {
         draggingValue.set(true)
         coastingValue.set(false)
-        const epoch = gestureEpoch.get() + 1
-        gestureEpoch.set(epoch)
-        scheduleOnRN(dispatchGesture, 0, 0, epoch, Boolean(globalThis._WORKLET))
+        wrapAtGestureEdge(event.contentOffset.y)
+        scheduleOnRN(dispatchGesture, 0, 0)
       },
       onEndDrag: (event) => {
         draggingValue.set(false)
-        // Set coasting on the UI thread immediately so the first momentum frame
-        // cannot wrap with scrollTo and stop Android's OverScroller.
+        // Wrap before the fling starts so it always has the full runway, then
+        // set coasting so no frame of the fling wraps.
+        wrapAtGestureEdge(event.contentOffset.y)
         coastingValue.set(true)
         scheduleOnRN(
           dispatchGesture,
           (event.velocity?.y ?? 0) !== 0 ? 1 : 3,
-          event.contentOffset.y,
-          gestureEpoch.get(),
-          Boolean(globalThis._WORKLET)
+          event.contentOffset.y
         )
       },
       onMomentumBegin: () => {
         draggingValue.set(false)
-        scheduleOnRN(
-          dispatchGesture,
-          4,
-          0,
-          gestureEpoch.get(),
-          Boolean(globalThis._WORKLET)
-        )
+        scheduleOnRN(dispatchGesture, 4, 0)
       },
       onMomentumEnd: (event) => {
         coastingValue.set(false)
         if (draggingValue.get()) return
-        scheduleOnRN(
-          dispatchGesture,
-          2,
-          event.contentOffset.y,
-          gestureEpoch.get(),
-          Boolean(globalThis._WORKLET)
-        )
+        const y = event.contentOffset.y
+        scheduleOnRN(dispatchGesture, 2, y)
+        if (!isAndroid) return
+        // Snap to the row in the center copy from the UI thread on the next
+        // frame, outside any touch event, the same way as the drag wrap.
+        if (!globalThis._WORKLET) {
+          scheduleOnRN(dispatchWrap, settledOffset(y, count, copies))
+          return
+        }
+        requestAnimationFrame(() => {
+          if (draggingValue.get() || coastingValue.get()) return
+          const current = scrollY.get()
+          const next = settledOffset(current, count, copies)
+          if (next === current) return
+          scrollY.set(next)
+          reanimatedScrollTo(listRef, 0, next, false)
+        })
       },
       onScroll: (event) => {
         const y = event.contentOffset.y
@@ -653,19 +648,10 @@ function ScrollWheel({
           setHovered(false)
           setPressed(false)
         }}
-        onTouchCancel={() => {
-          touchingRef.current = false
-          setPressed(false)
-        }}
-        onTouchEnd={() => {
-          touchingRef.current = false
-          setPressed(false)
-        }}
+        onTouchCancel={() => setPressed(false)}
+        onTouchEnd={() => setPressed(false)}
         onTouchStart={() => {
           if (disabled) return
-          touchingRef.current = true
-          pendingSettle.current = false
-          clearSettleTimer()
           setPressed(true)
           onFocus()
         }}
@@ -689,20 +675,16 @@ function ScrollWheel({
           importantForAccessibility="no-hide-descendants"
           nestedScrollEnabled
           onMomentumScrollBegin={() => {
-            if (workletLifecycle.current) return
             onGestureJs.current.momentumBegin()
           }}
           onMomentumScrollEnd={(event) => {
-            if (workletLifecycle.current) return
             onGestureJs.current.settle(event.nativeEvent.contentOffset.y)
           }}
           onScroll={scrollHandler}
           onScrollBeginDrag={() => {
-            if (workletLifecycle.current) return
             onGestureJs.current.begin()
           }}
           onScrollEndDrag={(event) => {
-            if (workletLifecycle.current) return
             if ((event.nativeEvent.velocity?.y ?? 0) !== 0) {
               onGestureJs.current.coast()
               return
@@ -1097,6 +1079,14 @@ export function wheelShift(
   }
   const within = y - Math.floor(y / cycle) * cycle
   return center + within
+}
+
+// The resting offset for `y`: its nearest row, moved into the center copy.
+export function settledOffset(y: number, count: number, copies: number) {
+  'worklet'
+  const row = Math.round(y / scrollItemHeight)
+  const normalized = ((row % count) + count) % count
+  return (Math.floor(copies / 2) * count + normalized) * scrollItemHeight
 }
 
 export function loopCopies(

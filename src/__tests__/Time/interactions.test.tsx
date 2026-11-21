@@ -31,6 +31,31 @@ import { scrollItemHeight, timeSeparatorWidth } from '../../Time/timeUtils'
 import en from '../../translations/en'
 import { registerTranslation } from '../../translations/utils'
 
+// Jest delivers scroll events to the JS props only, so keep the UI-thread
+// handlers the wheels register to call them directly.
+type MockScrollHandlers = Record<
+  string,
+  ((event: { contentOffset: { x: number; y: number } }) => void) | undefined
+>
+const mockReanimatedScrollTo = jest.fn()
+const mockScrollHandlers = new Set<MockScrollHandlers>()
+jest.mock('react-native-reanimated', () => {
+  const actual = jest.requireActual('react-native-reanimated')
+  return {
+    __esModule: true,
+    ...actual,
+    default: actual.default,
+    scrollTo: (...args: unknown[]) => mockReanimatedScrollTo(...args),
+    useAnimatedScrollHandler: (
+      handlers: MockScrollHandlers,
+      deps?: unknown[]
+    ) => {
+      mockScrollHandlers.add(handlers)
+      return actual.useAnimatedScrollHandler(handlers, deps)
+    },
+  }
+})
+
 registerTranslation('en', en)
 
 registerTranslation('en-US', en)
@@ -1355,6 +1380,102 @@ describe('scroll time picker', () => {
       worklet._WORKLET = previous
       frame.mockRestore()
       warn.mockRestore()
+    }
+  })
+
+  it('settles an Android minutes wheel from the UI thread, never with a JS scrollTo', async () => {
+    // A JS scrollTo is queued until the next UI mount, which can run inside
+    // the touch move of the next swipe. On the minutes wheel the recenter is
+    // a full 3,840dp cycle, which Android then hands to the parent page.
+    Platform.OS = 'android'
+    const worklet = globalThis as { _WORKLET?: boolean }
+    const previous = worklet._WORKLET
+    const frames: FrameRequestCallback[] = []
+    const scrollTo = jest
+      .spyOn(ScrollView.prototype, 'scrollTo')
+      .mockImplementation(() => {})
+    const picker = await renderScroll({ focused: 'minutes', minutes: 0 })
+    const frame = jest
+      .spyOn(globalThis, 'requestAnimationFrame')
+      .mockImplementation((callback) => {
+        frames.push(callback)
+        return frames.length
+      })
+    try {
+      const minutes = picker.getByTestId('time-scroll-minutes', {
+        includeHiddenElements: true,
+      })
+      const home = minutes.props.contentOffset.y as number
+      const cycle = 60 * scrollItemHeight
+      // Resting one copy below center on minute 10.
+      const rest = home - cycle + 10 * scrollItemHeight
+
+      await fireEvent(minutes, 'scrollBeginDrag', scrollEvent(home))
+      await fireEvent(minutes, 'scrollEndDrag', scrollEvent(rest, 4))
+      scrollTo.mockClear()
+      frames.length = 0
+      worklet._WORKLET = true
+      await fireEvent(minutes, 'momentumScrollEnd', scrollEvent(rest))
+      worklet._WORKLET = previous
+      await flushWheel()
+
+      expect(frames).toHaveLength(1)
+      expect(scrollTo).not.toHaveBeenCalled()
+      expect(picker.onChange).toHaveBeenCalledTimes(1)
+      expect(picker.onChange).toHaveBeenCalledWith(
+        expect.objectContaining({ minutes: 10 })
+      )
+    } finally {
+      worklet._WORKLET = previous
+      frame.mockRestore()
+      scrollTo.mockRestore()
+    }
+  })
+
+  it('wraps an Android wheel as each drag begins and ends, outside the touch move', async () => {
+    // The emulator turns a trackpad swipe into a chain of short touch swipes.
+    // Each one ends before a deferred drag wrap runs, so without these wraps
+    // the wheel drifts to the end of its range and the page takes the rest.
+    Platform.OS = 'android'
+    const worklet = globalThis as { _WORKLET?: boolean }
+    const previous = worklet._WORKLET
+    mockScrollHandlers.clear()
+    const picker = await renderScroll({ focused: 'hours' })
+    const send = (name: 'onBeginDrag' | 'onEndDrag', y: number) => {
+      for (const handlers of mockScrollHandlers) {
+        handlers[name]?.({ contentOffset: { x: 0, y } })
+      }
+    }
+    try {
+      const hours = picker.getByTestId('time-scroll-hours', {
+        includeHiddenElements: true,
+      })
+      const home = hours.props.contentOffset.y as number
+      const cycle = 12 * scrollItemHeight
+      const far = home + cycle + 3 * scrollItemHeight
+      worklet._WORKLET = true
+      mockReanimatedScrollTo.mockClear()
+      send('onBeginDrag', far)
+      expect(mockReanimatedScrollTo).toHaveBeenCalledWith(
+        expect.anything(),
+        0,
+        far - cycle,
+        false
+      )
+      mockReanimatedScrollTo.mockClear()
+      send('onEndDrag', home - 2 * cycle - 5)
+      expect(mockReanimatedScrollTo).toHaveBeenCalledWith(
+        expect.anything(),
+        0,
+        home - 5,
+        false
+      )
+      mockReanimatedScrollTo.mockClear()
+      send('onBeginDrag', home + scrollItemHeight)
+      expect(mockReanimatedScrollTo).not.toHaveBeenCalled()
+    } finally {
+      worklet._WORKLET = previous
+      mockReanimatedScrollTo.mockClear()
     }
   })
 
