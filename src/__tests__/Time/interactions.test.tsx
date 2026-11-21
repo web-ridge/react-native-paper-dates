@@ -1402,6 +1402,84 @@ describe('scroll time picker', () => {
     }
   })
 
+  it('ignores stale settle and prop resyncs once a new minutes drag begins', async () => {
+    Platform.OS = 'android'
+    const scrollTo = jest
+      .spyOn(ScrollView.prototype, 'scrollTo')
+      .mockImplementation(() => {})
+    try {
+      const picker = await renderScroll({
+        focused: 'minutes',
+        hours: 1,
+        minutes: 0,
+      })
+      const minutes = picker.getByTestId('time-scroll-minutes', {
+        includeHiddenElements: true,
+      })
+      const control = picker.getByTestId('time-scroll-minutes-control', {
+        includeHiddenElements: true,
+      })
+      const home = minutes.props.contentOffset.y as number
+      const cycle = 60 * scrollItemHeight
+
+      // First fling coasts past one cycle without wrapping yet.
+      await fireEvent(minutes, 'scrollBeginDrag', scrollEvent(home))
+      await fireEvent(minutes, 'scrollEndDrag', scrollEvent(home - 200, 4))
+      await scrollWheel(minutes, home - cycle + 10 * scrollItemHeight)
+
+      // Second touch/drag interrupts right as the previous momentum end arrives.
+      scrollTo.mockClear()
+      await fireEvent(control, 'touchStart')
+      await fireEvent(minutes, 'scrollBeginDrag', scrollEvent(home - cycle))
+      await fireEvent(
+        minutes,
+        'momentumScrollEnd',
+        scrollEvent(home - cycle + 10 * scrollItemHeight)
+      )
+      await flushWheel()
+      expect(scrollTo).not.toHaveBeenCalled()
+      expect(picker.onChange).not.toHaveBeenCalled()
+
+      // External value resyncs while the finger is still dragging must not jump.
+      await picker.rerender(
+        <TimePicker
+          focused="minutes"
+          hours={1}
+          inputType="scroll"
+          locale="en"
+          minutes={5}
+          onChange={picker.onChange}
+          onFocusInput={picker.onFocusInput}
+          use24HourClock={false}
+        />
+      )
+      expect(scrollTo).not.toHaveBeenCalled()
+
+      // Releasing and settling the active drag commits and recenters cleanly.
+      await fireEvent(
+        minutes,
+        'scrollEndDrag',
+        scrollEvent(home - 2 * scrollItemHeight, 4)
+      )
+      await fireEvent(control, 'touchEnd')
+      await fireEvent(
+        minutes,
+        'momentumScrollEnd',
+        scrollEvent(home + 2 * scrollItemHeight)
+      )
+      await flushWheel()
+      expect(picker.onChange).toHaveBeenCalledWith(
+        expect.objectContaining({ minutes: 2 })
+      )
+      expect(scrollTo).toHaveBeenCalledWith({
+        animated: false,
+        y: home + 2 * scrollItemHeight,
+      })
+    } finally {
+      scrollTo.mockRestore()
+    }
+  })
+
   it('keeps all rows mounted across scrolls without unmounting', async () => {
     const picker = await renderScroll({ focused: 'minutes', minutes: 0 })
     const minutes = picker.getByTestId('time-scroll-minutes', {

@@ -301,8 +301,14 @@ function ScrollWheel({
   const scrollY = useSharedValue(centeredIndex * scrollItemHeight)
   const coastingValue = useSharedValue(false)
   const draggingValue = useSharedValue(false)
+  const gestureEpoch = useSharedValue(0)
   const wrapQueued = useSharedValue(false)
   const coasting = useRef(false)
+  const draggingRef = useRef(false)
+  const touchingRef = useRef(false)
+  const epochRef = useRef(0)
+  const workletLifecycle = useRef(false)
+  const wasVisibleRef = useRef(visible)
   const listRef = useAnimatedRef<Animated.ScrollView>()
   const onChangeRef = useLatest(onChange)
   const valueRef = useLatest(value)
@@ -318,11 +324,19 @@ function ScrollWheel({
   }
 
   useEffect(() => {
+    const wasVisible = wasVisibleRef.current
+    wasVisibleRef.current = visible
     if (!visible) return
+    if (draggingRef.current || touchingRef.current || draggingValue.get()) {
+      return
+    }
     const y = centeredIndex * scrollItemHeight
+    if (wasVisible && Math.abs(scrollY.get() - y) < 0.5) {
+      return
+    }
     scrollY.set(y)
     listRef.current?.scrollTo({ animated: false, y })
-  }, [centeredIndex, listRef, scrollY, visible])
+  }, [centeredIndex, draggingValue, listRef, scrollY, visible])
 
   useEffect(() => {
     if (typeof requestAnimationFrame === 'function') {
@@ -386,20 +400,31 @@ function ScrollWheel({
     scrollList(shifted)
   })
   const onGestureJs = useLatest({
-    begin: () => {
+    begin: (epoch?: number) => {
       pendingSettle.current = false
       clearSettleTimer()
+      if (epoch !== undefined) {
+        epochRef.current = epoch
+      } else {
+        epochRef.current += 1
+        gestureEpoch.set(epochRef.current)
+      }
+      draggingRef.current = true
       setCoasting(false)
     },
     reset: () => {
       pendingSettle.current = false
       clearSettleTimer()
+      draggingRef.current = false
+      touchingRef.current = false
       setCoasting(false)
       draggingValue.set(false)
     },
     coast: () => {
       pendingSettle.current = false
       clearSettleTimer()
+      draggingRef.current = false
+      touchingRef.current = false
       setCoasting(true)
     },
     // Android generic motion (trackpad/mouse wheel ACTION_SCROLL) emits
@@ -409,23 +434,39 @@ function ScrollWheel({
     momentumBegin: () => {
       pendingSettle.current = false
       clearSettleTimer()
+      draggingRef.current = false
+      touchingRef.current = false
     },
-    settle: (y: number) => {
+    settle: (y: number, epoch?: number) => {
       pendingSettle.current = false
       clearSettleTimer()
       setCoasting(false)
+      if (
+        draggingRef.current ||
+        touchingRef.current ||
+        draggingValue.get() ||
+        (epoch !== undefined && epoch !== epochRef.current) ||
+        gestureEpoch.get() !== epochRef.current
+      ) {
+        return
+      }
       selectIndex(Math.round(y / scrollItemHeight))
     },
     // Momentum may still start after a release with no velocity. Wait briefly
     // before settling, so a hard Android touch fling is not stopped by scrollTo.
-    release: (y: number) => {
+    release: (y: number, epoch?: number) => {
       if (pendingSettle.current) return
       clearSettleTimer()
+      draggingRef.current = false
+      touchingRef.current = false
       setCoasting(true)
+      const scheduledEpoch = epoch ?? epochRef.current
       pendingSettle.current = true
       settleTimer.current = setTimeout(() => {
         settleTimer.current = null
-        if (pendingSettle.current) onGestureJs.current.settle(y)
+        if (pendingSettle.current) {
+          onGestureJs.current.settle(y, scheduledEpoch)
+        }
       }, 32)
     },
   })
@@ -436,19 +477,24 @@ function ScrollWheel({
   const [dispatchWrap] = useState(() => (shifted: number) => {
     onWrapJs.current(shifted)
   })
-  const [dispatchGesture] = useState(() => (kind: number, y: number) => {
-    if (kind === 1) onGestureJs.current.coast()
-    else if (kind === 2) onGestureJs.current.settle(y)
-    else if (kind === 3) onGestureJs.current.release(y)
-    else if (kind === 4) onGestureJs.current.momentumBegin()
-    else onGestureJs.current.begin()
-  })
+  const [dispatchGesture] = useState(
+    () => (kind: number, y: number, epoch: number, fromWorklet: boolean) => {
+      if (fromWorklet) workletLifecycle.current = true
+      if (kind === 1) onGestureJs.current.coast()
+      else if (kind === 2) onGestureJs.current.settle(y, epoch)
+      else if (kind === 3) onGestureJs.current.release(y, epoch)
+      else if (kind === 4) onGestureJs.current.momentumBegin()
+      else onGestureJs.current.begin(epoch)
+    }
+  )
   const scrollHandler = useAnimatedScrollHandler(
     {
       onBeginDrag: () => {
         draggingValue.set(true)
         coastingValue.set(false)
-        scheduleOnRN(dispatchGesture, 0, 0)
+        const epoch = gestureEpoch.get() + 1
+        gestureEpoch.set(epoch)
+        scheduleOnRN(dispatchGesture, 0, 0, epoch, Boolean(globalThis._WORKLET))
       },
       onEndDrag: (event) => {
         draggingValue.set(false)
@@ -458,16 +504,31 @@ function ScrollWheel({
         scheduleOnRN(
           dispatchGesture,
           (event.velocity?.y ?? 0) !== 0 ? 1 : 3,
-          event.contentOffset.y
+          event.contentOffset.y,
+          gestureEpoch.get(),
+          Boolean(globalThis._WORKLET)
         )
       },
       onMomentumBegin: () => {
         draggingValue.set(false)
-        scheduleOnRN(dispatchGesture, 4, 0)
+        scheduleOnRN(
+          dispatchGesture,
+          4,
+          0,
+          gestureEpoch.get(),
+          Boolean(globalThis._WORKLET)
+        )
       },
       onMomentumEnd: (event) => {
         coastingValue.set(false)
-        scheduleOnRN(dispatchGesture, 2, event.contentOffset.y)
+        if (draggingValue.get()) return
+        scheduleOnRN(
+          dispatchGesture,
+          2,
+          event.contentOffset.y,
+          gestureEpoch.get(),
+          Boolean(globalThis._WORKLET)
+        )
       },
       onScroll: (event) => {
         const y = event.contentOffset.y
@@ -592,10 +653,19 @@ function ScrollWheel({
           setHovered(false)
           setPressed(false)
         }}
-        onTouchCancel={() => setPressed(false)}
-        onTouchEnd={() => setPressed(false)}
+        onTouchCancel={() => {
+          touchingRef.current = false
+          setPressed(false)
+        }}
+        onTouchEnd={() => {
+          touchingRef.current = false
+          setPressed(false)
+        }}
         onTouchStart={() => {
           if (disabled) return
+          touchingRef.current = true
+          pendingSettle.current = false
+          clearSettleTimer()
           setPressed(true)
           onFocus()
         }}
@@ -619,16 +689,20 @@ function ScrollWheel({
           importantForAccessibility="no-hide-descendants"
           nestedScrollEnabled
           onMomentumScrollBegin={() => {
+            if (workletLifecycle.current) return
             onGestureJs.current.momentumBegin()
           }}
           onMomentumScrollEnd={(event) => {
+            if (workletLifecycle.current) return
             onGestureJs.current.settle(event.nativeEvent.contentOffset.y)
           }}
           onScroll={scrollHandler}
           onScrollBeginDrag={() => {
+            if (workletLifecycle.current) return
             onGestureJs.current.begin()
           }}
           onScrollEndDrag={(event) => {
+            if (workletLifecycle.current) return
             if ((event.nativeEvent.velocity?.y ?? 0) !== 0) {
               onGestureJs.current.coast()
               return
