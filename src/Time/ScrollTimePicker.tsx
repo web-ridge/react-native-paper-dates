@@ -288,6 +288,9 @@ function ScrollWheel({
     y: centeredIndex * scrollItemHeight,
   }))
   const [pressed, setPressed] = useState(false)
+  // Mount the loop copies around the visible cycle after the first paint so
+  // toggling to the wheels is not blocked on hundreds of rows.
+  const [offscreenCopiesMounted, setOffscreenCopiesMounted] = useState(false)
   const scrollY = useSharedValue(centeredIndex * scrollItemHeight)
   const coastingValue = useSharedValue(false)
   const draggingValue = useSharedValue(false)
@@ -311,6 +314,10 @@ function ScrollWheel({
     scrollY.set(y)
     listRef.current?.scrollTo({ animated: false, y })
   }, [centeredIndex, listRef, scrollY])
+
+  useEffect(() => {
+    setOffscreenCopiesMounted(true)
+  }, [])
 
   useEffect(() => {
     if (disabled || !focused || Platform.OS !== 'web') return
@@ -581,32 +588,20 @@ function ScrollWheel({
           style={styles.wheelScroller}
           testID={testID}
         >
-          {Array.from({ length: copies * count }, (_, listIndex) => {
-            const copy = Math.floor(listIndex / count)
-            const item = values[listIndex - copy * count]
-            const neighbor =
-              listIndex === centeredIndex - 1 || listIndex === centeredIndex + 1
-            return (
-              <WheelRow
-                activeColor={activeColor}
-                activeFont={theme.fonts.displayLargeEmphasized}
-                disabled={disabled}
-                key={`${copy}-${item}`}
-                label={padTime(item)}
-                listIndex={listIndex}
-                onPress={
-                  neighbor ? () => step(listIndex - centeredIndex) : undefined
-                }
-                restColor={restColor}
-                restFont={theme.fonts.displayMedium}
-                scrollY={scrollY}
-                testID={
-                  neighbor
-                    ? `${testID}-${listIndex < centeredIndex ? 'previous' : 'next'}`
-                    : undefined
-                }
-              />
-            )
+          {wheelRows({
+            activeColor,
+            activeFont: theme.fonts.displayLargeEmphasized,
+            centeredIndex,
+            copies,
+            count,
+            disabled,
+            offscreenCopiesMounted,
+            restColor,
+            restFont: theme.fonts.displayMedium,
+            scrollY,
+            step,
+            testID,
+            values,
           })}
         </Animated.ScrollView>
       </View>
@@ -826,6 +821,90 @@ function holdAncestors(node: {
       ancestorHolds.delete(parent)
     })
   }
+}
+
+function wheelRows({
+  activeColor,
+  activeFont,
+  centeredIndex,
+  copies,
+  count,
+  disabled,
+  offscreenCopiesMounted,
+  restColor,
+  restFont,
+  scrollY,
+  step,
+  testID,
+  values,
+}: {
+  activeColor: ColorValue
+  activeFont: TextStyle
+  centeredIndex: number
+  copies: number
+  count: number
+  disabled?: boolean
+  offscreenCopiesMounted: boolean
+  restColor: ColorValue
+  restFont: TextStyle
+  scrollY: SharedValue<number>
+  step: (delta: number) => void
+  testID: string
+  values: readonly number[]
+}) {
+  const centerCopy = Math.floor(copies / 2)
+  const startCopy = offscreenCopiesMounted ? 0 : centerCopy
+  const copyCount = offscreenCopiesMounted ? copies : 1
+  const cycleHeight = count * scrollItemHeight
+  const topHeight = startCopy * cycleHeight
+  const bottomHeight = (copies - startCopy - copyCount) * cycleHeight
+  const rows = Array.from({ length: copyCount * count }, (_, offset) => {
+    const listIndex = startCopy * count + offset
+    const copy = Math.floor(listIndex / count)
+    const item = values[listIndex - copy * count]
+    const neighbor =
+      listIndex === centeredIndex - 1 || listIndex === centeredIndex + 1
+    return (
+      <WheelRow
+        activeColor={activeColor}
+        activeFont={activeFont}
+        disabled={disabled}
+        key={`${copy}-${item}`}
+        label={padTime(item)}
+        listIndex={listIndex}
+        onPress={neighbor ? () => step(listIndex - centeredIndex) : undefined}
+        restColor={restColor}
+        restFont={restFont}
+        scrollY={scrollY}
+        testID={
+          neighbor
+            ? `${testID}-${listIndex < centeredIndex ? 'previous' : 'next'}`
+            : undefined
+        }
+      />
+    )
+  })
+  return (
+    <>
+      {topHeight > 0 ? (
+        <View
+          accessibilityElementsHidden
+          collapsable={false}
+          importantForAccessibility="no-hide-descendants"
+          style={{ height: topHeight }}
+        />
+      ) : null}
+      {rows}
+      {bottomHeight > 0 ? (
+        <View
+          accessibilityElementsHidden
+          collapsable={false}
+          importantForAccessibility="no-hide-descendants"
+          style={{ height: bottomHeight }}
+        />
+      ) : null}
+    </>
+  )
 }
 
 function hoursFromWheel(
