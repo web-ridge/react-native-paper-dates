@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/refs -- Animated values are created on refs and read while drawing the cross-fade. */
 import { type ReactNode, useEffect, useRef, useState } from 'react'
 import { Animated, type StyleProp, View, type ViewStyle } from 'react-native'
 
@@ -22,13 +21,10 @@ export default function CrossFade({
   primary: CrossFadeLayer
   secondary: CrossFadeLayer
 }) {
-  const progress = useRef(new Animated.Value(collapsed ? 1 : 0)).current
-  const secondaryOpacity = useRef(
-    progress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [1, 0],
-    })
-  ).current
+  const [progress] = useState(() => new Animated.Value(collapsed ? 1 : 0))
+  const [secondaryOpacity] = useState(() =>
+    progress.interpolate({ inputRange: [0, 1], outputRange: [1, 0] })
+  )
   const primaryTransform = useLayerTransform(progress, primary)
   const secondaryTransform = useLayerTransform(progress, secondary)
   const [showPrimary, setShowPrimary] = useState(collapsed)
@@ -89,33 +85,15 @@ export default function CrossFade({
 }
 
 function useLayerTransform(progress: Animated.Value, layer: CrossFadeLayer) {
-  const scale = useRef(
-    layer.scale
-      ? progress.interpolate({ inputRange: [0, 1], outputRange: layer.scale })
-      : undefined
-  ).current
-  const scaleX = useRef(
-    layer.scaleX
-      ? progress.interpolate({
-          inputRange: [0, 1],
-          outputRange: layer.scaleX,
-        })
-      : undefined
-  ).current
-  const scaleY = useRef(
-    layer.scaleY
-      ? progress.interpolate({
-          inputRange: [0, 1],
-          outputRange: layer.scaleY,
-        })
-      : undefined
-  ).current
-
-  if (scaleX && scaleY) {
-    return [{ scaleY }, { scaleX }]
-  }
-  if (scale) {
-    return [{ scale }]
-  }
-  return undefined
+  // Built once from the first layer, like the progress value they follow.
+  const [transform] = useState(() => {
+    const range = (outputRange: ScaleRange) =>
+      progress.interpolate({ inputRange: [0, 1], outputRange })
+    if (layer.scaleX && layer.scaleY) {
+      return [{ scaleY: range(layer.scaleY) }, { scaleX: range(layer.scaleX) }]
+    }
+    if (layer.scale) return [{ scale: range(layer.scale) }]
+    return undefined
+  })
+  return transform
 }
