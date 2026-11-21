@@ -1,5 +1,5 @@
 import { fireEvent, render } from '@testing-library/react-native'
-import { StyleSheet } from 'react-native'
+import { Dimensions, StyleSheet } from 'react-native'
 
 import TimeInputs from '../../Time/TimeInputs'
 import { timeSeparatorWidth } from '../../Time/timeUtils'
@@ -132,3 +132,69 @@ it.each(['keyboard', 'picker'] as const)(
     expect(StyleSheet.flatten(colon.props.style).width).toBe(timeSeparatorWidth)
   }
 )
+
+it('lines up landscape AM and PM with the hour and minute fields', async () => {
+  const saved = Dimensions.get('window')
+  Dimensions.set({
+    screen: { fontScale: 1, height: 400, scale: 1, width: 900 },
+    window: { fontScale: 1, height: 400, scale: 1, width: 900 },
+  })
+  const screen = await render(
+    <TimeInputs
+      focused="hours"
+      hours={6}
+      inputType="picker"
+      is24Hour={false}
+      locale="en"
+      minutes={40}
+      onChange={() => null}
+      onFocusInput={() => null}
+    />
+  )
+  try {
+    type FlatStyle = { gap?: number; width?: number }
+    type StyledNode = {
+      parent?: StyledNode | null
+      props: {
+        accessibilityRole?: string
+        style?: Parameters<typeof StyleSheet.flatten>[0]
+      }
+    }
+    const flatten = (node: StyledNode) =>
+      StyleSheet.flatten(node.props.style) as FlatStyle
+    const widthOf = (node: StyledNode) => {
+      let current: StyledNode | undefined = node
+      while (current) {
+        const width = flatten(current).width
+        if (typeof width === 'number') {
+          return width
+        }
+        current = current.parent ?? undefined
+      }
+      throw new Error('expected a numeric width')
+    }
+
+    const colonWidth = flatten(screen.getByTestId('time-separator')).width
+    const am = screen.getByRole('radio', { name: 'AM' })
+    let groupNode: StyledNode | undefined = am
+    while (groupNode && groupNode.props.accessibilityRole !== 'radiogroup') {
+      groupNode = groupNode.parent ?? undefined
+    }
+    if (!groupNode) {
+      throw new Error('expected a radiogroup')
+    }
+    const group = flatten(groupNode)
+    const hourWidth = widthOf(screen.getByLabelText('Hour'))
+    const minuteWidth = widthOf(screen.getByLabelText('Minute'))
+
+    expect(flatten(am).width).toBe(hourWidth)
+    expect(flatten(screen.getByRole('radio', { name: 'PM' })).width).toBe(
+      minuteWidth
+    )
+    expect(group.gap).toBe(colonWidth)
+    expect(group.width).toBe(hourWidth + (colonWidth ?? 0) + minuteWidth)
+  } finally {
+    screen.unmount()
+    Dimensions.set({ screen: saved, window: saved })
+  }
+})

@@ -53,7 +53,6 @@ export const disabledContentOpacity = 0.38
 export const focusRingOffset = 2
 export const focusRingThickness = 3
 export const focusRingReach = focusRingOffset + focusRingThickness
-export const horizontalPeriodGap = 16
 export const hourTypes: HourTypeMap = {
   am: 'am',
   pm: 'pm',

@@ -8,10 +8,10 @@ import StateLayer from '../shared/StateLayer'
 import FocusRing from './FocusRing'
 import { getTranslation } from '../translations/utils'
 import {
-  horizontalPeriodGap,
   inputTypes,
   type PossibleInputTypes,
   timeSelectorWidth,
+  timeSeparatorWidth,
   useSwitchColors,
 } from './timeUtils'
 
@@ -77,7 +77,7 @@ export default function AmPmSwitcher({
         }}
         radius={isAM ? selectedRadius : periodSelectorRoundRadius}
         selected={isAM}
-        width={isHorizontal ? undefined : buttonSize}
+        width={isHorizontal ? timeSelectorWidth : buttonSize}
       />
       <SwitchButton
         disabled={disabled}
@@ -95,7 +95,7 @@ export default function AmPmSwitcher({
         }}
         radius={isAM ? periodSelectorRoundRadius : selectedRadius}
         selected={!isAM}
-        width={isHorizontal ? undefined : buttonSize}
+        width={isHorizontal ? timeSelectorWidth : buttonSize}
       />
     </View>
   )
@@ -201,9 +201,9 @@ const styles = StyleSheet.create({
   },
   rootHorizontal: {
     flexDirection: 'row',
-    gap: horizontalPeriodGap,
+    gap: timeSeparatorWidth,
     height: horizontalPeriodHeight,
-    width: timeSelectorWidth * 2 + horizontalPeriodGap,
+    width: timeSelectorWidth * 2 + timeSeparatorWidth,
   },
   rootVertical: {
     gap: 8,
