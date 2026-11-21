@@ -13,6 +13,7 @@ import { IconButton, useTheme } from 'react-native-paper'
 import Animated, {
   Extrapolation,
   interpolate,
+  interpolateColor,
   scrollTo as reanimatedScrollTo,
   type SharedValue,
   useAnimatedRef,
@@ -24,7 +25,7 @@ import { scheduleOnRN } from 'react-native-worklets'
 
 import { TimePickerPlacementContext } from '../contexts/TimePickerPlacementContext'
 import StateLayer from '../shared/StateLayer'
-import { useLatest, withAlpha } from '../shared/utils'
+import { themeColor, useLatest, withAlpha } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
 import AmPmSwitcher from './AmPmSwitcher'
 import FocusRing from './FocusRing'
@@ -119,6 +120,7 @@ function ScrollTimePicker({
   onFocusInput,
   onToggleKeyboard,
   showKeyboardToggle = true,
+  visible = true,
 }: {
   disabled?: boolean
   focused: PossibleClockTypes
@@ -131,6 +133,7 @@ function ScrollTimePicker({
   onFocusInput: (type: PossibleClockTypes) => void
   onToggleKeyboard: () => void
   showKeyboardToggle?: boolean
+  visible?: boolean
 }) {
   const theme = useTheme()
   const placement = useContext(TimePickerPlacementContext)
@@ -162,6 +165,7 @@ function ScrollTimePicker({
         testID="time-scroll-hours"
         value={wheelHour}
         values={hourValues}
+        visible={visible}
       />
       <TimeSeparator color={dotColor} height={fieldHeight} />
       <ScrollWheel
@@ -180,6 +184,7 @@ function ScrollTimePicker({
         testID="time-scroll-minutes"
         value={minutes}
         values={minuteValues}
+        visible={visible}
       />
       {!is24Hour ? (
         <View style={styles.period}>
@@ -264,6 +269,7 @@ function ScrollWheel({
   testID,
   value,
   values,
+  visible,
 }: {
   accessibilityLabel: string
   disabled?: boolean
@@ -274,13 +280,14 @@ function ScrollWheel({
   testID: string
   value: number
   values: readonly number[]
+  visible: boolean
 }) {
   const count = values.length
-  const copies = loopCopies(count)
+  const isAndroid = Platform.OS === 'android'
+  const copies = loopCopies(count, isAndroid)
   const centerCopy = Math.floor(copies / 2)
   const valueIndex = values.indexOf(value)
   const centeredIndex = centerCopy * count + Math.max(0, valueIndex)
-  const isAndroid = Platform.OS === 'android'
   const theme = useTheme()
   const [hovered, setHovered] = useState(false)
   const [initialOffset] = useState(() => ({
@@ -310,17 +317,31 @@ function ScrollWheel({
   }
 
   useEffect(() => {
+    if (!visible) return
     const y = centeredIndex * scrollItemHeight
     scrollY.set(y)
     listRef.current?.scrollTo({ animated: false, y })
-  }, [centeredIndex, listRef, scrollY])
+  }, [centeredIndex, listRef, scrollY, visible])
 
   useEffect(() => {
-    setOffscreenCopiesMounted(true)
+    if (typeof requestAnimationFrame === 'function') {
+      const frame = requestAnimationFrame(() => {
+        setOffscreenCopiesMounted(true)
+      })
+      return () => {
+        cancelAnimationFrame?.(frame)
+      }
+    }
+    const timer = setTimeout(() => {
+      setOffscreenCopiesMounted(true)
+    }, 0)
+    return () => {
+      clearTimeout(timer)
+    }
   }, [])
 
   useEffect(() => {
-    if (disabled || !focused || Platform.OS !== 'web') return
+    if (disabled || !focused || !visible || Platform.OS !== 'web') return
     const target = globalThis.window
     if (!target?.addEventListener || !target.removeEventListener) return
     const onKeyDown = (event: KeyboardEvent) => {
@@ -334,7 +355,7 @@ function ScrollWheel({
     }
     target.addEventListener('keydown', onKeyDown)
     return () => target.removeEventListener('keydown', onKeyDown)
-  }, [disabled, focused, onChangeRef, valueRef, valuesRef])
+  }, [disabled, focused, onChangeRef, valueRef, valuesRef, visible])
 
   const pendingSettle = useRef(false)
   const settleTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -369,6 +390,12 @@ function ScrollWheel({
       clearSettleTimer()
       setCoasting(false)
     },
+    reset: () => {
+      pendingSettle.current = false
+      clearSettleTimer()
+      setCoasting(false)
+      draggingValue.set(false)
+    },
     coast: () => {
       pendingSettle.current = false
       clearSettleTimer()
@@ -401,6 +428,10 @@ function ScrollWheel({
       }, 32)
     },
   })
+  useEffect(() => {
+    if (!visible) onGestureJs.current.reset()
+  }, [onGestureJs, visible])
+
   const [dispatchWrap] = useState(() => (shifted: number) => {
     onWrapJs.current(shifted)
   })
@@ -474,11 +505,11 @@ function ScrollWheel({
   })
 
   useEffect(() => {
-    if (disabled || Platform.OS !== 'web') return
+    if (disabled || !visible || Platform.OS !== 'web') return
     const node = asWheelTarget(listRef.current)
     if (!node) return
     return bindTrackpadWheel(node, gestureRef)
-  }, [disabled, gestureRef, listRef])
+  }, [disabled, gestureRef, listRef, visible])
 
   const step = (delta: number) => {
     if (disabled) return
@@ -494,10 +525,10 @@ function ScrollWheel({
   ]
   const restColor = disabled
     ? withAlpha(theme.colors.onSurface, disabledContentOpacity)
-    : theme.colors.outline
+    : themeColor(theme.colors.outline)
   const activeColor = disabled
     ? withAlpha(theme.colors.onSurface, disabledContentOpacity)
-    : theme.colors.onSurface
+    : themeColor(theme.colors.onSurface)
 
   return (
     <View style={[styles.wheelFrame, { height: fieldHeight }]}>
@@ -609,12 +640,9 @@ function ScrollWheel({
   )
 }
 
-// Each row stacks the two M3 text styles, the emphasized display large for
-// the centered value and display medium for the rest, and cross-fades them
-// from the scroll offset on the UI thread. At rest exactly one shows, so the
-// wheel looks as it did when the active row was React state. These are
-// React Native texts: Paper's Text exposes no host view to Reanimated, and
-// the row sets every font and color value Paper's Text would.
+// Each row animates one React Native text node on the UI thread from the
+// resting size/color toward the centered emphasized display large style,
+// keeping one Reanimated mapper per row instead of two stacked texts.
 const WheelRow = memo(function WheelRow({
   activeColor,
   activeFont,
@@ -627,47 +655,42 @@ const WheelRow = memo(function WheelRow({
   scrollY,
   testID,
 }: {
-  activeColor: ColorValue
+  activeColor: string
   activeFont: TextStyle
   disabled?: boolean
   label: string
   listIndex: number
   onPress?: () => void
-  restColor: ColorValue
+  restColor: string
   restFont: TextStyle
   scrollY: SharedValue<number>
   testID?: string
 }) {
-  const activeStyle = useAnimatedStyle(() => ({
-    opacity: rowEmphasis(scrollY.value, listIndex),
-  }))
-  const restStyle = useAnimatedStyle(() => ({
-    opacity: 1 - rowEmphasis(scrollY.value, listIndex),
-  }))
+  const restScale = (restFont.fontSize ?? 45) / (activeFont.fontSize ?? 57)
+  const rowStyle = useAnimatedStyle(() => {
+    const emphasis = rowEmphasis(scrollY.value, listIndex)
+    return {
+      color: interpolateColor(emphasis, [0, 1], [restColor, activeColor]),
+      transform: [
+        {
+          scale: interpolate(
+            emphasis,
+            [0, 1],
+            [restScale, 1],
+            Extrapolation.CLAMP
+          ),
+        },
+      ],
+    }
+  })
   const text = (
-    <>
-      <Animated.Text
-        maxFontSizeMultiplier={1.2}
-        selectable={false}
-        style={[restFont, styles.value, { color: restColor }, restStyle]}
-      >
-        {label}
-      </Animated.Text>
-      <View pointerEvents="none" style={styles.activeValue}>
-        <Animated.Text
-          maxFontSizeMultiplier={1.2}
-          selectable={false}
-          style={[
-            activeFont,
-            styles.value,
-            { color: activeColor },
-            activeStyle,
-          ]}
-        >
-          {label}
-        </Animated.Text>
-      </View>
-    </>
+    <Animated.Text
+      maxFontSizeMultiplier={1.2}
+      selectable={false}
+      style={[activeFont, styles.value, rowStyle]}
+    >
+      {label}
+    </Animated.Text>
   )
   if (!onPress) return <View style={styles.item}>{text}</View>
   return (
@@ -838,14 +861,14 @@ function wheelRows({
   testID,
   values,
 }: {
-  activeColor: ColorValue
+  activeColor: string
   activeFont: TextStyle
   centeredIndex: number
   copies: number
   count: number
   disabled?: boolean
   offscreenCopiesMounted: boolean
-  restColor: ColorValue
+  restColor: string
   restFont: TextStyle
   scrollY: SharedValue<number>
   step: (delta: number) => void
@@ -853,13 +876,17 @@ function wheelRows({
   values: readonly number[]
 }) {
   const centerCopy = Math.floor(copies / 2)
-  const startCopy = offscreenCopiesMounted ? 0 : centerCopy
-  const copyCount = offscreenCopiesMounted ? copies : 1
-  const cycleHeight = count * scrollItemHeight
-  const topHeight = startCopy * cycleHeight
-  const bottomHeight = (copies - startCopy - copyCount) * cycleHeight
-  const rows = Array.from({ length: copyCount * count }, (_, offset) => {
-    const listIndex = startCopy * count + offset
+  const totalRows = copies * count
+  const startIndex = offscreenCopiesMounted
+    ? 0
+    : Math.max(0, centerCopy * count - 1)
+  const endIndex = offscreenCopiesMounted
+    ? totalRows
+    : Math.min(totalRows, (centerCopy + 1) * count + 1)
+  const topHeight = startIndex * scrollItemHeight
+  const bottomHeight = (totalRows - endIndex) * scrollItemHeight
+  const rows = Array.from({ length: endIndex - startIndex }, (_, offset) => {
+    const listIndex = startIndex + offset
     const copy = Math.floor(listIndex / count)
     const item = values[listIndex - copy * count]
     const neighbor =
@@ -964,7 +991,7 @@ export function wheelShift(
   } else if (dragging) {
     return y
   } else {
-    const margin = scrollItemHeight * 30
+    const margin = Math.min(scrollItemHeight * 30, cycle / 2)
     const limit = (copies * count - 1) * scrollItemHeight - margin
     if (y >= margin && y <= limit) return y
   }
@@ -972,7 +999,13 @@ export function wheelShift(
   return center + within
 }
 
-export function loopCopies(count: number) {
+export function loopCopies(
+  count: number,
+  isAndroid = Platform.OS === 'android'
+) {
+  if (!isAndroid) {
+    return count < 24 ? 5 : 3
+  }
   const cycle = count * scrollItemHeight
   const side = Math.max(2, Math.ceil(minLoopSideRoom / cycle))
   return side * 2 + 1
@@ -1013,11 +1046,6 @@ function wrappedWheelOffset(offset: number, count: number, copies: number) {
 }
 
 const styles = StyleSheet.create({
-  activeValue: {
-    ...StyleSheet.absoluteFill,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   item: {
     alignItems: 'center',
     height: scrollItemHeight,

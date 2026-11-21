@@ -66,6 +66,9 @@ function TimePicker({
   const [localInputType, setLocalInputType] = useState(inputType)
   const is24Hour = resolve24HourClock(use24HourClock, locale)
   const activeInputType = onToggleKeyboard ? inputType : localInputType
+  const [hasShownScroll, setHasShownScroll] = useState(
+    () => activeInputType === inputTypes.scroll
+  )
 
   const isLandscape = timePickerUsesLandscape(
     dimensions.width,
@@ -80,6 +83,14 @@ function TimePicker({
   useEffect(() => {
     setLocalInputType(inputType)
   }, [inputType])
+
+  useEffect(() => {
+    if (activeInputType === inputTypes.scroll) {
+      setHasShownScroll(true)
+    } else if (activeInputType === inputTypes.picker) {
+      setHasShownScroll(false)
+    }
+  }, [activeInputType])
 
   const clockWidth =
     activeInputType === inputTypes.picker
@@ -98,30 +109,6 @@ function TimePicker({
     }
     setLocalInputType((current) =>
       current === inputTypes.keyboard ? inputType : inputTypes.keyboard
-    )
-  }
-
-  if (activeInputType === inputTypes.scroll) {
-    return (
-      <DisplayModeContext.Provider value={displayModeValue}>
-        <ScrollTimePicker
-          disabled={disabled}
-          focused={focused}
-          hours={hours}
-          is24Hour={is24Hour}
-          keyboardIcon={keyboardIcon}
-          locale={locale}
-          minutes={minutes}
-          onChange={onChange}
-          onFocusInput={onFocusInput}
-          onToggleKeyboard={toggleKeyboard}
-          // The modal keeps its keyboard toggle bottom-left in the action
-          // row (M3), so only inline pickers show one beside the wheels.
-          showKeyboardToggle={
-            placement === 'inline' && (!is24Hour || !onToggleKeyboard)
-          }
-        />
-      </DisplayModeContext.Provider>
     )
   }
 
@@ -163,64 +150,102 @@ function TimePicker({
     />
   )
 
+  const showingScroll = activeInputType === inputTypes.scroll
+  const keepScrollMounted =
+    showingScroll || (hasShownScroll && activeInputType === inputTypes.keyboard)
+
   return (
     <DisplayModeContext.Provider value={displayModeValue}>
-      <View
-        style={
-          isLandscape && activeInputType === inputTypes.picker
-            ? [styles.rootLandscape, { width: inputsWidth + clockWidth }]
-            : styles.rootPortrait
-        }
-      >
-        {showReturnToPicker ? (
-          <View style={styles.inputColumn}>
-            {fields}
-            <IconButton
-              accessibilityLabel={getTranslation(
-                locale,
-                inputType === inputTypes.scroll
-                  ? 'toggleScroll'
-                  : 'toggleClock',
-                inputType === inputTypes.scroll
-                  ? 'Toggle scroll picker'
-                  : 'Toggle dial picker'
-              )}
-              disabled={disabled}
-              icon={inputType === inputTypes.scroll ? scrollIcon : clockIcon}
-              iconColor={theme.colors.onSurfaceVariant}
-              onPress={toggleKeyboard}
-              size={24}
-              style={styles.inputTypeToggle}
-            />
-          </View>
-        ) : (
-          fields
-        )}
-        {activeInputType === inputTypes.picker ? (
-          <View
-            style={[
-              styles.clockContainer,
-              !isLandscape && styles.clockSideInset,
-              isLandscape && styles.clockContainerLandscape,
-            ]}
-          >
-            <AnalogClock
-              disabled={disabled}
-              focused={focused}
-              hours={toHourInputFormat(hours, is24Hour)}
-              is24Hour={is24Hour}
-              locale={locale}
-              minutes={minutes}
-              onChange={onInnerChange}
-            />
-          </View>
-        ) : null}
-      </View>
+      {keepScrollMounted ? (
+        <View
+          accessibilityElementsHidden={!showingScroll}
+          importantForAccessibility={
+            showingScroll ? 'auto' : 'no-hide-descendants'
+          }
+          pointerEvents={showingScroll ? 'auto' : 'none'}
+          style={showingScroll ? undefined : styles.hiddenScroll}
+        >
+          <ScrollTimePicker
+            disabled={disabled}
+            focused={focused}
+            hours={hours}
+            is24Hour={is24Hour}
+            keyboardIcon={keyboardIcon}
+            locale={locale}
+            minutes={minutes}
+            onChange={onChange}
+            onFocusInput={onFocusInput}
+            onToggleKeyboard={toggleKeyboard}
+            // The modal keeps its keyboard toggle bottom-left in the action
+            // row (M3), so only inline pickers show one beside the wheels.
+            showKeyboardToggle={
+              placement === 'inline' && (!is24Hour || !onToggleKeyboard)
+            }
+            visible={showingScroll}
+          />
+        </View>
+      ) : null}
+      {!showingScroll ? (
+        <View
+          style={
+            isLandscape && activeInputType === inputTypes.picker
+              ? [styles.rootLandscape, { width: inputsWidth + clockWidth }]
+              : styles.rootPortrait
+          }
+        >
+          {showReturnToPicker ? (
+            <View style={styles.inputColumn}>
+              {fields}
+              <IconButton
+                accessibilityLabel={getTranslation(
+                  locale,
+                  inputType === inputTypes.scroll
+                    ? 'toggleScroll'
+                    : 'toggleClock',
+                  inputType === inputTypes.scroll
+                    ? 'Toggle scroll picker'
+                    : 'Toggle dial picker'
+                )}
+                disabled={disabled}
+                icon={inputType === inputTypes.scroll ? scrollIcon : clockIcon}
+                iconColor={theme.colors.onSurfaceVariant}
+                onPress={toggleKeyboard}
+                size={24}
+                style={styles.inputTypeToggle}
+              />
+            </View>
+          ) : (
+            fields
+          )}
+          {activeInputType === inputTypes.picker ? (
+            <View
+              style={[
+                styles.clockContainer,
+                !isLandscape && styles.clockSideInset,
+                isLandscape && styles.clockContainerLandscape,
+              ]}
+            >
+              <AnalogClock
+                disabled={disabled}
+                focused={focused}
+                hours={toHourInputFormat(hours, is24Hour)}
+                is24Hour={is24Hour}
+                locale={locale}
+                minutes={minutes}
+                onChange={onInnerChange}
+              />
+            </View>
+          ) : null}
+        </View>
+      ) : null}
     </DisplayModeContext.Provider>
   )
 }
 
 const styles = StyleSheet.create({
+  hiddenScroll: {
+    display: 'none',
+  },
   inputColumn: {
     alignItems: 'flex-start',
   },

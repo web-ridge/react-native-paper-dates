@@ -827,29 +827,63 @@ describe('time picker modal', () => {
     expect(onConfirm).not.toHaveBeenCalled()
   })
 
-  it('switches an inline scroll picker to the keyboard and back', async () => {
-    const picker = await render(
-      <TimePicker
-        focused="hours"
-        hours={9}
-        inputType="scroll"
-        locale="en"
-        minutes={45}
-        onChange={jest.fn()}
-        onFocusInput={jest.fn()}
-        use24HourClock={false}
-      />
-    )
+  it('switches an inline scroll picker to the keyboard and back without remounting', async () => {
+    function Controlled() {
+      const [hours, setHours] = useState(9)
+      const [minutes, setMinutes] = useState(45)
+      return (
+        <TimePicker
+          focused="hours"
+          hours={hours}
+          inputType="scroll"
+          locale="en"
+          minutes={minutes}
+          onChange={(next) => {
+            setHours(next.hours)
+            setMinutes(next.minutes)
+          }}
+          onFocusInput={jest.fn()}
+          use24HourClock={false}
+        />
+      )
+    }
+
+    const picker = await render(<Controlled />)
+    const wheelBefore = picker.getByTestId('time-scroll-hours', {
+      includeHiddenElements: true,
+    })
+
     await fireEvent.press(picker.getByLabelText('Toggle input picker'))
     expect(picker.getByLabelText('Hour')).toBeTruthy()
-    await fireEvent.press(picker.getByLabelText('Toggle scroll picker'))
+    // The scroll wheels stay mounted while hidden so toggling back is instant,
+    // and stay excluded from the accessibility tree while in keyboard mode.
+    expect(picker.queryByTestId('time-scroll-hours')).toBeNull()
     expect(
       picker.getByTestId('time-scroll-hours', { includeHiddenElements: true })
-    ).toBeTruthy()
-    expect(picker.queryByLabelText('Hour')).toBeNull()
+    ).toBe(wheelBefore)
+
+    await fireEvent.changeText(picker.getByLabelText('Hour'), '11')
+
+    const scrollTo = jest
+      .spyOn(ScrollView.prototype, 'scrollTo')
+      .mockImplementation(() => {})
+    try {
+      await fireEvent.press(picker.getByLabelText('Toggle scroll picker'))
+      expect(
+        picker.getByTestId('time-scroll-hours', { includeHiddenElements: true })
+      ).toBe(wheelBefore)
+      expect(picker.queryByLabelText('Hour')).toBeNull()
+      const expectedHourIndex = Math.floor(loopCopies(12) / 2) * 12 + 10
+      expect(scrollTo).toHaveBeenCalledWith({
+        animated: false,
+        y: expectedHourIndex * scrollItemHeight,
+      })
+    } finally {
+      scrollTo.mockRestore()
+    }
   })
 
-  it('toggles a scroll modal back to the wheels', async () => {
+  it('toggles a scroll modal back to the wheels without remounting', async () => {
     const modal = await render(
       <TimePickerModal
         defaultInputType="scroll"
@@ -862,12 +896,16 @@ describe('time picker modal', () => {
         visible
       />
     )
+    const wheelBefore = modal.getByTestId('time-scroll-hours', {
+      includeHiddenElements: true,
+    })
     await fireEvent.press(modal.getByLabelText('Toggle input picker'))
     expect(modal.getByLabelText('Hour')).toBeTruthy()
+    expect(modal.queryByTestId('time-scroll-hours')).toBeNull()
     await fireEvent.press(modal.getByLabelText('Toggle scroll picker'))
     expect(
       modal.getByTestId('time-scroll-hours', { includeHiddenElements: true })
-    ).toBeTruthy()
+    ).toBe(wheelBefore)
     expect(modal.queryByLabelText('Hour')).toBeNull()
   })
 
@@ -988,21 +1026,25 @@ describe('scroll time picker', () => {
     onChange = jest.fn(),
     onFocusInput = jest.fn(),
   } = {}) {
+    const view = await render(
+      <TimePicker
+        focused={focused}
+        hours={hours}
+        inputType="scroll"
+        locale="en"
+        minutes={minutes}
+        onChange={onChange}
+        onFocusInput={onFocusInput}
+        use24HourClock={is24Hour}
+      />
+    )
+    await act(() => {
+      jest.advanceTimersByTime(16)
+    })
     return {
       onChange,
       onFocusInput,
-      ...(await render(
-        <TimePicker
-          focused={focused}
-          hours={hours}
-          inputType="scroll"
-          locale="en"
-          minutes={minutes}
-          onChange={onChange}
-          onFocusInput={onFocusInput}
-          use24HourClock={is24Hour}
-        />
-      )),
+      ...view,
     }
   }
 
@@ -1031,23 +1073,23 @@ describe('scroll time picker', () => {
     await flushWheel()
   }
 
-  // The latest style Reanimated wrote for a node in Jest.
-  function animatedOpacity(node: { props: object }) {
+  // The latest animated style Reanimated wrote for a wheel row in Jest.
+  function animatedRowStyle(node: { props: object }) {
     const animated = (
-      node.props as { jestAnimatedStyle?: { value?: { opacity?: number } } }
+      node.props as {
+        jestAnimatedStyle?: {
+          value?: { color?: string; transform?: { scale?: number }[] }
+        }
+      }
     ).jestAnimatedStyle
-    return animated?.value?.opacity
+    return animated?.value
   }
 
-  // Each row stacks its centered and resting text, so one row shows a label
-  // twice.
   function rowsShowing(
     picker: { queryAllByText: (text: string, options: object) => unknown[] },
     label: string
   ) {
-    return (
-      picker.queryAllByText(label, { includeHiddenElements: true }).length / 2
-    )
+    return picker.queryAllByText(label, { includeHiddenElements: true }).length
   }
 
   it('steps hours and minutes from neighbors, actions, and the wheels', async () => {
@@ -1260,9 +1302,12 @@ describe('scroll time picker', () => {
       expect(home - cycle).toBeGreaterThanOrEqual(3072)
       expect(maxY - (home + cycle)).toBeGreaterThanOrEqual(3072)
     }
-    expect(loopCopies(12)).toBe(11)
-    expect(loopCopies(24)).toBe(7)
-    expect(loopCopies(60)).toBe(5)
+    expect(loopCopies(12, true)).toBe(11)
+    expect(loopCopies(24, true)).toBe(7)
+    expect(loopCopies(60, true)).toBe(5)
+    expect(loopCopies(12, false)).toBe(5)
+    expect(loopCopies(24, false)).toBe(3)
+    expect(loopCopies(60, false)).toBe(3)
   })
 
   it('keeps wrapping an Android wheel scroll that arrives without a drag', async () => {
@@ -1339,10 +1384,10 @@ describe('scroll time picker', () => {
     const home = minutes.props.contentOffset.y as number
     const centerCopy = Math.floor(loopCopies(60) / 2)
     // Scoped to the minutes wheel; the hours wheel has an 02 row too.
-    const texts = (label: string) =>
-      within(minutes)
-        .getAllByText(label, { includeHiddenElements: true })
-        .slice(centerCopy * 2, centerCopy * 2 + 2)
+    const rowText = (label: string) =>
+      within(minutes).getAllByText(label, { includeHiddenElements: true })[
+        centerCopy
+      ]
 
     await fireEvent(minutes, 'scrollBeginDrag', scrollEvent(home))
     await scrollWheel(minutes, home + scrollItemHeight)
@@ -1351,14 +1396,14 @@ describe('scroll time picker', () => {
       jest.advanceTimersByTime(32)
     })
 
-    // The emphasized text follows the offset on the UI thread: the row now
-    // in the center shows it and the starting row does not.
-    const [restTwo, activeTwo] = texts('02')
-    const [restZero, activeZero] = texts('00')
-    expect(animatedOpacity(activeTwo)).toBe(1)
-    expect(animatedOpacity(restTwo)).toBe(0)
-    expect(animatedOpacity(activeZero)).toBe(0)
-    expect(animatedOpacity(restZero)).toBe(1)
+    // The emphasized style follows the offset on the UI thread: the row now
+    // in the center scales to 1 with active color and the starting row shrinks
+    // back to rest size/color.
+    const twoStyle = animatedRowStyle(rowText('02'))
+    const zeroStyle = animatedRowStyle(rowText('00'))
+    expect(twoStyle?.transform?.[0]?.scale).toBe(1)
+    expect(zeroStyle?.transform?.[0]?.scale).toBeLessThan(1)
+    expect(twoStyle?.color).not.toBe(zeroStyle?.color)
     // Crossing rows is not a selection.
     expect(picker.onChange).not.toHaveBeenCalled()
 
