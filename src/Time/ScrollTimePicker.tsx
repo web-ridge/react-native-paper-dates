@@ -110,9 +110,6 @@ type WheelTarget = {
   style?: { overscrollBehavior?: string }
 }
 
-// Extra Android scroll room on each side of the mounted rows. A burst of
-// swipes that never hits a frame cannot wrap, so the wheel must absorb it
-// without reaching an end.
 const androidRunway = 250000
 const ancestorHolds = new Map<ScrollChainNode, AncestorHold>()
 const hourValues12 = Array.from({ length: 12 }, (_, hour) => hour + 1)
@@ -309,8 +306,6 @@ function ScrollWheel({
     y: centeredIndex * scrollItemHeight,
   }))
   const [pressed, setPressed] = useState(false)
-  // Mount the rest of the loop after the first paint so toggling to the
-  // wheels is not blocked on hundreds of rows.
   const [offscreenCopiesMounted, setOffscreenCopiesMounted] = useState(false)
   const scrollY = useSharedValue(centeredIndex * scrollItemHeight)
   const draggingValue = useSharedValue(false)
@@ -343,8 +338,6 @@ function ScrollWheel({
     listRef.current?.scrollTo({ animated: false, y })
   }
 
-  // contentOffset is ignored on web, and replacing the first-paint rows can
-  // reset scrollTop to 0.
   useLayoutEffect(() => {
     if (!visible) return
     if (draggingRef.current || touchingRef.current || draggingValue.get()) {
@@ -470,8 +463,6 @@ function ScrollWheel({
       }
       selectIndex(Math.round(y / scrollItemHeight))
     },
-    // Wait briefly so a hard Android fling is not stopped by scrollTo
-    // before momentum starts.
     release: (y: number, epoch?: number) => {
       if (pendingSettle.current) return
       clearSettleTimer()
@@ -758,8 +749,6 @@ const WheelRow = memo(function WheelRow({
   testID?: string
 }) {
   const restScale = (restFont.fontSize ?? 45) / (activeFont.fontSize ?? 57)
-  // A style that returns a new transform is always treated as changed, so
-  // derive emphasis and restyle only when it changes.
   const emphasisValue = useDerivedValue(() => {
     const y = scrollY.value
     return rowEmphasis(y - blockOffset(y, count, copies, rendered), listIndex)
@@ -1109,9 +1098,6 @@ export function rowEmphasis(scrollY: number, listIndex: number) {
   return interpolate(distance, [0.25, 0.75], [1, 0], Extrapolation.CLAMP)
 }
 
-// Android never moves mid-scroll: a scrollTo inside a touch move is handed
-// to the parent, and a deferred one may not run in time. Settling recenters
-// instead.
 export function wheelShift(
   y: number,
   count: number,

@@ -176,7 +176,8 @@ function TimePicker({
             onChange={onChange}
             onFocusInput={onFocusInput}
             onToggleKeyboard={toggleKeyboard}
-            // The modal keeps its keyboard toggle in the action row (M3).
+            // The modal keeps its keyboard toggle bottom-left in the action
+            // row (M3), so only inline pickers show one beside the wheels.
             showKeyboardToggle={
               placement === 'inline' && (!is24Hour || !onToggleKeyboard)
             }

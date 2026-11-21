@@ -116,7 +116,6 @@ export function TimePickerModal({
     }
   }, [visible])
 
-  // Fade in place on native, like DatePickerModalInput and Paper Dialog.
   const animation = useModalAnimation(
     animationType,
     Platform.OS === 'web' ? 'none' : 'fade'

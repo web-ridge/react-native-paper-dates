@@ -33,9 +33,6 @@ function Ring({ color, radius }: { color?: ColorValue; radius: number }) {
   )
 }
 
-// The ring sits `focusRingOffset` outside the control. On web a CSS border
-// flattens the inner corner of the stroke; a box-shadow follows the inner
-// radius evenly and the spread adds the stroke.
 export function focusRingLayout(radius: number, color: ColorValue): ViewStyle {
   if (Platform.OS === 'web') {
     return {

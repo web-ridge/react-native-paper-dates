@@ -59,9 +59,6 @@ function partOf(
   return formatter.formatToParts(date).find((part) => part.type === type)?.value
 }
 
-// Formats each month once and swaps in cached weekday and day strings.
-// Locales that are not Gregorian, or whose parts do not rebuild the formatted
-// string exactly, fall back to one format call per day.
 export function formatDayLabel(
   locale: string | undefined,
   year: number,
@@ -92,7 +89,6 @@ export function formatDayLabel(
   const weekday = date.getDay()
   let weekdayName = cache.weekdays.get(weekday)
   if (weekdayName === undefined) {
-    // 7 January 2024 is a Sunday, so day `n` of that week has getDay() === n.
     weekdayName = partOf(formatter, new Date(2024, 0, 7 + weekday), 'weekday')
     if (weekdayName === undefined) return formatter.format(date)
     cache.weekdays.set(weekday, weekdayName)
@@ -126,7 +122,6 @@ function splitDayPattern(formatter: Intl.DateTimeFormat, date: Date) {
   const count = (type: Intl.DateTimeFormatPartTypes) =>
     parts.filter((part) => part.type === type).length
   if (count('weekday') !== 1 || count('day') !== 1) return null
-  // Some engines put a different space in formatToParts than in format.
   const joined = parts.map((part) => part.value).join('')
   return joined === formatter.format(date) ? parts : null
 }

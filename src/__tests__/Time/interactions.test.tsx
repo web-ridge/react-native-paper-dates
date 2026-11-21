@@ -1055,8 +1055,6 @@ describe('scroll time picker', () => {
     }
   }
 
-  // The wheel's scroll handler is a worklet. It hands work to JS with
-  // scheduleOnRN, which Jest runs as a (fake-timer) microtask.
   async function flushWheel() {
     await act(() => {
       jest.runAllTicks()
@@ -2074,8 +2072,6 @@ describe('scroll time picker', () => {
     const nodes = ['time-scroll-hours', 'time-scroll-minutes'].map((id) => {
       const bound: ((event: WheelEvent) => void)[] = []
       const node = {
-        // Jest renders Reanimated's native ScrollView, which asks the
-        // scrollable node for a view tag when its scroll handler is rebound.
         __nativeTag: 1,
         addEventListener: (
           type: string,
