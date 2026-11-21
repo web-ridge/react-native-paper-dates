@@ -1312,6 +1312,44 @@ describe('scroll time picker', () => {
     expect(loopCopies(60, false)).toBe(3)
   })
 
+  it('leaves rows away from the center alone while an Android wheel scrolls', async () => {
+    Platform.OS = 'android'
+    const worklet = globalThis as { _WORKLET?: boolean }
+    const previous = worklet._WORKLET
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
+    const picker = await renderScroll({ hours: 1, minutes: 0 })
+    try {
+      const minutes = picker.getByTestId('time-scroll-minutes', {
+        includeHiddenElements: true,
+      })
+      const home = minutes.props.contentOffset.y as number
+      const middle = (label: string) =>
+        within(minutes).getAllByText(label, { includeHiddenElements: true })[
+          Math.floor(loopCopies(60) / 2)
+        ]
+      const farStyle = animatedRowStyle(middle('30'))
+      await fireEvent(minutes, 'scrollBeginDrag', scrollEvent(home))
+      worklet._WORKLET = true
+      for (const rows of [1, 2, 3]) {
+        await fireEvent.scroll(
+          minutes,
+          scrollEvent(home + rows * scrollItemHeight)
+        )
+      }
+      worklet._WORKLET = previous
+      await act(() => {
+        jest.advanceTimersByTime(32)
+      })
+      // The row now in the center restyles; a row half a wheel away is not
+      // written again, so a scroll costs the rows it moves, not every row.
+      expect(animatedRowStyle(middle('03'))?.transform?.[0]?.scale).toBe(1)
+      expect(animatedRowStyle(middle('30'))).toBe(farStyle)
+    } finally {
+      worklet._WORKLET = previous
+      warn.mockRestore()
+    }
+  })
+
   it('keeps the mounted Android rows under the viewport anywhere in the range', async () => {
     Platform.OS = 'android'
     const worklet = globalThis as { _WORKLET?: boolean }

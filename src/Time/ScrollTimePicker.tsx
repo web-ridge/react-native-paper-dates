@@ -26,6 +26,7 @@ import Animated, {
   useAnimatedRef,
   useAnimatedScrollHandler,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
 } from 'react-native-reanimated'
 import { scheduleOnRN } from 'react-native-worklets'
@@ -755,12 +756,17 @@ const WheelRow = memo(function WheelRow({
   testID?: string
 }) {
   const restScale = (restFont.fontSize ?? 45) / (activeFont.fontSize ?? 57)
-  const rowStyle = useAnimatedStyle(() => {
+  // Reanimated rewrites a style whenever it returns a new transform array,
+  // which a style built from scrollY does on every scroll event. With every
+  // mounted row doing that (300 on the Android minutes wheel), a scroll event
+  // cost the UI thread more than a frame. Only restyle a row when its
+  // emphasis changes, which is just the rows passing the center.
+  const emphasisValue = useDerivedValue(() => {
     const y = scrollY.value
-    const emphasis = rowEmphasis(
-      y - blockOffset(y, count, copies, rendered),
-      listIndex
-    )
+    return rowEmphasis(y - blockOffset(y, count, copies, rendered), listIndex)
+  })
+  const rowStyle = useAnimatedStyle(() => {
+    const emphasis = emphasisValue.value
     return {
       color: interpolateColor(emphasis, [0, 1], [restColor, activeColor]),
       transform: [
