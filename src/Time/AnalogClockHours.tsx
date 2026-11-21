@@ -51,6 +51,7 @@ function AnalogClockHours({
           <ClockNumber
             key={index}
             accessibilityLabel={hourOf(hourValue, total)}
+            color={selected ? selectedColor : unselectedColor}
             disabled={disabled}
             hovered={hoveredHour === hourValue}
             left={left}
@@ -58,7 +59,6 @@ function AnalogClockHours({
             onPress={onPress}
             pressValue={disabled ? undefined : hourValue}
             selected={selected}
-            color={selected ? selectedColor : unselectedColor}
             top={top}
             value={is24Hour && label === 12 ? '00' : label}
           />
@@ -73,6 +73,7 @@ function AnalogClockHours({
               <ClockNumber
                 key={index}
                 accessibilityLabel={hourOf(hourValue, total)}
+                color={selected ? selectedColor : unselectedColor}
                 disabled={disabled}
                 hovered={hoveredHour === hourValue}
                 left={left}
@@ -80,7 +81,6 @@ function AnalogClockHours({
                 onPress={onPress}
                 pressValue={disabled ? undefined : hourValue}
                 selected={selected}
-                color={selected ? selectedColor : unselectedColor}
                 top={top}
                 value={hour === 24 ? '12' : hour}
               />

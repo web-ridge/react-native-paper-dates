@@ -239,6 +239,17 @@ function TimePicker({
 }
 
 const styles = StyleSheet.create({
+  clockContainer: {
+    paddingTop: 12,
+  },
+  clockContainerLandscape: {
+    paddingLeft: 52,
+    paddingRight: 0,
+    paddingTop: 0,
+  },
+  clockSideInset: {
+    paddingHorizontal: 12,
+  },
   hiddenScroll: {
     display: 'none',
   },
@@ -248,17 +259,6 @@ const styles = StyleSheet.create({
   inputTypeToggle: {
     margin: 0,
     marginTop: 8,
-  },
-  clockContainer: {
-    paddingTop: 12,
-  },
-  clockSideInset: {
-    paddingHorizontal: 12,
-  },
-  clockContainerLandscape: {
-    paddingLeft: 52,
-    paddingRight: 0,
-    paddingTop: 0,
   },
   rootLandscape: {
     alignItems: 'center',

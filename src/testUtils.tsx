@@ -134,6 +134,41 @@ export function installDateKeyListener() {
   }
 }
 
+export function dayFocused(
+  screen: {
+    getAllByTestId: (testId: string) => Array<{
+      children?: Array<object | string>
+      props?: { pointerEvents?: string }
+    }>
+  },
+  testId: string
+) {
+  const focused = (node: {
+    children?: Array<object | string>
+    props?: { pointerEvents?: string }
+  }): boolean => {
+    if (node.props?.pointerEvents === 'none') return true
+    return (node.children ?? []).some(
+      (child) => typeof child !== 'string' && focused(child)
+    )
+  }
+  return screen.getAllByTestId(testId).some((day) => focused(day))
+}
+
+export async function pressLabel(
+  screen: { container: { queryAll: Function } },
+  label: string
+) {
+  const node = screen.container.queryAll(
+    (item: { props: { accessibilityLabel?: string } }) =>
+      item.props.accessibilityLabel === label
+  )[0]
+  if (!node) {
+    throw new Error(`missing ${label}`)
+  }
+  await pressNode(node)
+}
+
 export function walkFibers(
   fiber: Fiber | null | undefined,
   visit: (fiber: Fiber) => void

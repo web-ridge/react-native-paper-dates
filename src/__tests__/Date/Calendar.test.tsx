@@ -2,7 +2,12 @@ import { render } from '@testing-library/react-native'
 import { Dimensions } from 'react-native'
 
 import Calendar from '../../Date/Calendar'
-import { installDateKeyListener, pressNode, pressTestId } from '../../testUtils'
+import {
+  dayFocused,
+  installDateKeyListener,
+  pressLabel,
+  pressTestId,
+} from '../../testUtils'
 
 it('shows one month without a pager', async () => {
   const screen = await render(
@@ -81,41 +86,6 @@ it('does not complete a range on the same day', async () => {
     startDate: start,
   })
 })
-
-function dayFocused(
-  screen: {
-    getAllByTestId: (testId: string) => Array<{
-      children?: Array<object | string>
-      props?: { pointerEvents?: string }
-    }>
-  },
-  testId: string
-) {
-  const focused = (node: {
-    children?: Array<object | string>
-    props?: { pointerEvents?: string }
-  }): boolean => {
-    if (node.props?.pointerEvents === 'none') return true
-    return (node.children ?? []).some(
-      (child) => typeof child !== 'string' && focused(child)
-    )
-  }
-  return screen.getAllByTestId(testId).some((day) => focused(day))
-}
-
-async function pressLabel(
-  screen: { container: { queryAll: Function } },
-  label: string
-) {
-  const node = screen.container.queryAll(
-    (item: { props: { accessibilityLabel?: string } }) =>
-      item.props.accessibilityLabel === label
-  )[0]
-  if (!node) {
-    throw new Error(`missing ${label}`)
-  }
-  await pressNode(node)
-}
 
 it('moves the focused day from the keyboard and clamps a short month', async () => {
   const keys = installDateKeyListener()

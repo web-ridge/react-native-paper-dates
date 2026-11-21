@@ -1,8 +1,8 @@
 import { useRef } from 'react'
 import {
+  type ColorValue,
   Platform,
   useWindowDimensions,
-  type ColorValue,
   type ViewStyle,
 } from 'react-native'
 import { type Theme, useTheme } from 'react-native-paper'

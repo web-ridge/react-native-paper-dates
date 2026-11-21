@@ -1,6 +1,6 @@
 import {
-  memo,
   type CSSProperties,
+  memo,
   type ReactNode,
   type UIEvent,
   useEffect,

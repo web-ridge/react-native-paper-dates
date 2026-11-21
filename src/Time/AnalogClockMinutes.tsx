@@ -53,6 +53,7 @@ function AnalogClockMinutes({
           <ClockNumber
             key={index}
             accessibilityLabel={minuteOf(currentMinutes, 60)}
+            color={selected ? selectedColor : unselectedColor}
             disabled={disabled}
             hovered={hovered}
             left={left}
@@ -60,7 +61,6 @@ function AnalogClockMinutes({
             onPress={onPress}
             pressValue={disabled ? undefined : currentMinutes}
             selected={selected}
-            color={selected ? selectedColor : unselectedColor}
             top={top}
             value={isZero ? '00' : currentMinutes}
           />

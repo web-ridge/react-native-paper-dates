@@ -216,6 +216,7 @@ function MonthCalendar({
             focusedDate={focusedDate}
             hideHeader
             index={index}
+            indicatorSize={daySize}
             locale={locale}
             mode="single"
             onPressDate={commitDate}
@@ -229,7 +230,6 @@ function MonthCalendar({
             startWeekOnMonday={monday}
             startYear={resolvedStartYear}
             validRange={validRange}
-            indicatorSize={daySize}
           />
         </View>
       ) : null}

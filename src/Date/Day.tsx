@@ -277,16 +277,16 @@ const styles = StyleSheet.create({
   muted: {
     opacity: 0.38,
   },
-  stateLayer: {
-    overflow: 'hidden',
-    position: 'absolute',
-  },
   root: {
     alignItems: 'center',
     flex: 1,
     flexBasis: 0,
     justifyContent: 'center',
     position: 'relative',
+  },
+  stateLayer: {
+    overflow: 'hidden',
+    position: 'absolute',
   },
 })
 

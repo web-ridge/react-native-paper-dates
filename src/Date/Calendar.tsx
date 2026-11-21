@@ -18,7 +18,7 @@ import MonthCalendar, {
   renderMonthBody,
 } from './MonthCalendar'
 import MonthMenu from './MonthMenu'
-import { type PressedDate, pressDate } from './selection'
+import { pressDate, type PressedDate } from './selection'
 import Swiper from './Swiper'
 import type {
   CalendarDate,

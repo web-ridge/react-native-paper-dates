@@ -106,6 +106,7 @@ function MonthDays({
   month,
   onNavigateToDate,
   onPressDate,
+  primaryColor,
   scrollMode,
   selectColor,
   showOutsideDays,
@@ -114,7 +115,6 @@ function MonthDays({
   startYear,
   validRange,
   year,
-  primaryColor,
 }: MonthDayProps) {
   const { disabledKeys, validEnd, validStart } = useRangeChecker(validRange)
   const isHorizontal = scrollMode === 'horizontal'
@@ -219,8 +219,8 @@ function MonthDays({
             focusedDate.getMonth() === cellMonth &&
             focusedDate.getDate() === cellDay
           }
-          inRange={marks.inRange}
           indicatorSize={indicatorSize}
+          inRange={marks.inRange}
           isToday={
             cellYear === todayYear &&
             cellMonth === todayMonth &&
@@ -457,12 +457,12 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     justifyContent: 'center',
   },
-  yearButtonMenu: {
-    height: 40,
-  },
   yearButtonInner: {
     alignItems: 'center',
     flexDirection: 'row',
+  },
+  yearButtonMenu: {
+    height: 40,
   },
 })
 

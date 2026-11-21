@@ -247,6 +247,10 @@ function useShortDateLabel(locale: string | undefined, withWeekday = false) {
 }
 
 const styles = StyleSheet.create({
+  compactRangeHeader: {
+    paddingEnd: 12,
+    paddingStart: 64,
+  },
   editButton: {
     alignSelf: 'flex-end',
     height: 48,
@@ -286,10 +290,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: '50%',
     transform: [{ translateY: -24 }],
-  },
-  compactRangeHeader: {
-    paddingEnd: 12,
-    paddingStart: 64,
   },
   rangeHeaderContent: {
     height: 40,

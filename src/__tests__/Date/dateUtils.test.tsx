@@ -11,16 +11,16 @@ import {
   getFirstDayOfMonth,
   getGridCount,
   getGridCountForDate,
-  gregorianWeekday,
   getInitialIndex,
   getRealIndex,
-  resolveCalendarDay,
   getStartAtIndex,
   getStartOfDay,
   getTotalMonths,
+  gregorianWeekday,
   isDateWithinOptionalRange,
   isLeapYear,
   parseLooseDate,
+  resolveCalendarDay,
   showWeekDay,
 } from '../../Date/dateUtils'
 import {

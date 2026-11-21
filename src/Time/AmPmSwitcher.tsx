@@ -8,10 +8,10 @@ import StateLayer from '../shared/StateLayer'
 import FocusRing from './FocusRing'
 import { getTranslation } from '../translations/utils'
 import {
+  horizontalPeriodGap,
   inputTypes,
   type PossibleInputTypes,
   timeSelectorWidth,
-  horizontalPeriodGap,
   useSwitchColors,
 } from './timeUtils'
 
@@ -157,7 +157,6 @@ function SwitchButton({
         }}
         disabled={disabled}
         hitSlop={hitSlop}
-        role="radio"
         onBlur={() => setFocused(false)}
         onFocus={() => {
           if (!disabled) setFocused(true)
@@ -169,6 +168,7 @@ function SwitchButton({
           if (!disabled) setPressed(true)
         }}
         onPressOut={() => setPressed(false)}
+        role="radio"
         style={buttonStyle}
       >
         <StateLayer

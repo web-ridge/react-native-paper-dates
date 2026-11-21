@@ -398,15 +398,15 @@ function createStyles(colors: AppColors) {
     stack: {
       gap: 14,
     },
+    themeToggle: {
+      margin: 0,
+    },
     title: {
       color: colors.onSurface,
       fontSize: 30,
       fontWeight: '700',
       letterSpacing: -0.6,
       lineHeight: 34,
-    },
-    themeToggle: {
-      margin: 0,
     },
     titleWide: {
       color: colors.onSurface,

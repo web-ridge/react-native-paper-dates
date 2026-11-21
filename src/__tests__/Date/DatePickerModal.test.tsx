@@ -1,8 +1,8 @@
 import { act, render } from '@testing-library/react-native'
 import {
   Dimensions,
-  StyleSheet,
   type StyleProp,
+  StyleSheet,
   type ViewStyle,
 } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'

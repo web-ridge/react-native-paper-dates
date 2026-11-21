@@ -5,7 +5,12 @@ import DatePickerDocked, { placeDockedCard } from '../../Date/DatePickerDocked'
 import DatePickerInput from '../../Date/DatePickerInput'
 import MonthMenu from '../../Date/MonthMenu'
 import { useDatePickerKeys } from '../../Date/datePickerKeys'
-import { installDateKeyListener, pressNode, pressTestId } from '../../testUtils'
+import {
+  dayFocused,
+  installDateKeyListener,
+  pressLabel,
+  pressTestId,
+} from '../../testUtils'
 
 const anchor = { height: 56, width: 320, x: 24, y: 80 }
 
@@ -94,20 +99,6 @@ it('docks a calendar under the field and confirms or dismisses it', async () => 
   await pressTestId(docked, 'react-native-paper-dates-docked-cancel')
   expect(onDismiss).toHaveBeenCalled()
 })
-
-async function pressLabel(
-  screen: { container: { queryAll: Function } },
-  label: string
-) {
-  const node = screen.container.queryAll(
-    (item: { props: { accessibilityLabel?: string } }) =>
-      item.props.accessibilityLabel === label
-  )[0]
-  if (!node) {
-    throw new Error(`missing ${label}`)
-  }
-  await pressNode(node)
-}
 
 function dockedAt(date: Date, years?: { endYear: number; startYear: number }) {
   const onConfirm = jest.fn()
@@ -343,27 +334,6 @@ it('pages the focused day from the keyboard and stops at the year limits', async
     keys.restore()
   }
 })
-
-function dayFocused(
-  screen: {
-    getAllByTestId: (testId: string) => Array<{
-      children?: Array<object | string>
-      props?: { pointerEvents?: string }
-    }>
-  },
-  testId: string
-) {
-  const focused = (node: {
-    children?: Array<object | string>
-    props?: { pointerEvents?: string }
-  }): boolean => {
-    if (node.props?.pointerEvents === 'none') return true
-    return (node.children ?? []).some(
-      (child) => typeof child !== 'string' && focused(child)
-    )
-  }
-  return screen.getAllByTestId(testId).some((day) => focused(day))
-}
 
 it('uses a pill target and state layers for the month and year', async () => {
   const docked = await render(

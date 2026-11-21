@@ -317,13 +317,6 @@ const TimeInputWithRef: ForwardRefExoticComponent<
 > = forwardRef(TimeInput)
 
 const styles = StyleSheet.create({
-  input: {
-    borderWidth: 0,
-    outlineWidth: 0,
-    paddingHorizontal: 0,
-    textAlign: 'center',
-    width: '100%',
-  },
   fill: {
     alignItems: 'center',
     flex: 1,
@@ -332,6 +325,13 @@ const styles = StyleSheet.create({
   },
   frame: {
     overflow: 'visible',
+  },
+  input: {
+    borderWidth: 0,
+    outlineWidth: 0,
+    paddingHorizontal: 0,
+    textAlign: 'center',
+    width: '100%',
   },
   outline: {
     borderWidth: 2,

@@ -327,7 +327,6 @@ export function DatePickerModalContent(
         ]}
       >
         <AnimatedCrossView
-          fill={!hugCalendar}
           calendar={
             <Calendar
               date={state.date}
@@ -355,6 +354,7 @@ export function DatePickerModalContent(
           }
           calendarEdit={null}
           collapsed={collapsed}
+          fill={!hugCalendar}
         />
       </View>
       {showFooter ? (

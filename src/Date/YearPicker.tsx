@@ -162,13 +162,13 @@ function YearPicker({
   return (
     <View
       pointerEvents={selectingYear ? 'auto' : 'none'}
-      testID="react-native-paper-dates-year-picker"
       style={[
         StyleSheet.absoluteFill,
         styles.root,
         { backgroundColor: theme.colors.surfaceContainerHigh },
         selectingYear ? sharedStyles.opacity1 : sharedStyles.opacity0,
       ]}
+      testID="react-native-paper-dates-year-picker"
     >
       {list}
     </View>

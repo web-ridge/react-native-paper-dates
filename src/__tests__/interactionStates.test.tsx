@@ -44,10 +44,6 @@ type HostNode = {
   unstable_fiber?: FiberNode | null
 }
 
-function walk(fiber: FiberNode | null, visit: (fiber: FiberNode) => void) {
-  walkFibers(fiber, visit)
-}
-
 function rootOf(node: HostNode) {
   let fiber = node.unstable_fiber ?? null
   while (fiber?.return) fiber = fiber.return
@@ -399,7 +395,7 @@ it('follows the pointer around the dial, including noon and the inner ring', asy
     handler(locked, 'onFocus')()
   })
   const presses: Array<(value: number) => void> = []
-  walk(rootOf(locked), (fiber) => {
+  walkFibers(rootOf(locked), (fiber) => {
     const props = fiber.memoizedProps ?? fiber.pendingProps
     if (!props) return
     const onPress = props.onPress

@@ -1,5 +1,6 @@
 import {
   circleSize,
+  focusRingReach,
   getAngle,
   getHours,
   getHourType,
@@ -9,9 +10,8 @@ import {
   hourTypes,
   isValidHourInput,
   isValidMinuteInput,
-  snap,
-  focusRingReach,
   periodSelectorGap,
+  snap,
   timeDialFits,
   timePickerModalMinWidth,
   timePickerUsesLandscape,

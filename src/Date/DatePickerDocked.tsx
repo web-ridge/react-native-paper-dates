@@ -381,6 +381,7 @@ function DockedStepper({
       accessibilityRole="button"
       accessibilityState={{ disabled, expanded: open }}
       disabled={disabled}
+      hitSlop={menuHitSlop}
       onBlur={interaction.onBlur}
       onFocus={interaction.onFocus}
       onHoverIn={interaction.onHoverIn}
@@ -391,7 +392,6 @@ function DockedStepper({
       }}
       onPressIn={interaction.onPressIn}
       onPressOut={interaction.onPressOut}
-      hitSlop={menuHitSlop}
       style={[styles.menuButton, { borderRadius: menuButtonHeight / 2 }]}
       testID={testID}
     >
@@ -553,11 +553,6 @@ const styles = StyleSheet.create({
     gap: stepperGap,
     minWidth: 0,
   },
-  toolbarSide: {
-    flexShrink: 1,
-    maxWidth: '100%',
-    minWidth: 0,
-  },
   toolbar: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -570,6 +565,11 @@ const styles = StyleSheet.create({
   },
   toolbarMenu: {
     marginBottom: headerGap,
+  },
+  toolbarSide: {
+    flexShrink: 1,
+    maxWidth: '100%',
+    minWidth: 0,
   },
 })
 

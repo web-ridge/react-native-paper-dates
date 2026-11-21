@@ -201,15 +201,15 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     width: '100%',
   },
-  singleCard: {
-    flexGrow: 0,
-    maxWidth: 360,
-    width: '100%',
-  },
   modalRoot: {
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
+  },
+  singleCard: {
+    flexGrow: 0,
+    maxWidth: 360,
+    width: '100%',
   },
 })
 
