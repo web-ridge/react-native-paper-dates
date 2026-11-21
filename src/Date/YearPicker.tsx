@@ -15,7 +15,11 @@ import { range, scrollbarThumb } from '../shared/utils'
 import FocusRing from '../Time/FocusRing'
 import { calendarControlHeight } from './CalendarHeader'
 import SelectionMenuItem, { selectionMenuItemHeight } from './SelectionMenuItem'
-import { defaultEndYear, defaultStartYear } from './dateUtils'
+import {
+  currentCalendarMonth,
+  defaultEndYear,
+  defaultStartYear,
+} from './dateUtils'
 
 const COLUMNS = 3
 const YEAR_HEIGHT = 36
@@ -41,7 +45,8 @@ function YearPicker({
 }) {
   const columns = variant === 'grid' ? COLUMNS : 1
   const rowHeight = variant === 'menu' ? selectionMenuItemHeight : ROW_HEIGHT
-  const todayYear = new Date().getFullYear()
+  // Cached until the month changes, so a re-render does not build a Date.
+  const todayYear = currentCalendarMonth().year
   const getItemLayout = useCallback(
     (_: ArrayLike<number> | null | undefined, index: number) => ({
       index,
@@ -171,19 +176,29 @@ function YearPicker({
   )
 }
 
-function YearPure({
-  current,
-  menu,
-  onPressYear,
-  selected,
-  year,
-}: {
+type YearProps = {
   current: boolean
-  menu: boolean
   onPressYear: (newYear: number) => void
   selected: boolean
   year: number
-}) {
+}
+
+// Menu rows hold no state of their own, so only grid cells pay for the
+// hover, press and focus state.
+function YearPure({ menu, ...props }: YearProps & { menu: boolean }) {
+  if (menu) {
+    return (
+      <SelectionMenuItem
+        label={String(props.year)}
+        onPress={() => props.onPressYear(props.year)}
+        selected={props.selected}
+      />
+    )
+  }
+  return <GridYear {...props} />
+}
+
+function GridYear({ current, onPressYear, selected, year }: YearProps) {
   const [hovered, setHovered] = useState(false)
   const [inputFocused, setInputFocused] = useState(false)
   const [pressed, setPressed] = useState(false)
@@ -195,16 +210,6 @@ function YearPure({
       ? theme.colors.primary
       : theme.colors.onSurfaceVariant
   const label = String(year)
-
-  if (menu) {
-    return (
-      <SelectionMenuItem
-        label={label}
-        onPress={() => onPressYear(year)}
-        selected={selected}
-      />
-    )
-  }
 
   return (
     <View style={styles.cell}>
