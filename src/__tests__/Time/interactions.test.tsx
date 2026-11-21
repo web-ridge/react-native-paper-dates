@@ -22,9 +22,6 @@ import {
   asWheelTarget,
   bindTrackpadWheel,
   loopCopies,
-  wheelContentHeight,
-  wheelRowWindow,
-  wheelRows,
 } from '../../Time/ScrollTimePicker'
 import TimeInput from '../../Time/TimeInput'
 import TimeInputs from '../../Time/TimeInputs'
@@ -48,6 +45,7 @@ afterEach(async () => {
   Platform.OS = originalOS
   await act(async () => {
     Dimensions.set({ screen: savedWindow, window: savedWindow })
+    jest.clearAllTimers()
   })
 })
 
@@ -1167,15 +1165,14 @@ describe('scroll time picker', () => {
       .mockImplementation(() => {})
     try {
       const picker = await renderScroll({ hours: 1, minutes: 0 })
-      // The loop keeps its full scroll range, but only the rows around the
-      // center are mounted.
-      expect(rowsShowing(picker, '00')).toBe(1)
+      expect(rowsShowing(picker, '00')).toBe(loopCopies(60))
       const hours = picker.getByTestId('time-scroll-hours', {
         includeHiddenElements: true,
       })
       const home = hours.props.contentOffset.y as number
       const end = (loopCopies(12) * 12 - 1) * scrollItemHeight - home
-      expect(end).toBeGreaterThanOrEqual(10000)
+      expect(home).toBeGreaterThanOrEqual(3840)
+      expect(end).toBeGreaterThanOrEqual(3840)
 
       scrollTo.mockClear()
       await fireEvent(hours, 'scrollBeginDrag', scrollEvent(home))
@@ -1205,20 +1202,23 @@ describe('scroll time picker', () => {
     }
   })
 
-  it('keeps a hard fling on a track long enough to not reach the end', async () => {
+  it('keeps enough room beyond the wrap bounds on every wheel size', async () => {
     Platform.OS = 'android'
-    const picker = await renderScroll({ hours: 1, minutes: 0 })
-    const hours = picker.getByTestId('time-scroll-hours-content', {
-      includeHiddenElements: true,
-    })
-    const height = (hours.props.style as { height: number }).height
-    const home = picker.getByTestId('time-scroll-hours', {
-      includeHiddenElements: true,
-    }).props.contentOffset.y as number
-    expect(height).toBe(wheelContentHeight(12))
-    // A 30,000 dp fling from the centered value still lands inside the loop.
-    expect(home).toBeGreaterThanOrEqual(30000)
-    expect(height - home).toBeGreaterThanOrEqual(30000)
+    const picker = await renderScroll({ hours: 1, minutes: 59 })
+    for (const [id, count] of [
+      ['time-scroll-hours', 12],
+      ['time-scroll-minutes', 60],
+    ] as const) {
+      const wheel = picker.getByTestId(id, { includeHiddenElements: true })
+      const home = wheel.props.contentOffset.y as number
+      const maxY = (loopCopies(count) * count - 1) * scrollItemHeight
+      const cycle = count * scrollItemHeight
+      expect(home - cycle).toBeGreaterThanOrEqual(3072)
+      expect(maxY - (home + cycle)).toBeGreaterThanOrEqual(3072)
+    }
+    expect(loopCopies(12)).toBe(11)
+    expect(loopCopies(24)).toBe(7)
+    expect(loopCopies(60)).toBe(5)
   })
 
   it('keeps wrapping an Android wheel scroll that arrives without a drag', async () => {
@@ -1233,11 +1233,8 @@ describe('scroll time picker', () => {
       })
       const home = hours.props.contentOffset.y as number
 
-      // Settle once, then let the single-frame park guard release.
       await fireEvent(hours, 'momentumScrollEnd', scrollEvent(home))
-      await act(() => {
-        jest.advanceTimersByTime(16)
-      })
+      await flushWheel()
 
       // Generic pointer wheel / trackpad scrolls on Android emit momentum
       // events without scrollBeginDrag/scrollEndDrag. The wheel must not snap
@@ -1259,6 +1256,7 @@ describe('scroll time picker', () => {
         scrollEvent(home + scrollItemHeight)
       )
       await flushWheel()
+      expect(picker.onChange).toHaveBeenCalledTimes(1)
       expect(picker.onChange).toHaveBeenCalledWith(
         expect.objectContaining({ hours: 2 })
       )
@@ -1267,33 +1265,22 @@ describe('scroll time picker', () => {
     }
   })
 
-  it('mounts only the rows around the centered one', async () => {
-    expect(wheelRows(5, 180)).toEqual({ end: 5 + wheelRowWindow + 1, start: 0 })
-    expect(wheelRows(90, 180)).toEqual({
-      end: 90 + wheelRowWindow + 1,
-      start: 90 - wheelRowWindow,
-    })
-    expect(wheelRows(179, 180)).toEqual({
-      end: 180,
-      start: 179 - wheelRowWindow,
-    })
-
+  it('keeps all rows mounted across scrolls without unmounting', async () => {
     const picker = await renderScroll({ focused: 'minutes', minutes: 0 })
     const minutes = picker.getByTestId('time-scroll-minutes', {
       includeHiddenElements: true,
     })
     const home = minutes.props.contentOffset.y as number
     const hidden = { includeHiddenElements: true }
-    expect(rowsShowing(picker, '00')).toBe(1)
-    expect(rowsShowing(picker, '30')).toBe(0)
+    const expectedCopies = loopCopies(60)
+    expect(rowsShowing(picker, '00')).toBe(expectedCopies)
+    expect(rowsShowing(picker, '30')).toBe(expectedCopies)
 
     await fireEvent(minutes, 'scrollBeginDrag', scrollEvent(home))
     await scrollWheel(minutes, home + 30 * scrollItemHeight)
 
-    // The window follows the wheel, so rows far from the center unmount and
-    // the rows the wheel reaches mount before they come into view.
-    expect(rowsShowing(picker, '30')).toBe(1)
-    expect(rowsShowing(picker, '00')).toBe(0)
+    expect(rowsShowing(picker, '00')).toBe(expectedCopies)
+    expect(rowsShowing(picker, '30')).toBe(expectedCopies)
     expect(
       picker.getByTestId('time-scroll-minutes-previous', hidden)
     ).toBeTruthy()
@@ -1306,9 +1293,12 @@ describe('scroll time picker', () => {
       includeHiddenElements: true,
     })
     const home = minutes.props.contentOffset.y as number
+    const centerCopy = Math.floor(loopCopies(60) / 2)
     // Scoped to the minutes wheel; the hours wheel has an 02 row too.
     const texts = (label: string) =>
-      within(minutes).getAllByText(label, { includeHiddenElements: true })
+      within(minutes)
+        .getAllByText(label, { includeHiddenElements: true })
+        .slice(centerCopy * 2, centerCopy * 2 + 2)
 
     await fireEvent(minutes, 'scrollBeginDrag', scrollEvent(home))
     await scrollWheel(minutes, home + scrollItemHeight)
