@@ -35,6 +35,9 @@ jobs:
       - name: Typecheck files
         run: bun run typecheck
 
+      - name: Check React Compiler rules
+        run: bun run compiler:check
+
   test:
     runs-on: ubuntu-latest
     steps:

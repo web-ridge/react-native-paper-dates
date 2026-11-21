@@ -25,12 +25,17 @@ Then install a Paper 6-compatible release of this library:
 
 These APIs are unchanged:
 
-- Imports of `DatePickerModal`, `DatePickerInput`, `DatePickerModalInput`, `TimePicker`, and `TimePickerModal` from `react-native-paper-dates`
-- `registerTranslation` for custom locales. English is registered by default. Other built-in locales register when their module is imported, for example `import 'react-native-paper-dates/translations/fr'`
+- Imports of `DatePickerModal`, `DatePickerInput`, `TimePicker`, and `TimePickerModal` from `react-native-paper-dates` (`DatePickerDocked` and `DatePickerModalInput` are new exports)
+- `registerTranslation` for custom locales. English is registered by default.
 - Wrapping the app in `PaperProvider` and `SafeAreaProvider`
 - Props on `DatePickerModal`, `TimePicker`, and `TimePickerModal`
 
 `DatePickerModal` `mode` is still `'single' | 'range' | 'multiple'`. Do not rename those props to `variant`.
+
+## Removed top-level exports
+
+- **Built-in locale objects (`ar` through `zhTW`):** no longer re-exported from `react-native-paper-dates`. Import a locale module for its side effect instead, for example `import 'react-native-paper-dates/translations/fr'` (only `en` is registered automatically).
+- **`Calendar` and `DatePickerModalContent`:** no longer exported from the root entrypoint. Use `DatePickerModal` or `DatePickerDocked` instead.
 
 ## DatePickerInput
 
