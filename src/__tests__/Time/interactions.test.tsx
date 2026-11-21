@@ -581,6 +581,20 @@ describe('time inputs', () => {
 })
 
 describe('time picker modal', () => {
+  it('mounts no picker content while hidden', async () => {
+    const modal = await render(
+      <TimePickerModal
+        hours={15}
+        locale="en"
+        minutes={45}
+        onConfirm={jest.fn()}
+        onDismiss={jest.fn()}
+        visible={false}
+      />
+    )
+    expect(modal.toJSON()).toBeNull()
+  })
+
   it('confirms, cancels, and toggles the keyboard', async () => {
     const onConfirm = jest.fn()
     const onDismiss = jest.fn()

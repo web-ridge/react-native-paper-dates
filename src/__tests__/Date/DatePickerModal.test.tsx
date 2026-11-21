@@ -51,6 +51,38 @@ it('renders DatePickerModal', async () => {
   expect(toJSON()).toMatchSnapshot()
 })
 
+it('mounts no picker content while hidden', async () => {
+  const metrics = {
+    frame: { height: 640, width: 360, x: 0, y: 0 },
+    insets: { bottom: 0, left: 0, right: 0, top: 0 },
+  }
+  const props = {
+    locale: 'en',
+    mode: 'single' as const,
+    onConfirm: () => null,
+    onDismiss: () => null,
+  }
+  const modal = await render(
+    <SafeAreaProvider initialMetrics={metrics}>
+      <DatePickerModal {...props} visible={false} />
+    </SafeAreaProvider>
+  )
+  // React Native's Modal renders nothing while hidden (after the close
+  // animation on iOS), so a closed picker costs no calendar render.
+  expect(
+    modal.queryByText('Select date', { includeHiddenElements: true })
+  ).toBeNull()
+
+  await modal.rerender(
+    <SafeAreaProvider initialMetrics={metrics}>
+      <DatePickerModal {...props} visible />
+    </SafeAreaProvider>
+  )
+  expect(
+    modal.getByText('Select date', { includeHiddenElements: true })
+  ).toBeTruthy()
+})
+
 it('passes initialLayout to the calendar so the month draws on open', async () => {
   const { queryByText } = await render(
     <SafeAreaProvider
