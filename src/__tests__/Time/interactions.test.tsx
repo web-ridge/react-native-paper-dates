@@ -22,6 +22,7 @@ import {
   asWheelTarget,
   bindTrackpadWheel,
   loopCopies,
+  wheelSpan,
 } from '../../Time/ScrollTimePicker'
 import TimeInput from '../../Time/TimeInput'
 import TimeInputs from '../../Time/TimeInputs'
@@ -1244,7 +1245,10 @@ describe('scroll time picker', () => {
     )
   })
 
-  it('keeps an android fling inside the wheel', async () => {
+  it('never moves an Android wheel mid-scroll and recenters it once it settles', async () => {
+    // The emulator turns a two-finger trackpad swipe into about 60 one-move
+    // touch swipes a second with no frame in between, so a mid-scroll
+    // scrollTo cannot land in time. The scroll range absorbs the burst.
     Platform.OS = 'android'
     const scrollTo = jest
       .spyOn(ScrollView.prototype, 'scrollTo')
@@ -1256,39 +1260,32 @@ describe('scroll time picker', () => {
         includeHiddenElements: true,
       })
       const home = hours.props.contentOffset.y as number
-      const end = (loopCopies(12) * 12 - 1) * scrollItemHeight - home
-      expect(home).toBeGreaterThanOrEqual(3840)
-      expect(end).toBeGreaterThanOrEqual(3840)
+      const cycle = 12 * scrollItemHeight
+      const far = home + 300 * cycle + scrollItemHeight
 
       scrollTo.mockClear()
       await fireEvent(hours, 'scrollBeginDrag', scrollEvent(home))
-      await scrollWheel(hours, home + 12 * scrollItemHeight - 1)
+      await scrollWheel(hours, home - 300 * cycle)
+      await scrollWheel(hours, far)
+      await fireEvent(hours, 'scrollEndDrag', scrollEvent(far, 4))
       expect(scrollTo).not.toHaveBeenCalled()
-      await scrollWheel(hours, home + 13 * scrollItemHeight)
+
+      await fireEvent(hours, 'momentumScrollEnd', scrollEvent(far))
+      await flushWheel()
       expect(scrollTo).toHaveBeenCalledWith({
         animated: false,
         y: home + scrollItemHeight,
       })
-
-      scrollTo.mockClear()
-      await fireEvent(
-        hours,
-        'scrollEndDrag',
-        scrollEvent(home + scrollItemHeight, 4)
+      expect(picker.onChange).toHaveBeenCalledTimes(1)
+      expect(picker.onChange).toHaveBeenCalledWith(
+        expect.objectContaining({ hours: 2 })
       )
-      await scrollWheel(hours, home + 13 * scrollItemHeight)
-      expect(scrollTo).not.toHaveBeenCalled()
-
-      scrollTo.mockClear()
-      await fireEvent(hours, 'momentumScrollEnd', scrollEvent(home + 20))
-      await flushWheel()
-      expect(scrollTo).toHaveBeenCalledWith({ animated: false, y: home })
     } finally {
       scrollTo.mockRestore()
     }
   })
 
-  it('keeps enough room beyond the wrap bounds on every wheel size', async () => {
+  it('gives every Android wheel a long runway past its mounted rows', async () => {
     Platform.OS = 'android'
     const picker = await renderScroll({ hours: 1, minutes: 59 })
     for (const [id, count] of [
@@ -1297,10 +1294,15 @@ describe('scroll time picker', () => {
     ] as const) {
       const wheel = picker.getByTestId(id, { includeHiddenElements: true })
       const home = wheel.props.contentOffset.y as number
-      const maxY = (loopCopies(count) * count - 1) * scrollItemHeight
-      const cycle = count * scrollItemHeight
-      expect(home - cycle).toBeGreaterThanOrEqual(3072)
-      expect(maxY - (home + cycle)).toBeGreaterThanOrEqual(3072)
+      const maxY = (wheelSpan(count) * count - 1) * scrollItemHeight
+      expect(home).toBeGreaterThanOrEqual(250000)
+      expect(maxY - home).toBeGreaterThanOrEqual(250000)
+    }
+    for (const count of [12, 24, 60]) {
+      expect(wheelSpan(count, false)).toBe(loopCopies(count, false))
+      expect(
+        (wheelSpan(count, true) - loopCopies(count, true)) * count * 32
+      ).toBeGreaterThanOrEqual(250000)
     }
     expect(loopCopies(12, true)).toBe(11)
     expect(loopCopies(24, true)).toBe(7)
@@ -1310,55 +1312,44 @@ describe('scroll time picker', () => {
     expect(loopCopies(60, false)).toBe(3)
   })
 
-  it('wraps an Android drag on the next frame, not inside the touch move', async () => {
-    // Android runs the scroll worklet inside ScrollView's touch move. A
-    // scrollTo there is reported to the parent as unconsumed nested scroll,
-    // so the page moved by the wrap distance.
+  it('keeps the mounted Android rows under the viewport anywhere in the range', async () => {
     Platform.OS = 'android'
     const worklet = globalThis as { _WORKLET?: boolean }
     const previous = worklet._WORKLET
-    const frames: FrameRequestCallback[] = []
     const warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
     const picker = await renderScroll({ hours: 1, minutes: 0 })
-    const frame = jest
-      .spyOn(globalThis, 'requestAnimationFrame')
-      .mockImplementation((callback) => {
-        frames.push(callback)
-        return frames.length
-      })
     try {
       const hours = picker.getByTestId('time-scroll-hours', {
         includeHiddenElements: true,
       })
       const home = hours.props.contentOffset.y as number
       const cycle = 12 * scrollItemHeight
-      // The wrap lands one cycle on, in the copy after the centered one.
-      const centerRow = () =>
-        within(hours).getAllByText('01', { includeHiddenElements: true })[
-          Math.floor(loopCopies(12) / 2) + 1
+      // The middle mounted copy's 02, which the viewport is over again after
+      // travelling 40 cycles and one row.
+      const middleTwo = () =>
+        within(hours).getAllByText('02', { includeHiddenElements: true })[
+          Math.floor(loopCopies(12) / 2)
         ]
+      // Mid-fling, so nothing may scroll the wheel back toward its rows.
       await fireEvent(hours, 'scrollBeginDrag', scrollEvent(home))
-      frames.length = 0
+      await fireEvent(hours, 'scrollEndDrag', scrollEvent(home, 4))
       worklet._WORKLET = true
-      await fireEvent.scroll(hours, scrollEvent(home - cycle - 4))
+      await fireEvent.scroll(
+        hours,
+        scrollEvent(home - 40 * cycle + scrollItemHeight)
+      )
       worklet._WORKLET = previous
-      expect(frames).toHaveLength(1)
-      const [wrap] = frames
-      frame.mockRestore()
-
       await act(() => {
-        wrap(0)
         jest.advanceTimersByTime(32)
       })
-      expect(animatedRowStyle(centerRow())?.transform?.[0]?.scale).toBe(1)
+      expect(animatedRowStyle(middleTwo())?.transform?.[0]?.scale).toBe(1)
     } finally {
       worklet._WORKLET = previous
-      frame.mockRestore()
       warn.mockRestore()
     }
   })
 
-  it('keeps wrapping an Android wheel scroll that arrives without a drag', async () => {
+  it('keeps an Android wheel scroll that arrives without a drag going', async () => {
     Platform.OS = 'android'
     const scrollTo = jest
       .spyOn(ScrollView.prototype, 'scrollTo')
@@ -1375,24 +1366,25 @@ describe('scroll time picker', () => {
 
       // Generic pointer wheel / trackpad scrolls on Android emit momentum
       // events without scrollBeginDrag/scrollEndDrag. The wheel must not snap
-      // back to `home` or disable wrapping.
+      // back to `home` or stop mid-scroll.
       scrollTo.mockClear()
       await scrollWheel(hours, home + scrollItemHeight)
       expect(scrollTo).not.toHaveBeenCalled()
 
       await fireEvent(hours, 'momentumScrollBegin', scrollEvent(home))
       await scrollWheel(hours, home + 13 * scrollItemHeight)
-      expect(scrollTo).toHaveBeenCalledWith({
-        animated: false,
-        y: home + scrollItemHeight,
-      })
+      expect(scrollTo).not.toHaveBeenCalled()
 
       await fireEvent(
         hours,
         'momentumScrollEnd',
-        scrollEvent(home + scrollItemHeight)
+        scrollEvent(home + 13 * scrollItemHeight)
       )
       await flushWheel()
+      expect(scrollTo).toHaveBeenCalledWith({
+        animated: false,
+        y: home + scrollItemHeight,
+      })
       expect(picker.onChange).toHaveBeenCalledTimes(1)
       expect(picker.onChange).toHaveBeenCalledWith(
         expect.objectContaining({ hours: 2 })

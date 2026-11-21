@@ -1,4 +1,11 @@
-import { memo, useContext, useEffect, useRef, useState } from 'react'
+import {
+  memo,
+  type ReactNode,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import {
   type ColorValue,
   Platform,
@@ -102,6 +109,12 @@ type WheelTarget = {
 }
 
 const minLoopSideRoom = 3840
+// Android scroll room past the rendered rows, on each side. The emulator
+// turns a two-finger trackpad swipe into about 60 one-move touch swipes a
+// second, and no frame runs while they arrive, so no scrollTo can land to
+// wrap the wheel. The wheel has to absorb a whole burst without reaching an
+// end, or Android hands the rest of every swipe to the parent ScrollView.
+const androidRunway = 250000
 const ancestorHolds = new Map<ScrollChainNode, AncestorHold>()
 const hourValues12 = Array.from({ length: 12 }, (_, hour) => hour + 1)
 const hourValues24 = Array.from({ length: 24 }, (_, hour) => hour)
@@ -284,7 +297,9 @@ function ScrollWheel({
 }) {
   const count = values.length
   const isAndroid = Platform.OS === 'android'
-  const copies = loopCopies(count, isAndroid)
+  // `rendered` copies are mounted; `copies` is the scroll range in cycles.
+  const rendered = loopCopies(count, isAndroid)
+  const copies = wheelSpan(count, isAndroid)
   const centerCopy = Math.floor(copies / 2)
   const valueIndex = values.indexOf(value)
   const centeredIndex = centerCopy * count + Math.max(0, valueIndex)
@@ -299,10 +314,8 @@ function ScrollWheel({
   // toggling to the wheels is not blocked on hundreds of rows.
   const [offscreenCopiesMounted, setOffscreenCopiesMounted] = useState(false)
   const scrollY = useSharedValue(centeredIndex * scrollItemHeight)
-  const coastingValue = useSharedValue(false)
   const draggingValue = useSharedValue(false)
   const gestureEpoch = useSharedValue(0)
-  const wrapQueued = useSharedValue(false)
   const coasting = useRef(false)
   const draggingRef = useRef(false)
   const touchingRef = useRef(false)
@@ -316,7 +329,6 @@ function ScrollWheel({
 
   const setCoasting = (next: boolean) => {
     coasting.current = next
-    coastingValue.set(next)
   }
   const scrollList = (y: number) => {
     scrollY.set(y)
@@ -491,16 +503,12 @@ function ScrollWheel({
     {
       onBeginDrag: () => {
         draggingValue.set(true)
-        coastingValue.set(false)
         const epoch = gestureEpoch.get() + 1
         gestureEpoch.set(epoch)
         scheduleOnRN(dispatchGesture, 0, 0, epoch, Boolean(globalThis._WORKLET))
       },
       onEndDrag: (event) => {
         draggingValue.set(false)
-        // Set coasting on the UI thread immediately so the first momentum frame
-        // cannot wrap with scrollTo and stop Android's OverScroller.
-        coastingValue.set(true)
         scheduleOnRN(
           dispatchGesture,
           (event.velocity?.y ?? 0) !== 0 ? 1 : 3,
@@ -520,7 +528,6 @@ function ScrollWheel({
         )
       },
       onMomentumEnd: (event) => {
-        coastingValue.set(false)
         if (draggingValue.get()) return
         scheduleOnRN(
           dispatchGesture,
@@ -538,8 +545,7 @@ function ScrollWheel({
           count,
           copies,
           isAndroid,
-          draggingValue.get(),
-          coastingValue.get()
+          draggingValue.get()
         )
         if (shifted === y) return
         if (!globalThis._WORKLET) {
@@ -547,33 +553,8 @@ function ScrollWheel({
           scheduleOnRN(dispatchWrap, shifted)
           return
         }
-        if (!isAndroid) {
-          scrollY.set(shifted)
-          reanimatedScrollTo(listRef, 0, shifted, false)
-          return
-        }
-        // Android runs this handler inside ScrollView's touch move. A
-        // scrollTo here lands between the move reading the old offset and
-        // reporting what it consumed, so the whole wrap jump is handed to the
-        // parent as unconsumed nested scroll and the page moves. Wrap on the
-        // next frame instead, outside the touch event, from the latest offset.
-        if (wrapQueued.get()) return
-        wrapQueued.set(true)
-        requestAnimationFrame(() => {
-          wrapQueued.set(false)
-          const current = scrollY.get()
-          const next = wheelShift(
-            current,
-            count,
-            copies,
-            true,
-            draggingValue.get(),
-            coastingValue.get()
-          )
-          if (next === current) return
-          scrollY.set(next)
-          reanimatedScrollTo(listRef, 0, next, false)
-        })
+        scrollY.set(shifted)
+        reanimatedScrollTo(listRef, 0, shifted, false)
       },
     },
     Platform.OS === 'web'
@@ -727,6 +708,7 @@ function ScrollWheel({
             count,
             disabled,
             offscreenCopiesMounted,
+            rendered,
             restColor,
             restFont: theme.fonts.displayMedium,
             scrollY,
@@ -746,10 +728,13 @@ function ScrollWheel({
 const WheelRow = memo(function WheelRow({
   activeColor,
   activeFont,
+  copies,
+  count,
   disabled,
   label,
   listIndex,
   onPress,
+  rendered,
   restColor,
   restFont,
   scrollY,
@@ -757,10 +742,13 @@ const WheelRow = memo(function WheelRow({
 }: {
   activeColor: string
   activeFont: TextStyle
+  copies: number
+  count: number
   disabled?: boolean
   label: string
   listIndex: number
   onPress?: () => void
+  rendered: number
   restColor: string
   restFont: TextStyle
   scrollY: SharedValue<number>
@@ -768,7 +756,11 @@ const WheelRow = memo(function WheelRow({
 }) {
   const restScale = (restFont.fontSize ?? 45) / (activeFont.fontSize ?? 57)
   const rowStyle = useAnimatedStyle(() => {
-    const emphasis = rowEmphasis(scrollY.value, listIndex)
+    const y = scrollY.value
+    const emphasis = rowEmphasis(
+      y - blockOffset(y, count, copies, rendered),
+      listIndex
+    )
     return {
       color: interpolateColor(emphasis, [0, 1], [restColor, activeColor]),
       transform: [
@@ -946,6 +938,30 @@ function holdAncestors(node: {
   }
 }
 
+// The mounted rows, moved by whole cycles to stay under the viewport while it
+// travels through the scroll range. The rows repeat every cycle, so the move
+// never shows.
+function WheelBlock({
+  children,
+  copies,
+  count,
+  rendered,
+  scrollY,
+}: {
+  children: ReactNode
+  copies: number
+  count: number
+  rendered: number
+  scrollY: SharedValue<number>
+}) {
+  const blockStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateY: blockOffset(scrollY.value, count, copies, rendered) },
+    ],
+  }))
+  return <Animated.View style={blockStyle}>{children}</Animated.View>
+}
+
 function wheelRows({
   activeColor,
   activeFont,
@@ -954,6 +970,7 @@ function wheelRows({
   count,
   disabled,
   offscreenCopiesMounted,
+  rendered,
   restColor,
   restFont,
   scrollY,
@@ -968,6 +985,7 @@ function wheelRows({
   count: number
   disabled?: boolean
   offscreenCopiesMounted: boolean
+  rendered: number
   restColor: string
   restFont: TextStyle
   scrollY: SharedValue<number>
@@ -975,8 +993,13 @@ function wheelRows({
   testID: string
   values: readonly number[]
 }) {
-  const centerCopy = Math.floor(copies / 2)
-  const totalRows = copies * count
+  // Rows are indexed within the mounted block; the block starts this many
+  // cycles into the scroll range when the wheel is at rest.
+  const restBlock = Math.floor(copies / 2) - Math.floor(rendered / 2)
+  const center = centeredIndex - restBlock * count
+  const centerCopy = Math.floor(rendered / 2)
+  const totalRows = rendered * count
+  const runway = (copies - rendered) * count * scrollItemHeight
   const startIndex = offscreenCopiesMounted
     ? 0
     : Math.max(0, centerCopy * count - 1)
@@ -989,23 +1012,25 @@ function wheelRows({
     const listIndex = startIndex + offset
     const copy = Math.floor(listIndex / count)
     const item = values[listIndex - copy * count]
-    const neighbor =
-      listIndex === centeredIndex - 1 || listIndex === centeredIndex + 1
+    const neighbor = listIndex === center - 1 || listIndex === center + 1
     return (
       <WheelRow
         activeColor={activeColor}
         activeFont={activeFont}
+        copies={copies}
+        count={count}
         disabled={disabled}
         key={`${copy}-${item}`}
         label={padTime(item)}
         listIndex={listIndex}
-        onPress={neighbor ? () => step(listIndex - centeredIndex) : undefined}
+        onPress={neighbor ? () => step(listIndex - center) : undefined}
+        rendered={rendered}
         restColor={restColor}
         restFont={restFont}
         scrollY={scrollY}
         testID={
           neighbor
-            ? `${testID}-${listIndex < centeredIndex ? 'previous' : 'next'}`
+            ? `${testID}-${listIndex < center ? 'previous' : 'next'}`
             : undefined
         }
       />
@@ -1013,21 +1038,36 @@ function wheelRows({
   })
   return (
     <>
-      {topHeight > 0 ? (
+      <WheelBlock
+        copies={copies}
+        count={count}
+        rendered={rendered}
+        scrollY={scrollY}
+      >
+        {topHeight > 0 ? (
+          <View
+            accessibilityElementsHidden
+            collapsable={false}
+            importantForAccessibility="no-hide-descendants"
+            style={{ height: topHeight }}
+          />
+        ) : null}
+        {rows}
+        {bottomHeight > 0 ? (
+          <View
+            accessibilityElementsHidden
+            collapsable={false}
+            importantForAccessibility="no-hide-descendants"
+            style={{ height: bottomHeight }}
+          />
+        ) : null}
+      </WheelBlock>
+      {runway > 0 ? (
         <View
           accessibilityElementsHidden
           collapsable={false}
           importantForAccessibility="no-hide-descendants"
-          style={{ height: topHeight }}
-        />
-      ) : null}
-      {rows}
-      {bottomHeight > 0 ? (
-        <View
-          accessibilityElementsHidden
-          collapsable={false}
-          importantForAccessibility="no-hide-descendants"
-          style={{ height: bottomHeight }}
+          style={{ height: runway }}
         />
       ) : null}
     </>
@@ -1071,24 +1111,23 @@ export function rowEmphasis(scrollY: number, listIndex: number) {
   return interpolate(distance, [0.25, 0.75], [1, 0], Extrapolation.CLAMP)
 }
 
-// Where the loop moves an offset to keep it away from the ends. Android
-// recenters only between flings (a scrollTo mid-fling stops it) and only
-// once it is a full cycle off center. Elsewhere it waits for the finger to
-// lift and recenters near the ends.
+// Where the loop moves an offset to keep it away from the ends. Android never
+// moves it mid-scroll: a scrollTo there either lands inside a touch move,
+// which hands the jump to the parent ScrollView, or waits for a frame that
+// may not come in time. Its scroll range is long enough instead (see
+// wheelSpan), and settling recenters it. Elsewhere the loop waits for the
+// finger to lift and recenters near the ends.
 export function wheelShift(
   y: number,
   count: number,
   copies: number,
   isAndroid: boolean,
-  dragging: boolean,
-  coasting: boolean
+  dragging: boolean
 ) {
   'worklet'
   const cycle = count * scrollItemHeight
   const center = Math.floor(copies / 2) * cycle
-  if (isAndroid) {
-    if (coasting || Math.abs(y - center) < cycle) return y
-  } else if (dragging) {
+  if (isAndroid || dragging) {
     return y
   } else {
     const margin = Math.min(scrollItemHeight * 30, cycle / 2)
@@ -1097,6 +1136,34 @@ export function wheelShift(
   }
   const within = y - Math.floor(y / cycle) * cycle
   return center + within
+}
+
+// The scroll range in cycles. Android adds `androidRunway` on each side of
+// the mounted copies; elsewhere the range is the mounted copies.
+export function wheelSpan(
+  count: number,
+  isAndroid = Platform.OS === 'android'
+) {
+  const rendered = loopCopies(count, isAndroid)
+  if (!isAndroid) return rendered
+  const side = Math.ceil(androidRunway / (count * scrollItemHeight))
+  return side * 2 + rendered
+}
+
+// Where the mounted block sits for scroll offset `y`: whole cycles into the
+// range, with the viewport's cycle in its middle copy.
+export function blockOffset(
+  y: number,
+  count: number,
+  copies: number,
+  rendered: number
+) {
+  'worklet'
+  const cycle = count * scrollItemHeight
+  const last = copies - rendered
+  if (last <= 0) return 0
+  const start = Math.floor(y / cycle) - Math.floor(rendered / 2)
+  return Math.min(last, Math.max(0, start)) * cycle
 }
 
 export function loopCopies(
