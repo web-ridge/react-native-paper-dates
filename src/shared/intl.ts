@@ -59,13 +59,9 @@ function partOf(
   return formatter.formatToParts(date).find((part) => part.type === type)?.value
 }
 
-// The accessibility label of a calendar day, e.g. "Thursday, January 15,
-// 2026". A calendar opens with up to ~200 days on screen, so instead of one
-// format call per day this formats each month once and swaps in cached
-// weekday and day strings. Locales whose calendar is not Gregorian, or whose
-// pattern does not split into one weekday and one day part, fall back to a
-// format call per day, as does a month whose parts do not rebuild the
-// formatted string. The output matches the formatter exactly.
+// Formats each month once and swaps in cached weekday and day strings.
+// Locales that are not Gregorian, or whose parts do not rebuild the formatted
+// string exactly, fall back to one format call per day.
 export function formatDayLabel(
   locale: string | undefined,
   year: number,
@@ -130,8 +126,7 @@ function splitDayPattern(formatter: Intl.DateTimeFormat, date: Date) {
   const count = (type: Intl.DateTimeFormatPartTypes) =>
     parts.filter((part) => part.type === type).length
   if (count('weekday') !== 1 || count('day') !== 1) return null
-  // Some engines put a different space in formatToParts than in format, so
-  // use the parts only when they rebuild the formatted string exactly.
+  // Some engines put a different space in formatToParts than in format.
   const joined = parts.map((part) => part.value).join('')
   return joined === formatter.format(date) ? parts : null
 }

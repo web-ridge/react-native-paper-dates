@@ -15,8 +15,8 @@ import {
   periodSelectorVerticalWidth,
   type PossibleClockTypes,
   type PossibleInputTypes,
-  type TimeChange,
   resolve24HourClock,
+  type TimeChange,
   timePickerUsesLandscape,
   timeSelectorFieldWidth,
   timeSeparatorWidth,
@@ -176,8 +176,7 @@ function TimePicker({
             onChange={onChange}
             onFocusInput={onFocusInput}
             onToggleKeyboard={toggleKeyboard}
-            // The modal keeps its keyboard toggle bottom-left in the action
-            // row (M3), so only inline pickers show one beside the wheels.
+            // The modal keeps its keyboard toggle in the action row (M3).
             showKeyboardToggle={
               placement === 'inline' && (!is24Hour || !onToggleKeyboard)
             }

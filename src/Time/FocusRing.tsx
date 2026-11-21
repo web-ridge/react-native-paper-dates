@@ -22,8 +22,6 @@ export default function FocusRing({
   return <Ring color={color} radius={radius} />
 }
 
-// Split out so an unfocused ring reads no theme context and costs nothing in
-// lists like the calendar days.
 function Ring({ color, radius }: { color?: ColorValue; radius: number }) {
   const theme = useTheme()
   const ringColor = color ?? theme.colors.secondary
@@ -35,10 +33,9 @@ function Ring({ color, radius }: { color?: ColorValue; radius: number }) {
   )
 }
 
-// The ring sits `focusRingOffset` outside the control. A native border's
-// radius is the outer edge, so it is the field radius plus the gap plus the
-// stroke. On web a CSS border flattens the inner corner of that stroke; a
-// box-shadow follows the inner radius evenly and the spread adds the stroke.
+// The ring sits `focusRingOffset` outside the control. On web a CSS border
+// flattens the inner corner of the stroke; a box-shadow follows the inner
+// radius evenly and the spread adds the stroke.
 export function focusRingLayout(radius: number, color: ColorValue): ViewStyle {
   if (Platform.OS === 'web') {
     return {

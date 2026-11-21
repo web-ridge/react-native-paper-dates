@@ -29,8 +29,6 @@ it('keeps the focus ring concentric with the field on native and web', () => {
 
   Platform.OS = 'web'
   const web = focusRingLayout(radius, color)
-  // Inner edge of the ring is one gap outside the field; the 3dp stroke is
-  // the box-shadow spread, so the outer radius is still field + gap + stroke.
   expect(web.borderRadius).toBe(radius + focusRingOffset)
   expect(web.borderWidth).toBe(0)
   expect(web.top).toBe(-focusRingOffset)

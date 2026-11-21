@@ -102,7 +102,6 @@ describe('formatDayLabel', () => {
       formats = 0
       for (let day = 1; day <= 28; day += 1) formatDayLabel('de', 2031, 1, day)
       expect(spy).toHaveBeenCalledTimes(1)
-      // One format call checks the month's parts; the days reuse them.
       expect(formats).toBe(1)
       expect(formatDayLabel('de', 2031, 1, 14)).toBe(
         'Freitag, 14. Februar 2031'

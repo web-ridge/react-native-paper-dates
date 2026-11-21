@@ -58,7 +58,6 @@ function AnalogClock({
     mode,
     onChange,
   })
-  // Created once. Its handlers read the latest clock values when they run.
   const [panResponder] = useState(() => createClockResponder(latest))
   const pointerNumber = focused === clockTypes.hours ? hours : minutes
   const shortPointer = hours >= 12 && is24Hour
@@ -71,8 +70,6 @@ function AnalogClock({
   const [hoveredValue, setHoveredValue] = useState<number | null>(null)
   const [numberFocused, setNumberFocused] = useState(false)
   const [selectedNumberFocused, setSelectedNumberFocused] = useState(false)
-  // The compiler memoizes these, and they read the latest values through
-  // `latest`, so the dials' numbers keep stable callbacks.
   const onNumberFocus = (isFocused: boolean, selected: boolean) => {
     setNumberFocused(isFocused)
     if (selected) setSelectedNumberFocused(isFocused)
@@ -257,9 +254,6 @@ function selectionAt(
   return pickedHours
 }
 
-// The hand moves in whole numbers, so a drag commits to JS only when the
-// number under the finger changes, plus once on release for the hours dial,
-// which then moves focus to minutes.
 function createClockResponder(latest: { readonly current: ClockValues }) {
   const onPointerMove = (e: GestureResponderEvent, final: boolean) => {
     const current = latest.current

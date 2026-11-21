@@ -45,7 +45,6 @@ function YearPicker({
 }) {
   const columns = variant === 'grid' ? COLUMNS : 1
   const rowHeight = variant === 'menu' ? selectionMenuItemHeight : ROW_HEIGHT
-  // Cached until the month changes, so a re-render does not build a Date.
   const todayYear = currentCalendarMonth().year
   const getItemLayout = useCallback(
     (_: ArrayLike<number> | null | undefined, index: number) => ({
@@ -183,8 +182,6 @@ type YearProps = {
   year: number
 }
 
-// Menu rows hold no state of their own, so only grid cells pay for the
-// hover, press and focus state.
 function YearPure({ menu, ...props }: YearProps & { menu: boolean }) {
   if (menu) {
     return (

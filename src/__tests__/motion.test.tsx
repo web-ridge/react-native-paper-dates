@@ -32,6 +32,5 @@ it('fades the modals instead of sliding under Reduce Motion', async () => {
   expect(await animationFor(1, 'slide')).toBe('slide')
   expect(await animationFor(0, 'slide')).toBe('fade')
   expect(await animationFor(0, 'none')).toBe('none')
-  // An explicit animationType wins.
   expect(await animationFor(0, 'slide', 'slide')).toBe('slide')
 })

@@ -30,7 +30,6 @@ export default function CrossFade({
   )
   const primaryTransform = useLayerTransform(progress, primary)
   const secondaryTransform = useLayerTransform(progress, secondary)
-  // Reduce Motion drops the scale and makes the swap immediate.
   const reduceMotion = motionScale === 0
   const [showPrimary, setShowPrimary] = useState(collapsed)
   const [showSecondary, setShowSecondary] = useState(!collapsed)
@@ -96,7 +95,6 @@ export default function CrossFade({
 }
 
 function useLayerTransform(progress: Animated.Value, layer: CrossFadeLayer) {
-  // Built once from the first layer, like the progress value they follow.
   const [transform] = useState(() => {
     const range = (outputRange: ScaleRange) =>
       progress.interpolate({ inputRange: [0, 1], outputRange })

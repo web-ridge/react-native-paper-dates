@@ -5,8 +5,6 @@ import { Text, useTheme } from 'react-native-paper'
 import { withAlpha } from '../shared/utils'
 import FocusRing from './FocusRing'
 
-// Props are primitives plus callbacks the dial keeps stable, so a selection
-// or hover change re-renders only the numbers whose state changed.
 function ClockNumber({
   accessibilityLabel,
   color,
@@ -34,7 +32,6 @@ function ClockNumber({
 }) {
   const theme = useTheme()
   const [focused, setFocused] = useState(false)
-  // A number without a press value (a disabled dial) is not activatable.
   const press =
     pressValue === undefined ? undefined : () => onPress?.(pressValue)
   const showFocusRing = focused && !selected && !disabled

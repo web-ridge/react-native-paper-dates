@@ -67,8 +67,7 @@ it('mounts no picker content while hidden', async () => {
       <DatePickerModal {...props} visible={false} />
     </SafeAreaProvider>
   )
-  // React Native's Modal renders nothing while hidden (after the close
-  // animation on iOS), so a closed picker costs no calendar render.
+  // React Native's Modal renders nothing while hidden.
   expect(
     modal.queryByText('Select date', { includeHiddenElements: true })
   ).toBeNull()

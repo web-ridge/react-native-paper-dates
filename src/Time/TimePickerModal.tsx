@@ -25,8 +25,8 @@ import {
   type PickerInputType,
   type PossibleClockTypes,
   type PossibleInputTypes,
-  type TimeChange,
   resolve24HourClock,
+  type TimeChange,
   timeDialFits,
   timePickerActionsGap,
   timePickerHorizontalPadding,
@@ -116,8 +116,7 @@ export function TimePickerModal({
     }
   }, [visible])
 
-  // Centered dialog, like DatePickerModalInput and Paper Dialog: fade in
-  // place on native instead of sliding the card up from the bottom.
+  // Fade in place on native, like DatePickerModalInput and Paper Dialog.
   const animation = useModalAnimation(
     animationType,
     Platform.OS === 'web' ? 'none' : 'fade'

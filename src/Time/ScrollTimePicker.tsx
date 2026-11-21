@@ -110,16 +110,14 @@ type WheelTarget = {
   style?: { overscrollBehavior?: string }
 }
 
-const minLoopSideRoom = 3840
-// Android scroll room past the rendered rows, on each side. The emulator
-// turns a two-finger trackpad swipe into about 60 one-move touch swipes a
-// second, and no frame runs while they arrive, so no scrollTo can land to
-// wrap the wheel. The wheel has to absorb a whole burst without reaching an
-// end, or Android hands the rest of every swipe to the parent ScrollView.
+// Extra Android scroll room on each side of the mounted rows. A burst of
+// swipes that never hits a frame cannot wrap, so the wheel must absorb it
+// without reaching an end.
 const androidRunway = 250000
 const ancestorHolds = new Map<ScrollChainNode, AncestorHold>()
 const hourValues12 = Array.from({ length: 12 }, (_, hour) => hour + 1)
 const hourValues24 = Array.from({ length: 24 }, (_, hour) => hour)
+const minLoopSideRoom = 3840
 const minuteValues = Array.from({ length: 60 }, (_, minute) => minute)
 const wheelSettleDelay = 120
 
@@ -299,7 +297,6 @@ function ScrollWheel({
 }) {
   const count = values.length
   const isAndroid = Platform.OS === 'android'
-  // `rendered` copies are mounted; `copies` is the scroll range in cycles.
   const rendered = loopCopies(count, isAndroid)
   const copies = wheelSpan(count, isAndroid)
   const centerCopy = Math.floor(copies / 2)
@@ -312,8 +309,8 @@ function ScrollWheel({
     y: centeredIndex * scrollItemHeight,
   }))
   const [pressed, setPressed] = useState(false)
-  // Mount the loop copies around the visible cycle after the first paint so
-  // toggling to the wheels is not blocked on hundreds of rows.
+  // Mount the rest of the loop after the first paint so toggling to the
+  // wheels is not blocked on hundreds of rows.
   const [offscreenCopiesMounted, setOffscreenCopiesMounted] = useState(false)
   const scrollY = useSharedValue(centeredIndex * scrollItemHeight)
   const draggingValue = useSharedValue(false)
@@ -328,6 +325,16 @@ function ScrollWheel({
   const valueRef = useLatest(value)
   const valuesRef = useLatest(values)
 
+  const lastEmitted = useRef(value)
+  const emitValue = (next: number) => {
+    if (next === lastEmitted.current) return
+    lastEmitted.current = next
+    onChange(next)
+  }
+
+  useEffect(() => {
+    lastEmitted.current = value
+  }, [value])
   const setCoasting = (next: boolean) => {
     coasting.current = next
   }
@@ -336,10 +343,8 @@ function ScrollWheel({
     listRef.current?.scrollTo({ animated: false, y })
   }
 
-  // contentOffset is ignored on web, and swapping the first-paint row window
-  // for the full set can reset scrollTop to 0 even when scrollY already holds
-  // the selected offset. Always apply it to the view, including after the
-  // remaining rows mount.
+  // contentOffset is ignored on web, and replacing the first-paint rows can
+  // reset scrollTop to 0.
   useLayoutEffect(() => {
     if (!visible) return
     if (draggingRef.current || touchingRef.current || draggingValue.get()) {
@@ -408,10 +413,8 @@ function ScrollWheel({
   const selectIndex = (index: number) => {
     if (disabled) return
     const normalized = ((index % count) + count) % count
-    const next = values[normalized]
-    if (next !== value) onChange(next)
-    const middle = centerCopy * count + normalized
-    scrollList(middle * scrollItemHeight)
+    emitValue(values[normalized])
+    scrollList((centerCopy * count + normalized) * scrollItemHeight)
   }
 
   const onWrapJs = useLatest((shifted: number) => {
@@ -446,10 +449,6 @@ function ScrollWheel({
       touchingRef.current = false
       setCoasting(true)
     },
-    // Android generic motion (trackpad/mouse wheel ACTION_SCROLL) emits
-    // onMomentumScrollBegin without a touch drag. Keep coasting false here so
-    // the loop keeps wrapping instead of running out of track and bubbling
-    // unconsumed wheel events to a parent ScrollView.
     momentumBegin: () => {
       pendingSettle.current = false
       clearSettleTimer()
@@ -471,8 +470,8 @@ function ScrollWheel({
       }
       selectIndex(Math.round(y / scrollItemHeight))
     },
-    // Momentum may still start after a release with no velocity. Wait briefly
-    // before settling, so a hard Android touch fling is not stopped by scrollTo.
+    // Wait briefly so a hard Android fling is not stopped by scrollTo
+    // before momentum starts.
     release: (y: number, epoch?: number) => {
       if (pendingSettle.current) return
       clearSettleTimer()
@@ -668,10 +667,10 @@ function ScrollWheel({
         />
         <Animated.ScrollView
           ref={listRef}
+          bounces={false}
           contentContainerStyle={{
             paddingVertical: (fieldHeight - scrollItemHeight) / 2,
           }}
-          bounces={false}
           contentOffset={initialOffset}
           decelerationRate="fast"
           importantForAccessibility="no-hide-descendants"
@@ -729,9 +728,6 @@ function ScrollWheel({
   )
 }
 
-// Each row animates one React Native text node on the UI thread from the
-// resting size/color toward the centered emphasized display large style,
-// keeping one Reanimated mapper per row instead of two stacked texts.
 const WheelRow = memo(function WheelRow({
   activeColor,
   activeFont,
@@ -762,11 +758,8 @@ const WheelRow = memo(function WheelRow({
   testID?: string
 }) {
   const restScale = (restFont.fontSize ?? 45) / (activeFont.fontSize ?? 57)
-  // Reanimated rewrites a style whenever it returns a new transform array,
-  // which a style built from scrollY does on every scroll event. With every
-  // mounted row doing that (300 on the Android minutes wheel), a scroll event
-  // cost the UI thread more than a frame. Only restyle a row when its
-  // emphasis changes, which is just the rows passing the center.
+  // A style that returns a new transform is always treated as changed, so
+  // derive emphasis and restyle only when it changes.
   const emphasisValue = useDerivedValue(() => {
     const y = scrollY.value
     return rowEmphasis(y - blockOffset(y, count, copies, rendered), listIndex)
@@ -950,9 +943,6 @@ function holdAncestors(node: {
   }
 }
 
-// The mounted rows, moved by whole cycles to stay under the viewport while it
-// travels through the scroll range. The rows repeat every cycle, so the move
-// never shows.
 function WheelBlock({
   children,
   copies,
@@ -1005,8 +995,6 @@ function wheelRows({
   testID: string
   values: readonly number[]
 }) {
-  // Rows are indexed within the mounted block; the block starts this many
-  // cycles into the scroll range when the wheel is at rest.
   const restBlock = Math.floor(copies / 2) - Math.floor(rendered / 2)
   const center = centeredIndex - restBlock * count
   const centerCopy = Math.floor(rendered / 2)
@@ -1115,20 +1103,15 @@ function isWheelTarget(node: unknown): node is WheelTarget {
   )
 }
 
-// 1 for the row at the center, 0 from half a row away, cross-fading over the
-// middle of the move so the emphasis changes where the row snaps.
 export function rowEmphasis(scrollY: number, listIndex: number) {
   'worklet'
   const distance = Math.abs(scrollY / scrollItemHeight - listIndex)
   return interpolate(distance, [0.25, 0.75], [1, 0], Extrapolation.CLAMP)
 }
 
-// Where the loop moves an offset to keep it away from the ends. Android never
-// moves it mid-scroll: a scrollTo there either lands inside a touch move,
-// which hands the jump to the parent ScrollView, or waits for a frame that
-// may not come in time. Its scroll range is long enough instead (see
-// wheelSpan), and settling recenters it. Elsewhere the loop waits for the
-// finger to lift and recenters near the ends.
+// Android never moves mid-scroll: a scrollTo inside a touch move is handed
+// to the parent, and a deferred one may not run in time. Settling recenters
+// instead.
 export function wheelShift(
   y: number,
   count: number,
@@ -1150,8 +1133,6 @@ export function wheelShift(
   return center + within
 }
 
-// The scroll range in cycles. Android adds `androidRunway` on each side of
-// the mounted copies; elsewhere the range is the mounted copies.
 export function wheelSpan(
   count: number,
   isAndroid = Platform.OS === 'android'
@@ -1162,8 +1143,6 @@ export function wheelSpan(
   return side * 2 + rendered
 }
 
-// Where the mounted block sits for scroll offset `y`: whole cycles into the
-// range, with the viewport's cycle in its middle copy.
 export function blockOffset(
   y: number,
   count: number,

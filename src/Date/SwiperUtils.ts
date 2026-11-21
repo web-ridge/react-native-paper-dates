@@ -41,9 +41,6 @@ export type SwiperProps = {
   startYear?: number
 }
 
-// Months mounted on each side of the visible month in vertical mode. With an
-// edge of 2, the window moves as soon as the visible month changes, so each
-// shift mounts one month during a fling instead of a block of four.
 export const verticalMonthOverscan = 3
 export const verticalWindowEdge = 2
 const indexBoundCache = new Map<string, number>()

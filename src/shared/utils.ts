@@ -129,8 +129,6 @@ export function useTextColorOnPrimary() {
 
 const alphaColors = new Map<string, string>()
 
-// Components call this while rendering, often for every cell, with a handful
-// of theme colors. Cache the parsed result for string colors.
 export function withAlpha(color: unknown, alpha: number) {
   const key = typeof color === 'string' ? `${color}|${alpha}` : null
   const cached = key === null ? undefined : alphaColors.get(key)

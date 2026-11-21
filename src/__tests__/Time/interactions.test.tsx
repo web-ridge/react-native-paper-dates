@@ -107,7 +107,6 @@ describe('analog clock', () => {
         responder.onPanResponderRelease(clockEvent(256, 128))
       })
       expect(changes).toEqual([0, 15])
-      // One responder for the clock's lifetime, reading the latest values.
       expect(configs).toHaveLength(1)
     } finally {
       spy.mockRestore()
@@ -856,8 +855,6 @@ describe('time picker modal', () => {
 
     await fireEvent.press(picker.getByLabelText('Toggle input picker'))
     expect(picker.getByLabelText('Hour')).toBeTruthy()
-    // The scroll wheels stay mounted while hidden so toggling back is instant,
-    // and stay excluded from the accessibility tree while in keyboard mode.
     expect(picker.queryByTestId('time-scroll-hours')).toBeNull()
     expect(
       picker.getByTestId('time-scroll-hours', { includeHiddenElements: true })
@@ -1074,7 +1071,6 @@ describe('scroll time picker', () => {
     await flushWheel()
   }
 
-  // The latest animated style Reanimated wrote for a wheel row in Jest.
   function animatedRowStyle(node: { props: object }) {
     const animated = (
       node.props as {
@@ -1246,9 +1242,6 @@ describe('scroll time picker', () => {
   })
 
   it('never moves an Android wheel mid-scroll and recenters it once it settles', async () => {
-    // The emulator turns a two-finger trackpad swipe into about 60 one-move
-    // touch swipes a second with no frame in between, so a mid-scroll
-    // scrollTo cannot land in time. The scroll range absorbs the burst.
     Platform.OS = 'android'
     const scrollTo = jest
       .spyOn(ScrollView.prototype, 'scrollTo')
@@ -1340,8 +1333,6 @@ describe('scroll time picker', () => {
       await act(() => {
         jest.advanceTimersByTime(32)
       })
-      // The row now in the center restyles; a row half a wheel away is not
-      // written again, so a scroll costs the rows it moves, not every row.
       expect(animatedRowStyle(middle('03'))?.transform?.[0]?.scale).toBe(1)
       expect(animatedRowStyle(middle('30'))).toBe(farStyle)
     } finally {
@@ -1362,13 +1353,10 @@ describe('scroll time picker', () => {
       })
       const home = hours.props.contentOffset.y as number
       const cycle = 12 * scrollItemHeight
-      // The middle mounted copy's 02, which the viewport is over again after
-      // travelling 40 cycles and one row.
       const middleTwo = () =>
         within(hours).getAllByText('02', { includeHiddenElements: true })[
           Math.floor(loopCopies(12) / 2)
         ]
-      // Mid-fling, so nothing may scroll the wheel back toward its rows.
       await fireEvent(hours, 'scrollBeginDrag', scrollEvent(home))
       await fireEvent(hours, 'scrollEndDrag', scrollEvent(home, 4))
       worklet._WORKLET = true
@@ -1402,9 +1390,6 @@ describe('scroll time picker', () => {
       await fireEvent(hours, 'momentumScrollEnd', scrollEvent(home))
       await flushWheel()
 
-      // Generic pointer wheel / trackpad scrolls on Android emit momentum
-      // events without scrollBeginDrag/scrollEndDrag. The wheel must not snap
-      // back to `home` or stop mid-scroll.
       scrollTo.mockClear()
       await scrollWheel(hours, home + scrollItemHeight)
       expect(scrollTo).not.toHaveBeenCalled()
@@ -1452,12 +1437,10 @@ describe('scroll time picker', () => {
       const home = minutes.props.contentOffset.y as number
       const cycle = 60 * scrollItemHeight
 
-      // First fling coasts past one cycle without wrapping yet.
       await fireEvent(minutes, 'scrollBeginDrag', scrollEvent(home))
       await fireEvent(minutes, 'scrollEndDrag', scrollEvent(home - 200, 4))
       await scrollWheel(minutes, home - cycle + 10 * scrollItemHeight)
 
-      // Second touch/drag interrupts right as the previous momentum end arrives.
       scrollTo.mockClear()
       await fireEvent(control, 'touchStart')
       await fireEvent(minutes, 'scrollBeginDrag', scrollEvent(home - cycle))
@@ -1470,7 +1453,6 @@ describe('scroll time picker', () => {
       expect(scrollTo).not.toHaveBeenCalled()
       expect(picker.onChange).not.toHaveBeenCalled()
 
-      // External value resyncs while the finger is still dragging must not jump.
       await picker.rerender(
         <TimePicker
           focused="minutes"
@@ -1485,7 +1467,6 @@ describe('scroll time picker', () => {
       )
       expect(scrollTo).not.toHaveBeenCalled()
 
-      // Releasing and settling the active drag commits and recenters cleanly.
       await fireEvent(
         minutes,
         'scrollEndDrag',
@@ -1508,6 +1489,53 @@ describe('scroll time picker', () => {
     } finally {
       scrollTo.mockRestore()
     }
+  })
+
+  it('reports a settled wheel value only once', async () => {
+    const picker = await renderScroll({ hours: 9, minutes: 0 })
+    const minutes = picker.getByTestId('time-scroll-minutes', {
+      includeHiddenElements: true,
+    })
+    const home = minutes.props.contentOffset.y as number
+    const next = home + 2 * scrollItemHeight
+    await fireEvent(minutes, 'scrollBeginDrag', scrollEvent(home))
+    await fireEvent(minutes, 'scrollEndDrag', scrollEvent(next, 4))
+    await fireEvent(minutes, 'momentumScrollEnd', scrollEvent(next))
+    await flushWheel()
+    await fireEvent(minutes, 'momentumScrollEnd', scrollEvent(next))
+    await flushWheel()
+    expect(picker.onChange).toHaveBeenCalledTimes(1)
+    expect(picker.onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ hours: 9, minutes: 2 })
+    )
+  })
+
+  it('does not report a value the parent already applied', async () => {
+    const onChange = jest.fn()
+    const picker = await renderScroll({ hours: 9, minutes: 0, onChange })
+    const minutes = picker.getByTestId('time-scroll-minutes', {
+      includeHiddenElements: true,
+    })
+    const home = minutes.props.contentOffset.y as number
+    await picker.rerender(
+      <TimePicker
+        focused="hours"
+        hours={9}
+        inputType="scroll"
+        locale="en"
+        minutes={2}
+        onChange={onChange}
+        onFocusInput={picker.onFocusInput}
+        use24HourClock={false}
+      />
+    )
+    await fireEvent(
+      minutes,
+      'momentumScrollEnd',
+      scrollEvent(home + 2 * scrollItemHeight)
+    )
+    await flushWheel()
+    expect(onChange).not.toHaveBeenCalled()
   })
 
   it('scrolls a web wheel to the selected value after its rows mount', async () => {
@@ -1561,7 +1589,6 @@ describe('scroll time picker', () => {
     })
     const home = minutes.props.contentOffset.y as number
     const centerCopy = Math.floor(loopCopies(60) / 2)
-    // Scoped to the minutes wheel; the hours wheel has an 02 row too.
     const rowText = (label: string) =>
       within(minutes).getAllByText(label, { includeHiddenElements: true })[
         centerCopy
@@ -1574,15 +1601,11 @@ describe('scroll time picker', () => {
       jest.advanceTimersByTime(32)
     })
 
-    // The emphasized style follows the offset on the UI thread: the row now
-    // in the center scales to 1 with active color and the starting row shrinks
-    // back to rest size/color.
     const twoStyle = animatedRowStyle(rowText('02'))
     const zeroStyle = animatedRowStyle(rowText('00'))
     expect(twoStyle?.transform?.[0]?.scale).toBe(1)
     expect(zeroStyle?.transform?.[0]?.scale).toBeLessThan(1)
     expect(twoStyle?.color).not.toBe(zeroStyle?.color)
-    // Crossing rows is not a selection.
     expect(picker.onChange).not.toHaveBeenCalled()
 
     await fireEvent(
@@ -1627,10 +1650,12 @@ describe('scroll time picker', () => {
     expect(picker.onChange).toHaveBeenCalledWith(
       expect.objectContaining({ hours: 13 })
     )
-    const calls = picker.onChange.mock.calls.length
     await fireEvent(hours, 'momentumScrollEnd', scrollEvent(home))
     await flushWheel()
-    expect(picker.onChange.mock.calls.length).toBe(calls)
+    expect(picker.onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ hours: 12 })
+    )
+    expect(picker.onChange).toHaveBeenCalledTimes(2)
   })
 
   it('keeps 12 on the current side of noon and wraps a 24-hour wheel', async () => {

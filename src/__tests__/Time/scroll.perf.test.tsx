@@ -1,7 +1,7 @@
+import { act, fireEvent, render } from '@testing-library/react-native'
 import { Profiler, type ProfilerOnRenderCallback } from 'react'
 import { Platform } from 'react-native'
 import { PaperProvider } from 'react-native-paper'
-import { act, fireEvent, render } from '@testing-library/react-native'
 
 import TimePicker from '../../Time/TimePicker'
 
