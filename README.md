@@ -18,7 +18,7 @@ Cross-platform [Material Design](https://m3.material.io/) date and time pickers 
 
 ## Getting started
 
-Requires React `>=19`, React Native `>=0.78`, [React Native Paper 6](https://oss.callstack.com/react-native-paper/6.x/docs/guides/getting-started) (`>=6.0.0-alpha.0 <7`), and [react-native-safe-area-context](https://github.com/AppAndFlow/react-native-safe-area-context) `>=5`. Paper 6 also requires [react-native-reanimated](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started/) `>= 4.3.0`. Installation, usage, and the [Paper 5 migration guide](https://web-ridge.github.io/react-native-paper-dates/guide/migration) are in the [documentation](https://web-ridge.github.io/react-native-paper-dates/).
+Requires React `>=19`, React Native `>=0.78`, [React Native Paper 6](https://oss.callstack.com/react-native-paper/6.x/docs/guides/getting-started) (`>=6.0.0-alpha.0 <7`), and [react-native-safe-area-context](https://github.com/AppAndFlow/react-native-safe-area-context) `>=5`. The pickers also use [react-native-reanimated](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started/) `>=4.3.0` and react-native-worklets `>=0.8.1`, the same versions Paper 6 requires, so a working Paper 6 setup already has them. Installation, usage, and the [Paper 5 migration guide](https://web-ridge.github.io/react-native-paper-dates/guide/migration) are in the [documentation](https://web-ridge.github.io/react-native-paper-dates/).
 
 ## Maintainers
 
