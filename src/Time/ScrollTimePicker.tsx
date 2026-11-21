@@ -3,6 +3,7 @@ import {
   type ReactNode,
   useContext,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from 'react'
@@ -322,7 +323,6 @@ function ScrollWheel({
   const touchingRef = useRef(false)
   const epochRef = useRef(0)
   const workletLifecycle = useRef(false)
-  const wasVisibleRef = useRef(visible)
   const listRef = useAnimatedRef<Animated.ScrollView>()
   const onChangeRef = useLatest(onChange)
   const valueRef = useLatest(value)
@@ -336,20 +336,26 @@ function ScrollWheel({
     listRef.current?.scrollTo({ animated: false, y })
   }
 
-  useEffect(() => {
-    const wasVisible = wasVisibleRef.current
-    wasVisibleRef.current = visible
+  // contentOffset is ignored on web, and swapping the first-paint row window
+  // for the full set can reset scrollTop to 0 even when scrollY already holds
+  // the selected offset. Always apply it to the view, including after the
+  // remaining rows mount.
+  useLayoutEffect(() => {
     if (!visible) return
     if (draggingRef.current || touchingRef.current || draggingValue.get()) {
       return
     }
     const y = centeredIndex * scrollItemHeight
-    if (wasVisible && Math.abs(scrollY.get() - y) < 0.5) {
-      return
-    }
     scrollY.set(y)
     listRef.current?.scrollTo({ animated: false, y })
-  }, [centeredIndex, draggingValue, listRef, scrollY, visible])
+  }, [
+    centeredIndex,
+    draggingValue,
+    listRef,
+    offscreenCopiesMounted,
+    scrollY,
+    visible,
+  ])
 
   useEffect(() => {
     if (typeof requestAnimationFrame === 'function') {

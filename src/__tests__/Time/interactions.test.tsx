@@ -1510,6 +1510,28 @@ describe('scroll time picker', () => {
     }
   })
 
+  it('scrolls a web wheel to the selected value after its rows mount', async () => {
+    Platform.OS = 'web'
+    const scrollTo = jest
+      .spyOn(ScrollView.prototype, 'scrollTo')
+      .mockImplementation(() => {})
+    try {
+      await renderScroll({ hours: 9, minutes: 45 })
+      const hourIndex = Math.floor(loopCopies(12) / 2) * 12 + 8
+      const minuteIndex = Math.floor(loopCopies(60) / 2) * 60 + 45
+      expect(scrollTo).toHaveBeenCalledWith({
+        animated: false,
+        y: hourIndex * scrollItemHeight,
+      })
+      expect(scrollTo).toHaveBeenCalledWith({
+        animated: false,
+        y: minuteIndex * scrollItemHeight,
+      })
+    } finally {
+      scrollTo.mockRestore()
+    }
+  })
+
   it('keeps all rows mounted across scrolls without unmounting', async () => {
     const picker = await renderScroll({ focused: 'minutes', minutes: 0 })
     const minutes = picker.getByTestId('time-scroll-minutes', {
