@@ -116,9 +116,11 @@ export function TimePickerModal({
     }
   }, [visible])
 
+  // Centered dialog, like DatePickerModalInput and Paper Dialog: fade in
+  // place on native instead of sliding the card up from the bottom.
   const animation = useModalAnimation(
     animationType,
-    Platform.OS === 'web' ? 'none' : 'slide'
+    Platform.OS === 'web' ? 'none' : 'fade'
   )
   const onChange: TimeChange = (params) => {
     if (params.focused) {

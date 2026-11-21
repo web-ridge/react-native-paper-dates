@@ -631,6 +631,50 @@ describe('time inputs', () => {
 })
 
 describe('time picker modal', () => {
+  it('appears with a fade instead of sliding up', async () => {
+    const props = {
+      hours: 15,
+      minutes: 45,
+      onConfirm: jest.fn(),
+      onDismiss: jest.fn(),
+      visible: true as const,
+    }
+    const animationTypeOf = (screen: { container: { queryAll: Function } }) =>
+      screen.container.queryAll(
+        (node: { props?: { animationType?: string } }) =>
+          typeof node.props?.animationType === 'string'
+      )[0]?.props.animationType
+
+    Platform.OS = 'android'
+    const android = await render(<TimePickerModal {...props} />)
+    expect(animationTypeOf(android)).toBe('fade')
+
+    const reduced = await render(
+      <ThemeProvider
+        theme={{
+          ...DarkTheme,
+          animation: { ...DarkTheme.animation, scale: 0 },
+        }}
+      >
+        <TimePickerModal {...props} />
+      </ThemeProvider>
+    )
+    expect(animationTypeOf(reduced)).toBe('fade')
+
+    const sliding = await render(
+      <TimePickerModal {...props} animationType="slide" />
+    )
+    expect(animationTypeOf(sliding)).toBe('slide')
+
+    Platform.OS = 'ios'
+    const ios = await render(<TimePickerModal {...props} />)
+    expect(animationTypeOf(ios)).toBe('fade')
+
+    Platform.OS = 'web'
+    const web = await render(<TimePickerModal {...props} />)
+    expect(animationTypeOf(web)).toBe('none')
+  })
+
   it('mounts no picker content while hidden', async () => {
     const modal = await render(
       <TimePickerModal
