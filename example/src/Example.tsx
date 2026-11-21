@@ -91,6 +91,7 @@ function DemoCard({
   title,
   value,
   wide,
+  wrapValue,
 }: DemoCardProps) {
   const styles = useAppStyles()
   const theme = useTheme()
@@ -119,8 +120,8 @@ function DemoCard({
             {title}
           </AppText>
           <AppText
-            ellipsizeMode="tail"
-            numberOfLines={2}
+            ellipsizeMode={wrapValue ? undefined : 'tail'}
+            numberOfLines={wrapValue ? undefined : 2}
             style={styles.cardValue}
             variant="bodyMedium"
           >
@@ -150,6 +151,7 @@ type DemoCardProps = {
   title: string
   value: string
   wide?: boolean
+  wrapValue?: boolean
 }
 const materialDateGuidelinesUrl =
   'https://m3.material.io/components/date-pickers/guidelines'
@@ -590,6 +592,7 @@ export default function Example({
                 title="Multiple dates"
                 value={multiLabel}
                 wide={wide}
+                wrapValue
               />
             </ExampleSection>
             <ExampleSection
