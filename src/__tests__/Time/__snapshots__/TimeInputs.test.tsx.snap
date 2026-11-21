@@ -116,10 +116,13 @@ exports[`renders TimeInputs 1`] = `
       </View>
     </View>
     <View
+      accessible={false}
+      importantForAccessibility="no"
       style={
         [
           {
             "alignItems": "center",
+            "gap": 8,
             "justifyContent": "center",
             "width": 26,
           },
@@ -128,47 +131,36 @@ exports[`renders TimeInputs 1`] = `
           },
         ]
       }
+      testID="time-separator"
     >
-      <Text
-        accessible={false}
-        importantForAccessibility="no"
-        maxFontSizeMultiplier={1.2}
+      <View
         style={
           [
             {
-              "textAlign": "left",
+              "borderRadius": 4,
+              "height": 8,
+              "width": 8,
             },
             {
-              "color": "rgba(29, 27, 32, 1)",
-              "fontFamily": "System",
-              "fontWeight": "400",
-              "letterSpacing": 0,
+              "backgroundColor": "rgba(29, 27, 32, 1)",
             },
-            {
-              "writingDirection": "ltr",
-            },
-            [
-              {
-                "fontFamily": "System",
-                "fontSize": 57,
-                "fontWeight": "500",
-                "letterSpacing": -0.25,
-                "lineHeight": 64,
-              },
-              {
-                "includeFontPadding": false,
-                "textAlign": "center",
-                "textAlignVertical": "center",
-              },
-              {
-                "color": "rgba(29, 27, 32, 1)",
-              },
-            ],
           ]
         }
-      >
-        :
-      </Text>
+      />
+      <View
+        style={
+          [
+            {
+              "borderRadius": 4,
+              "height": 8,
+              "width": 8,
+            },
+            {
+              "backgroundColor": "rgba(29, 27, 32, 1)",
+            },
+          ]
+        }
+      />
     </View>
     <View
       style={

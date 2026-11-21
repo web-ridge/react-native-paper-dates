@@ -1,7 +1,6 @@
 import { type ColorValue, StyleSheet, View } from 'react-native'
-import { Text, useTheme } from 'react-native-paper'
 
-import { timeSeparatorWidth } from './timeUtils'
+import { timeSeparatorDotSize, timeSeparatorWidth } from './timeUtils'
 
 export default function TimeSeparator({
   color,
@@ -10,29 +9,28 @@ export default function TimeSeparator({
   color: ColorValue
   height: number
 }) {
-  const theme = useTheme()
   return (
-    <View style={[styles.slot, { height }]}>
-      <Text
-        accessible={false}
-        importantForAccessibility="no"
-        maxFontSizeMultiplier={1.2}
-        style={[theme.fonts.displayLargeEmphasized, styles.colon, { color }]}
-      >
-        :
-      </Text>
+    <View
+      accessible={false}
+      importantForAccessibility="no"
+      style={[styles.slot, { height }]}
+      testID="time-separator"
+    >
+      <View style={[styles.dot, { backgroundColor: color }]} />
+      <View style={[styles.dot, { backgroundColor: color }]} />
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  colon: {
-    includeFontPadding: false,
-    textAlign: 'center',
-    textAlignVertical: 'center',
+  dot: {
+    borderRadius: timeSeparatorDotSize / 2,
+    height: timeSeparatorDotSize,
+    width: timeSeparatorDotSize,
   },
   slot: {
     alignItems: 'center',
+    gap: timeSeparatorDotSize,
     justifyContent: 'center',
     width: timeSeparatorWidth,
   },

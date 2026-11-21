@@ -85,6 +85,7 @@ const timePickerMediumBreakpoint = 600
 export const timePickerPadding = 12
 export const timeSelectorHeight = 120
 export const timeSelectorWidth = 100
+export const timeSeparatorDotSize = 8
 export const timeSeparatorGlyphWidth = 16
 export const timeSeparatorWidth =
   focusRingReach + timeSeparatorGlyphWidth + focusRingReach

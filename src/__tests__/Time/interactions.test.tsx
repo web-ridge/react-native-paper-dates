@@ -916,11 +916,9 @@ describe('time picker modal', () => {
         use24HourClock
       />
     )
-    const colon = picker.getByText(':', { includeHiddenElements: true })
+    const colon = picker.getByTestId('time-separator')
     expect(colon).toHaveProp('accessible', false)
-    expect(StyleSheet.flatten(colon.parent?.props.style).width).toBe(
-      timeSeparatorWidth
-    )
+    expect(StyleSheet.flatten(colon.props.style).width).toBe(timeSeparatorWidth)
     await picker.unmount()
   })
 

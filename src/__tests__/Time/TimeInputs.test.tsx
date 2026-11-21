@@ -126,11 +126,9 @@ it.each(['keyboard', 'picker'] as const)(
       />
     )
 
-    const colon = screen.getByText(':', { includeHiddenElements: true })
+    const colon = screen.getByTestId('time-separator')
     expect(colon).toHaveProp('accessible', false)
     expect(colon).toHaveProp('importantForAccessibility', 'no')
-    expect(StyleSheet.flatten(colon.parent?.props.style).width).toBe(
-      timeSeparatorWidth
-    )
+    expect(StyleSheet.flatten(colon.props.style).width).toBe(timeSeparatorWidth)
   }
 )
