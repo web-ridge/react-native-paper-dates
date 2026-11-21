@@ -301,6 +301,7 @@ function ScrollWheel({
   const scrollY = useSharedValue(centeredIndex * scrollItemHeight)
   const coastingValue = useSharedValue(false)
   const draggingValue = useSharedValue(false)
+  const wrapQueued = useSharedValue(false)
   const coasting = useRef(false)
   const listRef = useAnimatedRef<Animated.ScrollView>()
   const onChangeRef = useLatest(onChange)
@@ -479,14 +480,39 @@ function ScrollWheel({
           draggingValue.get(),
           coastingValue.get()
         )
-        if (shifted !== y) {
+        if (shifted === y) return
+        if (!globalThis._WORKLET) {
           scrollY.set(shifted)
-          if (globalThis._WORKLET) {
-            reanimatedScrollTo(listRef, 0, shifted, false)
-          } else {
-            scheduleOnRN(dispatchWrap, shifted)
-          }
+          scheduleOnRN(dispatchWrap, shifted)
+          return
         }
+        if (!isAndroid) {
+          scrollY.set(shifted)
+          reanimatedScrollTo(listRef, 0, shifted, false)
+          return
+        }
+        // Android runs this handler inside ScrollView's touch move. A
+        // scrollTo here lands between the move reading the old offset and
+        // reporting what it consumed, so the whole wrap jump is handed to the
+        // parent as unconsumed nested scroll and the page moves. Wrap on the
+        // next frame instead, outside the touch event, from the latest offset.
+        if (wrapQueued.get()) return
+        wrapQueued.set(true)
+        requestAnimationFrame(() => {
+          wrapQueued.set(false)
+          const current = scrollY.get()
+          const next = wheelShift(
+            current,
+            count,
+            copies,
+            true,
+            draggingValue.get(),
+            coastingValue.get()
+          )
+          if (next === current) return
+          scrollY.set(next)
+          reanimatedScrollTo(listRef, 0, next, false)
+        })
       },
     },
     Platform.OS === 'web'

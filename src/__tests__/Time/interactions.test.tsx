@@ -1310,6 +1310,54 @@ describe('scroll time picker', () => {
     expect(loopCopies(60, false)).toBe(3)
   })
 
+  it('wraps an Android drag on the next frame, not inside the touch move', async () => {
+    // Android runs the scroll worklet inside ScrollView's touch move. A
+    // scrollTo there is reported to the parent as unconsumed nested scroll,
+    // so the page moved by the wrap distance.
+    Platform.OS = 'android'
+    const worklet = globalThis as { _WORKLET?: boolean }
+    const previous = worklet._WORKLET
+    const frames: FrameRequestCallback[] = []
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
+    const picker = await renderScroll({ hours: 1, minutes: 0 })
+    const frame = jest
+      .spyOn(globalThis, 'requestAnimationFrame')
+      .mockImplementation((callback) => {
+        frames.push(callback)
+        return frames.length
+      })
+    try {
+      const hours = picker.getByTestId('time-scroll-hours', {
+        includeHiddenElements: true,
+      })
+      const home = hours.props.contentOffset.y as number
+      const cycle = 12 * scrollItemHeight
+      // The wrap lands one cycle on, in the copy after the centered one.
+      const centerRow = () =>
+        within(hours).getAllByText('01', { includeHiddenElements: true })[
+          Math.floor(loopCopies(12) / 2) + 1
+        ]
+      await fireEvent(hours, 'scrollBeginDrag', scrollEvent(home))
+      frames.length = 0
+      worklet._WORKLET = true
+      await fireEvent.scroll(hours, scrollEvent(home - cycle - 4))
+      worklet._WORKLET = previous
+      expect(frames).toHaveLength(1)
+      const [wrap] = frames
+      frame.mockRestore()
+
+      await act(() => {
+        wrap(0)
+        jest.advanceTimersByTime(32)
+      })
+      expect(animatedRowStyle(centerRow())?.transform?.[0]?.scale).toBe(1)
+    } finally {
+      worklet._WORKLET = previous
+      frame.mockRestore()
+      warn.mockRestore()
+    }
+  })
+
   it('keeps wrapping an Android wheel scroll that arrives without a drag', async () => {
     Platform.OS = 'android'
     const scrollTo = jest
