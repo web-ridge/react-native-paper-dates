@@ -22,6 +22,7 @@ import {
   asWheelTarget,
   bindTrackpadWheel,
   loopCopies,
+  wheelContentHeight,
   wheelRowWindow,
   wheelRows,
 } from '../../Time/ScrollTimePicker'
@@ -974,14 +975,18 @@ describe('scroll time picker', () => {
 
   // The wheel's scroll handler is a worklet. It hands work to JS with
   // scheduleOnRN, which Jest runs as a (fake-timer) microtask.
+  async function flushWheel() {
+    await act(() => {
+      jest.runAllTicks()
+    })
+  }
+
   async function scrollWheel(
     wheel: Parameters<typeof fireEvent.scroll>[0],
     y: number
   ) {
     await fireEvent.scroll(wheel, scrollEvent(y))
-    await act(() => {
-      jest.runAllTicks()
-    })
+    await flushWheel()
   }
 
   // The latest style Reanimated wrote for a node in Jest.
@@ -1073,12 +1078,19 @@ describe('scroll time picker', () => {
       scrollEvent(20 * scrollItemHeight)
     )
     hours.props.onScrollEndDrag(scrollEvent(9 * scrollItemHeight, 2))
+    await flushWheel()
     expect(picker.onChange.mock.calls.length).toBe(callsBeforeRecenter)
     await fireEvent(
       hours,
       'scrollEndDrag',
       scrollEvent(9 * scrollItemHeight, 0)
     )
+    await fireEvent(
+      hours,
+      'momentumScrollEnd',
+      scrollEvent(9 * scrollItemHeight)
+    )
+    await flushWheel()
     expect(picker.onChange).toHaveBeenCalledWith(
       expect.objectContaining({ hours: 10 })
     )
@@ -1087,6 +1099,7 @@ describe('scroll time picker', () => {
       'momentumScrollEnd',
       scrollEvent(21 * scrollItemHeight)
     )
+    await flushWheel()
     await fireEvent.press(picker.getByLabelText('PM'))
     expect(picker.onChange).toHaveBeenCalledWith(
       expect.objectContaining({ hours: 21 })
@@ -1185,10 +1198,27 @@ describe('scroll time picker', () => {
 
       scrollTo.mockClear()
       await fireEvent(hours, 'momentumScrollEnd', scrollEvent(home + 20))
+      await flushWheel()
       expect(scrollTo).toHaveBeenCalledWith({ animated: false, y: home })
     } finally {
       scrollTo.mockRestore()
     }
+  })
+
+  it('keeps a hard fling on a track long enough to not reach the end', async () => {
+    Platform.OS = 'android'
+    const picker = await renderScroll({ hours: 1, minutes: 0 })
+    const hours = picker.getByTestId('time-scroll-hours-content', {
+      includeHiddenElements: true,
+    })
+    const height = (hours.props.style as { height: number }).height
+    const home = picker.getByTestId('time-scroll-hours', {
+      includeHiddenElements: true,
+    }).props.contentOffset.y as number
+    expect(height).toBe(wheelContentHeight(12))
+    // A 10,000 dp fling from the centered value still lands inside the loop.
+    expect(home).toBeGreaterThanOrEqual(10000)
+    expect(height - home).toBeGreaterThanOrEqual(10000)
   })
 
   it('mounts only the rows around the centered one', async () => {
@@ -1257,6 +1287,12 @@ describe('scroll time picker', () => {
       'scrollEndDrag',
       scrollEvent(home + 2 * scrollItemHeight)
     )
+    await fireEvent(
+      minutes,
+      'momentumScrollEnd',
+      scrollEvent(home + 2 * scrollItemHeight)
+    )
+    await flushWheel()
     expect(picker.onChange).toHaveBeenCalledTimes(1)
     expect(picker.onChange).toHaveBeenCalledWith(
       expect.objectContaining({ minutes: 2 })
@@ -1284,11 +1320,13 @@ describe('scroll time picker', () => {
       'momentumScrollEnd',
       scrollEvent(home + scrollItemHeight)
     )
+    await flushWheel()
     expect(picker.onChange).toHaveBeenCalledWith(
       expect.objectContaining({ hours: 13 })
     )
     const calls = picker.onChange.mock.calls.length
     await fireEvent(hours, 'momentumScrollEnd', scrollEvent(home))
+    await flushWheel()
     expect(picker.onChange.mock.calls.length).toBe(calls)
   })
 
