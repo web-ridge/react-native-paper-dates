@@ -37,6 +37,16 @@ These APIs are unchanged:
 - **Built-in locale objects (`ar` through `zhTW`):** no longer re-exported from `react-native-paper-dates`. Import a locale module for its side effect instead, for example `import 'react-native-paper-dates/translations/fr'` (only `en` is registered automatically).
 - **`Calendar` and `DatePickerModalContent`:** no longer exported from the root entrypoint. Use `DatePickerModal` or `DatePickerDocked` instead.
 
+
+## Date range input defaults
+
+In the date range input dialog (`DatePickerModalInput` with `mode="range"`, and the input view of `DatePickerModal`):
+
+- The supporting title defaults to the locale translation for `enterDates` (English: `'Enter dates'`). It previously always used `selectSingle` (`'Select date'`).
+- The start field label defaults to the locale translation for `startDate` (English: `'Start date'`). It previously defaulted to `'Date'`. Pass `startLabel` to override it.
+- The end field label still defaults to `'End date'` in English, now via the locale translation for `endDate`.
+- The selected-range headline uses `Intl.DateTimeFormat#formatRange` (for example `'May 18 – 20'` when both dates are in the same month) and Title Large typography. Custom `registerTranslation` tables must include the new `startDate` and `endDate` keys.
+
 ## DatePickerInput
 
 `DatePickerInput` forwards [Paper 6 TextInput](https://oss.callstack.com/react-native-paper/6.x/docs/components/TextInput/TextInput) props. Update call sites as follows.

@@ -17,7 +17,7 @@ import {
   useTheme,
 } from 'react-native-paper'
 
-import { dateTimeFormat } from '../shared/intl'
+import { dateTimeFormat, formatDateRange } from '../shared/intl'
 import { displayCase, themeColor } from '../shared/utils'
 import { getTranslation, translate } from '../translations/utils'
 import DatePickerInputWithoutModal from './DatePickerInputWithoutModal'
@@ -172,7 +172,19 @@ function DatePickerInputForm({
     uppercase
   )
   const supporting = displayCase(
-    translate(locale, 'selectSingle', 'Select date'),
+    mode === 'range'
+      ? translate(locale, 'enterDates', 'Enter dates')
+      : translate(locale, 'selectSingle', 'Select date'),
+    uppercase
+  )
+  const startCaption = displayCase(
+    mode === 'range'
+      ? (startLabel ?? translate(locale, 'startDate', 'Start date'))
+      : (label ?? 'Date'),
+    uppercase
+  )
+  const endCaption = displayCase(
+    endLabel ?? translate(locale, 'endDate', 'End date'),
     uppercase
   )
   const headline = displayCase(
@@ -180,10 +192,15 @@ function DatePickerInputForm({
       date,
       empty:
         mode === 'range'
-          ? translate(locale, 'enterDates', 'Enter dates')
+          ? `${startCaption} – ${endCaption}`
           : translate(locale, 'enterDate', 'Enter date'),
       endDate,
       format: (value) => headlineFormatter.format(value),
+      formatRange: (start, end) =>
+        formatDateRange(locale, start, end, {
+          day: 'numeric',
+          month: 'short',
+        }),
       mode,
       startDate,
     }),
@@ -191,11 +208,6 @@ function DatePickerInputForm({
   )
   const resolvedPlaceholder = placeholder ?? inputFormat.toLowerCase()
   const surface = theme.colors.surfaceContainerHigh as string
-  const startCaption = displayCase(
-    mode === 'range' ? (startLabel ?? 'Date') : (label ?? 'Date'),
-    uppercase
-  )
-  const endCaption = displayCase(endLabel ?? 'End date', uppercase)
 
   return (
     <>
@@ -216,10 +228,13 @@ function DatePickerInputForm({
           <View style={styles.headlineRow}>
             <Text
               maxFontSizeMultiplier={1.5}
-              numberOfLines={1}
+              numberOfLines={mode === 'range' ? 2 : 1}
               style={[
-                theme.fonts.headlineLarge,
+                mode === 'range'
+                  ? theme.fonts.titleLarge
+                  : theme.fonts.headlineLarge,
                 styles.headline,
+                mode === 'range' ? styles.rangeHeadline : styles.singleHeadline,
                 { color: theme.colors.onSurfaceVariant },
               ]}
             >
@@ -390,6 +405,7 @@ function headlineFor({
   empty,
   endDate,
   format,
+  formatRange,
   mode,
   startDate,
 }: {
@@ -397,11 +413,12 @@ function headlineFor({
   empty: string
   endDate: CalendarDate
   format: (value: Date) => string
+  formatRange: (start: Date, end: Date) => string
   mode: 'range' | 'single'
   startDate: CalendarDate
 }) {
   if (mode === 'single') return date ? format(date) : empty
-  if (startDate && endDate) return `${format(startDate)} – ${format(endDate)}`
+  if (startDate && endDate) return formatRange(startDate, endDate)
   if (startDate) return format(startDate)
   if (endDate) return format(endDate)
   return empty
@@ -451,8 +468,8 @@ const styles = StyleSheet.create({
   headline: {
     flex: 1,
     includeFontPadding: false,
-    lineHeight: 40,
     marginRight: 12,
+    minWidth: 0,
   },
   headlineRow: {
     alignItems: 'center',
@@ -465,6 +482,12 @@ const styles = StyleSheet.create({
     height: 48,
     margin: 0,
     width: 48,
+  },
+  rangeHeadline: {
+    lineHeight: 28,
+  },
+  singleHeadline: {
+    lineHeight: 40,
   },
   supporting: {
     paddingHorizontal: 24,

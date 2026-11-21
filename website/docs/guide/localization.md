@@ -36,6 +36,7 @@ registerTranslation('pl', {
   close: 'Close',
   confirm: 'OK',
   dateIsDisabled: 'Day is not allowed',
+  endDate: 'End date',
   enterDate: 'Enter date',
   enterDates: 'Enter dates',
   hour: 'Hour',
@@ -57,8 +58,10 @@ registerTranslation('pl', {
   selectMultiple: 'Select dates',
   selectRange: 'Select period',
   selectSingle: 'Select date',
+  startDate: 'Start date',
   toggleClock: 'Toggle dial picker',
   toggleKeyboard: 'Toggle input picker',
+  toggleScroll: 'Toggle scroll picker',
   typeInDate: 'Type in date',
 })
 ```
@@ -78,6 +81,7 @@ registerTranslation('dynamic', () => {
     close: translate('Close'),
     confirm: translate('OK'),
     dateIsDisabled: translate('Day is not allowed'),
+    endDate: translate('End date'),
     enterDate: translate('Enter date'),
     enterDates: translate('Enter dates'),
     hour: translate('Hour'),
@@ -99,8 +103,10 @@ registerTranslation('dynamic', () => {
     selectMultiple: translate('Select dates'),
     selectRange: translate('Select period'),
     selectSingle: translate('Select date'),
+    startDate: translate('Start date'),
     toggleClock: translate('Toggle dial picker'),
     toggleKeyboard: translate('Toggle input picker'),
+    toggleScroll: translate('Toggle scroll picker'),
     typeInDate: translate('Type in date'),
   }
 })

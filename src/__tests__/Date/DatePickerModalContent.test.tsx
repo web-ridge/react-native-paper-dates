@@ -127,6 +127,8 @@ it('shows the shared date input form for a single date and a range', async () =>
       </SafeAreaProvider>
     )
     expect(range.getByText('Enter dates')).toBeTruthy()
+    expect(range.getByText('Start date – End date')).toBeTruthy()
+    expect(range.getByLabelText('Start date, mm/dd/yyyy')).toBeTruthy()
     expect(range.getByLabelText('End date, mm/dd/yyyy')).toBeTruthy()
     expect(range.getByTestId('react-native-paper-dates-save')).toBeTruthy()
   } finally {

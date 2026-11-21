@@ -24,6 +24,61 @@ export function dateTimeFormat(
   return formatter
 }
 
+export function formatDateRange(
+  locale: string | undefined,
+  start: Date,
+  end: Date,
+  options: Intl.DateTimeFormatOptions
+) {
+  const formatter = dateTimeFormat(locale, options)
+  if (typeof formatter.formatRange === 'function') {
+    return formatter.formatRange(start, end)
+  }
+  return formatRangeFromParts(formatter, start, end)
+}
+
+function formatRangeFromParts(
+  formatter: Intl.DateTimeFormat,
+  start: Date,
+  end: Date
+) {
+  if (typeof formatter.formatToParts !== 'function') {
+    return `${formatter.format(start)} – ${formatter.format(end)}`
+  }
+
+  const startParts = formatter.formatToParts(start)
+  const endParts = formatter.formatToParts(end)
+  let prefix = 0
+  while (
+    prefix < startParts.length &&
+    prefix < endParts.length &&
+    startParts[prefix].type === endParts[prefix].type &&
+    startParts[prefix].value === endParts[prefix].value
+  ) {
+    prefix += 1
+  }
+  let startSuffix = startParts.length
+  let endSuffix = endParts.length
+  while (
+    startSuffix > prefix &&
+    endSuffix > prefix &&
+    startParts[startSuffix - 1].type === endParts[endSuffix - 1].type &&
+    startParts[startSuffix - 1].value === endParts[endSuffix - 1].value
+  ) {
+    startSuffix -= 1
+    endSuffix -= 1
+  }
+
+  const join = (parts: Intl.DateTimeFormatPart[]) =>
+    parts.map((part) => part.value).join('')
+  const startUnique = join(startParts.slice(prefix, startSuffix))
+  const endUnique = join(endParts.slice(prefix, endSuffix))
+  if (!startUnique && !endUnique) return formatter.format(start)
+  return `${join(startParts.slice(0, prefix))}${startUnique} – ${endUnique}${join(
+    startParts.slice(startSuffix)
+  )}`
+}
+
 export function formatMonth(locale: string | undefined, month: number) {
   const key = locale ?? ''
   let names = monthNames.get(key)

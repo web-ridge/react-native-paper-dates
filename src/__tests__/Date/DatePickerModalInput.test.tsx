@@ -114,8 +114,9 @@ it('renders start and end fields for a range', async () => {
     )
   )
 
-  expect(screen.getByText('Select date')).toBeTruthy()
   expect(screen.getByText('Enter dates')).toBeTruthy()
+  expect(screen.getByText('Start date – End date')).toBeTruthy()
+  expect(screen.getByLabelText(/Start date/)).toBeTruthy()
   expect(screen.getByLabelText(/End date/)).toBeTruthy()
   await act(() => {
     field(screen, 'react-native-paper-dates-modal-input').onChangeText?.(
@@ -139,7 +140,7 @@ it('renders start and end fields for a range', async () => {
   })
   expect(
     screen.getByText(
-      `${rangeHeadline.format(new Date(2026, 0, 2))} – ${rangeHeadline.format(new Date(2026, 0, 5))}`
+      rangeHeadline.formatRange(new Date(2026, 0, 2), new Date(2026, 0, 5))
     )
   ).toBeTruthy()
   await pressTestId(screen, 'react-native-paper-dates-modal-input-confirm')
@@ -268,4 +269,33 @@ it('fades in on native, disables animation on web, and honors animationType', as
   } finally {
     Platform.OS = originalOS
   }
+})
+
+it('shows a collapsed title-large range headline that can wrap', async () => {
+  const startDate = new Date(1993, 4, 18)
+  const endDate = new Date(1993, 4, 20)
+  const screen = await render(
+    host(
+      <DatePickerModalInput
+        endDate={endDate}
+        locale="en"
+        mode="range"
+        onConfirm={() => null}
+        onDismiss={() => null}
+        startDate={startDate}
+        visible
+      />
+    )
+  )
+  const headline = screen.getByText(
+    new Intl.DateTimeFormat('en', {
+      day: 'numeric',
+      month: 'short',
+    }).formatRange(startDate, endDate)
+  )
+  const style = StyleSheet.flatten(headline.props.style)
+  expect(screen.getByText('Enter dates')).toBeTruthy()
+  expect(screen.queryByText('Select date')).toBeNull()
+  expect(headline).toHaveProp('numberOfLines', 2)
+  expect(style.lineHeight).toBe(28)
 })

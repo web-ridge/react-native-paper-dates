@@ -1,4 +1,9 @@
-import { dateTimeFormat, formatDayLabel, formatMonth } from '../shared/intl'
+import {
+  dateTimeFormat,
+  formatDateRange,
+  formatDayLabel,
+  formatMonth,
+} from '../shared/intl'
 
 describe('dateTimeFormat', () => {
   it('reuses a formatter for the same locale and options', () => {
@@ -109,6 +114,53 @@ describe('formatDayLabel', () => {
     } finally {
       spy.mockRestore()
       Object.defineProperty(Intl.DateTimeFormat.prototype, 'format', descriptor)
+    }
+  })
+})
+
+describe('formatDateRange', () => {
+  const options: Intl.DateTimeFormatOptions = {
+    day: 'numeric',
+    month: 'short',
+  }
+  const start = new Date(1993, 4, 18)
+  const sameMonth = new Date(1993, 4, 20)
+  const nextMonth = new Date(1993, 5, 20)
+
+  it('collapses a same-month range and keeps both months otherwise', () => {
+    const same = formatDateRange('en-US', start, sameMonth, options)
+    const across = formatDateRange('en-US', start, nextMonth, options)
+    expect(same).toBe(
+      new Intl.DateTimeFormat('en-US', options).formatRange(start, sameMonth)
+    )
+    expect(across).toBe(
+      new Intl.DateTimeFormat('en-US', options).formatRange(start, nextMonth)
+    )
+    expect(same).toMatch(/May 18.*20/)
+    expect(same).not.toMatch(/May 20/)
+    expect(across).toMatch(/May 18/)
+    expect(across).toMatch(/Jun 20/)
+  })
+
+  it('falls back to formatToParts when formatRange is missing', () => {
+    const proto = Intl.DateTimeFormat.prototype
+    const original = proto.formatRange
+    Object.defineProperty(proto, 'formatRange', {
+      configurable: true,
+      value: undefined,
+    })
+    try {
+      expect(formatDateRange('en-US', start, sameMonth, options)).toBe(
+        'May 18 – 20'
+      )
+      expect(formatDateRange('en-US', start, nextMonth, options)).toBe(
+        'May 18 – Jun 20'
+      )
+    } finally {
+      Object.defineProperty(proto, 'formatRange', {
+        configurable: true,
+        value: original,
+      })
     }
   })
 })

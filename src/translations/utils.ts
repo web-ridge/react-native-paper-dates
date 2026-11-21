@@ -9,6 +9,7 @@ export type TranslationsType = {
   close: string
   confirm: string
   dateIsDisabled: string
+  endDate: string
   enterDate: string
   enterDates: string
   hour: string
@@ -28,6 +29,7 @@ export type TranslationsType = {
   selectMultiple: string
   selectRange: string
   selectSingle: string
+  startDate: string
   toggleClock: string
   toggleKeyboard: string
   toggleScroll: string
