@@ -48,6 +48,7 @@ import {
   type PossibleClockTypes,
   scrollFieldHeight,
   scrollFieldWidth,
+  getTimeInputToggleLabel,
   scrollItemHeight,
   type TimeChange,
   toHourInputFormat,
@@ -88,25 +89,20 @@ type WheelGesture = {
   onSettle: (offset: number) => void
 }
 
-type WheelTarget = {
+type WheelTarget = Pick<
+  ScrollChainNode,
+  'ownerDocument' | 'parentElement' | 'scrollTop'
+> & {
   addEventListener: (
     type: 'pointerenter' | 'pointerleave' | 'wheel',
     listener: (event: WheelEvent) => void,
     options?: boolean | AddEventListenerOptions
   ) => void
-  ownerDocument?: {
-    defaultView?: {
-      getComputedStyle?: (node: ScrollChainNode) => { overflowY?: string }
-    } | null
-    scrollingElement?: ScrollChainNode | null
-  } | null
-  parentElement?: ScrollChainNode | null
   removeEventListener: (
     type: 'pointerenter' | 'pointerleave' | 'wheel',
     listener: (event: WheelEvent) => void,
     options?: boolean | EventListenerOptions
   ) => void
-  scrollTop: number
   style?: { overscrollBehavior?: string }
 }
 
@@ -252,11 +248,7 @@ function KeyboardToggle({
 }) {
   return (
     <IconButton
-      accessibilityLabel={getTranslation(
-        locale,
-        'toggleKeyboard',
-        'Toggle input picker'
-      )}
+      accessibilityLabel={getTimeInputToggleLabel(locale, inputTypes.scroll)}
       disabled={disabled}
       icon={icon}
       iconColor={iconColor}

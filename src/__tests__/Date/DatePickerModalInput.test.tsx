@@ -1,6 +1,7 @@
 import { act } from '@testing-library/react-native'
 import type { ReactNode } from 'react'
-import { Dimensions, StyleSheet } from 'react-native'
+import { Dimensions, Platform, StyleSheet } from 'react-native'
+import { LightTheme, ThemeProvider } from 'react-native-paper'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 import DatePickerModalInput from '../../Date/DatePickerModalInput'
@@ -223,4 +224,48 @@ it('floats the card on a level 3 surface', async () => {
   }
   expect(style.borderRadius).toBe(28)
   expect(style.shadowOpacity).toBeGreaterThan(0)
+})
+
+it('fades in on native, disables animation on web, and honors animationType', async () => {
+  const originalOS = Platform.OS
+  const animationTypeOf = (screen: { container: { queryAll: Function } }) =>
+    screen.container.queryAll(
+      (node: { props?: { animationType?: string } }) =>
+        typeof node.props?.animationType === 'string'
+    )[0]?.props.animationType
+  const renderWith = (animationType?: 'slide' | 'fade' | 'none', scale = 1) => {
+    const theme = {
+      ...LightTheme,
+      animation: { ...LightTheme.animation, scale },
+    }
+    return render(
+      <ThemeProvider theme={theme}>
+        {host(
+          <DatePickerModalInput
+            animationType={animationType}
+            locale="en"
+            mode="single"
+            onConfirm={() => null}
+            onDismiss={() => null}
+            visible
+          />
+        )}
+      </ThemeProvider>
+    )
+  }
+
+  try {
+    Platform.OS = 'ios'
+    const nativeScreen = await renderWith()
+    expect(animationTypeOf(nativeScreen)).toBe('fade')
+
+    const explicitScreen = await renderWith('slide', 0)
+    expect(animationTypeOf(explicitScreen)).toBe('slide')
+
+    Platform.OS = 'web'
+    const webScreen = await renderWith()
+    expect(animationTypeOf(webScreen)).toBe('none')
+  } finally {
+    Platform.OS = originalOS
+  }
 })

@@ -16,6 +16,7 @@ import {
 
 import ElevatedCard from '../shared/ElevatedCard'
 import ModalScrim from '../shared/ModalScrim'
+import { useModalAnimation } from '../shared/motion'
 import { supportedOrientations } from '../shared/utils'
 import DatePickerInputForm, {
   dateInputCardMaxWidth,
@@ -48,6 +49,7 @@ type DatePickerModalInputRangeProps = DatePickerModalInputSharedProps & {
   startDate?: CalendarDate
 }
 type DatePickerModalInputSharedProps = {
+  animationType?: 'slide' | 'fade' | 'none'
   calendarIcon?: string
   disableWeekDays?: DisableWeekDaysType
   endLabel?: string
@@ -72,6 +74,7 @@ type DatePickerModalInputSingleProps = DatePickerModalInputSharedProps & {
 
 function DatePickerModalInput(props: DatePickerModalInputProps) {
   const {
+    animationType,
     calendarIcon,
     disableWeekDays,
     endLabel,
@@ -103,6 +106,10 @@ function DatePickerModalInput(props: DatePickerModalInputProps) {
   const resolvedEndYear = endYear ?? defaultEndYear
   const resolvedStartYear = startYear ?? defaultStartYear
   const resolvedUppercase = !!uppercase
+  const animation = useModalAnimation(
+    animationType,
+    Platform.OS === 'web' ? 'none' : 'fade'
+  )
 
   useEffect(() => {
     if (visible && !wasVisible.current) {
@@ -171,7 +178,7 @@ function DatePickerModalInput(props: DatePickerModalInputProps) {
 
   return (
     <Modal
-      animationType="none"
+      animationType={animation}
       onRequestClose={dismiss}
       onShow={focusField}
       statusBarTranslucent
@@ -194,57 +201,48 @@ function DatePickerModalInput(props: DatePickerModalInputProps) {
           testID="react-native-paper-dates-modal-input-surface"
         >
           {view === 'calendar' ? (
-            props.mode === 'single' ? (
-              <DatePickerModalContent
-                date={draftDate}
-                disableSafeTop
-                disableStatusBar
-                disableWeekDays={disableWeekDays}
-                endYear={resolvedEndYear}
-                layout="card"
-                locale={locale}
-                mode="single"
-                onChange={({ date: nextDate }) => {
-                  setDraftDate(nextDate)
-                }}
-                onConfirm={props.onConfirm}
-                onDismiss={dismiss}
-                onRequestInput={showInput}
-                saveLabel={saveLabel}
-                saveLabelDisabled={saveLabelDisabled ?? false}
-                startWeekOnMonday={startWeekOnMonday}
-                startYear={resolvedStartYear}
-                statusBarOnTopOfBackdrop
-                uppercase={resolvedUppercase}
-                validRange={validRange}
-              />
-            ) : (
-              <DatePickerModalContent
-                disableSafeTop
-                disableStatusBar
-                disableWeekDays={disableWeekDays}
-                endDate={draftEnd}
-                endYear={resolvedEndYear}
-                layout="card"
-                locale={locale}
-                mode="range"
-                onChange={({ endDate: nextEnd, startDate: nextStart }) => {
-                  setDraftEnd(nextEnd)
-                  setDraftStart(nextStart)
-                }}
-                onConfirm={props.onConfirm}
-                onDismiss={dismiss}
-                onRequestInput={showInput}
-                saveLabel={saveLabel}
-                saveLabelDisabled={saveLabelDisabled ?? false}
-                startDate={draftStart}
-                startWeekOnMonday={startWeekOnMonday}
-                startYear={resolvedStartYear}
-                statusBarOnTopOfBackdrop
-                uppercase={resolvedUppercase}
-                validRange={validRange}
-              />
-            )
+            <DatePickerModalContent
+              disableSafeTop
+              disableStatusBar
+              disableWeekDays={disableWeekDays}
+              endYear={resolvedEndYear}
+              layout="card"
+              locale={locale}
+              onDismiss={dismiss}
+              onRequestInput={showInput}
+              saveLabel={saveLabel}
+              saveLabelDisabled={saveLabelDisabled ?? false}
+              startWeekOnMonday={startWeekOnMonday}
+              startYear={resolvedStartYear}
+              statusBarOnTopOfBackdrop
+              uppercase={resolvedUppercase}
+              validRange={validRange}
+              {...(props.mode === 'single'
+                ? {
+                    date: draftDate,
+                    mode: 'single' as const,
+                    onChange: ({ date: nextDate }: { date: CalendarDate }) => {
+                      setDraftDate(nextDate)
+                    },
+                    onConfirm: props.onConfirm,
+                  }
+                : {
+                    endDate: draftEnd,
+                    mode: 'range' as const,
+                    onChange: ({
+                      endDate: nextEnd,
+                      startDate: nextStart,
+                    }: {
+                      endDate: CalendarDate
+                      startDate: CalendarDate
+                    }) => {
+                      setDraftEnd(nextEnd)
+                      setDraftStart(nextStart)
+                    },
+                    onConfirm: props.onConfirm,
+                    startDate: draftStart,
+                  })}
+            />
           ) : (
             <DatePickerInputForm
               autoFocus={presented}

@@ -143,42 +143,40 @@ export function DatePickerModal(
   )
 
   return (
-    <View pointerEvents="box-none" style={StyleSheet.absoluteFill}>
-      <Modal
-        animationType={animationTypeCalculated}
-        onRequestClose={rest.onDismiss}
-        presentationStyle={
-          useFormSheet
-            ? 'formSheet'
-            : shouldUseSheet
-              ? 'pageSheet'
-              : 'overFullScreen'
-        }
-        statusBarTranslucent={!disableStatusBar}
-        supportedOrientations={supportedOrientations}
-        transparent={!isSheet}
-        visible={visible}
+    <Modal
+      animationType={animationTypeCalculated}
+      onRequestClose={rest.onDismiss}
+      presentationStyle={
+        useFormSheet
+          ? 'formSheet'
+          : shouldUseSheet
+            ? 'pageSheet'
+            : 'overFullScreen'
+      }
+      statusBarTranslucent={!disableStatusBar}
+      supportedOrientations={supportedOrientations}
+      transparent={!isSheet}
+      visible={visible}
+    >
+      <ModalScrim onDismiss={rest.onDismiss} />
+      <View
+        pointerEvents="box-none"
+        style={[StyleSheet.absoluteFill, styles.modalRoot]}
       >
-        <ModalScrim onDismiss={rest.onDismiss} />
-        <View
-          pointerEvents="box-none"
-          style={[StyleSheet.absoluteFill, styles.modalRoot]}
-        >
-          {centeredCard ? (
-            <ElevatedCard style={cardStyle}>{content}</ElevatedCard>
-          ) : (
-            <View
-              style={[
-                cardStyle,
-                { backgroundColor: theme.colors.surfaceContainerHigh },
-              ]}
-            >
-              {content}
-            </View>
-          )}
-        </View>
-      </Modal>
-    </View>
+        {centeredCard ? (
+          <ElevatedCard style={cardStyle}>{content}</ElevatedCard>
+        ) : (
+          <View
+            style={[
+              cardStyle,
+              { backgroundColor: theme.colors.surfaceContainerHigh },
+            ]}
+          >
+            {content}
+          </View>
+        )}
+      </View>
+    </Modal>
   )
 }
 

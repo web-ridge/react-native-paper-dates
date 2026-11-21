@@ -4,12 +4,12 @@ import { IconButton, useTheme } from 'react-native-paper'
 
 import { DisplayModeContext } from '../contexts/DisplayModeContext'
 import { TimePickerPlacementContext } from '../contexts/TimePickerPlacementContext'
-import { getTranslation } from '../translations/utils'
 import AnalogClock from './AnalogClock'
 import ScrollTimePicker from './ScrollTimePicker'
 import TimeInputs from './TimeInputs'
 import {
   circleSize,
+  getTimeInputToggleLabel,
   inputTypes,
   periodSelectorGap,
   periodSelectorVerticalWidth,
@@ -195,14 +195,12 @@ function TimePicker({
             <View style={styles.inputColumn}>
               {fields}
               <IconButton
-                accessibilityLabel={getTranslation(
+                accessibilityLabel={getTimeInputToggleLabel(
                   locale,
+                  activeInputType,
                   inputType === inputTypes.scroll
-                    ? 'toggleScroll'
-                    : 'toggleClock',
-                  inputType === inputTypes.scroll
-                    ? 'Toggle scroll picker'
-                    : 'Toggle dial picker'
+                    ? inputTypes.scroll
+                    : inputTypes.picker
                 )}
                 disabled={disabled}
                 icon={inputType === inputTypes.scroll ? scrollIcon : clockIcon}

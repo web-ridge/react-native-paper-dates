@@ -3,6 +3,7 @@ import { useTheme } from 'react-native-paper'
 
 import { dateTimeFormat } from '../shared/intl'
 import { withAlpha } from '../shared/utils'
+import { getTranslation } from '../translations/utils'
 
 import type {
   PickerInputType,
@@ -171,6 +172,21 @@ export function getMinutes(handAngle: number) {
   while (minute >= 60) minute -= 60
 
   return minute
+}
+
+export function getTimeInputToggleLabel(
+  locale: string | undefined,
+  inputType: PossibleInputTypes,
+  pickerMode: PickerInputType = inputTypes.picker
+) {
+  const next = toggleInputType(inputType, pickerMode)
+  if (next === inputTypes.scroll) {
+    return getTranslation(locale, 'toggleScroll', 'Toggle scroll picker')
+  }
+  if (next === inputTypes.picker) {
+    return getTranslation(locale, 'toggleClock', 'Toggle dial picker')
+  }
+  return getTranslation(locale, 'toggleKeyboard', 'Toggle input picker')
 }
 
 export function getTimeInputTypeIcon(
