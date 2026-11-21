@@ -1,4 +1,4 @@
-import { act, fireEvent, render } from '@testing-library/react-native'
+import { act, fireEvent, render, within } from '@testing-library/react-native'
 import { useState } from 'react'
 import {
   Dimensions,
@@ -972,6 +972,37 @@ describe('scroll time picker', () => {
     }
   }
 
+  // The wheel's scroll handler is a worklet. It hands work to JS with
+  // scheduleOnRN, which Jest runs as a (fake-timer) microtask.
+  async function scrollWheel(
+    wheel: Parameters<typeof fireEvent.scroll>[0],
+    y: number
+  ) {
+    await fireEvent.scroll(wheel, scrollEvent(y))
+    await act(() => {
+      jest.runAllTicks()
+    })
+  }
+
+  // The latest style Reanimated wrote for a node in Jest.
+  function animatedOpacity(node: { props: object }) {
+    const animated = (
+      node.props as { jestAnimatedStyle?: { value?: { opacity?: number } } }
+    ).jestAnimatedStyle
+    return animated?.value?.opacity
+  }
+
+  // Each row stacks its centered and resting text, so one row shows a label
+  // twice.
+  function rowsShowing(
+    picker: { queryAllByText: (text: string, options: object) => unknown[] },
+    label: string
+  ) {
+    return (
+      picker.queryAllByText(label, { includeHiddenElements: true }).length / 2
+    )
+  }
+
   it('steps hours and minutes from neighbors, actions, and the wheels', async () => {
     const picker = await renderScroll()
     expect(picker.getByTestId('time-scroll-keyboard')).toBeTruthy()
@@ -1125,9 +1156,7 @@ describe('scroll time picker', () => {
       const picker = await renderScroll({ hours: 1, minutes: 0 })
       // The loop keeps its full scroll range, but only the rows around the
       // center are mounted.
-      expect(
-        picker.getAllByText('00', { includeHiddenElements: true }).length
-      ).toBe(1)
+      expect(rowsShowing(picker, '00')).toBe(1)
       const hours = picker.getByTestId('time-scroll-hours', {
         includeHiddenElements: true,
       })
@@ -1137,12 +1166,9 @@ describe('scroll time picker', () => {
 
       scrollTo.mockClear()
       await fireEvent(hours, 'scrollBeginDrag', scrollEvent(home))
-      await fireEvent.scroll(
-        hours,
-        scrollEvent(home + 12 * scrollItemHeight - 1)
-      )
+      await scrollWheel(hours, home + 12 * scrollItemHeight - 1)
       expect(scrollTo).not.toHaveBeenCalled()
-      await fireEvent.scroll(hours, scrollEvent(home + 13 * scrollItemHeight))
+      await scrollWheel(hours, home + 13 * scrollItemHeight)
       expect(scrollTo).toHaveBeenCalledWith({
         animated: false,
         y: home + scrollItemHeight,
@@ -1154,7 +1180,7 @@ describe('scroll time picker', () => {
         'scrollEndDrag',
         scrollEvent(home + scrollItemHeight, 4)
       )
-      await fireEvent.scroll(hours, scrollEvent(home + 13 * scrollItemHeight))
+      await scrollWheel(hours, home + 13 * scrollItemHeight)
       expect(scrollTo).not.toHaveBeenCalled()
 
       scrollTo.mockClear()
@@ -1182,20 +1208,59 @@ describe('scroll time picker', () => {
     })
     const home = minutes.props.contentOffset.y as number
     const hidden = { includeHiddenElements: true }
-    expect(picker.getAllByText('00', hidden)).toHaveLength(1)
-    expect(picker.queryByText('30', hidden)).toBeNull()
+    expect(rowsShowing(picker, '00')).toBe(1)
+    expect(rowsShowing(picker, '30')).toBe(0)
 
     await fireEvent(minutes, 'scrollBeginDrag', scrollEvent(home))
-    await fireEvent.scroll(minutes, scrollEvent(home + 30 * scrollItemHeight))
+    await scrollWheel(minutes, home + 30 * scrollItemHeight)
 
     // The window follows the wheel, so rows far from the center unmount and
     // the rows the wheel reaches mount before they come into view.
-    expect(picker.getAllByText('30', hidden)).toHaveLength(1)
-    expect(picker.queryByText('00', hidden)).toBeNull()
+    expect(rowsShowing(picker, '30')).toBe(1)
+    expect(rowsShowing(picker, '00')).toBe(0)
     expect(
       picker.getByTestId('time-scroll-minutes-previous', hidden)
     ).toBeTruthy()
     expect(picker.getByTestId('time-scroll-minutes-next', hidden)).toBeTruthy()
+  })
+
+  it('moves the highlight with the scroll and commits only on settle', async () => {
+    const picker = await renderScroll({ focused: 'minutes', minutes: 0 })
+    const minutes = picker.getByTestId('time-scroll-minutes', {
+      includeHiddenElements: true,
+    })
+    const home = minutes.props.contentOffset.y as number
+    // Scoped to the minutes wheel; the hours wheel has an 02 row too.
+    const texts = (label: string) =>
+      within(minutes).getAllByText(label, { includeHiddenElements: true })
+
+    await fireEvent(minutes, 'scrollBeginDrag', scrollEvent(home))
+    await scrollWheel(minutes, home + scrollItemHeight)
+    await scrollWheel(minutes, home + 2 * scrollItemHeight)
+    await act(() => {
+      jest.advanceTimersByTime(32)
+    })
+
+    // The emphasized text follows the offset on the UI thread: the row now
+    // in the center shows it and the starting row does not.
+    const [restTwo, activeTwo] = texts('02')
+    const [restZero, activeZero] = texts('00')
+    expect(animatedOpacity(activeTwo)).toBe(1)
+    expect(animatedOpacity(restTwo)).toBe(0)
+    expect(animatedOpacity(activeZero)).toBe(0)
+    expect(animatedOpacity(restZero)).toBe(1)
+    // Crossing rows is not a selection.
+    expect(picker.onChange).not.toHaveBeenCalled()
+
+    await fireEvent(
+      minutes,
+      'scrollEndDrag',
+      scrollEvent(home + 2 * scrollItemHeight)
+    )
+    expect(picker.onChange).toHaveBeenCalledTimes(1)
+    expect(picker.onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ minutes: 2 })
+    )
   })
 
   it('wraps a spin past 12 without sticking on the last row', async () => {
@@ -1643,6 +1708,9 @@ describe('scroll time picker', () => {
     const nodes = ['time-scroll-hours', 'time-scroll-minutes'].map((id) => {
       const bound: ((event: WheelEvent) => void)[] = []
       const node = {
+        // Jest renders Reanimated's native ScrollView, which asks the
+        // scrollable node for a view tag when its scroll handler is rebound.
+        __nativeTag: 1,
         addEventListener: (
           type: string,
           listener: (event: WheelEvent) => void

@@ -5,14 +5,22 @@ import {
   type NativeSyntheticEvent,
   Platform,
   Pressable,
-  ScrollView,
   type ScrollViewInstance,
   type StyleProp,
   StyleSheet,
   View,
   type ViewStyle,
 } from 'react-native'
-import { IconButton, Text, useTheme } from 'react-native-paper'
+import { IconButton, useTheme } from 'react-native-paper'
+import Animated, {
+  Extrapolation,
+  interpolate,
+  type SharedValue,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated'
+import { scheduleOnRN } from 'react-native-worklets'
 
 import { TimePickerPlacementContext } from '../contexts/TimePickerPlacementContext'
 import StateLayer from '../shared/StateLayer'
@@ -273,7 +281,11 @@ function ScrollWheel({
   const centerCopy = Math.floor(copies / 2)
   const valueIndex = values.indexOf(value)
   const centeredIndex = centerCopy * count + Math.max(0, valueIndex)
+  const isAndroid = Platform.OS === 'android'
   const theme = useTheme()
+  // The row the mounted window is built around. It follows the wheel in
+  // steps of a few rows, not on every row crossed. The centered row's
+  // highlight comes from `scrollY` on the UI thread.
   const [centered, setCentered] = useState(centeredIndex)
   const [hovered, setHovered] = useState(false)
   const [initialOffset] = useState(() => ({
@@ -281,6 +293,13 @@ function ScrollWheel({
     y: centeredIndex * scrollItemHeight,
   }))
   const [pressed, setPressed] = useState(false)
+  const scrollY = useSharedValue(centeredIndex * scrollItemHeight)
+  // UI-thread copies of the gesture state below, so the scroll worklet can
+  // tell when JS has work to do without calling it on every frame.
+  const coastingValue = useSharedValue(false)
+  const draggingValue = useSharedValue(false)
+  const parkedValue = useSharedValue(-1)
+  const windowCenter = useSharedValue(centeredIndex)
   const coasting = useRef(false)
   const dragging = useRef(false)
   const listRef = useRef<ScrollViewInstance | null>(null)
@@ -289,13 +308,34 @@ function ScrollWheel({
   const valueRef = useLatest(value)
   const valuesRef = useLatest(values)
 
+  const setCoasting = (next: boolean) => {
+    coasting.current = next
+    coastingValue.set(next)
+  }
+  const setDragging = (next: boolean) => {
+    dragging.current = next
+    draggingValue.set(next)
+  }
+  const setParked = (y: number | null) => {
+    settledY.current = y
+    parkedValue.set(y ?? -1)
+  }
+  const moveWindow = (index: number) => {
+    windowCenter.set(index)
+    setCentered(index)
+  }
+  const scrollList = (y: number) => {
+    scrollY.set(y)
+    listRef.current?.scrollTo({ animated: false, y })
+  }
+
   useEffect(() => {
-    listRef.current?.scrollTo({
-      animated: false,
-      y: centeredIndex * scrollItemHeight,
-    })
+    const y = centeredIndex * scrollItemHeight
+    scrollY.set(y)
+    listRef.current?.scrollTo({ animated: false, y })
+    windowCenter.set(centeredIndex)
     setCentered(centeredIndex)
-  }, [centeredIndex])
+  }, [centeredIndex, scrollY, windowCenter])
 
   useEffect(() => {
     if (disabled || !focused || Platform.OS !== 'web') return
@@ -321,34 +361,78 @@ function ScrollWheel({
     if (next !== value) onChange(next)
     const middle = centerCopy * count + normalized
     const y = middle * scrollItemHeight
-    settledY.current = y
-    setCentered(middle)
-    listRef.current?.scrollTo({ animated: false, y })
+    setParked(y)
+    moveWindow(middle)
+    scrollList(y)
     requestAnimationFrame(() => {
       if (settledY.current !== y || dragging.current || coasting.current) return
-      listRef.current?.scrollTo({ animated: false, y })
+      scrollList(y)
     })
   }
 
   const shiftIntoCenter = (y: number) => {
-    const cycle = count * scrollItemHeight
-    const center = centerCopy * cycle
-    if (Platform.OS === 'android') {
-      if (coasting.current || Math.abs(y - center) < cycle) return y
-    } else if (dragging.current) {
-      return y
-    } else {
-      const margin = scrollItemHeight * 30
-      const limit = (copies * count - 1) * scrollItemHeight - margin
-      if (y >= margin && y <= limit) return y
-    }
-    const within = y - Math.floor(y / cycle) * cycle
-    const next = center + within
+    const next = wheelShift(
+      y,
+      count,
+      copies,
+      isAndroid,
+      dragging.current,
+      coasting.current
+    )
     if (next === y) return y
-    listRef.current?.scrollTo({ animated: false, y: next })
-    setCentered(Math.round(next / scrollItemHeight))
+    scrollList(next)
+    moveWindow(Math.round(next / scrollItemHeight))
     return next
   }
+
+  // Runs on JS only when the scroll worklet sees a parked row drift, a loop
+  // edge to wrap, or the window falling behind. It re-checks the live state,
+  // since the worklet's copy can be a frame old.
+  const onWheelScroll = useLatest((y: number) => {
+    const parked = settledY.current
+    if (parked != null && !dragging.current && !coasting.current) {
+      if (Math.abs(y - parked) > 0.5) scrollList(parked)
+      return
+    }
+    if (shiftIntoCenter(y) !== y) return
+    const index = Math.round(y / scrollItemHeight)
+    if (Math.abs(index - windowCenter.get()) >= wheelWindowStep) {
+      moveWindow(index)
+    }
+  })
+  const [dispatchScroll] = useState(
+    () => (y: number) => onWheelScroll.current(y)
+  )
+  const scrollHandler = useAnimatedScrollHandler(
+    {
+      onScroll: (event) => {
+        const y = event.contentOffset.y
+        scrollY.set(y)
+        const parked = parkedValue.get()
+        const held = !draggingValue.get() && !coastingValue.get()
+        if (parked >= 0 && held) {
+          if (Math.abs(y - parked) > 0.5) scheduleOnRN(dispatchScroll, y)
+          return
+        }
+        const shifted = wheelShift(
+          y,
+          count,
+          copies,
+          isAndroid,
+          draggingValue.get(),
+          coastingValue.get()
+        )
+        const index = Math.round(y / scrollItemHeight)
+        if (
+          shifted !== y ||
+          Math.abs(index - windowCenter.get()) >= wheelWindowStep
+        ) {
+          scheduleOnRN(dispatchScroll, y)
+        }
+      },
+    },
+    [copies, count, dispatchScroll, isAndroid]
+  )
 
   const finishWheel = (offset: number) => {
     selectIndex(Math.round(offset / scrollItemHeight))
@@ -359,7 +443,7 @@ function ScrollWheel({
     onFocus,
     onSettle: finishWheel,
     onStart: () => {
-      settledY.current = null
+      setParked(null)
     },
   })
 
@@ -383,6 +467,12 @@ function ScrollWheel({
       borderRadius: theme.shapes.corner.large,
     },
   ]
+  const restColor = disabled
+    ? withAlpha(theme.colors.onSurface, disabledContentOpacity)
+    : theme.colors.outline
+  const activeColor = disabled
+    ? withAlpha(theme.colors.onSurface, disabledContentOpacity)
+    : theme.colors.onSurface
 
   return (
     <View style={[styles.wheelFrame, { height: fieldHeight }]}>
@@ -436,7 +526,7 @@ function ScrollWheel({
           hovered={!disabled && hovered}
           pressed={!disabled && pressed}
         />
-        <ScrollView
+        <Animated.ScrollView
           ref={listRef}
           contentContainerStyle={{
             paddingVertical: (fieldHeight - scrollItemHeight) / 2,
@@ -447,35 +537,23 @@ function ScrollWheel({
           importantForAccessibility="no-hide-descendants"
           nestedScrollEnabled
           onMomentumScrollEnd={(event) => {
-            coasting.current = false
+            setCoasting(false)
             selectIndex(offsetIndex(event))
           }}
-          onScroll={(event) => {
-            const y = event.nativeEvent.contentOffset.y
-            const parked = settledY.current
-            if (parked != null && !dragging.current && !coasting.current) {
-              if (Math.abs(y - parked) > 0.5) {
-                listRef.current?.scrollTo({ animated: false, y: parked })
-              }
-              return
-            }
-            const shifted = shiftIntoCenter(y)
-            if (shifted !== y) return
-            setCentered(offsetIndex(event))
-          }}
+          onScroll={scrollHandler}
           onScrollBeginDrag={() => {
-            coasting.current = false
-            dragging.current = true
-            settledY.current = null
+            setCoasting(false)
+            setDragging(true)
+            setParked(null)
           }}
           onScrollEndDrag={(event) => {
-            dragging.current = false
+            setDragging(false)
             if ((event.nativeEvent.velocity?.y ?? 0) !== 0) {
-              coasting.current = true
-              settledY.current = null
+              setCoasting(true)
+              setParked(null)
               return
             }
-            coasting.current = false
+            setCoasting(false)
             selectIndex(offsetIndex(event))
           }}
           overScrollMode="never"
@@ -497,13 +575,16 @@ function ScrollWheel({
               listIndex === centered - 1 || listIndex === centered + 1
             return (
               <WheelRow
-                active={listIndex === centered}
+                activeColor={activeColor}
                 disabled={disabled}
                 key={`${copy}-${item}`}
                 label={padTime(item)}
+                listIndex={listIndex}
                 onPress={
                   neighbor ? () => step(listIndex - centered) : undefined
                 }
+                restColor={restColor}
+                scrollY={scrollY}
                 testID={
                   neighbor
                     ? `${testID}-${listIndex < centered ? 'previous' : 'next'}`
@@ -515,42 +596,73 @@ function ScrollWheel({
           <View
             style={{ height: (copies * count - rows.end) * scrollItemHeight }}
           />
-        </ScrollView>
+        </Animated.ScrollView>
       </View>
     </View>
   )
 }
 
+// Each row stacks the two M3 text styles, the emphasized display large for
+// the centered value and display medium for the rest, and cross-fades them
+// from the scroll offset on the UI thread. At rest exactly one shows, so the
+// wheel looks as it did when the active row was React state. These are
+// React Native texts: Paper's Text exposes no host view to Reanimated, and
+// the row sets every font and color value Paper's Text would.
 const WheelRow = memo(function WheelRow({
-  active,
+  activeColor,
   disabled,
   label,
+  listIndex,
   onPress,
+  restColor,
+  scrollY,
   testID,
 }: {
-  active: boolean
+  activeColor: ColorValue
   disabled?: boolean
   label: string
+  listIndex: number
   onPress?: () => void
+  restColor: ColorValue
+  scrollY: SharedValue<number>
   testID?: string
 }) {
   const theme = useTheme()
-  const color = disabled
-    ? withAlpha(theme.colors.onSurface, disabledContentOpacity)
-    : active
-      ? theme.colors.onSurface
-      : theme.colors.outline
-  const type = active
-    ? theme.fonts.displayLargeEmphasized
-    : theme.fonts.displayMedium
+  const activeStyle = useAnimatedStyle(() => ({
+    opacity: rowEmphasis(scrollY.value, listIndex),
+  }))
+  const restStyle = useAnimatedStyle(() => ({
+    opacity: 1 - rowEmphasis(scrollY.value, listIndex),
+  }))
   const text = (
-    <Text
-      maxFontSizeMultiplier={1.2}
-      selectable={false}
-      style={[type, styles.value, { color }]}
-    >
-      {label}
-    </Text>
+    <>
+      <Animated.Text
+        maxFontSizeMultiplier={1.2}
+        selectable={false}
+        style={[
+          theme.fonts.displayMedium,
+          styles.value,
+          { color: restColor },
+          restStyle,
+        ]}
+      >
+        {label}
+      </Animated.Text>
+      <View pointerEvents="none" style={styles.activeValue}>
+        <Animated.Text
+          maxFontSizeMultiplier={1.2}
+          selectable={false}
+          style={[
+            theme.fonts.displayLargeEmphasized,
+            styles.value,
+            { color: activeColor },
+            activeStyle,
+          ]}
+        >
+          {label}
+        </Animated.Text>
+      </View>
+    </>
   )
   if (!onPress) return <View style={styles.item}>{text}</View>
   return (
@@ -745,6 +857,46 @@ function isWheelTarget(node: unknown): node is WheelTarget {
 // which changes once per row crossed, and leaves room for a fast fling to run
 // a few frames ahead of JS before it reaches an unmounted row.
 export const wheelRowWindow = 12
+// How far the centered row moves before the window is rebuilt around it.
+// Moving it every few rows instead of every row keeps React out of most of a
+// fling, and leaves 8 mounted rows ahead of the wheel at the moment it moves.
+export const wheelWindowStep = 4
+
+// 1 for the row at the center, 0 from half a row away, cross-fading over the
+// middle of the move so the emphasis changes where the row snaps.
+export function rowEmphasis(scrollY: number, listIndex: number) {
+  'worklet'
+  const distance = Math.abs(scrollY / scrollItemHeight - listIndex)
+  return interpolate(distance, [0.25, 0.75], [1, 0], Extrapolation.CLAMP)
+}
+
+// Where the loop moves an offset to keep it away from the ends. Android
+// recenters only between flings (a scrollTo mid-fling stops it) and only
+// once it is a full cycle off center. Elsewhere it waits for the finger to
+// lift and recenters near the ends.
+export function wheelShift(
+  y: number,
+  count: number,
+  copies: number,
+  isAndroid: boolean,
+  dragging: boolean,
+  coasting: boolean
+) {
+  'worklet'
+  const cycle = count * scrollItemHeight
+  const center = Math.floor(copies / 2) * cycle
+  if (isAndroid) {
+    if (coasting || Math.abs(y - center) < cycle) return y
+  } else if (dragging) {
+    return y
+  } else {
+    const margin = scrollItemHeight * 30
+    const limit = (copies * count - 1) * scrollItemHeight - margin
+    if (y >= margin && y <= limit) return y
+  }
+  const within = y - Math.floor(y / cycle) * cycle
+  return center + within
+}
 
 export function wheelRows(centered: number, total: number) {
   const start = Math.max(0, Math.min(total, centered - wheelRowWindow))
@@ -799,6 +951,11 @@ function wrappedWheelOffset(offset: number, count: number, copies: number) {
 }
 
 const styles = StyleSheet.create({
+  activeValue: {
+    ...StyleSheet.absoluteFill,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   item: {
     alignItems: 'center',
     height: scrollItemHeight,
