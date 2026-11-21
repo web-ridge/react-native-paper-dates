@@ -269,7 +269,7 @@ exports[`renders TimePicker 1`] = `
       <View
         style={
           {
-            "width": 8,
+            "width": 12,
           }
         }
       />

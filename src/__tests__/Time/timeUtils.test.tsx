@@ -1,5 +1,6 @@
 import {
   circleSize,
+  focusRingOffset,
   focusRingReach,
   getAngle,
   getHours,
@@ -171,8 +172,8 @@ describe('timeUtils', () => {
     expect(timeSelectorFieldWidth('picker', true, false)).toBe(132)
     expect(timeSelectorFieldWidth('picker', true, true)).toBe(100)
     expect(timeSelectorFieldWidth('keyboard', true, false)).toBe(100)
-    expect(timePickerModalMinWidth(false, true)).toBe(314)
-    expect(timePickerModalMinWidth(false, false)).toBe(314)
+    expect(timePickerModalMinWidth(false, true)).toBe(318)
+    expect(timePickerModalMinWidth(false, false)).toBe(318)
     expect(timePickerModalMinWidth(true, true)).toBe(314)
     expect(timePickerModalMinWidth(true, false)).toBe(250)
   })
@@ -183,7 +184,7 @@ describe('timeUtils', () => {
     expect(timeSeparatorWidth).toBe(
       focusRingReach + timeSeparatorGlyphWidth + focusRingReach
     )
-    expect(periodSelectorGap).toBe(8)
-    expect(periodSelectorGap).toBeGreaterThan(focusRingReach)
+    expect(periodSelectorGap).toBe(focusRingReach * 2 + focusRingOffset)
+    expect(periodSelectorGap).toBeGreaterThan(focusRingReach * 2)
   })
 })
