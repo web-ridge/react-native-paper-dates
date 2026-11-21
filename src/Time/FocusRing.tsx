@@ -12,9 +12,14 @@ export default function FocusRing({
   focused: boolean
   radius: number
 }) {
-  const theme = useTheme()
   if (!focused) return null
+  return <Ring color={color} radius={radius} />
+}
 
+// Split out so an unfocused ring reads no theme context and costs nothing in
+// lists like the calendar days.
+function Ring({ color, radius }: { color?: ColorValue; radius: number }) {
+  const theme = useTheme()
   const ringStyle = [
     styles.ring,
     {

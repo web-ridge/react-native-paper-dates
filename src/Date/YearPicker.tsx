@@ -249,7 +249,7 @@ function YearPure({
             {year}
           </Text>
         </View>
-        <FocusRing focused={inputFocused} radius={18} />
+        {inputFocused ? <FocusRing focused radius={18} /> : null}
       </Pressable>
     </View>
   )

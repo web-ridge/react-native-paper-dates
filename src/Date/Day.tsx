@@ -190,11 +190,13 @@ function Day(props: {
               {day}
             </Text>
           </View>
-          <FocusRing
-            color={theme.colors.secondary}
-            focused={showFocus}
-            radius={circle / 2}
-          />
+          {showFocus ? (
+            <FocusRing
+              color={theme.colors.secondary}
+              focused
+              radius={circle / 2}
+            />
+          ) : null}
         </View>
         {dayContent ? (
           <View
