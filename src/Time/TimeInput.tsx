@@ -14,7 +14,9 @@ import {
   TextInput,
   type TextInputInstance,
   type TextInputProps,
+  type TextStyle,
   View,
+  type ViewStyle,
 } from 'react-native'
 import { useTheme } from 'react-native-paper'
 
@@ -165,6 +167,19 @@ function TimeInput(
       height: fieldHeight,
       width,
     },
+    ...(Platform.OS === 'web'
+      ? [
+          {
+            borderWidth: 0,
+            boxShadow: `inset 0 0 0 ${outlineWidth}px ${
+              typeof borderColor === 'string'
+                ? borderColor
+                : String(borderColor)
+            }`,
+            padding: outlineWidth,
+          } as ViewStyle,
+        ]
+      : []),
   ]
 
   return (
@@ -244,6 +259,15 @@ function TimeInput(
                         paddingTop: textPadding,
                       }),
                 },
+                ...(Platform.OS === 'web'
+                  ? [
+                      {
+                        borderRadius: innerRadius,
+                        outlineStyle: 'none',
+                        outlineWidth: 0,
+                      } as unknown as TextStyle,
+                    ]
+                  : []),
               ]}
               textAlign="center"
               value={formattedValue}
