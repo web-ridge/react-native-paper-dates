@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import { Text } from 'react-native-paper'
 
-import { dateTimeFormat } from '../shared/intl'
+import { formatDayLabel } from '../shared/intl'
 import StateLayer from '../shared/StateLayer'
 import { type PaperTheme, withAlpha } from '../shared/utils'
 import FocusRing from '../Time/FocusRing'
@@ -66,7 +66,7 @@ function Day(props: {
   } = props
 
   const accessibilityLabel = useMemo(
-    () => dayAccessibilityLabel(day, locale, month, year),
+    () => formatDayLabel(locale, year, month, day),
     [day, locale, month, year]
   )
 
@@ -222,20 +222,6 @@ function Day(props: {
       </Pressable>
     </View>
   )
-}
-
-function dayAccessibilityLabel(
-  day: number,
-  locale: string | undefined,
-  month: number,
-  year: number
-) {
-  return dateTimeFormat(locale, {
-    day: 'numeric',
-    month: 'long',
-    weekday: 'long',
-    year: 'numeric',
-  }).format(new Date(year, month, day))
 }
 
 function EmptyDayPure() {
