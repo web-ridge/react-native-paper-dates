@@ -16,6 +16,20 @@ import { dayCellSize, daySize } from './dateUtils'
 import DayRange from './DayRange'
 import type { DayContentPosition, DayContentRenderer } from './types'
 
+const contentPositions = StyleSheet.create({
+  'bottom': {
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingBottom: 2,
+  },
+  'bottom-left': { alignItems: 'flex-start', justifyContent: 'flex-end' },
+  'bottom-right': { alignItems: 'flex-end', justifyContent: 'flex-end' },
+  'center': { alignItems: 'center', justifyContent: 'center' },
+  'top': { alignItems: 'center', justifyContent: 'flex-start', paddingTop: 2 },
+  'top-left': { alignItems: 'flex-start', justifyContent: 'flex-start' },
+  'top-right': { alignItems: 'flex-end', justifyContent: 'flex-start' },
+})
+
 function Day(props: {
   cellHeight?: number
   day: number
@@ -24,8 +38,8 @@ function Day(props: {
   dayContentStyle?: StyleProp<ViewStyle>
   disabled: boolean
   focused?: boolean
-  inRange: boolean
   indicatorSize?: number
+  inRange: boolean
   isToday: boolean
   leftCrop: boolean
   locale?: string
@@ -40,6 +54,10 @@ function Day(props: {
   theme: PaperTheme
   year: number
 }) {
+  const [hovered, setHovered] = useState(false)
+  const [inputFocused, setInputFocused] = useState(false)
+  const [pressed, setPressed] = useState(false)
+
   const {
     cellHeight = dayCellSize,
     day,
@@ -48,8 +66,8 @@ function Day(props: {
     dayContentStyle,
     disabled,
     focused,
-    inRange,
     indicatorSize = daySize,
+    inRange,
     isToday,
     leftCrop,
     locale,
@@ -70,18 +88,16 @@ function Day(props: {
     [day, locale, month, year]
   )
 
-  const [hovered, setHovered] = useState(false)
-  const [inputFocused, setInputFocused] = useState(false)
-  const [pressed, setPressed] = useState(false)
-  const muted = (disabled || outside) && !selected
-  const showFocus = !disabled && (focused || inputFocused)
   const baseTextColor = selected
     ? textColorOnPrimary
     : inRange && !disabled
       ? theme.colors.onSecondaryContainer
       : theme.colors.onSurface
-  const textColor =
-    isToday && !selected && !disabled ? theme.colors.primary : baseTextColor
+
+  const circle = Math.min(indicatorSize, cellHeight)
+  const muted = (disabled || outside) && !selected
+  const showFocus = !disabled && (focused || inputFocused)
+
   const stateLayerColor = selected
     ? theme.colors.onPrimary
     : isToday
@@ -90,14 +106,17 @@ function Day(props: {
         ? theme.colors.onPrimaryContainer
         : theme.colors.onSurfaceVariant
 
+  const stateSize = Math.min(daySize, circle)
+  const stateOffset = (circle - stateSize) / 2
+
+  const textColor =
+    isToday && !selected && !disabled ? theme.colors.primary : baseTextColor
+
+  const textFont = theme.fonts.bodyLarge
+
   const onPress = useCallback(() => {
     onPressDate(new Date(year, month, day))
   }, [onPressDate, year, month, day])
-
-  const textFont = theme.fonts.bodyLarge
-  const circle = Math.min(indicatorSize, cellHeight)
-  const stateSize = Math.min(daySize, circle)
-  const stateOffset = (circle - stateSize) / 2
 
   return (
     <View style={styles.root}>
@@ -228,22 +247,6 @@ function EmptyDayPure() {
   return <View style={styles.empty} />
 }
 
-export const EmptyDay = memo(EmptyDayPure)
-
-const contentPositions = StyleSheet.create({
-  'bottom': {
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    paddingBottom: 2,
-  },
-  'bottom-left': { alignItems: 'flex-start', justifyContent: 'flex-end' },
-  'bottom-right': { alignItems: 'flex-end', justifyContent: 'flex-end' },
-  'center': { alignItems: 'center', justifyContent: 'center' },
-  'top': { alignItems: 'center', justifyContent: 'flex-start', paddingTop: 2 },
-  'top-left': { alignItems: 'flex-start', justifyContent: 'flex-start' },
-  'top-right': { alignItems: 'flex-end', justifyContent: 'flex-start' },
-})
-
 const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
@@ -289,5 +292,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
 })
+
+export const EmptyDay = memo(EmptyDayPure)
 
 export default memo(Day)

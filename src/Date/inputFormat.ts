@@ -66,10 +66,6 @@ export function useRangeChecker(validRange: ValidRangeType | undefined) {
     }
     return keys
   }, [disabledDates])
-  const isDisabled = useCallback(
-    (day: Date) => disabledKeys.has(calendarDateKey(day)),
-    [disabledKeys]
-  )
 
   const validEnd = validRange?.endDate
 
@@ -82,6 +78,11 @@ export function useRangeChecker(validRange: ValidRangeType | undefined) {
     validStart instanceof Date
       ? dateToUnix(getStartOfDay(validStart))
       : undefined
+
+  const isDisabled = useCallback(
+    (day: Date) => disabledKeys.has(calendarDateKey(day)),
+    [disabledKeys]
+  )
 
   const isWithinValidRange = useCallback(
     (day: Date) => {

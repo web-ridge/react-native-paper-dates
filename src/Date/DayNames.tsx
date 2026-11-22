@@ -22,6 +22,8 @@ function DayNames({
   locale: string | undefined
   startWeekOnMonday: boolean
 }) {
+  const theme = useTheme()
+
   const dayNames = useMemo(() => {
     const weekdays = [
       new Date(2020, 7, 2),
@@ -42,7 +44,6 @@ function DayNames({
       name: long.format(date),
     }))
   }, [locale, startWeekOnMonday])
-  const theme = useTheme()
 
   return (
     <View

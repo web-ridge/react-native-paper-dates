@@ -35,6 +35,7 @@ export type DatePickerAnchor = {
   x: number
   y: number
 }
+
 export type DatePickerDockedProps = {
   anchor?: DatePickerAnchor | null
   date?: CalendarDate
@@ -60,22 +61,140 @@ const anchorGap = 8
 const cardWidth = 360
 const cornerRadius = 16
 const dayHeaderInset = 12
+let focusVisibleListeners = 0
+const headerGap = 8
 const headerPaddingTop = 8
 const headerRowHeight = 48
-const headerGap = 8
 const iconButtonSize = 40
+let lastInputWasKeyboard = false
+const menuButtonHeight = 40
+const menuButtonPadding = 8
+const menuIconGap = 8
+const menuLabelInset = 16 + 24 + 16 - menuButtonPadding
 const minTouchTarget = 48
 const iconHitSlop = (minTouchTarget - iconButtonSize) / 2
-const menuButtonHeight = 40
+
 const menuHitSlop = {
   bottom: (minTouchTarget - menuButtonHeight) / 2,
   top: (minTouchTarget - menuButtonHeight) / 2,
 }
-const menuButtonPadding = 8
-const menuIconGap = 8
-const menuLabelInset = 16 + 24 + 16 - menuButtonPadding
+
 const screenInset = 8
 const stepperGap = 0
+
+function listenForFocusVisibleInput() {
+  if (Platform.OS !== 'web' || typeof window === 'undefined') {
+    return () => {}
+  }
+  const target = window
+  if (typeof target.addEventListener !== 'function') {
+    return () => {}
+  }
+  if (focusVisibleListeners === 0) {
+    target.addEventListener('keydown', onFocusVisibleKeyDown, true)
+    target.addEventListener('mousedown', onFocusVisiblePointer, true)
+    target.addEventListener('pointerdown', onFocusVisiblePointer, true)
+    target.addEventListener('touchstart', onFocusVisiblePointer, true)
+  }
+  focusVisibleListeners += 1
+  return () => {
+    focusVisibleListeners -= 1
+    if (
+      focusVisibleListeners === 0 &&
+      typeof target.removeEventListener === 'function'
+    ) {
+      target.removeEventListener('keydown', onFocusVisibleKeyDown, true)
+      target.removeEventListener('mousedown', onFocusVisiblePointer, true)
+      target.removeEventListener('pointerdown', onFocusVisiblePointer, true)
+      target.removeEventListener('touchstart', onFocusVisiblePointer, true)
+    }
+  }
+}
+
+function onFocusVisibleKeyDown(event: Event) {
+  const keyEvent = event as unknown as {
+    altKey?: boolean
+    ctrlKey?: boolean
+    metaKey?: boolean
+  }
+  if (keyEvent.metaKey || keyEvent.altKey || keyEvent.ctrlKey) return
+  lastInputWasKeyboard = true
+}
+
+function onFocusVisiblePointer() {
+  lastInputWasKeyboard = false
+}
+
+export function placeDockedCard({
+  anchor,
+  cardHeight,
+  cardWidth: width,
+  windowHeight,
+  windowWidth,
+}: {
+  anchor: DatePickerAnchor
+  cardHeight: number
+  cardWidth: number
+  windowHeight: number
+  windowWidth: number
+}) {
+  const maxLeft = Math.max(screenInset, windowWidth - width - screenInset)
+  let left = anchor.x
+  if (left + width > windowWidth - screenInset) {
+    left = anchor.x + anchor.width - width
+  }
+  left = Math.min(Math.max(screenInset, left), maxLeft)
+  const below = anchor.y + anchor.height + anchorGap
+  const above = anchor.y - cardHeight - anchorGap
+  const top =
+    below + cardHeight > windowHeight - screenInset && above >= screenInset
+      ? above
+      : below
+  return { left, top }
+}
+
+function useMenuButtonInteraction(disabled: boolean, open: boolean) {
+  const [focused, setFocused] = useState(false)
+  const [hovered, setHovered] = useState(false)
+  const [pressed, setPressed] = useState(false)
+
+  useEffect(() => listenForFocusVisibleInput(), [])
+
+  useEffect(() => {
+    setPressed(false)
+    setHovered(false)
+    if (Platform.OS !== 'web' || !lastInputWasKeyboard) {
+      setFocused(false)
+    }
+  }, [disabled, open])
+
+  return {
+    focused: !disabled && Platform.OS === 'web' && focused,
+    hovered: !disabled && hovered,
+    onBlur: () => setFocused(false),
+    onFocus: () => {
+      if (Platform.OS === 'web' && lastInputWasKeyboard) {
+        setFocused(true)
+        return
+      }
+      setFocused(false)
+    },
+    onHoverIn: () => setHovered(true),
+    onHoverOut: () => setHovered(false),
+    onPress: () => {
+      lastInputWasKeyboard = false
+      setPressed(false)
+      setHovered(false)
+      setFocused(false)
+    },
+    onPressIn: () => {
+      lastInputWasKeyboard = false
+      setPressed(true)
+    },
+    onPressOut: () => setPressed(false),
+    pressed: !disabled && pressed,
+  }
+}
 
 function DatePickerDocked({
   anchor,
@@ -96,12 +215,26 @@ function DatePickerDocked({
 }: DatePickerDockedProps) {
   const theme = useTheme()
   const { height: windowHeight, width: windowWidth } = useWindowDimensions()
+
   const [cardHeight, setCardHeight] = useState(480)
 
   if (!visible) return null
 
-  const width = Math.min(cardWidth, Math.max(windowWidth - 16, 0))
+  const actionColor = themeColor(theme.colors.primary)
   const anchorBox = anchor ?? { height: 0, width: 0, x: 8, y: 8 }
+
+  const cancelLabel = displayCase(
+    translate(locale, 'cancel', 'Cancel'),
+    !!uppercase
+  )
+
+  const confirmLabel = displayCase(
+    saveLabel || translate(locale, 'confirm', 'OK'),
+    !!uppercase
+  )
+
+  const width = Math.min(cardWidth, Math.max(windowWidth - 16, 0))
+
   const { left, top } = placeDockedCard({
     anchor: anchorBox,
     cardHeight,
@@ -109,15 +242,6 @@ function DatePickerDocked({
     windowHeight,
     windowWidth,
   })
-  const actionColor = themeColor(theme.colors.primary)
-  const cancelLabel = displayCase(
-    translate(locale, 'cancel', 'Cancel'),
-    !!uppercase
-  )
-  const confirmLabel = displayCase(
-    saveLabel || translate(locale, 'confirm', 'OK'),
-    !!uppercase
-  )
 
   return (
     <Modal
@@ -252,95 +376,6 @@ function DatePickerDocked({
   )
 }
 
-let lastInputWasKeyboard = false
-let focusVisibleListeners = 0
-
-function onFocusVisibleKeyDown(event: Event) {
-  const keyEvent = event as unknown as {
-    altKey?: boolean
-    ctrlKey?: boolean
-    metaKey?: boolean
-  }
-  if (keyEvent.metaKey || keyEvent.altKey || keyEvent.ctrlKey) return
-  lastInputWasKeyboard = true
-}
-
-function onFocusVisiblePointer() {
-  lastInputWasKeyboard = false
-}
-
-function listenForFocusVisibleInput() {
-  if (Platform.OS !== 'web' || typeof window === 'undefined') {
-    return () => {}
-  }
-  const target = window
-  if (typeof target.addEventListener !== 'function') {
-    return () => {}
-  }
-  if (focusVisibleListeners === 0) {
-    target.addEventListener('keydown', onFocusVisibleKeyDown, true)
-    target.addEventListener('mousedown', onFocusVisiblePointer, true)
-    target.addEventListener('pointerdown', onFocusVisiblePointer, true)
-    target.addEventListener('touchstart', onFocusVisiblePointer, true)
-  }
-  focusVisibleListeners += 1
-  return () => {
-    focusVisibleListeners -= 1
-    if (
-      focusVisibleListeners === 0 &&
-      typeof target.removeEventListener === 'function'
-    ) {
-      target.removeEventListener('keydown', onFocusVisibleKeyDown, true)
-      target.removeEventListener('mousedown', onFocusVisiblePointer, true)
-      target.removeEventListener('pointerdown', onFocusVisiblePointer, true)
-      target.removeEventListener('touchstart', onFocusVisiblePointer, true)
-    }
-  }
-}
-
-function useMenuButtonInteraction(disabled: boolean, open: boolean) {
-  const [focused, setFocused] = useState(false)
-  const [hovered, setHovered] = useState(false)
-  const [pressed, setPressed] = useState(false)
-
-  useEffect(() => listenForFocusVisibleInput(), [])
-
-  useEffect(() => {
-    setPressed(false)
-    setHovered(false)
-    if (Platform.OS !== 'web' || !lastInputWasKeyboard) {
-      setFocused(false)
-    }
-  }, [disabled, open])
-
-  return {
-    focused: !disabled && Platform.OS === 'web' && focused,
-    hovered: !disabled && hovered,
-    onBlur: () => setFocused(false),
-    onFocus: () => {
-      if (Platform.OS === 'web' && lastInputWasKeyboard) {
-        setFocused(true)
-        return
-      }
-      setFocused(false)
-    },
-    onHoverIn: () => setHovered(true),
-    onHoverOut: () => setHovered(false),
-    onPress: () => {
-      lastInputWasKeyboard = false
-      setPressed(false)
-      setHovered(false)
-      setFocused(false)
-    },
-    onPressIn: () => {
-      lastInputWasKeyboard = false
-      setPressed(true)
-    },
-    onPressOut: () => setPressed(false),
-    pressed: !disabled && pressed,
-  }
-}
-
 function DockedStepper({
   disabled,
   label,
@@ -360,12 +395,13 @@ function DockedStepper({
   testID: string
   unit: 'month' | 'year'
 }) {
-  const theme = useTheme()
   const interaction = useMenuButtonInteraction(disabled, open)
+  const theme = useTheme()
+
   const labelColor = disabled
     ? theme.colors.onSurface
     : theme.colors.onSurfaceVariant
-  const showArrows = !disabled && !open
+
   const labelText = (
     <Text
       maxFontSizeMultiplier={1.5}
@@ -376,6 +412,7 @@ function DockedStepper({
       {label}
     </Text>
   )
+
   const menuControl = (
     <Pressable
       accessibilityRole="button"
@@ -409,6 +446,8 @@ function DockedStepper({
       </View>
     </Pressable>
   )
+
+  const showArrows = !disabled && !open
 
   if (!showArrows) return menuControl
 
@@ -445,34 +484,6 @@ function DockedStepper({
       />
     </View>
   )
-}
-
-export function placeDockedCard({
-  anchor,
-  cardHeight,
-  cardWidth: width,
-  windowHeight,
-  windowWidth,
-}: {
-  anchor: DatePickerAnchor
-  cardHeight: number
-  cardWidth: number
-  windowHeight: number
-  windowWidth: number
-}) {
-  const maxLeft = Math.max(screenInset, windowWidth - width - screenInset)
-  let left = anchor.x
-  if (left + width > windowWidth - screenInset) {
-    left = anchor.x + anchor.width - width
-  }
-  left = Math.min(Math.max(screenInset, left), maxLeft)
-  const below = anchor.y + anchor.height + anchorGap
-  const above = anchor.y - cardHeight - anchorGap
-  const top =
-    below + cardHeight > windowHeight - screenInset && above >= screenInset
-      ? above
-      : below
-  return { left, top }
 }
 
 const styles = StyleSheet.create({

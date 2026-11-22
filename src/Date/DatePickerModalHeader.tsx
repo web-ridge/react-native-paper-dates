@@ -24,10 +24,11 @@ interface DatePickerModalHeaderProps {
 export default function DatePickerModalHeader(
   props: DatePickerModalHeaderProps
 ) {
-  const { closeIcon = 'close', disableWeekDays, locale } = props
   const color = useHeaderTextColor()
-  const saveLabel = props.saveLabel || getTranslation(locale, 'save')
   const theme = useTheme()
+
+  const { closeIcon = 'close', disableWeekDays, locale } = props
+  const saveLabel = props.saveLabel || getTranslation(locale, 'save')
 
   return (
     <View style={styles.headerBar}>

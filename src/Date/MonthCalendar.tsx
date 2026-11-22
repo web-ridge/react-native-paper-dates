@@ -24,22 +24,6 @@ import type {
 } from './types'
 import YearPicker from './YearPicker'
 
-const actionHeight = 36
-const actionPaddingBottom = 12
-const actionPaddingTop = 8
-const headerPaddingBottom = 0
-const menuDividerOffset = 0
-const menuPaddingBottom = 20
-const weekdayRowHeight = 24
-const weekdayGridGap = 16
-const menuHeight =
-  weekdayRowHeight +
-  weekdayGridGap +
-  dayCellSize * 6 +
-  actionPaddingTop +
-  actionHeight +
-  actionPaddingBottom
-
 export type MonthCalendarNav = {
   body: ReactNode
   menu: 'day' | 'month' | 'year'
@@ -50,6 +34,23 @@ export type MonthCalendarNav = {
   toggleYear: () => void
   visibleMonth: Date
 }
+
+const actionHeight = 36
+const actionPaddingBottom = 12
+const actionPaddingTop = 8
+const headerPaddingBottom = 0
+const menuDividerOffset = 0
+const menuPaddingBottom = 20
+const weekdayGridGap = 16
+const weekdayRowHeight = 24
+
+const menuHeight =
+  weekdayRowHeight +
+  weekdayGridGap +
+  dayCellSize * 6 +
+  actionPaddingTop +
+  actionHeight +
+  actionPaddingBottom
 
 export function renderMonthBody(navigation: MonthCalendarNav) {
   return navigation.body
@@ -81,24 +82,38 @@ function MonthCalendar({
   validRange?: ValidRangeType
 }) {
   const theme = useTheme()
+
   const [draft, setDraft] = useState<CalendarDate>(date)
   const [focusedDate, setFocusedDate] = useState<Date | undefined>(date)
   const [menu, setMenu] = useState<'day' | 'month' | 'year'>('day')
+
   const [visibleMonth, setVisibleMonth] = useState(() => {
     const initial = date ?? new Date()
     return new Date(initial.getFullYear(), initial.getMonth(), 1)
   })
+
+  const onChangeRef = useLatest(onChange)
+  const onMonthConfirmRef = useLatest(onMonthConfirm)
+
   const monday = startWeekOnMonday ?? false
+
   const resolvedDate = focusedDate
     ? dateMode === 'end'
       ? getEndOfDay(focusedDate)
       : focusedDate
     : draft
+
+  const resolvedDateRef = useLatest(resolvedDate)
+
   const resolvedEndYear = endYear ?? defaultEndYear
   const resolvedStartYear = startYear ?? defaultStartYear
-  const onChangeRef = useLatest(onChange)
-  const onMonthConfirmRef = useLatest(onMonthConfirm)
-  const resolvedDateRef = useLatest(resolvedDate)
+
+  const index = getInitialIndex(
+    visibleMonth,
+    resolvedStartYear,
+    resolvedEndYear
+  )
+
   const commitDate = useCallback(
     (next: Date) => {
       const normalized = dateMode === 'end' ? getEndOfDay(next) : next
@@ -109,6 +124,7 @@ function MonthCalendar({
     },
     [dateMode, onChangeRef]
   )
+
   const moveMonth = useCallback(
     (delta: number) => {
       setVisibleMonth((current) => {
@@ -120,6 +136,7 @@ function MonthCalendar({
     },
     [resolvedEndYear, resolvedStartYear]
   )
+
   const moveYear = useCallback(
     (delta: number) => {
       setVisibleMonth((current) => {
@@ -130,43 +147,20 @@ function MonthCalendar({
     },
     [resolvedEndYear, resolvedStartYear]
   )
+
   const showMonth = useCallback((next: Date) => {
     setFocusedDate(next)
     setVisibleMonth(new Date(next.getFullYear(), next.getMonth(), 1))
   }, [])
+
   const toggleMonth = useCallback(() => {
     setMenu((current) => (current === 'month' ? 'day' : 'month'))
   }, [])
+
   const toggleYear = useCallback(() => {
     setMenu((current) => (current === 'year' ? 'day' : 'year'))
   }, [])
-  useDatePickerKeys(menu === 'day', {
-    getVisibleMonth: () => visibleMonth,
-    onConfirm: () => {
-      onMonthConfirmRef.current?.({ date: resolvedDateRef.current })
-    },
-    onFocusDate: showMonth,
-    onMoveFocus: (delta) => {
-      const base = focusedDate || draft || visibleMonth
-      const next = addMonths(base, delta)
-      if (
-        next.getFullYear() < resolvedStartYear ||
-        next.getFullYear() > resolvedEndYear
-      ) {
-        return
-      }
-      showMonth(next)
-    },
-    onMoveMonth: moveMonth,
-    onOpenMonthMenu: toggleMonth,
-    onOpenYearMenu: toggleYear,
-  })
 
-  const index = getInitialIndex(
-    visibleMonth,
-    resolvedStartYear,
-    resolvedEndYear
-  )
   const body = (
     <>
       {menu === 'month' ? (
@@ -235,6 +229,28 @@ function MonthCalendar({
       ) : null}
     </>
   )
+
+  useDatePickerKeys(menu === 'day', {
+    getVisibleMonth: () => visibleMonth,
+    onConfirm: () => {
+      onMonthConfirmRef.current?.({ date: resolvedDateRef.current })
+    },
+    onFocusDate: showMonth,
+    onMoveFocus: (delta) => {
+      const base = focusedDate || draft || visibleMonth
+      const next = addMonths(base, delta)
+      if (
+        next.getFullYear() < resolvedStartYear ||
+        next.getFullYear() > resolvedEndYear
+      ) {
+        return
+      }
+      showMonth(next)
+    },
+    onMoveMonth: moveMonth,
+    onOpenMonthMenu: toggleMonth,
+    onOpenYearMenu: toggleYear,
+  })
 
   return children({
     body,

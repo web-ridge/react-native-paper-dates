@@ -39,8 +39,6 @@ import type {
 } from './types'
 import YearPicker from './YearPicker'
 
-export type { MonthCalendarNav }
-
 export type BaseCalendarProps = {
   children?: (navigation: MonthCalendarNav) => ReactNode
   date?: CalendarDate
@@ -65,27 +63,17 @@ export type BaseCalendarProps = {
   startYear?: number
   validRange?: ValidRangeType
 }
-export type {
-  CalendarDate,
-  CalendarDates,
-  DayContentPosition,
-  DayContentRenderer,
-  ModeType,
-  MultiChange,
-  MultiConfirm,
-  RangeChange,
-  ScrollModeType,
-  SingleChange,
-  ValidRangeType,
-}
+
 type CalendarMultiProps = BaseCalendarProps &
   MultiCalendarMode & {
     onChange: MultiChange
   }
+
 type CalendarRangeProps = BaseCalendarProps &
   RangeCalendarMode & {
     onChange: RangeChange
   }
+
 type CalendarSingleProps = BaseCalendarProps &
   SingleCalendarMode & {
     onChange: SingleChange
@@ -118,6 +106,18 @@ function Calendar(
 function ScrollCalendar(
   props: CalendarSingleProps | CalendarRangeProps | CalendarMultiProps
 ) {
+  const theme = useTheme()
+
+  const [focusedDate, setFocusedDate] = useState<Date | undefined>(undefined)
+  const [navigateDate, setNavigateDate] = useState<Date | undefined>(undefined)
+
+  const [selectedYear, setSelectedYear] = useState<number | undefined>(
+    undefined
+  )
+
+  const [selectingMonth, setSelectingMonth] = useState(false)
+  const [selectingYear, setSelectingYear] = useState(false)
+
   const {
     date,
     dateMode,
@@ -141,53 +141,43 @@ function ScrollCalendar(
     startYear,
     validRange,
   } = props
+
   const datesRef = useLatest<CalendarDates>(dates)
   const endDateRef = useLatest<CalendarDate>(endDate)
-  const firstDate = startDate || date || dates?.[0]
+
   const onChangeRef = useLatest<RangeChange | SingleChange | MultiChange>(
     onChange
   )
+
+  const startDateRef = useLatest<CalendarDate>(startDate)
+
+  const firstDate = startDate || date || dates?.[0]
+  const primaryColor = themeColor(theme.colors.primary)
+  const roundness = theme.shapes.corner.extraSmall
+
   const scrollMode =
     mode === 'range' || mode === 'multiple' ? 'vertical' : 'horizontal'
-  const [focusedDate, setFocusedDate] = useState<Date | undefined>(undefined)
-  const [navigateDate, setNavigateDate] = useState<Date | undefined>(undefined)
-  const [selectedYear, setSelectedYear] = useState<number | undefined>(
-    undefined
-  )
-  const [selectingMonth, setSelectingMonth] = useState(false)
-  const [selectingYear, setSelectingYear] = useState(false)
-  useEffect(() => {
-    onSelectingYearChange?.(scrollMode === 'horizontal' && selectingYear)
-  }, [onSelectingYearChange, scrollMode, selectingYear])
+
+  const selectColor = theme.colors.secondaryContainer
+  const selectColorValue = themeColor(selectColor)
+  const startWeekOnMondayValue = startWeekOnMonday || false
+
   const onMoveFocus = (delta: number) => {
     setFocusedDate((prev) => addMonths(prev || date || new Date(), delta))
   }
+
   const onOpenMonthMenu = () => {
     setSelectingYear(false)
     setSelectingMonth((prev) => !prev)
   }
+
   const onOpenYearMenu = () => {
     const year = (focusedDate || date || new Date()).getFullYear()
     setSelectedYear(year)
     setSelectingMonth(false)
     setSelectingYear(true)
   }
-  const onPressMonth = (month: number) => {
-    const base = focusedDate || date || new Date()
-    const day = Math.min(
-      base.getDate(),
-      getDaysInMonth({ month, year: base.getFullYear() })
-    )
-    const next = new Date(base.getFullYear(), month, day)
-    setFocusedDate(next)
-    setNavigateDate(next)
-    setSelectingMonth(false)
-  }
-  const onPressYear = (year: number) => {
-    setSelectedYear(year)
-    setSelectingYear((prev) => !prev)
-  }
-  const startDateRef = useLatest<CalendarDate>(startDate)
+
   const onPressDate = (pressed: Date) => {
     const next = pressDate(
       {
@@ -202,7 +192,24 @@ function ScrollCalendar(
     if (next.dates) datesRef.current = next.dates
     ;(onChangeRef.current as (value: PressedDate) => void)(next)
   }
-  const startWeekOnMondayValue = startWeekOnMonday || false
+
+  const onPressMonth = (month: number) => {
+    const base = focusedDate || date || new Date()
+    const day = Math.min(
+      base.getDate(),
+      getDaysInMonth({ month, year: base.getFullYear() })
+    )
+    const next = new Date(base.getFullYear(), month, day)
+    setFocusedDate(next)
+    setNavigateDate(next)
+    setSelectingMonth(false)
+  }
+
+  const onPressYear = (year: number) => {
+    setSelectedYear(year)
+    setSelectingYear((prev) => !prev)
+  }
+
   const renderHeader = ({
     endInset,
     onNext,
@@ -223,11 +230,7 @@ function ScrollCalendar(
       startWeekOnMonday={startWeekOnMondayValue}
     />
   )
-  const theme = useTheme()
-  const primaryColor = themeColor(theme.colors.primary)
-  const roundness = theme.shapes.corner.extraSmall
-  const selectColor = theme.colors.secondaryContainer
-  const selectColorValue = themeColor(selectColor)
+
   const renderItem = ({
     active,
     index,
@@ -264,6 +267,10 @@ function ScrollCalendar(
       validRange={validRange}
     />
   )
+
+  useEffect(() => {
+    onSelectingYearChange?.(scrollMode === 'horizontal' && selectingYear)
+  }, [onSelectingYearChange, scrollMode, selectingYear])
 
   return (
     <View
@@ -309,6 +316,22 @@ function ScrollCalendar(
       ) : null}
     </View>
   )
+}
+
+export type { MonthCalendarNav }
+
+export type {
+  CalendarDate,
+  CalendarDates,
+  DayContentPosition,
+  DayContentRenderer,
+  ModeType,
+  MultiChange,
+  MultiConfirm,
+  RangeChange,
+  ScrollModeType,
+  SingleChange,
+  ValidRangeType,
 }
 
 export default memo(Calendar)

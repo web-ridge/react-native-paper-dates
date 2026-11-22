@@ -9,11 +9,44 @@ import type { DisableWeekDaysType } from './types'
 import { centerIconOnLastWeekday } from './weekdayColumns'
 
 export const calendarArrowSize = 48
+const buttonContainerHeight = calendarArrowSize
 export const calendarControlInset = 4
 export const calendarControlHeight = calendarControlInset + calendarArrowSize
-const buttonContainerHeight = calendarArrowSize
 const overlayScrollbarWidth = 15
+
 let cachedLayoutScrollbarWidth: number | undefined
+
+export function getCalendarHeaderHeight(scrollMode: 'horizontal' | 'vertical') {
+  if (scrollMode === 'horizontal') {
+    return calendarControlInset + buttonContainerHeight + dayNamesHeight
+  }
+  return dayNamesHeight
+}
+
+export function layoutScrollbarWidth(): number {
+  if (cachedLayoutScrollbarWidth !== undefined) {
+    return cachedLayoutScrollbarWidth
+  }
+  if (typeof document === 'undefined' || !document.body) {
+    return 0
+  }
+  const probe = document.createElement('div')
+  probe.style.cssText =
+    'position:absolute;top:-9999px;width:100px;height:100px;overflow:scroll;visibility:hidden'
+  document.body.appendChild(probe)
+  const width = probe.offsetWidth - probe.clientWidth
+  probe.remove()
+  return (cachedLayoutScrollbarWidth = width > 0 ? width : 0)
+}
+
+export function overlayScrollbarPadding(): number {
+  return layoutScrollbarWidth() > 0 ? 0 : overlayScrollbarWidth
+}
+
+export function weekdayScrollbarInset(): number {
+  const measured = layoutScrollbarWidth()
+  return measured > 0 ? measured : overlayScrollbarWidth
+}
 
 function CalendarHeader({
   disableWeekDays,
@@ -86,38 +119,6 @@ function CalendarHeader({
       />
     </View>
   )
-}
-
-export function getCalendarHeaderHeight(scrollMode: 'horizontal' | 'vertical') {
-  if (scrollMode === 'horizontal') {
-    return calendarControlInset + buttonContainerHeight + dayNamesHeight
-  }
-  return dayNamesHeight
-}
-
-export function layoutScrollbarWidth(): number {
-  if (cachedLayoutScrollbarWidth !== undefined) {
-    return cachedLayoutScrollbarWidth
-  }
-  if (typeof document === 'undefined' || !document.body) {
-    return 0
-  }
-  const probe = document.createElement('div')
-  probe.style.cssText =
-    'position:absolute;top:-9999px;width:100px;height:100px;overflow:scroll;visibility:hidden'
-  document.body.appendChild(probe)
-  const width = probe.offsetWidth - probe.clientWidth
-  probe.remove()
-  return (cachedLayoutScrollbarWidth = width > 0 ? width : 0)
-}
-
-export function overlayScrollbarPadding(): number {
-  return layoutScrollbarWidth() > 0 ? 0 : overlayScrollbarWidth
-}
-
-export function weekdayScrollbarInset(): number {
-  const measured = layoutScrollbarWidth()
-  return measured > 0 ? measured : overlayScrollbarWidth
 }
 
 const styles = StyleSheet.create({

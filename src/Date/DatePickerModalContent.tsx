@@ -81,12 +81,20 @@ export function DatePickerModalContent(
     | DatePickerModalContentSingleProps
     | DatePickerModalContentMultiProps
 ) {
+  const insets = useSafeAreaInsets()
+  const isLargeScreen = useIsLargeScreen()
+  const theme = useTheme()
+
   const [collapsed, setCollapsed] = useState(
     () => props.mode === 'multiple' || props.displayMode !== 'input'
   )
+
   const [focusOnInput, setFocusOnInput] = useState(false)
   const [inputValid, setInputValid] = useState(true)
   const [selectingYear, setSelectingYear] = useState(false)
+
+  const actionColor = themeColor(theme.colors.primary)
+
   const {
     date,
     dateMode,
@@ -116,56 +124,46 @@ export function DatePickerModalContent(
     statusBarOnTopOfBackdrop,
     validRange,
   } = props
-  const defaultUppercase = false
-  const cardLayout = layout === 'card'
-  const insets = useSafeAreaInsets()
-  const isLargeScreen = useIsLargeScreen()
-  const fillYearList = mode === 'single' && selectingYear && !isLargeScreen
-  const hugCalendar = mode === 'single' && !fillYearList
-  const showFooter = isLargeScreen || cardLayout
-  const showSheetHeader = !isLargeScreen && !cardLayout
-  const theme = useTheme()
-  const actionColor = themeColor(theme.colors.primary)
-  const uppercase = props.uppercase ?? defaultUppercase
-  const confirmLabel = displayCase(
-    props.saveLabel || translate(locale, 'confirm', 'OK'),
-    uppercase
-  )
-  const cancelLabel = displayCase(
-    translate(locale, 'cancel', 'Cancel'),
-    uppercase
-  )
+
   const [state, setState] = useState<LocalState>({
     date,
     dates,
     endDate,
     startDate,
   })
-  useEffect(() => {
-    setState({
-      date,
-      dates,
-      endDate,
-      startDate,
-    })
-  }, [date, startDate, endDate, dates])
+
   const onDisplayModeChangeRef = useLatest(onDisplayModeChange)
-  const reportDisplayMode = useCallback(
-    (nextCollapsed: boolean) => {
-      onDisplayModeChangeRef.current?.(
-        !nextCollapsed && mode !== 'multiple' ? 'input' : 'calendar'
-      )
-    },
-    [mode, onDisplayModeChangeRef]
-  )
-  useEffect(() => {
-    const nextCollapsed = mode === 'multiple' || displayMode !== 'input'
-    setCollapsed(nextCollapsed)
-    reportDisplayMode(nextCollapsed)
-  }, [displayMode, mode, reportDisplayMode])
+
+  const cardLayout = layout === 'card'
+  const defaultUppercase = false
+  const fillYearList = mode === 'single' && selectingYear && !isLargeScreen
+  const hugCalendar = mode === 'single' && !fillYearList
+
+  const sameDayRange =
+    mode === 'range' &&
+    !!state.startDate &&
+    !!state.endDate &&
+    areDatesOnSameDay(state.startDate, state.endDate)
+
+  const showFooter = isLargeScreen || cardLayout
+  const showSheetHeader = !isLargeScreen && !cardLayout
+
   const horizontalInset = showSheetHeader
     ? { paddingLeft: insets.left, paddingRight: insets.right }
     : null
+
+  const uppercase = props.uppercase ?? defaultUppercase
+
+  const cancelLabel = displayCase(
+    translate(locale, 'cancel', 'Cancel'),
+    uppercase
+  )
+
+  const confirmLabel = displayCase(
+    props.saveLabel || translate(locale, 'confirm', 'OK'),
+    uppercase
+  )
+
   const onCalendarContainerLayout = useCallback(
     (event: LayoutChangeEvent) => {
       const { height, width } = event.nativeEvent.layout
@@ -177,6 +175,7 @@ export function DatePickerModalContent(
     },
     [insets.left, insets.right, onCalendarLayout, showSheetHeader]
   )
+
   const onInnerChange = useCallback(
     (params: Partial<LocalState>) => {
       if (onChange) {
@@ -186,23 +185,26 @@ export function DatePickerModalContent(
     },
     [onChange]
   )
-  const sameDayRange =
-    mode === 'range' &&
-    !!state.startDate &&
-    !!state.endDate &&
-    areDatesOnSameDay(state.startDate, state.endDate)
+
   const onInnerConfirm = useCallback(() => {
     const confirmed = confirmDates(mode, state, true)
     if (!confirmed) return
     ;(onConfirm as (value: typeof confirmed) => void)(confirmed)
   }, [state, mode, onConfirm])
+
   const onInputValidityChange = useCallback((valid: boolean) => {
     setInputValid(valid)
   }, [])
-  const showCalendar = useCallback(() => {
-    setCollapsed(true)
-    reportDisplayMode(true)
-  }, [reportDisplayMode])
+
+  const reportDisplayMode = useCallback(
+    (nextCollapsed: boolean) => {
+      onDisplayModeChangeRef.current?.(
+        !nextCollapsed && mode !== 'multiple' ? 'input' : 'calendar'
+      )
+    },
+    [mode, onDisplayModeChangeRef]
+  )
+
   const onToggleCollapse = useCallback(() => {
     if (onRequestInput && collapsed) {
       onRequestInput()
@@ -212,6 +214,26 @@ export function DatePickerModalContent(
     setCollapsed(false)
     reportDisplayMode(false)
   }, [collapsed, onRequestInput, reportDisplayMode])
+
+  const showCalendar = useCallback(() => {
+    setCollapsed(true)
+    reportDisplayMode(true)
+  }, [reportDisplayMode])
+
+  useEffect(() => {
+    setState({
+      date,
+      dates,
+      endDate,
+      startDate,
+    })
+  }, [date, startDate, endDate, dates])
+
+  useEffect(() => {
+    const nextCollapsed = mode === 'multiple' || displayMode !== 'input'
+    setCollapsed(nextCollapsed)
+    reportDisplayMode(nextCollapsed)
+  }, [displayMode, mode, reportDisplayMode])
 
   if ((mode === 'single' || mode === 'range') && !collapsed) {
     const form = (

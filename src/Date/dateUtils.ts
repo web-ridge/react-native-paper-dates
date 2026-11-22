@@ -1,34 +1,40 @@
 import type { DisableWeekDaysType } from './types'
 
-export type { DisableWeekDaysType }
 type TypedDateIssue = 'disabled' | 'format' | 'range'
 
-export const dayCellSize = 48
-export const daySize = 40
-export const dateInputMaxHeight = 512
-export const datePickerRangeMaxHeight = 568
-export const datePickerSingleMaxHeight = 524
-export const defaultEndYear = 2200
-export const defaultStartYear = 1800
-export const estimatedMonthHeight = 400
 const calendarDay = {
   day: 0,
   expiresAt: 0,
   month: 0,
   year: 0,
 }
+
 const calendarMonth = {
   expiresAt: 0,
   month: 0,
   stamp: '',
   year: 0,
 }
+
+export const dateInputMaxHeight = 512
+export const datePickerRangeMaxHeight = 568
+export const datePickerSingleMaxHeight = 524
+export const dayCellSize = 48
+export const daySize = 40
+export const defaultEndYear = 2200
+export const defaultStartYear = 1800
+export const estimatedMonthHeight = 400
 const monthLengths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 const nativeDigits: Record<string, string> = {}
 const startAtIndexCache = new Map<string, number>()
+
+export type { DisableWeekDaysType }
+
 for (const [index, digit] of '٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹'.split('').entries()) {
   nativeDigits[digit] = String(index % 10)
 }
+
+const weekdayOffsets = [0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4]
 
 export function addMonths(date: Date, count: number) {
   const n = date.getDate()
@@ -173,26 +179,6 @@ export function getEndOfDay(d: Date): Date {
   return endOfDay
 }
 
-const weekdayOffsets = [0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4]
-
-export function gregorianWeekday(
-  year: number,
-  month: number,
-  day: number
-): number {
-  let weekdayYear = year
-  if (month < 2) weekdayYear -= 1
-  const weekday =
-    (weekdayYear +
-      Math.floor(weekdayYear / 4) -
-      Math.floor(weekdayYear / 100) +
-      Math.floor(weekdayYear / 400) +
-      weekdayOffsets[month] +
-      day) %
-    7
-  return weekday < 0 ? weekday + 7 : weekday
-}
-
 export function getFirstDayOfMonth({
   month,
   startWeekOnMonday,
@@ -222,77 +208,6 @@ export function getGridCount(
 
 export function getGridCountForDate(date: Date, startWeekOnMonday: boolean) {
   return monthWeekRows(date.getFullYear(), date.getMonth(), startWeekOnMonday)
-}
-
-export function resolveCalendarDay(year: number, month: number, day: number) {
-  let resolvedDay = day
-  let resolvedMonth = month
-  let resolvedYear = year
-  while (resolvedDay < 1) {
-    resolvedMonth -= 1
-    if (resolvedMonth < 0) {
-      resolvedMonth = 11
-      resolvedYear -= 1
-    }
-    resolvedDay += getDaysInMonth({
-      month: resolvedMonth,
-      year: resolvedYear,
-    })
-  }
-  let daysInMonth = getDaysInMonth({
-    month: resolvedMonth,
-    year: resolvedYear,
-  })
-  while (resolvedDay > daysInMonth) {
-    resolvedDay -= daysInMonth
-    resolvedMonth += 1
-    if (resolvedMonth > 11) {
-      resolvedMonth = 0
-      resolvedYear += 1
-    }
-    daysInMonth = getDaysInMonth({
-      month: resolvedMonth,
-      year: resolvedYear,
-    })
-  }
-  return { day: resolvedDay, month: resolvedMonth, year: resolvedYear }
-}
-
-export function shiftMonth(year: number, month: number, count: number) {
-  const absolute = year * 12 + month + count
-  let nextYear = Math.floor(absolute / 12)
-  let nextMonth = absolute - nextYear * 12
-  if (nextMonth < 0) {
-    nextMonth += 12
-    nextYear -= 1
-  }
-  return { month: nextMonth, year: nextYear }
-}
-
-export function monthFromIndex(
-  index: number,
-  startYear?: number,
-  endYear?: number
-): { month: number; year: number } {
-  const { month, year } = currentCalendarMonth()
-  const absolute =
-    year * 12 + month + (index - getStartAtIndex(startYear, endYear))
-  let nextYear = Math.floor(absolute / 12)
-  let nextMonth = absolute - nextYear * 12
-  if (nextMonth < 0) {
-    nextMonth += 12
-    nextYear -= 1
-  }
-  return { month: nextMonth, year: nextYear }
-}
-
-export function monthWeekRows(
-  year: number,
-  month: number,
-  startWeekOnMonday: boolean
-): number {
-  const dayOfWeek = getFirstDayOfMonth({ month, startWeekOnMonday, year })
-  return Math.ceil((getDaysInMonth({ month, year }) + dayOfWeek) / 7)
 }
 
 export function getInitialIndex(
@@ -346,6 +261,24 @@ export function getTotalMonths(startYear?: number, endYear?: number): number {
   return (end - start + 1) * 12
 }
 
+export function gregorianWeekday(
+  year: number,
+  month: number,
+  day: number
+): number {
+  let weekdayYear = year
+  if (month < 2) weekdayYear -= 1
+  const weekday =
+    (weekdayYear +
+      Math.floor(weekdayYear / 4) -
+      Math.floor(weekdayYear / 100) +
+      Math.floor(weekdayYear / 400) +
+      weekdayOffsets[month] +
+      day) %
+    7
+  return weekday < 0 ? weekday + 7 : weekday
+}
+
 export function interpretTypedDate(
   text: string,
   inputFormat: string,
@@ -396,6 +329,32 @@ export function isLeapYear({ year }: { year: number }) {
   return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0
 }
 
+export function monthFromIndex(
+  index: number,
+  startYear?: number,
+  endYear?: number
+): { month: number; year: number } {
+  const { month, year } = currentCalendarMonth()
+  const absolute =
+    year * 12 + month + (index - getStartAtIndex(startYear, endYear))
+  let nextYear = Math.floor(absolute / 12)
+  let nextMonth = absolute - nextYear * 12
+  if (nextMonth < 0) {
+    nextMonth += 12
+    nextYear -= 1
+  }
+  return { month: nextMonth, year: nextYear }
+}
+
+export function monthWeekRows(
+  year: number,
+  month: number,
+  startWeekOnMonday: boolean
+): number {
+  const dayOfWeek = getFirstDayOfMonth({ month, startWeekOnMonday, year })
+  return Math.ceil((getDaysInMonth({ month, year }) + dayOfWeek) / 7)
+}
+
 function normalizeDigits(text: string) {
   return text.replace(/[٠-٩۰-۹]/g, (digit) => nativeDigits[digit])
 }
@@ -433,6 +392,51 @@ export function parseLooseDate(
   }
 
   return { day: values.D, month: values.M, year: values.Y }
+}
+
+export function resolveCalendarDay(year: number, month: number, day: number) {
+  let resolvedDay = day
+  let resolvedMonth = month
+  let resolvedYear = year
+  while (resolvedDay < 1) {
+    resolvedMonth -= 1
+    if (resolvedMonth < 0) {
+      resolvedMonth = 11
+      resolvedYear -= 1
+    }
+    resolvedDay += getDaysInMonth({
+      month: resolvedMonth,
+      year: resolvedYear,
+    })
+  }
+  let daysInMonth = getDaysInMonth({
+    month: resolvedMonth,
+    year: resolvedYear,
+  })
+  while (resolvedDay > daysInMonth) {
+    resolvedDay -= daysInMonth
+    resolvedMonth += 1
+    if (resolvedMonth > 11) {
+      resolvedMonth = 0
+      resolvedYear += 1
+    }
+    daysInMonth = getDaysInMonth({
+      month: resolvedMonth,
+      year: resolvedYear,
+    })
+  }
+  return { day: resolvedDay, month: resolvedMonth, year: resolvedYear }
+}
+
+export function shiftMonth(year: number, month: number, count: number) {
+  const absolute = year * 12 + month + count
+  let nextYear = Math.floor(absolute / 12)
+  let nextMonth = absolute - nextYear * 12
+  if (nextMonth < 0) {
+    nextMonth += 12
+    nextYear -= 1
+  }
+  return { month: nextMonth, year: nextYear }
 }
 
 export function showWeekDay(

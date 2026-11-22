@@ -21,6 +21,13 @@ import {
   defaultStartYear,
 } from './dateUtils'
 
+type YearProps = {
+  current: boolean
+  onPressYear: (newYear: number) => void
+  selected: boolean
+  year: number
+}
+
 const COLUMNS = 3
 const YEAR_HEIGHT = 36
 const YEAR_ROW_GAP = 16
@@ -43,9 +50,44 @@ function YearPicker({
   startYear: number
   variant?: 'grid' | 'menu'
 }) {
+  const theme = useTheme()
+
+  const listReady = useRef({ laidOut: false, sized: false })
+  const listRef = useRef<FlatList<number>>(null)
+  const revealed = useRef(false)
+
   const columns = variant === 'grid' ? COLUMNS : 1
+  const resolvedStartYear = isNaN(startYear) ? defaultStartYear : startYear
   const rowHeight = variant === 'menu' ? selectionMenuItemHeight : ROW_HEIGHT
+
+  const selectedIndex = useMemo(() => {
+    if (!selectedYear) {
+      return 0
+    }
+    return Math.max(0, selectedYear - resolvedStartYear)
+  }, [resolvedStartYear, selectedYear])
+
   const todayYear = currentCalendarMonth().year
+
+  const years = useMemo(
+    () => range(resolvedStartYear, isNaN(endYear) ? defaultEndYear : endYear),
+    [endYear, resolvedStartYear]
+  )
+
+  const rowCount = Math.max(Math.ceil(years.length / columns), 1)
+
+  const initialScrollIndex = Math.min(
+    Math.floor(selectedIndex / columns),
+    rowCount - 1
+  )
+
+  const scrollIndex = Math.max(initialScrollIndex, 0)
+
+  const [contentOffset] = useState(() => ({
+    x: 0,
+    y: scrollIndex * rowHeight,
+  }))
+
   const getItemLayout = useCallback(
     (_: ArrayLike<number> | null | undefined, index: number) => ({
       index,
@@ -54,7 +96,9 @@ function YearPicker({
     }),
     [rowHeight]
   )
+
   const keyExtractor = useCallback((item: number) => `${item}`, [])
+
   const renderItem = useCallback(
     ({ item }: { item: number }) => (
       <Year
@@ -67,37 +111,11 @@ function YearPicker({
     ),
     [onPressYear, selectedYear, todayYear, variant]
   )
+
   const renderScrollComponent = useCallback((sProps: object) => {
     return <ScrollView {...sProps} />
   }, [])
 
-  const resolvedStartYear = isNaN(startYear) ? defaultStartYear : startYear
-
-  const selectedIndex = useMemo(() => {
-    if (!selectedYear) {
-      return 0
-    }
-    return Math.max(0, selectedYear - resolvedStartYear)
-  }, [resolvedStartYear, selectedYear])
-  const theme = useTheme()
-  const years = useMemo(
-    () => range(resolvedStartYear, isNaN(endYear) ? defaultEndYear : endYear),
-    [endYear, resolvedStartYear]
-  )
-
-  const rowCount = Math.max(Math.ceil(years.length / columns), 1)
-  const initialScrollIndex = Math.min(
-    Math.floor(selectedIndex / columns),
-    rowCount - 1
-  )
-  const scrollIndex = Math.max(initialScrollIndex, 0)
-  const [contentOffset] = useState(() => ({
-    x: 0,
-    y: scrollIndex * rowHeight,
-  }))
-  const listReady = useRef({ laidOut: false, sized: false })
-  const listRef = useRef<FlatList<number>>(null)
-  const revealed = useRef(false)
   const revealYear = useCallback(() => {
     if (
       !listReady.current.laidOut ||
@@ -118,6 +136,7 @@ function YearPicker({
     scroll()
     requestAnimationFrame(scroll)
   }, [scrollIndex])
+
   const onListContentSizeChange = useCallback(
     (_width: number, height: number) => {
       if (height <= 0) return
@@ -126,6 +145,7 @@ function YearPicker({
     },
     [revealYear]
   )
+
   const onListLayout = useCallback(
     (event: LayoutChangeEvent) => {
       if (event.nativeEvent.layout.height <= 0) return
@@ -175,38 +195,21 @@ function YearPicker({
   )
 }
 
-type YearProps = {
-  current: boolean
-  onPressYear: (newYear: number) => void
-  selected: boolean
-  year: number
-}
-
-function YearPure({ menu, ...props }: YearProps & { menu: boolean }) {
-  if (menu) {
-    return (
-      <SelectionMenuItem
-        label={String(props.year)}
-        onPress={() => props.onPressYear(props.year)}
-        selected={props.selected}
-      />
-    )
-  }
-  return <GridYear {...props} />
-}
-
 function GridYear({ current, onPressYear, selected, year }: YearProps) {
+  const theme = useTheme()
+
   const [hovered, setHovered] = useState(false)
   const [inputFocused, setInputFocused] = useState(false)
   const [pressed, setPressed] = useState(false)
-  const theme = useTheme()
-  const textFont = theme.fonts.bodyLarge
+
   const color = selected
     ? theme.colors.onPrimary
     : current
       ? theme.colors.primary
       : theme.colors.onSurfaceVariant
+
   const label = String(year)
+  const textFont = theme.fonts.bodyLarge
 
   return (
     <View style={styles.cell}>
@@ -257,7 +260,18 @@ function GridYear({ current, onPressYear, selected, year }: YearProps) {
   )
 }
 
-const Year = memo(YearPure)
+function YearPure({ menu, ...props }: YearProps & { menu: boolean }) {
+  if (menu) {
+    return (
+      <SelectionMenuItem
+        label={String(props.year)}
+        onPress={() => props.onPressYear(props.year)}
+        selected={props.selected}
+      />
+    )
+  }
+  return <GridYear {...props} />
+}
 
 const styles = StyleSheet.create({
   cell: {
@@ -292,5 +306,7 @@ const styles = StyleSheet.create({
     width: 72,
   },
 })
+
+const Year = memo(YearPure)
 
 export default memo(YearPicker)

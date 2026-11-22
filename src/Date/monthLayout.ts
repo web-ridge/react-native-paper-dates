@@ -26,21 +26,25 @@ type MonthWeeks = {
   total: number
 }
 
-const weekPrefixCache = new Map<string, MonthWeeks>()
-
-export const monthSubheadPaddingTop = 16
-export const monthSubheadPaddingBottom = 12
-export const monthHeaderHeight =
-  monthSubheadPaddingTop + 20 + monthSubheadPaddingBottom
 export const monthHeaderSingleMarginBottom = dayNamesHeight
-const monthHeaderSingleMarginTop = 0
-const monthHeaderSingleHeight =
-  monthHeaderSingleMarginTop + monthHeaderSingleMarginBottom
-export const weekMargin = 0
-const weekSize = dayCellSize + weekMargin
 
 const horizontalMonthChrome =
   calendarControlInset + calendarArrowSize + monthHeaderSingleMarginBottom
+
+const monthHeaderSingleMarginTop = 0
+
+const monthHeaderSingleHeight =
+  monthHeaderSingleMarginTop + monthHeaderSingleMarginBottom
+
+export const monthSubheadPaddingBottom = 12
+export const monthSubheadPaddingTop = 16
+
+export const monthHeaderHeight =
+  monthSubheadPaddingTop + 20 + monthSubheadPaddingBottom
+
+export const weekMargin = 0
+const weekPrefixCache = new Map<string, MonthWeeks>()
+const weekSize = dayCellSize + weekMargin
 
 function getIndexCount(
   index: number,
@@ -53,66 +57,6 @@ function getIndexCount(
   }
 
   return -(dynamicStartAtIndex - index)
-}
-
-function getWeekPrefix(
-  startWeekOnMonday: boolean,
-  startYear?: number,
-  endYear?: number
-): MonthWeeks {
-  const end = endYear ?? defaultEndYear
-  const start = startYear ?? defaultStartYear
-  const { stamp } = currentCalendarMonth()
-  const key = `${start}:${end}:${startWeekOnMonday ? 1 : 0}:${stamp}`
-  const cached = weekPrefixCache.get(key)
-  if (cached) return cached
-
-  const total = getTotalMonths(start, end)
-  const startAtIndex = getStartAtIndex(start, end)
-  const span = Math.max(total, startAtIndex)
-  const rows = new Array<number>(span)
-  const prefix = new Array<number>(span + 1)
-  prefix[0] = 0
-  let { month, year } = monthFromIndex(0, start, end)
-  let sum = 0
-  for (let index = 0; index < span; index += 1) {
-    const count = monthWeekRows(year, month, startWeekOnMonday)
-    rows[index] = count
-    sum += count
-    prefix[index + 1] = sum
-    month += 1
-    if (month === 12) {
-      month = 0
-      year += 1
-    }
-  }
-  const layout = { prefix, rows, startAtIndex, total }
-  weekPrefixCache.set(key, layout)
-  return layout
-}
-
-function weekRows(
-  index: number,
-  startWeekOnMonday: boolean,
-  startYear?: number,
-  endYear?: number
-): number {
-  const layout = getWeekPrefix(startWeekOnMonday, startYear, endYear)
-  return (
-    layout.rows[index] ??
-    getGridCount(index, startWeekOnMonday, startYear, endYear)
-  )
-}
-
-function weeksOffset(
-  index: number,
-  startWeekOnMonday: boolean,
-  startYear?: number,
-  endYear?: number
-): number {
-  const layout = getWeekPrefix(startWeekOnMonday, startYear, endYear)
-  const clamped = Math.max(0, Math.min(index, layout.total))
-  return layout.prefix[clamped] - layout.prefix[layout.startAtIndex]
 }
 
 export function getIndexFromVerticalOffset(
@@ -210,15 +154,40 @@ export function getVerticalMonthsOffset(
   return c + dynamicBeginOffset
 }
 
-export function horizontalMonthScrolls(
-  viewportHeight: number,
-  index: number,
+function getWeekPrefix(
   startWeekOnMonday: boolean,
   startYear?: number,
   endYear?: number
-): boolean {
-  const weeks = weekRows(index, startWeekOnMonday, startYear, endYear)
-  return weekSize * weeks > viewportHeight - horizontalMonthChrome
+): MonthWeeks {
+  const end = endYear ?? defaultEndYear
+  const start = startYear ?? defaultStartYear
+  const { stamp } = currentCalendarMonth()
+  const key = `${start}:${end}:${startWeekOnMonday ? 1 : 0}:${stamp}`
+  const cached = weekPrefixCache.get(key)
+  if (cached) return cached
+
+  const total = getTotalMonths(start, end)
+  const startAtIndex = getStartAtIndex(start, end)
+  const span = Math.max(total, startAtIndex)
+  const rows = new Array<number>(span)
+  const prefix = new Array<number>(span + 1)
+  prefix[0] = 0
+  let { month, year } = monthFromIndex(0, start, end)
+  let sum = 0
+  for (let index = 0; index < span; index += 1) {
+    const count = monthWeekRows(year, month, startWeekOnMonday)
+    rows[index] = count
+    sum += count
+    prefix[index + 1] = sum
+    month += 1
+    if (month === 12) {
+      month = 0
+      year += 1
+    }
+  }
+  const layout = { prefix, rows, startAtIndex, total }
+  weekPrefixCache.set(key, layout)
+  return layout
 }
 
 export function horizontalContentHeight(
@@ -231,6 +200,17 @@ export function horizontalContentHeight(
     horizontalMonthChrome +
     weekSize * monthWeekCount(index, startWeekOnMonday, startYear, endYear)
   )
+}
+
+export function horizontalMonthScrolls(
+  viewportHeight: number,
+  index: number,
+  startWeekOnMonday: boolean,
+  startYear?: number,
+  endYear?: number
+): boolean {
+  const weeks = weekRows(index, startWeekOnMonday, startYear, endYear)
+  return weekSize * weeks > viewportHeight - horizontalMonthChrome
 }
 
 export function horizontalWeekHeight(daysHeight: number, weekCount: number) {
@@ -261,4 +241,28 @@ export function monthWeekCount(
   endYear?: number
 ) {
   return weekRows(index, startWeekOnMonday, startYear, endYear)
+}
+
+function weekRows(
+  index: number,
+  startWeekOnMonday: boolean,
+  startYear?: number,
+  endYear?: number
+): number {
+  const layout = getWeekPrefix(startWeekOnMonday, startYear, endYear)
+  return (
+    layout.rows[index] ??
+    getGridCount(index, startWeekOnMonday, startYear, endYear)
+  )
+}
+
+function weeksOffset(
+  index: number,
+  startWeekOnMonday: boolean,
+  startYear?: number,
+  endYear?: number
+): number {
+  const layout = getWeekPrefix(startWeekOnMonday, startYear, endYear)
+  const clamped = Math.max(0, Math.min(index, layout.total))
+  return layout.prefix[clamped] - layout.prefix[layout.startAtIndex]
 }

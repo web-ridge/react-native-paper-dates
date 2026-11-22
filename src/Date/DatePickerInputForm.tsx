@@ -29,16 +29,59 @@ import {
 } from './inputFormat'
 import type { CalendarDate, ValidRangeType } from './types'
 
+type DatePickerInputFormChange = {
+  date?: CalendarDate
+  endDate?: CalendarDate
+  startDate?: CalendarDate
+}
+
 export const dateInputCardMaxWidth = 328
 
 export function dateInputCardWidth(windowWidth: number) {
   return Math.min(dateInputCardMaxWidth, Math.max(windowWidth - 16, 0))
 }
 
-type DatePickerInputFormChange = {
-  date?: CalendarDate
-  endDate?: CalendarDate
-  startDate?: CalendarDate
+function headlineFor({
+  date,
+  empty,
+  endDate,
+  format,
+  formatRange,
+  mode,
+  startDate,
+}: {
+  date: CalendarDate
+  empty: string
+  endDate: CalendarDate
+  format: (value: Date) => string
+  formatRange: (start: Date, end: Date) => string
+  mode: 'range' | 'single'
+  startDate: CalendarDate
+}) {
+  if (mode === 'single') return date ? format(date) : empty
+  if (startDate && endDate) return formatRange(startDate, endDate)
+  if (startDate) return format(startDate)
+  if (endDate) return format(endDate)
+  return empty
+}
+
+function patchFor(
+  mode: 'range' | 'single',
+  inputMode: 'end' | 'start',
+  next: CalendarDate
+): DatePickerInputFormChange {
+  if (mode === 'single') return { date: next }
+  if (inputMode === 'end') return { endDate: next }
+  return { startDate: next }
+}
+
+export function releaseFieldFocus() {
+  if (Platform.OS === 'web') {
+    const active = document.activeElement
+    if (active instanceof HTMLElement) active.blur()
+    return
+  }
+  Keyboard.dismiss()
 }
 
 function DatePickerInputForm({
@@ -90,13 +133,33 @@ function DatePickerInputForm({
   validRange?: ValidRangeType
   withDateFormatInLabel?: boolean
 }) {
-  const theme = useTheme()
-  const fieldRef = useRef<TextInputHandles>(null)
-  const endRef = useRef<TextInputHandles>(null)
-  const [invalid, setInvalid] = useState({ end: false, start: false })
-  const { isDisabled, isWithinValidRange } = useRangeChecker(validRange)
   const formatter = useInputFormatter({ locale })
   const inputFormat = useInputFormat({ formatter, locale })
+  const { isDisabled, isWithinValidRange } = useRangeChecker(validRange)
+  const theme = useTheme()
+
+  const [invalid, setInvalid] = useState({ end: false, start: false })
+
+  const endRef = useRef<TextInputHandles>(null)
+  const fieldRef = useRef<TextInputHandles>(null)
+
+  const actionColor = themeColor(theme.colors.primary)
+
+  const cancelLabel = displayCase(
+    translate(locale, 'cancel', 'Cancel'),
+    uppercase
+  )
+
+  const confirmLabel = displayCase(
+    saveLabel || translate(locale, 'confirm', 'OK'),
+    uppercase
+  )
+
+  const endCaption = displayCase(
+    endLabel ?? translate(locale, 'endDate', 'End date'),
+    uppercase
+  )
+
   const headlineFormatter = useMemo(
     () =>
       dateTimeFormat(
@@ -107,86 +170,27 @@ function DatePickerInputForm({
       ),
     [locale, mode]
   )
-  const applyText = useCallback(
-    (text: string | undefined, inputMode: 'end' | 'start') => {
-      const next = interpretTypedDate(text ?? '', inputFormat, inputMode, {
-        isDisabled,
-        isWithinValidRange,
-      })
-      setInvalid((current) => ({
-        ...current,
-        [inputMode]: next.issue !== undefined,
-      }))
-      if (next.issue) return
-      onChange(patchFor(mode, inputMode, next.date))
-    },
-    [inputFormat, isDisabled, isWithinValidRange, mode, onChange]
-  )
-  const changeDate = useCallback(
-    (inputMode: 'end' | 'start', next: CalendarDate) => {
-      setInvalid((current) => ({ ...current, [inputMode]: false }))
-      onChange(patchFor(mode, inputMode, next))
-    },
-    [mode, onChange]
-  )
+
+  const resolvedPlaceholder = placeholder ?? inputFormat.toLowerCase()
+
   const sameDayRange =
     mode === 'range' &&
     !!startDate &&
     !!endDate &&
     areDatesOnSameDay(startDate, endDate)
+
   const fieldsValid =
     !invalid.start && !(mode === 'range' && invalid.end) && !sameDayRange
-  const confirm = useCallback(() => {
-    if (!fieldsValid) return
-    releaseFieldFocus()
-    onConfirm()
-  }, [fieldsValid, onConfirm])
-  const dismiss = useCallback(() => {
-    releaseFieldFocus()
-    onDismiss()
-  }, [onDismiss])
-  const requestCalendar = useCallback(() => {
-    releaseFieldFocus()
-    onRequestCalendar()
-  }, [onRequestCalendar])
-  const submitStart = useCallback(() => {
-    endRef.current?.focus()
-  }, [])
 
-  useEffect(() => {
-    if (!autoFocus) return
-    fieldRef.current?.focus()
-  }, [autoFocus])
-  useEffect(() => {
-    onValidityChange?.(fieldsValid)
-  }, [fieldsValid, onValidityChange])
-
-  const actionColor = themeColor(theme.colors.primary)
   const confirmDisabled = (saveLabelDisabled ?? false) || !fieldsValid
-  const confirmLabel = displayCase(
-    saveLabel || translate(locale, 'confirm', 'OK'),
-    uppercase
-  )
-  const cancelLabel = displayCase(
-    translate(locale, 'cancel', 'Cancel'),
-    uppercase
-  )
-  const supporting = displayCase(
-    mode === 'range'
-      ? translate(locale, 'enterDates', 'Enter dates')
-      : translate(locale, 'selectSingle', 'Select date'),
-    uppercase
-  )
+
   const startCaption = displayCase(
     mode === 'range'
       ? (startLabel ?? translate(locale, 'startDate', 'Start date'))
       : (label ?? 'Date'),
     uppercase
   )
-  const endCaption = displayCase(
-    endLabel ?? translate(locale, 'endDate', 'End date'),
-    uppercase
-  )
+
   const headline = displayCase(
     headlineFor({
       date,
@@ -206,8 +210,68 @@ function DatePickerInputForm({
     }),
     uppercase
   )
-  const resolvedPlaceholder = placeholder ?? inputFormat.toLowerCase()
+
+  const supporting = displayCase(
+    mode === 'range'
+      ? translate(locale, 'enterDates', 'Enter dates')
+      : translate(locale, 'selectSingle', 'Select date'),
+    uppercase
+  )
+
   const surface = theme.colors.surfaceContainerHigh as string
+
+  const applyText = useCallback(
+    (text: string | undefined, inputMode: 'end' | 'start') => {
+      const next = interpretTypedDate(text ?? '', inputFormat, inputMode, {
+        isDisabled,
+        isWithinValidRange,
+      })
+      setInvalid((current) => ({
+        ...current,
+        [inputMode]: next.issue !== undefined,
+      }))
+      if (next.issue) return
+      onChange(patchFor(mode, inputMode, next.date))
+    },
+    [inputFormat, isDisabled, isWithinValidRange, mode, onChange]
+  )
+
+  const changeDate = useCallback(
+    (inputMode: 'end' | 'start', next: CalendarDate) => {
+      setInvalid((current) => ({ ...current, [inputMode]: false }))
+      onChange(patchFor(mode, inputMode, next))
+    },
+    [mode, onChange]
+  )
+
+  const confirm = useCallback(() => {
+    if (!fieldsValid) return
+    releaseFieldFocus()
+    onConfirm()
+  }, [fieldsValid, onConfirm])
+
+  const dismiss = useCallback(() => {
+    releaseFieldFocus()
+    onDismiss()
+  }, [onDismiss])
+
+  const requestCalendar = useCallback(() => {
+    releaseFieldFocus()
+    onRequestCalendar()
+  }, [onRequestCalendar])
+
+  const submitStart = useCallback(() => {
+    endRef.current?.focus()
+  }, [])
+
+  useEffect(() => {
+    if (!autoFocus) return
+    fieldRef.current?.focus()
+  }, [autoFocus])
+
+  useEffect(() => {
+    onValidityChange?.(fieldsValid)
+  }, [fieldsValid, onValidityChange])
 
   return (
     <>
@@ -388,49 +452,6 @@ function DateField({
       />
     </View>
   )
-}
-
-function patchFor(
-  mode: 'range' | 'single',
-  inputMode: 'end' | 'start',
-  next: CalendarDate
-): DatePickerInputFormChange {
-  if (mode === 'single') return { date: next }
-  if (inputMode === 'end') return { endDate: next }
-  return { startDate: next }
-}
-
-function headlineFor({
-  date,
-  empty,
-  endDate,
-  format,
-  formatRange,
-  mode,
-  startDate,
-}: {
-  date: CalendarDate
-  empty: string
-  endDate: CalendarDate
-  format: (value: Date) => string
-  formatRange: (start: Date, end: Date) => string
-  mode: 'range' | 'single'
-  startDate: CalendarDate
-}) {
-  if (mode === 'single') return date ? format(date) : empty
-  if (startDate && endDate) return formatRange(startDate, endDate)
-  if (startDate) return format(startDate)
-  if (endDate) return format(endDate)
-  return empty
-}
-
-export function releaseFieldFocus() {
-  if (Platform.OS === 'web') {
-    const active = document.activeElement
-    if (active instanceof HTMLElement) active.blur()
-    return
-  }
-  Keyboard.dismiss()
 }
 
 const styles = StyleSheet.create({

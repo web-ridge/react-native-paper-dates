@@ -45,6 +45,8 @@ import {
 const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect
 
+const empty = () => null
+
 function Swiper({
   endYear,
   focusDate,
@@ -158,8 +160,6 @@ function Swiper({
   )
 }
 
-const empty = () => null
-
 function VerticalScroller({
   contentInset,
   endYear,
@@ -179,8 +179,13 @@ function VerticalScroller({
   startYear?: number
   width: number
 }) {
+  const theme = useTheme()
+
+  const parentRef = useRef<HTMLDivElement | null>(null)
+
   const effectiveEndYear = endYear || defaultEndYear
   const effectiveStartYear = startYear || defaultStartYear
+
   const constrainedInitialIndex = isIndexWithinRange(
     initialIndex,
     effectiveStartYear,
@@ -191,8 +196,7 @@ function VerticalScroller({
         Math.min(initialIndex, getMaxIndex(effectiveEndYear)),
         getMinIndex(effectiveStartYear)
       )
-  const idx = useRef<number>(constrainedInitialIndex)
-  const parentRef = useRef<HTMLDivElement | null>(null)
+
   const [monthWindow, setMonthWindow] = useState<{
     indexes: number[]
     slots: MonthSlot[]
@@ -204,7 +208,22 @@ function VerticalScroller({
     )
     return { indexes, slots: assignMonthSlots([], indexes) }
   })
-  const theme = useTheme()
+
+  const idx = useRef<number>(constrainedInitialIndex)
+
+  const scrollerStyle: CSSProperties = {
+    boxSizing: 'border-box',
+    colorScheme: theme.dark ? 'dark' : 'light',
+    height,
+    overflow: 'auto',
+    overflowAnchor: 'none',
+    paddingRight: contentInset,
+    scrollbarColor: `${themeColor(theme.colors.outline)} ${themeColor(
+      theme.colors.surfaceContainerHigh
+    )}`,
+    width,
+  }
+
   const verticalMetrics = useMemo(
     () =>
       getVerticalListMetrics(
@@ -217,21 +236,11 @@ function VerticalScroller({
     [effectiveEndYear, effectiveStartYear, startWeekOnMonday]
   )
 
-  useIsomorphicLayoutEffect(() => {
-    const element = parentRef.current
-    if (!element) {
-      return
-    }
-    element.scrollTo({
-      top: getVerticalMonthScrollY(
-        idx.current,
-        verticalMetrics.origin,
-        startWeekOnMonday,
-        effectiveStartYear,
-        effectiveEndYear
-      ),
-    })
-  }, [])
+  const trackStyle: CSSProperties = {
+    height: verticalMetrics.height,
+    position: 'relative',
+  }
+
   const onScroll = (e: UIEvent) => {
     const top = e.currentTarget?.scrollTop
     if (top === undefined) {
@@ -269,25 +278,24 @@ function VerticalScroller({
     })
   }
 
-  const scrollerStyle: CSSProperties = {
-    boxSizing: 'border-box',
-    colorScheme: theme.dark ? 'dark' : 'light',
-    height,
-    overflow: 'auto',
-    paddingRight: contentInset,
-    overflowAnchor: 'none',
-    scrollbarColor: `${themeColor(theme.colors.outline)} ${themeColor(
-      theme.colors.surfaceContainerHigh
-    )}`,
-    width,
-  }
-  const trackStyle: CSSProperties = {
-    height: verticalMetrics.height,
-    position: 'relative',
-  }
+  useIsomorphicLayoutEffect(() => {
+    const element = parentRef.current
+    if (!element) {
+      return
+    }
+    element.scrollTo({
+      top: getVerticalMonthScrollY(
+        idx.current,
+        verticalMetrics.origin,
+        startWeekOnMonday,
+        effectiveStartYear,
+        effectiveEndYear
+      ),
+    })
+  }, [])
 
   return (
-    <div onScroll={onScroll} ref={parentRef} style={scrollerStyle}>
+    <div ref={parentRef} onScroll={onScroll} style={scrollerStyle}>
       <div style={trackStyle}>
         {monthWindow.slots.map(({ monthIndex, slot }) => {
           const monthStyle: CSSProperties = {

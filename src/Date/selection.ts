@@ -18,6 +18,7 @@ export type PressedDate = {
   endDate?: CalendarDate
   startDate?: CalendarDate
 }
+
 type RangeBounds = {
   endOrdinal?: number
   sameDay: boolean
@@ -214,6 +215,17 @@ export function pressDate(
   }
 }
 
+export function rangeBounds(
+  startDate: CalendarDate,
+  endDate: CalendarDate
+): RangeBounds {
+  return {
+    endOrdinal: endDate ? dateOrdinal(endDate) : undefined,
+    sameDay: !!startDate && !!endDate && areDatesOnSameDay(startDate, endDate),
+    startOrdinal: startDate ? dateOrdinal(startDate) : undefined,
+  }
+}
+
 function sameCalendarDay(
   year: number,
   month: number,
@@ -226,15 +238,4 @@ function sameCalendarDay(
     date.getMonth() === month &&
     date.getDate() === day
   )
-}
-
-export function rangeBounds(
-  startDate: CalendarDate,
-  endDate: CalendarDate
-): RangeBounds {
-  return {
-    endOrdinal: endDate ? dateOrdinal(endDate) : undefined,
-    sameDay: !!startDate && !!endDate && areDatesOnSameDay(startDate, endDate),
-    startOrdinal: startDate ? dateOrdinal(startDate) : undefined,
-  }
 }

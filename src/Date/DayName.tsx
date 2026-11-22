@@ -5,8 +5,8 @@ import { Text, useTheme } from 'react-native-paper'
 function DayName({ label, name }: { label: string; name?: string }) {
   const theme = useTheme()
 
-  const textFont = theme.fonts.bodyLarge
   const accessibleName = name ?? label
+  const textFont = theme.fonts.bodyLarge
 
   return (
     <View

@@ -17,6 +17,27 @@ import DatePickerModal from './DatePickerModal'
 import { defaultEndYear, defaultStartYear } from './dateUtils'
 import type { CalendarDate } from './types'
 
+function readAnchor(node: unknown): DatePickerAnchor | null {
+  if (!node || typeof node !== 'object') return null
+  const host = node as {
+    getBoundingClientRect?: () => {
+      height: number
+      left: number
+      top: number
+      width: number
+    }
+  }
+  if (typeof host.getBoundingClientRect !== 'function') return null
+  const rect = host.getBoundingClientRect()
+  if (rect.width <= 0 && rect.height <= 0) return null
+  return {
+    height: rect.height,
+    width: rect.width,
+    x: rect.left,
+    y: rect.top,
+  }
+}
+
 function DatePickerInput(
   {
     animationType = Platform.select({ default: 'slide', web: 'none' }),
@@ -45,17 +66,29 @@ function DatePickerInput(
   }: DatePickerInputProps,
   ref: Ref<TextInputHandles>
 ) {
-  const anchorRef = useRef<ComponentRef<typeof View>>(null)
-  const onChangeRef = useLatest(rest.onChange)
   const isLargeScreen = useIsLargeScreen()
-  const docked =
-    presentation === 'docked' || (presentation === 'auto' && isLargeScreen)
 
   const [anchor, setAnchor] = useState<DatePickerAnchor | null>(null)
   const [visible, setVisible] = useState(false)
+
+  const anchorRef = useRef<ComponentRef<typeof View>>(null)
+  const onChangeRef = useLatest(rest.onChange)
+
+  const docked =
+    presentation === 'docked' || (presentation === 'auto' && isLargeScreen)
+
   const onDismiss = useCallback(() => {
     setVisible(false)
   }, [])
+
+  const onInnerConfirm = useCallback(
+    ({ date }: { date: CalendarDate }) => {
+      setVisible(false)
+      onChangeRef.current(date)
+    },
+    [onChangeRef]
+  )
+
   const openPicker = useCallback(() => {
     const node = anchorRef.current
     const rect = readAnchor(node)
@@ -76,13 +109,6 @@ function DatePickerInput(
       })
     }
   }, [])
-  const onInnerConfirm = useCallback(
-    ({ date }: { date: CalendarDate }) => {
-      setVisible(false)
-      onChangeRef.current(date)
-    },
-    [onChangeRef]
-  )
 
   return (
     <View ref={anchorRef} collapsable={false}>
@@ -160,27 +186,6 @@ function DatePickerInput(
       />
     </View>
   )
-}
-
-function readAnchor(node: unknown): DatePickerAnchor | null {
-  if (!node || typeof node !== 'object') return null
-  const host = node as {
-    getBoundingClientRect?: () => {
-      height: number
-      left: number
-      top: number
-      width: number
-    }
-  }
-  if (typeof host.getBoundingClientRect !== 'function') return null
-  const rect = host.getBoundingClientRect()
-  if (rect.width <= 0 && rect.height <= 0) return null
-  return {
-    height: rect.height,
-    width: rect.width,
-    x: rect.left,
-    y: rect.top,
-  }
 }
 
 export default forwardRef(DatePickerInput)

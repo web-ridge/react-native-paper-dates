@@ -20,6 +20,11 @@ import { scrollbarThumb } from '../shared/utils'
 import { calendarControlHeight } from './CalendarHeader'
 import SelectionMenuItem, { selectionMenuItemHeight } from './SelectionMenuItem'
 
+function monthScrollOffset(selectedMonth: number | undefined) {
+  if (selectedMonth == null) return 0
+  return Math.max(0, (selectedMonth - 2) * selectionMenuItemHeight)
+}
+
 function MonthMenu({
   embedded = false,
   locale,
@@ -32,12 +37,25 @@ function MonthMenu({
   selectedMonth: number | undefined
 }) {
   const theme = useTheme()
-  const offset = monthScrollOffset(selectedMonth)
-  const [contentOffset] = useState(() => ({ x: 0, y: offset }))
+
   const listRef = useRef<ComponentRef<typeof ScrollView>>(null)
-  const offsetRef = useRef(offset)
   const ready = useRef({ laidOut: false, sized: false })
   const shownOffset = useRef<number | null>(null)
+
+  const months = useMemo(() => {
+    const formatter = dateTimeFormat(locale, { month: 'long' })
+    return Array.from({ length: 12 }, (_, month) => ({
+      label: formatter.format(new Date(2020, month, 1)),
+      month,
+    }))
+  }, [locale])
+
+  const offset = monthScrollOffset(selectedMonth)
+
+  const [contentOffset] = useState(() => ({ x: 0, y: offset }))
+
+  const offsetRef = useRef(offset)
+
   const revealMonth = useCallback(() => {
     if (!ready.current.laidOut || !ready.current.sized) return
     const y = offsetRef.current
@@ -47,10 +65,7 @@ function MonthMenu({
     scroll()
     requestAnimationFrame(scroll)
   }, [])
-  useEffect(() => {
-    offsetRef.current = offset
-    revealMonth()
-  }, [offset, revealMonth])
+
   const onContentSizeChange = useCallback(
     (_width: number, height: number) => {
       if (height <= 0) return
@@ -59,6 +74,7 @@ function MonthMenu({
     },
     [revealMonth]
   )
+
   const onLayout = useCallback(
     (event: LayoutChangeEvent) => {
       if (event.nativeEvent.layout.height <= 0) return
@@ -67,13 +83,6 @@ function MonthMenu({
     },
     [revealMonth]
   )
-  const months = useMemo(() => {
-    const formatter = dateTimeFormat(locale, { month: 'long' })
-    return Array.from({ length: 12 }, (_, month) => ({
-      label: formatter.format(new Date(2020, month, 1)),
-      month,
-    }))
-  }, [locale])
 
   const list = (
     <ScrollView
@@ -97,6 +106,11 @@ function MonthMenu({
     </ScrollView>
   )
 
+  useEffect(() => {
+    offsetRef.current = offset
+    revealMonth()
+  }, [offset, revealMonth])
+
   if (embedded) return list
 
   return (
@@ -110,11 +124,6 @@ function MonthMenu({
       {list}
     </View>
   )
-}
-
-function monthScrollOffset(selectedMonth: number | undefined) {
-  if (selectedMonth == null) return 0
-  return Math.max(0, (selectedMonth - 2) * selectionMenuItemHeight)
 }
 
 const styles = StyleSheet.create({

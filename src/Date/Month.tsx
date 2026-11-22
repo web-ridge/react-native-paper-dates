@@ -81,12 +81,168 @@ interface BaseMonthProps {
   startYear?: number
   validRange?: ValidRangeType
 }
-const menuButtonInset = 8
+
 type MonthDayProps = CalendarMode &
   Omit<BaseMonthProps, 'onPressYear' | 'roundness' | 'selectingYear'> & {
     month: number
     year: number
   }
+
+const menuButtonInset = 8
+
+function Month(props: BaseMonthProps & CalendarMode) {
+  const theme = useTheme()
+
+  const current = currentCalendarMonth()
+
+  const {
+    date,
+    dates,
+    dayContent,
+    dayContentPosition,
+    dayContentStyle,
+    disableWeekDays,
+    endDate,
+    endYear,
+    focusedDate,
+    hideHeader,
+    index,
+    indicatorSize,
+    locale,
+    mode,
+    onNavigateToDate,
+    onPressDate,
+    onPressYear,
+    primaryColor,
+    roundness,
+    scrollMode,
+    selectColor,
+    selectingYear,
+    showOutsideDays,
+    startDate,
+    startWeekOnMonday,
+    startYear,
+    validRange,
+  } = props
+
+  const iconColor = theme.colors.onSurfaceVariant
+  const iconSource = selectingYear ? 'menu-up' : 'menu-down'
+  const isHorizontal = scrollMode === 'horizontal'
+  const realIndex = getRealIndex(index, startYear, endYear)
+  const { month, year } = shiftMonth(current.year, current.month, realIndex)
+  const monthName = formatMonth(locale, month)
+  const textFont = theme.fonts.labelLarge
+
+  return (
+    <View
+      style={
+        hideHeader
+          ? undefined
+          : isHorizontal
+            ? sharedStyles.hug
+            : {
+                height: getMonthHeight(
+                  scrollMode,
+                  index,
+                  startWeekOnMonday,
+                  startYear,
+                  endYear
+                ),
+              }
+      }
+    >
+      {hideHeader ? null : (
+        <View
+          style={[
+            styles.monthHeader,
+            isHorizontal
+              ? {
+                  height: calendarArrowSize,
+                  marginBottom: monthHeaderSingleMarginBottom,
+                  marginTop: calendarControlInset,
+                }
+              : {
+                  paddingBottom: monthSubheadPaddingBottom,
+                  paddingTop: monthSubheadPaddingTop,
+                },
+          ]}
+        >
+          <TouchableRipple
+            accessibilityLabel={`${monthName} ${year}`}
+            accessibilityRole="button"
+            disabled={!isHorizontal}
+            onPress={isHorizontal ? () => onPressYear(year) : undefined}
+            style={[
+              styles.yearButton,
+              isHorizontal ? styles.yearButtonMenu : styles.subhead,
+              {
+                borderRadius: roundness,
+                paddingStart: menuButtonInset,
+              },
+              alignTextToFirstWeekday(disableWeekDays, menuButtonInset),
+            ]}
+          >
+            <View
+              style={[
+                styles.yearButtonInner,
+                {
+                  borderRadius: roundness,
+                },
+              ]}
+            >
+              <Text
+                maxFontSizeMultiplier={1.5}
+                numberOfLines={1}
+                selectable={false}
+                style={[
+                  {
+                    ...textFont,
+                    color: theme.colors.onSurfaceVariant,
+                  },
+                ]}
+              >
+                {monthName} {year}
+              </Text>
+              {isHorizontal ? (
+                <View style={styles.iconWrapper}>
+                  <Icon color={iconColor} size={18} source={iconSource} />
+                </View>
+              ) : null}
+            </View>
+          </TouchableRipple>
+        </View>
+      )}
+      <MonthGrid
+        date={date}
+        dates={dates}
+        dayContent={dayContent}
+        dayContentPosition={dayContentPosition}
+        dayContentStyle={dayContentStyle}
+        disableWeekDays={disableWeekDays}
+        endDate={endDate}
+        endYear={endYear}
+        focusedDate={focusedDate}
+        hideHeader={hideHeader}
+        index={index}
+        indicatorSize={indicatorSize}
+        locale={locale}
+        mode={mode}
+        month={month}
+        onNavigateToDate={onNavigateToDate}
+        onPressDate={onPressDate}
+        primaryColor={primaryColor}
+        scrollMode={scrollMode}
+        selectColor={selectColor}
+        showOutsideDays={showOutsideDays}
+        startDate={startDate}
+        startWeekOnMonday={startWeekOnMonday}
+        startYear={startYear}
+        validRange={validRange}
+        year={year}
+      />
+    </View>
+  )
+}
 
 function MonthDays({
   date,
@@ -117,16 +273,17 @@ function MonthDays({
   year,
 }: MonthDayProps) {
   const { disabledKeys, validEnd, validStart } = useRangeChecker(validRange)
+  const textColorOnPrimary = useTextColorOnPrimary()
+  const theme = useTheme()
+
+  const [daysHeight, setDaysHeight] = useState(0)
+
+  const dayOfWeek = getFirstDayOfMonth({ month, startWeekOnMonday, year })
+  const daysInMonth = getDaysInMonth({ month, year })
   const isHorizontal = scrollMode === 'horizontal'
-  const onDayPress = useCallback(
-    (pressed: Date) => {
-      onPressDate(pressed)
-      if (pressed.getFullYear() !== year || pressed.getMonth() !== month) {
-        onNavigateToDate?.(pressed)
-      }
-    },
-    [month, onNavigateToDate, onPressDate, year]
-  )
+  const range = mode === 'range' ? rangeBounds(startDate, endDate) : undefined
+  const renderOutsideDays = showOutsideDays ?? isHorizontal
+
   const selectedKeys = useMemo(() => {
     const keys = new Set<string>()
     if (dates) {
@@ -136,32 +293,40 @@ function MonthDays({
     }
     return keys
   }, [dates])
+
   const today = currentCalendarDay()
   const todayDay = today.day
   const todayMonth = today.month
   const todayYear = today.year
-  const dayOfWeek = getFirstDayOfMonth({ month, startWeekOnMonday, year })
-  const daysInMonth = getDaysInMonth({ month, year })
-  const range = mode === 'range' ? rangeBounds(startDate, endDate) : undefined
   const validEndOrdinal = validEnd ? dateOrdinal(validEnd) : undefined
   const validStartOrdinal = validStart ? dateOrdinal(validStart) : undefined
-  const textColorOnPrimary = useTextColorOnPrimary()
-  const theme = useTheme()
-  const renderOutsideDays = showOutsideDays ?? isHorizontal
+  const weeks = []
+
   const weeksInMonth = Math.max(
     monthWeekCount(index, startWeekOnMonday, startYear, endYear),
     1
   )
+
   const naturalDaysHeight = weeksInMonth * dayCellSize
-  const [daysHeight, setDaysHeight] = useState(0)
   const rowHeight = horizontalWeekHeight(daysHeight, weeksInMonth)
+
+  const onDayPress = useCallback(
+    (pressed: Date) => {
+      onPressDate(pressed)
+      if (pressed.getFullYear() !== year || pressed.getMonth() !== month) {
+        onNavigateToDate?.(pressed)
+      }
+    },
+    [month, onNavigateToDate, onPressDate, year]
+  )
+
   const onDaysLayout = useCallback((event: LayoutChangeEvent) => {
     const next = event.nativeEvent.layout.height
     setDaysHeight((current) =>
       Math.abs(current - next) < 0.5 ? current : next
     )
   }, [])
-  const weeks = []
+
   for (let weekGrid = 0; weekGrid < weeksInMonth; weekGrid += 1) {
     const cells = []
     for (let dayIndex = 0; dayIndex < 7; dayIndex += 1) {
@@ -277,160 +442,6 @@ function MonthDays({
   )
 }
 
-const MonthGrid = memo(MonthDays)
-
-function Month(props: BaseMonthProps & CalendarMode) {
-  const {
-    date,
-    dates,
-    dayContent,
-    dayContentPosition,
-    dayContentStyle,
-    disableWeekDays,
-    endDate,
-    endYear,
-    focusedDate,
-    hideHeader,
-    index,
-    indicatorSize,
-    locale,
-    mode,
-    onNavigateToDate,
-    onPressDate,
-    onPressYear,
-    primaryColor,
-    roundness,
-    scrollMode,
-    selectColor,
-    selectingYear,
-    showOutsideDays,
-    startDate,
-    startWeekOnMonday,
-    startYear,
-    validRange,
-  } = props
-
-  const iconSource = selectingYear ? 'menu-up' : 'menu-down'
-  const isHorizontal = scrollMode === 'horizontal'
-  const realIndex = getRealIndex(index, startYear, endYear)
-  const current = currentCalendarMonth()
-  const { month, year } = shiftMonth(current.year, current.month, realIndex)
-  const monthName = formatMonth(locale, month)
-  const theme = useTheme()
-  const iconColor = theme.colors.onSurfaceVariant
-  const textFont = theme.fonts.labelLarge
-
-  return (
-    <View
-      style={
-        hideHeader
-          ? undefined
-          : isHorizontal
-            ? sharedStyles.hug
-            : {
-                height: getMonthHeight(
-                  scrollMode,
-                  index,
-                  startWeekOnMonday,
-                  startYear,
-                  endYear
-                ),
-              }
-      }
-    >
-      {hideHeader ? null : (
-        <View
-          style={[
-            styles.monthHeader,
-            isHorizontal
-              ? {
-                  height: calendarArrowSize,
-                  marginBottom: monthHeaderSingleMarginBottom,
-                  marginTop: calendarControlInset,
-                }
-              : {
-                  paddingBottom: monthSubheadPaddingBottom,
-                  paddingTop: monthSubheadPaddingTop,
-                },
-          ]}
-        >
-          <TouchableRipple
-            accessibilityLabel={`${monthName} ${year}`}
-            accessibilityRole="button"
-            disabled={!isHorizontal}
-            onPress={isHorizontal ? () => onPressYear(year) : undefined}
-            style={[
-              styles.yearButton,
-              isHorizontal ? styles.yearButtonMenu : styles.subhead,
-              {
-                borderRadius: roundness,
-                paddingStart: menuButtonInset,
-              },
-              alignTextToFirstWeekday(disableWeekDays, menuButtonInset),
-            ]}
-          >
-            <View
-              style={[
-                styles.yearButtonInner,
-                {
-                  borderRadius: roundness,
-                },
-              ]}
-            >
-              <Text
-                maxFontSizeMultiplier={1.5}
-                numberOfLines={1}
-                selectable={false}
-                style={[
-                  {
-                    ...textFont,
-                    color: theme.colors.onSurfaceVariant,
-                  },
-                ]}
-              >
-                {monthName} {year}
-              </Text>
-              {isHorizontal ? (
-                <View style={styles.iconWrapper}>
-                  <Icon color={iconColor} size={18} source={iconSource} />
-                </View>
-              ) : null}
-            </View>
-          </TouchableRipple>
-        </View>
-      )}
-      <MonthGrid
-        date={date}
-        dates={dates}
-        dayContent={dayContent}
-        dayContentPosition={dayContentPosition}
-        dayContentStyle={dayContentStyle}
-        disableWeekDays={disableWeekDays}
-        endDate={endDate}
-        endYear={endYear}
-        focusedDate={focusedDate}
-        hideHeader={hideHeader}
-        index={index}
-        indicatorSize={indicatorSize}
-        locale={locale}
-        mode={mode}
-        month={month}
-        onNavigateToDate={onNavigateToDate}
-        onPressDate={onPressDate}
-        primaryColor={primaryColor}
-        scrollMode={scrollMode}
-        selectColor={selectColor}
-        showOutsideDays={showOutsideDays}
-        startDate={startDate}
-        startWeekOnMonday={startWeekOnMonday}
-        startYear={startYear}
-        validRange={validRange}
-        year={year}
-      />
-    </View>
-  )
-}
-
 const styles = StyleSheet.create({
   days: {
     flexGrow: 0,
@@ -465,5 +476,7 @@ const styles = StyleSheet.create({
     height: 40,
   },
 })
+
+const MonthGrid = memo(MonthDays)
 
 export default memo(Month)

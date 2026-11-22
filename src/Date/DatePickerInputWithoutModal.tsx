@@ -18,6 +18,21 @@ type DatePickerInputWithoutModalProps = DateFieldProps & {
   modal?: ReactNode
 }
 
+function getLabel({
+  inputFormat,
+  label,
+  withDateFormatInLabel,
+}: {
+  inputFormat: string
+  label: string | undefined
+  withDateFormatInLabel: boolean
+}) {
+  if (withDateFormatInLabel) {
+    return label ? `${label} (${inputFormat})` : inputFormat
+  }
+  return label || ''
+}
+
 function DatePickerInputWithoutModal(
   {
     hasError,
@@ -121,21 +136,6 @@ function DatePickerInputWithoutModal(
       {modal}
     </>
   )
-}
-
-function getLabel({
-  inputFormat,
-  label,
-  withDateFormatInLabel,
-}: {
-  inputFormat: string
-  label: string | undefined
-  withDateFormatInLabel: boolean
-}) {
-  if (withDateFormatInLabel) {
-    return label ? `${label} (${inputFormat})` : inputFormat
-  }
-  return label || ''
 }
 
 const styles = StyleSheet.create({

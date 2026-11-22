@@ -42,19 +42,6 @@ import {
 
 const HORIZONTAL_PAGES = 3
 
-function Swiper(props: SwiperProps) {
-  return (
-    <AutoSizer
-      fill={props.scrollMode !== 'horizontal'}
-      initialLayout={props.initialLayout}
-    >
-      {({ height, width }) => (
-        <SwiperInner {...props} height={height} width={width} />
-      )}
-    </AutoSizer>
-  )
-}
-
 function clampIndex(i: number, startYear?: number, endYear?: number) {
   if (isIndexWithinRange(i, startYear, endYear)) {
     return i
@@ -83,6 +70,19 @@ function getVisibleArray(
   return getVerticalWindow(i, startYear, endYear)
 }
 
+function Swiper(props: SwiperProps) {
+  return (
+    <AutoSizer
+      fill={props.scrollMode !== 'horizontal'}
+      initialLayout={props.initialLayout}
+    >
+      {({ height, width }) => (
+        <SwiperInner {...props} height={height} width={width} />
+      )}
+    </AutoSizer>
+  )
+}
+
 /* eslint-disable react-hooks/refs -- The scroll index lives in a ref so handlers stay current. Passing those handlers to render props makes the compiler skip this component, so its manual memoization stays. */
 function SwiperInner({
   endYear,
@@ -104,13 +104,15 @@ function SwiperInner({
   startYear,
   width,
 }: SwiperProps & { height: number; width: number }) {
-  const isHorizontal = scrollMode === 'horizontal'
   const parentRef = useRef<ScrollViewInstance | null>(null)
   const pendingRecenter = useRef(false)
   const pendingScroll = useRef<{ animated: boolean; y: number } | null>(null)
+
+  const isHorizontal = scrollMode === 'horizontal'
+  const contentWidth = isHorizontal ? width * HORIZONTAL_PAGES : width
   const restX = width
   const startIndex = clampIndex(initialIndex, startYear, endYear)
-  const idx = useRef<number>(startIndex)
+
   const [monthWindow, setMonthWindow] = useState<{
     activeIndex: number
     indexes: number[]
@@ -127,7 +129,9 @@ function SwiperInner({
       slots: isHorizontal ? [] : assignMonthSlots([], indexes),
     }
   })
-  const visibleIndexes = monthWindow.indexes
+
+  const idx = useRef<number>(startIndex)
+
   const verticalMetrics = useMemo(
     () =>
       getVerticalListMetrics(
@@ -139,6 +143,7 @@ function SwiperInner({
       ),
     [endYear, startWeekOnMonday, startYear]
   )
+
   const [initialContentOffset] = useState(() => {
     if (isHorizontal) {
       return { x: restX, y: 0 }
@@ -154,6 +159,20 @@ function SwiperInner({
       ),
     }
   })
+
+  const visibleIndexes = monthWindow.indexes
+
+  const pageHeight = isHorizontal
+    ? horizontalContentHeight(
+        visibleIndexes[1] ?? initialIndex,
+        startWeekOnMonday,
+        startYear,
+        endYear
+      )
+    : height
+
+  const contentHeight = isHorizontal ? pageHeight : verticalMetrics.height
+
   const scrollTo = useCallback(
     (index: number, animated: boolean) => {
       if (!isIndexWithinRange(index, startYear, endYear)) {
@@ -196,6 +215,14 @@ function SwiperInner({
       verticalMetrics.origin,
     ]
   )
+
+  const moveMonth = useCallback(
+    (delta: number) => {
+      scrollTo(idx.current + delta, false)
+    },
+    [scrollTo]
+  )
+
   const onNext = useCallback(() => {
     const newIndex = idx.current + 1
     if (isIndexWithinRange(newIndex, startYear, endYear)) {
@@ -206,6 +233,7 @@ function SwiperInner({
       scrollTo(newIndex, true)
     }
   }, [endYear, isHorizontal, restX, scrollTo, startYear])
+
   const onPrev = useCallback(() => {
     const newIndex = idx.current - 1
     if (isIndexWithinRange(newIndex, startYear, endYear)) {
@@ -216,31 +244,16 @@ function SwiperInner({
       scrollTo(newIndex, true)
     }
   }, [endYear, isHorizontal, scrollTo, startYear])
-  const scrollToCurrent = useCallback(() => {
-    scrollTo(idx.current, false)
-  }, [scrollTo])
-  useEffect(scrollToCurrent, [scrollToCurrent])
-  useLayoutEffect(() => {
-    const pending = pendingScroll.current
-    if (pending) {
-      pendingScroll.current = null
-      parentRef.current?.scrollTo({
-        animated: pending.animated,
-        x: 0,
-        y: pending.y,
-      })
-    }
-    if (pendingRecenter.current) {
-      pendingRecenter.current = false
-      parentRef.current?.scrollTo({ animated: false, x: restX, y: 0 })
-    }
-  }, [restX, visibleIndexes])
 
   const renderProps = {
     index: 0,
     onNext,
     onPrev,
   }
+
+  const scrollToCurrent = useCallback(() => {
+    scrollTo(idx.current, false)
+  }, [scrollTo])
 
   const syncVerticalIndex = useCallback(
     (scrollY: number) => {
@@ -275,6 +288,7 @@ function SwiperInner({
     },
     [endYear, startWeekOnMonday, startYear, verticalMetrics.origin]
   )
+
   const onMomentumScrollEnd = useCallback(
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
       const contentOffset = e.nativeEvent.contentOffset
@@ -306,6 +320,7 @@ function SwiperInner({
     },
     [endYear, isHorizontal, restX, startYear, syncVerticalIndex, width]
   )
+
   const onScroll = useCallback(
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
       if (isHorizontal) {
@@ -315,12 +330,25 @@ function SwiperInner({
     },
     [isHorizontal, syncVerticalIndex]
   )
-  const moveMonth = useCallback(
-    (delta: number) => {
-      scrollTo(idx.current + delta, false)
-    },
-    [scrollTo]
-  )
+
+  useEffect(scrollToCurrent, [scrollToCurrent])
+
+  useLayoutEffect(() => {
+    const pending = pendingScroll.current
+    if (pending) {
+      pendingScroll.current = null
+      parentRef.current?.scrollTo({
+        animated: pending.animated,
+        x: 0,
+        y: pending.y,
+      })
+    }
+    if (pendingRecenter.current) {
+      pendingRecenter.current = false
+      parentRef.current?.scrollTo({ animated: false, x: restX, y: 0 })
+    }
+  }, [restX, visibleIndexes])
+
   useFocusDate(
     (newIndex) => {
       scrollTo(newIndex, false)
@@ -332,6 +360,7 @@ function SwiperInner({
       startYear,
     }
   )
+
   useCalendarKeyboard(keyboardEnabled, idx, {
     endYear,
     onConfirm: onKeyboardConfirm,
@@ -342,6 +371,7 @@ function SwiperInner({
     onOpenYearMenu,
     startYear,
   })
+
   useYearChange(
     (newIndex) => {
       if (newIndex && isIndexWithinRange(newIndex, startYear, endYear)) {
@@ -355,17 +385,6 @@ function SwiperInner({
       startYear,
     }
   )
-
-  const pageHeight = isHorizontal
-    ? horizontalContentHeight(
-        visibleIndexes[1] ?? initialIndex,
-        startWeekOnMonday,
-        startYear,
-        endYear
-      )
-    : height
-  const contentHeight = isHorizontal ? pageHeight : verticalMetrics.height
-  const contentWidth = isHorizontal ? width * HORIZONTAL_PAGES : width
 
   return (
     <>

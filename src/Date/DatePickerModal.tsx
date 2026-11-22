@@ -49,6 +49,18 @@ export function DatePickerModal(
     | DatePickerModalSingleProps
     | DatePickerModalMultiProps
 ) {
+  const theme = useTheme()
+
+  const [inputMode, setInputMode] = useState(
+    () => props.mode !== 'multiple' && props.displayMode === 'input'
+  )
+
+  const [lastCalendarLayout, setLastCalendarLayout] = useState<{
+    height: number
+    width: number
+    windowKey: string
+  } | null>(null)
+
   const {
     animationType,
     disableStatusBar,
@@ -59,54 +71,33 @@ export function DatePickerModal(
     visible,
     ...rest
   } = props
+
   const animationTypeCalculated = useModalAnimation(
     animationType,
     Platform.OS === 'web' ? 'none' : 'slide'
   )
-  const [inputMode, setInputMode] = useState(
-    () => props.mode !== 'multiple' && props.displayMode === 'input'
-  )
-  const onDisplayModeChange = useCallback((next: 'calendar' | 'input') => {
-    setInputMode(next === 'input')
-  }, [])
+
   const isLargeScreen = useIsLargeScreen()
-  const [lastCalendarLayout, setLastCalendarLayout] = useState<{
-    height: number
-    width: number
-    windowKey: string
-  } | null>(null)
+  const { height: windowHeight, width: windowWidth } = useWindowDimensions()
+
+  const inputWidth = dateInputCardWidth(windowWidth)
+
   const shouldUseSheet =
     Platform.OS === 'ios' &&
     (presentationStyle === 'pageSheet' || presentationStyle === 'formSheet')
+
   const isSheet = shouldUseSheet
   const centeredCard = isLargeScreen && !isSheet
-  const theme = useTheme()
-  const useFormSheet = shouldUseSheet && isLargeScreen
-  const { height: windowHeight, width: windowWidth } = useWindowDimensions()
-  const inputWidth = dateInputCardWidth(windowWidth)
   const singleCard = props.mode === 'single' && !inputMode
+
   const specMaxHeight = inputMode
     ? dateInputMaxHeight
     : props.mode === 'single'
       ? datePickerSingleMaxHeight
       : datePickerRangeMaxHeight
+
   const cardMaxHeight = Math.min(specMaxHeight, Math.max(windowHeight - 32, 0))
-  const windowKey = `${windowWidth}x${windowHeight}`
-  const onCalendarLayout = useCallback(
-    ({ height, width }: { height: number; width: number }) => {
-      setLastCalendarLayout((prev) =>
-        rememberLayout(prev, { height, width, windowKey })
-      )
-    },
-    [windowKey]
-  )
-  const rememberedCalendarLayout = useMemo(
-    () =>
-      lastCalendarLayout && lastCalendarLayout.windowKey === windowKey
-        ? { height: lastCalendarLayout.height, width: lastCalendarLayout.width }
-        : undefined,
-    [lastCalendarLayout, windowKey]
-  )
+  const useFormSheet = shouldUseSheet && isLargeScreen
 
   const cardStyle = [
     inputMode && isLargeScreen && !useFormSheet
@@ -127,6 +118,30 @@ export function DatePickerModal(
           ]
         : null,
   ]
+
+  const windowKey = `${windowWidth}x${windowHeight}`
+
+  const rememberedCalendarLayout = useMemo(
+    () =>
+      lastCalendarLayout && lastCalendarLayout.windowKey === windowKey
+        ? { height: lastCalendarLayout.height, width: lastCalendarLayout.width }
+        : undefined,
+    [lastCalendarLayout, windowKey]
+  )
+
+  const onCalendarLayout = useCallback(
+    ({ height, width }: { height: number; width: number }) => {
+      setLastCalendarLayout((prev) =>
+        rememberLayout(prev, { height, width, windowKey })
+      )
+    },
+    [windowKey]
+  )
+
+  const onDisplayModeChange = useCallback((next: 'calendar' | 'input') => {
+    setInputMode(next === 'input')
+  }, [])
+
   const content = (
     <DatePickerModalContent
       {...rest}

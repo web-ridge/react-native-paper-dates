@@ -17,6 +17,7 @@ interface HeaderContentProps extends HeaderPickProps {
   onToggle: () => void
   state: LocalState
 }
+
 export interface HeaderPickProps {
   allowEditing?: boolean
   calendarIcon?: string
@@ -34,9 +35,47 @@ export interface HeaderPickProps {
   withDateFormatInLabel?: boolean
 }
 
+const selectionLabel = {
+  multiple: 'selectMultiple',
+  range: 'selectRange',
+  single: 'selectSingle',
+} as const
+
+function getLabel(
+  locale: string | undefined,
+  mode: ModeType,
+  configuredLabel?: string
+) {
+  if (configuredLabel) {
+    return configuredLabel
+  }
+  const key = selectionLabel[mode]
+  if (!key) {
+    return ''
+  }
+  return getTranslation(locale, key)
+}
+
+function useShortDateLabel(locale: string | undefined, withWeekday = false) {
+  const formatter = useMemo(
+    () =>
+      dateTimeFormat(locale, {
+        day: 'numeric',
+        month: 'short',
+        ...(withWeekday ? { weekday: 'short' as const } : {}),
+      }),
+    [locale, withWeekday]
+  )
+
+  return { formatter }
+}
+
 export default function DatePickerModalContentHeader(
   props: HeaderContentProps
 ) {
+  const isLargeScreen = useIsLargeScreen()
+  const theme = useTheme()
+
   const {
     allowEditing,
     calendarIcon,
@@ -47,12 +86,11 @@ export default function DatePickerModalContentHeader(
     onToggle,
     uppercase,
   } = props
-  const theme = useTheme()
-  const headlineColor = themeColor(theme.colors.onSurfaceVariant)
+
   const finalCollapsedIcon = editIcon ?? 'pencil-outline'
   const finalExpandedIcon = calendarIcon ?? 'calendar-blank'
+  const headlineColor = themeColor(theme.colors.onSurfaceVariant)
   const isEditingEnabled = allowEditing && mode !== 'multiple'
-  const isLargeScreen = useIsLargeScreen()
   const isRange = mode === 'range'
   const compactRange = isRange && !isLargeScreen && props.layout !== 'card'
   const label = getLabel(props.locale, props.mode, props.label)
@@ -117,27 +155,6 @@ export default function DatePickerModalContentHeader(
   )
 }
 
-const selectionLabel = {
-  multiple: 'selectMultiple',
-  range: 'selectRange',
-  single: 'selectSingle',
-} as const
-
-function getLabel(
-  locale: string | undefined,
-  mode: ModeType,
-  configuredLabel?: string
-) {
-  if (configuredLabel) {
-    return configuredLabel
-  }
-  const key = selectionLabel[mode]
-  if (!key) {
-    return ''
-  }
-  return getTranslation(locale, key)
-}
-
 function HeaderContentMulti({
   color,
   emptyLabel = ' ',
@@ -145,8 +162,9 @@ function HeaderContentMulti({
   moreLabel = 'more',
   state,
 }: HeaderContentProps & { color: string; moreLabel: string | undefined }) {
-  const dateCount = state.dates?.length || 0
   const { formatter } = useShortDateLabel(locale)
+
+  const dateCount = state.dates?.length || 0
   let label = emptyLabel
 
   if (dateCount) {
@@ -230,20 +248,6 @@ function HeaderContentSingle({
       {state.date ? formatter.format(state.date) : emptyLabel}
     </Text>
   )
-}
-
-function useShortDateLabel(locale: string | undefined, withWeekday = false) {
-  const formatter = useMemo(
-    () =>
-      dateTimeFormat(locale, {
-        day: 'numeric',
-        month: 'short',
-        ...(withWeekday ? { weekday: 'short' as const } : {}),
-      }),
-    [locale, withWeekday]
-  )
-
-  return { formatter }
 }
 
 const styles = StyleSheet.create({

@@ -16,8 +16,9 @@ export default function AnimatedCrossView({
   collapsed: boolean
   fill?: boolean
 }) {
-  const frame = fill ? sharedStyles.root : sharedStyles.hug
   const theme = useTheme()
+
+  const frame = fill ? sharedStyles.root : sharedStyles.hug
 
   return (
     <CrossFade

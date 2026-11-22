@@ -3,11 +3,6 @@ import type { TextInput } from 'react-native-paper'
 
 import type { ValidRangeType } from './types'
 
-type TextFieldProps = Omit<
-  ComponentProps<typeof TextInput>,
-  'value' | 'onChange' | 'onChangeText' | 'inputMode' | 'endAccessory'
->
-
 export type DateFieldProps = {
   hasError?: boolean
   hideValidationErrors?: boolean
@@ -21,6 +16,13 @@ export type DateFieldProps = {
   value: Date | undefined
   withDateFormatInLabel?: boolean
 } & TextFieldProps
+
+export type DatePickerInputProps = DateFieldProps &
+  DatePickerPresentationProps & {
+    iconColor?: string
+    iconSize?: number
+    iconStyle?: CSSProperties
+  }
 
 type DatePickerPresentationProps = {
   animationType?: 'slide' | 'fade' | 'none'
@@ -39,9 +41,7 @@ type DatePickerPresentationProps = {
   withModal?: boolean
 }
 
-export type DatePickerInputProps = DateFieldProps &
-  DatePickerPresentationProps & {
-    iconColor?: string
-    iconSize?: number
-    iconStyle?: CSSProperties
-  }
+type TextFieldProps = Omit<
+  ComponentProps<typeof TextInput>,
+  'value' | 'onChange' | 'onChangeText' | 'inputMode' | 'endAccessory'
+>

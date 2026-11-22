@@ -42,12 +42,14 @@ import type {
 export type DatePickerModalInputProps =
   | DatePickerModalInputRangeProps
   | DatePickerModalInputSingleProps
+
 type DatePickerModalInputRangeProps = DatePickerModalInputSharedProps & {
   endDate?: CalendarDate
   mode: 'range'
   onConfirm: RangeChange
   startDate?: CalendarDate
 }
+
 type DatePickerModalInputSharedProps = {
   animationType?: 'slide' | 'fade' | 'none'
   calendarIcon?: string
@@ -66,13 +68,42 @@ type DatePickerModalInputSharedProps = {
   validRange?: ValidRangeType
   visible: boolean
 }
+
 type DatePickerModalInputSingleProps = DatePickerModalInputSharedProps & {
   date?: CalendarDate
   mode: 'single'
   onConfirm: SingleChange
 }
 
+function rememberPageScroll() {
+  if (Platform.OS !== 'web' || typeof document === 'undefined') {
+    return () => {}
+  }
+  const saved = Array.from(document.querySelectorAll('div'))
+    .filter((node) => {
+      const style = getComputedStyle(node)
+      return (
+        (style.overflowY === 'auto' || style.overflowY === 'scroll') &&
+        node.scrollHeight > node.clientHeight + 1
+      )
+    })
+    .map((node) => [node, node.scrollTop] as const)
+  return () => {
+    for (const [node, top] of saved) {
+      if (Math.abs(node.scrollTop - top) > 1) node.scrollTop = top
+    }
+  }
+}
+
 function DatePickerModalInput(props: DatePickerModalInputProps) {
+  const { height: windowHeight, width: windowWidth } = useWindowDimensions()
+
+  const [presented, setPresented] = useState(false)
+  const [view, setView] = useState<'calendar' | 'input'>('input')
+
+  const pageScroll = useRef<(() => void) | null>(null)
+  const wasVisible = useRef(false)
+
   const {
     animationType,
     calendarIcon,
@@ -92,69 +123,36 @@ function DatePickerModalInput(props: DatePickerModalInputProps) {
     validRange,
     visible,
   } = props
-  const date = mode === 'single' ? props.date : undefined
-  const endDate = mode === 'range' ? props.endDate : undefined
-  const startDate = mode === 'range' ? props.startDate : undefined
-  const { height: windowHeight, width: windowWidth } = useWindowDimensions()
-  const pageScroll = useRef<(() => void) | null>(null)
-  const [presented, setPresented] = useState(false)
-  const [draftDate, setDraftDate] = useState<CalendarDate>(date)
-  const [draftEnd, setDraftEnd] = useState<CalendarDate>(endDate)
-  const [draftStart, setDraftStart] = useState<CalendarDate>(startDate)
-  const [view, setView] = useState<'calendar' | 'input'>('input')
-  const wasVisible = useRef(false)
-  const resolvedEndYear = endYear ?? defaultEndYear
-  const resolvedStartYear = startYear ?? defaultStartYear
-  const resolvedUppercase = !!uppercase
+
   const animation = useModalAnimation(
     animationType,
     Platform.OS === 'web' ? 'none' : 'fade'
   )
 
-  useEffect(() => {
-    if (visible && !wasVisible.current) {
-      setDraftDate(date)
-      setDraftEnd(endDate)
-      setDraftStart(startDate)
-      setView('input')
-    }
-    wasVisible.current = visible
-  }, [date, endDate, startDate, visible])
-  useLayoutEffect(() => {
-    if (!visible) return
-    pageScroll.current = rememberPageScroll()
-  }, [visible])
-  useEffect(() => {
-    if (visible) return
-    setPresented(false)
-  }, [visible])
-  useEffect(() => {
-    if (!visible) return
-    return () => {
-      pageScroll.current?.()
-    }
-  }, [view, visible])
-  const focusField = useCallback(() => {
-    setPresented(true)
-  }, [])
-  const dismiss = useCallback(() => {
-    releaseFieldFocus()
-    onDismiss()
-  }, [onDismiss])
-  const confirm = useCallback(() => {
-    releaseFieldFocus()
-    if (props.mode === 'single') {
-      props.onConfirm({ date: draftDate })
-      return
-    }
-    props.onConfirm({ endDate: draftEnd, startDate: draftStart })
-  }, [draftDate, draftEnd, draftStart, props])
-  const showCalendar = useCallback(() => {
-    setView('calendar')
-  }, [])
-  const showInput = useCallback(() => {
-    setView('input')
-  }, [])
+  const calendarHeight = Math.min(
+    props.mode === 'single'
+      ? datePickerSingleMaxHeight
+      : datePickerRangeMaxHeight,
+    Math.max(windowHeight - 32, 0)
+  )
+
+  const date = mode === 'single' ? props.date : undefined
+
+  const [draftDate, setDraftDate] = useState<CalendarDate>(date)
+
+  const endDate = mode === 'range' ? props.endDate : undefined
+
+  const [draftEnd, setDraftEnd] = useState<CalendarDate>(endDate)
+
+  const resolvedEndYear = endYear ?? defaultEndYear
+  const resolvedStartYear = startYear ?? defaultStartYear
+  const resolvedUppercase = !!uppercase
+  const startDate = mode === 'range' ? props.startDate : undefined
+
+  const [draftStart, setDraftStart] = useState<CalendarDate>(startDate)
+
+  const width = dateInputCardWidth(windowWidth)
+
   const applyDraft = useCallback(
     (patch: {
       date?: CalendarDate
@@ -168,13 +166,58 @@ function DatePickerModalInput(props: DatePickerModalInputProps) {
     []
   )
 
-  const width = dateInputCardWidth(windowWidth)
-  const calendarHeight = Math.min(
-    props.mode === 'single'
-      ? datePickerSingleMaxHeight
-      : datePickerRangeMaxHeight,
-    Math.max(windowHeight - 32, 0)
-  )
+  const confirm = useCallback(() => {
+    releaseFieldFocus()
+    if (props.mode === 'single') {
+      props.onConfirm({ date: draftDate })
+      return
+    }
+    props.onConfirm({ endDate: draftEnd, startDate: draftStart })
+  }, [draftDate, draftEnd, draftStart, props])
+
+  const dismiss = useCallback(() => {
+    releaseFieldFocus()
+    onDismiss()
+  }, [onDismiss])
+
+  const focusField = useCallback(() => {
+    setPresented(true)
+  }, [])
+
+  const showCalendar = useCallback(() => {
+    setView('calendar')
+  }, [])
+
+  const showInput = useCallback(() => {
+    setView('input')
+  }, [])
+
+  useEffect(() => {
+    if (visible && !wasVisible.current) {
+      setDraftDate(date)
+      setDraftEnd(endDate)
+      setDraftStart(startDate)
+      setView('input')
+    }
+    wasVisible.current = visible
+  }, [date, endDate, startDate, visible])
+
+  useLayoutEffect(() => {
+    if (!visible) return
+    pageScroll.current = rememberPageScroll()
+  }, [visible])
+
+  useEffect(() => {
+    if (visible) return
+    setPresented(false)
+  }, [visible])
+
+  useEffect(() => {
+    if (!visible) return
+    return () => {
+      pageScroll.current?.()
+    }
+  }, [view, visible])
 
   return (
     <Modal
@@ -269,26 +312,6 @@ function DatePickerModalInput(props: DatePickerModalInputProps) {
       </View>
     </Modal>
   )
-}
-
-function rememberPageScroll() {
-  if (Platform.OS !== 'web' || typeof document === 'undefined') {
-    return () => {}
-  }
-  const saved = Array.from(document.querySelectorAll('div'))
-    .filter((node) => {
-      const style = getComputedStyle(node)
-      return (
-        (style.overflowY === 'auto' || style.overflowY === 'scroll') &&
-        node.scrollHeight > node.clientHeight + 1
-      )
-    })
-    .map((node) => [node, node.scrollTop] as const)
-  return () => {
-    for (const [node, top] of saved) {
-      if (Math.abs(node.scrollTop - top) > 1) node.scrollTop = top
-    }
-  }
 }
 
 const styles = StyleSheet.create({

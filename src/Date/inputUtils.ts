@@ -24,31 +24,40 @@ export default function useDateInput({
   validRange: ValidRangeType | undefined
   value: Date | undefined
 }) {
+  const formatter = useInputFormatter({ locale })
+  const inputFormat = useInputFormat({ formatter, locale })
+
   const [draft, setDraft] = useState('')
   const [error, setError] = useState<null | string>(null)
   const [focused, setFocused] = useState(false)
   const [rejected, setRejected] = useState<null | string>(null)
+
   const errorRef = useRef(error)
-  const formatter = useInputFormatter({ locale })
-  const formattedValue = value ? formatter.format(value) : ''
-  const inputFormat = useInputFormat({ formatter, locale })
   const onValidationErrorRef = useRef(onValidationError)
   const reportedValue = useRef(value)
+
+  const formattedValue = value ? formatter.format(value) : ''
+
   // eslint-disable-next-line react-hooks/refs
   errorRef.current = error
+
   // eslint-disable-next-line react-hooks/refs
   onValidationErrorRef.current = onValidationError
 
-  useEffect(() => {
-    if (reportedValue.current === value) return
-    reportedValue.current = value
-    setRejected(null)
-    if (!errorRef.current) return
-    setError(null)
-    onValidationErrorRef.current?.(null)
-  }, [value])
   const { isDisabled, isWithinValidRange, validEnd, validStart } =
     useRangeChecker(validRange)
+
+  const displayedValue = focused ? draft : (rejected ?? formattedValue)
+
+  const onChangeText = (text: string) => {
+    setDraft(text)
+    if (rejected) setRejected(null)
+  }
+
+  const onFocus = () => {
+    setDraft(rejected ?? formattedValue)
+    setFocused(true)
+  }
 
   const report = (inputError: string | null) => {
     setError(inputError)
@@ -113,22 +122,19 @@ export default function useDateInput({
     onChange(next.date)
   }
 
-  const onChangeText = (text: string) => {
-    setDraft(text)
-    if (rejected) setRejected(null)
-  }
-
-  const onFocus = () => {
-    setDraft(rejected ?? formattedValue)
-    setFocused(true)
-  }
-
   const onBlur = () => {
     setFocused(false)
     commit(draft)
   }
 
-  const displayedValue = focused ? draft : (rejected ?? formattedValue)
+  useEffect(() => {
+    if (reportedValue.current === value) return
+    reportedValue.current = value
+    setRejected(null)
+    if (!errorRef.current) return
+    setError(null)
+    onValidationErrorRef.current?.(null)
+  }, [value])
 
   return {
     displayedValue,

@@ -21,8 +21,9 @@ export default function AutoSizer({
   fill?: boolean
   initialLayout?: WidthAndHeight
 }) {
-  const [measured, setMeasured] = useState<MeasuredLayout | null>(null)
   const { height: windowHeight, width: windowWidth } = useWindowDimensions()
+
+  const [measured, setMeasured] = useState<MeasuredLayout | null>(null)
 
   const windowKey = `${windowWidth}x${windowHeight}`
 
@@ -33,10 +34,12 @@ export default function AutoSizer({
     (fill ? measured.height > 0 : true)
       ? measured
       : null
+
   const windowLayout =
     windowWidth > 0 && (!fill || windowHeight > 0)
       ? { height: windowHeight, width: windowWidth }
       : null
+
   const layout = measuredReady ?? initialLayout ?? windowLayout
 
   const onLayout = useCallback(
