@@ -1,8 +1,6 @@
 import en from './en'
 
-export type TranslationResolver = (
-  locale: string | undefined
-) => TranslationsType
+type TranslationResolver = (locale: string | undefined) => TranslationsType
 export type TranslationsType = {
   am: string
   cancel: string
