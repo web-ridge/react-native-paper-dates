@@ -19,7 +19,7 @@ import {
 
 import { dateTimeFormat, formatDateRange } from '../shared/intl'
 import { displayCase, themeColor } from '../shared/utils'
-import { getTranslation, translate } from '../translations/utils'
+import { actionLabels, getTranslation, translate } from '../translations/utils'
 import DatePickerInputWithoutModal from './DatePickerInputWithoutModal'
 import { areDatesOnSameDay, interpretTypedDate } from './dateUtils'
 import {
@@ -145,15 +145,11 @@ function DatePickerInputForm({
 
   const actionColor = themeColor(theme.colors.primary)
 
-  const cancelLabel = displayCase(
-    translate(locale, 'cancel', 'Cancel'),
-    uppercase
-  )
-
-  const confirmLabel = displayCase(
-    saveLabel || translate(locale, 'confirm', 'OK'),
-    uppercase
-  )
+  const { cancelLabel, confirmLabel } = actionLabels({
+    locale,
+    saveLabel,
+    uppercase,
+  })
 
   const endCaption = displayCase(
     endLabel ?? translate(locale, 'endDate', 'End date'),

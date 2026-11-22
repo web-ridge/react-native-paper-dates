@@ -1,3 +1,4 @@
+import { displayCase } from '../shared/utils'
 import en from './en'
 
 type TranslationResolver = (locale: string | undefined) => TranslationsType
@@ -45,6 +46,27 @@ function translationTable(locale: string | undefined) {
   const table = translationsPerLocale[locale || 'en']
   if (!table) return undefined
   return typeof table === 'function' ? table(locale) : table
+}
+
+export function actionLabels({
+  locale,
+  saveLabel,
+  uppercase,
+}: {
+  locale?: string
+  saveLabel?: string
+  uppercase?: boolean
+}) {
+  return {
+    cancelLabel: displayCase(
+      getTranslation(locale, 'cancel', 'Cancel'),
+      !!uppercase
+    ),
+    confirmLabel: displayCase(
+      saveLabel || getTranslation(locale, 'confirm', 'OK'),
+      !!uppercase
+    ),
+  }
 }
 
 export function getTranslation<K extends keyof TranslationsType>(

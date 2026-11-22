@@ -19,8 +19,8 @@ import {
 
 import { dateTimeFormat } from '../shared/intl'
 import StateLayer from '../shared/StateLayer'
-import { displayCase, supportedOrientations, themeColor } from '../shared/utils'
-import { getTranslation, translate } from '../translations/utils'
+import { supportedOrientations, themeColor } from '../shared/utils'
+import { actionLabels, getTranslation } from '../translations/utils'
 import Calendar from './Calendar'
 import type {
   CalendarDate,
@@ -223,15 +223,11 @@ function DatePickerDocked({
   const actionColor = themeColor(theme.colors.primary)
   const anchorBox = anchor ?? { height: 0, width: 0, x: 8, y: 8 }
 
-  const cancelLabel = displayCase(
-    translate(locale, 'cancel', 'Cancel'),
-    !!uppercase
-  )
-
-  const confirmLabel = displayCase(
-    saveLabel || translate(locale, 'confirm', 'OK'),
-    !!uppercase
-  )
+  const { cancelLabel, confirmLabel } = actionLabels({
+    locale,
+    saveLabel,
+    uppercase,
+  })
 
   const width = Math.min(cardWidth, Math.max(windowWidth - 16, 0))
 

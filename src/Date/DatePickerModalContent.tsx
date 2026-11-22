@@ -4,13 +4,8 @@ import { Button, Divider, useTheme } from 'react-native-paper'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { sharedStyles } from '../shared/styles'
-import {
-  displayCase,
-  themeColor,
-  useIsLargeScreen,
-  useLatest,
-} from '../shared/utils'
-import { translate } from '../translations/utils'
+import { themeColor, useIsLargeScreen, useLatest } from '../shared/utils'
+import { actionLabels } from '../translations/utils'
 import AnimatedCrossView from './AnimatedCrossView'
 import Calendar, { type BaseCalendarProps } from './Calendar'
 import DatePickerInputForm from './DatePickerInputForm'
@@ -154,15 +149,11 @@ export function DatePickerModalContent(
 
   const uppercase = props.uppercase ?? defaultUppercase
 
-  const cancelLabel = displayCase(
-    translate(locale, 'cancel', 'Cancel'),
-    uppercase
-  )
-
-  const confirmLabel = displayCase(
-    props.saveLabel || translate(locale, 'confirm', 'OK'),
-    uppercase
-  )
+  const { cancelLabel, confirmLabel } = actionLabels({
+    locale,
+    saveLabel: props.saveLabel,
+    uppercase,
+  })
 
   const onCalendarContainerLayout = useCallback(
     (event: LayoutChangeEvent) => {
