@@ -6,40 +6,39 @@ The calendar modal for a range is documented on the [range date picker](./range-
 
 ## Usage
 
-```jsx
-import React from 'react';
+```jsx playground
+import { useState } from 'react';
 import { View } from 'react-native';
-import { Button, PaperProvider } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import { DatePickerModalInput } from 'react-native-paper-dates';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-
 
 export default function App() {
-  const [range, setRange] = React.useState({ startDate: undefined, endDate: undefined });
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [range, setRange] = useState({ endDate: undefined, startDate: undefined });
 
   return (
-    <PaperProvider>
-      <SafeAreaProvider>
-        <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
-          <Button onPress={() => setOpen(true)} mode="outlined">
-            Enter dates
-          </Button>
-          <DatePickerModalInput
-            locale="en"
-            mode="range"
-            visible={open}
-            onDismiss={() => setOpen(false)}
-            startDate={range.startDate}
-            endDate={range.endDate}
-            onConfirm={({ startDate, endDate }) => {
-              setOpen(false);
-              setRange({ startDate, endDate });
-            }}
-          />
-        </View>
-      </SafeAreaProvider>
-    </PaperProvider>
+    <View style={{ alignItems: 'center', gap: 12 }}>
+      <Button mode="outlined" onPress={() => setOpen(true)}>
+        Enter dates
+      </Button>
+      <Text>
+        {range.startDate
+          ? `${range.startDate.toDateString()} – ${range.endDate?.toDateString() ?? '…'}`
+          : 'No dates entered'}
+      </Text>
+      <DatePickerModalInput
+        endDate={range.endDate}
+        locale="en"
+        mode="range"
+        onConfirm={({ endDate, startDate }) => {
+          setOpen(false);
+          setRange({ endDate, startDate });
+        }}
+        onDismiss={() => setOpen(false)}
+        startDate={range.startDate}
+        visible={open}
+      />
+    </View>
   );
 }
 ```

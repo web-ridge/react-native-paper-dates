@@ -6,33 +6,26 @@ The docked date picker is a 360dp calendar anchored to a text field. It opens un
 
 ## Usage
 
-```jsx
-import React from 'react';
+```jsx playground
+import { useState } from 'react';
 import { View } from 'react-native';
-import { PaperProvider } from 'react-native-paper';
 import { DatePickerInput } from 'react-native-paper-dates';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-
 
 export default function App() {
-  const [date, setDate] = React.useState(undefined);
+  const [date, setDate] = useState(undefined);
 
   return (
-    <PaperProvider>
-      <SafeAreaProvider>
-        <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
-          <DatePickerInput
-            locale="en"
-            label="Date"
-            value={date}
-            onChange={setDate}
-            inputMode="start"
-            presentation="docked"
-            variant="outlined"
-          />
-        </View>
-      </SafeAreaProvider>
-    </PaperProvider>
+    <View style={{ alignItems: 'center' }}>
+      <DatePickerInput
+        inputMode="start"
+        label="Date"
+        locale="en"
+        onChange={setDate}
+        presentation="docked"
+        value={date}
+        variant="outlined"
+      />
+    </View>
   );
 }
 ```
