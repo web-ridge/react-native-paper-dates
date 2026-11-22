@@ -21,7 +21,10 @@ import {
   datePickerRangeMaxHeight,
   datePickerSingleMaxHeight,
 } from './dateUtils'
-import { dateInputCardWidth } from './DatePickerInputForm'
+import {
+  dateInputCardMaxWidth,
+  dateInputCardWidth,
+} from './DatePickerInputForm'
 import DatePickerModalContent, {
   DatePickerModalContentMultiProps,
   DatePickerModalContentRangeProps,
@@ -199,7 +202,7 @@ const styles = StyleSheet.create({
   inputCard: {
     flexGrow: 0,
     maxHeight: dateInputMaxHeight,
-    maxWidth: 328,
+    maxWidth: dateInputCardMaxWidth,
   },
   modalContent: {
     flex: 1,
