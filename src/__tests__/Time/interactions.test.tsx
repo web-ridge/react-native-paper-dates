@@ -557,9 +557,9 @@ describe('time inputs', () => {
         onErrorContainer: 'rgb(0, 255, 0)',
         onPrimaryContainer: 'rgb(1, 2, 3)',
         onSurface: 'rgb(20, 21, 22)',
-        primary: 'rgb(4, 5, 6)',
         onSurfaceVariant: 'rgb(7, 8, 9)',
         onTertiaryContainer: 'rgb(10, 11, 12)',
+        primary: 'rgb(4, 5, 6)',
       },
     }
     const states = await render(

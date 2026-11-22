@@ -485,17 +485,17 @@ it('keeps a keyboard focus layer on the docked menu pills on web', async () => {
       list.push(listener)
       listeners.set(type, list)
     },
-    removeEventListener: (type: string, listener: EventListener) => {
-      listeners.set(
-        type,
-        (listeners.get(type) ?? []).filter((item) => item !== listener)
-      )
-    },
     dispatchEvent: (event: Event) => {
       for (const listener of listeners.get(event.type) ?? []) {
         listener(event)
       }
       return true
+    },
+    removeEventListener: (type: string, listener: EventListener) => {
+      listeners.set(
+        type,
+        (listeners.get(type) ?? []).filter((item) => item !== listener)
+      )
     },
   } as unknown as Window & typeof globalThis
 
@@ -545,8 +545,8 @@ it('keeps a keyboard focus layer on the docked menu pills on web', async () => {
   try {
     await act(() => {
       host.window?.dispatchEvent({
-        type: 'keydown',
         key: 'Tab',
+        type: 'keydown',
       } as unknown as Event)
       ;(handlers.onFocus as () => void)()
     })
