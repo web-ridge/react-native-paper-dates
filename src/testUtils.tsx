@@ -7,6 +7,7 @@ import {
 import { ReactElement } from 'react'
 import { Platform } from 'react-native'
 import { PaperProvider } from 'react-native-paper'
+export * from '@testing-library/react-native'
 
 type Fiber = {
   child: Fiber | null
@@ -15,6 +16,7 @@ type Fiber = {
   return: Fiber | null
   sibling: Fiber | null
 }
+
 export type PressableInstance = {
   props: Record<string, unknown>
   unstable_fiber?: Fiber | null
@@ -31,6 +33,27 @@ export function byTestId(
   }) as PressableInstance[]
 }
 
+export function dayFocused(
+  screen: {
+    getAllByTestId: (testId: string) => Array<{
+      children?: Array<object | string>
+      props?: { pointerEvents?: string }
+    }>
+  },
+  testId: string
+) {
+  const focused = (node: {
+    children?: Array<object | string>
+    props?: { pointerEvents?: string }
+  }): boolean => {
+    if (node.props?.pointerEvents === 'none') return true
+    return (node.children ?? []).some(
+      (child) => typeof child !== 'string' && focused(child)
+    )
+  }
+  return screen.getAllByTestId(testId).some((day) => focused(day))
+}
+
 export function findPress(node: PressableInstance): (() => void) | undefined {
   let fiber = node.unstable_fiber ?? null
   for (let depth = 0; fiber && depth < 12; depth += 1, fiber = fiber.return) {
@@ -40,6 +63,43 @@ export function findPress(node: PressableInstance): (() => void) | undefined {
     }
   }
   return undefined
+}
+
+export function installDateKeyListener() {
+  const previousPlatform = Platform.OS
+  Platform.OS = 'web'
+  const listeners = new Map<string, (event: KeyboardEvent) => void>()
+  const host = globalThis as { window?: Window & typeof globalThis }
+  const previousWindow = host.window
+  host.window = {
+    addEventListener(type: string, listener: EventListener) {
+      listeners.set(type, listener as (event: KeyboardEvent) => void)
+    },
+    removeEventListener(type: string) {
+      listeners.delete(type)
+    },
+  } as unknown as Window & typeof globalThis
+
+  return {
+    async press(key: string, shiftKey = false) {
+      const handler = listeners.get('keydown')
+      if (!handler) {
+        throw new Error('missing keydown listener')
+      }
+      await act(() => {
+        handler({
+          key,
+          preventDefault() {},
+          shiftKey,
+          target: null,
+        } as unknown as KeyboardEvent)
+      })
+    },
+    restore() {
+      Platform.OS = previousPlatform
+      host.window = previousWindow
+    },
+  }
 }
 
 export async function pressDays(
@@ -56,6 +116,20 @@ export async function pressDays(
   if (pressed === 0) {
     throw new Error('no pressable day')
   }
+}
+
+export async function pressLabel(
+  screen: { container: { queryAll: Function } },
+  label: string
+) {
+  const node = screen.container.queryAll(
+    (item: { props: { accessibilityLabel?: string } }) =>
+      item.props.accessibilityLabel === label
+  )[0]
+  if (!node) {
+    throw new Error(`missing ${label}`)
+  }
+  await pressNode(node)
 }
 
 export async function pressNode(node: PressableInstance) {
@@ -97,78 +171,6 @@ async function render(
   })
 }
 
-export function installDateKeyListener() {
-  const previousPlatform = Platform.OS
-  Platform.OS = 'web'
-  const listeners = new Map<string, (event: KeyboardEvent) => void>()
-  const host = globalThis as { window?: Window & typeof globalThis }
-  const previousWindow = host.window
-  host.window = {
-    addEventListener(type: string, listener: EventListener) {
-      listeners.set(type, listener as (event: KeyboardEvent) => void)
-    },
-    removeEventListener(type: string) {
-      listeners.delete(type)
-    },
-  } as unknown as Window & typeof globalThis
-
-  return {
-    async press(key: string, shiftKey = false) {
-      const handler = listeners.get('keydown')
-      if (!handler) {
-        throw new Error('missing keydown listener')
-      }
-      await act(() => {
-        handler({
-          key,
-          preventDefault() {},
-          shiftKey,
-          target: null,
-        } as unknown as KeyboardEvent)
-      })
-    },
-    restore() {
-      Platform.OS = previousPlatform
-      host.window = previousWindow
-    },
-  }
-}
-
-export function dayFocused(
-  screen: {
-    getAllByTestId: (testId: string) => Array<{
-      children?: Array<object | string>
-      props?: { pointerEvents?: string }
-    }>
-  },
-  testId: string
-) {
-  const focused = (node: {
-    children?: Array<object | string>
-    props?: { pointerEvents?: string }
-  }): boolean => {
-    if (node.props?.pointerEvents === 'none') return true
-    return (node.children ?? []).some(
-      (child) => typeof child !== 'string' && focused(child)
-    )
-  }
-  return screen.getAllByTestId(testId).some((day) => focused(day))
-}
-
-export async function pressLabel(
-  screen: { container: { queryAll: Function } },
-  label: string
-) {
-  const node = screen.container.queryAll(
-    (item: { props: { accessibilityLabel?: string } }) =>
-      item.props.accessibilityLabel === label
-  )[0]
-  if (!node) {
-    throw new Error(`missing ${label}`)
-  }
-  await pressNode(node)
-}
-
 export function walkFibers(
   fiber: Fiber | null | undefined,
   visit: (fiber: Fiber) => void
@@ -180,7 +182,5 @@ export function walkFibers(
     current = current.sibling
   }
 }
-
-export * from '@testing-library/react-native'
 
 export { render }

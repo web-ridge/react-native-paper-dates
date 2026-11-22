@@ -10,7 +10,21 @@ type CrossFadeLayer = {
   scaleY?: ScaleRange
   style?: StyleProp<ViewStyle>
 }
+
 type ScaleRange = [number, number]
+
+function useLayerTransform(progress: Animated.Value, layer: CrossFadeLayer) {
+  const [transform] = useState(() => {
+    const range = (outputRange: ScaleRange) =>
+      progress.interpolate({ inputRange: [0, 1], outputRange })
+    if (layer.scaleX && layer.scaleY) {
+      return [{ scaleY: range(layer.scaleY) }, { scaleX: range(layer.scaleX) }]
+    }
+    if (layer.scale) return [{ scale: range(layer.scale) }]
+    return undefined
+  })
+  return transform
+}
 
 export default function CrossFade({
   collapsed,
@@ -24,16 +38,23 @@ export default function CrossFade({
   secondary: CrossFadeLayer
 }) {
   const motionScale = useMotionScale()
+
   const [progress] = useState(() => new Animated.Value(collapsed ? 1 : 0))
+
+  const primaryTransform = useLayerTransform(progress, primary)
+  const secondaryTransform = useLayerTransform(progress, secondary)
+
   const [secondaryOpacity] = useState(() =>
     progress.interpolate({ inputRange: [0, 1], outputRange: [1, 0] })
   )
-  const primaryTransform = useLayerTransform(progress, primary)
-  const secondaryTransform = useLayerTransform(progress, secondary)
-  const reduceMotion = motionScale === 0
+
   const [showPrimary, setShowPrimary] = useState(collapsed)
   const [showSecondary, setShowSecondary] = useState(!collapsed)
+
   const skipFirst = useRef(true)
+
+  const reduceMotion = motionScale === 0
+
   useEffect(() => {
     if (skipFirst.current) {
       skipFirst.current = false
@@ -92,17 +113,4 @@ export default function CrossFade({
       ) : null}
     </View>
   )
-}
-
-function useLayerTransform(progress: Animated.Value, layer: CrossFadeLayer) {
-  const [transform] = useState(() => {
-    const range = (outputRange: ScaleRange) =>
-      progress.interpolate({ inputRange: [0, 1], outputRange })
-    if (layer.scaleX && layer.scaleY) {
-      return [{ scaleY: range(layer.scaleY) }, { scaleX: range(layer.scaleX) }]
-    }
-    if (layer.scale) return [{ scale: range(layer.scale) }]
-    return undefined
-  })
-  return transform
 }

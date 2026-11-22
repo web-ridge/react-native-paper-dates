@@ -8,12 +8,15 @@ import {
 import { type Theme, useTheme } from 'react-native-paper'
 
 export type PaperTheme = Theme
+
 type Rgb = {
   a: number
   b: number
   g: number
   r: number
 }
+
+const alphaColors = new Map<string, string>()
 
 export const supportedOrientations: (
   | 'portrait'
@@ -126,8 +129,6 @@ export function useTextColorOnPrimary() {
   const theme = useTheme()
   return themeColor(theme.colors.onPrimary)
 }
-
-const alphaColors = new Map<string, string>()
 
 export function withAlpha(color: unknown, alpha: number) {
   const key = typeof color === 'string' ? `${color}|${alpha}` : null

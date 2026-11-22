@@ -1,15 +1,20 @@
+type DayLabelParts = {
+  days: Map<number, string>
+  formatter: Intl.DateTimeFormat
+  months: Map<string, readonly Intl.DateTimeFormatPart[] | null>
+  weekdays: Map<number, string>
+}
+
+const dayLabelOptions: Intl.DateTimeFormatOptions = {
+  day: 'numeric',
+  month: 'long',
+  weekday: 'long',
+  year: 'numeric',
+}
+
+const dayLabelParts = new Map<string, DayLabelParts>()
 const formatters = new Map<string, Intl.DateTimeFormat>()
 const monthNames = new Map<string, readonly string[]>()
-
-function optionsKey(options: Intl.DateTimeFormatOptions): string {
-  return Object.keys(options)
-    .sort()
-    .map((key) => {
-      const value = options[key as keyof Intl.DateTimeFormatOptions]
-      return `${key}:${String(value)}`
-    })
-    .join('|')
-}
 
 export function dateTimeFormat(
   locale: string | undefined,
@@ -35,83 +40,6 @@ export function formatDateRange(
     return formatter.formatRange(start, end)
   }
   return formatRangeFromParts(formatter, start, end)
-}
-
-function formatRangeFromParts(
-  formatter: Intl.DateTimeFormat,
-  start: Date,
-  end: Date
-) {
-  if (typeof formatter.formatToParts !== 'function') {
-    return `${formatter.format(start)} – ${formatter.format(end)}`
-  }
-
-  const startParts = formatter.formatToParts(start)
-  const endParts = formatter.formatToParts(end)
-  let prefix = 0
-  while (
-    prefix < startParts.length &&
-    prefix < endParts.length &&
-    startParts[prefix].type === endParts[prefix].type &&
-    startParts[prefix].value === endParts[prefix].value
-  ) {
-    prefix += 1
-  }
-  let startSuffix = startParts.length
-  let endSuffix = endParts.length
-  while (
-    startSuffix > prefix &&
-    endSuffix > prefix &&
-    startParts[startSuffix - 1].type === endParts[endSuffix - 1].type &&
-    startParts[startSuffix - 1].value === endParts[endSuffix - 1].value
-  ) {
-    startSuffix -= 1
-    endSuffix -= 1
-  }
-
-  const join = (parts: Intl.DateTimeFormatPart[]) =>
-    parts.map((part) => part.value).join('')
-  const startUnique = join(startParts.slice(prefix, startSuffix))
-  const endUnique = join(endParts.slice(prefix, endSuffix))
-  if (!startUnique && !endUnique) return formatter.format(start)
-  return `${join(startParts.slice(0, prefix))}${startUnique} – ${endUnique}${join(
-    startParts.slice(startSuffix)
-  )}`
-}
-
-export function formatMonth(locale: string | undefined, month: number) {
-  const key = locale ?? ''
-  let names = monthNames.get(key)
-  if (!names) {
-    const formatter = dateTimeFormat(locale, { month: 'long' })
-    names = Array.from({ length: 12 }, (_, index) =>
-      formatter.format(new Date(2020, index, 1))
-    )
-    monthNames.set(key, names)
-  }
-  return names[month]
-}
-
-const dayLabelOptions: Intl.DateTimeFormatOptions = {
-  day: 'numeric',
-  month: 'long',
-  weekday: 'long',
-  year: 'numeric',
-}
-type DayLabelParts = {
-  days: Map<number, string>
-  formatter: Intl.DateTimeFormat
-  months: Map<string, readonly Intl.DateTimeFormatPart[] | null>
-  weekdays: Map<number, string>
-}
-const dayLabelParts = new Map<string, DayLabelParts>()
-
-function partOf(
-  formatter: Intl.DateTimeFormat,
-  date: Date,
-  type: Intl.DateTimeFormatPartTypes
-) {
-  return formatter.formatToParts(date).find((part) => part.type === type)?.value
 }
 
 export function formatDayLabel(
@@ -164,6 +92,79 @@ export function formatDayLabel(
           : part.value
   }
   return label
+}
+
+export function formatMonth(locale: string | undefined, month: number) {
+  const key = locale ?? ''
+  let names = monthNames.get(key)
+  if (!names) {
+    const formatter = dateTimeFormat(locale, { month: 'long' })
+    names = Array.from({ length: 12 }, (_, index) =>
+      formatter.format(new Date(2020, index, 1))
+    )
+    monthNames.set(key, names)
+  }
+  return names[month]
+}
+
+function formatRangeFromParts(
+  formatter: Intl.DateTimeFormat,
+  start: Date,
+  end: Date
+) {
+  if (typeof formatter.formatToParts !== 'function') {
+    return `${formatter.format(start)} – ${formatter.format(end)}`
+  }
+
+  const startParts = formatter.formatToParts(start)
+  const endParts = formatter.formatToParts(end)
+  let prefix = 0
+  while (
+    prefix < startParts.length &&
+    prefix < endParts.length &&
+    startParts[prefix].type === endParts[prefix].type &&
+    startParts[prefix].value === endParts[prefix].value
+  ) {
+    prefix += 1
+  }
+  let startSuffix = startParts.length
+  let endSuffix = endParts.length
+  while (
+    startSuffix > prefix &&
+    endSuffix > prefix &&
+    startParts[startSuffix - 1].type === endParts[endSuffix - 1].type &&
+    startParts[startSuffix - 1].value === endParts[endSuffix - 1].value
+  ) {
+    startSuffix -= 1
+    endSuffix -= 1
+  }
+
+  const join = (parts: Intl.DateTimeFormatPart[]) =>
+    parts.map((part) => part.value).join('')
+  const startUnique = join(startParts.slice(prefix, startSuffix))
+  const endUnique = join(endParts.slice(prefix, endSuffix))
+  if (!startUnique && !endUnique) return formatter.format(start)
+  return `${join(startParts.slice(0, prefix))}${startUnique} – ${endUnique}${join(
+    startParts.slice(startSuffix)
+  )}`
+}
+
+function optionsKey(options: Intl.DateTimeFormatOptions): string {
+  return Object.keys(options)
+    .sort()
+    .map((key) => {
+      const value = options[key as keyof Intl.DateTimeFormatOptions]
+      return `${key}:${String(value)}`
+    })
+    .join('|')
+}
+
+function partOf(
+  formatter: Intl.DateTimeFormat,
+  date: Date,
+  type: Intl.DateTimeFormatPartTypes
+) {
+  return formatter.formatToParts(date).find((part) => part.type === type)?.value
 }
 
 function splitDayPattern(formatter: Intl.DateTimeFormat, date: Date) {
