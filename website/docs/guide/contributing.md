@@ -59,9 +59,9 @@ Remember to add tests for your change if possible.
 The documentation site lives in `website/`. Install its dependencies with `bun install --cwd website`, then:
 
 ```sh
-bun --cwd website run dev
-bun --cwd website run build
-bun --cwd website run typecheck
+bun run --cwd website dev
+bun run --cwd website build
+bun run --cwd website typecheck
 ```
 
 ### Linting and tests
@@ -87,9 +87,9 @@ The `package.json` file contains various scripts for common tasks:
 - `bun run example android`: run the example app on Android.
 - `bun run example ios`: run the example app on iOS.
 - `bun run example web`: run the example app on web.
-- `bun --cwd website run dev`: start the documentation site.
-- `bun --cwd website run build`: build the documentation site.
-- `bun --cwd website run typecheck`: type-check the documentation site.
+- `bun run --cwd website dev`: start the documentation site.
+- `bun run --cwd website build`: build the documentation site.
+- `bun run --cwd website typecheck`: type-check the documentation site.
 
 ### Sending a pull request
 

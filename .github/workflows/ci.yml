@@ -40,7 +40,8 @@ jobs:
         run: bun run compiler:check
 
       - name: Typecheck website
-        run: bun --cwd website run typecheck
+        working-directory: website
+        run: bun run typecheck
 
   test:
     runs-on: ubuntu-latest
