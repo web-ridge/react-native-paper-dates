@@ -6,39 +6,34 @@ The single date input opens a dialog on a text field, for a date such as a birth
 
 ## Usage
 
-```jsx
-import React from 'react';
+```jsx playground
+import { useState } from 'react';
 import { View } from 'react-native';
-import { Button, PaperProvider } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import { DatePickerModalInput } from 'react-native-paper-dates';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-
 
 export default function App() {
-  const [date, setDate] = React.useState(undefined);
-  const [open, setOpen] = React.useState(false);
+  const [date, setDate] = useState(undefined);
+  const [open, setOpen] = useState(false);
 
   return (
-    <PaperProvider>
-      <SafeAreaProvider>
-        <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
-          <Button onPress={() => setOpen(true)} mode="outlined">
-            Enter date
-          </Button>
-          <DatePickerModalInput
-            locale="en"
-            mode="single"
-            visible={open}
-            onDismiss={() => setOpen(false)}
-            date={date}
-            onConfirm={({ date }) => {
-              setOpen(false);
-              setDate(date);
-            }}
-          />
-        </View>
-      </SafeAreaProvider>
-    </PaperProvider>
+    <View style={{ alignItems: 'center', gap: 12 }}>
+      <Button mode="outlined" onPress={() => setOpen(true)}>
+        Enter date
+      </Button>
+      <Text>{date ? date.toDateString() : 'No date entered'}</Text>
+      <DatePickerModalInput
+        date={date}
+        locale="en"
+        mode="single"
+        onConfirm={(params) => {
+          setOpen(false);
+          setDate(params.date);
+        }}
+        onDismiss={() => setOpen(false)}
+        visible={open}
+      />
+    </View>
   );
 }
 ```

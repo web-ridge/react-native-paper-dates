@@ -4,44 +4,63 @@ The time picker selects a time with the expressive Material scroll, input, and d
 
 ## Usage
 
-```jsx
-import React from 'react';
+```jsx playground
+import { useState } from 'react';
 import { View } from 'react-native';
-import { Button, PaperProvider } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import { TimePickerModal } from 'react-native-paper-dates';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-
 
 export default function App() {
-  const [visible, setVisible] = React.useState(false);
-  const [time, setTime] = React.useState({ hours: 12, minutes: 14 });
-
-  const onDismiss = React.useCallback(() => {
-    setVisible(false);
-  }, []);
-
-  const onConfirm = React.useCallback(({ hours, minutes }) => {
-    setVisible(false);
-    setTime({ hours, minutes });
-  }, []);
+  const [time, setTime] = useState({ hours: 12, minutes: 14 });
+  const [visible, setVisible] = useState(false);
 
   return (
-    <PaperProvider>
-      <SafeAreaProvider>
-        <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
-          <Button onPress={() => setVisible(true)} mode="outlined">
-            Pick time
-          </Button>
-          <TimePickerModal
-            visible={visible}
-            onDismiss={onDismiss}
-            onConfirm={onConfirm}
-            hours={time.hours}
-            minutes={time.minutes}
-          />
-        </View>
-      </SafeAreaProvider>
-    </PaperProvider>
+    <View style={{ alignItems: 'center', gap: 12 }}>
+      <Button mode="outlined" onPress={() => setVisible(true)}>
+        Pick time
+      </Button>
+      <Text>{`${time.hours}:${String(time.minutes).padStart(2, '0')}`}</Text>
+      <TimePickerModal
+        hours={time.hours}
+        minutes={time.minutes}
+        onConfirm={({ hours, minutes }) => {
+          setVisible(false);
+          setTime({ hours, minutes });
+        }}
+        onDismiss={() => setVisible(false)}
+        visible={visible}
+      />
+    </View>
+  );
+}
+```
+
+## Scroll picker
+
+`TimePicker` with `inputType="scroll"` renders the wheel inline.
+
+```jsx playground
+import { useState } from 'react';
+import { View } from 'react-native';
+import { Text } from 'react-native-paper';
+import { TimePicker } from 'react-native-paper-dates';
+
+export default function App() {
+  const [focused, setFocused] = useState('hours');
+  const [time, setTime] = useState({ hours: 9, minutes: 45 });
+
+  return (
+    <View style={{ alignItems: 'center', gap: 12 }}>
+      <TimePicker
+        focused={focused}
+        hours={time.hours}
+        inputType="scroll"
+        minutes={time.minutes}
+        onChange={({ hours, minutes }) => setTime({ hours, minutes })}
+        onFocusInput={setFocused}
+      />
+      <Text>{`${time.hours}:${String(time.minutes).padStart(2, '0')}`}</Text>
+    </View>
   );
 }
 ```
