@@ -6,6 +6,10 @@ inputs:
     description: Install example app dependencies
     required: false
     default: "false"
+  install-website:
+    description: Install website dependencies
+    required: false
+    default: "false"
 
 runs:
   using: composite
@@ -27,4 +31,9 @@ runs:
     - name: Install example dependencies
       if: inputs.install-example == 'true'
       run: bun install --frozen-lockfile --cwd example
+      shell: bash
+
+    - name: Install website dependencies
+      if: inputs.install-website == 'true'
+      run: bun install --frozen-lockfile --cwd website
       shell: bash

@@ -25,6 +25,7 @@ jobs:
         uses: ./.github/actions/setup
         with:
           install-example: true
+          install-website: true
 
       - name: Lint files
         run: bun run lint
@@ -37,6 +38,9 @@ jobs:
 
       - name: Check React Compiler rules
         run: bun run compiler:check
+
+      - name: Typecheck website
+        run: bun --cwd website run typecheck
 
   test:
     runs-on: ubuntu-latest
