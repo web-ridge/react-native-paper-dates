@@ -198,3 +198,33 @@ it('lets the year selector fill the phone sheet', async () => {
     })
   }
 })
+
+it('warns when cancel and confirm labels fall back for an unregistered locale', async () => {
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined)
+  try {
+    const screen = await render(
+      <DatePickerInputForm
+        locale="xx"
+        mode="single"
+        onChange={() => null}
+        onConfirm={() => null}
+        onDismiss={() => null}
+        onRequestCalendar={() => null}
+      />
+    )
+    expect(screen.getByText('Cancel')).toBeTruthy()
+    expect(screen.getByText('OK')).toBeTruthy()
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'The locale xx is not registered, see https://web-ridge.github.io/react-native-paper-dates/guide/localization, key: cancel'
+      )
+    )
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'The locale xx is not registered, see https://web-ridge.github.io/react-native-paper-dates/guide/localization, key: confirm'
+      )
+    )
+  } finally {
+    warn.mockRestore()
+  }
+})

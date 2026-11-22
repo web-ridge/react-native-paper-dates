@@ -19,7 +19,7 @@ import {
 
 import { dateTimeFormat, formatDateRange } from '../shared/intl'
 import { displayCase, themeColor } from '../shared/utils'
-import { actionLabels, getTranslation, translate } from '../translations/utils'
+import { actionLabels, getTranslation } from '../translations/utils'
 import DatePickerInputWithoutModal from './DatePickerInputWithoutModal'
 import { areDatesOnSameDay, interpretTypedDate } from './dateUtils'
 import {
@@ -152,7 +152,7 @@ function DatePickerInputForm({
   })
 
   const endCaption = displayCase(
-    endLabel ?? translate(locale, 'endDate', 'End date'),
+    endLabel ?? getTranslation(locale, 'endDate', 'End date'),
     uppercase
   )
 
@@ -182,7 +182,7 @@ function DatePickerInputForm({
 
   const startCaption = displayCase(
     mode === 'range'
-      ? (startLabel ?? translate(locale, 'startDate', 'Start date'))
+      ? (startLabel ?? getTranslation(locale, 'startDate', 'Start date'))
       : (label ?? 'Date'),
     uppercase
   )
@@ -193,7 +193,7 @@ function DatePickerInputForm({
       empty:
         mode === 'range'
           ? `${startCaption} – ${endCaption}`
-          : translate(locale, 'enterDate', 'Enter date'),
+          : getTranslation(locale, 'enterDate', 'Enter date'),
       endDate,
       format: (value) => headlineFormatter.format(value),
       formatRange: (start, end) =>
@@ -209,8 +209,8 @@ function DatePickerInputForm({
 
   const supporting = displayCase(
     mode === 'range'
-      ? translate(locale, 'enterDates', 'Enter dates')
-      : translate(locale, 'selectSingle', 'Select date'),
+      ? getTranslation(locale, 'enterDates', 'Enter dates')
+      : getTranslation(locale, 'selectSingle', 'Select date'),
     uppercase
   )
 

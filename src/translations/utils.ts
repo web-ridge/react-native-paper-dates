@@ -102,6 +102,6 @@ export function translate(
   key: keyof TranslationsType,
   fallback: string
 ): string {
-  const value = translationTable(locale)?.[key]
+  const value = getTranslation(locale, key, fallback)
   return typeof value === 'string' && value ? value : fallback
 }
