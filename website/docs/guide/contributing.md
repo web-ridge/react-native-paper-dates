@@ -36,13 +36,17 @@ To run the example app on web:
 bun run example web
 ```
 
-Make sure your code passes TypeScript and Oxlint. Run the following to verify:
+Make sure your code passes the full check set. Run the following to verify:
 
 ```sh
-bun run typecheck
 bun run lint
 bun run format:check
+bun run typecheck
+bun run compiler:check
+bun run test
 ```
+
+Use `bun run test` to run the Jest suite. Do not use `bun test`, which runs Bun's own test runner instead.
 
 To fix formatting errors, run the following:
 
@@ -50,33 +54,42 @@ To fix formatting errors, run the following:
 bun run format
 ```
 
-Remember to add tests for your change if possible. Run the unit tests by:
+Remember to add tests for your change if possible.
+
+The documentation site lives in `website/`. Install its dependencies with `bun install --cwd website`, then:
 
 ```sh
-bun run test
+bun --cwd website run dev
+bun --cwd website run build
+bun --cwd website run typecheck
 ```
 
 ### Linting and tests
 
 [Oxlint](https://oxc.rs/docs/guide/usage/linter), [Oxfmt](https://oxc.rs/docs/guide/usage/formatter), [TypeScript](https://www.typescriptlang.org/)
 
-We use [TypeScript](https://www.typescriptlang.org/) for type checking, [Oxlint](https://oxc.rs/docs/guide/usage/linter) for linting, [Oxfmt](https://oxc.rs/docs/guide/usage/formatter) for formatting, and [Jest](https://jestjs.io/) for testing.
+We use [TypeScript](https://www.typescriptlang.org/) for type checking, [Oxlint](https://oxc.rs/docs/guide/usage/linter) for linting, [Oxfmt](https://oxc.rs/docs/guide/usage/formatter) for formatting, [ESLint](https://eslint.org/) for React Compiler rules (`compiler:check`), and [Jest](https://jestjs.io/) for testing.
 
-Our pre-commit hooks verify that tests pass when committing.
+Our pre-commit hooks run lint, format checking, typecheck, and the Jest suite when committing. Do not skip them.
 
 ### Scripts
 
 The `package.json` file contains various scripts for common tasks:
 
 - `bun run bootstrap`: setup project by installing all dependencies and pods.
-- `bun run typecheck`: type-check files with TypeScript.
-- `bun run lint`: lint files with Oxlint.
+- `bun run compiler:check`: check React Compiler rules with ESLint.
 - `bun run format`: format files with Oxfmt.
-- `bun run test`: run unit tests with Jest.
+- `bun run format:check`: check formatting with Oxfmt.
+- `bun run lint`: lint files with Oxlint.
+- `bun run test`: run unit tests with Jest. Do not use `bun test`.
+- `bun run typecheck`: type-check the library with TypeScript.
 - `bun run example start`: start the Metro server for the example app.
 - `bun run example android`: run the example app on Android.
 - `bun run example ios`: run the example app on iOS.
 - `bun run example web`: run the example app on web.
+- `bun --cwd website run dev`: start the documentation site.
+- `bun --cwd website run build`: build the documentation site.
+- `bun --cwd website run typecheck`: type-check the documentation site.
 
 ### Sending a pull request
 
