@@ -342,3 +342,9 @@ html.rp-dark .intro-badges {
   background: var(--paper-surface-variant);
   border-color: var(--paper-outline-variant);
 }
+
+@font-face {
+  font-family: 'MaterialDesignIcons';
+  src: url('@react-native-vector-icons/material-design-icons/fonts/MaterialDesignIcons.ttf')
+    format('truetype');
+}

@@ -1,8 +1,80 @@
 import * as path from 'node:path'
+import { pluginBabel } from '@rsbuild/plugin-babel'
 import { defineConfig } from '@rspress/core'
 
+const base = '/react-native-paper-dates/'
+const modules = path.join(__dirname, 'node_modules')
+const src = path.join(__dirname, '..', 'src')
+
+const pinned = [
+  '@react-native-vector-icons/material-design-icons',
+  'react',
+  'react-dom',
+  'react-native-paper',
+  'react-native-reanimated',
+  'react-native-safe-area-context',
+  'react-native-web',
+  'react-native-worklets',
+]
+
 export default defineConfig({
-  base: '/react-native-paper-dates/',
+  base,
+  builderConfig: {
+    plugins: [
+      pluginBabel({
+        babelLoaderOptions: {
+          plugins: ['react-native-worklets/plugin'],
+          presets: [
+            ['@babel/preset-typescript', { allExtensions: true, isTSX: true }],
+          ],
+        },
+        include: [src, /[\\/]node_modules[\\/]react-native-paper[\\/]/],
+      }),
+    ],
+    resolve: {
+      alias: {
+        ...Object.fromEntries(
+          pinned.map((name) => [name, path.join(modules, name)])
+        ),
+        '@react-native-vector-icons/get-image': false,
+        '@react-native/assets-registry/registry': false,
+        'expo-font': false,
+        'react-native$': 'react-native-web',
+        'react-native-paper-dates$': path.join(src, 'index.ts'),
+        'react-native-paper-dates/translations': path.join(src, 'translations'),
+      },
+      extensions: [
+        '.web.tsx',
+        '.web.ts',
+        '.web.mjs',
+        '.web.js',
+        '.tsx',
+        '.ts',
+        '.mjs',
+        '.js',
+        '.json',
+      ],
+    },
+    source: {
+      define: {
+        __DEV__: JSON.stringify(process.env.NODE_ENV !== 'production'),
+        global: 'globalThis',
+      },
+      include: [src],
+    },
+    tools: {
+      rspack: {
+        module: {
+          rules: [
+            {
+              test: /@react-native-vector-icons[\\/].*\.js$/,
+              type: 'javascript/auto',
+            },
+          ],
+        },
+      },
+    },
+  },
   description:
     'Cross-platform Material Design date and time pickers for React Native Paper',
   icon: '/favicon.svg',
