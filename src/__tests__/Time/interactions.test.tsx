@@ -201,7 +201,9 @@ describe('analog clock', () => {
         <AnalogClockMinutes locale="xx" minutes={20} onPress={() => null} />
       )
       expect(warn).toHaveBeenCalledWith(
-        expect.stringContaining('The locale xx is not registered')
+        expect.stringContaining(
+          'The locale xx is not registered, see https://web-ridge.github.io/react-native-paper-dates/guide/localization'
+        )
       )
     } finally {
       warn.mockRestore()

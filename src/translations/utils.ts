@@ -57,7 +57,7 @@ export function getTranslation<K extends keyof TranslationsType>(
   const table = translationTable(locale)
   if (!table) {
     console.warn(
-      `[react-native-paper-dates] The locale ${locale} is not registered, see README!, key: ${key}`
+      `[react-native-paper-dates] The locale ${locale} is not registered, see https://web-ridge.github.io/react-native-paper-dates/guide/localization, key: ${key}`
     )
     return (fallback || key) as TranslationsType[K]
   }
