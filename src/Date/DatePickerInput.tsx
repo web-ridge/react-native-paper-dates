@@ -111,6 +111,22 @@ function DatePickerInput(
     }
   }, [])
 
+  const pickerProps = {
+    date: value,
+    dateMode: inputMode,
+    endYear: endYear ?? defaultEndYear,
+    locale,
+    onConfirm: onInnerConfirm,
+    onDismiss,
+    saveLabel,
+    saveLabelDisabled: saveLabelDisabled ?? false,
+    startWeekOnMonday,
+    startYear: startYear ?? defaultStartYear,
+    uppercase,
+    validRange,
+    visible,
+  }
+
   return (
     <View ref={anchorRef} collapsable={false}>
       <DatePickerInputWithoutModal
@@ -141,45 +157,18 @@ function DatePickerInput(
         locale={locale}
         modal={
           withModal && docked ? (
-            <DatePickerDocked
-              anchor={anchor}
-              date={value}
-              dateMode={inputMode}
-              endYear={endYear ?? defaultEndYear}
-              locale={locale}
-              onConfirm={onInnerConfirm}
-              onDismiss={onDismiss}
-              saveLabel={saveLabel}
-              saveLabelDisabled={saveLabelDisabled ?? false}
-              startWeekOnMonday={startWeekOnMonday}
-              startYear={startYear ?? defaultStartYear}
-              uppercase={uppercase}
-              validRange={validRange}
-              visible={visible}
-            />
+            <DatePickerDocked {...pickerProps} anchor={anchor} />
           ) : withModal ? (
             <DatePickerModal
+              {...pickerProps}
               animationType={animationType}
-              date={value}
-              dateMode={inputMode}
               disableStatusBar={disableStatusBar}
               disableStatusBarPadding={disableStatusBarPadding ?? false}
-              endYear={endYear ?? defaultEndYear}
               inputEnabled={inputEnabled}
               label={label}
-              locale={locale}
               mode="single"
-              onConfirm={onInnerConfirm}
-              onDismiss={onDismiss}
               placeholder={placeholder}
               presentationStyle={presentationStyle}
-              saveLabel={saveLabel}
-              saveLabelDisabled={saveLabelDisabled ?? false}
-              startWeekOnMonday={startWeekOnMonday}
-              startYear={startYear ?? defaultStartYear}
-              uppercase={uppercase}
-              validRange={validRange}
-              visible={visible}
               withDateFormatInLabel={withDateFormatInLabel}
             />
           ) : null
