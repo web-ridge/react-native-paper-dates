@@ -10,6 +10,7 @@ import { Platform, StyleProp, View, ViewStyle } from 'react-native'
 import { TextInput, type TextInputHandles } from 'react-native-paper'
 
 import { useIsLargeScreen, useLatest } from '../shared/utils'
+import { getTranslation } from '../translations/utils'
 import DatePickerDocked, { type DatePickerAnchor } from './DatePickerDocked'
 import type { DatePickerInputProps } from './DatePickerInput.shared'
 import DatePickerInputWithoutModal from './DatePickerInputWithoutModal'
@@ -118,6 +119,10 @@ function DatePickerInput(
         inputButton={
           withModal ? (
             <TextInput.Icon
+              accessibilityLabel={getTranslation(
+                locale,
+                'pickDateFromCalendar'
+              )}
               disabled={rest.disabled || disableCalendarIcon}
               error={false}
               icon={calendarIcon}

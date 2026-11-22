@@ -321,6 +321,7 @@ exports[`renders DatePickerInput 1`] = `
               }
             >
               <View
+                accessibilityLabel="Pick date from calendar"
                 accessibilityState={
                   {
                     "busy": undefined,
