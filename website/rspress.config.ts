@@ -1,6 +1,7 @@
 import * as path from 'node:path'
 import { pluginBabel } from '@rsbuild/plugin-babel'
 import { defineConfig } from '@rspress/core'
+import { pluginPlayground } from '@rspress/plugin-playground'
 
 const base = '/react-native-paper-dates/'
 const modules = path.join(__dirname, 'node_modules')
@@ -20,6 +21,20 @@ const pinned = [
 export default defineConfig({
   base,
   builderConfig: {
+    output: {
+      copy: [
+        {
+          from: path.join(modules, '@babel/standalone/babel.min.js'),
+          info: { minimized: true },
+          to: 'playground/babel.min.js',
+        },
+        {
+          from: path.join(modules, 'monaco-editor/min/vs'),
+          info: { minimized: true },
+          to: 'playground/vs',
+        },
+      ],
+    },
     plugins: [
       pluginBabel({
         babelLoaderOptions: {
@@ -83,6 +98,20 @@ export default defineConfig({
     light: '/logo.svg',
   },
   logoText: 'React Native Paper Dates',
+  plugins: [
+    pluginPlayground({
+      babelUrl: `${base}playground/babel.min.js`,
+      defaultDirection: 'vertical',
+      include: [
+        'react-native',
+        'react-native-paper',
+        'react-native-paper-dates',
+        'react-native-safe-area-context',
+      ],
+      monacoLoader: { paths: { vs: `${base}playground/vs` } },
+      render: path.join(__dirname, 'components', 'Playground.tsx'),
+    }),
+  ],
   root: path.join(__dirname, 'docs'),
   themeConfig: {
     editLink: {
