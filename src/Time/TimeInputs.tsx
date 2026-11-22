@@ -5,12 +5,15 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native'
-import { Text, useTheme } from 'react-native-paper'
+import { useTheme } from 'react-native-paper'
 
 import { useLatest, withAlpha } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
 import AmPmSwitcher from './AmPmSwitcher'
 import TimeInput from './TimeInput'
+import TimePickerSupportingText, {
+  timePickerErrorMessage,
+} from './TimePickerSupportingText'
 import TimeSeparator from './TimeSeparator'
 import {
   clockTypes,
@@ -30,6 +33,8 @@ import {
 
 function TimeInputs({
   disabled,
+  error,
+  errorText,
   focused,
   hours,
   inputFontSize,
@@ -42,6 +47,8 @@ function TimeInputs({
   onInputInvalidChange,
 }: {
   disabled?: boolean
+  error?: boolean
+  errorText?: string
   focused: PossibleClockTypes
   hours: number
   inputFontSize?: number
@@ -99,10 +106,13 @@ function TimeInputs({
   const fieldWidth = timeSelectorFieldWidth(inputType, is24Hour, isLandscape)
 
   const hourLabel = getTranslation(locale, 'hour', 'Hour')
-  const invalidTime = getTranslation(locale, 'invalidTime', 'Invalid time')
   const minuteLabel = getTranslation(locale, 'minute', 'Minute')
-
-  const error = hourInvalid || minuteInvalid ? invalidTime : undefined
+  const errorMessage = timePickerErrorMessage(
+    error,
+    errorText,
+    hourInvalid || minuteInvalid,
+    locale
+  )
   const hourMinuteRow = (
     <View style={styles.inputContainer}>
       <TimeField width={fieldWidth}>
@@ -112,6 +122,7 @@ function TimeInputs({
           blurOnSubmit={false}
           clockType={clockTypes.hours}
           disabled={disabled}
+          error={error}
           inputFontSize={inputFontSize}
           inputType={inputType}
           is24Hour={is24Hour}
@@ -139,6 +150,7 @@ function TimeInputs({
           accessibilityLabel={minuteLabel}
           clockType={clockTypes.minutes}
           disabled={disabled}
+          error={error}
           inputFontSize={inputFontSize}
           inputType={inputType}
           is24Hour={is24Hour}
@@ -165,6 +177,7 @@ function TimeInputs({
           <AmPmSwitcher
             direction="vertical"
             disabled={disabled}
+            error={error}
             hours={hours}
             inputType={inputType}
             locale={locale}
@@ -182,6 +195,7 @@ function TimeInputs({
         <AmPmSwitcher
           direction="horizontal"
           disabled={disabled}
+          error={error}
           hours={hours}
           inputType={inputType}
           locale={locale}
@@ -196,16 +210,7 @@ function TimeInputs({
   return (
     <View style={styles.fields}>
       {fields}
-      {error ? (
-        <Text
-          accessibilityLiveRegion="polite"
-          maxFontSizeMultiplier={1.5}
-          style={[styles.supportingText, { color: theme.colors.error }]}
-          variant="bodySmall"
-        >
-          {error}
-        </Text>
-      ) : null}
+      <TimePickerSupportingText message={errorMessage} />
     </View>
   )
 }
@@ -244,11 +249,6 @@ const styles = StyleSheet.create({
   },
   periodSwitcher: {
     alignSelf: 'flex-start',
-  },
-  supportingText: {
-    alignSelf: 'stretch',
-    marginTop: 7,
-    textAlign: 'center',
   },
 })
 

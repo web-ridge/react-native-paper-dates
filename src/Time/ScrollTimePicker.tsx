@@ -38,6 +38,9 @@ import { themeColor, useLatest, withAlpha } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
 import AmPmSwitcher from './AmPmSwitcher'
 import FocusRing from './FocusRing'
+import TimePickerSupportingText, {
+  timePickerErrorMessage,
+} from './TimePickerSupportingText'
 import TimeSeparator from './TimeSeparator'
 import {
   clockTypes,
@@ -53,6 +56,7 @@ import {
   type TimeChange,
   toHourInputFormat,
   toHourOutputFormat,
+  useInputColors,
 } from './timeUtils'
 
 type AncestorHold = {
@@ -116,6 +120,8 @@ const wheelSettleDelay = 120
 
 function ScrollTimePicker({
   disabled,
+  error,
+  errorText,
   focused,
   hours,
   is24Hour,
@@ -129,6 +135,8 @@ function ScrollTimePicker({
   visible = true,
 }: {
   disabled?: boolean
+  error?: boolean
+  errorText?: string
   focused: PossibleClockTypes
   hours: number
   is24Hour: boolean
@@ -153,80 +161,88 @@ function ScrollTimePicker({
   const hourValues = is24Hour ? hourValues24 : hourValues12
   const wheelHour = toHourInputFormat(hours, is24Hour)
 
+  const errorMessage = timePickerErrorMessage(error, errorText, false, locale)
+
   return (
-    <View style={styles.row}>
-      <ScrollWheel
-        accessibilityLabel={rangeLabel(hourLabel, hourValues)}
-        disabled={disabled}
-        fieldHeight={fieldHeight}
-        focused={focused === clockTypes.hours}
-        onChange={(wheelHourNext) => {
-          onChange({
-            focused: clockTypes.hours,
-            hours: hoursFromWheel(wheelHourNext, hours, is24Hour),
-            minutes,
-          })
-        }}
-        onFocus={() => onFocusInput(clockTypes.hours)}
-        testID="time-scroll-hours"
-        value={wheelHour}
-        values={hourValues}
-        visible={visible}
-      />
-      <TimeSeparator color={dotColor} height={fieldHeight} />
-      <ScrollWheel
-        accessibilityLabel={rangeLabel(minuteLabel, minuteValues)}
-        disabled={disabled}
-        fieldHeight={fieldHeight}
-        focused={focused === clockTypes.minutes}
-        onChange={(nextMinutes) => {
-          onChange({
-            focused: clockTypes.minutes,
-            hours,
-            minutes: nextMinutes,
-          })
-        }}
-        onFocus={() => onFocusInput(clockTypes.minutes)}
-        testID="time-scroll-minutes"
-        value={minutes}
-        values={minuteValues}
-        visible={visible}
-      />
-      {!is24Hour ? (
-        <View style={styles.period}>
-          <AmPmSwitcher
-            direction="vertical"
-            disabled={disabled}
-            hours={hours}
-            inputType={inputTypes.scroll}
-            locale={locale}
-            onChange={(nextHours) => {
-              onChange({
-                hours: nextHours,
-                minutes,
-              })
-            }}
-          />
-          {showKeyboardToggle ? (
-            <KeyboardToggle
-              disabled={disabled}
-              icon={keyboardIcon}
-              iconColor={theme.colors.onSurfaceVariant}
-              locale={locale}
-              onPress={onToggleKeyboard}
-            />
-          ) : null}
-        </View>
-      ) : showKeyboardToggle ? (
-        <KeyboardToggle
+    <View>
+      <View style={styles.row}>
+        <ScrollWheel
+          accessibilityLabel={rangeLabel(hourLabel, hourValues)}
           disabled={disabled}
-          icon={keyboardIcon}
-          iconColor={theme.colors.onSurfaceVariant}
-          locale={locale}
-          onPress={onToggleKeyboard}
-          style={styles.sideKeyboard}
+          error={error}
+          fieldHeight={fieldHeight}
+          focused={focused === clockTypes.hours}
+          onChange={(wheelHourNext) => {
+            onChange({
+              focused: clockTypes.hours,
+              hours: hoursFromWheel(wheelHourNext, hours, is24Hour),
+              minutes,
+            })
+          }}
+          onFocus={() => onFocusInput(clockTypes.hours)}
+          testID="time-scroll-hours"
+          value={wheelHour}
+          values={hourValues}
+          visible={visible}
         />
-      ) : null}
+        <TimeSeparator color={dotColor} height={fieldHeight} />
+        <ScrollWheel
+          accessibilityLabel={rangeLabel(minuteLabel, minuteValues)}
+          disabled={disabled}
+          error={error}
+          fieldHeight={fieldHeight}
+          focused={focused === clockTypes.minutes}
+          onChange={(nextMinutes) => {
+            onChange({
+              focused: clockTypes.minutes,
+              hours,
+              minutes: nextMinutes,
+            })
+          }}
+          onFocus={() => onFocusInput(clockTypes.minutes)}
+          testID="time-scroll-minutes"
+          value={minutes}
+          values={minuteValues}
+          visible={visible}
+        />
+        {!is24Hour ? (
+          <View style={styles.period}>
+            <AmPmSwitcher
+              direction="vertical"
+              disabled={disabled}
+              error={error}
+              hours={hours}
+              inputType={inputTypes.scroll}
+              locale={locale}
+              onChange={(nextHours) => {
+                onChange({
+                  hours: nextHours,
+                  minutes,
+                })
+              }}
+            />
+            {showKeyboardToggle ? (
+              <KeyboardToggle
+                disabled={disabled}
+                icon={keyboardIcon}
+                iconColor={theme.colors.onSurfaceVariant}
+                locale={locale}
+                onPress={onToggleKeyboard}
+              />
+            ) : null}
+          </View>
+        ) : showKeyboardToggle ? (
+          <KeyboardToggle
+            disabled={disabled}
+            icon={keyboardIcon}
+            iconColor={theme.colors.onSurfaceVariant}
+            locale={locale}
+            onPress={onToggleKeyboard}
+            style={styles.sideKeyboard}
+          />
+        ) : null}
+      </View>
+      <TimePickerSupportingText message={errorMessage} />
     </View>
   )
 }
@@ -263,6 +279,7 @@ function KeyboardToggle({
 function ScrollWheel({
   accessibilityLabel,
   disabled,
+  error,
   fieldHeight,
   focused,
   onChange,
@@ -274,6 +291,7 @@ function ScrollWheel({
 }: {
   accessibilityLabel: string
   disabled?: boolean
+  error?: boolean
   fieldHeight: number
   focused: boolean
   onChange: (value: number) => void
@@ -571,12 +589,20 @@ function ScrollWheel({
     if (disabled) return
     onChange(values[(values.indexOf(value) + delta + count) % count])
   }
+  const showError = Boolean(error)
+  const {
+    backgroundColor,
+    borderColor,
+    color: inputColor,
+  } = useInputColors(focused, showError, disabled)
+  const outlineWidth = 2
+  const radius = theme.shapes.corner.large
   const wheelStyle = [
     styles.wheel,
     {
+      backgroundColor,
+      borderRadius: radius,
       height: fieldHeight,
-      backgroundColor: theme.colors.surfaceContainerLowest,
-      borderRadius: theme.shapes.corner.large,
     },
   ]
   const restColor = disabled
@@ -584,14 +610,11 @@ function ScrollWheel({
     : themeColor(theme.colors.outline)
   const activeColor = disabled
     ? withAlpha(theme.colors.onSurface, disabledContentOpacity)
-    : themeColor(theme.colors.onSurface)
+    : themeColor(showError ? inputColor : theme.colors.onSurface)
 
   return (
     <View style={[styles.wheelFrame, { height: fieldHeight }]}>
-      <FocusRing
-        focused={focused && !disabled}
-        radius={theme.shapes.corner.large}
-      />
+      <FocusRing focused={focused && !disabled} radius={radius} />
       <View
         accessibilityActions={[{ name: 'increment' }, { name: 'decrement' }]}
         accessibilityLabel={accessibilityLabel}
@@ -601,6 +624,7 @@ function ScrollWheel({
           selected: focused,
         }}
         aria-disabled={disabled ? true : undefined}
+        aria-invalid={showError || undefined}
         accessibilityValue={{
           max: values[count - 1],
           min: values[0],
@@ -641,6 +665,19 @@ function ScrollWheel({
         style={wheelStyle}
         testID={`${testID}-control`}
       >
+        {showError ? (
+          <View
+            pointerEvents="none"
+            style={[
+              StyleSheet.absoluteFill,
+              {
+                borderColor,
+                borderRadius: radius,
+                borderWidth: outlineWidth,
+              },
+            ]}
+          />
+        ) : null}
         <StateLayer
           color={theme.colors.onSurface}
           focused={!disabled && focused}

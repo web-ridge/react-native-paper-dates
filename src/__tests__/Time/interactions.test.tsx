@@ -823,6 +823,27 @@ describe('time picker modal', () => {
     expect(onConfirm).not.toHaveBeenCalled()
   })
 
+  it('confirms a valid time when a consumer error is set', async () => {
+    const onConfirm = jest.fn()
+    const modal = await render(
+      <TimePickerModal
+        defaultInputType="keyboard"
+        error
+        errorText="Outside hours"
+        hours={8}
+        locale="en"
+        minutes={0}
+        onConfirm={onConfirm}
+        onDismiss={jest.fn()}
+        use24HourClock
+        visible
+      />
+    )
+    expect(modal.getByText('Outside hours')).toBeTruthy()
+    await fireEvent.press(modal.getByText('OK'))
+    expect(onConfirm).toHaveBeenCalledWith({ hours: 8, minutes: 0 })
+  })
+
   it('switches an inline scroll picker to the keyboard and back without remounting', async () => {
     function Controlled() {
       const [hours, setHours] = useState(9)

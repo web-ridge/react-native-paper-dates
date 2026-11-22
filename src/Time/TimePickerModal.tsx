@@ -43,6 +43,8 @@ export function TimePickerModal({
   confirmLabel = 'OK',
   defaultInputType,
   disabled,
+  error,
+  errorText,
   hours,
   inputFontSize,
   keyboardIcon = 'keyboard',
@@ -62,6 +64,8 @@ export function TimePickerModal({
   confirmLabel?: string
   defaultInputType?: PossibleInputTypes
   disabled?: boolean
+  error?: boolean
+  errorText?: string
   hours?: number
   inputFontSize?: number
   keyboardIcon?: string
@@ -222,6 +226,8 @@ export function TimePickerModal({
                 <TimePicker
                   clockIcon={clockIcon}
                   disabled={disabled}
+                  error={error}
+                  errorText={errorText}
                   focused={focused}
                   hours={localHours}
                   inputFontSize={inputFontSize}

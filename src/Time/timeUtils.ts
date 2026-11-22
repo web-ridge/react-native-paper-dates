@@ -375,6 +375,7 @@ export function useInputColors(
 
 export function useSwitchColors(
   highlighted: boolean,
+  invalid = false,
   disabled = false
 ): HighlightColors {
   const theme = useTheme()
@@ -385,6 +386,15 @@ export function useSwitchColors(
         : theme.colors.surfaceContainerLowest,
       borderColor: 'transparent',
       color: withAlpha(theme.colors.onSurface, disabledContentOpacity),
+    }
+  }
+  if (invalid) {
+    return {
+      backgroundColor: highlighted
+        ? theme.colors.errorContainer
+        : theme.colors.surfaceContainerLowest,
+      borderColor: theme.colors.error,
+      color: highlighted ? theme.colors.onErrorContainer : theme.colors.error,
     }
   }
   const backgroundColor = highlighted

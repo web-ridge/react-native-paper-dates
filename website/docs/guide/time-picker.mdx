@@ -76,6 +76,14 @@ Initial input mode. Defaults to `'picker'` (dial). `'scroll'` is the compact whe
 `Type: boolean | undefined`  
 Disables the time controls. Fields, period buttons, the dial, and the mode toggle draw the disabled state and ignore input. Confirm stays disabled. Cancel still closes the modal. `TimePicker` accepts the same prop.
 
+**error**  
+`Type: boolean | undefined`  
+Shows the Material error state on the hour and minute fields, the AM/PM selector, and the scroll wheels, with supporting text under the inputs. The clock dial is unchanged. Confirm stays enabled unless a typed hour or minute is invalid. `TimePicker` accepts the same prop.
+
+**errorText**  
+`Type: string | undefined`  
+Supporting text shown when `error` is true, or when a typed hour or minute is invalid. Defaults to the `invalidTime` translation (`'Invalid time'`). Pass `''` to hide the text and keep the error styles. `TimePicker` accepts the same prop.
+
 **hours**  
 `Type: number | undefined`  
 Initial hours value. Defaults to the current hour.

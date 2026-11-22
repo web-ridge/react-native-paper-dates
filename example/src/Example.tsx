@@ -605,6 +605,8 @@ export default function Example({
                 wide={wide}
               >
                 <TimePicker
+                  error={scrollTime.hours * 60 + scrollTime.minutes < 9 * 60}
+                  errorText="Choose a time from 9:00 AM"
                   focused={scrollFocused}
                   hours={scrollTime.hours}
                   inputType="scroll"

@@ -43,6 +43,7 @@ interface TimeInputProps extends Omit<
   accessibilityLabel?: string
   clockType: PossibleClockTypes
   disabled?: boolean
+  error?: boolean
   inputFontSize?: number
   inputType: PossibleInputTypes
   is24Hour?: boolean
@@ -59,6 +60,7 @@ function TimeInput(
     accessibilityLabel,
     clockType,
     disabled,
+    error,
     inputFontSize,
     inputType,
     is24Hour = false,
@@ -92,10 +94,11 @@ function TimeInput(
       : clockType === clockTypes.hours
         ? !isValidHourInput(parsedValue, is24Hour)
         : !isValidMinuteInput(parsedValue)
+  const showError = Boolean(error) || invalid
 
   const { backgroundColor, borderColor, color } = useInputColors(
     highlighted,
-    invalid,
+    showError,
     disabled
   )
   const theme = useTheme()
@@ -221,6 +224,8 @@ function TimeInput(
             <TextInput
               ref={ref}
               accessibilityLabel={accessibilityLabel}
+              accessibilityState={disabled ? { disabled: true } : undefined}
+              aria-invalid={showError || undefined}
               keyboardAppearance={theme.dark ? 'dark' : 'default'}
               keyboardType="number-pad"
               maxFontSizeMultiplier={1.5}
@@ -270,7 +275,6 @@ function TimeInput(
               {...(disabled
                 ? {
                     'aria-disabled': true,
-                    'accessibilityState': { disabled: true },
                     'caretHidden': true,
                     'editable': false,
                   }
@@ -285,6 +289,7 @@ function TimeInput(
                 disabled: disabled || undefined,
                 selected: pressed,
               }}
+              aria-invalid={showError || undefined}
               disabled={disabled}
               onBlur={() => setSelectorFocused(false)}
               onFocus={() => {

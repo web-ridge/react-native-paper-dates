@@ -57,3 +57,52 @@ it('follows a later hours value onto PM', async () => {
     expect.objectContaining({ selected: true })
   )
 })
+
+it('shows a consumer error on the scroll wheels', async () => {
+  const screen = await render(
+    <TimePicker
+      error
+      errorText="Choose a time from 9:00 AM"
+      focused="hours"
+      hours={8}
+      inputType="scroll"
+      locale="en"
+      minutes={0}
+      onChange={() => null}
+      onFocusInput={() => null}
+    />
+  )
+
+  expect(screen.getByText('Choose a time from 9:00 AM')).toBeTruthy()
+  expect(screen.getByTestId('time-scroll-hours-control')).toHaveProp(
+    'aria-invalid',
+    true
+  )
+  expect(screen.getByTestId('time-scroll-minutes-control')).toHaveProp(
+    'aria-invalid',
+    true
+  )
+  expect(screen.getByRole('radio', { name: 'AM' })).toHaveProp(
+    'aria-invalid',
+    true
+  )
+})
+
+it('shows a consumer error on the dial fields', async () => {
+  const screen = await render(
+    <TimePicker
+      error
+      errorText="Choose a time from 9:00 AM"
+      focused="hours"
+      hours={8}
+      inputType="picker"
+      locale="en"
+      minutes={0}
+      onChange={() => null}
+      onFocusInput={() => null}
+    />
+  )
+
+  expect(screen.getByText('Choose a time from 9:00 AM')).toBeTruthy()
+  expect(screen.getByLabelText('Hour')).toHaveProp('aria-invalid', true)
+})

@@ -27,6 +27,8 @@ import {
 function TimePicker({
   clockIcon = 'clock',
   disabled,
+  error,
+  errorText,
   focused,
   hours,
   inputFontSize,
@@ -43,6 +45,8 @@ function TimePicker({
 }: {
   clockIcon?: string
   disabled?: boolean
+  error?: boolean
+  errorText?: string
   focused: PossibleClockTypes
   hours: number
   inputFontSize?: number
@@ -137,6 +141,8 @@ function TimePicker({
   const fields = (
     <TimeInputs
       disabled={disabled}
+      error={error}
+      errorText={errorText}
       focused={focused}
       hours={hours}
       inputFontSize={inputFontSize}
@@ -167,6 +173,8 @@ function TimePicker({
         >
           <ScrollTimePicker
             disabled={disabled}
+            error={error}
+            errorText={errorText}
             focused={focused}
             hours={hours}
             is24Hour={is24Hour}

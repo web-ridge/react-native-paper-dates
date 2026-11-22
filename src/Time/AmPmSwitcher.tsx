@@ -25,6 +25,7 @@ const compactHitSlop = (minTouchTarget - compactPeriodButtonSize) / 2
 export default function AmPmSwitcher({
   direction = 'vertical',
   disabled,
+  error,
   hours,
   inputType,
   locale,
@@ -32,6 +33,7 @@ export default function AmPmSwitcher({
 }: {
   direction?: 'vertical' | 'horizontal'
   disabled?: boolean
+  error?: boolean
   hours: number
   inputType: PossibleInputTypes
   locale?: string
@@ -63,6 +65,7 @@ export default function AmPmSwitcher({
     >
       <SwitchButton
         disabled={disabled}
+        error={error}
         height={isHorizontal ? horizontalPeriodHeight : buttonSize}
         hitSlop={hitSlop}
         label={getTranslation(locale, 'am', 'AM')}
@@ -81,6 +84,7 @@ export default function AmPmSwitcher({
       />
       <SwitchButton
         disabled={disabled}
+        error={error}
         height={isHorizontal ? horizontalPeriodHeight : buttonSize}
         hitSlop={hitSlop}
         label={getTranslation(locale, 'pm', 'PM')}
@@ -103,6 +107,7 @@ export default function AmPmSwitcher({
 
 function SwitchButton({
   disabled,
+  error,
   height,
   hitSlop,
   label,
@@ -112,6 +117,7 @@ function SwitchButton({
   width,
 }: {
   disabled?: boolean
+  error?: boolean
   height: number
   hitSlop?: PressableProps['hitSlop']
   label: string
@@ -123,7 +129,11 @@ function SwitchButton({
   const [focused, setFocused] = useState(false)
   const [hovered, setHovered] = useState(false)
   const [pressed, setPressed] = useState(false)
-  const { backgroundColor, color } = useSwitchColors(selected, disabled)
+  const { backgroundColor, borderColor, color } = useSwitchColors(
+    selected,
+    error,
+    disabled
+  )
   const theme = useTheme()
   const textFont = selected
     ? theme.fonts.titleMediumEmphasized
@@ -136,6 +146,7 @@ function SwitchButton({
       borderRadius: radius,
       height,
       width,
+      ...(error ? { borderColor, borderWidth: 1 } : null),
     },
   ]
   const labelStyle = {
@@ -155,6 +166,7 @@ function SwitchButton({
           disabled: disabled || undefined,
           selected,
         }}
+        aria-invalid={error || undefined}
         disabled={disabled}
         hitSlop={hitSlop}
         onBlur={() => setFocused(false)}

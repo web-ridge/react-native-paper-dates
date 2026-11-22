@@ -198,3 +198,71 @@ it('lines up landscape AM and PM with the hour and minute fields', async () => {
     Dimensions.set({ screen: saved, window: saved })
   }
 })
+
+it('shows a consumer error on the keyboard fields', async () => {
+  const screen = await render(
+    <TimeInputs
+      error
+      errorText="Outside hours"
+      focused="hours"
+      hours={8}
+      inputType="keyboard"
+      is24Hour={false}
+      locale="en"
+      minutes={0}
+      onChange={() => null}
+      onFocusInput={() => null}
+    />
+  )
+
+  expect(screen.getByText('Outside hours')).toBeTruthy()
+  expect(screen.getByLabelText('Hour')).toHaveProp('aria-invalid', true)
+  expect(screen.getByLabelText('Minute')).toHaveProp('aria-invalid', true)
+  expect(screen.getByRole('radio', { name: 'AM' })).toHaveProp(
+    'aria-invalid',
+    true
+  )
+})
+
+it('defaults the consumer error text to Invalid time', async () => {
+  const screen = await render(
+    <TimeInputs
+      error
+      focused="hours"
+      hours={8}
+      inputType="keyboard"
+      is24Hour={false}
+      locale="en"
+      minutes={0}
+      onChange={() => null}
+      onFocusInput={() => null}
+    />
+  )
+
+  expect(screen.getByText('Invalid time')).toBeTruthy()
+})
+
+it('keeps the typed-invalid error when a consumer error is also set', async () => {
+  const screen = await render(
+    <TimeInputs
+      error
+      errorText="Outside hours"
+      focused="hours"
+      hours={12}
+      inputType="keyboard"
+      is24Hour
+      locale="en"
+      minutes={45}
+      onChange={() => null}
+      onFocusInput={() => null}
+    />
+  )
+
+  const hour = screen.getByLabelText('Hour')
+  await fireEvent(hour, 'focus')
+  await fireEvent.changeText(hour, '99')
+
+  expect(screen.getByText('Outside hours')).toBeTruthy()
+  expect(screen.queryByText('Invalid time')).toBeNull()
+  expect(hour).toHaveProp('aria-invalid', true)
+})
