@@ -40,6 +40,14 @@ export function displayCase(text: string, uppercase: boolean) {
   return uppercase ? text.toUpperCase() : text
 }
 
+export function isTextField(target: EventTarget | null) {
+  if (!target || typeof target !== 'object' || !('tagName' in target)) {
+    return false
+  }
+  const tag = String((target as { tagName?: string }).tagName)
+  return tag === 'INPUT' || tag === 'TEXTAREA'
+}
+
 function parseColor(input: string): Rgb {
   const value = input.trim()
   const hex = /^#([\da-f]{3,8})$/i.exec(value)

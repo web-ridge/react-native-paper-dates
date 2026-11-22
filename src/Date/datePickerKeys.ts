@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Platform } from 'react-native'
 
-import { useLatest } from '../shared/utils'
+import { isTextField, useLatest } from '../shared/utils'
 import { getDaysInMonth } from './dateUtils'
 
 type DateKeyHandlers = {
@@ -12,14 +12,6 @@ type DateKeyHandlers = {
   onMoveMonth?: (deltaMonths: number) => void
   onOpenMonthMenu?: () => void
   onOpenYearMenu?: () => void
-}
-
-function isTextField(target: EventTarget | null) {
-  if (!target || typeof target !== 'object' || !('tagName' in target)) {
-    return false
-  }
-  const tag = String((target as { tagName?: string }).tagName)
-  return tag === 'INPUT' || tag === 'TEXTAREA'
 }
 
 export function useDatePickerKeys(enabled: boolean, handlers: DateKeyHandlers) {

@@ -34,7 +34,7 @@ import { scheduleOnRN } from 'react-native-worklets'
 
 import { TimePickerPlacementContext } from '../contexts/TimePickerPlacementContext'
 import StateLayer from '../shared/StateLayer'
-import { themeColor, useLatest, withAlpha } from '../shared/utils'
+import { isTextField, themeColor, useLatest, withAlpha } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
 import AmPmSwitcher from './AmPmSwitcher'
 import FocusRing from './FocusRing'
@@ -280,14 +280,6 @@ function hoursFromWheel(
     return previousHours >= 12 ? 12 : 0
   }
   return toHourOutputFormat(wheelHour, previousHours, is24Hour)
-}
-
-function isTextField(target: EventTarget | null) {
-  if (!target || typeof target !== 'object' || !('tagName' in target)) {
-    return false
-  }
-  const tag = String((target as { tagName?: string }).tagName)
-  return tag === 'INPUT' || tag === 'TEXTAREA'
 }
 
 function isWheelTarget(node: unknown): node is WheelTarget {
