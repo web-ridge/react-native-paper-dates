@@ -73,7 +73,7 @@ Try this and the other pickers on the [example site](https://www.reactnativepape
 
 **animationType**  
 `Type: 'slide' | 'fade' | 'none' | undefined`  
-The animation used when opening the modal. Defaults to `'none'`.
+The animation used when opening the modal. Defaults to `'fade'` on iOS/Android and `'none'` on web.
 
 **cancelLabel**  
 `Type: string | undefined`  
@@ -85,7 +85,7 @@ Icon used to switch back to the dial. Defaults to `'clock'`. Pass a name from [M
 
 **confirmLabel**  
 `Type: string | undefined`  
-Confirm button label. Defaults to `'Ok'`.
+Confirm button label. Defaults to `'OK'`.
 
 **defaultInputType**  
 `Type: 'picker' | 'keyboard' | 'scroll' | undefined`  
@@ -109,7 +109,7 @@ Initial hours value. Defaults to the current hour.
 
 **inputFontSize**  
 `Type: number | undefined`  
-Font size of the time input. Defaults to `57`. Useful when using a custom font.
+Font size of the time input. Defaults to the theme's `displayLarge` font size (`57` in Paper's default typescale). Useful when using a custom font.
 
 **keyboardIcon**  
 `Type: string | undefined`  
