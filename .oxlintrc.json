@@ -24,6 +24,7 @@
     "react/set-state-in-effect": "off",
     "react/purity": "off",
     "react-native/no-inline-styles": "warn",
+    "sort-keys": ["error", "asc", { "caseSensitive": false }],
     "unicorn/no-new-array": "off",
     "unicorn/no-useless-fallback-in-spread": "off",
     "jest/expect-expect": "off",
