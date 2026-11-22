@@ -11,7 +11,7 @@
 Cross-platform [Material Design](https://m3.material.io/) date and time pickers for [React Native Paper](https://reactnativepaper.com/). Live demo: [reactnativepaperdates.com](https://www.reactnativepaperdates.com/).
 
 - Single, range, multiple, input, and docked date pickers, plus a modal date input
-- Time picker with clock face or keyboard input
+- Time picker with scroll wheel, dial, or keyboard input
 - Android, iOS, and web, including Expo
 - `Intl` formatting, built-in translations, and custom or dynamic locales
 - Small bundle with virtualized month scrolling
