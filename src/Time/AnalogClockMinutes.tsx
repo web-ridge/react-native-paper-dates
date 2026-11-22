@@ -29,17 +29,20 @@ function AnalogClockMinutes({
   onPress?: (minutes: number) => void
 }) {
   const theme = useTheme()
-  const selectedColor = disabled
-    ? withAlpha(theme.colors.onPrimary, disabledContentOpacity)
-    : theme.colors.onPrimary
-  const unselectedColor = disabled
-    ? withAlpha(theme.colors.onSurface, disabledContentOpacity)
-    : theme.colors.onSurface
+
   const minuteOf = getTranslation(
     locale,
     'minuteOf',
     (minute, count) => `Minute ${minute} of ${count}`
   )
+
+  const selectedColor = disabled
+    ? withAlpha(theme.colors.onPrimary, disabledContentOpacity)
+    : theme.colors.onPrimary
+
+  const unselectedColor = disabled
+    ? withAlpha(theme.colors.onSurface, disabledContentOpacity)
+    : theme.colors.onSurface
 
   return (
     <>

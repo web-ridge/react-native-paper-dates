@@ -95,8 +95,6 @@ function ClockNumber({
   )
 }
 
-export default memo(ClockNumber)
-
 const styles = StyleSheet.create({
   focused: {
     zIndex: 30,
@@ -121,3 +119,5 @@ const styles = StyleSheet.create({
     zIndex: 20,
   },
 })
+
+export default memo(ClockNumber)

@@ -16,26 +16,23 @@ import type {
 type ClockTypeMap = {
   [clockType in PossibleClockTypes]: PossibleClockTypes
 }
+
 type HighlightColors = {
   backgroundColor: ColorValue
   borderColor: ColorValue
   color: ColorValue
 }
+
 type HourTypeMap = {
   [hourType in PossibleHourTypes]: PossibleHourTypes
 }
+
 type InputIconMap = {
   [inputType in PossibleInputTypes]: string
 }
+
 type InputTypeMap = {
   [inputType in PossibleInputTypes]: PossibleInputTypes
-}
-export type {
-  PickerInputType,
-  PossibleClockTypes,
-  PossibleHourTypes,
-  PossibleInputTypes,
-  TimeChange,
 }
 
 const _12 = Math.PI / 30
@@ -44,39 +41,45 @@ const _360 = Math.PI * 2
 const _90 = Math.PI / 2
 export const circleSize = 256
 export const clockSideInset = 12
+
 export const clockTypes: ClockTypeMap = {
   hours: 'hours',
   minutes: 'minutes',
 }
+
 const disabledContainerOpacity = 0.12
 export const disabledContentOpacity = 0.38
 export const focusRingOffset = 2
 export const focusRingThickness = 3
 export const focusRingReach = focusRingOffset + focusRingThickness
+
 export const hourTypes: HourTypeMap = {
   am: 'am',
   pm: 'pm',
 }
+
 const inputTypeIcons: InputIconMap = {
   keyboard: 'keyboard',
   picker: 'clock',
   scroll: 'gesture-swipe-vertical',
 }
+
 export const inputTypes = {
   keyboard: 'keyboard',
   picker: 'picker',
   scroll: 'scroll',
 } as const satisfies InputTypeMap
+
 const landscapeDialChrome = 132
 const landscapeDialExtraWidth = 100
+export const modalScrollFieldHeight = 120
 const outerHeight = 34
 export const periodSelectorGap = focusRingReach * 2 + focusRingOffset
 export const periodSelectorVerticalWidth = 56
 const portraitDialChrome = 216
-export const scrollItemHeight = 64
 export const scrollFieldHeight = 140
-export const modalScrollFieldHeight = 120
 export const scrollFieldWidth = 100
+export const scrollItemHeight = 64
 export const timeInputFieldHeight = 120
 export const timePickerActionsGap = 8
 export const timePickerHorizontalPadding = 24
@@ -86,8 +89,10 @@ export const timeSelectorHeight = 120
 export const timeSelectorWidth = 100
 export const timeSeparatorDotSize = 8
 export const timeSeparatorGlyphWidth = 16
+
 export const timeSeparatorWidth =
   focusRingReach + timeSeparatorGlyphWidth + focusRingReach
+
 const verticalDial24HourFieldWidth = 132
 
 export function clockNumbers(
@@ -199,15 +204,15 @@ export function getTimeInputTypeIcon(
   return inputIconMap?.[next] || inputTypeIcons[next]
 }
 
-export function toggleInputType(
-  inputType: PossibleInputTypes,
-  pickerMode: PickerInputType
-): PossibleInputTypes | undefined {
-  if (inputType === inputTypes.keyboard) return pickerMode
-  if (inputType === inputTypes.picker || inputType === inputTypes.scroll) {
-    return inputTypes.keyboard
-  }
-  return undefined
+function horizontalDialFits(width: number, height: number) {
+  return (
+    height >= circleSize + landscapeDialChrome &&
+    width >=
+      timeSelectorWidth * 2 +
+        timeSeparatorWidth +
+        circleSize +
+        landscapeDialExtraWidth
+  )
 }
 
 export function isValidHourInput(hours: number, is24Hour: boolean) {
@@ -222,6 +227,22 @@ export function isValidHourInput(hours: number, is24Hour: boolean) {
 
 export function isValidMinuteInput(minutes: number) {
   return Number.isFinite(minutes) && minutes >= 0 && minutes <= 59
+}
+
+export function resolve24HourClock(
+  use24HourClock: boolean | undefined,
+  locale?: string
+) {
+  if (use24HourClock !== undefined) {
+    return use24HourClock
+  }
+  return dateTimeFormat(locale, {
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'UTC',
+  })
+    .format(new Date(Date.UTC(2020, 1, 1, 23)))
+    .includes('23')
 }
 
 export function snap(angle: number, step: number) {
@@ -243,15 +264,18 @@ export function timeDialFits(width: number, height: number) {
   return horizontalDialFits(width, height)
 }
 
-function horizontalDialFits(width: number, height: number) {
-  return (
-    height >= circleSize + landscapeDialChrome &&
-    width >=
-      timeSelectorWidth * 2 +
-        timeSeparatorWidth +
-        circleSize +
-        landscapeDialExtraWidth
+export function timePickerModalMinWidth(is24Hour: boolean, showsDial: boolean) {
+  const fieldWidth = timeSelectorFieldWidth(
+    showsDial ? inputTypes.picker : inputTypes.keyboard,
+    is24Hour,
+    false
   )
+  const fieldRow =
+    fieldWidth * 2 +
+    timeSeparatorWidth +
+    (is24Hour ? 0 : periodSelectorGap + periodSelectorVerticalWidth)
+  const dialRow = showsDial ? circleSize + clockSideInset * 2 : 0
+  return Math.max(fieldRow, dialRow) + timePickerPadding * 2
 }
 
 export function timePickerUsesLandscape(
@@ -270,36 +294,6 @@ export function timePickerUsesLandscape(
   )
 }
 
-export function resolve24HourClock(
-  use24HourClock: boolean | undefined,
-  locale?: string
-) {
-  if (use24HourClock !== undefined) {
-    return use24HourClock
-  }
-  return dateTimeFormat(locale, {
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZone: 'UTC',
-  })
-    .format(new Date(Date.UTC(2020, 1, 1, 23)))
-    .includes('23')
-}
-
-export function timePickerModalMinWidth(is24Hour: boolean, showsDial: boolean) {
-  const fieldWidth = timeSelectorFieldWidth(
-    showsDial ? inputTypes.picker : inputTypes.keyboard,
-    is24Hour,
-    false
-  )
-  const fieldRow =
-    fieldWidth * 2 +
-    timeSeparatorWidth +
-    (is24Hour ? 0 : periodSelectorGap + periodSelectorVerticalWidth)
-  const dialRow = showsDial ? circleSize + clockSideInset * 2 : 0
-  return Math.max(fieldRow, dialRow) + timePickerPadding * 2
-}
-
 export function timeSelectorFieldWidth(
   inputType: PossibleInputTypes,
   is24Hour: boolean,
@@ -309,6 +303,17 @@ export function timeSelectorFieldWidth(
     return verticalDial24HourFieldWidth
   }
   return timeSelectorWidth
+}
+
+export function toggleInputType(
+  inputType: PossibleInputTypes,
+  pickerMode: PickerInputType
+): PossibleInputTypes | undefined {
+  if (inputType === inputTypes.keyboard) return pickerMode
+  if (inputType === inputTypes.picker || inputType === inputTypes.scroll) {
+    return inputTypes.keyboard
+  }
+  return undefined
 }
 
 export function toHourInputFormat(hours: number, is24Hour: boolean): number {
@@ -405,4 +410,12 @@ export function useSwitchColors(
     : theme.colors.onSurfaceVariant
 
   return { backgroundColor, borderColor: 'transparent', color }
+}
+
+export type {
+  PickerInputType,
+  PossibleClockTypes,
+  PossibleHourTypes,
+  PossibleInputTypes,
+  TimeChange,
 }

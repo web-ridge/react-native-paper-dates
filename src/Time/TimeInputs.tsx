@@ -61,13 +61,32 @@ function TimeInputs({
   onInputInvalidChange?: (invalid: boolean) => void
 }) {
   const dimensions = useWindowDimensions()
-  const endInput = useRef<TextInputInstance | null>(null)
+  const theme = useTheme()
+
   const [hourInvalid, setHourInvalid] = useState(false)
   const [minuteInvalid, setMinuteInvalid] = useState(false)
 
-  useEffect(() => {
-    onInputInvalidChange?.(hourInvalid || minuteInvalid)
-  }, [hourInvalid, minuteInvalid, onInputInvalidChange])
+  const endInput = useRef<TextInputInstance | null>(null)
+  const minutesRef = useLatest(minutes)
+  const startInput = useRef<TextInputInstance | null>(null)
+
+  const dotColor = disabled
+    ? withAlpha(theme.colors.onSurface, disabledContentOpacity)
+    : theme.colors.onSurface
+
+  const errorMessage = timePickerErrorMessage(
+    error,
+    errorText,
+    hourInvalid || minuteInvalid,
+    locale
+  )
+
+  const fieldHeight =
+    inputType === inputTypes.keyboard
+      ? timeInputFieldHeight
+      : timeSelectorHeight
+
+  const hourLabel = getTranslation(locale, 'hour', 'Hour')
 
   const isLandscape = timePickerUsesLandscape(
     dimensions.width,
@@ -75,21 +94,8 @@ function TimeInputs({
     inputType
   )
 
-  const minutesRef = useLatest(minutes)
-  const onChangeHours = (newHours: number) => {
-    onChange({
-      hours: newHours,
-      minutes: minutesRef.current,
-    })
-  }
-  const onSubmitStartInput = () => {
-    endInput.current?.focus()
-  }
-  const startInput = useRef<TextInputInstance | null>(null)
-  const theme = useTheme()
-  const dotColor = disabled
-    ? withAlpha(theme.colors.onSurface, disabledContentOpacity)
-    : theme.colors.onSurface
+  const fieldWidth = timeSelectorFieldWidth(inputType, is24Hour, isLandscape)
+  const minuteLabel = getTranslation(locale, 'minute', 'Minute')
 
   const selectionColor = theme.dark
     ? theme.colors.primaryContainer
@@ -98,21 +104,17 @@ function TimeInputs({
   const useHorizontalAmPm =
     !is24Hour && isLandscape && inputType === inputTypes.picker
 
-  const fieldHeight =
-    inputType === inputTypes.keyboard
-      ? timeInputFieldHeight
-      : timeSelectorHeight
+  const onChangeHours = (newHours: number) => {
+    onChange({
+      hours: newHours,
+      minutes: minutesRef.current,
+    })
+  }
 
-  const fieldWidth = timeSelectorFieldWidth(inputType, is24Hour, isLandscape)
+  const onSubmitStartInput = () => {
+    endInput.current?.focus()
+  }
 
-  const hourLabel = getTranslation(locale, 'hour', 'Hour')
-  const minuteLabel = getTranslation(locale, 'minute', 'Minute')
-  const errorMessage = timePickerErrorMessage(
-    error,
-    errorText,
-    hourInvalid || minuteInvalid,
-    locale
-  )
   const hourMinuteRow = (
     <View style={styles.inputContainer}>
       <TimeField width={fieldWidth}>
@@ -206,6 +208,10 @@ function TimeInputs({
   ) : (
     hourMinuteRow
   )
+
+  useEffect(() => {
+    onInputInvalidChange?.(hourInvalid || minuteInvalid)
+  }, [hourInvalid, minuteInvalid, onInputInvalidChange])
 
   return (
     <View style={styles.fields}>

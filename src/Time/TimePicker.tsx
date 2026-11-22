@@ -62,82 +62,28 @@ function TimePicker({
   use24HourClock?: boolean
 }) {
   const dimensions = useWindowDimensions()
-  const theme = useTheme()
   const placement = useContext(TimePickerPlacementContext)
+  const theme = useTheme()
+
   const [displayMode, setDisplayMode] = useState<'AM' | 'PM' | undefined>(() =>
     hours >= 12 ? 'PM' : 'AM'
   )
+
   const [localInputType, setLocalInputType] = useState(inputType)
-  const is24Hour = resolve24HourClock(use24HourClock, locale)
+
   const activeInputType = onToggleKeyboard ? inputType : localInputType
+
   const [hasShownScroll, setHasShownScroll] = useState(
     () => activeInputType === inputTypes.scroll
   )
-
-  const isLandscape = timePickerUsesLandscape(
-    dimensions.width,
-    dimensions.height,
-    activeInputType
-  )
-
-  useEffect(() => {
-    setDisplayMode(hours >= 12 ? 'PM' : 'AM')
-  }, [hours])
-
-  useEffect(() => {
-    setLocalInputType(inputType)
-  }, [inputType])
-
-  useEffect(() => {
-    if (activeInputType === inputTypes.scroll) {
-      setHasShownScroll(true)
-    } else if (activeInputType === inputTypes.picker) {
-      setHasShownScroll(false)
-    }
-  }, [activeInputType])
-
-  const clockWidth =
-    activeInputType === inputTypes.picker
-      ? circleSize + (isLandscape ? 52 : 0)
-      : 0
 
   const displayModeValue = useMemo(
     () => ({ mode: displayMode, setMode: setDisplayMode }),
     [displayMode]
   )
-  const toggleKeyboard = () => {
-    if (disabled) return
-    if (onToggleKeyboard) {
-      onToggleKeyboard()
-      return
-    }
-    setLocalInputType((current) =>
-      current === inputTypes.keyboard ? inputType : inputTypes.keyboard
-    )
-  }
 
-  const fieldWidth = timeSelectorFieldWidth(
-    activeInputType,
-    is24Hour,
-    isLandscape
-  )
-  const inputsWidth =
-    fieldWidth * 2 +
-    timeSeparatorWidth +
-    (is24Hour || (isLandscape && activeInputType === inputTypes.picker)
-      ? 0
-      : periodSelectorGap + periodSelectorVerticalWidth)
+  const is24Hour = resolve24HourClock(use24HourClock, locale)
 
-  const onInnerChange: TimeChange = (params) => {
-    onChange({
-      ...params,
-      hours: toHourOutputFormat(params.hours, hours, is24Hour),
-    })
-  }
-  const showReturnToPicker =
-    activeInputType === inputTypes.keyboard &&
-    !onToggleKeyboard &&
-    inputType !== inputTypes.keyboard
   const fields = (
     <TimeInputs
       disabled={disabled}
@@ -156,9 +102,73 @@ function TimePicker({
     />
   )
 
+  const isLandscape = timePickerUsesLandscape(
+    dimensions.width,
+    dimensions.height,
+    activeInputType
+  )
+
+  const clockWidth =
+    activeInputType === inputTypes.picker
+      ? circleSize + (isLandscape ? 52 : 0)
+      : 0
+
+  const fieldWidth = timeSelectorFieldWidth(
+    activeInputType,
+    is24Hour,
+    isLandscape
+  )
+
+  const inputsWidth =
+    fieldWidth * 2 +
+    timeSeparatorWidth +
+    (is24Hour || (isLandscape && activeInputType === inputTypes.picker)
+      ? 0
+      : periodSelectorGap + periodSelectorVerticalWidth)
+
   const showingScroll = activeInputType === inputTypes.scroll
+
   const keepScrollMounted =
     showingScroll || (hasShownScroll && activeInputType === inputTypes.keyboard)
+
+  const showReturnToPicker =
+    activeInputType === inputTypes.keyboard &&
+    !onToggleKeyboard &&
+    inputType !== inputTypes.keyboard
+
+  const onInnerChange: TimeChange = (params) => {
+    onChange({
+      ...params,
+      hours: toHourOutputFormat(params.hours, hours, is24Hour),
+    })
+  }
+
+  const toggleKeyboard = () => {
+    if (disabled) return
+    if (onToggleKeyboard) {
+      onToggleKeyboard()
+      return
+    }
+    setLocalInputType((current) =>
+      current === inputTypes.keyboard ? inputType : inputTypes.keyboard
+    )
+  }
+
+  useEffect(() => {
+    setDisplayMode(hours >= 12 ? 'PM' : 'AM')
+  }, [hours])
+
+  useEffect(() => {
+    setLocalInputType(inputType)
+  }, [inputType])
+
+  useEffect(() => {
+    if (activeInputType === inputTypes.scroll) {
+      setHasShownScroll(true)
+    } else if (activeInputType === inputTypes.picker) {
+      setHasShownScroll(false)
+    }
+  }, [activeInputType])
 
   return (
     <DisplayModeContext.Provider value={displayModeValue}>

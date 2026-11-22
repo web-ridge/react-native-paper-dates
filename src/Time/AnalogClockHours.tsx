@@ -10,6 +10,16 @@ const hourStart = -Math.PI / 2 + Math.PI / 6
 const innerHourNumbers = clockNumbers(12, 4, circleSize, hourStart)
 const outerHourNumbers = clockNumbers(12, 2.5, circleSize, hourStart)
 
+function isOuterHourSelected(hours: number, is24Hour: boolean, label: number) {
+  if (label === 12 && hours === 0) {
+    return true
+  }
+  if (!is24Hour) {
+    return label === hours
+  }
+  return label === hours && hours !== 12
+}
+
 function AnalogClockHours({
   disabled,
   hours,
@@ -28,18 +38,22 @@ function AnalogClockHours({
   onPress?: (hours: number) => void
 }) {
   const theme = useTheme()
-  const selectedColor = disabled
-    ? withAlpha(theme.colors.onPrimary, disabledContentOpacity)
-    : theme.colors.onPrimary
-  const unselectedColor = disabled
-    ? withAlpha(theme.colors.onSurface, disabledContentOpacity)
-    : theme.colors.onSurface
-  const total = is24Hour ? 24 : 12
+
   const hourOf = getTranslation(
     locale,
     'hourOf',
     (hour, count) => `Hour ${hour} of ${count}`
   )
+
+  const selectedColor = disabled
+    ? withAlpha(theme.colors.onPrimary, disabledContentOpacity)
+    : theme.colors.onPrimary
+
+  const total = is24Hour ? 24 : 12
+
+  const unselectedColor = disabled
+    ? withAlpha(theme.colors.onSurface, disabledContentOpacity)
+    : theme.colors.onSurface
 
   return (
     <>
@@ -89,16 +103,6 @@ function AnalogClockHours({
         : null}
     </>
   )
-}
-
-function isOuterHourSelected(hours: number, is24Hour: boolean, label: number) {
-  if (label === 12 && hours === 0) {
-    return true
-  }
-  if (!is24Hour) {
-    return label === hours
-  }
-  return label === hours && hours !== 12
 }
 
 export default memo(AnalogClockHours)

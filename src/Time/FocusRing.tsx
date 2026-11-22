@@ -9,28 +9,8 @@ import { useTheme } from 'react-native-paper'
 
 import { focusRingOffset, focusRingThickness } from './timeUtils'
 
-export default function FocusRing({
-  color,
-  focused,
-  radius,
-}: {
-  color?: ColorValue
-  focused: boolean
-  radius: number
-}) {
-  if (!focused) return null
-  return <Ring color={color} radius={radius} />
-}
-
-function Ring({ color, radius }: { color?: ColorValue; radius: number }) {
-  const theme = useTheme()
-  const ringColor = color ?? theme.colors.secondary
-  return (
-    <View
-      pointerEvents="none"
-      style={[styles.ring, focusRingLayout(radius, ringColor)]}
-    />
-  )
+function cssColor(color: ColorValue) {
+  return typeof color === 'string' ? color : String(color)
 }
 
 export function focusRingLayout(radius: number, color: ColorValue): ViewStyle {
@@ -56,8 +36,28 @@ export function focusRingLayout(radius: number, color: ColorValue): ViewStyle {
   }
 }
 
-function cssColor(color: ColorValue) {
-  return typeof color === 'string' ? color : String(color)
+export default function FocusRing({
+  color,
+  focused,
+  radius,
+}: {
+  color?: ColorValue
+  focused: boolean
+  radius: number
+}) {
+  if (!focused) return null
+  return <Ring color={color} radius={radius} />
+}
+
+function Ring({ color, radius }: { color?: ColorValue; radius: number }) {
+  const theme = useTheme()
+  const ringColor = color ?? theme.colors.secondary
+  return (
+    <View
+      pointerEvents="none"
+      style={[styles.ring, focusRingLayout(radius, ringColor)]}
+    />
+  )
 }
 
 const styles = StyleSheet.create({

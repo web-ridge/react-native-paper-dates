@@ -74,18 +74,28 @@ function TimeInput(
   }: TimeInputProps,
   ref: Ref<TextInputInstance>
 ) {
+  const theme = useTheme()
+
   const [controlledValue, setControlledValue] = useState(`${value}`)
   const [editing, setEditing] = useState(false)
   const [hovered, setHovered] = useState(false)
   const [inputFocused, setInputFocused] = useState(false)
   const [pointerPressed, setPointerPressed] = useState(false)
-  const [, setRejectedEdits] = useState(0)
   const [selectorFocused, setSelectorFocused] = useState(false)
+  const [, setRejectedEdits] = useState(0)
 
+  const formattedValue =
+    !editing && controlledValue.length === 1
+      ? `0${controlledValue}`
+      : controlledValue
+
+  const iosInput = Platform.OS === 'ios'
   const isPicker = inputType === inputTypes.picker
-
+  const fieldFocused = isPicker ? selectorFocused : inputFocused
+  const fieldHeight = isPicker ? timeSelectorHeight : timeInputFieldHeight
   const highlighted = isPicker ? pressed : inputFocused
-
+  const outlineWidth = 2
+  const contentHeight = fieldHeight - outlineWidth * 2
   const parsedValue = Number(controlledValue)
 
   const invalid =
@@ -94,6 +104,9 @@ function TimeInput(
       : clockType === clockTypes.hours
         ? !isValidHourInput(parsedValue, is24Hour)
         : !isValidMinuteInput(parsedValue)
+
+  const radius = theme.shapes.corner.large
+  const innerRadius = Math.max(0, radius - outlineWidth)
   const showError = Boolean(error) || invalid
 
   const { backgroundColor, borderColor, color } = useInputColors(
@@ -101,61 +114,7 @@ function TimeInput(
     showError,
     disabled
   )
-  const theme = useTheme()
 
-  const typeface = theme.fonts.displayLarge
-
-  const fontSize = inputFontSize ?? typeface.fontSize
-
-  useEffect(() => {
-    setControlledValue((current) => {
-      if (current === '' || Number(current) === value) {
-        return current
-      }
-      return `${value}`
-    })
-  }, [value])
-
-  useEffect(() => {
-    onInvalidChange?.(invalid)
-  }, [invalid, onInvalidChange])
-
-  const onInnerChange = (text: string) => {
-    if (disabled) return
-    if (text !== '' && !/^\d{1,2}$/.test(text)) {
-      setRejectedEdits((count) => count + 1)
-      return
-    }
-    setEditing(true)
-    setControlledValue(text)
-    if (text === '') {
-      return
-    }
-    const number = Number(text)
-    if (
-      clockType === clockTypes.hours
-        ? isValidHourInput(number, is24Hour)
-        : isValidMinuteInput(number)
-    ) {
-      onChanged(number)
-    }
-  }
-
-  const formattedValue =
-    !editing && controlledValue.length === 1
-      ? `0${controlledValue}`
-      : controlledValue
-
-  const fieldHeight = isPicker ? timeSelectorHeight : timeInputFieldHeight
-  const outlineWidth = 2
-  const radius = theme.shapes.corner.large
-  const innerRadius = Math.max(0, radius - outlineWidth)
-
-  const contentHeight = fieldHeight - outlineWidth * 2
-  const textPadding = Math.max(0, (contentHeight - fontSize) / 2)
-  const iosInput = Platform.OS === 'ios'
-
-  const fieldFocused = isPicker ? selectorFocused : inputFocused
   const fieldStyle = [
     styles.outline,
     {
@@ -179,6 +138,44 @@ function TimeInput(
         ]
       : []),
   ]
+
+  const typeface = theme.fonts.displayLarge
+  const fontSize = inputFontSize ?? typeface.fontSize
+  const textPadding = Math.max(0, (contentHeight - fontSize) / 2)
+
+  const onInnerChange = (text: string) => {
+    if (disabled) return
+    if (text !== '' && !/^\d{1,2}$/.test(text)) {
+      setRejectedEdits((count) => count + 1)
+      return
+    }
+    setEditing(true)
+    setControlledValue(text)
+    if (text === '') {
+      return
+    }
+    const number = Number(text)
+    if (
+      clockType === clockTypes.hours
+        ? isValidHourInput(number, is24Hour)
+        : isValidMinuteInput(number)
+    ) {
+      onChanged(number)
+    }
+  }
+
+  useEffect(() => {
+    setControlledValue((current) => {
+      if (current === '' || Number(current) === value) {
+        return current
+      }
+      return `${value}`
+    })
+  }, [value])
+
+  useEffect(() => {
+    onInvalidChange?.(invalid)
+  }, [invalid, onInvalidChange])
 
   return (
     <View style={styles.frame}>
@@ -317,10 +314,6 @@ function TimeInput(
   )
 }
 
-const TimeInputWithRef: ForwardRefExoticComponent<
-  TimeInputProps & RefAttributes<TextInputInstance>
-> = forwardRef(TimeInput)
-
 const styles = StyleSheet.create({
   fill: {
     alignItems: 'center',
@@ -345,5 +338,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 })
+
+const TimeInputWithRef: ForwardRefExoticComponent<
+  TimeInputProps & RefAttributes<TextInputInstance>
+> = forwardRef(TimeInput)
 
 export default TimeInputWithRef

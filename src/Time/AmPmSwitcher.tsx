@@ -15,12 +15,12 @@ import {
   useSwitchColors,
 } from './timeUtils'
 
-const periodSelectorRoundRadius = 9999
-const periodButtonSize = 56
 const compactPeriodButtonSize = 40
 const horizontalPeriodHeight = 40
 const minTouchTarget = 48
 const compactHitSlop = (minTouchTarget - compactPeriodButtonSize) / 2
+const periodButtonSize = 56
+const periodSelectorRoundRadius = 9999
 
 export default function AmPmSwitcher({
   direction = 'vertical',
@@ -39,23 +39,28 @@ export default function AmPmSwitcher({
   locale?: string
   onChange: (newHours: number) => void
 }) {
-  const isHorizontal = direction === 'horizontal'
+  const { mode, setMode } = useContext(DisplayModeContext)
   const placement = useContext(TimePickerPlacementContext)
+  const theme = useTheme()
+
+  const isAM = mode === 'AM'
+  const isHorizontal = direction === 'horizontal'
+
   const compact =
     !isHorizontal && inputType === inputTypes.scroll && placement === 'inline'
+
   const buttonSize = compact ? compactPeriodButtonSize : periodButtonSize
-  const { mode, setMode } = useContext(DisplayModeContext)
-  const isAM = mode === 'AM'
-  const theme = useTheme()
-  const selectedRadius =
-    isHorizontal || compact
-      ? theme.shapes.corner.medium
-      : theme.shapes.corner.large
+
   const hitSlop = isHorizontal
     ? { bottom: compactHitSlop, top: compactHitSlop }
     : compact
       ? compactHitSlop
       : undefined
+
+  const selectedRadius =
+    isHorizontal || compact
+      ? theme.shapes.corner.medium
+      : theme.shapes.corner.large
 
   return (
     <View
@@ -126,18 +131,18 @@ function SwitchButton({
   selected: boolean
   width?: number
 }) {
-  const [focused, setFocused] = useState(false)
-  const [hovered, setHovered] = useState(false)
-  const [pressed, setPressed] = useState(false)
   const { backgroundColor, borderColor, color } = useSwitchColors(
     selected,
     error,
     disabled
   )
+
   const theme = useTheme()
-  const textFont = selected
-    ? theme.fonts.titleMediumEmphasized
-    : theme.fonts.titleMedium
+
+  const [focused, setFocused] = useState(false)
+  const [hovered, setHovered] = useState(false)
+  const [pressed, setPressed] = useState(false)
+
   const buttonStyle = [
     styles.button,
     width === undefined ? styles.buttonFill : null,
@@ -149,11 +154,17 @@ function SwitchButton({
       ...(error ? { borderColor, borderWidth: 1 } : null),
     },
   ]
+
+  const frameStyle = width === undefined ? styles.frameFill : { height, width }
+
+  const textFont = selected
+    ? theme.fonts.titleMediumEmphasized
+    : theme.fonts.titleMedium
+
   const labelStyle = {
     ...textFont,
     color,
   }
-  const frameStyle = width === undefined ? styles.frameFill : { height, width }
 
   return (
     <View style={frameStyle}>

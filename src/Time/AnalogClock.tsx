@@ -29,6 +29,88 @@ import {
   type TimeChange,
 } from './timeUtils'
 
+type ClockValues = {
+  disabled?: boolean
+  focused: PossibleClockTypes
+  hours: number
+  is24Hour: boolean
+  minutes: number
+  mode: string | undefined
+  onChange: TimeChange
+}
+
+function createClockResponder(latest: { readonly current: ClockValues }) {
+  const onPointerMove = (e: GestureResponderEvent, final: boolean) => {
+    const current = latest.current
+    if (current.disabled) return
+    const { focused, hours, minutes, onChange } = current
+    if (focused !== clockTypes.hours && focused !== clockTypes.minutes) return
+    const picked = selectionAt(
+      e.nativeEvent.locationX,
+      e.nativeEvent.locationY,
+      focused,
+      hours,
+      current.is24Hour,
+      current.mode
+    )
+    if (focused === clockTypes.hours) {
+      if (hours !== picked || final) {
+        onChange({
+          focused: final ? clockTypes.minutes : undefined,
+          hours: picked,
+          minutes,
+        })
+      }
+    } else if (minutes !== picked) {
+      onChange({ hours, minutes: picked })
+    }
+  }
+  const enabled = () => !latest.current.disabled
+  return PanResponder.create({
+    onMoveShouldSetPanResponder: enabled,
+    onMoveShouldSetPanResponderCapture: enabled,
+    onPanResponderGrant: (e) => onPointerMove(e, false),
+    onPanResponderMove: (e) => onPointerMove(e, false),
+    onPanResponderRelease: (e) => onPointerMove(e, true),
+    onPanResponderTerminationRequest: returnTrue,
+    onShouldBlockNativeResponder: returnTrue,
+    onStartShouldSetPanResponder: enabled,
+    onStartShouldSetPanResponderCapture: () => false,
+  })
+}
+
+function isOwnFocus(
+  event: { nativeEvent?: { target?: unknown } },
+  node: ViewInstance | null
+) {
+  const target = event.nativeEvent?.target
+  return target == null || node == null || target === node
+}
+
+function returnTrue() {
+  return true
+}
+
+function selectionAt(
+  x: number,
+  y: number,
+  focused: PossibleClockTypes,
+  hours: number,
+  is24Hour: boolean,
+  mode: string | undefined
+) {
+  const angle = getAngle(x, y, circleSize)
+  if (focused !== clockTypes.hours) return getMinutes(angle)
+  const hours12AndPm = !is24Hour && mode === 'PM'
+  const hourTypeFromOffset = getHourTypeFromOffset(x, y, circleSize)
+  const hours24AndPM = is24Hour && hourTypeFromOffset === hourTypes.pm
+  let pickedHours = getHours(angle, getHourType(hours))
+  if (hours12AndPm || hours24AndPM) pickedHours += 12
+  if ((mode === 'AM' || is24Hour) && pickedHours === 12) pickedHours = 0
+  if (pickedHours === 24) pickedHours = 12
+  return pickedHours
+}
+
 function AnalogClock({
   disabled,
   focused,
@@ -46,9 +128,16 @@ function AnalogClock({
   minutes: number
   onChange: TimeChange
 }) {
-  const clockRef = useRef<ViewInstance | null>(null)
-  const degreesPerNumber = focused === clockTypes.hours ? 30 : 6
   const { mode } = useContext(DisplayModeContext)
+  const theme = useTheme()
+
+  const [clockFocused, setClockFocused] = useState(false)
+  const [hoveredValue, setHoveredValue] = useState<number | null>(null)
+  const [numberFocused, setNumberFocused] = useState(false)
+  const [selectedNumberFocused, setSelectedNumberFocused] = useState(false)
+
+  const clockRef = useRef<ViewInstance | null>(null)
+
   const latest = useLatest<ClockValues>({
     disabled,
     focused,
@@ -58,22 +147,19 @@ function AnalogClock({
     mode,
     onChange,
   })
+
   const [panResponder] = useState(() => createClockResponder(latest))
+
+  const degreesPerNumber = focused === clockTypes.hours ? 30 : 6
   const pointerNumber = focused === clockTypes.hours ? hours : minutes
-  const shortPointer = hours >= 12 && is24Hour
-  const dynamicSize = focused === clockTypes.hours && shortPointer ? 33 : 0
-  const theme = useTheme()
+
   const selectorColor = disabled
     ? withAlpha(theme.colors.primary, disabledContentOpacity)
     : theme.colors.primary
-  const [clockFocused, setClockFocused] = useState(false)
-  const [hoveredValue, setHoveredValue] = useState<number | null>(null)
-  const [numberFocused, setNumberFocused] = useState(false)
-  const [selectedNumberFocused, setSelectedNumberFocused] = useState(false)
-  const onNumberFocus = (isFocused: boolean, selected: boolean) => {
-    setNumberFocused(isFocused)
-    if (selected) setSelectedNumberFocused(isFocused)
-  }
+
+  const shortPointer = hours >= 12 && is24Hour
+  const dynamicSize = focused === clockTypes.hours && shortPointer ? 33 : 0
+
   const onHoursPress = (nextHours: number) => {
     const current = latest.current
     if (current.disabled) return
@@ -83,10 +169,16 @@ function AnalogClock({
       minutes: current.minutes,
     })
   }
+
   const onMinutesPress = (nextMinutes: number) => {
     const current = latest.current
     if (current.disabled) return
     current.onChange({ hours: current.hours, minutes: nextMinutes })
+  }
+
+  const onNumberFocus = (isFocused: boolean, selected: boolean) => {
+    setNumberFocused(isFocused)
+    if (selected) setSelectedNumberFocused(isFocused)
   }
 
   return (
@@ -222,88 +314,6 @@ function AnalogClock({
       />
     </View>
   )
-}
-
-type ClockValues = {
-  disabled?: boolean
-  focused: PossibleClockTypes
-  hours: number
-  is24Hour: boolean
-  minutes: number
-  mode: string | undefined
-  onChange: TimeChange
-}
-
-function selectionAt(
-  x: number,
-  y: number,
-  focused: PossibleClockTypes,
-  hours: number,
-  is24Hour: boolean,
-  mode: string | undefined
-) {
-  const angle = getAngle(x, y, circleSize)
-  if (focused !== clockTypes.hours) return getMinutes(angle)
-  const hours12AndPm = !is24Hour && mode === 'PM'
-  const hourTypeFromOffset = getHourTypeFromOffset(x, y, circleSize)
-  const hours24AndPM = is24Hour && hourTypeFromOffset === hourTypes.pm
-  let pickedHours = getHours(angle, getHourType(hours))
-  if (hours12AndPm || hours24AndPM) pickedHours += 12
-  if ((mode === 'AM' || is24Hour) && pickedHours === 12) pickedHours = 0
-  if (pickedHours === 24) pickedHours = 12
-  return pickedHours
-}
-
-function createClockResponder(latest: { readonly current: ClockValues }) {
-  const onPointerMove = (e: GestureResponderEvent, final: boolean) => {
-    const current = latest.current
-    if (current.disabled) return
-    const { focused, hours, minutes, onChange } = current
-    if (focused !== clockTypes.hours && focused !== clockTypes.minutes) return
-    const picked = selectionAt(
-      e.nativeEvent.locationX,
-      e.nativeEvent.locationY,
-      focused,
-      hours,
-      current.is24Hour,
-      current.mode
-    )
-    if (focused === clockTypes.hours) {
-      if (hours !== picked || final) {
-        onChange({
-          focused: final ? clockTypes.minutes : undefined,
-          hours: picked,
-          minutes,
-        })
-      }
-    } else if (minutes !== picked) {
-      onChange({ hours, minutes: picked })
-    }
-  }
-  const enabled = () => !latest.current.disabled
-  return PanResponder.create({
-    onMoveShouldSetPanResponder: enabled,
-    onMoveShouldSetPanResponderCapture: enabled,
-    onPanResponderGrant: (e) => onPointerMove(e, false),
-    onPanResponderMove: (e) => onPointerMove(e, false),
-    onPanResponderRelease: (e) => onPointerMove(e, true),
-    onPanResponderTerminationRequest: returnTrue,
-    onShouldBlockNativeResponder: returnTrue,
-    onStartShouldSetPanResponder: enabled,
-    onStartShouldSetPanResponderCapture: () => false,
-  })
-}
-
-function isOwnFocus(
-  event: { nativeEvent?: { target?: unknown } },
-  node: ViewInstance | null
-) {
-  const target = event.nativeEvent?.target
-  return target == null || node == null || target === node
-}
-
-function returnTrue() {
-  return true
 }
 
 const styles = StyleSheet.create({

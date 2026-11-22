@@ -36,6 +36,10 @@ import {
   timePickerUsesLandscape,
 } from './timeUtils'
 
+function orNow(value: number | undefined | null, read: (date: Date) => number) {
+  return value ?? read(new Date())
+}
+
 export function TimePickerModal({
   animationType,
   cancelLabel = 'Cancel',
@@ -79,36 +83,87 @@ export function TimePickerModal({
   use24HourClock?: boolean
   visible: boolean | undefined
 }) {
+  const { height, width } = useWindowDimensions()
+  const theme = useTheme()
+
   const [focused, setFocused] = useState<PossibleClockTypes>(clockTypes.hours)
   const [inputInvalid, setInputInvalid] = useState(false)
+
   const [inputType, setInputType] = useState<PossibleInputTypes>(
     defaultInputType || inputTypes.picker
   )
+
+  const [localHours, setLocalHours] = useState(() =>
+    orNow(hours, (date) => date.getHours())
+  )
+
+  const [localMinutes, setLocalMinutes] = useState(() =>
+    orNow(minutes, (date) => date.getMinutes())
+  )
+
   const [pickerMode, setPickerMode] = useState<PickerInputType>(
     defaultInputType === inputTypes.scroll
       ? inputTypes.scroll
       : inputTypes.picker
   )
-  const [localHours, setLocalHours] = useState(() =>
-    orNow(hours, (date) => date.getHours())
-  )
-  const [localMinutes, setLocalMinutes] = useState(() =>
-    orNow(minutes, (date) => date.getMinutes())
-  )
-  const theme = useTheme()
-  const { height, width } = useWindowDimensions()
-  const is24Hour = resolve24HourClock(use24HourClock, locale)
+
   const canShowDial = timeDialFits(width, height)
+  const color = theme.colors.surfaceContainer
+
   const displayedInputType =
     inputType === inputTypes.picker && !canShowDial
       ? inputTypes.scroll
       : inputType
+
+  const horizontalDial =
+    displayedInputType === inputTypes.picker &&
+    timePickerUsesLandscape(width, height, displayedInputType)
+
+  const actionsGap = horizontalDial
+    ? timePickerHorizontalPadding
+    : displayedInputType === inputTypes.picker
+      ? timePickerPadding
+      : timePickerActionsGap
+
+  const framePadding = horizontalDial
+    ? timePickerHorizontalPadding
+    : timePickerPadding
+
+  const is24Hour = resolve24HourClock(use24HourClock, locale)
+
   const storedMode: PickerInputType =
     inputType === inputTypes.scroll ? inputTypes.scroll : pickerMode
+
   const iconMode: PickerInputType =
     storedMode === inputTypes.picker && !canShowDial
       ? inputTypes.scroll
       : storedMode
+
+  const textFont = theme.fonts.labelMedium
+
+  const onChange: TimeChange = (params) => {
+    if (params.focused) {
+      setFocused(params.focused)
+    }
+
+    setLocalHours(params.hours)
+    setLocalMinutes(params.minutes)
+  }
+
+  const onFocusInput = (type: PossibleClockTypes) => setFocused(type)
+
+  const toggleInputType = () => {
+    if (disabled) return
+    Keyboard.dismiss()
+    if (displayedInputType === inputTypes.keyboard) {
+      setInputType(storedMode)
+      return
+    }
+    setPickerMode(
+      inputType === inputTypes.scroll ? inputTypes.scroll : inputTypes.picker
+    )
+    setInputType(inputTypes.keyboard)
+  }
 
   useEffect(() => {
     setLocalHours(orNow(hours, (date) => date.getHours()))
@@ -125,41 +180,6 @@ export function TimePickerModal({
     animationType,
     Platform.OS === 'web' ? 'none' : 'fade'
   )
-  const onChange: TimeChange = (params) => {
-    if (params.focused) {
-      setFocused(params.focused)
-    }
-
-    setLocalHours(params.hours)
-    setLocalMinutes(params.minutes)
-  }
-  const onFocusInput = (type: PossibleClockTypes) => setFocused(type)
-  const textFont = theme.fonts.labelMedium
-  const toggleInputType = () => {
-    if (disabled) return
-    Keyboard.dismiss()
-    if (displayedInputType === inputTypes.keyboard) {
-      setInputType(storedMode)
-      return
-    }
-    setPickerMode(
-      inputType === inputTypes.scroll ? inputTypes.scroll : inputTypes.picker
-    )
-    setInputType(inputTypes.keyboard)
-  }
-
-  const horizontalDial =
-    displayedInputType === inputTypes.picker &&
-    timePickerUsesLandscape(width, height, displayedInputType)
-  const framePadding = horizontalDial
-    ? timePickerHorizontalPadding
-    : timePickerPadding
-  const actionsGap = horizontalDial
-    ? timePickerHorizontalPadding
-    : displayedInputType === inputTypes.picker
-      ? timePickerPadding
-      : timePickerActionsGap
-  const color = theme.colors.surfaceContainer
 
   return (
     <Modal
@@ -297,10 +317,6 @@ export function TimePickerModal({
       </View>
     </Modal>
   )
-}
-
-function orNow(value: number | undefined | null, read: (date: Date) => number) {
-  return value ?? read(new Date())
 }
 
 const styles = StyleSheet.create({
