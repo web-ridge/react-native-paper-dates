@@ -44,6 +44,7 @@ const savedWindow = Dimensions.get('window')
 
 afterEach(async () => {
   Platform.OS = originalOS
+  jest.useFakeTimers()
   await act(async () => {
     Dimensions.set({ screen: savedWindow, window: savedWindow })
     jest.clearAllTimers()
@@ -1843,7 +1844,6 @@ describe('scroll time picker', () => {
   })
 
   it('keeps a hard trackpad flick on the wheel', () => {
-    jest.useFakeTimers()
     const listeners: {
       capture: boolean
       listener: (event: WheelEvent) => void
@@ -1914,83 +1914,79 @@ describe('scroll time picker', () => {
         ...extra,
       }) as WheelEvent
 
-    try {
-      expect(asWheelTarget(null)).toBeNull()
-      expect(asWheelTarget({ scrollTop: 0 })).toBeNull()
-      expect(asWheelTarget({ getScrollableNode: 1 })).toBeNull()
-      expect(asWheelTarget({ getScrollableNode: () => 4 })).toBeNull()
-      expect(
-        asWheelTarget({
-          getScrollableNode: () => {
-            throw new Error('native')
-          },
-        })
-      ).toBeNull()
-      expect(asWheelTarget(node)).toBe(node)
-      expect(asWheelTarget({ getScrollableNode: () => node })).toBe(node)
+    expect(asWheelTarget(null)).toBeNull()
+    expect(asWheelTarget({ scrollTop: 0 })).toBeNull()
+    expect(asWheelTarget({ getScrollableNode: 1 })).toBeNull()
+    expect(asWheelTarget({ getScrollableNode: () => 4 })).toBeNull()
+    expect(
+      asWheelTarget({
+        getScrollableNode: () => {
+          throw new Error('native')
+        },
+      })
+    ).toBeNull()
+    expect(asWheelTarget(node)).toBe(node)
+    expect(asWheelTarget({ getScrollableNode: () => node })).toBe(node)
 
-      const unbind = bindTrackpadWheel(node, state)
-      expect(node.style.overscrollBehavior).toBe('none')
-      const wheelListener = listeners.find((item) => item.type === 'wheel')
-      expect(wheelListener).toEqual(
-        expect.objectContaining({
-          capture: true,
-          passive: false,
-          type: 'wheel',
-        })
-      )
+    const unbind = bindTrackpadWheel(node, state)
+    expect(node.style.overscrollBehavior).toBe('none')
+    const wheelListener = listeners.find((item) => item.type === 'wheel')
+    expect(wheelListener).toEqual(
+      expect.objectContaining({
+        capture: true,
+        passive: false,
+        type: 'wheel',
+      })
+    )
 
-      const pinch = wheel(800, { ctrlKey: true })
-      wheelListener?.listener(pinch)
-      expect(pinch.preventDefault).not.toHaveBeenCalled()
+    const pinch = wheel(800, { ctrlKey: true })
+    wheelListener?.listener(pinch)
+    expect(pinch.preventDefault).not.toHaveBeenCalled()
 
-      const sideways = wheel(10, { deltaX: 40, deltaY: 4 })
-      wheelListener?.listener(sideways)
-      expect(node.parentElement.style.overflowY).toBe('hidden')
-      expect(sideways.preventDefault).toHaveBeenCalled()
-      expect(node.scrollTop).toBe(68 * scrollItemHeight + 4)
-      node.scrollTop = 68 * scrollItemHeight
+    const sideways = wheel(10, { deltaX: 40, deltaY: 4 })
+    wheelListener?.listener(sideways)
+    expect(node.parentElement.style.overflowY).toBe('hidden')
+    expect(sideways.preventDefault).toHaveBeenCalled()
+    expect(node.scrollTop).toBe(68 * scrollItemHeight + 4)
+    node.scrollTop = 68 * scrollItemHeight
 
-      const locked = wheel(500, { cancelable: false })
-      wheelListener?.listener(locked)
-      expect(locked.preventDefault).not.toHaveBeenCalled()
-      expect(locked.stopPropagation).toHaveBeenCalled()
-      expect(node.scrollTop).toBe(68 * scrollItemHeight)
-      node.parentElement.scrollTop = 900
+    const locked = wheel(500, { cancelable: false })
+    wheelListener?.listener(locked)
+    expect(locked.preventDefault).not.toHaveBeenCalled()
+    expect(locked.stopPropagation).toHaveBeenCalled()
+    expect(node.scrollTop).toBe(68 * scrollItemHeight)
+    node.parentElement.scrollTop = 900
 
-      const idle = wheel(0)
-      wheelListener?.listener(idle)
-      expect(idle.preventDefault).not.toHaveBeenCalled()
+    const idle = wheel(0)
+    wheelListener?.listener(idle)
+    expect(idle.preventDefault).not.toHaveBeenCalled()
 
-      const flick = wheel(100 * scrollItemHeight)
-      wheelListener?.listener(flick)
-      expect(flick.preventDefault).toHaveBeenCalled()
-      expect(flick.stopPropagation).toHaveBeenCalled()
-      expect(onFocus).toHaveBeenCalled()
-      expect(node.scrollTop).toBe(60 * scrollItemHeight)
-      expect(node.parentElement.scrollTop).toBe(250)
+    const flick = wheel(100 * scrollItemHeight)
+    wheelListener?.listener(flick)
+    expect(flick.preventDefault).toHaveBeenCalled()
+    expect(flick.stopPropagation).toHaveBeenCalled()
+    expect(onFocus).toHaveBeenCalled()
+    expect(node.scrollTop).toBe(60 * scrollItemHeight)
+    expect(node.parentElement.scrollTop).toBe(250)
 
-      const notch = wheel(2, { deltaMode: 1 })
-      wheelListener?.listener(notch)
-      expect(node.scrollTop).toBe(62 * scrollItemHeight)
-      wheelListener?.listener(wheel(1, { deltaMode: 2 }))
+    const notch = wheel(2, { deltaMode: 1 })
+    wheelListener?.listener(notch)
+    expect(node.scrollTop).toBe(62 * scrollItemHeight)
+    wheelListener?.listener(wheel(1, { deltaMode: 2 }))
 
-      jest.advanceTimersByTime(120)
-      expect(onSettle).toHaveBeenCalledTimes(1)
-      expect(onSettle).toHaveBeenCalledWith(node.scrollTop)
-      expect(node.parentElement.style.overflowY).toBe('auto')
+    jest.advanceTimersByTime(120)
+    expect(onSettle).toHaveBeenCalledTimes(1)
+    expect(onSettle).toHaveBeenCalledWith(node.scrollTop)
+    expect(node.parentElement.style.overflowY).toBe('auto')
 
-      unbind()
-      expect(listeners).toHaveLength(0)
-      jest.advanceTimersByTime(120)
-      expect(onSettle).toHaveBeenCalledTimes(1)
+    unbind()
+    expect(listeners).toHaveLength(0)
+    jest.advanceTimersByTime(120)
+    expect(onSettle).toHaveBeenCalledTimes(1)
 
-      const plain = { ...node, style: undefined }
-      bindTrackpadWheel(plain, state)()
-      expect(plain.style).toBeUndefined()
-    } finally {
-      jest.useRealTimers()
-    }
+    const plain = { ...node, style: undefined }
+    bindTrackpadWheel(plain, state)()
+    expect(plain.style).toBeUndefined()
   })
 
   it('hides page scrolling while the pointer is over a wheel', () => {
@@ -2148,7 +2144,6 @@ describe('scroll time picker', () => {
     const scrollTo = jest
       .spyOn(ScrollView.prototype, 'scrollTo')
       .mockImplementation(() => {})
-    jest.useFakeTimers()
     try {
       await act(async () => {
         nodes[0].bound[0](flick)
@@ -2169,7 +2164,6 @@ describe('scroll time picker', () => {
       expect(scrollTo).not.toHaveBeenCalled()
     } finally {
       scrollTo.mockRestore()
-      jest.useRealTimers()
     }
     expect(flick.preventDefault).toHaveBeenCalled()
     expect(picker.onFocusInput).toHaveBeenCalledWith('hours')
