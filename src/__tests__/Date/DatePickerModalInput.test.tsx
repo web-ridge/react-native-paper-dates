@@ -1,7 +1,7 @@
 import { act } from '@testing-library/react-native'
 import type { ReactNode } from 'react'
 import { Dimensions, Platform, StyleSheet } from 'react-native'
-import { LightTheme, ThemeProvider } from 'react-native-paper'
+import { PaperProvider } from 'react-native-paper'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 import DatePickerModalInput from '../../Date/DatePickerModalInput'
@@ -96,7 +96,11 @@ it('keeps OK disabled while the typed date is invalid', async () => {
     'react-native-paper-dates-modal-input-confirm'
   )[0]
   expect(disabled(confirm)).toBe(true)
-  expect(screen.getByText('Date format must be MM/DD/YYYY')).toBeTruthy()
+  expect(
+    screen.getByText('Date format must be MM/DD/YYYY', {
+      includeHiddenElements: true,
+    })
+  ).toBeTruthy()
   expect(onConfirm).not.toHaveBeenCalled()
 })
 
@@ -234,13 +238,12 @@ it('fades in on native, disables animation on web, and honors animationType', as
       (node: { props?: { animationType?: string } }) =>
         typeof node.props?.animationType === 'string'
     )[0]?.props.animationType
-  const renderWith = (animationType?: 'slide' | 'fade' | 'none', scale = 1) => {
-    const theme = {
-      ...LightTheme,
-      animation: { ...LightTheme.animation, scale },
-    }
+  const renderWith = (
+    animationType?: 'slide' | 'fade' | 'none',
+    reduceMotion: 'off' | 'on' = 'off'
+  ) => {
     return render(
-      <ThemeProvider theme={theme}>
+      <PaperProvider reduceMotion={reduceMotion}>
         {host(
           <DatePickerModalInput
             animationType={animationType}
@@ -251,7 +254,7 @@ it('fades in on native, disables animation on web, and honors animationType', as
             visible
           />
         )}
-      </ThemeProvider>
+      </PaperProvider>
     )
   }
 
@@ -260,7 +263,7 @@ it('fades in on native, disables animation on web, and honors animationType', as
     const nativeScreen = await renderWith()
     expect(animationTypeOf(nativeScreen)).toBe('fade')
 
-    const explicitScreen = await renderWith('slide', 0)
+    const explicitScreen = await renderWith('slide', 'on')
     expect(animationTypeOf(explicitScreen)).toBe('slide')
 
     Platform.OS = 'web'

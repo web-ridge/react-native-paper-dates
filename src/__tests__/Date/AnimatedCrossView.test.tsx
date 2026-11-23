@@ -1,6 +1,6 @@
 import { act, render } from '@testing-library/react-native'
 import { Animated, StyleSheet, Text } from 'react-native'
-import { LightTheme, ThemeProvider } from 'react-native-paper'
+import { PaperProvider } from 'react-native-paper'
 
 import AnimatedCrossView from '../../Date/AnimatedCrossView'
 
@@ -68,18 +68,14 @@ it('drops the scale and swaps at once under Reduce Motion', async () => {
       durations.push(config.duration ?? -1)
       return timing(value, config)
     })
-  const theme = {
-    ...LightTheme,
-    animation: { ...LightTheme.animation, scale: 0 },
-  }
   const view = (collapsed: boolean) => (
-    <ThemeProvider theme={theme}>
+    <PaperProvider reduceMotion="on">
       <AnimatedCrossView
         calendar={<Text>calendar</Text>}
         calendarEdit={<Text>edit</Text>}
         collapsed={collapsed}
       />
-    </ThemeProvider>
+    </PaperProvider>
   )
   type Node = { parent: Node | null; props: { style?: unknown } }
   const layerStyle = (node: Node) => {

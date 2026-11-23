@@ -1,4 +1,4 @@
-import { useTheme } from 'react-native-paper'
+import { useReduceMotion } from 'react-native-paper'
 
 export function useModalAnimation(
   animationType: 'slide' | 'fade' | 'none' | undefined,
@@ -7,13 +7,4 @@ export function useModalAnimation(
   const reduceMotion = useReduceMotion()
   if (animationType) return animationType
   return reduceMotion && fallback === 'slide' ? 'fade' : fallback
-}
-
-export function useMotionScale() {
-  const scale = useTheme().animation?.scale
-  return typeof scale === 'number' && scale >= 0 ? scale : 1
-}
-
-function useReduceMotion() {
-  return useMotionScale() === 0
 }

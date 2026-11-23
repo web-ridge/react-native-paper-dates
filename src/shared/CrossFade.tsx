@@ -1,7 +1,6 @@
 import { type ReactNode, useEffect, useRef, useState } from 'react'
 import { Animated, type StyleProp, View, type ViewStyle } from 'react-native'
-
-import { useMotionScale } from './motion'
+import { useReduceMotion } from 'react-native-paper'
 
 type CrossFadeLayer = {
   node: ReactNode
@@ -37,8 +36,6 @@ export default function CrossFade({
   primary: CrossFadeLayer
   secondary: CrossFadeLayer
 }) {
-  const motionScale = useMotionScale()
-
   const [progress] = useState(() => new Animated.Value(collapsed ? 1 : 0))
 
   const primaryTransform = useLayerTransform(progress, primary)
@@ -53,7 +50,7 @@ export default function CrossFade({
 
   const skipFirst = useRef(true)
 
-  const reduceMotion = motionScale === 0
+  const reduceMotion = useReduceMotion()
 
   useEffect(() => {
     if (skipFirst.current) {
@@ -66,7 +63,7 @@ export default function CrossFade({
       setShowSecondary(true)
     }
     Animated.timing(progress, {
-      duration: 250 * motionScale,
+      duration: reduceMotion ? 0 : 250,
       toValue: collapsed ? 1 : 0,
       useNativeDriver: true,
     }).start(({ finished }) => {
@@ -79,7 +76,7 @@ export default function CrossFade({
         setShowPrimary(false)
       }
     })
-  }, [collapsed, motionScale, progress])
+  }, [collapsed, progress, reduceMotion])
 
   return (
     <View style={containerStyle}>

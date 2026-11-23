@@ -84,7 +84,7 @@ describe('web swiper', () => {
     )
 
     const vertical = await render(
-      <ThemeProvider theme={{ ...DarkTheme, roundness: 4 }}>
+      <ThemeProvider theme={DarkTheme}>
         <SwiperWeb
           endYear={2030}
           initialIndex={getStartAtIndex(2020, 2030)}

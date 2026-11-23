@@ -7,7 +7,7 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native'
-import { DarkTheme, ThemeProvider } from 'react-native-paper'
+import { DarkTheme, PaperProvider, ThemeProvider } from 'react-native-paper'
 
 import { DisplayModeContext } from '../../contexts/DisplayModeContext'
 import { withAlpha } from '../../shared/utils'
@@ -341,7 +341,6 @@ describe('time inputs', () => {
         theme={{
           ...DarkTheme,
           colors: { ...DarkTheme.colors, primary: '#000000' },
-          roundness: 4,
         }}
       >
         <TimeInputs
@@ -649,14 +648,9 @@ describe('time picker modal', () => {
     expect(animationTypeOf(android)).toBe('fade')
 
     const reduced = await render(
-      <ThemeProvider
-        theme={{
-          ...DarkTheme,
-          animation: { ...DarkTheme.animation, scale: 0 },
-        }}
-      >
+      <PaperProvider reduceMotion="on">
         <TimePickerModal {...props} />
-      </ThemeProvider>
+      </PaperProvider>
     )
     expect(animationTypeOf(reduced)).toBe('fade')
 
