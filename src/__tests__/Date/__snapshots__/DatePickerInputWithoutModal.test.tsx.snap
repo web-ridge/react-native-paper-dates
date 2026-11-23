@@ -84,7 +84,7 @@ exports[`renders DatePickerInputWithoutModal 1`] = `
                 "right": 0,
               },
               {
-                "backgroundColor": "rgba(121, 116, 126, 1)",
+                "backgroundColor": "rgba(73, 69, 79, 1)",
                 "height": 1,
               },
               false,
@@ -150,48 +150,20 @@ exports[`renders DatePickerInputWithoutModal 1`] = `
           }
         />
         <View
-          collapsable={false}
-          jestAnimatedProps={
-            {
-              "value": {},
-            }
-          }
-          jestAnimatedStyle={
-            {
-              "value": {},
-            }
-          }
-          jestInlineStyle={
-            [
-              [
-                {
-                  "alignItems": "flex-end",
-                  "flex": 1,
-                  "flexDirection": "row",
-                  "paddingHorizontal": 16,
-                },
-                false,
-              ],
-              undefined,
-            ]
-          }
           style={
-            [
-              {
-                "alignItems": "flex-end",
-                "flex": 1,
-                "flexDirection": "row",
-                "paddingHorizontal": 16,
-              },
-              false,
-              undefined,
-            ]
+            {
+              "alignItems": "flex-end",
+              "flex": 1,
+              "flexDirection": "row",
+              "paddingHorizontal": 16,
+            }
           }
         >
           <TextInput
+            accessibilityHint="MM/DD/YYYY"
             aria-disabled={false}
             aria-invalid={false}
-            aria-label="MM/DD/YYYY"
+            aria-label=""
             cursorColor="rgba(103, 80, 164, 1)"
             keyboardAppearance="default"
             keyboardType="default"

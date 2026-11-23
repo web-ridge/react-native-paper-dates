@@ -68,7 +68,9 @@ it('rejects a typed day that is disabled', async () => {
 
   await commitText(screen, '1/15/2026')
 
-  expect(screen.getByText('Day is not allowed')).toBeTruthy()
+  expect(
+    screen.getByText('Day is not allowed', { includeHiddenElements: true })
+  ).toBeTruthy()
   expect(onChange).not.toHaveBeenCalled()
 })
 
@@ -85,7 +87,9 @@ it('keeps a mistyped date until it is corrected', async () => {
   )
 
   await commitText(screen, 'nope')
-  expect(screen.getByText(/^Date format must be /)).toBeTruthy()
+  expect(
+    screen.getByText(/^Date format must be /, { includeHiddenElements: true })
+  ).toBeTruthy()
   expect(screen.getByTestId('date').props.value).toBe('nope')
   expect(onChange).not.toHaveBeenCalled()
 
@@ -114,7 +118,9 @@ it('rejects a typed date outside the allowed range', async () => {
   )
   await commitText(both, '2/1/2026')
   expect(
-    both.getByText(`Must be between ${inputDate(start)} - ${inputDate(end)}`)
+    both.getByText(`Must be between ${inputDate(start)} - ${inputDate(end)}`, {
+      includeHiddenElements: true,
+    })
   ).toBeTruthy()
 
   const later = await render(
@@ -128,7 +134,11 @@ it('rejects a typed date outside the allowed range', async () => {
     />
   )
   await commitText(later, '1/2/2026')
-  expect(later.getByText(`Must be later than ${inputDate(start)}`)).toBeTruthy()
+  expect(
+    later.getByText(`Must be later than ${inputDate(start)}`, {
+      includeHiddenElements: true,
+    })
+  ).toBeTruthy()
 
   const earlier = await render(
     <DatePickerInputWithoutModal
@@ -142,7 +152,9 @@ it('rejects a typed date outside the allowed range', async () => {
   )
   await commitText(earlier, '2/1/2026')
   expect(
-    earlier.getByText(`Must be earlier than ${inputDate(end)}`)
+    earlier.getByText(`Must be earlier than ${inputDate(end)}`, {
+      includeHiddenElements: true,
+    })
   ).toBeTruthy()
   expect(onChange).not.toHaveBeenCalled()
 })
@@ -194,7 +206,9 @@ it('clears a typed-date error when the saved date changes', async () => {
   )
 
   await commitText(screen, 'nope')
-  expect(screen.getByText(/^Date format must be /)).toBeTruthy()
+  expect(
+    screen.getByText(/^Date format must be /, { includeHiddenElements: true })
+  ).toBeTruthy()
 
   await screen.rerender(
     <DatePickerInputWithoutModal

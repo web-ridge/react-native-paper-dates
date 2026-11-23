@@ -738,7 +738,11 @@ it('uses fallback date errors when the locale is not registered', async () => {
   await fireEvent(invalid.getByTestId('date'), 'focus')
   await fireEvent.changeText(invalid.getByTestId('date'), 'not-a-date')
   await fireEvent(invalid.getByTestId('date'), 'blur')
-  expect(invalid.getByText('notAccordingToDateFormat')).toBeTruthy()
+  expect(
+    invalid.getByText('notAccordingToDateFormat', {
+      includeHiddenElements: true,
+    })
+  ).toBeTruthy()
 
   const focused = await render(
     <DatePickerInputWithoutModal
@@ -794,16 +798,20 @@ it('uses fallback date errors when the locale is not registered', async () => {
 
   expect(
     (await reject({ endDate: end, startDate: start }, '01', '01')).getByText(
-      'mustBeBetween'
+      'mustBeBetween',
+      { includeHiddenElements: true }
     )
   ).toBeTruthy()
   expect(
     (await reject({ startDate: start }, '01', '01')).getByText(
-      'mustBeHigherThan'
+      'mustBeHigherThan',
+      { includeHiddenElements: true }
     )
   ).toBeTruthy()
   expect(
-    (await reject({ endDate: end }, '01', '25')).getByText('mustBeLowerThan')
+    (await reject({ endDate: end }, '01', '25')).getByText('mustBeLowerThan', {
+      includeHiddenElements: true,
+    })
   ).toBeTruthy()
   warn.mockRestore()
 })

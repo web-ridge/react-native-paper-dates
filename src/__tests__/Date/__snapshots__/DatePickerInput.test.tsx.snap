@@ -87,7 +87,7 @@ exports[`renders DatePickerInput 1`] = `
                   "right": 0,
                 },
                 {
-                  "backgroundColor": "rgba(121, 116, 126, 1)",
+                  "backgroundColor": "rgba(73, 69, 79, 1)",
                   "height": 1,
                 },
                 false,
@@ -153,48 +153,20 @@ exports[`renders DatePickerInput 1`] = `
             }
           />
           <View
-            collapsable={false}
-            jestAnimatedProps={
-              {
-                "value": {},
-              }
-            }
-            jestAnimatedStyle={
-              {
-                "value": {},
-              }
-            }
-            jestInlineStyle={
-              [
-                [
-                  {
-                    "alignItems": "flex-end",
-                    "flex": 1,
-                    "flexDirection": "row",
-                    "paddingHorizontal": 16,
-                  },
-                  false,
-                ],
-                undefined,
-              ]
-            }
             style={
-              [
-                {
-                  "alignItems": "flex-end",
-                  "flex": 1,
-                  "flexDirection": "row",
-                  "paddingHorizontal": 16,
-                },
-                false,
-                undefined,
-              ]
+              {
+                "alignItems": "flex-end",
+                "flex": 1,
+                "flexDirection": "row",
+                "paddingHorizontal": 16,
+              }
             }
           >
             <TextInput
+              accessibilityHint="MM/DD/YYYY"
               aria-disabled={false}
               aria-invalid={false}
-              aria-label="MM/DD/YYYY"
+              aria-label=""
               cursorColor="rgba(103, 80, 164, 1)"
               keyboardAppearance="default"
               keyboardType="default"
@@ -235,6 +207,8 @@ exports[`renders DatePickerInput 1`] = `
             />
           </View>
           <View
+            aria-hidden={false}
+            pointerEvents="auto"
             style={
               {
                 "alignItems": "center",
@@ -259,16 +233,11 @@ exports[`renders DatePickerInput 1`] = `
                 [
                   {
                     "margin": 6,
+                    "overflow": "visible",
                   },
                   {
-                    "backgroundColor": undefined,
                     "height": 40,
                     "width": 40,
-                  },
-                  {
-                    "borderColor": "rgba(202, 196, 208, 1)",
-                    "borderRadius": 20,
-                    "borderWidth": 0,
                   },
                   [
                     {
@@ -287,22 +256,59 @@ exports[`renders DatePickerInput 1`] = `
                     ],
                     null,
                   ],
+                  {
+                    "borderRadius": 20,
+                    "transitionDuration": 407.04338337878676,
+                    "transitionProperty": [
+                      "borderRadius",
+                    ],
+                    "transitionTimingFunction": LinearEasing {
+                      "points": [
+                        0,
+                        0.06277263847713954,
+                        0.21164597425789278,
+                        0.3974888070655127,
+                        0.5849913632729022,
+                        0.7516811833326952,
+                        0.88580555283714,
+                        0.9837456473395675,
+                        1.047436679981868,
+                        1.0820926082479323,
+                        1.0943882691765388,
+                        1.0911420678500907,
+                        1.0784680721678237,
+                        1.0613231358356892,
+                        1.0433560658932506,
+                        1.026964952235526,
+                        1.0134791547226913,
+                        1.0033987269768834,
+                        0.9966421670995276,
+                        0.9927705383487956,
+                        0.9911705512021525,
+                        0.9911904072150362,
+                        0.9922300002567417,
+                        0.9937918031038392,
+                        0.9955010155671044,
+                        0.9971039689916122,
+                        0.9984529974668427,
+                        0.9994845338952444,
+                        1.0001954849012749,
+                        1.0006212740890563,
+                        1,
+                      ],
+                    },
+                  },
                 ]
               }
               style={
                 [
                   {
                     "margin": 6,
+                    "overflow": "visible",
                   },
                   {
-                    "backgroundColor": undefined,
                     "height": 40,
                     "width": 40,
-                  },
-                  {
-                    "borderColor": "rgba(202, 196, 208, 1)",
-                    "borderRadius": 20,
-                    "borderWidth": 0,
                   },
                   {
                     "margin": 0,
@@ -317,56 +323,138 @@ exports[`renders DatePickerInput 1`] = `
                   },
                   false,
                   null,
+                  {
+                    "borderRadius": 20,
+                  },
                 ]
               }
             >
               <View
-                accessibilityLabel="Pick date from calendar"
-                accessibilityState={
-                  {
-                    "busy": undefined,
-                    "checked": undefined,
-                    "disabled": false,
-                    "expanded": undefined,
-                    "selected": undefined,
-                  }
-                }
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={true}
-                centered={true}
                 collapsable={false}
-                focusable={true}
-                hitSlop={
+                jestAnimatedProps={
                   {
-                    "bottom": 12,
-                    "left": 12,
-                    "right": 12,
-                    "top": 12,
+                    "value": {},
                   }
                 }
-                multiline={false}
-                onBlur={[Function]}
-                onClick={[Function]}
-                onFocus={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                role="button"
+                jestAnimatedStyle={
+                  {
+                    "value": {},
+                  }
+                }
+                jestInlineStyle={
+                  [
+                    {
+                      "height": "100%",
+                      "width": "100%",
+                    },
+                    {
+                      "backgroundColor": undefined,
+                      "borderColor": "rgba(202, 196, 208, 1)",
+                      "borderWidth": 0,
+                    },
+                    {
+                      "borderRadius": 20,
+                      "transitionDuration": 407.04338337878676,
+                      "transitionProperty": [
+                        "borderRadius",
+                      ],
+                      "transitionTimingFunction": LinearEasing {
+                        "points": [
+                          0,
+                          0.06277263847713954,
+                          0.21164597425789278,
+                          0.3974888070655127,
+                          0.5849913632729022,
+                          0.7516811833326952,
+                          0.88580555283714,
+                          0.9837456473395675,
+                          1.047436679981868,
+                          1.0820926082479323,
+                          1.0943882691765388,
+                          1.0911420678500907,
+                          1.0784680721678237,
+                          1.0613231358356892,
+                          1.0433560658932506,
+                          1.026964952235526,
+                          1.0134791547226913,
+                          1.0033987269768834,
+                          0.9966421670995276,
+                          0.9927705383487956,
+                          0.9911705512021525,
+                          0.9911904072150362,
+                          0.9922300002567417,
+                          0.9937918031038392,
+                          0.9955010155671044,
+                          0.9971039689916122,
+                          0.9984529974668427,
+                          0.9994845338952444,
+                          1.0001954849012749,
+                          1.0006212740890563,
+                          1,
+                        ],
+                      },
+                    },
+                  ]
+                }
                 style={
                   [
                     {
-                      "overflow": "hidden",
+                      "height": "100%",
+                      "width": "100%",
                     },
+                    {
+                      "backgroundColor": undefined,
+                      "borderColor": "rgba(202, 196, 208, 1)",
+                      "borderWidth": 0,
+                    },
+                    {
+                      "borderRadius": 20,
+                    },
+                  ]
+                }
+              >
+                <View
+                  accessibilityLabel="Pick date from calendar"
+                  accessibilityState={
+                    {
+                      "busy": false,
+                      "checked": undefined,
+                      "disabled": false,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={true}
+                  centered={true}
+                  collapsable={false}
+                  focusable={true}
+                  hitSlop={
+                    {
+                      "bottom": 12,
+                      "left": 12,
+                      "right": 12,
+                      "top": 12,
+                    }
+                  }
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
+                  jestAnimatedStyle={
+                    {
+                      "value": {},
+                    }
+                  }
+                  jestInlineStyle={
                     [
                       {
                         "alignItems": "center",
@@ -375,59 +463,129 @@ exports[`renders DatePickerInput 1`] = `
                       },
                       {
                         "borderRadius": 20,
+                        "transitionDuration": 407.04338337878676,
+                        "transitionProperty": [
+                          "borderRadius",
+                        ],
+                        "transitionTimingFunction": LinearEasing {
+                          "points": [
+                            0,
+                            0.06277263847713954,
+                            0.21164597425789278,
+                            0.3974888070655127,
+                            0.5849913632729022,
+                            0.7516811833326952,
+                            0.88580555283714,
+                            0.9837456473395675,
+                            1.047436679981868,
+                            1.0820926082479323,
+                            1.0943882691765388,
+                            1.0911420678500907,
+                            1.0784680721678237,
+                            1.0613231358356892,
+                            1.0433560658932506,
+                            1.026964952235526,
+                            1.0134791547226913,
+                            1.0033987269768834,
+                            0.9966421670995276,
+                            0.9927705383487956,
+                            0.9911705512021525,
+                            0.9911904072150362,
+                            0.9922300002567417,
+                            0.9937918031038392,
+                            0.9955010155671044,
+                            0.9971039689916122,
+                            0.9984529974668427,
+                            0.9994845338952444,
+                            1.0001954849012749,
+                            1.0006212740890563,
+                            1,
+                          ],
+                        },
                       },
                       {
                         "overflow": "hidden",
                       },
                       undefined,
-                    ],
-                  ]
-                }
-                testID="date-picker-icon-button"
-              >
-                <View
-                  style={
-                    {
-                      "opacity": 1,
-                    }
+                    ]
                   }
-                >
-                  <Text
-                    accessibilityElementsHidden={true}
-                    allowFontScaling={false}
-                    importantForAccessibility="no-hide-descendants"
-                    pointerEvents="none"
-                    selectable={false}
-                    style={
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  role="button"
+                  style={
+                    [
+                      {
+                        "overflow": "hidden",
+                      },
                       [
                         {
-                          "color": "rgba(73, 69, 79, 1)",
-                          "fontSize": 24,
+                          "alignItems": "center",
+                          "flex": 1,
+                          "justifyContent": "center",
                         },
-                        [
-                          {
-                            "lineHeight": 24,
-                            "transform": [
-                              {
-                                "scaleX": 1,
-                              },
-                            ],
-                          },
-                          {
-                            "backgroundColor": "transparent",
-                          },
-                        ],
                         {
-                          "fontFamily": "MaterialDesignIcons",
-                          "fontStyle": "normal",
-                          "fontWeight": "normal",
+                          "borderRadius": 20,
+                        },
+                        {
+                          "overflow": "hidden",
                         },
                         undefined,
-                      ]
+                      ],
+                    ]
+                  }
+                  testID="date-picker-icon-button"
+                >
+                  <View
+                    style={
+                      {
+                        "opacity": 1,
+                      }
                     }
                   >
-                    󰃭
-                  </Text>
+                    <Text
+                      accessibilityElementsHidden={true}
+                      allowFontScaling={false}
+                      importantForAccessibility="no-hide-descendants"
+                      pointerEvents="none"
+                      selectable={false}
+                      style={
+                        [
+                          {
+                            "color": "rgba(73, 69, 79, 1)",
+                            "fontSize": 24,
+                          },
+                          [
+                            {
+                              "lineHeight": 24,
+                              "transform": [
+                                {
+                                  "scaleX": 1,
+                                },
+                              ],
+                            },
+                            {
+                              "backgroundColor": "transparent",
+                            },
+                          ],
+                          {
+                            "fontFamily": "MaterialDesignIcons",
+                            "fontStyle": "normal",
+                            "fontWeight": "normal",
+                          },
+                          undefined,
+                        ]
+                      }
+                    >
+                      󰃭
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>
