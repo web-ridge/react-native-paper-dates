@@ -638,8 +638,8 @@ function KeyboardToggle({
       disabled={disabled}
       icon={icon}
       iconColor={iconColor}
+      iconSize={24}
       onPress={onPress}
-      size={24}
       style={[styles.keyboard, style]}
       testID="time-scroll-keyboard"
     />

@@ -144,8 +144,8 @@ export default function DatePickerModalContentHeader(
             }
             icon={collapsed ? finalCollapsedIcon : finalExpandedIcon}
             iconColor={theme.colors.onSurfaceVariant}
+            iconSize={24}
             onPress={onToggle}
-            size={24}
             style={[styles.editButton, compactRange && styles.rangeEditButton]}
             testID="react-native-paper-dates-toggle-edit"
           />

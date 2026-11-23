@@ -95,16 +95,16 @@ function CalendarHeader({
               <IconButton
                 accessibilityLabel={getTranslation(locale, 'previous')}
                 icon="chevron-left"
+                iconSize={24}
                 onPress={onPrev}
-                size={24}
                 style={styles.arrowButton}
                 testID="react-native-paper-dates-prev-month"
               />
               <IconButton
                 accessibilityLabel={getTranslation(locale, 'next')}
                 icon="chevron-right"
+                iconSize={24}
                 onPress={onNext}
-                size={24}
                 style={styles.arrowButton}
                 testID="react-native-paper-dates-next-month"
               />

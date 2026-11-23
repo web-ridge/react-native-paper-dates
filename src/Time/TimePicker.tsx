@@ -223,8 +223,8 @@ function TimePicker({
                 disabled={disabled}
                 icon={inputType === inputTypes.scroll ? scrollIcon : clockIcon}
                 iconColor={theme.colors.onSurfaceVariant}
+                iconSize={24}
                 onPress={toggleKeyboard}
-                size={24}
                 style={styles.inputTypeToggle}
               />
             </View>

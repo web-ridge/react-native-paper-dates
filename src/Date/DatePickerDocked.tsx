@@ -454,8 +454,8 @@ function DockedStepper({
         hitSlop={iconHitSlop}
         icon="chevron-left"
         iconColor={labelColor}
+        iconSize={24}
         onPress={onPrev}
-        size={24}
         style={styles.iconButton}
         testID={
           unit === 'month'
@@ -469,8 +469,8 @@ function DockedStepper({
         hitSlop={iconHitSlop}
         icon="chevron-right"
         iconColor={labelColor}
+        iconSize={24}
         onPress={onNext}
-        size={24}
         style={styles.iconButton}
         testID={
           unit === 'month'

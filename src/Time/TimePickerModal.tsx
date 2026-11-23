@@ -293,8 +293,8 @@ export function TimePickerModal({
                   ) ?? keyboardIcon
                 }
                 iconColor={theme.colors.onSurfaceVariant}
+                iconSize={24}
                 onPress={toggleInputType}
-                size={24}
                 style={styles.inputTypeToggle}
               />
               <View style={sharedStyles.root} />

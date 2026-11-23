@@ -143,9 +143,9 @@ function DatePickerInput(
               error={false}
               icon={calendarIcon}
               iconColor={rest.iconColor ?? undefined}
+              iconSize={rest.iconSize ?? 24}
               multiline={false}
               onPress={openPicker}
-              size={rest.iconSize ?? 24}
               style={rest.iconStyle as StyleProp<ViewStyle>}
               testID={`${rest.testID || 'date-picker'}-icon-button`}
             />

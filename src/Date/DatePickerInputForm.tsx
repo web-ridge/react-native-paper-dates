@@ -307,8 +307,8 @@ function DatePickerInputForm({
               )}
               icon={calendarIcon}
               iconColor={themeColor(theme.colors.onSurfaceVariant)}
+              iconSize={24}
               onPress={requestCalendar}
-              size={24}
               style={styles.iconButton}
               testID="react-native-paper-dates-modal-input-calendar"
             />
