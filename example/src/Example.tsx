@@ -422,59 +422,63 @@ export default function Example({
               />
             </Pressable>
             <Dialog
+              actions={[
+                <Button key="close" onPress={closeDialog}>
+                  Close
+                </Button>,
+              ]}
+              content={
+                <>
+                  <Searchbar
+                    inputStyle={styles.searchInput}
+                    onChangeText={setLocaleQuery}
+                    placeholder="Search locales"
+                    placeholderTextColor={theme.colors.onSurfaceVariant}
+                    style={styles.searchbar}
+                    theme={{
+                      colors: {
+                        surfaceContainerHigh: theme.colors.secondaryContainer,
+                      },
+                    }}
+                    value={localeQuery}
+                  />
+                  <ScrollView
+                    keyboardShouldPersistTaps="handled"
+                    style={[
+                      styles.localeScroll,
+                      { maxHeight: localeListMaxHeight },
+                    ]}
+                  >
+                    {filteredLocales.length === 0 ? (
+                      <AppText style={styles.emptyLocales} variant="bodyMedium">
+                        No locales match.
+                      </AppText>
+                    ) : (
+                      <RadioButton.Group
+                        onValueChange={(code) => {
+                          setLocale(code)
+                          setTimeout(closeDialog, 0)
+                        }}
+                        value={locale}
+                      >
+                        {filteredLocales.map(({ code }) => (
+                          <RadioButton.Item
+                            key={code}
+                            label={localeLabel(code)}
+                            style={styles.localeOption}
+                            value={code}
+                          />
+                        ))}
+                      </RadioButton.Group>
+                    )}
+                  </ScrollView>
+                </>
+              }
               onDismiss={closeDialog}
               style={styles.localeDialog}
+              title="Locale"
               visible={dialog === 'locale'}
-            >
-              <Dialog.Title>Locale</Dialog.Title>
-              <Searchbar
-                inputStyle={styles.searchInput}
-                onChangeText={setLocaleQuery}
-                placeholder="Search locales"
-                placeholderTextColor={theme.colors.onSurfaceVariant}
-                style={styles.searchbar}
-                theme={{
-                  colors: {
-                    surfaceContainerHigh: theme.colors.secondaryContainer,
-                  },
-                }}
-                value={localeQuery}
-              />
-              <Dialog.ScrollArea
-                style={[
-                  styles.localeScroll,
-                  { maxHeight: localeListMaxHeight },
-                ]}
-              >
-                <ScrollView keyboardShouldPersistTaps="handled">
-                  {filteredLocales.length === 0 ? (
-                    <AppText style={styles.emptyLocales} variant="bodyMedium">
-                      No locales match.
-                    </AppText>
-                  ) : (
-                    <RadioButton.Group
-                      onValueChange={(code) => {
-                        setLocale(code)
-                        setTimeout(closeDialog, 0)
-                      }}
-                      value={locale}
-                    >
-                      {filteredLocales.map(({ code }) => (
-                        <RadioButton.Item
-                          key={code}
-                          label={localeLabel(code)}
-                          style={styles.localeOption}
-                          value={code}
-                        />
-                      ))}
-                    </RadioButton.Group>
-                  )}
-                </ScrollView>
-              </Dialog.ScrollArea>
-              <Dialog.Actions>
-                <Button onPress={closeDialog}>Close</Button>
-              </Dialog.Actions>
-            </Dialog>
+            />
           </View>
 
           <View style={[styles.examples, wide && styles.examplesWide]}>
