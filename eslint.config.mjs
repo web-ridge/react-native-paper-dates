@@ -1,3 +1,4 @@
+import { defineConfig } from 'eslint/config'
 import reactHooks from 'eslint-plugin-react-hooks'
 import tseslint from 'typescript-eslint'
 
@@ -16,7 +17,7 @@ const compilerRules = [
   'unsupported-syntax',
 ]
 
-export default tseslint.config(
+export default defineConfig(
   {
     ignores: ['src/**/__tests__/**', 'lib/**', 'example/**', 'website/**'],
   },
