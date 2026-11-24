@@ -1,5 +1,5 @@
 import { act, fireEvent, render } from '@testing-library/react-native'
-import { Platform, ScrollView } from 'react-native'
+import { I18nManager, Platform, ScrollView } from 'react-native'
 
 import DatePickerDocked, { placeDockedCard } from '../../Date/DatePickerDocked'
 import DatePickerInput from '../../Date/DatePickerInput'
@@ -8,6 +8,7 @@ import { useDatePickerKeys } from '../../Date/datePickerKeys'
 import {
   dayFocused,
   installDateKeyListener,
+  iconName,
   pressLabel,
   pressTestId,
 } from '../../testUtils'
@@ -87,6 +88,8 @@ it('uses 40dp Cancel and OK buttons in the 56dp docked action row', async () => 
   const confirm = docked.getByTestId('react-native-paper-dates-docked-confirm')
   expect(styleTreeHas(cancel, { minHeight: 40 })).toBe(true)
   expect(styleTreeHas(confirm, { minHeight: 40 })).toBe(true)
+  expect(cancel).toHaveProp('hitSlop', { bottom: 4, top: 4 })
+  expect(confirm).toHaveProp('hitSlop', { bottom: 4, top: 4 })
   expect(
     styleTreeHas(
       docked.getByTestId('react-native-paper-dates-docked-surface'),
@@ -700,5 +703,78 @@ it('maps web keyboard shortcuts onto the date picker', async () => {
   } finally {
     Platform.OS = previousPlatform
     globalThis.window = previousWindow as Window & typeof globalThis
+  }
+})
+
+it('exposes keyboard shortcuts and flips chevrons in RTL', async () => {
+  const wasRtl = I18nManager.isRTL
+  try {
+    const docked = await render(
+      <DatePickerDocked
+        anchor={anchor}
+        date={new Date(2026, 5, 2)}
+        locale="en"
+        onConfirm={jest.fn()}
+        onDismiss={jest.fn()}
+        visible
+      />
+    )
+    const previous = docked.getByTestId('react-native-paper-dates-docked-prev')
+    const next = docked.getByTestId('react-native-paper-dates-docked-next')
+    const month = docked.getByTestId('react-native-paper-dates-docked-month')
+    expect(previous).toHaveProp('accessibilityLabel', 'Previous month')
+    expect(previous).toHaveProp('accessibilityHint', 'Page Up')
+    expect(next).toHaveProp('accessibilityLabel', 'Next month')
+    expect(next).toHaveProp('accessibilityHint', 'Page Down')
+    expect(month.props.accessibilityLabel).toContain('Choose a month')
+    expect(month).toHaveProp('accessibilityHint', 'Shift+M')
+
+    const yearPrev = docked.getByTestId(
+      'react-native-paper-dates-docked-year-prev'
+    )
+    expect(yearPrev).toHaveProp('accessibilityLabel', 'Previous year')
+    expect(yearPrev).toHaveProp('accessibilityHint', 'Shift+Page Up')
+
+    I18nManager.isRTL = true
+    const rtl = await render(
+      <DatePickerDocked
+        anchor={anchor}
+        date={new Date(2026, 5, 2)}
+        locale="en"
+        onConfirm={jest.fn()}
+        onDismiss={jest.fn()}
+        visible
+      />
+    )
+    expect(
+      iconName(rtl.getByTestId('react-native-paper-dates-docked-prev'))
+    ).toBe('chevron-right')
+    expect(
+      iconName(rtl.getByTestId('react-native-paper-dates-docked-next'))
+    ).toBe('chevron-left')
+  } finally {
+    I18nManager.isRTL = wasRtl
+  }
+})
+
+it('moves the docked focused day with the arrow keys', async () => {
+  const keys = installDateKeyListener()
+  try {
+    const docked = await render(
+      <DatePickerDocked
+        anchor={anchor}
+        date={new Date(2026, 0, 15)}
+        locale="en"
+        onConfirm={jest.fn()}
+        onDismiss={jest.fn()}
+        visible
+      />
+    )
+    await keys.press('ArrowRight')
+    expect(dayFocused(docked, 'react-native-paper-dates-day-2026-0-16')).toBe(
+      true
+    )
+  } finally {
+    keys.restore()
   }
 })

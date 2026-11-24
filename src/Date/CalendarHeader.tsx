@@ -2,6 +2,7 @@ import { memo } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { IconButton } from 'react-native-paper'
 
+import { chevronIcon, shortcutAttrs } from '../shared/rtl'
 import { sharedStyles } from '../shared/styles'
 import { getTranslation } from '../translations/utils'
 import DayNames, { dayNamesHeight } from './DayNames'
@@ -93,20 +94,36 @@ function CalendarHeader({
               ]}
             >
               <IconButton
-                accessibilityLabel={getTranslation(locale, 'previous')}
-                icon="chevron-left"
+                accessibilityLabel={getTranslation(
+                  locale,
+                  'previousMonth',
+                  'Previous month'
+                )}
+                icon={chevronIcon('previous')}
                 iconSize={24}
                 onPress={onPrev}
                 style={styles.arrowButton}
                 testID="react-native-paper-dates-prev-month"
+                {...shortcutAttrs(
+                  getTranslation(locale, 'previousMonth', 'Previous month'),
+                  getTranslation(locale, 'previousMonthHint', 'Page Up')
+                )}
               />
               <IconButton
-                accessibilityLabel={getTranslation(locale, 'next')}
-                icon="chevron-right"
+                accessibilityLabel={getTranslation(
+                  locale,
+                  'nextMonth',
+                  'Next month'
+                )}
+                icon={chevronIcon('next')}
                 iconSize={24}
                 onPress={onNext}
                 style={styles.arrowButton}
                 testID="react-native-paper-dates-next-month"
+                {...shortcutAttrs(
+                  getTranslation(locale, 'nextMonth', 'Next month'),
+                  getTranslation(locale, 'nextMonthHint', 'Page Down')
+                )}
               />
             </View>
           )}

@@ -18,6 +18,7 @@ import {
 } from 'react-native-paper'
 
 import { dateTimeFormat } from '../shared/intl'
+import { chevronIcon, shortcutAttrs } from '../shared/rtl'
 import StateLayer from '../shared/StateLayer'
 import { supportedOrientations, themeColor } from '../shared/utils'
 import { actionLabels, getTranslation } from '../translations/utils'
@@ -73,6 +74,11 @@ const menuIconGap = 8
 const menuLabelInset = 16 + 24 + 16 - menuButtonPadding
 const minTouchTarget = 48
 const iconHitSlop = (minTouchTarget - iconButtonSize) / 2
+
+const actionHitSlop = {
+  bottom: (minTouchTarget - actionHeight) / 2,
+  top: (minTouchTarget - actionHeight) / 2,
+}
 
 const menuHitSlop = {
   bottom: (minTouchTarget - menuButtonHeight) / 2,
@@ -300,6 +306,7 @@ function DatePickerDocked({
                         label={dateTimeFormat(locale, {
                           month: 'short',
                         }).format(nav.visibleMonth)}
+                        locale={locale}
                         onNext={() => nav.moveMonth(1)}
                         onOpen={nav.toggleMonth}
                         onPrev={() => nav.moveMonth(-1)}
@@ -318,6 +325,7 @@ function DatePickerDocked({
                       <DockedStepper
                         disabled={nav.menu === 'month'}
                         label={String(nav.visibleMonth.getFullYear())}
+                        locale={locale}
                         onNext={() => nav.moveYear(1)}
                         onOpen={nav.toggleYear}
                         onPrev={() => nav.moveYear(-1)}
@@ -339,6 +347,7 @@ function DatePickerDocked({
                     <View style={styles.actions}>
                       <Button
                         contentStyle={styles.actionContent}
+                        hitSlop={actionHitSlop}
                         labelStyle={styles.actionLabel}
                         mode="text"
                         onPress={onDismiss}
@@ -351,6 +360,7 @@ function DatePickerDocked({
                       <Button
                         contentStyle={styles.actionContent}
                         disabled={saveLabelDisabled ?? false}
+                        hitSlop={actionHitSlop}
                         labelStyle={styles.actionLabel}
                         mode="text"
                         onPress={() => onConfirm({ date: nav.resolvedDate })}
@@ -375,6 +385,7 @@ function DatePickerDocked({
 function DockedStepper({
   disabled,
   label,
+  locale,
   onNext,
   onOpen,
   onPrev,
@@ -384,6 +395,7 @@ function DockedStepper({
 }: {
   disabled: boolean
   label: string
+  locale: string
   onNext: () => void
   onOpen: () => void
   onPrev: () => void
@@ -393,6 +405,36 @@ function DockedStepper({
 }) {
   const interaction = useMenuButtonInteraction(disabled, open)
   const theme = useTheme()
+  const chooseLabel = getTranslation(
+    locale,
+    unit === 'year' ? 'chooseYear' : 'chooseMonth',
+    unit === 'year' ? 'Choose a year' : 'Choose a month'
+  )
+  const chooseHint = getTranslation(
+    locale,
+    unit === 'year' ? 'chooseYearHint' : 'chooseMonthHint',
+    unit === 'year' ? 'Shift+Y' : 'Shift+M'
+  )
+  const nextLabel = getTranslation(
+    locale,
+    unit === 'year' ? 'nextYear' : 'nextMonth',
+    unit === 'year' ? 'Next year' : 'Next month'
+  )
+  const nextHint = getTranslation(
+    locale,
+    unit === 'year' ? 'nextYearHint' : 'nextMonthHint',
+    unit === 'year' ? 'Shift+Page Down' : 'Page Down'
+  )
+  const previousLabel = getTranslation(
+    locale,
+    unit === 'year' ? 'previousYear' : 'previousMonth',
+    unit === 'year' ? 'Previous year' : 'Previous month'
+  )
+  const previousHint = getTranslation(
+    locale,
+    unit === 'year' ? 'previousYearHint' : 'previousMonthHint',
+    unit === 'year' ? 'Shift+Page Up' : 'Page Up'
+  )
 
   const labelColor = disabled
     ? theme.colors.onSurface
@@ -411,10 +453,12 @@ function DockedStepper({
 
   const menuControl = (
     <Pressable
+      accessibilityLabel={`${label}, ${chooseLabel}`}
       accessibilityRole="button"
       accessibilityState={{ disabled, expanded: open }}
       disabled={disabled}
       hitSlop={menuHitSlop}
+      {...shortcutAttrs(`${label}, ${chooseLabel}`, chooseHint)}
       onBlur={interaction.onBlur}
       onFocus={interaction.onFocus}
       onHoverIn={interaction.onHoverIn}
@@ -450,9 +494,9 @@ function DockedStepper({
   return (
     <View style={styles.stepper}>
       <IconButton
-        accessibilityLabel={getTranslation(undefined, 'previous')}
+        accessibilityLabel={previousLabel}
         hitSlop={iconHitSlop}
-        icon="chevron-left"
+        icon={chevronIcon('previous')}
         iconColor={labelColor}
         iconSize={24}
         onPress={onPrev}
@@ -462,12 +506,13 @@ function DockedStepper({
             ? 'react-native-paper-dates-docked-prev'
             : 'react-native-paper-dates-docked-year-prev'
         }
+        {...shortcutAttrs(previousLabel, previousHint)}
       />
       {menuControl}
       <IconButton
-        accessibilityLabel={getTranslation(undefined, 'next')}
+        accessibilityLabel={nextLabel}
         hitSlop={iconHitSlop}
-        icon="chevron-right"
+        icon={chevronIcon('next')}
         iconColor={labelColor}
         iconSize={24}
         onPress={onNext}
@@ -477,6 +522,7 @@ function DockedStepper({
             ? 'react-native-paper-dates-docked-next'
             : 'react-native-paper-dates-docked-year-next'
         }
+        {...shortcutAttrs(nextLabel, nextHint)}
       />
     </View>
   )

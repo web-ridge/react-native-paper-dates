@@ -1,4 +1,7 @@
 import { render } from '@testing-library/react-native'
+import { I18nManager } from 'react-native'
+
+import { iconName } from '../../testUtils'
 
 import CalendarHeader, {
   layoutScrollbarWidth,
@@ -95,3 +98,45 @@ function probe(offsetWidth: number, clientWidth: number) {
     },
   }
 }
+
+it('labels the month arrows and flips them in RTL', async () => {
+  const wasRtl = I18nManager.isRTL
+  try {
+    const header = await render(
+      <CalendarHeader
+        locale="en"
+        onNext={() => null}
+        onPrev={() => null}
+        scrollMode="horizontal"
+        startWeekOnMonday={false}
+      />
+    )
+    const previous = header.getByTestId('react-native-paper-dates-prev-month')
+    const next = header.getByTestId('react-native-paper-dates-next-month')
+    expect(previous).toHaveProp('accessibilityLabel', 'Previous month')
+    expect(previous).toHaveProp('accessibilityHint', 'Page Up')
+    expect(iconName(previous)).toBe('chevron-left')
+    expect(next).toHaveProp('accessibilityLabel', 'Next month')
+    expect(next).toHaveProp('accessibilityHint', 'Page Down')
+    expect(iconName(next)).toBe('chevron-right')
+
+    I18nManager.isRTL = true
+    const rtl = await render(
+      <CalendarHeader
+        locale="en"
+        onNext={() => null}
+        onPrev={() => null}
+        scrollMode="horizontal"
+        startWeekOnMonday={false}
+      />
+    )
+    expect(
+      iconName(rtl.getByTestId('react-native-paper-dates-prev-month'))
+    ).toBe('chevron-right')
+    expect(
+      iconName(rtl.getByTestId('react-native-paper-dates-next-month'))
+    ).toBe('chevron-left')
+  } finally {
+    I18nManager.isRTL = wasRtl
+  }
+})
