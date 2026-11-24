@@ -51,6 +51,60 @@ export function addMonths(date: Date, count: number) {
   return n2
 }
 
+export function addCalendarDays(date: Date, count: number) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate() + count)
+}
+
+export function isCalendarDayUnavailable(
+  day: Date,
+  {
+    disabledDates,
+    endDate,
+    endYear,
+    startDate,
+    startYear,
+  }: {
+    disabledDates?: Date[]
+    endDate?: Date | null
+    endYear?: number
+    startDate?: Date | null
+    startYear?: number
+  } = {}
+) {
+  const year = day.getFullYear()
+  if (startYear !== undefined && year < startYear) return true
+  if (endYear !== undefined && year > endYear) return true
+  if (disabledDates?.some((disabled) => areDatesOnSameDay(day, disabled))) {
+    return true
+  }
+  const startUnix =
+    startDate instanceof Date ? dateToUnix(getStartOfDay(startDate)) : undefined
+  const endUnix =
+    endDate instanceof Date ? dateToUnix(getEndOfDay(endDate)) : undefined
+  return !isDateWithinOptionalRange(day, { endUnix, startUnix })
+}
+
+export function moveEnabledCalendarDay(
+  from: Date,
+  deltaDays: number,
+  bounds?: {
+    disabledDates?: Date[]
+    endDate?: Date | null
+    endYear?: number
+    startDate?: Date | null
+    startYear?: number
+  }
+) {
+  if (deltaDays === 0) return from
+  const direction = Math.sign(deltaDays)
+  let candidate = addCalendarDays(from, deltaDays)
+  for (let step = 0; step < 400; step += 1) {
+    if (!isCalendarDayUnavailable(candidate, bounds)) return candidate
+    candidate = addCalendarDays(candidate, direction)
+  }
+  return undefined
+}
+
 export function adjacentDayKey(
   year: number,
   month: number,

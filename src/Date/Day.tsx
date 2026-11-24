@@ -1,9 +1,11 @@
-import { memo, useCallback, useMemo, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
+  Platform,
   Pressable,
   type StyleProp,
   StyleSheet,
   View,
+  type ViewInstance,
   type ViewStyle,
 } from 'react-native'
 import { Text } from 'react-native-paper'
@@ -11,6 +13,7 @@ import { Text } from 'react-native-paper'
 import { formatDayLabel } from '../shared/intl'
 import StateLayer from '../shared/StateLayer'
 import { type PaperTheme, withAlpha } from '../shared/utils'
+import { getTranslation } from '../translations/utils'
 import FocusRing from '../Time/FocusRing'
 import { dayCellSize, daySize } from './dateUtils'
 import DayRange from './DayRange'
@@ -30,6 +33,30 @@ const contentPositions = StyleSheet.create({
   'top-right': { alignItems: 'flex-end', justifyContent: 'flex-start' },
 })
 
+export type DayRangeRole = 'end' | 'in-range' | 'start' | 'start-end'
+
+function dayAccessibilityLabel(
+  locale: string | undefined,
+  year: number,
+  month: number,
+  day: number,
+  isToday: boolean,
+  rangeRole?: DayRangeRole
+) {
+  const parts = [formatDayLabel(locale, year, month, day)]
+  if (isToday) parts.push(getTranslation(locale, 'today', 'Today'))
+  if (rangeRole === 'start' || rangeRole === 'start-end') {
+    parts.push(getTranslation(locale, 'startDate', 'Start date'))
+  }
+  if (rangeRole === 'end' || rangeRole === 'start-end') {
+    parts.push(getTranslation(locale, 'endDate', 'End date'))
+  }
+  if (rangeRole === 'in-range') {
+    parts.push(getTranslation(locale, 'inRange', 'In selected range'))
+  }
+  return parts.join(', ')
+}
+
 function Day(props: {
   cellHeight?: number
   day: number
@@ -40,6 +67,7 @@ function Day(props: {
   focused?: boolean
   indicatorSize?: number
   inRange: boolean
+  isTabStop?: boolean
   isToday: boolean
   leftCrop: boolean
   locale?: string
@@ -47,6 +75,7 @@ function Day(props: {
   onPressDate: (date: Date) => void
   outside?: boolean
   primaryColor: string
+  rangeRole?: DayRangeRole
   rightCrop: boolean
   selectColor: string
   selected: boolean
@@ -57,6 +86,7 @@ function Day(props: {
   const [hovered, setHovered] = useState(false)
   const [inputFocused, setInputFocused] = useState(false)
   const [pressed, setPressed] = useState(false)
+  const pressableRef = useRef<ViewInstance>(null)
 
   const {
     cellHeight = dayCellSize,
@@ -68,6 +98,7 @@ function Day(props: {
     focused,
     indicatorSize = daySize,
     inRange,
+    isTabStop,
     isToday,
     leftCrop,
     locale,
@@ -75,6 +106,7 @@ function Day(props: {
     onPressDate,
     outside,
     primaryColor,
+    rangeRole,
     rightCrop,
     selectColor,
     selected,
@@ -84,9 +116,15 @@ function Day(props: {
   } = props
 
   const accessibilityLabel = useMemo(
-    () => formatDayLabel(locale, year, month, day),
-    [day, locale, month, year]
+    () => dayAccessibilityLabel(locale, year, month, day, isToday, rangeRole),
+    [day, isToday, locale, month, rangeRole, year]
   )
+
+  useEffect(() => {
+    if (focused && Platform.OS === 'web') {
+      pressableRef.current?.focus?.()
+    }
+  }, [focused])
 
   const baseTextColor = selected
     ? textColorOnPrimary
@@ -127,10 +165,15 @@ function Day(props: {
         selectColor={selectColor}
       />
       <Pressable
+        ref={pressableRef}
         accessibilityLabel={accessibilityLabel}
         accessibilityRole="button"
         accessibilityState={{ disabled, selected }}
+        {...(Platform.OS === 'web' && isToday
+          ? { 'aria-current': 'date' as const }
+          : null)}
         disabled={disabled}
+        {...(Platform.OS === 'web' ? { tabIndex: isTabStop ? 0 : -1 } : null)}
         onBlur={() => setInputFocused(false)}
         onFocus={() => setInputFocused(true)}
         onHoverIn={() => setHovered(true)}

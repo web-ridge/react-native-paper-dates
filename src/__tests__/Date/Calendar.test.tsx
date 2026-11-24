@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react-native'
-import { Dimensions } from 'react-native'
+import { Dimensions, I18nManager } from 'react-native'
 
 import Calendar from '../../Date/Calendar'
 import {
@@ -150,6 +150,63 @@ it('moves the focused day from the keyboard and clamps a short month', async () 
     expect(first.getByText('January 2026')).toBeTruthy()
     expect(first.queryByText('December 2025')).toBeNull()
   } finally {
+    keys.restore()
+  }
+})
+
+it('moves the focused day with the arrow keys and skips disabled dates', async () => {
+  const keys = installDateKeyListener()
+  const layout = { height: 400, width: 320 }
+  const wasRtl = I18nManager.isRTL
+  try {
+    const screen = await render(
+      <Calendar
+        date={new Date(2026, 0, 15)}
+        endYear={2026}
+        initialLayout={layout}
+        locale="en"
+        mode="single"
+        onChange={() => null}
+        startYear={2026}
+        validRange={{ disabledDates: [new Date(2026, 0, 16)] }}
+      />
+    )
+
+    expect(
+      screen.getByTestId('react-native-paper-dates-day-2026-0-15').props
+        .tabIndex
+    ).toBe(0)
+    expect(
+      screen.getByTestId('react-native-paper-dates-day-2026-0-17').props
+        .tabIndex
+    ).toBe(-1)
+
+    await keys.press('ArrowRight')
+    expect(dayFocused(screen, 'react-native-paper-dates-day-2026-0-17')).toBe(
+      true
+    )
+
+    await keys.press('ArrowDown')
+    expect(dayFocused(screen, 'react-native-paper-dates-day-2026-0-24')).toBe(
+      true
+    )
+
+    I18nManager.isRTL = true
+    const rtl = await render(
+      <Calendar
+        date={new Date(2026, 0, 15)}
+        endYear={2026}
+        initialLayout={layout}
+        locale="en"
+        mode="single"
+        onChange={() => null}
+        startYear={2026}
+      />
+    )
+    await keys.press('ArrowLeft')
+    expect(dayFocused(rtl, 'react-native-paper-dates-day-2026-0-16')).toBe(true)
+  } finally {
+    I18nManager.isRTL = wasRtl
     keys.restore()
   }
 })

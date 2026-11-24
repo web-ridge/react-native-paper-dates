@@ -12,6 +12,7 @@ import { formatMonth } from '../shared/intl'
 import { sharedStyles } from '../shared/styles'
 import { useTextColorOnPrimary } from '../shared/utils'
 import {
+  areDatesOnSameDay,
   calendarDateKey,
   calendarDayKey,
   calendarOrdinal,
@@ -26,7 +27,7 @@ import {
   shiftMonth,
   showWeekDay,
 } from './dateUtils'
-import Day, { EmptyDay } from './Day'
+import Day, { type DayRangeRole, EmptyDay } from './Day'
 import { useRangeChecker } from './inputFormat'
 import { calendarArrowSize, calendarControlInset } from './CalendarHeader'
 import {
@@ -89,6 +90,23 @@ type MonthDayProps = CalendarMode &
   }
 
 const menuButtonInset = 8
+
+function dayRangeRole(
+  mode: ModeType | undefined,
+  cell: Date,
+  startDate?: CalendarDate,
+  endDate?: CalendarDate,
+  inRange?: boolean
+): DayRangeRole | undefined {
+  if (mode !== 'range') return undefined
+  const isStart = areDatesOnSameDay(cell, startDate)
+  const isEnd = areDatesOnSameDay(cell, endDate)
+  if (isStart && isEnd) return 'start-end'
+  if (isStart) return 'start'
+  if (isEnd) return 'end'
+  if (inRange) return 'in-range'
+  return undefined
+}
 
 function Month(props: BaseMonthProps & CalendarMode) {
   const theme = useTheme()
@@ -298,6 +316,15 @@ function MonthDays({
   const todayDay = today.day
   const todayMonth = today.month
   const todayYear = today.year
+  const tabStopKey = focusedDate
+    ? calendarDateKey(focusedDate)
+    : date
+      ? calendarDateKey(date)
+      : startDate
+        ? calendarDateKey(startDate)
+        : dates?.[0]
+          ? calendarDateKey(dates[0])
+          : calendarDayKey(todayYear, todayMonth, todayDay)
   const validEndOrdinal = validEnd ? dateOrdinal(validEnd) : undefined
   const validStartOrdinal = validStart ? dateOrdinal(validStart) : undefined
   const weeks = []
@@ -386,6 +413,10 @@ function MonthDays({
           }
           indicatorSize={indicatorSize}
           inRange={marks.inRange}
+          isTabStop={
+            !disabled &&
+            calendarDayKey(cellYear, cellMonth, cellDay) === tabStopKey
+          }
           isToday={
             cellYear === todayYear &&
             cellMonth === todayMonth &&
@@ -397,6 +428,13 @@ function MonthDays({
           onPressDate={onDayPress}
           outside={outside}
           primaryColor={primaryColor}
+          rangeRole={dayRangeRole(
+            mode,
+            new Date(cellYear, cellMonth, cellDay),
+            startDate,
+            endDate,
+            marks.inRange
+          )}
           rightCrop={marks.rightCrop}
           selectColor={selectColor}
           selected={marks.selected}

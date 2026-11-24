@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Platform } from 'react-native'
+import { I18nManager, Platform } from 'react-native'
 
 import { isTextField, useLatest } from '../shared/utils'
 import { getDaysInMonth } from './dateUtils'
@@ -8,6 +8,7 @@ type DateKeyHandlers = {
   getVisibleMonth: () => Date
   onConfirm?: () => void
   onFocusDate?: (date: Date) => void
+  onMoveDay?: (deltaDays: number) => void
   onMoveFocus?: (deltaMonths: number) => void
   onMoveMonth?: (deltaMonths: number) => void
   onOpenMonthMenu?: () => void
@@ -32,6 +33,29 @@ export function useDatePickerKeys(enabled: boolean, handlers: DateKeyHandlers) {
       if (key === 'Enter') {
         event.preventDefault()
         handlersRef.current.onConfirm?.()
+        return
+      }
+      if (
+        key === 'ArrowDown' ||
+        key === 'ArrowLeft' ||
+        key === 'ArrowRight' ||
+        key === 'ArrowUp'
+      ) {
+        event.preventDefault()
+        const rtl = I18nManager.isRTL
+        const delta =
+          key === 'ArrowUp'
+            ? -7
+            : key === 'ArrowDown'
+              ? 7
+              : key === 'ArrowLeft'
+                ? rtl
+                  ? 1
+                  : -1
+                : rtl
+                  ? -1
+                  : 1
+        handlersRef.current.onMoveDay?.(delta)
         return
       }
       if (key === 'Home' || key === 'End') {

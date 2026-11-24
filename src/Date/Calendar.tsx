@@ -11,6 +11,7 @@ import {
   defaultStartYear,
   getDaysInMonth,
   getInitialIndex,
+  moveEnabledCalendarDay,
 } from './dateUtils'
 import Month from './Month'
 import MonthCalendar, {
@@ -162,6 +163,23 @@ function ScrollCalendar(
   const selectColorValue = themeColor(selectColor)
   const startWeekOnMondayValue = startWeekOnMonday || false
 
+  const onMoveDay = (deltaDays: number) => {
+    const next = moveEnabledCalendarDay(
+      focusedDate || date || new Date(),
+      deltaDays,
+      {
+        disabledDates: validRange?.disabledDates,
+        endDate: validRange?.endDate,
+        endYear,
+        startDate: validRange?.startDate,
+        startYear,
+      }
+    )
+    if (!next) return
+    setFocusedDate(next)
+    setNavigateDate(next)
+  }
+
   const onMoveFocus = (delta: number) => {
     setFocusedDate((prev) => addMonths(prev || date || new Date(), delta))
   }
@@ -288,6 +306,7 @@ function ScrollCalendar(
         keyboardEnabled={keyboardEnabled}
         onFocusDate={setFocusedDate}
         onKeyboardConfirm={onKeyboardConfirm}
+        onMoveDay={onMoveDay}
         onMoveFocus={onMoveFocus}
         onOpenMonthMenu={onOpenMonthMenu}
         onOpenYearMenu={onOpenYearMenu}

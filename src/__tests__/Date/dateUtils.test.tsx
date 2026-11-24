@@ -1,6 +1,7 @@
 import { renderHook } from '@testing-library/react-native'
 
 import {
+  addCalendarDays,
   addMonths,
   areDatesOnSameDay,
   dateToUnix,
@@ -19,6 +20,7 @@ import {
   gregorianWeekday,
   isDateWithinOptionalRange,
   isLeapYear,
+  moveEnabledCalendarDay,
   parseLooseDate,
   resolveCalendarDay,
   showWeekDay,
@@ -340,4 +342,23 @@ describe('dateUtils', () => {
     )
     expect(thai.result.current).toBe('DD/MM/YYYY')
   })
+})
+
+it('moves to the next enabled day and stays inside the bounds', () => {
+  expect(addCalendarDays(new Date(2026, 0, 15), 1)).toEqual(
+    new Date(2026, 0, 16)
+  )
+  expect(
+    moveEnabledCalendarDay(new Date(2026, 0, 15), 1, {
+      disabledDates: [new Date(2026, 0, 16)],
+    })
+  ).toEqual(new Date(2026, 0, 17))
+  expect(
+    moveEnabledCalendarDay(new Date(2026, 11, 31), 1, { endYear: 2026 })
+  ).toBeUndefined()
+  expect(
+    moveEnabledCalendarDay(new Date(2026, 0, 15), 7, {
+      endDate: new Date(2026, 0, 20),
+    })
+  ).toBeUndefined()
 })

@@ -12,6 +12,7 @@ import {
   defaultStartYear,
   getEndOfDay,
   getInitialIndex,
+  moveEnabledCalendarDay,
 } from './dateUtils'
 import DayNames from './DayNames'
 import Month from './Month'
@@ -236,6 +237,20 @@ function MonthCalendar({
       onMonthConfirmRef.current?.({ date: resolvedDateRef.current })
     },
     onFocusDate: showMonth,
+    onMoveDay: (deltaDays) => {
+      const next = moveEnabledCalendarDay(
+        focusedDate || draft || visibleMonth,
+        deltaDays,
+        {
+          disabledDates: validRange?.disabledDates,
+          endDate: validRange?.endDate,
+          endYear: resolvedEndYear,
+          startDate: validRange?.startDate,
+          startYear: resolvedStartYear,
+        }
+      )
+      if (next) showMonth(next)
+    },
     onMoveFocus: (delta) => {
       const base = focusedDate || draft || visibleMonth
       const next = addMonths(base, delta)

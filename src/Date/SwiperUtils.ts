@@ -35,6 +35,7 @@ export type SwiperProps = {
   keyboardEnabled?: boolean
   onFocusDate?: (date: Date) => void
   onKeyboardConfirm?: () => void
+  onMoveDay?: (deltaDays: number) => void
   onMoveFocus?: (deltaMonths: number) => void
   onOpenMonthMenu?: () => void
   onOpenYearMenu?: () => void
@@ -188,6 +189,7 @@ export function useCalendarKeyboard(
     endYear,
     onConfirm,
     onFocusDate,
+    onMoveDay,
     onMoveFocus,
     onMoveMonth,
     onOpenMonthMenu,
@@ -197,6 +199,7 @@ export function useCalendarKeyboard(
     endYear?: number
     onConfirm?: () => void
     onFocusDate?: (date: Date) => void
+    onMoveDay?: (deltaDays: number) => void
     onMoveFocus?: (deltaMonths: number) => void
     onMoveMonth: (delta: number) => void
     onOpenMonthMenu?: () => void
@@ -209,6 +212,7 @@ export function useCalendarKeyboard(
       addMonths(new Date(), getRealIndex(indexRef.current, startYear, endYear)),
     onConfirm,
     onFocusDate,
+    onMoveDay,
     onMoveFocus,
     onMoveMonth,
     onOpenMonthMenu,

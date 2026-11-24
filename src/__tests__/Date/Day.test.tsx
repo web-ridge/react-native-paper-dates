@@ -1,5 +1,5 @@
 import { act, render } from '@testing-library/react-native'
-import { StyleSheet } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 import { LightTheme, Text } from 'react-native-paper'
 
 import type { DayContentRenderer } from '../../Date/Calendar'
@@ -245,4 +245,46 @@ it('renders day content at the given position with extra styles', async () => {
     justifyContent: 'flex-start',
     marginTop: -3,
   })
+})
+
+it('announces today and range roles and keeps one web tab stop', async () => {
+  const previous = Platform.OS
+  Platform.OS = 'web'
+  try {
+    const today = await render(
+      <Day {...defaultProps} isTabStop isToday locale="en-US" />
+    )
+    const todayButton = today.getByTestId(
+      'react-native-paper-dates-day-2025-0-15'
+    )
+    expect(todayButton.props.accessibilityLabel).toContain('Today')
+    expect(todayButton.props['aria-current']).toBe('date')
+    expect(todayButton.props.tabIndex).toBe(0)
+
+    const start = await render(
+      <Day
+        {...defaultProps}
+        inRange
+        leftCrop
+        locale="en-US"
+        rangeRole="start"
+        selected
+      />
+    )
+    expect(
+      start.getByTestId('react-native-paper-dates-day-2025-0-15').props
+        .accessibilityLabel
+    ).toContain('Start date')
+
+    const inside = await render(
+      <Day {...defaultProps} inRange locale="en-US" rangeRole="in-range" />
+    )
+    const insideButton = inside.getByTestId(
+      'react-native-paper-dates-day-2025-0-15'
+    )
+    expect(insideButton.props.accessibilityLabel).toContain('In selected range')
+    expect(insideButton.props.tabIndex).toBe(-1)
+  } finally {
+    Platform.OS = previous
+  }
 })
