@@ -2,8 +2,19 @@
 
 exports[`renders AnalogClock 1`] = `
 <View
+  accessibilityActions={
+    [
+      {
+        "name": "decrement",
+      },
+      {
+        "name": "increment",
+      },
+    ]
+  }
   accessible={true}
   focusable={true}
+  onAccessibilityAction={[Function]}
   onBlur={[Function]}
   onFocus={[Function]}
   onMouseLeave={[Function]}
@@ -36,6 +47,7 @@ exports[`renders AnalogClock 1`] = `
       },
     ]
   }
+  testID="react-native-paper-dates-clock"
 >
   <View
     pointerEvents="none"

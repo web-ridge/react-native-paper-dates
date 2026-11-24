@@ -1,4 +1,4 @@
-import { memo, useContext, useRef, useState } from 'react'
+import { memo, useContext, useEffect, useRef, useState } from 'react'
 import {
   GestureResponderEvent,
   PanResponder,
@@ -10,7 +10,7 @@ import {
 import { useTheme } from 'react-native-paper'
 
 import { DisplayModeContext } from '../contexts/DisplayModeContext'
-import { useLatest, withAlpha } from '../shared/utils'
+import { isTextField, useLatest, withAlpha } from '../shared/utils'
 import AnalogClockHours from './AnalogClockHours'
 import AnalogClockMinutes from './AnalogClockMinutes'
 import AnimatedClockSwitcher from './AnimatedClockSwitcher'
@@ -91,6 +91,22 @@ function returnTrue() {
   return true
 }
 
+function stepClockValue(
+  focused: PossibleClockTypes,
+  hours: number,
+  is24Hour: boolean,
+  minutes: number,
+  delta: number
+) {
+  if (focused === clockTypes.hours) {
+    if (is24Hour) {
+      return { hours: (hours + delta + 24) % 24, minutes }
+    }
+    return { hours: ((hours - 1 + delta + 12) % 12) + 1, minutes }
+  }
+  return { hours, minutes: (minutes + delta + 60) % 60 }
+}
+
 function selectionAt(
   x: number,
   y: number,
@@ -148,6 +164,45 @@ function AnalogClock({
     onChange,
   })
 
+  const clockActive = !disabled && (clockFocused || numberFocused)
+
+  useEffect(() => {
+    const target = globalThis.window
+    if (
+      !clockActive ||
+      Platform.OS !== 'web' ||
+      !target?.addEventListener ||
+      !target.removeEventListener
+    ) {
+      return
+    }
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (isTextField(event.target)) return
+      const key = event.key
+      if (
+        key !== 'ArrowDown' &&
+        key !== 'ArrowLeft' &&
+        key !== 'ArrowRight' &&
+        key !== 'ArrowUp'
+      ) {
+        return
+      }
+      event.preventDefault()
+      const current = latest.current
+      current.onChange(
+        stepClockValue(
+          current.focused,
+          current.hours,
+          current.is24Hour,
+          current.minutes,
+          key === 'ArrowDown' || key === 'ArrowRight' ? 1 : -1
+        )
+      )
+    }
+    target.addEventListener('keydown', onKeyDown)
+    return () => target.removeEventListener('keydown', onKeyDown)
+  }, [clockActive, latest])
+
   const [panResponder] = useState(() => createClockResponder(latest))
 
   const degreesPerNumber = focused === clockTypes.hours ? 30 : 6
@@ -192,8 +247,25 @@ function AnalogClock({
             'pointerEvents': 'none' as const,
           }
         : null)}
+      accessibilityActions={
+        disabled ? undefined : [{ name: 'decrement' }, { name: 'increment' }]
+      }
       accessible
       focusable={!disabled}
+      onAccessibilityAction={(event) => {
+        if (disabled) return
+        const name = event.nativeEvent.actionName
+        if (name !== 'decrement' && name !== 'increment') return
+        onChange(
+          stepClockValue(
+            focused,
+            hours,
+            is24Hour,
+            minutes,
+            name === 'increment' ? 1 : -1
+          )
+        )
+      }}
       onBlur={(event) => {
         if (Platform.OS === 'web' && !isOwnFocus(event, clockRef.current)) {
           return
@@ -227,6 +299,7 @@ function AnalogClock({
           backgroundColor: theme.colors.surfaceContainerLowest,
         },
       ]}
+      testID="react-native-paper-dates-clock"
     >
       <View
         pointerEvents="none"
