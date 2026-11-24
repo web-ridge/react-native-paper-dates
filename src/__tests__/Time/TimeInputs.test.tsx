@@ -266,3 +266,21 @@ it('keeps the typed-invalid error when a consumer error is also set', async () =
   expect(screen.queryByText('Invalid time')).toBeNull()
   expect(hour).toHaveProp('aria-invalid', true)
 })
+
+it('auto-focuses the hour field', async () => {
+  const screen = await render(
+    <TimeInputs
+      autoFocus
+      focused="hours"
+      hours={12}
+      inputType="keyboard"
+      is24Hour
+      locale="en"
+      minutes={45}
+      onChange={() => null}
+      onFocusInput={() => null}
+    />
+  )
+  expect(screen.getByLabelText('Hour')).toHaveProp('autoFocus', true)
+  expect(screen.getByLabelText('Minute')).not.toHaveProp('autoFocus', true)
+})

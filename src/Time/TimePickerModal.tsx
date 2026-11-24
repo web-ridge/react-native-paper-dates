@@ -244,6 +244,7 @@ export function TimePickerModal({
             >
               <TimePickerPlacementContext.Provider value="modal">
                 <TimePicker
+                  autoFocus={visible}
                   clockIcon={clockIcon}
                   disabled={disabled}
                   error={error}

@@ -32,6 +32,7 @@ import {
 } from './timeUtils'
 
 function TimeInputs({
+  autoFocus,
   disabled,
   error,
   errorText,
@@ -46,6 +47,7 @@ function TimeInputs({
   onFocusInput,
   onInputInvalidChange,
 }: {
+  autoFocus?: boolean
   disabled?: boolean
   error?: boolean
   errorText?: string
@@ -121,6 +123,7 @@ function TimeInputs({
         <TimeInput
           ref={startInput}
           accessibilityLabel={hourLabel}
+          autoFocus={autoFocus}
           blurOnSubmit={false}
           clockType={clockTypes.hours}
           disabled={disabled}

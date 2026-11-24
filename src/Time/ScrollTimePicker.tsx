@@ -15,6 +15,7 @@ import {
   StyleSheet,
   type TextStyle,
   View,
+  type ViewInstance,
   type ViewStyle,
 } from 'react-native'
 import { IconButton, useTheme } from 'react-native-paper'
@@ -486,6 +487,7 @@ function wrappedWheelOffset(offset: number, count: number, copies: number) {
 }
 
 function ScrollTimePicker({
+  autoFocus,
   disabled,
   error,
   errorText,
@@ -501,6 +503,7 @@ function ScrollTimePicker({
   showKeyboardToggle = true,
   visible = true,
 }: {
+  autoFocus?: boolean
   disabled?: boolean
   error?: boolean
   errorText?: string
@@ -538,6 +541,7 @@ function ScrollTimePicker({
       <View style={styles.row}>
         <ScrollWheel
           accessibilityLabel={rangeLabel(hourLabel, hourValues)}
+          autoFocus={autoFocus}
           disabled={disabled}
           error={error}
           fieldHeight={fieldHeight}
@@ -648,6 +652,7 @@ function KeyboardToggle({
 
 function ScrollWheel({
   accessibilityLabel,
+  autoFocus,
   disabled,
   error,
   fieldHeight,
@@ -660,6 +665,7 @@ function ScrollWheel({
   visible,
 }: {
   accessibilityLabel: string
+  autoFocus?: boolean
   disabled?: boolean
   error?: boolean
   fieldHeight: number
@@ -677,6 +683,7 @@ function ScrollWheel({
   const [offscreenCopiesMounted, setOffscreenCopiesMounted] = useState(false)
   const [pressed, setPressed] = useState(false)
 
+  const controlRef = useRef<ViewInstance>(null)
   const coasting = useRef(false)
   const draggingRef = useRef(false)
   const epochRef = useRef(0)
@@ -869,6 +876,11 @@ function ScrollWheel({
     lastEmitted.current = value
   }, [value])
 
+  useEffect(() => {
+    if (!autoFocus || disabled || !visible) return
+    controlRef.current?.focus?.()
+  }, [autoFocus, disabled, visible])
+
   useLayoutEffect(() => {
     if (!visible) return
     if (draggingRef.current || touchingRef.current || draggingValue.get()) {
@@ -1004,6 +1016,7 @@ function ScrollWheel({
     <View style={[styles.wheelFrame, { height: fieldHeight }]}>
       <FocusRing focused={focused && !disabled} radius={radius} />
       <View
+        ref={controlRef}
         accessibilityActions={[{ name: 'increment' }, { name: 'decrement' }]}
         accessibilityLabel={accessibilityLabel}
         accessibilityRole="adjustable"

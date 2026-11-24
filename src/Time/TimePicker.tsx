@@ -25,6 +25,7 @@ import {
 } from './timeUtils'
 
 function TimePicker({
+  autoFocus,
   clockIcon = 'clock',
   disabled,
   error,
@@ -43,6 +44,7 @@ function TimePicker({
   scrollIcon = 'gesture-swipe-vertical',
   use24HourClock,
 }: {
+  autoFocus?: boolean
   clockIcon?: string
   disabled?: boolean
   error?: boolean
@@ -86,6 +88,7 @@ function TimePicker({
 
   const fields = (
     <TimeInputs
+      autoFocus={autoFocus}
       disabled={disabled}
       error={error}
       errorText={errorText}
@@ -182,6 +185,7 @@ function TimePicker({
           style={showingScroll ? undefined : styles.hiddenScroll}
         >
           <ScrollTimePicker
+            autoFocus={autoFocus}
             disabled={disabled}
             error={error}
             errorText={errorText}

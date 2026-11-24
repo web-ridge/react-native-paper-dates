@@ -4,6 +4,8 @@ import {
   type Ref,
   type RefAttributes,
   useEffect,
+  useImperativeHandle,
+  useRef,
   useState,
 } from 'react'
 import {
@@ -16,6 +18,7 @@ import {
   type TextInputProps,
   type TextStyle,
   View,
+  type ViewInstance,
   type ViewStyle,
 } from 'react-native'
 import { useTheme } from 'react-native-paper'
@@ -58,6 +61,7 @@ interface TimeInputProps extends Omit<
 function TimeInput(
   {
     accessibilityLabel,
+    autoFocus,
     clockType,
     disabled,
     error,
@@ -75,6 +79,8 @@ function TimeInput(
   ref: Ref<TextInputInstance>
 ) {
   const theme = useTheme()
+  const inputRef = useRef<TextInputInstance>(null)
+  const selectorRef = useRef<ViewInstance>(null)
 
   const [controlledValue, setControlledValue] = useState(`${value}`)
   const [editing, setEditing] = useState(false)
@@ -91,6 +97,30 @@ function TimeInput(
 
   const iosInput = Platform.OS === 'ios'
   const isPicker = inputType === inputTypes.picker
+
+  useImperativeHandle(ref, () => {
+    return {
+      blur: () => {
+        inputRef.current?.blur?.()
+      },
+      focus: () => {
+        if (isPicker) {
+          selectorRef.current?.focus?.()
+          return
+        }
+        inputRef.current?.focus?.()
+      },
+      isFocused: () => inputRef.current?.isFocused?.() ?? false,
+    } as TextInputInstance
+  })
+
+  useEffect(() => {
+    if (!autoFocus || disabled) return
+    if (isPicker) {
+      selectorRef.current?.focus?.()
+    }
+  }, [autoFocus, disabled, isPicker])
+
   const fieldFocused = isPicker ? selectorFocused : inputFocused
   const fieldHeight = isPicker ? timeSelectorHeight : timeInputFieldHeight
   const highlighted = isPicker ? pressed : inputFocused
@@ -219,8 +249,9 @@ function TimeInput(
             </Text>
           ) : (
             <TextInput
-              ref={ref}
+              ref={inputRef}
               accessibilityLabel={accessibilityLabel}
+              autoFocus={autoFocus}
               accessibilityState={disabled ? { disabled: true } : undefined}
               aria-invalid={showError || undefined}
               keyboardAppearance={theme.dark ? 'dark' : 'default'}
@@ -280,6 +311,7 @@ function TimeInput(
           )}
           {isPicker ? (
             <Pressable
+              ref={selectorRef}
               accessibilityLabel={accessibilityLabel}
               accessibilityRole="button"
               accessibilityState={{
