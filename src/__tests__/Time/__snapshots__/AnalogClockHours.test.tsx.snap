@@ -10,7 +10,7 @@ exports[`renders AnalogClockHours 1`] = `
         },
       ]
     }
-    accessibilityLabel="Hour 1 of 24"
+    accessibilityLabel="Hour 1"
     accessibilityRole="button"
     accessibilityState={
       {
@@ -112,7 +112,7 @@ exports[`renders AnalogClockHours 1`] = `
         },
       ]
     }
-    accessibilityLabel="Hour 2 of 24"
+    accessibilityLabel="Hour 2"
     accessibilityRole="button"
     accessibilityState={
       {
@@ -214,7 +214,7 @@ exports[`renders AnalogClockHours 1`] = `
         },
       ]
     }
-    accessibilityLabel="Hour 3 of 24"
+    accessibilityLabel="Hour 3"
     accessibilityRole="button"
     accessibilityState={
       {
@@ -316,7 +316,7 @@ exports[`renders AnalogClockHours 1`] = `
         },
       ]
     }
-    accessibilityLabel="Hour 4 of 24"
+    accessibilityLabel="Hour 4"
     accessibilityRole="button"
     accessibilityState={
       {
@@ -418,7 +418,7 @@ exports[`renders AnalogClockHours 1`] = `
         },
       ]
     }
-    accessibilityLabel="Hour 5 of 24"
+    accessibilityLabel="Hour 5"
     accessibilityRole="button"
     accessibilityState={
       {
@@ -520,7 +520,7 @@ exports[`renders AnalogClockHours 1`] = `
         },
       ]
     }
-    accessibilityLabel="Hour 6 of 24"
+    accessibilityLabel="Hour 6"
     accessibilityRole="button"
     accessibilityState={
       {
@@ -622,7 +622,7 @@ exports[`renders AnalogClockHours 1`] = `
         },
       ]
     }
-    accessibilityLabel="Hour 7 of 24"
+    accessibilityLabel="Hour 7"
     accessibilityRole="button"
     accessibilityState={
       {
@@ -724,7 +724,7 @@ exports[`renders AnalogClockHours 1`] = `
         },
       ]
     }
-    accessibilityLabel="Hour 8 of 24"
+    accessibilityLabel="Hour 8"
     accessibilityRole="button"
     accessibilityState={
       {
@@ -826,7 +826,7 @@ exports[`renders AnalogClockHours 1`] = `
         },
       ]
     }
-    accessibilityLabel="Hour 9 of 24"
+    accessibilityLabel="Hour 9"
     accessibilityRole="button"
     accessibilityState={
       {
@@ -928,7 +928,7 @@ exports[`renders AnalogClockHours 1`] = `
         },
       ]
     }
-    accessibilityLabel="Hour 10 of 24"
+    accessibilityLabel="Hour 10"
     accessibilityRole="button"
     accessibilityState={
       {
@@ -1030,7 +1030,7 @@ exports[`renders AnalogClockHours 1`] = `
         },
       ]
     }
-    accessibilityLabel="Hour 11 of 24"
+    accessibilityLabel="Hour 11"
     accessibilityRole="button"
     accessibilityState={
       {
@@ -1132,7 +1132,7 @@ exports[`renders AnalogClockHours 1`] = `
         },
       ]
     }
-    accessibilityLabel="Hour 0 of 24"
+    accessibilityLabel="Hour 0"
     accessibilityRole="button"
     accessibilityState={
       {
@@ -1234,7 +1234,7 @@ exports[`renders AnalogClockHours 1`] = `
         },
       ]
     }
-    accessibilityLabel="Hour 13 of 24"
+    accessibilityLabel="Hour 13"
     accessibilityRole="button"
     accessibilityState={
       {
@@ -1336,7 +1336,7 @@ exports[`renders AnalogClockHours 1`] = `
         },
       ]
     }
-    accessibilityLabel="Hour 14 of 24"
+    accessibilityLabel="Hour 14"
     accessibilityRole="button"
     accessibilityState={
       {
@@ -1438,7 +1438,7 @@ exports[`renders AnalogClockHours 1`] = `
         },
       ]
     }
-    accessibilityLabel="Hour 15 of 24"
+    accessibilityLabel="Hour 15"
     accessibilityRole="button"
     accessibilityState={
       {
@@ -1540,7 +1540,7 @@ exports[`renders AnalogClockHours 1`] = `
         },
       ]
     }
-    accessibilityLabel="Hour 16 of 24"
+    accessibilityLabel="Hour 16"
     accessibilityRole="button"
     accessibilityState={
       {
@@ -1642,7 +1642,7 @@ exports[`renders AnalogClockHours 1`] = `
         },
       ]
     }
-    accessibilityLabel="Hour 17 of 24"
+    accessibilityLabel="Hour 17"
     accessibilityRole="button"
     accessibilityState={
       {
@@ -1744,7 +1744,7 @@ exports[`renders AnalogClockHours 1`] = `
         },
       ]
     }
-    accessibilityLabel="Hour 18 of 24"
+    accessibilityLabel="Hour 18"
     accessibilityRole="button"
     accessibilityState={
       {
@@ -1846,7 +1846,7 @@ exports[`renders AnalogClockHours 1`] = `
         },
       ]
     }
-    accessibilityLabel="Hour 19 of 24"
+    accessibilityLabel="Hour 19"
     accessibilityRole="button"
     accessibilityState={
       {
@@ -1948,7 +1948,7 @@ exports[`renders AnalogClockHours 1`] = `
         },
       ]
     }
-    accessibilityLabel="Hour 20 of 24"
+    accessibilityLabel="Hour 20"
     accessibilityRole="button"
     accessibilityState={
       {
@@ -2050,7 +2050,7 @@ exports[`renders AnalogClockHours 1`] = `
         },
       ]
     }
-    accessibilityLabel="Hour 21 of 24"
+    accessibilityLabel="Hour 21"
     accessibilityRole="button"
     accessibilityState={
       {
@@ -2152,7 +2152,7 @@ exports[`renders AnalogClockHours 1`] = `
         },
       ]
     }
-    accessibilityLabel="Hour 22 of 24"
+    accessibilityLabel="Hour 22"
     accessibilityRole="button"
     accessibilityState={
       {
@@ -2254,7 +2254,7 @@ exports[`renders AnalogClockHours 1`] = `
         },
       ]
     }
-    accessibilityLabel="Hour 23 of 24"
+    accessibilityLabel="Hour 23"
     accessibilityRole="button"
     accessibilityState={
       {
@@ -2356,7 +2356,7 @@ exports[`renders AnalogClockHours 1`] = `
         },
       ]
     }
-    accessibilityLabel="Hour 12 of 24"
+    accessibilityLabel="Hour 12"
     accessibilityRole="button"
     accessibilityState={
       {

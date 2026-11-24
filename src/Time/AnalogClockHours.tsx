@@ -39,17 +39,18 @@ function AnalogClockHours({
 }) {
   const theme = useTheme()
 
+  const hourAt = getTranslation(locale, 'hourAt', (hour) => `Hour ${hour}`)
   const hourOf = getTranslation(
     locale,
     'hourOf',
     (hour, count) => `Hour ${hour} of ${count}`
   )
+  const hourLabel = (hourValue: number) =>
+    is24Hour ? hourAt(hourValue) : hourOf(hourValue, 12)
 
   const selectedColor = disabled
     ? withAlpha(theme.colors.onPrimary, disabledContentOpacity)
     : theme.colors.onPrimary
-
-  const total = is24Hour ? 24 : 12
 
   const unselectedColor = disabled
     ? withAlpha(theme.colors.onSurface, disabledContentOpacity)
@@ -64,7 +65,7 @@ function AnalogClockHours({
         return (
           <ClockNumber
             key={index}
-            accessibilityLabel={hourOf(hourValue, total)}
+            accessibilityLabel={hourLabel(hourValue)}
             color={selected ? selectedColor : unselectedColor}
             disabled={disabled}
             hovered={hoveredHour === hourValue}
@@ -86,7 +87,7 @@ function AnalogClockHours({
             return (
               <ClockNumber
                 key={index}
-                accessibilityLabel={hourOf(hourValue, total)}
+                accessibilityLabel={hourLabel(hourValue)}
                 color={selected ? selectedColor : unselectedColor}
                 disabled={disabled}
                 hovered={hoveredHour === hourValue}

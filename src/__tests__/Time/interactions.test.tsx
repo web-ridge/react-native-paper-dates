@@ -267,11 +267,9 @@ describe('analog clock', () => {
         onChange={onChange}
       />
     )
-    await fireEvent(
-      inner.getByLabelText('Hour 15 of 24'),
-      'accessibilityAction',
-      { nativeEvent: { actionName: 'activate' } }
-    )
+    await fireEvent(inner.getByLabelText('Hour 15'), 'accessibilityAction', {
+      nativeEvent: { actionName: 'activate' },
+    })
 
     const minuteClock = await render(
       <AnalogClock
