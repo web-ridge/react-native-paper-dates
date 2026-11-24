@@ -54,8 +54,8 @@ export type DatePickerDockedProps = {
   visible: boolean
 }
 
-const actionHeight = 36
-const actionPaddingBottom = 12
+const actionHeight = 40
+const actionPaddingBottom = 8
 const actionPaddingTop = 8
 const anchorGap = 8
 const cardWidth = 360

@@ -98,7 +98,13 @@ export default function DatePickerModalContentHeader(
   const textFont = theme.fonts.labelLarge
 
   return (
-    <View style={[styles.header, compactRange && styles.compactRangeHeader]}>
+    <View
+      style={[
+        styles.header,
+        isRange && styles.rangeHeader,
+        compactRange && styles.compactRangeHeader,
+      ]}
+    >
       <View style={styles.supporting}>
         <Text
           maxFontSizeMultiplier={1.5}
@@ -265,6 +271,8 @@ const styles = StyleSheet.create({
     width: 48,
   },
   header: {
+    justifyContent: 'space-between',
+    minHeight: 120,
     paddingBottom: 12,
     paddingEnd: 12,
     paddingStart: 24,
@@ -294,6 +302,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: '50%',
     transform: [{ translateY: -24 }],
+  },
+  rangeHeader: {
+    minHeight: 128,
   },
   rangeHeaderContent: {
     height: 40,

@@ -28,7 +28,12 @@ import TimeInput from '../../Time/TimeInput'
 import TimeInputs from '../../Time/TimeInputs'
 import TimePicker from '../../Time/TimePicker'
 import TimePickerModal from '../../Time/TimePickerModal'
-import { scrollItemHeight, timeSeparatorWidth } from '../../Time/timeUtils'
+import {
+  modalScrollFieldHeight,
+  scrollFieldHeight,
+  scrollItemHeight,
+  timeSeparatorWidth,
+} from '../../Time/timeUtils'
 import en from '../../translations/en'
 import { registerTranslation } from '../../translations/utils'
 
@@ -958,12 +963,14 @@ describe('time picker modal', () => {
     await modal.unmount()
   })
 
-  it('sizes the scroll field 140dp inline and 120dp in the modal (M3 Expressive)', async () => {
+  it('sizes inline and modal scroll fields to 120dp (M3 Expressive)', async () => {
     const wheelPadding = (screen: Awaited<ReturnType<typeof render>>) =>
       StyleSheet.flatten(
         screen.getByTestId('time-scroll-hours', { includeHiddenElements: true })
           .props.contentContainerStyle
       ).paddingVertical
+    expect(scrollFieldHeight).toBe(120)
+    expect(modalScrollFieldHeight).toBe(120)
     const inline = await render(
       <TimePicker
         focused="hours"
@@ -976,7 +983,9 @@ describe('time picker modal', () => {
         use24HourClock
       />
     )
-    expect(wheelPadding(inline)).toBe((140 - scrollItemHeight) / 2)
+    expect(wheelPadding(inline)).toBe(
+      (scrollFieldHeight - scrollItemHeight) / 2
+    )
     await inline.unmount()
     const modal = await render(
       <TimePickerModal
@@ -990,7 +999,9 @@ describe('time picker modal', () => {
         visible
       />
     )
-    expect(wheelPadding(modal)).toBe((120 - scrollItemHeight) / 2)
+    expect(wheelPadding(modal)).toBe(
+      (modalScrollFieldHeight - scrollItemHeight) / 2
+    )
     await modal.unmount()
   })
 

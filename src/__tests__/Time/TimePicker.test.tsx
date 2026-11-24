@@ -78,10 +78,16 @@ it('shows a consumer error on the scroll wheels', async () => {
     'aria-invalid',
     true
   )
+  expect(screen.getByTestId('time-scroll-hours-control')).toHaveStyle({
+    height: 120,
+  })
   expect(screen.getByTestId('time-scroll-minutes-control')).toHaveProp(
     'aria-invalid',
     true
   )
+  expect(screen.getByTestId('time-scroll-minutes-control')).toHaveStyle({
+    height: 120,
+  })
   expect(screen.getByRole('radio', { name: 'AM' })).toHaveProp(
     'aria-invalid',
     true

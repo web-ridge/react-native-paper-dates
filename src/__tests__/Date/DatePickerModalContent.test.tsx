@@ -22,6 +22,43 @@ it('renders DatePickerModalContent', async () => {
   expect(toJSON()).toMatchSnapshot()
 })
 
+it('sizes the calendar header to 120dp, or 128dp for a range', async () => {
+  const metrics = {
+    frame: { height: 1366, width: 1024, x: 0, y: 0 },
+    insets: { bottom: 0, left: 0, right: 0, top: 0 },
+  }
+  const single = await render(
+    <SafeAreaProvider initialMetrics={metrics}>
+      <DatePickerModalContent
+        date={new Date(2026, 10, 16)}
+        locale="en"
+        mode="single"
+        onConfirm={() => null}
+        onDismiss={() => null}
+      />
+    </SafeAreaProvider>
+  )
+  expect(single.getByText('Select date').parent?.parent).toHaveStyle({
+    minHeight: 120,
+  })
+
+  const range = await render(
+    <SafeAreaProvider initialMetrics={metrics}>
+      <DatePickerModalContent
+        endDate={undefined}
+        locale="en"
+        mode="range"
+        onConfirm={() => null}
+        onDismiss={() => null}
+        startDate={new Date(2026, 10, 16)}
+      />
+    </SafeAreaProvider>
+  )
+  expect(range.getByText('Select period').parent?.parent).toHaveStyle({
+    minHeight: 128,
+  })
+})
+
 it('does not confirm a range that starts and ends on the same day', async () => {
   const saved = Dimensions.get('window')
   await act(async () => {

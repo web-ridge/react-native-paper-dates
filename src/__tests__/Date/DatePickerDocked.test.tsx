@@ -29,6 +29,27 @@ function hoverHandlers(node: { unstable_fiber?: Fiber | null }) {
   throw new Error('missing hover handlers')
 }
 
+function styleTreeHas(
+  node: {
+    children?: Array<object | string>
+    props?: { style?: unknown }
+  },
+  expected: Record<string, unknown>
+): boolean {
+  const merged: Record<string, unknown> = {}
+  for (const style of [node.props?.style].flat(Infinity)) {
+    if (style && typeof style === 'object' && !Array.isArray(style)) {
+      Object.assign(merged, style)
+    }
+  }
+  if (Object.entries(expected).every(([key, value]) => merged[key] === value)) {
+    return true
+  }
+  return (node.children ?? []).some(
+    (child) => typeof child !== 'string' && styleTreeHas(child, expected)
+  )
+}
+
 it('docks the menu under the field and keeps it on screen', () => {
   expect(
     placeDockedCard({
@@ -49,6 +70,33 @@ it('docks the menu under the field and keeps it on screen', () => {
       windowWidth: 1200,
     }).left
   ).toBe(780)
+})
+
+it('uses 40dp Cancel and OK buttons in the 56dp docked action row', async () => {
+  const docked = await render(
+    <DatePickerDocked
+      anchor={anchor}
+      date={new Date(2026, 5, 2)}
+      locale="en"
+      onConfirm={jest.fn()}
+      onDismiss={jest.fn()}
+      visible
+    />
+  )
+  const cancel = docked.getByTestId('react-native-paper-dates-docked-cancel')
+  const confirm = docked.getByTestId('react-native-paper-dates-docked-confirm')
+  expect(styleTreeHas(cancel, { minHeight: 40 })).toBe(true)
+  expect(styleTreeHas(confirm, { minHeight: 40 })).toBe(true)
+  expect(
+    styleTreeHas(
+      docked.getByTestId('react-native-paper-dates-docked-surface'),
+      {
+        gap: 16,
+        paddingBottom: 8,
+        paddingTop: 8,
+      }
+    )
+  ).toBe(true)
 })
 
 it('docks a calendar under the field and confirms or dismisses it', async () => {
