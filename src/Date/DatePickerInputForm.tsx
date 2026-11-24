@@ -438,7 +438,6 @@ function DateField({
         onValidationError={onValidationError}
         placeholder={placeholder}
         returnKeyType={returnKeyType}
-        supportingText=""
         testID={testID}
         theme={{ colors: { background: surface } }}
         validRange={validRange}

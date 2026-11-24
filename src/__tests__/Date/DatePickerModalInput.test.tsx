@@ -302,3 +302,20 @@ it('shows a collapsed title-large range headline that can wrap', async () => {
   expect(headline).toHaveProp('numberOfLines', 2)
   expect(style.lineHeight).toBe(28)
 })
+
+it('shows the date format as helper text under the modal fields', async () => {
+  const screen = await render(
+    host(
+      <DatePickerModalInput
+        locale="en"
+        mode="single"
+        onConfirm={() => null}
+        onDismiss={() => null}
+        visible
+      />
+    )
+  )
+  expect(
+    screen.getByText('MM/DD/YYYY', { includeHiddenElements: true })
+  ).toBeTruthy()
+})
