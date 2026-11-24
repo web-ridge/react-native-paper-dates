@@ -5,6 +5,10 @@ type TranslationResolver = (locale: string | undefined) => TranslationsType
 export type TranslationsType = {
   am: string
   cancel: string
+  chooseMonth: string
+  chooseMonthHint: string
+  chooseYear: string
+  chooseYearHint: string
   close: string
   confirm: string
   dateIsDisabled: string
@@ -12,7 +16,9 @@ export type TranslationsType = {
   enterDate: string
   enterDates: string
   hour: string
+  hourAt: (hour: number) => string
   hourOf: (hour: number, total: number) => string
+  inRange: string
   invalidTime: string
   minute: string
   minuteOf: (minute: number, total: number) => string
@@ -20,15 +26,24 @@ export type TranslationsType = {
   mustBeHigherThan: (date: string) => string
   mustBeLowerThan: (date: string) => string
   next: string
+  nextMonth: string
+  nextMonthHint: string
+  nextYear: string
+  nextYearHint: string
   notAccordingToDateFormat: (inputFormat: string) => string
   pickDateFromCalendar: string
   pm: string
   previous: string
+  previousMonth: string
+  previousMonthHint: string
+  previousYear: string
+  previousYearHint: string
   save: string
   selectMultiple: string
   selectRange: string
   selectSingle: string
   startDate: string
+  today: string
   toggleClock: string
   toggleKeyboard: string
   toggleScroll: string
