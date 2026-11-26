@@ -28,15 +28,32 @@ These APIs are unchanged:
 - Imports of `DatePickerModal`, `DatePickerInput`, `TimePicker`, and `TimePickerModal` from `react-native-paper-dates` (`DatePickerDocked` and `DatePickerModalInput` are new exports)
 - `registerTranslation` for custom locales. English is registered by default.
 - Wrapping the app in `PaperProvider` and `SafeAreaProvider`
-- Props on `DatePickerModal`, `TimePicker`, and `TimePickerModal`
 
-`DatePickerModal` `mode` is still `'single' | 'range' | 'multiple'`. Do not rename those props to `variant`.
+`DatePickerModal` `mode` is still `'single' | 'range' | 'multiple'`. Do not rename those props to `variant`. Some defaults and optional props on `DatePickerModal`, `TimePicker`, and `TimePickerModal` did change; see [Prop defaults](#prop-defaults).
 
 ## Removed top-level exports
 
 - **Built-in locale objects (`ar` through `zhTW`):** no longer re-exported from `react-native-paper-dates`. Import a locale module for its side effect instead, for example `import 'react-native-paper-dates/translations/fr'` (only `en` is registered automatically).
 - **`Calendar` and `DatePickerModalContent`:** no longer exported from the root entrypoint. Use `DatePickerModal` or `DatePickerDocked` instead.
 
+## Prop defaults
+
+### TimePickerModal
+
+- `confirmLabel` defaults to `'OK'` (was `'Ok'`).
+- `clockIcon` defaults to `'clock'` (was `'clock-outline'`). `keyboardIcon` defaults to `'keyboard'` (was `'keyboard-outline'`).
+- There is no default label. The header is omitted unless you pass `label`. It previously defaulted to `'Select time'`, or `'Enter time'` on the keyboard view.
+- `animationType` no longer defaults to `'none'`. If you omit it, the modal uses `'fade'` on iOS and Android and `'none'` on web. When the user prefers reduced motion, a `'slide'` fallback is changed to `'fade'`.
+- New optional props: `disabled`, `error`, `errorText`, and `scrollIcon` (default `'gesture-swipe-vertical'`). `defaultInputType` also accepts `'scroll'`.
+
+### TimePicker
+
+- New optional props: `autoFocus`, `clockIcon` (default `'clock'`), `disabled`, `error`, `errorText`, `keyboardIcon` (default `'keyboard'`), `onInputInvalidChange`, `onToggleKeyboard`, and `scrollIcon` (default `'gesture-swipe-vertical'`). `inputType` also accepts `'scroll'`.
+
+### DatePickerModal
+
+- If you omit `animationType`, the default is still `'slide'` on iOS and Android and `'none'` on web. When the user prefers reduced motion, that `'slide'` fallback is changed to `'fade'`.
+- New optional props include `displayMode` (`'calendar'` or `'input'`) and `layout` (`'card'`).
 
 ## Date range input defaults
 
