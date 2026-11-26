@@ -12,17 +12,16 @@
     "@release-it/conventional-changelog": "^12.0.2",
     "@testing-library/react-native": "^14.1.0",
     "@types/jest": "^30.0.0",
-    "@types/node": "^26.6.6",
-    "@types/react": "~19.3.0",
+    "@types/react": "~19.3.3",
     "@typescript/native": "npm:typescript@7.0.2",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "10",
     "eslint-plugin-react-hooks": "7",
     "jest": "^30.5.2",
-    "lefthook": "^2.2.2",
+    "lefthook": "^2.2.4",
     "oxfmt": "^0.80.0",
     "oxlint": "^1.95.0",
-    "oxlint-plugin-react-native": "^0.2.45",
+    "oxlint-plugin-react-native": "^0.2.46",
     "pod-install": "^1.1.0",
     "react": "19.3.1",
     "react-native": "0.88.1",
@@ -127,9 +126,6 @@
     },
     "npm": {
       "publish": true,
-      "publishArgs": [
-        "--registry=https://registry.npmjs.org/"
-      ],
       "skipChecks": true
     },
     "plugins": {
@@ -152,8 +148,8 @@
     "prepack": "bob build",
     "prepare": "lefthook install",
     "release": "release-it --ci --github.autoGenerate",
-    "test": "jest --config=jest.config.js --watchAll=false",
-    "test-watch": "jest --config=jest.config.js --watchAll",
+    "test": "jest --watchAll=false",
+    "test-watch": "jest --watchAll",
     "typecheck": "tsc --noEmit"
   },
   "source": "src/index",

@@ -8,4 +8,4 @@ pre-commit:
     typecheck:
       run: bun run typecheck
     test:
-      run: bunx jest --config=jest.config.js --watchAll=false
+      run: bun run test

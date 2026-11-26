@@ -1,7 +1,6 @@
 process.env.TZ = 'GMT'
 
 module.exports = {
-  collectCoverage: false,
   collectCoverageFrom: [
     '**/src/**',
     '!**/src/__tests__/**',
@@ -18,9 +17,8 @@ module.exports = {
   resolver: 'react-native-reanimated/jest/resolver',
   setupFiles: ['<rootDir>/testSetup.js'],
   transform: {
-    '^.+\\.(bmp|gif|jpg|jpeg|mp4|png|psd|svg|ttf|webp)$':
+    '^.+\\.ttf$':
       require.resolve('@react-native/jest-preset/jest/assetFileTransformer.js'),
-    '^.+\\.(js|ts|tsx)$': 'babel-jest',
   },
   transformIgnorePatterns: [
     'node_modules/(?!(@react-native|@react-native-vector-icons|react-native(-.*)?|react-native-reanimated|react-native-worklets)/)',

@@ -8,18 +8,13 @@
     "correctness": "error"
   },
   "ignorePatterns": ["website/", "lib/", "coverage/"],
-  "env": {
-    "es6": true
-  },
   "globals": {
     "__DEV__": "writable"
   },
   "rules": {
     "no-unused-expressions": "off",
     "react/rules-of-hooks": "error",
-    "react/exhaustive-deps": "error",
     "react/no-unstable-nested-components": "warn",
-    "react/react-in-jsx-scope": "off",
     "react/refs": "off",
     "react/set-state-in-effect": "off",
     "react/purity": "off",

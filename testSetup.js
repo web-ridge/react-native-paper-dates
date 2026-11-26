@@ -16,17 +16,12 @@ for (const name of ['scrollTo', 'scrollToOffset', 'scrollToIndex']) {
   }
 }
 
-// Paper 6 themes use `shapes` and no longer include `roundness`. Keep a
-// numeric fallback so any leftover read does not become NaN in styles.
-const { DarkTheme, LightTheme, LocaleProvider } = require('react-native-paper')
-LightTheme.roundness = 4
-DarkTheme.roundness = 4
-
 const { registerTranslation } = require('./src/translations/utils')
 registerTranslation('en', require('./src/translations/en').default)
 
 // Text requires a locale context. A provider adds no host node, so snapshots
 // stay the component tree.
+const { LocaleProvider } = require('react-native-paper')
 const renderModule = require('@testing-library/react-native/dist/render')
 const originalRender = renderModule.render
 renderModule.render = (ui, options) => {
