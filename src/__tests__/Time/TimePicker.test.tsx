@@ -1,6 +1,7 @@
-import { render } from '@testing-library/react-native'
+import { fireEvent, render } from '@testing-library/react-native'
 
-import TimePicker from '../../Time/TimePicker'
+import TimePicker, { TimePickerView } from '../../Time/TimePicker'
+import TimePickerModal from '../../Time/TimePickerModal'
 import en from '../../translations/en'
 import { registerTranslation } from '../../translations/utils'
 
@@ -96,7 +97,7 @@ it('shows a consumer error on the scroll wheels', async () => {
 
 it('shows a consumer error on the dial fields', async () => {
   const screen = await render(
-    <TimePicker
+    <TimePickerView
       error
       errorText="Choose a time from 9:00 AM"
       focused="hours"
@@ -111,4 +112,44 @@ it('shows a consumer error on the dial fields', async () => {
 
   expect(screen.getByText('Choose a time from 9:00 AM')).toBeTruthy()
   expect(screen.getByLabelText('Hour')).toHaveProp('aria-invalid', true)
+})
+
+it('does not render the dial and falls back to scroll when inputType is picker', async () => {
+  const screen = await render(
+    <TimePicker
+      focused="hours"
+      hours={8}
+      // @ts-expect-error picker is not a valid inline input type
+      inputType="picker"
+      locale="en"
+      minutes={0}
+      onChange={() => null}
+      onFocusInput={() => null}
+    />
+  )
+
+  expect(
+    screen.getByTestId('time-scroll-hours', { includeHiddenElements: true })
+  ).toBeTruthy()
+  expect(screen.queryByTestId('react-native-paper-dates-clock')).toBeNull()
+})
+
+it('keeps the dial in TimePickerModal and toggles to keyboard and back', async () => {
+  const modal = await render(
+    <TimePickerModal
+      hours={9}
+      locale="en"
+      minutes={45}
+      onConfirm={() => null}
+      onDismiss={() => null}
+      visible
+    />
+  )
+
+  expect(modal.getByTestId('react-native-paper-dates-clock')).toBeTruthy()
+  await fireEvent.press(modal.getByLabelText('Toggle input picker'))
+  expect(modal.queryByTestId('react-native-paper-dates-clock')).toBeNull()
+  expect(modal.getByLabelText('Hour')).toBeTruthy()
+  await fireEvent.press(modal.getByLabelText('Toggle dial picker'))
+  expect(modal.getByTestId('react-native-paper-dates-clock')).toBeTruthy()
 })

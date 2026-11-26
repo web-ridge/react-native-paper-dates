@@ -10,12 +10,14 @@ import TimeInputs from './TimeInputs'
 import {
   circleSize,
   getTimeInputToggleLabel,
+  type InlineInputTypes,
   inputTypes,
   periodSelectorGap,
   periodSelectorVerticalWidth,
   type PossibleClockTypes,
   type PossibleInputTypes,
   resolve24HourClock,
+  resolveInlineInputType,
   type TimeChange,
   timePickerUsesLandscape,
   timeSelectorFieldWidth,
@@ -24,26 +26,7 @@ import {
   toHourOutputFormat,
 } from './timeUtils'
 
-function TimePicker({
-  autoFocus,
-  clockIcon = 'clock',
-  disabled,
-  error,
-  errorText,
-  focused,
-  hours,
-  inputFontSize,
-  inputType,
-  keyboardIcon = 'keyboard',
-  locale,
-  minutes,
-  onChange,
-  onFocusInput,
-  onInputInvalidChange,
-  onToggleKeyboard,
-  scrollIcon = 'gesture-swipe-vertical',
-  use24HourClock,
-}: {
+type TimePickerViewProps = {
   autoFocus?: boolean
   clockIcon?: string
   disabled?: boolean
@@ -62,7 +45,28 @@ function TimePicker({
   onToggleKeyboard?: () => void
   scrollIcon?: string
   use24HourClock?: boolean
-}) {
+}
+
+const TimePickerView = memo(function TimePickerView({
+  autoFocus,
+  clockIcon = 'clock',
+  disabled,
+  error,
+  errorText,
+  focused,
+  hours,
+  inputFontSize,
+  inputType,
+  keyboardIcon = 'keyboard',
+  locale,
+  minutes,
+  onChange,
+  onFocusInput,
+  onInputInvalidChange,
+  onToggleKeyboard,
+  scrollIcon = 'gesture-swipe-vertical',
+  use24HourClock,
+}: TimePickerViewProps) {
   const dimensions = useWindowDimensions()
   const placement = useContext(TimePickerPlacementContext)
   const theme = useTheme()
@@ -258,6 +262,17 @@ function TimePicker({
       ) : null}
     </DisplayModeContext.Provider>
   )
+})
+
+function TimePicker({
+  inputType,
+  ...rest
+}: Omit<TimePickerViewProps, 'inputType'> & {
+  inputType: InlineInputTypes
+}) {
+  return (
+    <TimePickerView {...rest} inputType={resolveInlineInputType(inputType)} />
+  )
 }
 
 const styles = StyleSheet.create({
@@ -292,5 +307,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 })
+
+export { TimePickerView }
 
 export default memo(TimePicker)

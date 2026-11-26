@@ -48,6 +48,7 @@ These APIs are unchanged:
 
 ### TimePicker
 
+- **Breaking:** `inputType` no longer accepts `'picker'`. The clock dial is only available in `TimePickerModal`. Use `inputType="scroll"` or `inputType="keyboard"` on the inline `TimePicker`. Passing `'picker'` at runtime falls back to `'scroll'`.
 - New optional props: `autoFocus`, `clockIcon` (default `'clock'`), `disabled`, `error`, `errorText`, `keyboardIcon` (default `'keyboard'`), `onInputInvalidChange`, `onToggleKeyboard`, and `scrollIcon` (default `'gesture-swipe-vertical'`). `inputType` also accepts `'scroll'`.
 
 ### DatePickerModal

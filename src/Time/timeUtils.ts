@@ -6,6 +6,7 @@ import { withAlpha } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
 
 import type {
+  InlineInputTypes,
   PickerInputType,
   PossibleClockTypes,
   PossibleHourTypes,
@@ -245,6 +246,12 @@ export function resolve24HourClock(
     .includes('23')
 }
 
+export function resolveInlineInputType(inputType: string): InlineInputTypes {
+  return inputType === inputTypes.keyboard
+    ? inputTypes.keyboard
+    : inputTypes.scroll
+}
+
 export function snap(angle: number, step: number) {
   let a = angle
   while (a < 0) a += _360
@@ -413,6 +420,7 @@ export function useSwitchColors(
 }
 
 export type {
+  InlineInputTypes,
   PickerInputType,
   PossibleClockTypes,
   PossibleHourTypes,

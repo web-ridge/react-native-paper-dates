@@ -37,7 +37,7 @@ export default function App() {
 
 ## Scroll picker
 
-`TimePicker` with `inputType="scroll"` renders the wheel inline.
+`TimePicker` with `inputType="scroll"` renders the wheel inline. Its `inputType` is `'scroll'` or `'keyboard'`. The dial is only available in `TimePickerModal`. Passing `inputType="picker"` to `TimePicker` falls back to `'scroll'`.
 
 ```jsx playground
 import { useState } from 'react';

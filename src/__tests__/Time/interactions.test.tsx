@@ -26,7 +26,7 @@ import {
 } from '../../Time/ScrollTimePicker'
 import TimeInput from '../../Time/TimeInput'
 import TimeInputs from '../../Time/TimeInputs'
-import TimePicker from '../../Time/TimePicker'
+import TimePicker, { TimePickerView } from '../../Time/TimePicker'
 import TimePickerModal from '../../Time/TimePickerModal'
 import {
   modalScrollFieldHeight,
@@ -752,7 +752,7 @@ describe('time picker modal', () => {
     })
 
     await render(
-      <TimePicker
+      <TimePickerView
         focused="minutes"
         hours={0}
         inputType="picker"
@@ -2282,7 +2282,7 @@ describe('disabled time picker', () => {
       await setWindow(800, 900)
       const dial = await render(
         <ThemeProvider theme={theme}>
-          <TimePicker
+          <TimePickerView
             disabled
             focused="hours"
             hours={9}

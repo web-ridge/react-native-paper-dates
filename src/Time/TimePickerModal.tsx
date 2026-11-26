@@ -17,7 +17,7 @@ import ModalScrim from '../shared/ModalScrim'
 import { useModalAnimation } from '../shared/motion'
 import { sharedStyles } from '../shared/styles'
 import { displayCase, supportedOrientations } from '../shared/utils'
-import TimePicker from './TimePicker'
+import { TimePickerView } from './TimePicker'
 import {
   clockTypes,
   getTimeInputToggleLabel,
@@ -243,7 +243,7 @@ export function TimePickerModal({
               ]}
             >
               <TimePickerPlacementContext.Provider value="modal">
-                <TimePicker
+                <TimePickerView
                   autoFocus={visible}
                   clockIcon={clockIcon}
                   disabled={disabled}

@@ -9,7 +9,7 @@ import AnalogClock from '../Time/AnalogClock'
 import AmPmSwitcher from '../Time/AmPmSwitcher'
 import ScrollTimePicker from '../Time/ScrollTimePicker'
 import TimeInput from '../Time/TimeInput'
-import TimePicker from '../Time/TimePicker'
+import TimePicker, { TimePickerView } from '../Time/TimePicker'
 import TimePickerModal from '../Time/TimePickerModal'
 import {
   circleSize,
@@ -584,7 +584,7 @@ it('keeps a disabled scroll picker from opening the keyboard', async () => {
 it('reports a dial hour through the time picker', async () => {
   const onChange = jest.fn()
   const picker = await render(
-    <TimePicker
+    <TimePickerView
       focused="hours"
       hours={9}
       inputType={inputTypes.picker}
