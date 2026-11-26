@@ -54,16 +54,6 @@ export function dayFocused(
   return screen.getAllByTestId(testId).some((day) => focused(day))
 }
 
-export function iconName(node: PressableInstance) {
-  let fiber = node.unstable_fiber ?? null
-  for (let depth = 0; fiber && depth < 16; depth += 1, fiber = fiber.return) {
-    const props = fiber.memoizedProps ?? fiber.pendingProps
-    if (typeof props?.icon === 'string') return props.icon
-    if (typeof props?.source === 'string') return props.source
-  }
-  return undefined
-}
-
 export function findPress(node: PressableInstance): (() => void) | undefined {
   let fiber = node.unstable_fiber ?? null
   for (let depth = 0; fiber && depth < 12; depth += 1, fiber = fiber.return) {
@@ -71,6 +61,16 @@ export function findPress(node: PressableInstance): (() => void) | undefined {
     if (typeof props?.onPress === 'function') {
       return props.onPress as () => void
     }
+  }
+  return undefined
+}
+
+export function iconName(node: PressableInstance) {
+  let fiber = node.unstable_fiber ?? null
+  for (let depth = 0; fiber && depth < 16; depth += 1, fiber = fiber.return) {
+    const props = fiber.memoizedProps ?? fiber.pendingProps
+    if (typeof props?.icon === 'string') return props.icon
+    if (typeof props?.source === 'string') return props.source
   }
   return undefined
 }
@@ -165,7 +165,7 @@ export async function pressTestId(
   await pressNode(node)
 }
 
-async function render(
+export async function render(
   ui: ReactElement,
   options?: RenderOptions
 ): Promise<RenderResult> {
@@ -192,5 +192,3 @@ export function walkFibers(
     current = current.sibling
   }
 }
-
-export { render }
