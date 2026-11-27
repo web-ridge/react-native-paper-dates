@@ -1,12 +1,8 @@
-import { act, fireEvent, render } from '@testing-library/react-native'
+import { fireEvent, render } from '@testing-library/react-native'
 import { StyleSheet } from 'react-native'
 
 import TimePicker, { TimePickerView } from '../../Time/TimePicker'
-import {
-  scrollFieldHeight,
-  scrollItemHeight,
-  timeFieldSize,
-} from '../../Time/timeUtils'
+import { scrollFieldHeight, scrollItemHeight } from '../../Time/timeUtils'
 import TimePickerModal from '../../Time/TimePickerModal'
 import en from '../../translations/en'
 import { registerTranslation } from '../../translations/utils'
@@ -70,7 +66,8 @@ it('shows a consumer error on the scroll wheels', async () => {
     true
   )
   expect(screen.getByTestId('time-scroll-hours-control')).toHaveStyle({
-    height: 128,
+    height: 120,
+    width: 100,
   })
   expect(
     StyleSheet.flatten(
@@ -83,7 +80,8 @@ it('shows a consumer error on the scroll wheels', async () => {
     true
   )
   expect(screen.getByTestId('time-scroll-minutes-control')).toHaveStyle({
-    height: 128,
+    height: 120,
+    width: 100,
   })
   expect(screen.getByRole('radio', { name: 'AM' })).toHaveProp(
     'aria-invalid',
@@ -148,38 +146,4 @@ it('keeps the dial in TimePickerModal and toggles to keyboard and back', async (
   expect(modal.getByLabelText('Hour')).toBeTruthy()
   await fireEvent.press(modal.getByLabelText('Toggle dial picker'))
   expect(modal.getByTestId('react-native-paper-dates-clock')).toBeTruthy()
-})
-
-it('grows scroll fields when the pane is wider than the minimum row', async () => {
-  const screen = await render(
-    <TimePicker
-      focused="hours"
-      hours={9}
-      inputType="scroll"
-      locale="en"
-      minutes={45}
-      onChange={() => null}
-      onFocusInput={() => null}
-      use24HourClock
-    />
-  )
-  expect(screen.getByTestId('time-scroll-hours-control')).toHaveStyle({
-    height: scrollFieldHeight,
-  })
-
-  await act(() => {
-    screen.getByTestId('time-scroll-pane').props.onLayout({
-      nativeEvent: { layout: { height: 200, width: 500, x: 0, y: 0 } },
-    })
-  })
-
-  const grown = timeFieldSize({ availableWidth: 500, is24Hour: true })
-  expect(screen.getByTestId('time-scroll-hours-control')).toHaveStyle({
-    height: grown.height,
-    width: grown.width,
-  })
-  expect(screen.getByTestId('time-scroll-minutes-control')).toHaveStyle({
-    height: grown.height,
-    width: grown.width,
-  })
 })

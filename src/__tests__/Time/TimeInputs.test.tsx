@@ -1,10 +1,9 @@
-import { act, fireEvent, render } from '@testing-library/react-native'
+import { fireEvent, render } from '@testing-library/react-native'
 import type { ComponentProps } from 'react'
 import { Dimensions, StyleSheet } from 'react-native'
 
 import TimeInputs from '../../Time/TimeInputs'
 import {
-  timeFieldSize,
   timeInputFieldHeight,
   timeSelectorHeight,
   timeSelectorWidth,
@@ -191,47 +190,27 @@ it('auto-focuses the hour field', async () => {
   expect(screen.getByLabelText('Minute')).not.toHaveProp('autoFocus', true)
 })
 
-it('grows keyboard fields with the pane and leaves dial fields at the token size', async () => {
-  const keyboard = await render(
-    <TimeInputs
-      focused="hours"
-      hours={6}
-      inputType="keyboard"
-      is24Hour
-      locale="en"
-      minutes={40}
-      onChange={() => null}
-      onFocusInput={() => null}
-    />
-  )
+it('keeps keyboard and dial fields at the 100 by 120 token size', async () => {
+  const keyboard = await renderInputs({
+    hours: 6,
+    is24Hour: true,
+    minutes: 40,
+  })
   expect(fieldSize(keyboard.getByLabelText('Hour'))).toEqual({
     height: timeInputFieldHeight,
     width: timeSelectorWidth,
   })
-
-  await act(() => {
-    keyboard.getByTestId('time-field-pane').props.onLayout({
-      nativeEvent: { layout: { height: 200, width: 500, x: 0, y: 0 } },
-    })
+  expect(fieldSize(keyboard.getByLabelText('Minute'))).toEqual({
+    height: timeInputFieldHeight,
+    width: timeSelectorWidth,
   })
 
-  const grown = timeFieldSize({ availableWidth: 500, is24Hour: true })
-  expect(fieldSize(keyboard.getByLabelText('Hour'))).toEqual(grown)
-  expect(fieldSize(keyboard.getByLabelText('Minute'))).toEqual(grown)
-
-  const dial = await render(
-    <TimeInputs
-      focused="hours"
-      hours={6}
-      inputType="picker"
-      is24Hour={false}
-      locale="en"
-      minutes={40}
-      onChange={() => null}
-      onFocusInput={() => null}
-    />
-  )
-  expect(dial.queryByTestId('time-field-pane')).toBeNull()
+  const dial = await renderInputs({
+    hours: 6,
+    inputType: 'picker',
+    is24Hour: false,
+    minutes: 40,
+  })
   expect(fieldSize(dial.getByLabelText('Hour'))).toEqual({
     height: timeSelectorHeight,
     width: timeSelectorWidth,

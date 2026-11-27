@@ -47,7 +47,6 @@ interface TimeInputProps extends Omit<
   clockType: PossibleClockTypes
   disabled?: boolean
   error?: boolean
-  height?: number
   inputFontSize?: number
   inputType: PossibleInputTypes
   is24Hour?: boolean
@@ -66,7 +65,6 @@ function TimeInput(
     clockType,
     disabled,
     error,
-    height,
     inputFontSize,
     inputType,
     is24Hour = false,
@@ -124,8 +122,7 @@ function TimeInput(
   }, [autoFocus, disabled, isPicker])
 
   const fieldFocused = isPicker ? selectorFocused : inputFocused
-  const fieldHeight =
-    height ?? (isPicker ? timeSelectorHeight : timeInputFieldHeight)
+  const fieldHeight = isPicker ? timeSelectorHeight : timeInputFieldHeight
   const highlighted = isPicker ? pressed : inputFocused
   const outlineWidth = 2
   const contentHeight = fieldHeight - outlineWidth * 2

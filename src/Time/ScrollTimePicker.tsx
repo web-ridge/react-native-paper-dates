@@ -1,6 +1,7 @@
 import {
   memo,
   type ReactNode,
+  useContext,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -8,7 +9,6 @@ import {
 } from 'react'
 import {
   type ColorValue,
-  type LayoutChangeEvent,
   Platform,
   Pressable,
   type StyleProp,
@@ -33,6 +33,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import { scheduleOnRN } from 'react-native-worklets'
 
+import { TimePickerPlacementContext } from '../contexts/TimePickerPlacementContext'
 import StateLayer from '../shared/StateLayer'
 import { isTextField, themeColor, useLatest, withAlpha } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
@@ -47,12 +48,12 @@ import {
   disabledContentOpacity,
   getTimeInputToggleLabel,
   inputTypes,
+  modalScrollFieldHeight,
   periodSelectorGap,
   type PossibleClockTypes,
   scrollFieldHeight,
   scrollFieldWidth,
   scrollItemHeight,
-  timeFieldSize,
   type TimeChange,
   toHourInputFormat,
   toHourOutputFormat,
@@ -518,9 +519,8 @@ function ScrollTimePicker({
   showKeyboardToggle?: boolean
   visible?: boolean
 }) {
+  const placement = useContext(TimePickerPlacementContext)
   const theme = useTheme()
-
-  const [paneWidth, setPaneWidth] = useState<number | undefined>()
 
   const dotColor = disabled
     ? withAlpha(theme.colors.onSurface, disabledContentOpacity)
@@ -528,28 +528,16 @@ function ScrollTimePicker({
 
   const errorMessage = timePickerErrorMessage(error, errorText, false, locale)
 
-  const { height: fieldHeight, width: fieldWidth } = timeFieldSize({
-    availableWidth: paneWidth,
-    is24Hour,
-    minHeight: scrollFieldHeight,
-    minWidth: scrollFieldWidth,
-  })
+  const fieldHeight =
+    placement === 'modal' ? modalScrollFieldHeight : scrollFieldHeight
 
   const hourLabel = getTranslation(locale, 'hour', 'Hour')
   const hourValues = is24Hour ? hourValues24 : hourValues12
   const minuteLabel = getTranslation(locale, 'minute', 'Minute')
-
-  const onPaneLayout = (event: LayoutChangeEvent) => {
-    const next = event.nativeEvent.layout.width
-    setPaneWidth((current) =>
-      current != null && Math.abs(current - next) < 0.5 ? current : next
-    )
-  }
-
   const wheelHour = toHourInputFormat(hours, is24Hour)
 
   return (
-    <View onLayout={onPaneLayout} style={styles.pane} testID="time-scroll-pane">
+    <View>
       <View style={styles.row}>
         <ScrollWheel
           accessibilityLabel={rangeLabel(hourLabel, hourValues)}
@@ -557,7 +545,6 @@ function ScrollTimePicker({
           disabled={disabled}
           error={error}
           fieldHeight={fieldHeight}
-          fieldWidth={fieldWidth}
           focused={focused === clockTypes.hours}
           onChange={(wheelHourNext) => {
             onChange({
@@ -578,7 +565,6 @@ function ScrollTimePicker({
           disabled={disabled}
           error={error}
           fieldHeight={fieldHeight}
-          fieldWidth={fieldWidth}
           focused={focused === clockTypes.minutes}
           onChange={(nextMinutes) => {
             onChange({
@@ -670,7 +656,6 @@ function ScrollWheel({
   disabled,
   error,
   fieldHeight,
-  fieldWidth,
   focused,
   onChange,
   onFocus,
@@ -684,7 +669,6 @@ function ScrollWheel({
   disabled?: boolean
   error?: boolean
   fieldHeight: number
-  fieldWidth: number
   focused: boolean
   onChange: (value: number) => void
   onFocus: () => void
@@ -755,7 +739,6 @@ function ScrollWheel({
       backgroundColor,
       borderRadius: radius,
       height: fieldHeight,
-      width: fieldWidth,
     },
   ]
 
@@ -1030,9 +1013,7 @@ function ScrollWheel({
   }, [disabled, gestureRef, listRef, visible])
 
   return (
-    <View
-      style={[styles.wheelFrame, { height: fieldHeight, width: fieldWidth }]}
-    >
+    <View style={[styles.wheelFrame, { height: fieldHeight }]}>
       <FocusRing focused={focused && !disabled} radius={radius} />
       <View
         ref={controlRef}
@@ -1276,10 +1257,6 @@ const styles = StyleSheet.create({
   },
   keyboard: {
     margin: 0,
-  },
-  pane: {
-    alignSelf: 'stretch',
-    width: '100%',
   },
   period: {
     alignItems: 'center',

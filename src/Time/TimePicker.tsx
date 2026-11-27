@@ -186,7 +186,7 @@ const TimePickerView = memo(function TimePickerView({
             showingScroll ? 'auto' : 'no-hide-descendants'
           }
           pointerEvents={showingScroll ? 'auto' : 'none'}
-          style={showingScroll ? styles.stretch : styles.hiddenScroll}
+          style={showingScroll ? undefined : styles.hiddenScroll}
         >
           <ScrollTimePicker
             autoFocus={autoFocus}
@@ -214,7 +214,7 @@ const TimePickerView = memo(function TimePickerView({
           style={
             isLandscape && activeInputType === inputTypes.picker
               ? [styles.rootLandscape, { width: inputsWidth + clockWidth }]
-              : [styles.rootPortrait, styles.stretch]
+              : styles.rootPortrait
           }
         >
           {showReturnToPicker ? (
@@ -292,8 +292,6 @@ const styles = StyleSheet.create({
   },
   inputColumn: {
     alignItems: 'flex-start',
-    alignSelf: 'stretch',
-    width: '100%',
   },
   inputTypeToggle: {
     margin: 0,
@@ -307,10 +305,6 @@ const styles = StyleSheet.create({
   rootPortrait: {
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  stretch: {
-    alignSelf: 'stretch',
-    width: '100%',
   },
 })
 
