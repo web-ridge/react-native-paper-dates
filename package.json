@@ -64,12 +64,13 @@
     "./package.json": "./package.json"
   },
   "files": [
+    "lib",
+    "src",
     "!**/__fixtures__",
     "!**/__mocks__",
     "!**/__tests__",
-    "!lib/typescript/**/example",
-    "lib",
-    "src"
+    "!**/__tests__/**",
+    "!lib/typescript/**/example"
   ],
   "homepage": "https://github.com/web-ridge/react-native-paper-dates#readme",
   "keywords": [
