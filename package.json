@@ -98,12 +98,14 @@
       [
         "commonjs",
         {
+          "configFile": "./babel.bob.config.js",
           "esm": true
         }
       ],
       [
         "module",
         {
+          "configFile": "./babel.bob.config.js",
           "esm": true
         }
       ],
