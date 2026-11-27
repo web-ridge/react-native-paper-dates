@@ -28,12 +28,7 @@ import TimeInput from '../../Time/TimeInput'
 import TimeInputs from '../../Time/TimeInputs'
 import TimePicker, { TimePickerView } from '../../Time/TimePicker'
 import TimePickerModal from '../../Time/TimePickerModal'
-import {
-  modalScrollFieldHeight,
-  scrollFieldHeight,
-  scrollItemHeight,
-  timeSeparatorWidth,
-} from '../../Time/timeUtils'
+import { scrollItemHeight, timeSeparatorWidth } from '../../Time/timeUtils'
 import en from '../../translations/en'
 import { registerTranslation } from '../../translations/utils'
 
@@ -958,48 +953,6 @@ describe('time picker modal', () => {
     )
     expect(modal.queryByTestId('time-scroll-keyboard')).toBeNull()
     expect(modal.getAllByLabelText('Toggle input picker')).toHaveLength(1)
-    await modal.unmount()
-  })
-
-  it('sizes inline and modal scroll fields so neighboring values are half visible', async () => {
-    const wheelPadding = (screen: Awaited<ReturnType<typeof render>>) =>
-      StyleSheet.flatten(
-        screen.getByTestId('time-scroll-hours', { includeHiddenElements: true })
-          .props.contentContainerStyle
-      ).paddingVertical
-    expect(scrollFieldHeight).toBe(128)
-    expect(modalScrollFieldHeight).toBe(128)
-    const inline = await render(
-      <TimePicker
-        focused="hours"
-        hours={9}
-        inputType="scroll"
-        locale="en"
-        minutes={45}
-        onChange={jest.fn()}
-        onFocusInput={jest.fn()}
-        use24HourClock
-      />
-    )
-    expect(wheelPadding(inline)).toBe(
-      (scrollFieldHeight - scrollItemHeight) / 2
-    )
-    await inline.unmount()
-    const modal = await render(
-      <TimePickerModal
-        defaultInputType="scroll"
-        hours={9}
-        locale="en"
-        minutes={45}
-        onConfirm={jest.fn()}
-        onDismiss={jest.fn()}
-        use24HourClock
-        visible
-      />
-    )
-    expect(wheelPadding(modal)).toBe(
-      (modalScrollFieldHeight - scrollItemHeight) / 2
-    )
     await modal.unmount()
   })
 

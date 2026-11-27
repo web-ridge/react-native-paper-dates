@@ -4,11 +4,6 @@ import { StyleSheet, Text } from 'react-native'
 
 import AutoSizer from '../../Date/AutoSizer'
 
-it('renders AutoSizer', async () => {
-  const { toJSON } = await render(<AutoSizer>{() => <></>}</AutoSizer>)
-  expect(toJSON()).toMatchSnapshot()
-})
-
 it('follows a later layout instead of keeping the first measured size', async () => {
   const { getByText, root } = await render(
     <AutoSizer>

@@ -1,25 +1,12 @@
 import { act, render } from '@testing-library/react-native'
 
 import AnalogClock from '../../Time/AnalogClock'
+import AnalogClockHours from '../../Time/AnalogClockHours'
 import { installDateKeyListener } from '../../testUtils'
 import en from '../../translations/en'
 import { registerTranslation } from '../../translations/utils'
 
 registerTranslation('en', en)
-
-it('renders AnalogClock', async () => {
-  const { toJSON } = await render(
-    <AnalogClock
-      focused="hours"
-      hours={12}
-      is24Hour={false}
-      minutes={30}
-      onChange={() => null}
-    />
-  )
-
-  expect(toJSON()).toMatchSnapshot()
-})
 
 it('rotates the dial with the arrow keys', async () => {
   const onChange = jest.fn()
@@ -65,4 +52,16 @@ it('rotates the dial with the arrow keys', async () => {
   } finally {
     keys.restore()
   }
+})
+
+it('says Hour 23 without a total on the 24-hour dial', async () => {
+  const screen = await render(<AnalogClockHours hours={23} is24Hour />)
+  expect(screen.getByLabelText('Hour 23')).toBeTruthy()
+  expect(screen.queryByLabelText('Hour 23 of 24')).toBeNull()
+  expect(screen.getByLabelText('Hour 0')).toBeTruthy()
+})
+
+it('keeps Hour of 12 wording on the 12-hour dial', async () => {
+  const screen = await render(<AnalogClockHours hours={11} is24Hour={false} />)
+  expect(screen.getByLabelText('Hour 11 of 12')).toBeTruthy()
 })

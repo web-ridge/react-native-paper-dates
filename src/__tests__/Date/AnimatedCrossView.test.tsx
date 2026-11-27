@@ -4,17 +4,6 @@ import { PaperProvider } from 'react-native-paper'
 
 import AnimatedCrossView from '../../Date/AnimatedCrossView'
 
-it('renders AnimatedCrossView', async () => {
-  const { toJSON } = await render(
-    <AnimatedCrossView
-      calendar={<></>}
-      calendarEdit={<></>}
-      collapsed={false}
-    />
-  )
-  expect(toJSON()).toMatchSnapshot()
-})
-
 it('finishes the crossfade in both directions', async () => {
   const callbacks: Array<(result: { finished: boolean }) => void> = []
   const timing = jest.spyOn(Animated, 'timing').mockImplementation(

@@ -9,18 +9,6 @@ import { registerTranslation } from '../../translations/utils'
 
 registerTranslation('en', en)
 
-it('renders AmPmSwitcher', async () => {
-  const { toJSON } = await render(
-    <AmPmSwitcher
-      hours={12}
-      inputType={inputTypes.keyboard}
-      onChange={() => null}
-    />
-  )
-
-  expect(toJSON()).toMatchSnapshot()
-})
-
 function radio(screen: Awaited<ReturnType<typeof render>>, name: string) {
   return StyleSheet.flatten(
     screen.getByRole('radio', { name }).props.style

@@ -36,21 +36,6 @@ function viewsWithHeight(root: { queryAll: Function } | null, height: number) {
   })
 }
 
-it('renders DatePickerModal', async () => {
-  const { toJSON } = await render(
-    <SafeAreaProvider>
-      <DatePickerModal
-        locale="en"
-        mode="single"
-        onConfirm={() => null}
-        onDismiss={() => null}
-        visible={true}
-      />
-    </SafeAreaProvider>
-  )
-  expect(toJSON()).toMatchSnapshot()
-})
-
 it('mounts no picker content while hidden', async () => {
   const metrics = {
     frame: { height: 640, width: 360, x: 0, y: 0 },

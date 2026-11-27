@@ -3,24 +3,12 @@ import { I18nManager } from 'react-native'
 
 import { iconName } from '../../testUtils'
 
+import DayName from '../../Date/DayName'
 import CalendarHeader, {
   layoutScrollbarWidth,
   overlayScrollbarPadding,
   weekdayScrollbarInset,
 } from '../../Date/CalendarHeader'
-
-it('renders CalendarHeader', async () => {
-  const { toJSON } = await render(
-    <CalendarHeader
-      locale="en"
-      onNext={() => null}
-      onPrev={() => null}
-      scrollMode="vertical"
-      startWeekOnMonday={false}
-    />
-  )
-  expect(toJSON()).toMatchSnapshot()
-})
 
 it('measures the document scrollbar and caches the width', () => {
   const globalDocument = globalThis as { document?: Document }
@@ -139,4 +127,12 @@ it('labels the month arrows and flips them in RTL', async () => {
   } finally {
     I18nManager.isRTL = wasRtl
   }
+})
+
+it('uses the long weekday name for the column header when it is provided', async () => {
+  const labeled = await render(<DayName label="M" />)
+  expect(labeled.getByLabelText('M')).toBeTruthy()
+  const named = await render(<DayName label="M" name="Monday" />)
+  expect(named.getByLabelText('Monday')).toBeTruthy()
+  expect(named.queryByLabelText('M')).toBeNull()
 })

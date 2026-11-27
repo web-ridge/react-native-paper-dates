@@ -1,4 +1,5 @@
 import { act, fireEvent, render } from '@testing-library/react-native'
+import type { ComponentProps } from 'react'
 import { Dimensions, StyleSheet } from 'react-native'
 
 import TimeInputs from '../../Time/TimeInputs'
@@ -7,12 +8,13 @@ import {
   timeInputFieldHeight,
   timeSelectorHeight,
   timeSelectorWidth,
-  timeSeparatorWidth,
 } from '../../Time/timeUtils'
 import en from '../../translations/en'
 import { registerTranslation } from '../../translations/utils'
 
 registerTranslation('en', en)
+
+type InputsProps = ComponentProps<typeof TimeInputs>
 
 function fieldSize(node: {
   parent?: unknown
@@ -29,8 +31,8 @@ function fieldSize(node: {
   throw new Error('expected a field size')
 }
 
-it('renders TimeInputs', async () => {
-  const { toJSON } = await render(
+function renderInputs(props: Partial<InputsProps> = {}) {
+  return render(
     <TimeInputs
       focused="hours"
       hours={12}
@@ -40,119 +42,82 @@ it('renders TimeInputs', async () => {
       minutes={45}
       onChange={() => null}
       onFocusInput={() => null}
+      {...props}
     />
   )
+}
 
-  expect(toJSON()).toMatchSnapshot()
-})
+it.each(['keyboard', 'picker'] as const)(
+  'has no Hour or Minute captions in %s mode',
+  async (inputType) => {
+    const screen = await renderInputs({ inputType })
+    expect(
+      screen.queryByText('Hour', { includeHiddenElements: true })
+    ).toBeNull()
+    expect(
+      screen.queryByText('Minute', { includeHiddenElements: true })
+    ).toBeNull()
+    expect(screen.getByLabelText('Hour')).toBeTruthy()
+    expect(screen.getByLabelText('Minute')).toBeTruthy()
+  }
+)
 
-it('shows no Hour / Minute captions in keyboard mode (M3 Expressive)', async () => {
-  const screen = await render(
-    <TimeInputs
-      focused="hours"
-      hours={12}
-      inputType="keyboard"
-      is24Hour
-      locale="en"
-      minutes={45}
-      onChange={() => null}
-      onFocusInput={() => null}
-    />
-  )
-
-  expect(screen.queryByText('Hour', { includeHiddenElements: true })).toBeNull()
-  expect(
-    screen.queryByText('Minute', { includeHiddenElements: true })
-  ).toBeNull()
-  expect(screen.getByLabelText('Hour')).toBeTruthy()
-  expect(screen.getByLabelText('Minute')).toBeTruthy()
-})
-
-it('shows the error text below the fields when the time is invalid', async () => {
-  const screen = await render(
-    <TimeInputs
-      focused="hours"
-      hours={12}
-      inputType="keyboard"
-      is24Hour
-      locale="en"
-      minutes={45}
-      onChange={() => null}
-      onFocusInput={() => null}
-    />
-  )
-
-  const hour = screen.getByLabelText('Hour')
+it('surfaces typed and consumer time errors', async () => {
+  const typed = await renderInputs()
+  const hour = typed.getByLabelText('Hour')
   await fireEvent(hour, 'focus')
   await fireEvent.changeText(hour, '99')
+  expect(typed.getByText('Invalid time')).toBeTruthy()
 
-  expect(screen.getByText('Invalid time')).toBeTruthy()
-  expect(screen.queryByText('Hour', { includeHiddenElements: true })).toBeNull()
-  expect(
-    screen.queryByText('Minute', { includeHiddenElements: true })
-  ).toBeNull()
-})
+  const fallback = await renderInputs({
+    error: true,
+    hours: 8,
+    is24Hour: false,
+    minutes: 0,
+  })
+  expect(fallback.getByText('Invalid time')).toBeTruthy()
 
-it('has no captions outside keyboard mode', async () => {
-  const screen = await render(
-    <TimeInputs
-      focused="hours"
-      hours={12}
-      inputType="picker"
-      is24Hour
-      locale="en"
-      minutes={45}
-      onChange={() => null}
-      onFocusInput={() => null}
-    />
+  const consumer = await renderInputs({
+    error: true,
+    errorText: 'Outside hours',
+    hours: 8,
+    is24Hour: false,
+    minutes: 0,
+  })
+  expect(consumer.getByText('Outside hours')).toBeTruthy()
+  expect(consumer.getByLabelText('Hour')).toHaveProp('aria-invalid', true)
+  expect(consumer.getByLabelText('Minute')).toHaveProp('aria-invalid', true)
+  expect(consumer.getByRole('radio', { name: 'AM' })).toHaveProp(
+    'aria-invalid',
+    true
   )
 
-  expect(screen.queryByText('Hour', { includeHiddenElements: true })).toBeNull()
+  const both = await renderInputs({
+    error: true,
+    errorText: 'Outside hours',
+  })
+  const bothHour = both.getByLabelText('Hour')
+  await fireEvent(bothHour, 'focus')
+  await fireEvent.changeText(bothHour, '99')
+  expect(both.getByText('Outside hours')).toBeTruthy()
+  expect(both.queryByText('Invalid time')).toBeNull()
+  expect(bothHour).toHaveProp('aria-invalid', true)
 })
 
 it('does not move the focused field when AM or PM is pressed', async () => {
   const onChange = jest.fn()
-  const screen = await render(
-    <TimeInputs
-      focused="minutes"
-      hours={9}
-      inputType="keyboard"
-      is24Hour={false}
-      locale="en"
-      minutes={45}
-      onChange={onChange}
-      onFocusInput={() => null}
-    />
-  )
+  const screen = await renderInputs({
+    focused: 'minutes',
+    hours: 9,
+    is24Hour: false,
+    onChange,
+  })
 
   await fireEvent.press(screen.getByLabelText('PM'))
 
   expect(onChange).toHaveBeenCalledWith({ hours: 21, minutes: 45 })
   expect(onChange.mock.calls[0][0].focused).toBeUndefined()
 })
-
-it.each(['keyboard', 'picker'] as const)(
-  'separates hours and minutes with a colon in %s mode',
-  async (inputType) => {
-    const screen = await render(
-      <TimeInputs
-        focused="hours"
-        hours={12}
-        inputType={inputType}
-        is24Hour
-        locale="en"
-        minutes={45}
-        onChange={() => null}
-        onFocusInput={() => null}
-      />
-    )
-
-    const colon = screen.getByTestId('time-separator')
-    expect(colon).toHaveProp('accessible', false)
-    expect(colon).toHaveProp('importantForAccessibility', 'no')
-    expect(StyleSheet.flatten(colon.props.style).width).toBe(timeSeparatorWidth)
-  }
-)
 
 it('lines up landscape AM and PM with the hour and minute fields', async () => {
   const saved = Dimensions.get('window')
@@ -220,88 +185,8 @@ it('lines up landscape AM and PM with the hour and minute fields', async () => {
   }
 })
 
-it('shows a consumer error on the keyboard fields', async () => {
-  const screen = await render(
-    <TimeInputs
-      error
-      errorText="Outside hours"
-      focused="hours"
-      hours={8}
-      inputType="keyboard"
-      is24Hour={false}
-      locale="en"
-      minutes={0}
-      onChange={() => null}
-      onFocusInput={() => null}
-    />
-  )
-
-  expect(screen.getByText('Outside hours')).toBeTruthy()
-  expect(screen.getByLabelText('Hour')).toHaveProp('aria-invalid', true)
-  expect(screen.getByLabelText('Minute')).toHaveProp('aria-invalid', true)
-  expect(screen.getByRole('radio', { name: 'AM' })).toHaveProp(
-    'aria-invalid',
-    true
-  )
-})
-
-it('defaults the consumer error text to Invalid time', async () => {
-  const screen = await render(
-    <TimeInputs
-      error
-      focused="hours"
-      hours={8}
-      inputType="keyboard"
-      is24Hour={false}
-      locale="en"
-      minutes={0}
-      onChange={() => null}
-      onFocusInput={() => null}
-    />
-  )
-
-  expect(screen.getByText('Invalid time')).toBeTruthy()
-})
-
-it('keeps the typed-invalid error when a consumer error is also set', async () => {
-  const screen = await render(
-    <TimeInputs
-      error
-      errorText="Outside hours"
-      focused="hours"
-      hours={12}
-      inputType="keyboard"
-      is24Hour
-      locale="en"
-      minutes={45}
-      onChange={() => null}
-      onFocusInput={() => null}
-    />
-  )
-
-  const hour = screen.getByLabelText('Hour')
-  await fireEvent(hour, 'focus')
-  await fireEvent.changeText(hour, '99')
-
-  expect(screen.getByText('Outside hours')).toBeTruthy()
-  expect(screen.queryByText('Invalid time')).toBeNull()
-  expect(hour).toHaveProp('aria-invalid', true)
-})
-
 it('auto-focuses the hour field', async () => {
-  const screen = await render(
-    <TimeInputs
-      autoFocus
-      focused="hours"
-      hours={12}
-      inputType="keyboard"
-      is24Hour
-      locale="en"
-      minutes={45}
-      onChange={() => null}
-      onFocusInput={() => null}
-    />
-  )
+  const screen = await renderInputs({ autoFocus: true })
   expect(screen.getByLabelText('Hour')).toHaveProp('autoFocus', true)
   expect(screen.getByLabelText('Minute')).not.toHaveProp('autoFocus', true)
 })

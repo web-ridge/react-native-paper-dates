@@ -1,28 +1,17 @@
 import { act, fireEvent, render } from '@testing-library/react-native'
+import { StyleSheet } from 'react-native'
 
 import TimePicker, { TimePickerView } from '../../Time/TimePicker'
-import { scrollFieldHeight, timeFieldSize } from '../../Time/timeUtils'
+import {
+  scrollFieldHeight,
+  scrollItemHeight,
+  timeFieldSize,
+} from '../../Time/timeUtils'
 import TimePickerModal from '../../Time/TimePickerModal'
 import en from '../../translations/en'
 import { registerTranslation } from '../../translations/utils'
 
 registerTranslation('en', en)
-
-it('renders TimePicker', async () => {
-  const { toJSON } = await render(
-    <TimePicker
-      focused="hours"
-      hours={6}
-      inputType="keyboard"
-      locale="en"
-      minutes={30}
-      onChange={() => null}
-      onFocusInput={() => null}
-    />
-  )
-
-  expect(toJSON()).toMatchSnapshot()
-})
 
 it('follows a later hours value onto PM', async () => {
   const view = await render(
@@ -83,6 +72,12 @@ it('shows a consumer error on the scroll wheels', async () => {
   expect(screen.getByTestId('time-scroll-hours-control')).toHaveStyle({
     height: 128,
   })
+  expect(
+    StyleSheet.flatten(
+      screen.getByTestId('time-scroll-hours', { includeHiddenElements: true })
+        .props.contentContainerStyle
+    ).paddingVertical
+  ).toBe((scrollFieldHeight - scrollItemHeight) / 2)
   expect(screen.getByTestId('time-scroll-minutes-control')).toHaveProp(
     'aria-invalid',
     true

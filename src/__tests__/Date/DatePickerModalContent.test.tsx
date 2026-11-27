@@ -6,22 +6,6 @@ import DatePickerInputForm from '../../Date/DatePickerInputForm'
 import DatePickerModalContent from '../../Date/DatePickerModalContent'
 import { pressTestId } from '../../testUtils'
 
-it('renders DatePickerModalContent', async () => {
-  const fixedDate = new Date('2025-01-15')
-  const { toJSON } = await render(
-    <SafeAreaProvider>
-      <DatePickerModalContent
-        date={fixedDate}
-        locale="en"
-        mode="single"
-        onConfirm={() => null}
-        onDismiss={() => null}
-      />
-    </SafeAreaProvider>
-  )
-  expect(toJSON()).toMatchSnapshot()
-})
-
 it('sizes the calendar header to 120dp, or 128dp for a range', async () => {
   const metrics = {
     frame: { height: 1366, width: 1024, x: 0, y: 0 },

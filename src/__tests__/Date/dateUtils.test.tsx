@@ -32,46 +32,10 @@ import {
 } from '../../Date/inputFormat'
 
 describe('dateUtils', () => {
-  it('should return true for weekday', () => {
+  it('hides a weekday only when that day is disabled', () => {
     expect(showWeekDay(6)).toBeTruthy()
-  })
-
-  it('should return false for weekday', () => {
     expect(showWeekDay(6, [6])).toBeFalsy()
-  })
-
-  it('should return correct unix time stamp for date', () => {
-    expect(dateToUnix(new Date(2022, 1, 1))).toBe(1643673600)
-  })
-
-  it('should add specified months to date', () => {
-    const expectedResult = '2022-03-10T00:00:00.000Z'
-    expect(new Date(2022, 2, 10).toISOString()).toBe(expectedResult)
-    expect(addMonths(new Date(2022, 2, 10), 0).toISOString()).toBe(
-      expectedResult
-    )
-  })
-
-  it('should return correct days for month', () => {
-    expect(getDaysInMonth({ month: 11, year: 2022 })).toBe(31)
-  })
-
-  it('should indicate days are the same', () => {
-    expect(
-      areDatesOnSameDay(new Date(2022, 1, 1), new Date(2022, 1, 1))
-    ).toBeTruthy()
-  })
-
-  it('should indicate days are the not same', () => {
-    expect(areDatesOnSameDay(new Date(2022, 1, 1))).toBeFalsy()
-  })
-
-  it('should indicate year is a leap year', () => {
-    expect(isLeapYear({ year: 2024 })).toBeTruthy()
-  })
-
-  it('should indicate year is not a leap year', () => {
-    expect(isLeapYear({ year: 2022 })).toBeFalsy()
+    expect(showWeekDay(1, [0, 6])).toBeTruthy()
   })
 
   it('parses loose dates in locale field order', () => {
@@ -108,41 +72,23 @@ describe('dateUtils', () => {
     })
   })
 
-  it('should return correct gridCount for October 2021', () => {
-    expect(
-      getGridCountForDate(addMonths(new Date(2018, 10 - 1, 1), 12 * 3), false)
-    ).toBe(6)
-  })
-
-  it('should return correct gridCount for October 2021 with weeks starting on monday', () => {
-    expect(
-      getGridCountForDate(addMonths(new Date(2018, 10 - 1, 1), 12 * 3), true)
-    ).toBe(5)
-  })
-
-  it('should get correct difference in month between dates', () => {
-    expect(differenceInMonths(new Date(2022, 1, 1), new Date(2022, 2, 1))).toBe(
-      1
-    )
-  })
-
   it('compares each part of a calendar day', () => {
-    expect(
-      areDatesOnSameDay(new Date(2022, 1, 1), new Date(2023, 1, 1))
-    ).toBeFalsy()
-    expect(
-      areDatesOnSameDay(new Date(2022, 1, 1), new Date(2022, 2, 1))
-    ).toBeFalsy()
-    expect(
-      areDatesOnSameDay(new Date(2022, 1, 1), new Date(2022, 1, 2))
-    ).toBeFalsy()
+    const day = new Date(2022, 1, 1)
+    expect(areDatesOnSameDay(day, new Date(2022, 1, 1))).toBeTruthy()
+    expect(areDatesOnSameDay(day)).toBeFalsy()
+    expect(areDatesOnSameDay(day, new Date(2023, 1, 1))).toBeFalsy()
+    expect(areDatesOnSameDay(day, new Date(2022, 2, 1))).toBeFalsy()
+    expect(areDatesOnSameDay(day, new Date(2022, 1, 2))).toBeFalsy()
   })
 
-  it('knows century leap years and the length of February', () => {
+  it('knows century leap years and the length of a month', () => {
     expect(isLeapYear({ year: 1900 })).toBeFalsy()
     expect(isLeapYear({ year: 2000 })).toBeTruthy()
+    expect(isLeapYear({ year: 2024 })).toBeTruthy()
+    expect(isLeapYear({ year: 2022 })).toBeFalsy()
     expect(getDaysInMonth({ month: 1, year: 2024 })).toBe(29)
     expect(getDaysInMonth({ month: 1, year: 2022 })).toBe(28)
+    expect(getDaysInMonth({ month: 11, year: 2022 })).toBe(31)
   })
 
   it('resolves days outside a month the same way Date does', () => {
@@ -160,9 +106,14 @@ describe('dateUtils', () => {
     }
   })
 
-  it('clamps the day when the target month is shorter', () => {
+  it('adds months and clamps the day when the target month is shorter', () => {
+    const same = new Date(2022, 2, 10)
+    expect(addMonths(same, 0).toISOString()).toBe(same.toISOString())
     expect(addMonths(new Date(2022, 0, 31), 1).getDate()).toBe(28)
     expect(addMonths(new Date(2022, 11, 15), 1).getMonth()).toBe(0)
+    expect(differenceInMonths(new Date(2022, 1, 1), new Date(2022, 2, 1))).toBe(
+      1
+    )
   })
 
   it('matches Date.getDay across the supported year range', () => {
@@ -179,6 +130,16 @@ describe('dateUtils', () => {
   })
 
   it('keeps index grid counts aligned with calendar dates', () => {
+    const october2021 = addMonths(new Date(2018, 10 - 1, 1), 12 * 3)
+    expect(getGridCountForDate(october2021, false)).toBe(6)
+    expect(getGridCountForDate(october2021, true)).toBe(5)
+    expect(
+      getFirstDayOfMonth({ month: 9, startWeekOnMonday: false, year: 2021 })
+    ).toBeGreaterThanOrEqual(0)
+    expect(
+      getFirstDayOfMonth({ month: 9, startWeekOnMonday: true, year: 2021 })
+    ).toBeGreaterThanOrEqual(0)
+
     const start = getStartAtIndex(2020, 2030)
     for (let index = start - 24; index <= start + 24; index += 1) {
       const date = addMonths(new Date(), index - start)
@@ -191,19 +152,6 @@ describe('dateUtils', () => {
     }
   })
 
-  it('shifts the first weekday when weeks start on Monday', () => {
-    expect(
-      getFirstDayOfMonth({ month: 9, startWeekOnMonday: false, year: 2021 })
-    ).toBeGreaterThanOrEqual(0)
-    expect(
-      getFirstDayOfMonth({ month: 9, startWeekOnMonday: true, year: 2021 })
-    ).toBeGreaterThanOrEqual(0)
-  })
-
-  it('returns a weekday when that day is not disabled', () => {
-    expect(showWeekDay(1, [0, 6])).toBeTruthy()
-  })
-
   it('maps indexes onto the configured year span', () => {
     expect(getStartAtIndex(3000)).toBe(0)
     expect(getStartAtIndex()).toBeGreaterThan(0)
@@ -211,7 +159,6 @@ describe('dateUtils', () => {
     expect(getTotalMonths(2020, 2021)).toBe(24)
     expect(getBeginOffset(2020, 2030)).toBeGreaterThan(0)
     expect(getRealIndex(getStartAtIndex(2020, 2030), 2020, 2030)).toBe(0)
-    expect(getGridCount(getStartAtIndex(), false)).toBeGreaterThan(0)
     expect(getGridCount(getStartAtIndex(), false)).toBeGreaterThan(0)
     expect(getInitialIndex(undefined)).toBe(getStartAtIndex())
     expect(getInitialIndex(new Date(2024, 0, 1))).toEqual(expect.any(Number))
@@ -221,6 +168,7 @@ describe('dateUtils', () => {
     const day = new Date(2022, 5, 15, 12)
     const end = dateToUnix(getEndOfDay(new Date(2022, 5, 20)))
     const start = dateToUnix(getStartOfDay(new Date(2022, 5, 10)))
+    expect(dateToUnix(new Date(2022, 1, 1))).toBe(1643673600)
     expect(getStartOfDay(day).getHours()).toBe(0)
     expect(getEndOfDay(day).getHours()).toBe(23)
     expect(isDateWithinOptionalRange(day, {})).toBeTruthy()
