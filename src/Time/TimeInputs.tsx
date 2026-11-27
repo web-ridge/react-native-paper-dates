@@ -1,5 +1,6 @@
 import { memo, type ReactNode, useEffect, useRef, useState } from 'react'
 import {
+  type LayoutChangeEvent,
   StyleSheet,
   type TextInputInstance,
   useWindowDimensions,
@@ -23,6 +24,7 @@ import {
   type PossibleClockTypes,
   type PossibleInputTypes,
   type TimeChange,
+  timeFieldSize,
   timeInputFieldHeight,
   timePickerUsesLandscape,
   timeSelectorFieldWidth,
@@ -83,12 +85,9 @@ function TimeInputs({
     locale
   )
 
-  const fieldHeight =
-    inputType === inputTypes.keyboard
-      ? timeInputFieldHeight
-      : timeSelectorHeight
-
   const hourLabel = getTranslation(locale, 'hour', 'Hour')
+
+  const isKeyboard = inputType === inputTypes.keyboard
 
   const isLandscape = timePickerUsesLandscape(
     dimensions.width,
@@ -96,7 +95,31 @@ function TimeInputs({
     inputType
   )
 
-  const fieldWidth = timeSelectorFieldWidth(inputType, is24Hour, isLandscape)
+  const [paneWidth, setPaneWidth] = useState<number | undefined>()
+
+  const tokenWidth = timeSelectorFieldWidth(inputType, is24Hour, isLandscape)
+
+  const grown = isKeyboard
+    ? timeFieldSize({
+        availableWidth: paneWidth,
+        is24Hour,
+        minHeight: timeInputFieldHeight,
+        minWidth: tokenWidth,
+      })
+    : {
+        height: timeSelectorHeight,
+        width: tokenWidth,
+      }
+
+  const fieldHeight = grown.height
+  const fieldWidth = grown.width
+
+  const onPaneLayout = (event: LayoutChangeEvent) => {
+    const next = event.nativeEvent.layout.width
+    setPaneWidth((current) =>
+      current != null && Math.abs(current - next) < 0.5 ? current : next
+    )
+  }
   const minuteLabel = getTranslation(locale, 'minute', 'Minute')
 
   const selectionColor = theme.dark
@@ -128,6 +151,7 @@ function TimeInputs({
           clockType={clockTypes.hours}
           disabled={disabled}
           error={error}
+          height={fieldHeight}
           inputFontSize={inputFontSize}
           inputType={inputType}
           is24Hour={is24Hour}
@@ -156,6 +180,7 @@ function TimeInputs({
           clockType={clockTypes.minutes}
           disabled={disabled}
           error={error}
+          height={fieldHeight}
           inputFontSize={inputFontSize}
           inputType={inputType}
           is24Hour={is24Hour}
@@ -217,7 +242,11 @@ function TimeInputs({
   }, [hourInvalid, minuteInvalid, onInputInvalidChange])
 
   return (
-    <View style={styles.fields}>
+    <View
+      onLayout={isKeyboard ? onPaneLayout : undefined}
+      style={isKeyboard ? styles.growingFields : styles.fields}
+      testID={isKeyboard ? 'time-field-pane' : undefined}
+    >
       {fields}
       <TimePickerSupportingText message={errorMessage} />
     </View>
@@ -241,6 +270,11 @@ const styles = StyleSheet.create({
   },
   fields: {
     alignItems: 'flex-start',
+  },
+  growingFields: {
+    alignItems: 'flex-start',
+    alignSelf: 'stretch',
+    width: '100%',
   },
   inputContainer: {
     alignItems: 'flex-start',

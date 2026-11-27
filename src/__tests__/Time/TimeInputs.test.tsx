@@ -1,12 +1,33 @@
-import { fireEvent, render } from '@testing-library/react-native'
+import { act, fireEvent, render } from '@testing-library/react-native'
 import { Dimensions, StyleSheet } from 'react-native'
 
 import TimeInputs from '../../Time/TimeInputs'
-import { timeSeparatorWidth } from '../../Time/timeUtils'
+import {
+  timeFieldSize,
+  timeInputFieldHeight,
+  timeSelectorHeight,
+  timeSelectorWidth,
+  timeSeparatorWidth,
+} from '../../Time/timeUtils'
 import en from '../../translations/en'
 import { registerTranslation } from '../../translations/utils'
 
 registerTranslation('en', en)
+
+function fieldSize(node: {
+  parent?: unknown
+  props: { style?: Parameters<typeof StyleSheet.flatten>[0] }
+}) {
+  let current: typeof node | undefined = node
+  while (current) {
+    const style = StyleSheet.flatten(current.props.style)
+    if (typeof style?.height === 'number' && typeof style?.width === 'number') {
+      return { height: style.height, width: style.width }
+    }
+    current = (current.parent as typeof node | undefined) ?? undefined
+  }
+  throw new Error('expected a field size')
+}
 
 it('renders TimeInputs', async () => {
   const { toJSON } = await render(
@@ -283,4 +304,51 @@ it('auto-focuses the hour field', async () => {
   )
   expect(screen.getByLabelText('Hour')).toHaveProp('autoFocus', true)
   expect(screen.getByLabelText('Minute')).not.toHaveProp('autoFocus', true)
+})
+
+it('grows keyboard fields with the pane and leaves dial fields at the token size', async () => {
+  const keyboard = await render(
+    <TimeInputs
+      focused="hours"
+      hours={6}
+      inputType="keyboard"
+      is24Hour
+      locale="en"
+      minutes={40}
+      onChange={() => null}
+      onFocusInput={() => null}
+    />
+  )
+  expect(fieldSize(keyboard.getByLabelText('Hour'))).toEqual({
+    height: timeInputFieldHeight,
+    width: timeSelectorWidth,
+  })
+
+  await act(() => {
+    keyboard.getByTestId('time-field-pane').props.onLayout({
+      nativeEvent: { layout: { height: 200, width: 500, x: 0, y: 0 } },
+    })
+  })
+
+  const grown = timeFieldSize({ availableWidth: 500, is24Hour: true })
+  expect(fieldSize(keyboard.getByLabelText('Hour'))).toEqual(grown)
+  expect(fieldSize(keyboard.getByLabelText('Minute'))).toEqual(grown)
+
+  const dial = await render(
+    <TimeInputs
+      focused="hours"
+      hours={6}
+      inputType="picker"
+      is24Hour={false}
+      locale="en"
+      minutes={40}
+      onChange={() => null}
+      onFocusInput={() => null}
+    />
+  )
+  expect(dial.queryByTestId('time-field-pane')).toBeNull()
+  expect(fieldSize(dial.getByLabelText('Hour'))).toEqual({
+    height: timeSelectorHeight,
+    width: timeSelectorWidth,
+  })
 })

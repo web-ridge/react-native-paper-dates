@@ -2,11 +2,15 @@
 
 exports[`renders TimeInputs 1`] = `
 <View
+  onLayout={[Function]}
   style={
     {
       "alignItems": "flex-start",
+      "alignSelf": "stretch",
+      "width": "100%",
     }
   }
+  testID="time-field-pane"
 >
   <View
     style={
@@ -51,7 +55,7 @@ exports[`renders TimeInputs 1`] = `
                 "backgroundColor": "rgba(255, 255, 255, 1)",
                 "borderColor": "transparent",
                 "borderRadius": 16,
-                "height": 120,
+                "height": 128,
                 "width": 100,
               },
             ]
@@ -102,7 +106,7 @@ exports[`renders TimeInputs 1`] = `
                     "fontFamily": "System",
                     "fontSize": 57,
                     "fontWeight": "400",
-                    "height": 116,
+                    "height": 124,
                     "paddingBottom": 0,
                     "paddingTop": 0,
                   },
@@ -127,7 +131,7 @@ exports[`renders TimeInputs 1`] = `
             "width": 26,
           },
           {
-            "height": 120,
+            "height": 128,
           },
         ]
       }
@@ -197,7 +201,7 @@ exports[`renders TimeInputs 1`] = `
                 "backgroundColor": "rgba(255, 255, 255, 1)",
                 "borderColor": "transparent",
                 "borderRadius": 16,
-                "height": 120,
+                "height": 128,
                 "width": 100,
               },
             ]
@@ -245,7 +249,7 @@ exports[`renders TimeInputs 1`] = `
                     "fontFamily": "System",
                     "fontSize": 57,
                     "fontWeight": "400",
-                    "height": 116,
+                    "height": 124,
                     "paddingBottom": 0,
                     "paddingTop": 0,
                   },

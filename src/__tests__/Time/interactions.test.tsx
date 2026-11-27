@@ -961,14 +961,14 @@ describe('time picker modal', () => {
     await modal.unmount()
   })
 
-  it('sizes inline and modal scroll fields to 120dp (M3 Expressive)', async () => {
+  it('sizes inline and modal scroll fields so neighboring values are half visible', async () => {
     const wheelPadding = (screen: Awaited<ReturnType<typeof render>>) =>
       StyleSheet.flatten(
         screen.getByTestId('time-scroll-hours', { includeHiddenElements: true })
           .props.contentContainerStyle
       ).paddingVertical
-    expect(scrollFieldHeight).toBe(120)
-    expect(modalScrollFieldHeight).toBe(120)
+    expect(scrollFieldHeight).toBe(128)
+    expect(modalScrollFieldHeight).toBe(128)
     const inline = await render(
       <TimePicker
         focused="hours"

@@ -73,15 +73,18 @@ export const inputTypes = {
 
 const landscapeDialChrome = 132
 const landscapeDialExtraWidth = 100
-export const modalScrollFieldHeight = 120
 const outerHeight = 34
 export const periodSelectorGap = focusRingReach * 2 + focusRingOffset
 export const periodSelectorVerticalWidth = 56
 const portraitDialChrome = 216
-export const scrollFieldHeight = 120
 export const scrollFieldWidth = 100
 export const scrollItemHeight = 64
-export const timeInputFieldHeight = 120
+export const scrollNeighborMinVisible = scrollItemHeight / 2
+export const scrollFieldHeight = scrollItemHeight + scrollNeighborMinVisible * 2
+export const modalScrollFieldHeight = scrollFieldHeight
+export const timeFieldMaxHeight = 200
+export const timeFieldMaxWidth = 160
+export const timeInputFieldHeight = scrollFieldHeight
 export const timePickerActionsGap = 8
 export const timePickerHorizontalPadding = 24
 const timePickerMediumBreakpoint = 600
@@ -269,6 +272,37 @@ export function timeDialFits(width: number, height: number) {
     return true
   }
   return horizontalDialFits(width, height)
+}
+
+export function timeFieldReservedWidth(is24Hour: boolean) {
+  return (
+    timeSeparatorWidth +
+    (is24Hour ? 0 : periodSelectorGap + periodSelectorVerticalWidth)
+  )
+}
+
+export function timeFieldSize({
+  availableWidth,
+  is24Hour,
+  minHeight = scrollFieldHeight,
+  minWidth = scrollFieldWidth,
+}: {
+  availableWidth?: number
+  is24Hour: boolean
+  minHeight?: number
+  minWidth?: number
+}) {
+  const reserved = timeFieldReservedWidth(is24Hour)
+  const widthFromPane =
+    availableWidth != null
+      ? Math.floor((availableWidth - reserved) / 2)
+      : minWidth
+  const width = Math.min(timeFieldMaxWidth, Math.max(minWidth, widthFromPane))
+  const height = Math.min(
+    timeFieldMaxHeight,
+    Math.max(minHeight, Math.round((width / minWidth) * minHeight))
+  )
+  return { height, width }
 }
 
 export function timePickerModalMinWidth(is24Hour: boolean, showsDial: boolean) {

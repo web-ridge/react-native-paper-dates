@@ -13,10 +13,21 @@ import {
   isValidMinuteInput,
   periodSelectorGap,
   snap,
+  modalScrollFieldHeight,
+  scrollFieldHeight,
+  scrollFieldWidth,
+  scrollItemHeight,
+  scrollNeighborMinVisible,
   timeDialFits,
+  timeFieldMaxHeight,
+  timeFieldMaxWidth,
+  timeFieldReservedWidth,
+  timeFieldSize,
+  timeInputFieldHeight,
   timePickerModalMinWidth,
   timePickerUsesLandscape,
   timeSelectorFieldWidth,
+  timeSelectorHeight,
   timeSeparatorGlyphWidth,
   timeSeparatorWidth,
   toHourInputFormat,
@@ -176,6 +187,45 @@ describe('timeUtils', () => {
     expect(timePickerModalMinWidth(false, false)).toBe(318)
     expect(timePickerModalMinWidth(true, true)).toBe(314)
     expect(timePickerModalMinWidth(true, false)).toBe(250)
+  })
+
+  it('keeps at least half of each neighboring scroll value visible', () => {
+    expect(scrollItemHeight).toBe(64)
+    expect(scrollNeighborMinVisible).toBe(32)
+    expect(scrollFieldHeight).toBe(128)
+    expect(modalScrollFieldHeight).toBe(128)
+    expect(timeInputFieldHeight).toBe(128)
+    expect(timeSelectorHeight).toBe(120)
+    expect((scrollFieldHeight - scrollItemHeight) / 2).toBeGreaterThanOrEqual(
+      scrollNeighborMinVisible
+    )
+  })
+
+  it('sizes growing time fields from the pane width, with a floor and a cap', () => {
+    expect(timeFieldReservedWidth(true)).toBe(timeSeparatorWidth)
+    expect(timeFieldReservedWidth(false)).toBeGreaterThan(timeSeparatorWidth)
+    expect(timeFieldSize({ is24Hour: true })).toEqual({
+      height: scrollFieldHeight,
+      width: scrollFieldWidth,
+    })
+    expect(timeFieldSize({ availableWidth: 200, is24Hour: true })).toEqual({
+      height: scrollFieldHeight,
+      width: scrollFieldWidth,
+    })
+    const twelveHourRow = scrollFieldWidth * 2 + timeFieldReservedWidth(false)
+    expect(
+      timeFieldSize({ availableWidth: twelveHourRow, is24Hour: false })
+    ).toEqual({ height: scrollFieldHeight, width: scrollFieldWidth })
+    const grown = timeFieldSize({ availableWidth: 500, is24Hour: true })
+    expect(grown.width).toBe(timeFieldMaxWidth)
+    expect(grown.height).toBe(timeFieldMaxHeight)
+    const midWidth = scrollFieldWidth + 20
+    const midPane = midWidth * 2 + timeFieldReservedWidth(true)
+    const mid = timeFieldSize({ availableWidth: midPane, is24Hour: true })
+    expect(mid.width).toBe(midWidth)
+    expect(mid.height).toBe(
+      Math.round((midWidth / scrollFieldWidth) * scrollFieldHeight)
+    )
   })
 
   it('clears the 5dp focus ring around the 16dp colon and the AM/PM selector', () => {
