@@ -41,6 +41,24 @@ it('tracks focus and hover and selects a year from the menu', async () => {
   expect(onPressYear).toHaveBeenCalledWith(2026)
 })
 
+it('keeps the year chip 72 by 36 and expands the press target to 48dp', async () => {
+  const view = await render(
+    <YearPicker
+      endYear={2026}
+      onPressYear={() => null}
+      selectedYear={2025}
+      selectingYear
+      startYear={2024}
+    />
+  )
+  const year = view.getByLabelText('2025')
+  expect(year.props.hitSlop).toEqual({ bottom: 6, top: 6 })
+  expect(StyleSheet.flatten(year.props.style)).toEqual({
+    height: 36,
+    width: 72,
+  })
+})
+
 it('treats the current year like today and rings keyboard focus', async () => {
   const year = new Date().getFullYear()
   const view = await render(

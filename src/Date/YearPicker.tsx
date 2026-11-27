@@ -31,7 +31,13 @@ type YearProps = {
 const COLUMNS = 3
 const YEAR_HEIGHT = 36
 const YEAR_ROW_GAP = 16
+const MIN_TOUCH_TARGET = 48
 const ROW_HEIGHT = YEAR_HEIGHT + YEAR_ROW_GAP
+
+const yearHitSlop = {
+  bottom: (MIN_TOUCH_TARGET - YEAR_HEIGHT) / 2,
+  top: (MIN_TOUCH_TARGET - YEAR_HEIGHT) / 2,
+}
 
 function YearPicker({
   embedded = false,
@@ -218,6 +224,7 @@ function GridYear({ current, onPressYear, selected, year }: YearProps) {
         accessibilityRole="button"
         accessibilityState={{ selected }}
         android_ripple={{ color: 'transparent' }}
+        hitSlop={yearHitSlop}
         onBlur={() => setInputFocused(false)}
         onFocus={() => setInputFocused(true)}
         onHoverIn={() => setHovered(true)}
