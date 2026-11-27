@@ -12,7 +12,6 @@ import { formatMonth } from '../shared/intl'
 import { sharedStyles } from '../shared/styles'
 import { useTextColorOnPrimary } from '../shared/utils'
 import {
-  areDatesOnSameDay,
   calendarDateKey,
   calendarDayKey,
   calendarOrdinal,
@@ -93,14 +92,17 @@ const menuButtonInset = 8
 
 function dayRangeRole(
   mode: ModeType | undefined,
-  cell: Date,
+  year: number,
+  month: number,
+  day: number,
   startDate?: CalendarDate,
   endDate?: CalendarDate,
   inRange?: boolean
 ): DayRangeRole | undefined {
   if (mode !== 'range') return undefined
-  const isStart = areDatesOnSameDay(cell, startDate)
-  const isEnd = areDatesOnSameDay(cell, endDate)
+  const cellKey = calendarDayKey(year, month, day)
+  const isStart = startDate != null && calendarDateKey(startDate) === cellKey
+  const isEnd = endDate != null && calendarDateKey(endDate) === cellKey
   if (isStart && isEnd) return 'start-end'
   if (isStart) return 'start'
   if (isEnd) return 'end'
@@ -430,7 +432,9 @@ function MonthDays({
           primaryColor={primaryColor}
           rangeRole={dayRangeRole(
             mode,
-            new Date(cellYear, cellMonth, cellDay),
+            cellYear,
+            cellMonth,
+            cellDay,
             startDate,
             endDate,
             marks.inRange

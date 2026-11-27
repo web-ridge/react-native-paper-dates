@@ -97,6 +97,52 @@ it('does not draw a range span when the start and end are the same day', async (
   expect(bars(span, selectColor).length).toBeGreaterThan(0)
 })
 
+it('labels the start, end, and in-range days of a range selection', async () => {
+  const index = getInitialIndex(new Date(2026, 10, 10))
+  const { getByTestId } = await render(
+    <Month
+      {...defaultProps}
+      endDate={new Date(2026, 10, 20, 23, 59, 59)}
+      index={index}
+      mode="range"
+      scrollMode="vertical"
+      startDate={new Date(2026, 10, 10)}
+    />
+  )
+
+  expect(
+    getByTestId('react-native-paper-dates-day-2026-10-10').props
+      .accessibilityLabel
+  ).toContain('Start date')
+  expect(
+    getByTestId('react-native-paper-dates-day-2026-10-20').props
+      .accessibilityLabel
+  ).toContain('End date')
+  expect(
+    getByTestId('react-native-paper-dates-day-2026-10-15').props
+      .accessibilityLabel
+  ).toContain('In selected range')
+  expect(
+    getByTestId('react-native-paper-dates-day-2026-10-9').props
+      .accessibilityLabel
+  ).not.toContain('In selected range')
+
+  const sameDay = await render(
+    <Month
+      {...defaultProps}
+      endDate={new Date(2026, 10, 10, 23, 59, 59)}
+      index={index}
+      mode="range"
+      scrollMode="vertical"
+      startDate={new Date(2026, 10, 10)}
+    />
+  )
+  const label = sameDay.getByTestId('react-native-paper-dates-day-2026-10-10')
+    .props.accessibilityLabel
+  expect(label).toContain('Start date')
+  expect(label).toContain('End date')
+})
+
 it('does not wrap day numbers in a scroll view in vertical mode', async () => {
   const { queryByTestId } = await render(
     <Month
