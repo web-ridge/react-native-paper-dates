@@ -17,11 +17,6 @@ import {
   useIsLargeScreen,
 } from '../shared/utils'
 import {
-  dateInputMaxHeight,
-  datePickerRangeMaxHeight,
-  datePickerSingleMaxHeight,
-} from './dateUtils'
-import {
   dateInputCardMaxWidth,
   dateInputCardWidth,
 } from './DatePickerInputForm'
@@ -30,6 +25,11 @@ import DatePickerModalContent, {
   DatePickerModalContentRangeProps,
   DatePickerModalContentSingleProps,
 } from './DatePickerModalContent'
+import {
+  dateInputMaxHeight,
+  datePickerRangeMaxHeight,
+  datePickerSingleMaxHeight,
+} from './dateUtils'
 
 export interface DatePickerModalMultiProps
   extends DatePickerModalContentMultiProps, DatePickerModalProps {}

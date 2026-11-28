@@ -57,12 +57,6 @@ let translationsPerLocale: Record<
   en,
 }
 
-function translationTable(locale: string | undefined) {
-  const table = translationsPerLocale[locale || 'en']
-  if (!table) return undefined
-  return typeof table === 'function' ? table(locale) : table
-}
-
 export function actionLabels({
   locale,
   saveLabel,
@@ -119,4 +113,10 @@ export function translate(
 ): string {
   const value = getTranslation(locale, key, fallback)
   return typeof value === 'string' && value ? value : fallback
+}
+
+function translationTable(locale: string | undefined) {
+  const table = translationsPerLocale[locale || 'en']
+  if (!table) return undefined
+  return typeof table === 'function' ? table(locale) : table
 }

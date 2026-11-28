@@ -2,6 +2,8 @@ import type { DisableWeekDaysType } from './types'
 
 type TypedDateIssue = 'disabled' | 'format' | 'range'
 
+export type { DisableWeekDaysType }
+
 const calendarDay = {
   day: 0,
   expiresAt: 0,
@@ -27,14 +29,15 @@ export const estimatedMonthHeight = 400
 const monthLengths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 const nativeDigits: Record<string, string> = {}
 const startAtIndexCache = new Map<string, number>()
-
-export type { DisableWeekDaysType }
+const weekdayOffsets = [0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4]
 
 for (const [index, digit] of '٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹'.split('').entries()) {
   nativeDigits[digit] = String(index % 10)
 }
 
-const weekdayOffsets = [0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4]
+export function addCalendarDays(date: Date, count: number) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate() + count)
+}
 
 export function addMonths(date: Date, count: number) {
   const n = date.getDate()
@@ -49,60 +52,6 @@ export function addMonths(date: Date, count: number) {
   )
 
   return n2
-}
-
-export function addCalendarDays(date: Date, count: number) {
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate() + count)
-}
-
-export function isCalendarDayUnavailable(
-  day: Date,
-  {
-    disabledDates,
-    endDate,
-    endYear,
-    startDate,
-    startYear,
-  }: {
-    disabledDates?: Date[]
-    endDate?: Date | null
-    endYear?: number
-    startDate?: Date | null
-    startYear?: number
-  } = {}
-) {
-  const year = day.getFullYear()
-  if (startYear !== undefined && year < startYear) return true
-  if (endYear !== undefined && year > endYear) return true
-  if (disabledDates?.some((disabled) => areDatesOnSameDay(day, disabled))) {
-    return true
-  }
-  const startUnix =
-    startDate instanceof Date ? dateToUnix(getStartOfDay(startDate)) : undefined
-  const endUnix =
-    endDate instanceof Date ? dateToUnix(getEndOfDay(endDate)) : undefined
-  return !isDateWithinOptionalRange(day, { endUnix, startUnix })
-}
-
-export function moveEnabledCalendarDay(
-  from: Date,
-  deltaDays: number,
-  bounds?: {
-    disabledDates?: Date[]
-    endDate?: Date | null
-    endYear?: number
-    startDate?: Date | null
-    startYear?: number
-  }
-) {
-  if (deltaDays === 0) return from
-  const direction = Math.sign(deltaDays)
-  let candidate = addCalendarDays(from, deltaDays)
-  for (let step = 0; step < 400; step += 1) {
-    if (!isCalendarDayUnavailable(candidate, bounds)) return candidate
-    candidate = addCalendarDays(candidate, direction)
-  }
-  return undefined
 }
 
 export function adjacentDayKey(
@@ -363,6 +312,35 @@ export function interpretTypedDate(
   return { date }
 }
 
+export function isCalendarDayUnavailable(
+  day: Date,
+  {
+    disabledDates,
+    endDate,
+    endYear,
+    startDate,
+    startYear,
+  }: {
+    disabledDates?: Date[]
+    endDate?: Date | null
+    endYear?: number
+    startDate?: Date | null
+    startYear?: number
+  } = {}
+) {
+  const year = day.getFullYear()
+  if (startYear !== undefined && year < startYear) return true
+  if (endYear !== undefined && year > endYear) return true
+  if (disabledDates?.some((disabled) => areDatesOnSameDay(day, disabled))) {
+    return true
+  }
+  const startUnix =
+    startDate instanceof Date ? dateToUnix(getStartOfDay(startDate)) : undefined
+  const endUnix =
+    endDate instanceof Date ? dateToUnix(getEndOfDay(endDate)) : undefined
+  return !isDateWithinOptionalRange(day, { endUnix, startUnix })
+}
+
 export function isDateWithinOptionalRange(
   date: Date,
   { endUnix, startUnix }: { endUnix?: number; startUnix?: number }
@@ -407,6 +385,27 @@ export function monthWeekRows(
 ): number {
   const dayOfWeek = getFirstDayOfMonth({ month, startWeekOnMonday, year })
   return Math.ceil((getDaysInMonth({ month, year }) + dayOfWeek) / 7)
+}
+
+export function moveEnabledCalendarDay(
+  from: Date,
+  deltaDays: number,
+  bounds?: {
+    disabledDates?: Date[]
+    endDate?: Date | null
+    endYear?: number
+    startDate?: Date | null
+    startYear?: number
+  }
+) {
+  if (deltaDays === 0) return from
+  const direction = Math.sign(deltaDays)
+  let candidate = addCalendarDays(from, deltaDays)
+  for (let step = 0; step < 400; step += 1) {
+    if (!isCalendarDayUnavailable(candidate, bounds)) return candidate
+    candidate = addCalendarDays(candidate, direction)
+  }
+  return undefined
 }
 
 function normalizeDigits(text: string) {

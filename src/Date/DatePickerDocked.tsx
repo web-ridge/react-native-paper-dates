@@ -73,12 +73,13 @@ const menuButtonPadding = 8
 const menuIconGap = 8
 const menuLabelInset = 16 + 24 + 16 - menuButtonPadding
 const minTouchTarget = 48
-const iconHitSlop = (minTouchTarget - iconButtonSize) / 2
 
 const actionHitSlop = {
   bottom: (minTouchTarget - actionHeight) / 2,
   top: (minTouchTarget - actionHeight) / 2,
 }
+
+const iconHitSlop = (minTouchTarget - iconButtonSize) / 2
 
 const menuHitSlop = {
   bottom: (minTouchTarget - menuButtonHeight) / 2,

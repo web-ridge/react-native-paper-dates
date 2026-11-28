@@ -23,8 +23,8 @@ import {
 } from 'react-native'
 import { useTheme } from 'react-native-paper'
 
-import { sharedStyles } from '../shared/styles'
 import StateLayer from '../shared/StateLayer'
+import { sharedStyles } from '../shared/styles'
 import FocusRing from './FocusRing'
 import {
   clockTypes,

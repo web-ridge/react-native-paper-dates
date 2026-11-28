@@ -14,12 +14,12 @@ import { sharedStyles } from '../shared/styles'
 import { range, scrollbarThumb } from '../shared/utils'
 import FocusRing from '../Time/FocusRing'
 import { calendarControlHeight } from './CalendarHeader'
-import SelectionMenuItem, { selectionMenuItemHeight } from './SelectionMenuItem'
 import {
   currentCalendarMonth,
   defaultEndYear,
   defaultStartYear,
 } from './dateUtils'
+import SelectionMenuItem, { selectionMenuItemHeight } from './SelectionMenuItem'
 
 type YearProps = {
   current: boolean
@@ -29,9 +29,9 @@ type YearProps = {
 }
 
 const COLUMNS = 3
+const MIN_TOUCH_TARGET = 48
 const YEAR_HEIGHT = 36
 const YEAR_ROW_GAP = 16
-const MIN_TOUCH_TARGET = 48
 const ROW_HEIGHT = YEAR_HEIGHT + YEAR_ROW_GAP
 
 const yearHitSlop = {

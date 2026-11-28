@@ -2,7 +2,6 @@ import { useCallback, useMemo } from 'react'
 
 import { dateTimeFormat } from '../shared/intl'
 
-import type { ValidRangeType } from './types'
 import {
   calendarDateKey,
   dateToUnix,
@@ -10,6 +9,7 @@ import {
   getStartOfDay,
   isDateWithinOptionalRange,
 } from './dateUtils'
+import type { ValidRangeType } from './types'
 
 const inputSample = new Date(2020, 9, 1)
 
@@ -91,7 +91,7 @@ export function useRangeChecker(validRange: ValidRangeType | undefined) {
         startUnix: startUnix,
       })
     },
-    [startUnix, endUnix]
+    [endUnix, startUnix]
   )
 
   return { disabledKeys, isDisabled, isWithinValidRange, validEnd, validStart }

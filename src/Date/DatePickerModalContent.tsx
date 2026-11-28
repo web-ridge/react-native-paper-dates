@@ -181,7 +181,7 @@ export function DatePickerModalContent(
     const confirmed = confirmDates(mode, state, true)
     if (!confirmed) return
     ;(onConfirm as (value: typeof confirmed) => void)(confirmed)
-  }, [state, mode, onConfirm])
+  }, [mode, onConfirm, state])
 
   const onInputValidityChange = useCallback((valid: boolean) => {
     setInputValid(valid)
@@ -218,7 +218,7 @@ export function DatePickerModalContent(
       endDate,
       startDate,
     })
-  }, [date, startDate, endDate, dates])
+  }, [date, dates, endDate, startDate])
 
   useEffect(() => {
     const nextCollapsed = mode === 'multiple' || displayMode !== 'input'

@@ -13,11 +13,13 @@ import { Text } from 'react-native-paper'
 import { formatDayLabel } from '../shared/intl'
 import StateLayer from '../shared/StateLayer'
 import { type PaperTheme, withAlpha } from '../shared/utils'
-import { getTranslation } from '../translations/utils'
 import FocusRing from '../Time/FocusRing'
+import { getTranslation } from '../translations/utils'
 import { dayCellSize, daySize } from './dateUtils'
 import DayRange from './DayRange'
 import type { DayContentPosition, DayContentRenderer } from './types'
+
+export type DayRangeRole = 'end' | 'in-range' | 'start' | 'start-end'
 
 const contentPositions = StyleSheet.create({
   'bottom': {
@@ -32,8 +34,6 @@ const contentPositions = StyleSheet.create({
   'top-left': { alignItems: 'flex-start', justifyContent: 'flex-start' },
   'top-right': { alignItems: 'flex-end', justifyContent: 'flex-start' },
 })
-
-export type DayRangeRole = 'end' | 'in-range' | 'start' | 'start-end'
 
 function dayAccessibilityLabel(
   locale: string | undefined,
@@ -154,7 +154,7 @@ function Day(props: {
 
   const onPress = useCallback(() => {
     onPressDate(new Date(year, month, day))
-  }, [onPressDate, year, month, day])
+  }, [day, month, onPressDate, year])
 
   return (
     <View style={styles.root}>

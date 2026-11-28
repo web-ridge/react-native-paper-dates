@@ -5,8 +5,8 @@ import { Text, useTheme } from 'react-native-paper'
 import { DisplayModeContext } from '../contexts/DisplayModeContext'
 import { TimePickerPlacementContext } from '../contexts/TimePickerPlacementContext'
 import StateLayer from '../shared/StateLayer'
-import FocusRing from './FocusRing'
 import { getTranslation } from '../translations/utils'
+import FocusRing from './FocusRing'
 import {
   inputTypes,
   type PossibleInputTypes,

@@ -91,22 +91,6 @@ function returnTrue() {
   return true
 }
 
-function stepClockValue(
-  focused: PossibleClockTypes,
-  hours: number,
-  is24Hour: boolean,
-  minutes: number,
-  delta: number
-) {
-  if (focused === clockTypes.hours) {
-    if (is24Hour) {
-      return { hours: (hours + delta + 24) % 24, minutes }
-    }
-    return { hours: ((hours - 1 + delta + 12) % 12) + 1, minutes }
-  }
-  return { hours, minutes: (minutes + delta + 60) % 60 }
-}
-
 function selectionAt(
   x: number,
   y: number,
@@ -125,6 +109,22 @@ function selectionAt(
   if ((mode === 'AM' || is24Hour) && pickedHours === 12) pickedHours = 0
   if (pickedHours === 24) pickedHours = 12
   return pickedHours
+}
+
+function stepClockValue(
+  focused: PossibleClockTypes,
+  hours: number,
+  is24Hour: boolean,
+  minutes: number,
+  delta: number
+) {
+  if (focused === clockTypes.hours) {
+    if (is24Hour) {
+      return { hours: (hours + delta + 24) % 24, minutes }
+    }
+    return { hours: ((hours - 1 + delta + 12) % 12) + 1, minutes }
+  }
+  return { hours, minutes: (minutes + delta + 60) % 60 }
 }
 
 function AnalogClock({

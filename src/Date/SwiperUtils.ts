@@ -280,5 +280,5 @@ export function useYearChange(
         onChangeRef.current(boundedIndex)
       }
     }
-  }, [currentIndexRef, onChangeRef, selectedYear, startYear, endYear])
+  }, [currentIndexRef, endYear, onChangeRef, selectedYear, startYear])
 }

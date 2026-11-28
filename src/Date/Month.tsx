@@ -11,6 +11,7 @@ import { Icon, Text, TouchableRipple, useTheme } from 'react-native-paper'
 import { formatMonth } from '../shared/intl'
 import { sharedStyles } from '../shared/styles'
 import { useTextColorOnPrimary } from '../shared/utils'
+import { calendarArrowSize, calendarControlInset } from './CalendarHeader'
 import {
   calendarDateKey,
   calendarDayKey,
@@ -28,7 +29,6 @@ import {
 } from './dateUtils'
 import Day, { type DayRangeRole, EmptyDay } from './Day'
 import { useRangeChecker } from './inputFormat'
-import { calendarArrowSize, calendarControlInset } from './CalendarHeader'
 import {
   getMonthHeight,
   horizontalWeekHeight,
