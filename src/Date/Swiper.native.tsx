@@ -26,9 +26,11 @@ import { verticalScrollbarGutter } from './CalendarHeader'
 
 function getVisibleArray(
   i: number,
-  { isHorizontal, height }: { isHorizontal: boolean; height: number }
+  { isHorizontal }: { isHorizontal: boolean; height: number }
 ) {
-  if (isHorizontal || height < 700) {
+  // Vertical months are shorter than the viewport: keep two each side so a
+  // fling stays covered between onScroll window moves.
+  if (isHorizontal) {
     return [i - 1, i, i + 1]
   }
   return [i - 2, i - 1, i, i + 1, i + 2]
@@ -152,7 +154,7 @@ function SwiperInner({
   // onLayout can run against the previous page width during rotation, before
   useEffect(scrollToCurrent, [scrollToCurrent])
 
-  const onMomentumScrollEnd = useCallback(
+  const getIndexFromScroll = useCallback(
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
       const contentOffset = e.nativeEvent.contentOffset
       const viewSize = e.nativeEvent.layoutMeasurement
@@ -166,20 +168,47 @@ function SwiperInner({
             endYear
           )
 
-      if (newIndex === 0) {
-        return
+      if (newIndex === 0 || !isIndexWithinRange(newIndex, startYear, endYear)) {
+        return undefined
       }
+      return newIndex
+    },
+    [isHorizontal, startWeekOnMonday, startYear, endYear]
+  )
 
-      if (!isIndexWithinRange(newIndex, startYear, endYear)) {
-        return
-      }
+  const showAround = useCallback(
+    (index: number) => {
+      setVisibleIndexes((prev) =>
+        prev[(prev.length - 1) / 2] === index
+          ? prev
+          : getVisibleArray(index, { isHorizontal, height })
+      )
+    },
+    [isHorizontal, height]
+  )
 
-      if (idx.current !== newIndex) {
-        idx.current = newIndex
-        setVisibleIndexes(getVisibleArray(newIndex, { isHorizontal, height }))
+  // Move the mounted months while scrolling, not only when the fling ends,
+  // otherwise a fast fling on Android outruns them and shows blank space.
+  // idx is left alone here so an animated onPrev/onNext keeps its target.
+  const onScroll = useCallback(
+    (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const newIndex = getIndexFromScroll(e)
+      if (newIndex !== undefined) {
+        showAround(newIndex)
       }
     },
-    [idx, height, isHorizontal, startWeekOnMonday, startYear, endYear]
+    [getIndexFromScroll, showAround]
+  )
+
+  const onMomentumScrollEnd = useCallback(
+    (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const newIndex = getIndexFromScroll(e)
+      if (newIndex !== undefined) {
+        idx.current = newIndex
+        showAround(newIndex)
+      }
+    },
+    [getIndexFromScroll, showAround]
   )
 
   const renderProps = {
@@ -227,6 +256,7 @@ function SwiperInner({
         style={[sharedStyles.root, sharedStyles.minHeightZero]}
         onMomentumScrollEnd={onMomentumScrollEnd}
         onScrollEndDrag={onMomentumScrollEnd}
+        onScroll={onScroll}
         onLayout={scrollToCurrent}
         contentOffset={initialContentOffset}
         showsHorizontalScrollIndicator={false}
@@ -248,8 +278,7 @@ function SwiperInner({
           ]}
         >
           {visibleIndexes
-            ? new Array(visibleIndexes.length).fill(undefined).map((_, vi) => {
-                const monthIndex = visibleIndexes[vi]
+            ? visibleIndexes.map((monthIndex) => {
                 const monthHeight = getMonthHeight(
                   scrollMode,
                   monthIndex,
@@ -261,7 +290,8 @@ function SwiperInner({
                 // page to the dialog so the day grid can scroll in landscape.
                 return (
                   <View
-                    key={vi}
+                    // Keyed by month so a window shift mounts only the new month.
+                    key={monthIndex}
                     // eslint-disable-next-line react-native/no-inline-styles
                     style={{
                       top: isHorizontal
