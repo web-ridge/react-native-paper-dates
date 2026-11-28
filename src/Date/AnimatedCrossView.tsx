@@ -1,90 +1,51 @@
-import { useEffect, useRef } from 'react'
-import { Animated, StyleSheet, View } from 'react-native'
+import type { ReactNode } from 'react'
+import { StyleSheet } from 'react-native'
 import { useTheme } from 'react-native-paper'
+
+import CrossFade from '../shared/CrossFade'
 import { sharedStyles } from '../shared/styles'
 
 export default function AnimatedCrossView({
-  collapsed,
   calendar,
   calendarEdit,
+  collapsed,
+  fill = true,
 }: {
-  calendar: any
-  calendarEdit: any
+  calendar: ReactNode
+  calendarEdit: ReactNode
   collapsed: boolean
+  fill?: boolean
 }) {
   const theme = useTheme()
 
-  const calendarOpacity = useRef<Animated.Value>(
-    new Animated.Value(collapsed ? 1 : 0)
-  )
-
-  useEffect(() => {
-    Animated.timing(calendarOpacity.current, {
-      toValue: collapsed ? 1 : 0,
-      duration: 250,
-      useNativeDriver: true,
-    }).start()
-  }, [collapsed])
+  const frame = fill ? sharedStyles.root : sharedStyles.hug
 
   return (
-    <View style={[sharedStyles.root, sharedStyles.minHeightZero]}>
-      <Animated.View
-        pointerEvents={collapsed ? 'auto' : 'none'}
-        style={[
-          sharedStyles.minHeightZero,
-          sharedStyles.root,
-          {
-            opacity: calendarOpacity.current,
-            transform: [
-              {
-                scaleY: calendarOpacity.current.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [0.85, 1],
-                }),
-              },
-              {
-                scaleX: calendarOpacity.current.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [0.95, 1],
-                }),
-              },
-            ],
-          },
-        ]}
-      >
-        {calendar}
-      </Animated.View>
-      <Animated.View
-        pointerEvents={collapsed ? 'none' : 'auto'}
-        style={[
+    <CrossFade
+      collapsed={collapsed}
+      containerStyle={[frame, sharedStyles.minHeightZero]}
+      primary={{
+        node: calendar,
+        scaleX: [0.95, 1],
+        scaleY: [0.85, 1],
+        style: [sharedStyles.minHeightZero, frame],
+      }}
+      secondary={{
+        node: calendarEdit,
+        scale: [1, 0.95],
+        style: [
           styles.calendarEdit,
-          {
-            backgroundColor: theme.colors.elevation.level3,
-            opacity: calendarOpacity.current.interpolate({
-              inputRange: [0, 1],
-              outputRange: [1, 0],
-            }),
-            transform: [
-              {
-                scale: calendarOpacity.current.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [1, 0.95],
-                }),
-              },
-            ],
-          },
-        ]}
-      >
-        {calendarEdit}
-      </Animated.View>
-    </View>
+          { backgroundColor: theme.colors.surfaceContainerHigh },
+        ],
+      }}
+    />
   )
 }
 
 const styles = StyleSheet.create({
   calendarEdit: {
-    position: 'absolute',
     left: 0,
+    position: 'absolute',
     right: 0,
   },
 })

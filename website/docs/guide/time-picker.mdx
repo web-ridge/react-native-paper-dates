@@ -1,64 +1,79 @@
-import { TimePickerDemo } from '../../components/demos'
-
 # Time Picker
 
-The time picker provides a modal allowing the selection or input of a time.
-
-## Preview
-
-<TimePickerDemo className="pd-demo--page" />
+The time picker selects a time with the expressive Material scroll, input, and dial variants. Use the scroll picker inline. Open the dial in a modal, and switch either one to keyboard input.
 
 ## Usage
 
-```jsx
-import React from "react";
-import { View, Text } from "react-native";
-import { Button } from 'react-native-paper';
+```jsx playground
+import { useState } from 'react';
+import { View } from 'react-native';
+import { Button, Text } from 'react-native-paper';
 import { TimePickerModal } from 'react-native-paper-dates';
-import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function App() {
-  const [visible, setVisible] = React.useState(false)
-  const onDismiss = React.useCallback(() => {
-    setVisible(false)
-  }, [setVisible])
-
-  const onConfirm = React.useCallback(
-    ({ hours, minutes }) => {
-      setVisible(false);
-      console.log({ hours, minutes });
-    },
-    [setVisible]
-  );
+  const [time, setTime] = useState({ hours: 12, minutes: 14 });
+  const [visible, setVisible] = useState(false);
 
   return (
-    <SafeAreaProvider>
-      <View style={{justifyContent: 'center', flex: 1, alignItems: 'center'}}>
-        <Button onPress={() => setVisible(true)} uppercase={false} mode="outlined">
-          Pick time
-        </Button>
-        <TimePickerModal
-          visible={visible}
-          onDismiss={onDismiss}
-          onConfirm={onConfirm}
-          hours={12}
-          minutes={14}
-        />
-      </View>
-    </SafeAreaProvider>
+    <View style={{ alignItems: 'center', gap: 12 }}>
+      <Button mode="outlined" onPress={() => setVisible(true)}>
+        Pick time
+      </Button>
+      <Text>{`${time.hours}:${String(time.minutes).padStart(2, '0')}`}</Text>
+      <TimePickerModal
+        hours={time.hours}
+        minutes={time.minutes}
+        onConfirm={({ hours, minutes }) => {
+          setVisible(false);
+          setTime({ hours, minutes });
+        }}
+        onDismiss={() => setVisible(false)}
+        visible={visible}
+      />
+    </View>
+  );
+}
+```
+
+## Scroll picker
+
+`TimePicker` with `inputType="scroll"` renders the wheel inline. Its `inputType` is `'scroll'` or `'keyboard'`. The dial is only available in `TimePickerModal`. Passing `inputType="picker"` to `TimePicker` falls back to `'scroll'`.
+
+```jsx playground
+import { useState } from 'react';
+import { View } from 'react-native';
+import { Text } from 'react-native-paper';
+import { TimePicker } from 'react-native-paper-dates';
+
+export default function App() {
+  const [focused, setFocused] = useState('hours');
+  const [time, setTime] = useState({ hours: 9, minutes: 45 });
+
+  return (
+    <View style={{ alignItems: 'center', gap: 12 }}>
+      <TimePicker
+        focused={focused}
+        hours={time.hours}
+        inputType="scroll"
+        minutes={time.minutes}
+        onChange={({ hours, minutes }) => setTime({ hours, minutes })}
+        onFocusInput={setFocused}
+      />
+      <Text>{`${time.hours}:${String(time.minutes).padStart(2, '0')}`}</Text>
+    </View>
   );
 }
 ```
 
 ## Live Example
 
-View an interactive [Expo snack](https://snack.expo.dev/@fitzwabs/react-native-paper-dates-time-picker).
+Try this and the other pickers on the [example site](https://www.reactnativepaperdates.com/).
 
 ## Props
 
 **animationType**  
 `Type: 'slide' | 'fade' | 'none' | undefined`  
-The animation used when opening the modal. Defaults to `'none'`.
+The animation used when opening the modal. Defaults to `'fade'` on iOS/Android and `'none'` on web.
 
 **cancelLabel**  
 `Type: string | undefined`  
@@ -66,15 +81,27 @@ Dismiss button label. Defaults to `'Cancel'`.
 
 **clockIcon**  
 `Type: string | undefined`  
-Icon used to switch back to the clock face. Defaults to `'clock-outline'`. Pass a name from [MaterialCommunityIcons](https://materialdesignicons.com/).
+Icon used to switch back to the dial. Defaults to `'clock'`. Pass a name from [MaterialCommunityIcons](https://materialdesignicons.com/).
 
 **confirmLabel**  
 `Type: string | undefined`  
-Confirm button label. Defaults to `'Ok'`.
+Confirm button label. Defaults to `'OK'`.
 
 **defaultInputType**  
-`Type: 'picker' | 'keyboard' | undefined`  
-Initial input mode. Defaults to `'picker'` (clock face).
+`Type: 'picker' | 'keyboard' | 'scroll' | undefined`  
+Initial input mode. Defaults to `'picker'` (dial). `'scroll'` is the compact wheel, for inline use or a short modal. Keyboard input toggles back to the dial or the scroll wheel it came from.
+
+**disabled**  
+`Type: boolean | undefined`  
+Disables the time controls. Fields, period buttons, the dial, and the mode toggle draw the disabled state and ignore input. Confirm stays disabled. Cancel still closes the modal. `TimePicker` accepts the same prop.
+
+**error**  
+`Type: boolean | undefined`  
+Shows the Material error state on the hour and minute fields, the AM/PM selector, and the scroll wheels, with supporting text under the inputs. The clock dial is unchanged. Confirm stays enabled unless a typed hour or minute is invalid. `TimePicker` accepts the same prop.
+
+**errorText**  
+`Type: string | undefined`  
+Supporting text shown when `error` is true, or when a typed hour or minute is invalid. Defaults to the `invalidTime` translation (`'Invalid time'`). Pass `''` to hide the text and keep the error styles. `TimePicker` accepts the same prop.
 
 **hours**  
 `Type: number | undefined`  
@@ -82,15 +109,19 @@ Initial hours value. Defaults to the current hour.
 
 **inputFontSize**  
 `Type: number | undefined`  
-Font size of the time input. Defaults to `57`. Useful when using a custom font.
+Font size of the time input. Defaults to the theme's `displayLarge` font size (`57` in Paper's default typescale). Useful when using a custom font.
 
 **keyboardIcon**  
 `Type: string | undefined`  
-Icon used to switch to keyboard input. Defaults to `'keyboard-outline'`. Pass a name from [MaterialCommunityIcons](https://materialdesignicons.com/).
+Icon used to switch to keyboard input. Defaults to `'keyboard'`. Pass a name from [MaterialCommunityIcons](https://materialdesignicons.com/).
 
 **label**  
 `Type: string | undefined`  
-Header label. Defaults to `'Select time'` (or `'Enter time'` when using keyboard input with no label).
+Optional header label. Omitted unless you pass one.
+
+**scrollIcon**  
+`Type: string | undefined`  
+Icon used to switch back to the scroll wheel. Defaults to `'gesture-swipe-vertical'`. Pass a name from [MaterialCommunityIcons](https://materialdesignicons.com/).
 
 **locale**  
 `Type: string | undefined`  
@@ -102,7 +133,7 @@ Initial minutes value. Defaults to the current minutes.
 
 **onConfirm (Required)**  
 `Type: (params: { hours: number, minutes: number }) => void`  
-Called when the user confirms the selected time.
+Called when the user confirms the selected time. The confirm button stays disabled while a typed hour or minute is invalid.
 
 **onDismiss (Required)**  
 `Type: () => void`  

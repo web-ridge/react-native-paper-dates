@@ -1,203 +1,341 @@
-import { Text, TouchableRipple } from 'react-native-paper'
-import { StyleSheet, View } from 'react-native'
-import type { StyleProp, ViewStyle } from 'react-native'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  Platform,
+  Pressable,
+  type StyleProp,
+  StyleSheet,
+  View,
+  type ViewInstance,
+  type ViewStyle,
+} from 'react-native'
+import { Text } from 'react-native-paper'
+
+import { formatDayLabel } from '../shared/intl'
+import StateLayer from '../shared/StateLayer'
+import { type PaperTheme, withAlpha } from '../shared/utils'
+import FocusRing from '../Time/FocusRing'
+import { getTranslation } from '../translations/utils'
+import { dayCellSize, daySize } from './dateUtils'
 import DayRange from './DayRange'
-import { daySize } from './dateUtils'
+import type { DayContentPosition, DayContentRenderer } from './types'
 
-import type { PaperTheme } from '../shared/utils'
-import type { DayContentPosition, DayContentRenderer } from './Calendar'
-import { memo, useCallback } from 'react'
+export type DayRangeRole = 'end' | 'in-range' | 'start' | 'start-end'
 
-function EmptyDayPure() {
-  return <View style={styles.empty} />
+const contentPositions = StyleSheet.create({
+  'bottom': {
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingBottom: 2,
+  },
+  'bottom-left': { alignItems: 'flex-start', justifyContent: 'flex-end' },
+  'bottom-right': { alignItems: 'flex-end', justifyContent: 'flex-end' },
+  'center': { alignItems: 'center', justifyContent: 'center' },
+  'top': { alignItems: 'center', justifyContent: 'flex-start', paddingTop: 2 },
+  'top-left': { alignItems: 'flex-start', justifyContent: 'flex-start' },
+  'top-right': { alignItems: 'flex-end', justifyContent: 'flex-start' },
+})
+
+function dayAccessibilityLabel(
+  locale: string | undefined,
+  year: number,
+  month: number,
+  day: number,
+  isToday: boolean,
+  rangeRole?: DayRangeRole
+) {
+  const parts = [formatDayLabel(locale, year, month, day)]
+  if (isToday) parts.push(getTranslation(locale, 'today', 'Today'))
+  if (rangeRole === 'start' || rangeRole === 'start-end') {
+    parts.push(getTranslation(locale, 'startDate', 'Start date'))
+  }
+  if (rangeRole === 'end' || rangeRole === 'start-end') {
+    parts.push(getTranslation(locale, 'endDate', 'End date'))
+  }
+  if (rangeRole === 'in-range') {
+    parts.push(getTranslation(locale, 'inRange', 'In selected range'))
+  }
+  return parts.join(', ')
 }
 
-export const EmptyDay = memo(EmptyDayPure)
-
 function Day(props: {
-  theme: PaperTheme
-  textColorOnPrimary: string
+  cellHeight?: number
   day: number
-  month: number
-  year: number
-  selected: boolean
-  inRange: boolean
-  leftCrop: boolean
-  rightCrop: boolean
-  primaryColor: string
-  selectColor: string
-  isToday: boolean
-  disabled: boolean
-  onPressDate: (date: Date) => any
   dayContent?: DayContentRenderer
   dayContentPosition?: DayContentPosition
   dayContentStyle?: StyleProp<ViewStyle>
+  disabled: boolean
+  focused?: boolean
+  indicatorSize?: number
+  inRange: boolean
+  isTabStop?: boolean
+  isToday: boolean
+  leftCrop: boolean
+  locale?: string
+  month: number
+  onPressDate: (date: Date) => void
+  outside?: boolean
+  primaryColor: string
+  rangeRole?: DayRangeRole
+  rightCrop: boolean
+  selectColor: string
+  selected: boolean
+  textColorOnPrimary: string
+  theme: PaperTheme
+  year: number
 }) {
+  const [hovered, setHovered] = useState(false)
+  const [inputFocused, setInputFocused] = useState(false)
+  const [pressed, setPressed] = useState(false)
+  const pressableRef = useRef<ViewInstance>(null)
+
   const {
+    cellHeight = dayCellSize,
     day,
-    month,
-    year,
-    selected,
-    inRange,
-    leftCrop,
-    rightCrop,
-    onPressDate,
-    primaryColor,
-    selectColor,
-    isToday,
-    disabled,
-    theme,
     dayContent,
     dayContentPosition,
     dayContentStyle,
+    disabled,
+    focused,
+    indicatorSize = daySize,
+    inRange,
+    isTabStop,
+    isToday,
+    leftCrop,
+    locale,
+    month,
+    onPressDate,
+    outside,
+    primaryColor,
+    rangeRole,
+    rightCrop,
+    selectColor,
+    selected,
+    textColorOnPrimary,
+    theme,
+    year,
   } = props
-  const borderColor = theme.colors.primary
+
+  const accessibilityLabel = useMemo(
+    () => dayAccessibilityLabel(locale, year, month, day, isToday, rangeRole),
+    [day, isToday, locale, month, rangeRole, year]
+  )
+
+  useEffect(() => {
+    if (focused && Platform.OS === 'web') {
+      pressableRef.current?.focus?.()
+    }
+  }, [focused])
+
+  const baseTextColor = selected
+    ? textColorOnPrimary
+    : inRange && !disabled
+      ? theme.colors.onSecondaryContainer
+      : theme.colors.onSurface
+
+  const circle = Math.min(indicatorSize, cellHeight)
+  const muted = (disabled || outside) && !selected
+  const showFocus = !disabled && (focused || inputFocused)
+
+  const stateLayerColor = selected
+    ? theme.colors.onPrimary
+    : isToday
+      ? theme.colors.primary
+      : inRange
+        ? theme.colors.onPrimaryContainer
+        : theme.colors.onSurfaceVariant
+
+  const stateSize = Math.min(daySize, circle)
+  const stateOffset = (circle - stateSize) / 2
+
+  const textColor =
+    isToday && !selected && !disabled ? theme.colors.primary : baseTextColor
+
+  const textFont = theme.fonts.bodyLarge
 
   const onPress = useCallback(() => {
     onPressDate(new Date(year, month, day))
-  }, [onPressDate, year, month, day])
-
-  // Determine text colors for M3
-  let baseTextColor
-  let finalTextColor
-
-  if (selected) {
-    baseTextColor = theme.colors.onPrimary
-  } else if (inRange && theme.dark) {
-    baseTextColor = theme.colors.onPrimaryContainer
-  } else {
-    baseTextColor = theme.colors.onSurface
-  }
-
-  if (isToday) {
-    finalTextColor = selected ? baseTextColor : theme.colors.primary
-  } else {
-    finalTextColor = baseTextColor
-  }
-
-  const textFont = theme.fonts.bodySmall
+  }, [day, month, onPressDate, year])
 
   return (
-    <View style={[styles.root, disabled && styles.disabled]}>
+    <View style={styles.root}>
       <DayRange
         inRange={inRange}
         leftCrop={leftCrop}
         rightCrop={rightCrop}
         selectColor={selectColor}
       />
-      <TouchableRipple
-        testID={`react-native-paper-dates-day-${year}-${month}-${day}`}
+      <Pressable
+        ref={pressableRef}
+        accessibilityLabel={accessibilityLabel}
+        accessibilityRole="button"
+        accessibilityState={{ disabled, selected }}
+        {...(Platform.OS === 'web' && isToday
+          ? { 'aria-current': 'date' as const }
+          : null)}
         disabled={disabled}
-        borderless={true}
+        {...(Platform.OS === 'web' ? { tabIndex: isTabStop ? 0 : -1 } : null)}
+        onBlur={() => setInputFocused(false)}
+        onFocus={() => setInputFocused(true)}
+        onHoverIn={() => setHovered(true)}
+        onHoverOut={() => setHovered(false)}
         onPress={disabled ? undefined : onPress}
+        onPressIn={() => setPressed(true)}
+        onPressOut={() => setPressed(false)}
         style={[
           styles.button,
-          { backgroundColor: inRange ? selectColor : undefined },
+          cellHeight === dayCellSize ? null : { height: cellHeight },
         ]}
-        accessibilityRole="button"
+        testID={`react-native-paper-dates-day-${year}-${month}-${day}`}
       >
         <View
           style={[
-            styles.day,
-            isToday ? { borderColor: borderColor } : null,
-            selected ? { backgroundColor: primaryColor } : null,
+            styles.indicator,
+            circle === daySize ? null : { height: circle, width: circle },
           ]}
         >
-          <Text
-            maxFontSizeMultiplier={1.5}
+          <View
             style={[
-              baseTextColor
+              styles.day,
+              circle === daySize
+                ? null
+                : {
+                    borderRadius: circle / 2,
+                    height: circle,
+                    width: circle,
+                  },
+              isToday && !selected
+                ? { borderColor: theme.colors.primary }
+                : null,
+              selected
                 ? {
-                    color: finalTextColor,
+                    backgroundColor: disabled
+                      ? withAlpha(primaryColor, 0.38)
+                      : primaryColor,
                   }
-                : undefined,
-              { ...textFont },
+                : null,
             ]}
-            selectable={false}
           >
-            {day}
-          </Text>
+            <View
+              pointerEvents="none"
+              style={[
+                styles.stateLayer,
+                {
+                  borderRadius: stateSize / 2,
+                  height: stateSize,
+                  left: stateOffset,
+                  top: stateOffset,
+                  width: stateSize,
+                },
+              ]}
+            >
+              <StateLayer
+                color={stateLayerColor}
+                focused={showFocus}
+                hovered={!disabled && hovered}
+                pressed={!disabled && pressed}
+              />
+            </View>
+            <Text
+              maxFontSizeMultiplier={1.5}
+              selectable={false}
+              style={[
+                {
+                  color:
+                    selected && disabled
+                      ? withAlpha(textColorOnPrimary, 0.38)
+                      : textColor,
+                },
+                textFont,
+                muted && styles.muted,
+              ]}
+            >
+              {day}
+            </Text>
+          </View>
+          {showFocus ? (
+            <FocusRing
+              color={theme.colors.secondary}
+              focused
+              radius={circle / 2}
+            />
+          ) : null}
         </View>
-      </TouchableRipple>
-      {dayContent ? (
-        <View
-          style={[
-            styles.content,
-            contentPositions[dayContentPosition || 'bottom'],
-            dayContentStyle,
-          ]}
-          pointerEvents="none"
-        >
-          {dayContent({
-            date: new Date(year, month, day),
-            day,
-            month,
-            year,
-            selected,
-            isToday,
-            disabled,
-          })}
-        </View>
-      ) : null}
+        {dayContent ? (
+          <View
+            pointerEvents="none"
+            style={[
+              styles.content,
+              circle === daySize ? null : { height: circle, width: circle },
+              contentPositions[dayContentPosition || 'bottom'],
+              dayContentStyle,
+            ]}
+          >
+            {dayContent({
+              date: new Date(year, month, day),
+              day,
+              disabled,
+              isToday,
+              month,
+              selected,
+              year,
+            })}
+          </View>
+        ) : null}
+      </Pressable>
     </View>
   )
 }
 
+function EmptyDayPure() {
+  return <View style={styles.empty} />
+}
+
 const styles = StyleSheet.create({
   button: {
-    width: daySize,
-    height: daySize,
-    overflow: 'hidden',
-    borderRadius: daySize / 2,
+    alignItems: 'center',
+    height: dayCellSize,
+    justifyContent: 'center',
+    width: dayCellSize,
   },
   content: {
-    // Absolutely positioned without insets, so Yoga still honours the parent's
-    // centering and this box lines up with the day circle instead of the
-    // (wider) grid cell.
+    height: daySize,
     position: 'absolute',
     width: daySize,
-    height: daySize,
   },
   day: {
-    flexBasis: 0,
-    flex: 1,
+    alignItems: 'center',
+    borderColor: 'transparent',
     borderRadius: daySize / 2,
-    width: daySize,
+    borderWidth: 1,
     height: daySize,
     justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'transparent',
-  },
-  disabled: {
-    opacity: 0.3,
+    overflow: 'hidden',
+    width: daySize,
   },
   empty: {
     flex: 1,
     flexBasis: 0,
   },
+  indicator: {
+    height: daySize,
+    width: daySize,
+  },
+  muted: {
+    opacity: 0.38,
+  },
   root: {
-    flexBasis: 0,
-    flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+    flex: 1,
+    flexBasis: 0,
+    justifyContent: 'center',
     position: 'relative',
+  },
+  stateLayer: {
+    overflow: 'hidden',
+    position: 'absolute',
   },
 })
 
-// Anchors for `dayContent`, applied to a box the size of the day circle.
-const contentPositions = StyleSheet.create({
-  'bottom': {
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    paddingBottom: 2,
-  },
-  'bottom-left': { justifyContent: 'flex-end', alignItems: 'flex-start' },
-  'bottom-right': { justifyContent: 'flex-end', alignItems: 'flex-end' },
-  'center': { justifyContent: 'center', alignItems: 'center' },
-  'top': { justifyContent: 'flex-start', alignItems: 'center', paddingTop: 2 },
-  'top-left': { justifyContent: 'flex-start', alignItems: 'flex-start' },
-  'top-right': { justifyContent: 'flex-start', alignItems: 'flex-end' },
-})
+export const EmptyDay = memo(EmptyDayPure)
 
 export default memo(Day)

@@ -1,154 +1,305 @@
+import { memo, useContext, useEffect, useMemo, useState } from 'react'
 import { StyleSheet, useWindowDimensions, View } from 'react-native'
+import { IconButton, useTheme } from 'react-native-paper'
 
+import { DisplayModeContext } from '../contexts/DisplayModeContext'
+import { TimePickerPlacementContext } from '../contexts/TimePickerPlacementContext'
+import AnalogClock from './AnalogClock'
+import ScrollTimePicker from './ScrollTimePicker'
+import TimeInputs from './TimeInputs'
 import {
   circleSize,
+  getTimeInputToggleLabel,
+  type InlineInputTypes,
   inputTypes,
-  PossibleClockTypes,
-  PossibleInputTypes,
+  periodSelectorGap,
+  periodSelectorVerticalWidth,
+  type PossibleClockTypes,
+  type PossibleInputTypes,
+  resolve24HourClock,
+  resolveInlineInputType,
+  type TimeChange,
+  timePickerUsesLandscape,
+  timeSelectorFieldWidth,
+  timeSeparatorWidth,
   toHourInputFormat,
   toHourOutputFormat,
 } from './timeUtils'
 
-import AnalogClock from './AnalogClock'
-import TimeInputs from './TimeInputs'
-import { DisplayModeContext } from '../contexts/DisplayModeContext'
-import { memo, useCallback, useEffect, useMemo, useState } from 'react'
-
-type onChangeFunc = ({
-  hours,
-  minutes,
-  focused,
-}: {
-  hours: number
-  minutes: number
-  focused?: undefined | PossibleClockTypes
-}) => any
-
-function TimePicker({
-  hours,
-  minutes,
-  onFocusInput,
-  focused,
-  inputType,
-  onChange,
-  locale,
-  use24HourClock,
-  inputFontSize,
-}: {
-  locale?: undefined | string
-  inputType: PossibleInputTypes
+type TimePickerViewProps = {
+  autoFocus?: boolean
+  clockIcon?: string
+  disabled?: boolean
+  error?: boolean
+  errorText?: string
   focused: PossibleClockTypes
   hours: number
-  minutes: number
-  onFocusInput: (type: PossibleClockTypes) => any
-  onChange: onChangeFunc
-  use24HourClock?: boolean
   inputFontSize?: number
-}) {
-  const dimensions = useWindowDimensions()
-  const isLandscape = dimensions.width > dimensions.height
+  inputType: PossibleInputTypes
+  keyboardIcon?: string
+  locale?: string
+  minutes: number
+  onChange: TimeChange
+  onFocusInput: (type: PossibleClockTypes) => void
+  onInputInvalidChange?: (invalid: boolean) => void
+  onToggleKeyboard?: () => void
+  scrollIcon?: string
+  use24HourClock?: boolean
+}
 
-  const [displayMode, setDisplayMode] = useState<'AM' | 'PM' | undefined>(
-    undefined
+const TimePickerView = memo(function TimePickerView({
+  autoFocus,
+  clockIcon = 'clock',
+  disabled,
+  error,
+  errorText,
+  focused,
+  hours,
+  inputFontSize,
+  inputType,
+  keyboardIcon = 'keyboard',
+  locale,
+  minutes,
+  onChange,
+  onFocusInput,
+  onInputInvalidChange,
+  onToggleKeyboard,
+  scrollIcon = 'gesture-swipe-vertical',
+  use24HourClock,
+}: TimePickerViewProps) {
+  const dimensions = useWindowDimensions()
+  const placement = useContext(TimePickerPlacementContext)
+  const theme = useTheme()
+
+  const [displayMode, setDisplayMode] = useState<'AM' | 'PM' | undefined>(() =>
+    hours >= 12 ? 'PM' : 'AM'
   )
 
-  // method to check whether we have 24 hours in clock or 12
-  const is24Hour = useMemo(() => {
-    if (use24HourClock !== undefined) {
-      return use24HourClock
-    }
-    const formatter = new Intl.DateTimeFormat(locale, {
-      hour: '2-digit',
-      minute: '2-digit',
-      timeZone: 'UTC',
-    })
-    const formatted = formatter.format(new Date(Date.UTC(2020, 1, 1, 23)))
-    return formatted.includes('23')
-  }, [locale, use24HourClock])
+  const [localInputType, setLocalInputType] = useState(inputType)
 
-  // Initialize display Mode according the hours value
-  useEffect(() => {
-    if (hours >= 12) {
-      setDisplayMode('PM')
-    } else {
-      setDisplayMode('AM')
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const activeInputType = onToggleKeyboard ? inputType : localInputType
 
-  const onInnerChange = useCallback<onChangeFunc>(
-    (params) => {
-      params.hours = toHourOutputFormat(params.hours, hours, is24Hour)
-      onChange(params)
-    },
-    [onChange, hours, is24Hour]
+  const [hasShownScroll, setHasShownScroll] = useState(
+    () => activeInputType === inputTypes.scroll
+  )
+
+  const displayModeValue = useMemo(
+    () => ({ mode: displayMode, setMode: setDisplayMode }),
+    [displayMode]
+  )
+
+  const is24Hour = resolve24HourClock(use24HourClock, locale)
+
+  const fields = (
+    <TimeInputs
+      autoFocus={autoFocus}
+      disabled={disabled}
+      error={error}
+      errorText={errorText}
+      focused={focused}
+      hours={hours}
+      inputFontSize={inputFontSize}
+      inputType={activeInputType}
+      is24Hour={is24Hour}
+      locale={locale}
+      minutes={minutes}
+      onChange={onChange}
+      onFocusInput={onFocusInput}
+      onInputInvalidChange={onInputInvalidChange}
+    />
+  )
+
+  const isLandscape = timePickerUsesLandscape(
+    dimensions.width,
+    dimensions.height,
+    activeInputType
+  )
+
+  const clockWidth =
+    activeInputType === inputTypes.picker
+      ? circleSize + (isLandscape ? 52 : 0)
+      : 0
+
+  const fieldWidth = timeSelectorFieldWidth(
+    activeInputType,
+    is24Hour,
+    isLandscape
   )
 
   const inputsWidth =
-    96 * 2 +
-    24 +
-    (is24Hour || (isLandscape && inputType === inputTypes.picker) ? 0 : 12 + 52)
+    fieldWidth * 2 +
+    timeSeparatorWidth +
+    (is24Hour || (isLandscape && activeInputType === inputTypes.picker)
+      ? 0
+      : periodSelectorGap + periodSelectorVerticalWidth)
 
-  const clockWidth =
-    inputType === inputTypes.picker ? circleSize + (isLandscape ? 64 : 0) : 0
+  const showingScroll = activeInputType === inputTypes.scroll
+
+  const keepScrollMounted =
+    showingScroll || (hasShownScroll && activeInputType === inputTypes.keyboard)
+
+  const showReturnToPicker =
+    activeInputType === inputTypes.keyboard &&
+    !onToggleKeyboard &&
+    inputType !== inputTypes.keyboard
+
+  const onInnerChange: TimeChange = (params) => {
+    onChange({
+      ...params,
+      hours: toHourOutputFormat(params.hours, hours, is24Hour),
+    })
+  }
+
+  const toggleKeyboard = () => {
+    if (disabled) return
+    if (onToggleKeyboard) {
+      onToggleKeyboard()
+      return
+    }
+    setLocalInputType((current) =>
+      current === inputTypes.keyboard ? inputType : inputTypes.keyboard
+    )
+  }
+
+  useEffect(() => {
+    setDisplayMode(hours >= 12 ? 'PM' : 'AM')
+  }, [hours])
+
+  useEffect(() => {
+    setLocalInputType(inputType)
+  }, [inputType])
+
+  useEffect(() => {
+    if (activeInputType === inputTypes.scroll) {
+      setHasShownScroll(true)
+    } else if (activeInputType === inputTypes.picker) {
+      setHasShownScroll(false)
+    }
+  }, [activeInputType])
 
   return (
-    <DisplayModeContext.Provider
-      value={{ mode: displayMode, setMode: setDisplayMode }}
-    >
-      <View
-        style={
-          isLandscape
-            ? [styles.rootLandscape, { width: inputsWidth + clockWidth }]
-            : styles.rootPortrait
-        }
-      >
-        <TimeInputs
-          inputType={inputType}
-          inputFontSize={inputFontSize}
-          hours={hours}
-          minutes={minutes}
-          is24Hour={is24Hour}
-          onChange={onChange}
-          onFocusInput={onFocusInput}
-          focused={focused}
-          locale={locale}
-        />
-        {inputType === inputTypes.picker ? (
-          <View
-            style={[
-              styles.clockContainer,
-              isLandscape && styles.clockContainerLandscape,
-            ]}
-          >
-            <AnalogClock
-              hours={toHourInputFormat(hours, is24Hour)}
-              minutes={minutes}
-              focused={focused}
-              is24Hour={is24Hour}
-              onChange={onInnerChange}
-            />
-          </View>
-        ) : null}
-      </View>
+    <DisplayModeContext.Provider value={displayModeValue}>
+      {keepScrollMounted ? (
+        <View
+          accessibilityElementsHidden={!showingScroll}
+          importantForAccessibility={
+            showingScroll ? 'auto' : 'no-hide-descendants'
+          }
+          pointerEvents={showingScroll ? 'auto' : 'none'}
+          style={showingScroll ? undefined : styles.hiddenScroll}
+        >
+          <ScrollTimePicker
+            autoFocus={autoFocus}
+            disabled={disabled}
+            error={error}
+            errorText={errorText}
+            focused={focused}
+            hours={hours}
+            is24Hour={is24Hour}
+            keyboardIcon={keyboardIcon}
+            locale={locale}
+            minutes={minutes}
+            onChange={onChange}
+            onFocusInput={onFocusInput}
+            onToggleKeyboard={toggleKeyboard}
+            showKeyboardToggle={
+              placement === 'inline' && (!is24Hour || !onToggleKeyboard)
+            }
+            visible={showingScroll}
+          />
+        </View>
+      ) : null}
+      {!showingScroll ? (
+        <View
+          style={
+            isLandscape && activeInputType === inputTypes.picker
+              ? [styles.rootLandscape, { width: inputsWidth + clockWidth }]
+              : styles.rootPortrait
+          }
+        >
+          {showReturnToPicker ? (
+            <View style={styles.inputColumn}>
+              {fields}
+              <IconButton
+                accessibilityLabel={getTimeInputToggleLabel(
+                  locale,
+                  activeInputType,
+                  inputType === inputTypes.scroll
+                    ? inputTypes.scroll
+                    : inputTypes.picker
+                )}
+                disabled={disabled}
+                icon={inputType === inputTypes.scroll ? scrollIcon : clockIcon}
+                iconColor={theme.colors.onSurfaceVariant}
+                iconSize={24}
+                onPress={toggleKeyboard}
+                style={styles.inputTypeToggle}
+              />
+            </View>
+          ) : (
+            fields
+          )}
+          {activeInputType === inputTypes.picker ? (
+            <View
+              style={[
+                styles.clockContainer,
+                !isLandscape && styles.clockSideInset,
+                isLandscape && styles.clockContainerLandscape,
+              ]}
+            >
+              <AnalogClock
+                disabled={disabled}
+                focused={focused}
+                hours={toHourInputFormat(hours, is24Hour)}
+                is24Hour={is24Hour}
+                locale={locale}
+                minutes={minutes}
+                onChange={onInnerChange}
+              />
+            </View>
+          ) : null}
+        </View>
+      ) : null}
     </DisplayModeContext.Provider>
+  )
+})
+
+function TimePicker({
+  inputType,
+  ...rest
+}: Omit<TimePickerViewProps, 'inputType'> & {
+  inputType: InlineInputTypes
+}) {
+  return (
+    <TimePickerView {...rest} inputType={resolveInlineInputType(inputType)} />
   )
 }
 
 const styles = StyleSheet.create({
   clockContainer: {
-    paddingTop: 36,
-    paddingLeft: 12,
-    paddingRight: 12,
+    paddingTop: 12,
   },
   clockContainerLandscape: {
-    paddingTop: 0,
-    paddingLeft: 64,
+    paddingLeft: 52,
     paddingRight: 0,
+    paddingTop: 0,
+  },
+  clockSideInset: {
+    paddingHorizontal: 12,
+  },
+  hiddenScroll: {
+    display: 'none',
+  },
+  inputColumn: {
+    alignItems: 'flex-start',
+  },
+  inputTypeToggle: {
+    margin: 0,
+    marginTop: 8,
   },
   rootLandscape: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
     justifyContent: 'center',
   },
   rootPortrait: {
@@ -156,5 +307,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 })
+
+export { TimePickerView }
 
 export default memo(TimePicker)

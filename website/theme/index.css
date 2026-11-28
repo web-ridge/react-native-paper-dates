@@ -342,3 +342,66 @@ html.rp-dark .intro-badges {
   background: var(--paper-surface-variant);
   border-color: var(--paper-outline-variant);
 }
+
+@font-face {
+  font-family: 'MaterialDesignIcons';
+  src: url('@react-native-vector-icons/material-design-icons/fonts/MaterialDesignIcons.ttf')
+    format('truetype');
+}
+
+.paper-demo {
+  border: 1px solid var(--rp-c-divider-light);
+  border-radius: var(--rp-radius);
+  margin: 16px 0;
+  overflow: hidden;
+}
+
+.paper-demo__preview {
+  display: flex;
+  flex-direction: column;
+  min-height: 120px;
+  padding: 24px 16px;
+}
+
+@media (max-width: 480px) {
+  .paper-demo__preview {
+    padding: 16px 8px;
+  }
+}
+
+.paper-demo__toolbar {
+  border-top: 1px solid var(--rp-c-divider-light);
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+  padding: 4px 8px;
+}
+
+.paper-demo__toolbar button {
+  background: none;
+  border-radius: 999px;
+  color: var(--rp-c-brand);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 6px 12px;
+}
+
+.paper-demo__toolbar button:hover {
+  background: var(--rp-c-brand-tint);
+}
+
+.paper-demo .rp-playground-editor {
+  border-top: 1px solid var(--rp-c-divider-light);
+  height: 360px;
+}
+
+.paper-demo .rp-playground-runner {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.paper-demo .rp-playground-error {
+  position: static;
+  white-space: pre-wrap;
+}

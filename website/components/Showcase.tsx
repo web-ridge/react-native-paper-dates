@@ -5,22 +5,22 @@ import GithubIcon from './icons/GithubIcon'
 import GooglePlayIcon from './icons/GooglePlayIcon'
 
 type Data = {
-  name: string
-  description: string
-  icon: string
   android?: string
-  ios?: string
+  description: string
   github?: string
+  icon: string
+  ios?: string
+  name: string
 }
 
 const data: Data[] = [
   {
-    name: 'Bluebirding',
-    description: 'Lease land for outdoor activities',
-    icon: '/showcase/bluebirding-icon.jpg',
     android:
       'https://play.google.com/store/apps/details?id=com.bitzllc.bluebird',
+    description: 'Lease land for outdoor activities',
+    icon: '/showcase/bluebirding-icon.jpg',
     ios: 'https://apps.apple.com/us/app/bluebirding/id1553837668',
+    name: 'Bluebirding',
   },
 ]
 
@@ -28,14 +28,14 @@ export default function Showcase() {
   return (
     <div className="showcase-list">
       {data.map((item) => (
-        <article key={item.name} className="showcase-app">
+        <article className="showcase-app" key={item.name}>
           <div className="showcase-app__header">
             <img
-              className="showcase-app__icon"
-              src={withBase(item.icon)}
               alt=""
-              width={56}
+              className="showcase-app__icon"
               height={56}
+              src={withBase(item.icon)}
+              width={56}
             />
             <div className="showcase-app__meta">
               <h3 className="showcase-app__name">{item.name}</h3>
@@ -47,8 +47,8 @@ export default function Showcase() {
               <a
                 className="showcase-store-btn"
                 href={item.ios}
-                target="_blank"
                 rel="noopener noreferrer"
+                target="_blank"
               >
                 <AppStoreIcon color="currentColor" />
                 <span>
@@ -63,8 +63,8 @@ export default function Showcase() {
               <a
                 className="showcase-store-btn"
                 href={item.android}
-                target="_blank"
                 rel="noopener noreferrer"
+                target="_blank"
               >
                 <GooglePlayIcon color="currentColor" />
                 <span>
@@ -77,8 +77,8 @@ export default function Showcase() {
               <a
                 className="showcase-store-btn showcase-store-btn--ghost"
                 href={item.github}
-                target="_blank"
                 rel="noopener noreferrer"
+                target="_blank"
               >
                 <GithubIcon color="currentColor" />
                 <span>

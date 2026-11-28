@@ -1,82 +1,76 @@
-import { StyleSheet, View } from 'react-native'
-import { Text } from 'react-native-paper'
-import { circleSize } from './timeUtils'
-import { useTextColorOnPrimary } from '../shared/utils'
 import { memo } from 'react'
+import { useTheme } from 'react-native-paper'
 
-function AnalogClockMinutes({ minutes }: { minutes: number }) {
-  const range = getMinuteNumbers(circleSize, 12)
-  const color = useTextColorOnPrimary()
+import { withAlpha } from '../shared/utils'
+import { getTranslation } from '../translations/utils'
+import ClockNumber from './ClockNumber'
+import { circleSize, clockNumbers, disabledContentOpacity } from './timeUtils'
+
+const minuteNumbers = clockNumbers(12, 2.5, circleSize, -Math.PI / 2)
+
+function minuteMatches(label: number, value: number) {
+  if (label === 0) return value >= 59 || value <= 1
+  return label - 1 <= value && value <= label + 1
+}
+
+function AnalogClockMinutes({
+  disabled,
+  hoveredMinute = null,
+  locale,
+  minutes,
+  onNumberFocus,
+  onPress,
+}: {
+  disabled?: boolean
+  hoveredMinute?: number | null
+  locale?: string
+  minutes: number
+  onNumberFocus?: (focused: boolean, selected: boolean) => void
+  onPress?: (minutes: number) => void
+}) {
+  const theme = useTheme()
+
+  const minuteOf = getTranslation(
+    locale,
+    'minuteOf',
+    (minute, count) => `Minute ${minute} of ${count}`
+  )
+
+  const selectedColor = disabled
+    ? withAlpha(theme.colors.onPrimary, disabledContentOpacity)
+    : theme.colors.onPrimary
+
+  const unselectedColor = disabled
+    ? withAlpha(theme.colors.onSurface, disabledContentOpacity)
+    : theme.colors.onSurface
 
   return (
     <>
-      {range.map((a, i) => {
-        const currentMinutes = i * 5
+      {minuteNumbers.map(([left, top], index) => {
+        const currentMinutes = index * 5
         const isZero = currentMinutes === 0
-        let isCurrent =
-          currentMinutes - 1 <= minutes && currentMinutes + 1 >= minutes
-        if (isZero) {
-          isCurrent = minutes >= 59 || currentMinutes + 1 >= minutes
-        }
+        const selected = minuteMatches(currentMinutes, minutes)
+        const hovered =
+          hoveredMinute !== null && minuteMatches(currentMinutes, hoveredMinute)
         return (
-          <View
-            key={i}
-            pointerEvents="none"
-            style={[
-              styles.outerHourRoot,
-              {
-                top: a[1] || 0,
-                left: a[0] || 0,
-              },
-            ]}
-          >
-            <View style={styles.outerHourInner}>
-              <Text
-                maxFontSizeMultiplier={1.5}
-                style={isCurrent ? { color } : undefined}
-                selectable={false}
-                variant="bodyLarge"
-              >
-                {isZero ? '00' : currentMinutes}
-              </Text>
-            </View>
-          </View>
+          <ClockNumber
+            key={index}
+            accessibilityLabel={minuteOf(currentMinutes, 60)}
+            color={selected ? selectedColor : unselectedColor}
+            disabled={disabled}
+            hovered={hovered}
+            left={left}
+            onFocusChange={onNumberFocus}
+            onPress={onPress}
+            pressValue={disabled ? undefined : currentMinutes}
+            selected={selected}
+            top={top}
+            value={isZero ? '00' : currentMinutes}
+          />
         )
       })}
     </>
   )
 }
-
-function getMinuteNumbers(size: number, count: number) {
-  let angle = 0
-  let step = (2 * Math.PI) / count
-  let radius = size / 2.5
-
-  angle = angle = (-90 * Math.PI) / 180
-
-  return Array(12)
-    .fill(true)
-    .map(() => {
-      let x = Math.round(size / 2 + radius * Math.cos(angle))
-      let y = Math.round(size / 2 + radius * Math.sin(angle))
-      angle += step
-      return [x, y]
-    })
-}
-
-const styles = StyleSheet.create({
-  outerHourRoot: {
-    position: 'absolute',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 20,
-    width: 48,
-    height: 48,
-    marginLeft: -24,
-    marginTop: -24,
-    borderRadius: 24,
-  },
-  outerHourInner: { borderRadius: 24 },
-})
 
 export default memo(AnalogClockMinutes)

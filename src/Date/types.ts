@@ -1,0 +1,57 @@
+import type { ReactNode } from 'react'
+
+export type CalendarDate = Date | undefined
+export type CalendarDates = Date[] | null | undefined
+export type CalendarMode =
+  | SingleCalendarMode
+  | RangeCalendarMode
+  | MultiCalendarMode
+export type DayContentPosition =
+  | 'bottom'
+  | 'bottom-left'
+  | 'bottom-right'
+  | 'center'
+  | 'top'
+  | 'top-left'
+  | 'top-right'
+export type DayContentRenderer = (params: {
+  date: Date
+  day: number
+  disabled: boolean
+  isToday: boolean
+  month: number
+  selected: boolean
+  year: number
+}) => ReactNode
+export type DisableWeekDaysType = number[]
+export type ModeType = 'multiple' | 'range' | 'single'
+export type MultiCalendarMode = {
+  dates: CalendarDates
+  mode: 'multiple'
+}
+export type MultiChange = (params: {
+  change: 'added' | 'removed'
+  datePressed: Date
+  dates: CalendarDates
+}) => void
+export type MultiConfirm = (params: { dates: Date[] }) => void
+export type RangeCalendarMode = {
+  endDate: CalendarDate
+  mode: 'range'
+  startDate: CalendarDate
+}
+export type RangeChange = (params: {
+  endDate: CalendarDate
+  startDate: CalendarDate
+}) => void
+export type ScrollModeType = 'horizontal' | 'vertical'
+export type SingleCalendarMode = {
+  date: CalendarDate
+  mode: 'single'
+}
+export type SingleChange = (params: { date: CalendarDate }) => void
+export type ValidRangeType = {
+  disabledDates?: Date[]
+  endDate?: Date
+  startDate?: Date
+}

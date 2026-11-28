@@ -1,43 +1,45 @@
+import { useMemo } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { IconButton, Text, useTheme } from 'react-native-paper'
-import type { ModeType } from './Calendar'
-import type { LocalState } from './DatePickerModalContent'
-import { useHeaderTextColor } from '../shared/utils'
-import Color from 'color'
+
+import { dateTimeFormat } from '../shared/intl'
+import { displayCase, themeColor, useIsLargeScreen } from '../shared/utils'
 import { getTranslation } from '../translations/utils'
-import { useMemo } from 'react'
-import { sharedStyles } from '../shared/styles'
-import type { DisableWeekDaysType } from './dateUtils'
-import {
-  alignTextToFirstWeekday,
-  centerIconOnLastWeekday,
-} from './weekdayColumns'
+import type { LocalState } from './DatePickerModalContent'
+import type { DisableWeekDaysType, ModeType } from './types'
+
+interface HeaderContentProps extends HeaderPickProps {
+  collapsed: boolean
+  disableWeekDays?: DisableWeekDaysType
+  layout?: 'card'
+  locale: string | undefined
+  mode: ModeType
+  onToggle: () => void
+  state: LocalState
+}
 
 export interface HeaderPickProps {
-  moreLabel?: string
-  label?: string
-  emptyLabel?: string
-  withDateFormatInLabel?: boolean
-  placeholder?: string
-  saveLabel?: string
-  uppercase?: boolean
-  headerSeparator?: string
-  startLabel?: string
-  endLabel?: string
-  editIcon?: string
+  allowEditing?: boolean
   calendarIcon?: string
   closeIcon?: string
-  allowEditing?: boolean
+  editIcon?: string
+  emptyLabel?: string
+  endLabel?: string
+  headerSeparator?: string
+  label?: string
+  moreLabel?: string
+  placeholder?: string
+  saveLabel?: string
+  startLabel?: string
+  uppercase?: boolean
+  withDateFormatInLabel?: boolean
 }
 
-export interface HeaderContentProps extends HeaderPickProps {
-  state: LocalState
-  mode: ModeType
-  collapsed: boolean
-  onToggle: () => any
-  locale: string | undefined
-  disableWeekDays?: DisableWeekDaysType
-}
+const selectionLabel = {
+  multiple: 'selectMultiple',
+  range: 'selectRange',
+  single: 'selectSingle',
+} as const
 
 function getLabel(
   locale: string | undefined,
@@ -47,134 +49,130 @@ function getLabel(
   if (configuredLabel) {
     return configuredLabel
   }
-  if (mode === 'range') {
-    return getTranslation(locale, 'selectRange')
+  const key = selectionLabel[mode]
+  if (!key) {
+    return ''
   }
-  if (mode === 'multiple') {
-    return getTranslation(locale, 'selectMultiple')
-  }
-  if (mode === 'single') {
-    return getTranslation(locale, 'selectSingle')
-  }
-  return '...?'
+  return getTranslation(locale, key)
+}
+
+function useShortDateLabel(locale: string | undefined, withWeekday = false) {
+  const formatter = useMemo(
+    () =>
+      dateTimeFormat(locale, {
+        day: 'numeric',
+        month: 'short',
+        ...(withWeekday ? { weekday: 'short' as const } : {}),
+      }),
+    [locale, withWeekday]
+  )
+
+  return { formatter }
 }
 
 export default function DatePickerModalContentHeader(
   props: HeaderContentProps
 ) {
+  const isLargeScreen = useIsLargeScreen()
+  const theme = useTheme()
+
   const {
-    onToggle,
+    allowEditing,
+    calendarIcon,
     collapsed,
+    editIcon,
     mode,
     moreLabel,
+    onToggle,
     uppercase,
-    editIcon,
-    calendarIcon,
-    allowEditing,
-    disableWeekDays,
   } = props
-  const theme = useTheme()
-  const label = getLabel(props.locale, props.mode, props.label)
-  const color = useHeaderTextColor()
-  const isEditingEnabled = allowEditing && mode !== 'multiple'
-  const supportingTextColor = theme.colors.onSurfaceVariant
-  const textFont = theme.fonts.labelMedium
+
   const finalCollapsedIcon = editIcon ?? 'pencil-outline'
   const finalExpandedIcon = calendarIcon ?? 'calendar-blank'
+  const headlineColor = themeColor(theme.colors.onSurfaceVariant)
+  const isEditingEnabled = allowEditing && mode !== 'multiple'
+  const isRange = mode === 'range'
+  const compactRange = isRange && !isLargeScreen && props.layout !== 'card'
+  const label = getLabel(props.locale, props.mode, props.label)
+  const supportingTextColor = theme.colors.onSurfaceVariant
+  const textFont = theme.fonts.labelLarge
 
   return (
-    <View style={styles.header}>
-      <View style={alignTextToFirstWeekday(disableWeekDays)}>
+    <View
+      style={[
+        styles.header,
+        isRange && styles.rangeHeader,
+        compactRange && styles.compactRangeHeader,
+      ]}
+    >
+      <View style={styles.supporting}>
         <Text
           maxFontSizeMultiplier={1.5}
-          style={[styles.label, { color: supportingTextColor, ...textFont }]}
+          style={[
+            textFont,
+            styles.supportingText,
+            { color: supportingTextColor },
+          ]}
         >
-          {uppercase ? label.toUpperCase() : label}
+          {displayCase(label, !!uppercase)}
         </Text>
-        <View style={styles.headerContentContainer}>
+      </View>
+      <View style={styles.headlineRow}>
+        <View
+          style={[
+            styles.headerContentContainer,
+            compactRange && styles.rangeHeaderContent,
+            compactRange &&
+              isEditingEnabled &&
+              styles.rangeHeaderContentWithToggle,
+          ]}
+        >
           {mode === 'range' ? (
-            <HeaderContentRange {...props} color={color} />
+            <HeaderContentRange {...props} color={headlineColor} />
           ) : null}
           {mode === 'single' ? (
-            <HeaderContentSingle {...props} color={color} />
+            <HeaderContentSingle {...props} color={headlineColor} />
           ) : null}
           {mode === 'multiple' ? (
             <HeaderContentMulti
               {...props}
-              color={color}
+              color={headlineColor}
               moreLabel={moreLabel}
             />
           ) : null}
         </View>
+        {isEditingEnabled ? (
+          <IconButton
+            accessibilityLabel={
+              collapsed
+                ? getTranslation(props.locale, 'typeInDate')
+                : getTranslation(props.locale, 'pickDateFromCalendar')
+            }
+            icon={collapsed ? finalCollapsedIcon : finalExpandedIcon}
+            iconColor={theme.colors.onSurfaceVariant}
+            iconSize={24}
+            onPress={onToggle}
+            style={[styles.editButton, compactRange && styles.rangeEditButton]}
+            testID="react-native-paper-dates-toggle-edit"
+          />
+        ) : null}
       </View>
-      <View style={sharedStyles.root} />
-      {isEditingEnabled ? (
-        <IconButton
-          icon={collapsed ? finalCollapsedIcon : finalExpandedIcon}
-          accessibilityLabel={
-            collapsed
-              ? getTranslation(props.locale, 'typeInDate')
-              : getTranslation(props.locale, 'pickDateFromCalendar')
-          }
-          iconColor={theme.colors.onSurface}
-          onPress={onToggle}
-          testID="react-native-paper-dates-toggle-edit"
-          style={[styles.editButton, centerIconOnLastWeekday(disableWeekDays)]}
-        />
-      ) : null}
     </View>
   )
 }
 
-export function HeaderContentSingle({
-  state,
-  emptyLabel = ' ',
+function HeaderContentMulti({
   color,
-  locale,
-}: HeaderContentProps & { color: string }) {
-  const theme = useTheme()
-
-  const lighterColor = Color(color).fade(0.5).rgb().toString()
-  const dateColor = state.date ? theme.colors.onSurface : lighterColor
-
-  const formatter = useMemo(() => {
-    return new Intl.DateTimeFormat(locale, {
-      month: 'short',
-      day: 'numeric',
-    })
-  }, [locale])
-
-  return (
-    <Text
-      maxFontSizeMultiplier={1.5}
-      style={[styles.text, { color: dateColor }]}
-    >
-      {state.date ? formatter.format(state.date) : emptyLabel}
-    </Text>
-  )
-}
-
-export function HeaderContentMulti({
-  state,
   emptyLabel = ' ',
+  locale,
   moreLabel = 'more',
-  color,
-  locale,
+  state,
 }: HeaderContentProps & { color: string; moreLabel: string | undefined }) {
-  const theme = useTheme()
+  const { formatter } = useShortDateLabel(locale)
 
   const dateCount = state.dates?.length || 0
-  const lighterColor = Color(color).fade(0.5).rgb().toString()
-  const dateColor = dateCount ? theme.colors.onSurface : lighterColor
-
-  const formatter = useMemo(() => {
-    return new Intl.DateTimeFormat(locale, {
-      month: 'short',
-      day: 'numeric',
-    })
-  }, [locale])
-
   let label = emptyLabel
+
   if (dateCount) {
     if (dateCount <= 2) {
       label = state.dates!.map((date) => formatter.format(date)).join(', ')
@@ -184,56 +182,53 @@ export function HeaderContentMulti({
     }
   }
 
+  const headlineFont = useTheme().fonts.headlineLarge
+
   return (
     <Text
       maxFontSizeMultiplier={1.5}
-      style={[styles.text, { color: dateColor }]}
+      style={[headlineFont, styles.headlineText, { color }]}
     >
       {label}
     </Text>
   )
 }
 
-export function HeaderContentRange({
-  locale,
-  state,
-  headerSeparator = '-',
-  startLabel = 'Start',
-  endLabel = 'End',
+function HeaderContentRange({
   color,
+  endLabel = 'End',
+  headerSeparator = '-',
+  locale,
+  startLabel = 'Start',
+  state,
 }: HeaderContentProps & { color: string }) {
-  const theme = useTheme()
-
-  const lighterColor = Color(color).fade(0.5).rgb().toString()
-  const startColorFilled = theme.colors.onSurface
-  const endColorFilled = theme.colors.onSurface
-  const startColor = state.startDate ? startColorFilled : lighterColor
-  const endColor = state.endDate ? endColorFilled : lighterColor
-
-  const formatter = useMemo(() => {
-    return new Intl.DateTimeFormat(locale, {
-      month: 'short',
-      day: 'numeric',
-    })
-  }, [locale])
+  const { formatter } = useShortDateLabel(locale)
+  const headlineFont = useTheme().fonts.titleLarge
 
   return (
     <>
       <Text
         maxFontSizeMultiplier={1.5}
-        style={[styles.text, { color: startColor }]}
+        numberOfLines={1}
+        style={[headlineFont, styles.headlineText, { color }]}
       >
         {state.startDate ? formatter.format(state.startDate) : startLabel}
       </Text>
       <Text
         maxFontSizeMultiplier={1.5}
-        style={[styles.headerSeparator, { color }]}
+        style={[
+          styles.headerSeparator,
+          headlineFont,
+          styles.headlineText,
+          { color },
+        ]}
       >
         {headerSeparator}
       </Text>
       <Text
         maxFontSizeMultiplier={1.5}
-        style={[styles.text, { color: endColor }]}
+        numberOfLines={1}
+        style={[headlineFont, styles.headlineText, { color }]}
       >
         {state.endDate ? formatter.format(state.endDate) : endLabel}
       </Text>
@@ -241,34 +236,88 @@ export function HeaderContentRange({
   )
 }
 
+function HeaderContentSingle({
+  color,
+  emptyLabel = ' ',
+  locale,
+  state,
+}: HeaderContentProps & { color: string }) {
+  const { formatter } = useShortDateLabel(locale, true)
+  const headlineFont = useTheme().fonts.headlineLarge
+
+  return (
+    <Text
+      maxFontSizeMultiplier={1.5}
+      numberOfLines={1}
+      style={[headlineFont, styles.headlineText, { color }]}
+    >
+      {state.date ? formatter.format(state.date) : emptyLabel}
+    </Text>
+  )
+}
+
 const styles = StyleSheet.create({
+  compactRangeHeader: {
+    paddingEnd: 12,
+    paddingStart: 64,
+  },
   editButton: {
-    marginTop: 0,
+    alignSelf: 'flex-end',
+    height: 48,
     marginBottom: 0,
-    marginStart: 0,
+    marginEnd: 0,
+    marginStart: 8,
+    marginTop: 0,
+    width: 48,
   },
   header: {
-    height: 75,
-    alignItems: 'center',
-    flexDirection: 'row',
+    justifyContent: 'space-between',
+    minHeight: 120,
+    paddingBottom: 12,
+    paddingEnd: 12,
+    paddingStart: 24,
+    paddingTop: 16,
   },
   headerContentContainer: {
+    alignItems: 'center',
+    flex: 1,
     flexDirection: 'row',
-    marginTop: 5,
+    height: 40,
   },
   headerSeparator: {
-    color: 'rgba(255,255,255,1)',
-    fontSize: 25,
-    paddingLeft: 6,
-    paddingRight: 6,
+    marginHorizontal: 4,
   },
-  label: {
-    color: '#fff',
-    fontSize: 13,
-    letterSpacing: 1,
+  headlineRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    height: 40,
+    marginTop: 0,
   },
-  text: {
-    color: '#fff',
-    fontSize: 25,
+  headlineText: {
+    includeFontPadding: false,
+  },
+  rangeEditButton: {
+    end: 0,
+    margin: 0,
+    position: 'absolute',
+    top: '50%',
+    transform: [{ translateY: -24 }],
+  },
+  rangeHeader: {
+    minHeight: 128,
+  },
+  rangeHeaderContent: {
+    height: 40,
+  },
+  rangeHeaderContentWithToggle: {
+    paddingEnd: 60,
+  },
+  supporting: {
+    height: 36,
+    justifyContent: 'center',
+  },
+  supportingText: {
+    includeFontPadding: false,
+    lineHeight: 20,
   },
 })

@@ -1,10 +1,15 @@
-import { I18nManager, type DimensionValue, type ViewStyle } from 'react-native'
-import { showWeekDay, type DisableWeekDaysType } from './dateUtils'
+import { type DimensionValue, I18nManager, type ViewStyle } from 'react-native'
+
+import { showWeekDay } from './dateUtils'
+import type { DisableWeekDaysType } from './types'
 
 const compactTextButtonPadding = 8
 const iconButtonPadding = 8
 const iconButtonSize = 24 + 2 * iconButtonPadding
 const letterHalfWidth = 4
+export const weekdaySpanOvershoot: ViewStyle = {
+  marginHorizontal: -letterHalfWidth,
+}
 
 export function alignIconToFirstWeekday(
   disableWeekDays?: DisableWeekDaysType
@@ -16,9 +21,10 @@ export function alignIconToFirstWeekday(
 }
 
 export function alignTextToFirstWeekday(
-  disableWeekDays?: DisableWeekDaysType
+  disableWeekDays?: DisableWeekDaysType,
+  contentInset = 0
 ): ViewStyle {
-  return alignToFirstColumn(disableWeekDays, letterHalfWidth)
+  return alignToFirstColumn(disableWeekDays, letterHalfWidth + contentInset)
 }
 
 export function alignTextToLastWeekday(
@@ -67,9 +73,5 @@ function columnCentreInset(
 
 export function weekdaySpan(disableWeekDays?: DisableWeekDaysType): ViewStyle {
   const inset = columnCentreInset(disableWeekDays)
-  return { marginStart: inset, marginEnd: inset }
-}
-
-export const weekdaySpanOvershoot: ViewStyle = {
-  marginHorizontal: -letterHalfWidth,
+  return { marginEnd: inset, marginStart: inset }
 }

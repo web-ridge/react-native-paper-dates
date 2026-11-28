@@ -1,59 +1,44 @@
-import { MultipleDatesDemo } from '../../../components/demos'
-
 # Multiple Dates Picker
 
 The multiple dates picker provides a modal allowing for multiple dates selection.
 
-## Preview
-
-<MultipleDatesDemo className="pd-demo--page" />
-
 ## Usage
 
-```jsx
-import React from "react";
-import { View, Text } from "react-native";
-import { Button } from 'react-native-paper';
+```jsx playground
+import { useState } from 'react';
+import { View } from 'react-native';
+import { Button, Text } from 'react-native-paper';
 import { DatePickerModal } from 'react-native-paper-dates';
-import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function App() {
-  const [dates, setDates] = React.useState();
-  const [open, setOpen] = React.useState(false);
-
-  const onDismiss = React.useCallback(() => {
-    setOpen(false);
-  }, [setOpen]);
-
-  const onConfirm = React.useCallback((params) => {
-    setOpen(false);
-    setDates(params.dates);
-    console.log('[on-change-multi]', params);
-  }, []);
+  const [dates, setDates] = useState(undefined);
+  const [open, setOpen] = useState(false);
 
   return (
-    <SafeAreaProvider>
-      <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
-        <Button onPress={() => setOpen(true)} uppercase={false} mode="outlined">
-          Pick multiple dates
-        </Button>
-        <DatePickerModal
-          locale="en"
-          mode="multiple"
-          visible={open}
-          onDismiss={onDismiss}
-          dates={dates}
-          onConfirm={onConfirm}
-        />
-      </View>
-    </SafeAreaProvider>
-  )
+    <View style={{ alignItems: 'center', gap: 12 }}>
+      <Button mode="outlined" onPress={() => setOpen(true)}>
+        Pick multiple dates
+      </Button>
+      <Text>{dates?.length ? `${dates.length} dates selected` : 'No dates selected'}</Text>
+      <DatePickerModal
+        dates={dates}
+        locale="en"
+        mode="multiple"
+        onConfirm={(params) => {
+          setOpen(false);
+          setDates(params.dates);
+        }}
+        onDismiss={() => setOpen(false)}
+        visible={open}
+      />
+    </View>
+  );
 }
 ```
 
 ## Live Example
 
-View an interactive [Expo snack](https://snack.expo.dev/@fitzwabs/react-native-paper-dates-multiple-picker).
+Try this and the other pickers on the [example site](https://www.reactnativepaperdates.com/).
 
 ## Props
 
@@ -178,7 +163,7 @@ iOS modal presentation style. Defaults to `'overFullScreen'`.
 
 **saveLabel**  
 `Type: string | undefined`  
-Confirm button label. Defaults to the locale translation for `save` (English: `'Save'`).
+Confirm button label. Compact screens default to `save` (English: `'Save'`). Larger screens default to `confirm` (English: `'OK'`) when this is omitted.
 
 **saveLabelDisabled**  
 `Type: boolean | undefined`  

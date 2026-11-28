@@ -1,83 +1,113 @@
-import { useTheme } from 'react-native-paper'
 import {
-  getIndexFromVerticalOffset,
-  getMonthHeight,
-  getVerticalMonthsOffset,
-  montHeaderHeight,
-} from './Month'
-import {
-  getBeginOffset,
-  estimatedMonthHeight,
-  getTotalMonths,
-} from './dateUtils'
-import { useLatest } from '../shared/utils'
-import {
-  RenderProps,
-  SwiperProps,
-  useYearChange,
-  isIndexWithinRange,
-  getMinIndex,
-  getMaxIndex,
-} from './SwiperUtils'
-import AutoSizer from './AutoSizer'
-import {
+  type CSSProperties,
   memo,
-  UIEvent,
-  useCallback,
+  type ReactNode,
+  type UIEvent,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
-import { verticalScrollbarGutter } from './CalendarHeader'
+import { View } from 'react-native'
+import { useTheme } from 'react-native-paper'
+
+import { sharedStyles } from '../shared/styles'
+import { themeColor, useLatest } from '../shared/utils'
+import AutoSizer from './AutoSizer'
+import {
+  overlayScrollbarPadding,
+  weekdayScrollbarInset,
+} from './CalendarHeader'
+import { defaultEndYear, defaultStartYear } from './dateUtils'
+import {
+  getMonthHeight,
+  getVerticalListMetrics,
+  getVerticalMonthScrollY,
+  getVerticalMonthsOffset,
+  indexFromVerticalScroll,
+} from './monthLayout'
+import {
+  assignMonthSlots,
+  getMaxIndex,
+  getMinIndex,
+  getVerticalWindow,
+  isIndexWithinRange,
+  type MonthSlot,
+  nextVisibleIndexes,
+  type RenderProps,
+  type SwiperProps,
+  useCalendarKeyboard,
+  useFocusDate,
+  useYearChange,
+} from './SwiperUtils'
 
 const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect
 
+const empty = () => null
+
 function Swiper({
-  scrollMode,
-  renderItem,
-  renderHeader,
-  renderFooter,
-  selectedYear,
+  endYear,
+  focusDate,
   initialIndex,
+  initialLayout,
+  keyboardEnabled = true,
+  onFocusDate,
+  onKeyboardConfirm,
+  onMoveDay,
+  onMoveFocus,
+  onOpenMonthMenu,
+  onOpenYearMenu,
+  renderFooter,
+  renderHeader,
+  renderItem,
+  scrollMode,
+  selectedYear,
   startWeekOnMonday,
   startYear,
-  endYear,
-  initialLayout,
 }: SwiperProps) {
+  const [index, setIndex] = useState(initialIndex)
+  const indexRef = useLatest(index)
+
   const isHorizontal = scrollMode === 'horizontal'
 
-  const [index, setIndex] = useState(initialIndex)
-
-  const onPrev = useCallback(() => {
+  const shiftIndex = (delta: number) => {
     setIndex((prev) => {
-      const newIndex = prev - 1
-      // Check if the new index is within allowed range
-      if (isIndexWithinRange(newIndex, startYear, endYear)) {
-        return newIndex
-      }
-      return prev // Don't change if outside range
+      const newIndex = prev + delta
+      return isIndexWithinRange(newIndex, startYear, endYear) ? newIndex : prev
     })
-  }, [setIndex, startYear, endYear])
-
-  const onNext = useCallback(() => {
-    setIndex((prev) => {
-      const newIndex = prev + 1
-      // Check if the new index is within allowed range
-      if (isIndexWithinRange(newIndex, startYear, endYear)) {
-        return newIndex
-      }
-      return prev // Don't change if outside range
-    })
-  }, [setIndex, startYear, endYear])
+  }
+  const onNext = () => shiftIndex(1)
+  const onPrev = () => shiftIndex(-1)
 
   const renderProps = {
     index,
-    onPrev,
     onNext,
+    onPrev,
   }
-  const indexRef = useLatest(index)
+  useFocusDate(
+    (newIndex) => {
+      setIndex(newIndex)
+    },
+    {
+      currentIndexRef: indexRef,
+      endYear,
+      focusDate,
+      startYear,
+    }
+  )
+  useCalendarKeyboard(keyboardEnabled, indexRef, {
+    endYear,
+    onConfirm: onKeyboardConfirm,
+    onFocusDate,
+    onMoveDay,
+    onMoveFocus,
+    onMoveMonth: shiftIndex,
+    onOpenMonthMenu,
+    onOpenYearMenu,
+    startYear,
+  })
   useYearChange(
     (newIndex) => {
       if (newIndex && isIndexWithinRange(newIndex, startYear, endYear)) {
@@ -85,57 +115,43 @@ function Swiper({
       }
     },
     {
-      selectedYear,
       currentIndexRef: indexRef,
-      startYear,
       endYear,
+      selectedYear,
+      startYear,
     }
   )
 
   return (
     <>
       {isHorizontal ? (
-        <AutoSizer initialLayout={initialLayout}>
-          {({ height }) => {
-            const overflow =
-              getMonthHeight(
-                'horizontal',
-                index,
-                startWeekOnMonday,
-                startYear,
-                endYear
-              ) > height
-            return (
-              <>
-                {renderItem({
-                  index,
-                  onPrev,
-                  onNext,
-                })}
-                {renderHeader
-                  ? renderHeader({
-                      ...renderProps,
-                      endInset: overflow ? verticalScrollbarGutter : 0,
-                    })
-                  : null}
-              </>
-            )
-          }}
-        </AutoSizer>
+        <View style={sharedStyles.hug}>
+          {renderItem({
+            active: true,
+            index,
+            onNext,
+            onPrev,
+          })}
+          {renderHeader ? renderHeader(renderProps) : null}
+        </View>
       ) : (
         <>
-          {renderHeader && renderHeader(renderProps)}
+          {renderHeader &&
+            renderHeader({
+              ...renderProps,
+              endInset: weekdayScrollbarInset(),
+            })}
           <AutoSizer initialLayout={initialLayout}>
-            {({ width, height }) => (
+            {({ height, width }) => (
               <VerticalScroller
-                width={width}
+                contentInset={overlayScrollbarPadding()}
+                endYear={endYear}
                 height={height}
                 initialIndex={initialIndex}
-                estimatedHeight={estimatedMonthHeight}
                 renderItem={renderItem}
                 startWeekOnMonday={startWeekOnMonday}
                 startYear={startYear}
-                endYear={endYear}
+                width={width}
               />
             )}
           </AutoSizer>
@@ -146,33 +162,32 @@ function Swiper({
   )
 }
 
-const visibleArray = (i: number) => {
-  return [i - 2, i - 1, i, i + 1, i + 2]
-}
-
 function VerticalScroller({
-  width,
+  contentInset,
+  endYear,
   height,
   initialIndex,
-  estimatedHeight,
   renderItem,
   startWeekOnMonday,
   startYear,
-  endYear,
+  width,
 }: {
-  renderItem: (renderProps: RenderProps) => any
-  width: number
+  contentInset: number
+  endYear?: number
   height: number
   initialIndex: number
-  estimatedHeight: number
+  renderItem: (renderProps: RenderProps) => ReactNode
   startWeekOnMonday: boolean
   startYear?: number
-  endYear?: number
+  width: number
 }) {
-  // Provide default values for startYear and endYear
-  const effectiveStartYear = startYear || 1800
-  const effectiveEndYear = endYear || 2200
-  // Ensure initial index is within allowed range
+  const theme = useTheme()
+
+  const parentRef = useRef<HTMLDivElement | null>(null)
+
+  const effectiveEndYear = endYear || defaultEndYear
+  const effectiveStartYear = startYear || defaultStartYear
+
   const constrainedInitialIndex = isIndexWithinRange(
     initialIndex,
     effectiveStartYear,
@@ -184,166 +199,140 @@ function VerticalScroller({
         getMinIndex(effectiveStartYear)
       )
 
-  const [visibleIndexes, setVisibleIndexes] = useState<number[]>(() =>
-    visibleArray(constrainedInitialIndex)
+  const [monthWindow, setMonthWindow] = useState<{
+    indexes: number[]
+    slots: MonthSlot[]
+  }>(() => {
+    const indexes = getVerticalWindow(
+      constrainedInitialIndex,
+      effectiveStartYear,
+      effectiveEndYear
+    )
+    return { indexes, slots: assignMonthSlots([], indexes) }
+  })
+
+  const idx = useRef<number>(constrainedInitialIndex)
+
+  const scrollerStyle: CSSProperties = {
+    boxSizing: 'border-box',
+    colorScheme: theme.dark ? 'dark' : 'light',
+    height,
+    overflow: 'auto',
+    overflowAnchor: 'none',
+    paddingRight: contentInset,
+    scrollbarColor: `${themeColor(theme.colors.outline)} ${themeColor(
+      theme.colors.surfaceContainerHigh
+    )}`,
+    width,
+  }
+
+  const verticalMetrics = useMemo(
+    () =>
+      getVerticalListMetrics(
+        getMinIndex(effectiveStartYear, effectiveEndYear),
+        getMaxIndex(effectiveStartYear, effectiveEndYear),
+        startWeekOnMonday,
+        effectiveStartYear,
+        effectiveEndYear
+      ),
+    [effectiveEndYear, effectiveStartYear, startWeekOnMonday]
   )
 
-  const theme = useTheme()
-  const idx = useRef<number>(constrainedInitialIndex)
-  const parentRef = useRef<HTMLDivElement | null>(null)
+  const trackStyle: CSSProperties = {
+    height: verticalMetrics.height,
+    position: 'relative',
+  }
+
+  const onScroll = (e: UIEvent) => {
+    const top = e.currentTarget?.scrollTop
+    if (top === undefined) {
+      return
+    }
+
+    const index = indexFromVerticalScroll(
+      top,
+      verticalMetrics.origin,
+      startWeekOnMonday,
+      effectiveStartYear,
+      effectiveEndYear
+    )
+
+    if (
+      !isIndexWithinRange(index, effectiveStartYear, effectiveEndYear) ||
+      idx.current === index
+    ) {
+      return
+    }
+
+    idx.current = index
+    setMonthWindow((current) => {
+      const indexes = nextVisibleIndexes(
+        current.indexes,
+        index,
+        effectiveStartYear,
+        effectiveEndYear
+      )
+      if (indexes === current.indexes) return current
+      return {
+        indexes,
+        slots: assignMonthSlots(current.slots, indexes),
+      }
+    })
+  }
 
   useIsomorphicLayoutEffect(() => {
     const element = parentRef.current
     if (!element) {
       return
     }
-    const top =
-      getVerticalMonthsOffset(
-        idx.current,
-        startWeekOnMonday,
-        effectiveStartYear,
-        effectiveEndYear
-      ) - montHeaderHeight
-
     element.scrollTo({
-      top,
-    })
-  }, [parentRef, idx])
-
-  const setVisibleIndexesThrottled = useDebouncedCallback(setVisibleIndexes)
-
-  const onScroll = useCallback(
-    (e: UIEvent) => {
-      const top = e.currentTarget?.scrollTop
-      if (top === 0) {
-        return
-      }
-
-      const dynamicBeginOffset = getBeginOffset(
-        effectiveStartYear,
-        effectiveEndYear
-      )
-      const offset = top - dynamicBeginOffset
-      const index = getIndexFromVerticalOffset(
-        offset,
+      top: getVerticalMonthScrollY(
+        idx.current,
+        verticalMetrics.origin,
         startWeekOnMonday,
         effectiveStartYear,
         effectiveEndYear
-      )
-
-      // Check if the new index is within allowed range
-      if (!isIndexWithinRange(index, effectiveStartYear, effectiveEndYear)) {
-        return
-      }
-
-      if (idx.current !== index) {
-        idx.current = index
-        setVisibleIndexesThrottled(visibleArray(index))
-      }
-    },
-    [
-      setVisibleIndexesThrottled,
-      startWeekOnMonday,
-      effectiveStartYear,
-      effectiveEndYear,
-    ]
-  )
+      ),
+    })
+  }, [])
 
   return (
-    <div
-      ref={parentRef}
-      // eslint-disable-next-line react-native/no-inline-styles
-      style={{
-        height,
-        width,
-        overflow: 'auto',
-        colorScheme: theme.dark ? 'dark' : 'light',
-      }}
-      onScroll={onScroll}
-    >
-      <div
-        // eslint-disable-next-line react-native/no-inline-styles
-        style={{
-          height:
-            estimatedHeight *
-            getTotalMonths(effectiveStartYear, effectiveEndYear),
-          position: 'relative',
-        }}
-      >
-        {[0, 1, 2, 3, 4]
-          .map((vi) => {
-            const monthIndex = visibleIndexes[vi]
-
-            if (monthIndex === undefined) {
-              return null
-            }
-
-            return (
-              <div
-                key={vi}
-                // eslint-disable-next-line react-native/no-inline-styles
-                style={{
-                  willChange: 'transform',
-                  transform: `translateY(${getVerticalMonthsOffset(
-                    monthIndex,
-                    startWeekOnMonday,
-                    effectiveStartYear,
-                    effectiveEndYear
-                  )}px)`,
-                  left: 0,
-                  right: 0,
-                  position: 'absolute',
-                  height: getMonthHeight(
-                    'vertical',
-                    monthIndex,
-                    startWeekOnMonday,
-                    effectiveStartYear,
-                    effectiveEndYear
-                  ),
-                }}
-              >
-                {renderItem({
-                  index: monthIndex,
-                  onPrev: empty,
-                  onNext: empty,
-                })}
-              </div>
-            )
-          })
-          .filter((item) => item !== null)}
+    <div ref={parentRef} onScroll={onScroll} style={scrollerStyle}>
+      <div style={trackStyle}>
+        {monthWindow.slots.map(({ monthIndex, slot }) => {
+          const monthStyle: CSSProperties = {
+            height: getMonthHeight(
+              'vertical',
+              monthIndex,
+              startWeekOnMonday,
+              effectiveStartYear,
+              effectiveEndYear
+            ),
+            left: 0,
+            position: 'absolute',
+            right: 0,
+            transform: `translateY(${
+              getVerticalMonthsOffset(
+                monthIndex,
+                startWeekOnMonday,
+                effectiveStartYear,
+                effectiveEndYear
+              ) - verticalMetrics.origin
+            }px)`,
+            willChange: 'transform',
+          }
+          return (
+            <div key={slot} style={monthStyle}>
+              {renderItem({
+                index: monthIndex,
+                onNext: empty,
+                onPrev: empty,
+              })}
+            </div>
+          )
+        })}
       </div>
     </div>
-  )
-}
-
-const empty = () => null
-
-export function useDebouncedCallback(callback: any): any {
-  const mounted = useRef<boolean>(true)
-  const timerId = useRef<any>(null)
-  const latest = useLatest(callback)
-
-  useEffect(() => {
-    return () => {
-      mounted.current = false
-      if (timerId.current) {
-        window.cancelAnimationFrame(timerId.current)
-      }
-    }
-  }, [mounted, timerId])
-
-  return useCallback(
-    (args: any) => {
-      if (timerId.current) {
-        window.cancelAnimationFrame(timerId.current)
-      }
-      timerId.current = window.requestAnimationFrame(function () {
-        if (mounted.current) {
-          latest.current(args)
-        }
-      })
-    },
-    [mounted, timerId, latest]
   )
 }
 

@@ -1,54 +1,83 @@
 # Localization
 
-Register translations somewhere before react-native-paper-dates is used — for example in your `index.ts` or `app.ts`.
+English is registered automatically. Import any other built-in locale before the picker renders. Each module registers itself.
 
 ## Supported locales
 
 React Native Paper Dates currently supports:
 
-| Locale | Language | Locale | Language | Locale | Language |
+| Locale | Import | Locale | Import | Locale | Import |
 | --- | --- | --- | --- | --- | --- |
-| `ar` | Arabic | `ca` | Catalan | `cs` | Czech |
-| `da` | Danish | `de` | German | `el` | Greek |
-| `en` | English | `en-GB` | English (UK) | `es` | Spanish |
-| `fi` | Finnish | `fr` | French | `he` | Hebrew |
-| `hi` | Hindi | `id` | Indonesian | `it` | Italian |
-| `ja` | Japanese | `ko` | Korean | `nl` | Dutch |
-| `no-NO` | Norwegian | `pl` | Polish | `pt` | Portuguese |
-| `ro` | Romanian | `ru` | Russian | `sv` | Swedish |
-| `th` | Thai | `tr` | Turkish | `uk-UA` | Ukrainian |
-| `zh` | Chinese (Simplified) | `zh-TW` | Chinese (Traditional) | | |
+| `ar` | `translations/ar` | `ca` | `translations/ca` | `cs` | `translations/cs` |
+| `da` | `translations/da` | `de` | `translations/de` | `el` | `translations/el` |
+| `en` | built in | `en-GB` | `translations/enGB` | `es` | `translations/es` |
+| `fi` | `translations/fi` | `fr` | `translations/fr` | `he` | `translations/he` |
+| `hi` | `translations/hi` | `id` | `translations/id` | `it` | `translations/it` |
+| `ja` | `translations/ja` | `ko` | `translations/ko` | `nl` | `translations/nl` |
+| `no-NO` | `translations/noNO` | `pl` | `translations/pl` | `pt` | `translations/pt` |
+| `ro` | `translations/ro` | `ru` | `translations/ru` | `sv` | `translations/sv` |
+| `th` | `translations/th` | `tr` | `translations/tr` | `uk-UA` | `translations/ukUA` |
+| `zh` | `translations/zh` | `zh-TW` | `translations/zhTW` | | |
 
 ```javascript
-import { enGB, registerTranslation } from 'react-native-paper-dates'
-
-registerTranslation('en-GB', enGB)
+import 'react-native-paper-dates/translations/enGB'
 ```
 
 ## Custom translation
 
-You can register your own translation object:
+Register your own translation object. Every key is required.
 
 ```javascript
 import { registerTranslation } from 'react-native-paper-dates'
 
 registerTranslation('pl', {
-  save: 'Save',
-  selectSingle: 'Select date',
-  selectMultiple: 'Select dates',
-  selectRange: 'Select period',
-  notAccordingToDateFormat: (inputFormat) =>
-    `Date format must be ${inputFormat}`,
-  mustBeHigherThan: (date) => `Must be later than ${date}`,
-  mustBeLowerThan: (date) => `Must be earlier than ${date}`,
+  am: 'AM',
+  cancel: 'Cancel',
+  chooseMonth: 'Choose a month',
+  chooseMonthHint: 'Shift+M',
+  chooseYear: 'Choose a year',
+  chooseYearHint: 'Shift+Y',
+  close: 'Close',
+  confirm: 'OK',
+  dateIsDisabled: 'Day is not allowed',
+  endDate: 'End date',
+  enterDate: 'Enter date',
+  enterDates: 'Enter dates',
+  hour: 'Hour',
+  hourAt: (hour) => `Hour ${hour}`,
+  hourOf: (hour, total) => `Hour ${hour} of ${total}`,
+  inRange: 'In selected range',
+  invalidTime: 'Invalid time',
+  minute: 'Minute',
+  minuteOf: (minute, total) => `Minute ${minute} of ${total}`,
   mustBeBetween: (startDate, endDate) =>
     `Must be between ${startDate} - ${endDate}`,
-  dateIsDisabled: 'Day is not allowed',
-  previous: 'Previous',
+  mustBeHigherThan: (date) => `Must be later than ${date}`,
+  mustBeLowerThan: (date) => `Must be earlier than ${date}`,
   next: 'Next',
-  typeInDate: 'Type in date',
+  nextMonth: 'Next month',
+  nextMonthHint: 'Page Down',
+  nextYear: 'Next year',
+  nextYearHint: 'Shift+Page Down',
+  notAccordingToDateFormat: (inputFormat) =>
+    `Date format must be ${inputFormat}`,
   pickDateFromCalendar: 'Pick date from calendar',
-  close: 'Close',
+  pm: 'PM',
+  previous: 'Previous',
+  previousMonth: 'Previous month',
+  previousMonthHint: 'Page Up',
+  previousYear: 'Previous year',
+  previousYearHint: 'Shift+Page Up',
+  save: 'Save',
+  selectMultiple: 'Select dates',
+  selectRange: 'Select period',
+  selectSingle: 'Select date',
+  startDate: 'Start date',
+  today: 'Today',
+  toggleClock: 'Toggle dial picker',
+  toggleKeyboard: 'Toggle input picker',
+  toggleScroll: 'Toggle scroll picker',
+  typeInDate: 'Type in date',
 })
 ```
 
@@ -62,22 +91,53 @@ import { registerTranslation } from 'react-native-paper-dates'
 
 registerTranslation('dynamic', () => {
   return {
-    save: translate('Save'),
-    selectSingle: translate('Select date'),
-    selectMultiple: translate('Select dates'),
-    selectRange: translate('Select period'),
-    notAccordingToDateFormat: (inputFormat) =>
-      translate(`Date format must be ${inputFormat}`),
-    mustBeHigherThan: (date) => translate(`Must be later than ${date}`),
-    mustBeLowerThan: (date) => translate(`Must be earlier than ${date}`),
+    am: translate('AM'),
+    cancel: translate('Cancel'),
+    chooseMonth: translate('Choose a month'),
+    chooseMonthHint: translate('Shift+M'),
+    chooseYear: translate('Choose a year'),
+    chooseYearHint: translate('Shift+Y'),
+    close: translate('Close'),
+    confirm: translate('OK'),
+    dateIsDisabled: translate('Day is not allowed'),
+    endDate: translate('End date'),
+    enterDate: translate('Enter date'),
+    enterDates: translate('Enter dates'),
+    hour: translate('Hour'),
+    hourAt: (hour) => translate(`Hour ${hour}`),
+    hourOf: (hour, total) => translate(`Hour ${hour} of ${total}`),
+    inRange: translate('In selected range'),
+    invalidTime: translate('Invalid time'),
+    minute: translate('Minute'),
+    minuteOf: (minute, total) => translate(`Minute ${minute} of ${total}`),
     mustBeBetween: (startDate, endDate) =>
       translate(`Must be between ${startDate} - ${endDate}`),
-    dateIsDisabled: translate('Day is not allowed'),
-    previous: translate('Previous'),
+    mustBeHigherThan: (date) => translate(`Must be later than ${date}`),
+    mustBeLowerThan: (date) => translate(`Must be earlier than ${date}`),
     next: translate('Next'),
-    typeInDate: translate('Type in date'),
+    nextMonth: translate('Next month'),
+    nextMonthHint: translate('Page Down'),
+    nextYear: translate('Next year'),
+    nextYearHint: translate('Shift+Page Down'),
+    notAccordingToDateFormat: (inputFormat) =>
+      translate(`Date format must be ${inputFormat}`),
     pickDateFromCalendar: translate('Pick date from calendar'),
-    close: translate('Close'),
+    pm: translate('PM'),
+    previous: translate('Previous'),
+    previousMonth: translate('Previous month'),
+    previousMonthHint: translate('Page Up'),
+    previousYear: translate('Previous year'),
+    previousYearHint: translate('Shift+Page Up'),
+    save: translate('Save'),
+    selectMultiple: translate('Select dates'),
+    selectRange: translate('Select period'),
+    selectSingle: translate('Select date'),
+    startDate: translate('Start date'),
+    today: translate('Today'),
+    toggleClock: translate('Toggle dial picker'),
+    toggleKeyboard: translate('Toggle input picker'),
+    toggleScroll: translate('Toggle scroll picker'),
+    typeInDate: translate('Type in date'),
   }
 })
 ```

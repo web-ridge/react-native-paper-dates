@@ -1,28 +1,83 @@
-import { render, screen } from '@testing-library/react-native'
-import { MD3LightTheme, Text } from 'react-native-paper'
-import Day from '../../Date/Day'
-import type { DayContentRenderer } from '../../Date/Calendar'
+import { act, render } from '@testing-library/react-native'
+import { Platform, StyleSheet } from 'react-native'
+import { LightTheme, Text } from 'react-native-paper'
 
-const defaultProps = {
-  theme: MD3LightTheme,
-  textColorOnPrimary: '#fff',
-  day: 15,
-  month: 0,
-  year: 2025,
-  selected: false,
-  inRange: false,
-  leftCrop: false,
-  rightCrop: false,
-  primaryColor: 'blue',
-  selectColor: 'lightblue',
-  isToday: false,
-  disabled: false,
-  onPressDate: () => null,
+import type { DayContentRenderer } from '../../Date/Calendar'
+import Day from '../../Date/Day'
+import { withAlpha } from '../../shared/utils'
+
+type Fiber = {
+  memoizedProps?: Record<string, unknown>
+  pendingProps?: Record<string, unknown>
+  return: Fiber | null
 }
 
+function dayHandlers(node: { unstable_fiber?: Fiber | null }) {
+  let fiber = node.unstable_fiber ?? null
+  for (let depth = 0; fiber && depth < 12; depth += 1, fiber = fiber.return) {
+    const props = fiber.memoizedProps ?? fiber.pendingProps
+    if (typeof props?.onHoverIn === 'function') return props
+  }
+  throw new Error('missing day handlers')
+}
+
+const defaultProps = {
+  day: 15,
+  disabled: false,
+  inRange: false,
+  isToday: false,
+  leftCrop: false,
+  month: 0,
+  onPressDate: () => null,
+  primaryColor: 'blue',
+  rightCrop: false,
+  selectColor: 'lightblue',
+  selected: false,
+  textColorOnPrimary: '#fff',
+  theme: LightTheme,
+  year: 2025,
+}
+
+it('uses the contrast color and exposes the date when selected', async () => {
+  const view = await render(
+    <Day
+      {...defaultProps}
+      locale="en-US"
+      selected
+      textColorOnPrimary="#123456"
+    />
+  )
+  expect(view.getByText('15')).toHaveStyle({ color: '#123456' })
+  const button = view.getByTestId('react-native-paper-dates-day-2025-0-15')
+  expect(button).toHaveProp(
+    'accessibilityState',
+    expect.objectContaining({ disabled: false, selected: true })
+  )
+  expect(button.props.accessibilityLabel).toContain('2025')
+  expect(button.props.accessibilityLabel).toContain('15')
+})
+
+it('tracks focus, hover, and press on a day', async () => {
+  const onPressDate = jest.fn()
+  const view = await render(<Day {...defaultProps} onPressDate={onPressDate} />)
+  const button = dayHandlers(
+    view.getByTestId('react-native-paper-dates-day-2025-0-15')
+  )
+  await act(async () => {
+    ;(button.onFocus as () => void)()
+    ;(button.onHoverIn as () => void)()
+    ;(button.onPressIn as () => void)()
+    ;(button.onPress as () => void)()
+    ;(button.onPressOut as () => void)()
+    ;(button.onHoverOut as () => void)()
+    ;(button.onBlur as () => void)()
+  })
+  expect(onPressDate).toHaveBeenCalledWith(new Date(2025, 0, 15))
+})
+
 it('renders no day content by default', async () => {
-  await render(<Day {...defaultProps} />)
-  expect(screen.queryByTestId('day-content')).toBeNull()
+  const view = await render(<Day {...defaultProps} />)
+  expect(view.queryByTestId('day-content')).toBeNull()
 })
 
 it('renders dayContent with the day it belongs to', async () => {
@@ -31,18 +86,145 @@ it('renders dayContent with the day it belongs to', async () => {
       {`${date.getDate()}|${day}|${month}|${year}`}
     </Text>
   )
-  await render(<Day {...defaultProps} dayContent={dayContent} />)
-  expect(screen.getByTestId('day-content')).toHaveTextContent('15|15|0|2025')
+  const view = await render(<Day {...defaultProps} dayContent={dayContent} />)
+  expect(view.getByTestId('day-content')).toHaveTextContent('15|15|0|2025')
 })
 
 it('does not let day content swallow presses', async () => {
   const dayContent: DayContentRenderer = () => (
     <Text testID="day-content">•</Text>
   )
-  await render(<Day {...defaultProps} dayContent={dayContent} />)
-  expect(screen.getByTestId('day-content').parent).toHaveProp(
+  const view = await render(<Day {...defaultProps} dayContent={dayContent} />)
+  expect(view.getByTestId('day-content').parent).toHaveProp(
     'pointerEvents',
     'none'
+  )
+})
+
+it('shrinks the day when the row is shorter than the default cell', async () => {
+  const dayContent: DayContentRenderer = () => (
+    <Text testID="day-content">•</Text>
+  )
+  const view = await render(
+    <Day {...defaultProps} cellHeight={24} dayContent={dayContent} />
+  )
+  expect(
+    view.getByTestId('react-native-paper-dates-day-2025-0-15')
+  ).toHaveStyle({ height: 24 })
+  expect(view.getByText('15').parent).toHaveStyle({
+    borderRadius: 12,
+    height: 24,
+    width: 24,
+  })
+  expect(view.getByTestId('day-content').parent).toHaveStyle({
+    height: 24,
+    width: 24,
+  })
+})
+
+function painted(
+  node: {
+    children?: Array<object | string>
+    props?: { style?: unknown }
+  } | null
+): { background: string[]; border: string[] } {
+  if (!node) return { background: [], border: [] }
+  const style = StyleSheet.flatten(
+    node.props?.style as Parameters<typeof StyleSheet.flatten>[0]
+  )
+  const background =
+    typeof style?.backgroundColor === 'string' ? [style.backgroundColor] : []
+  const border =
+    typeof style?.borderColor === 'string' ? [style.borderColor] : []
+  for (const child of node.children ?? []) {
+    if (typeof child === 'string') continue
+    const nested = painted(child as typeof node)
+    background.push(...nested.background)
+    border.push(...nested.border)
+  }
+  return { background, border }
+}
+
+it('follows the material date states', async () => {
+  const unselected = await render(<Day {...defaultProps} />)
+  const button = dayHandlers(
+    unselected.getByTestId('react-native-paper-dates-day-2025-0-15')
+  )
+  expect(painted(unselected.toJSON()).border).not.toContain(
+    LightTheme.colors.secondary
+  )
+  await act(async () => {
+    ;(button.onHoverIn as () => void)()
+  })
+  expect(painted(unselected.toJSON()).background).toContain(
+    withAlpha(LightTheme.colors.onSurfaceVariant, 0.08)
+  )
+  await act(async () => {
+    ;(button.onFocus as () => void)()
+  })
+  expect(painted(unselected.toJSON()).border).toContain(
+    LightTheme.colors.secondary
+  )
+
+  const today = await render(<Day {...defaultProps} isToday />)
+  const todayButton = dayHandlers(
+    today.getByTestId('react-native-paper-dates-day-2025-0-15')
+  )
+  expect(today.getByText('15').parent).toHaveStyle({
+    borderColor: LightTheme.colors.primary,
+  })
+  expect(today.getByText('15')).toHaveStyle({
+    color: LightTheme.colors.primary,
+  })
+  await act(async () => {
+    ;(todayButton.onPressIn as () => void)()
+  })
+  expect(painted(today.toJSON()).background).toContain(
+    withAlpha(LightTheme.colors.primary, 0.1)
+  )
+
+  const disabledToday = await render(<Day {...defaultProps} disabled isToday />)
+  expect(disabledToday.getByText('15').parent).toHaveStyle({
+    borderColor: LightTheme.colors.primary,
+  })
+  expect(disabledToday.getByText('15')).toHaveStyle({ opacity: 0.38 })
+  const disabledButton = dayHandlers(
+    disabledToday.getByTestId('react-native-paper-dates-day-2025-0-15')
+  )
+  await act(async () => {
+    ;(disabledButton.onHoverIn as () => void)()
+    ;(disabledButton.onFocus as () => void)()
+  })
+  expect(painted(disabledToday.toJSON()).border).not.toContain(
+    LightTheme.colors.secondary
+  )
+  expect(painted(disabledToday.toJSON()).background).not.toContain(
+    withAlpha(LightTheme.colors.onSurfaceVariant, 0.08)
+  )
+
+  const range = await render(<Day {...defaultProps} inRange />)
+  const rangeButton = dayHandlers(
+    range.getByTestId('react-native-paper-dates-day-2025-0-15')
+  )
+  expect(range.getByText('15')).toHaveStyle({
+    color: LightTheme.colors.onSecondaryContainer,
+  })
+  await act(async () => {
+    ;(rangeButton.onHoverIn as () => void)()
+  })
+  expect(painted(range.toJSON()).background).toContain(
+    withAlpha(LightTheme.colors.onPrimaryContainer, 0.08)
+  )
+
+  const selected = await render(<Day {...defaultProps} selected />)
+  const selectedButton = dayHandlers(
+    selected.getByTestId('react-native-paper-dates-day-2025-0-15')
+  )
+  await act(async () => {
+    ;(selectedButton.onHoverIn as () => void)()
+  })
+  expect(painted(selected.toJSON()).background).toContain(
+    withAlpha(LightTheme.colors.onPrimary, 0.08)
   )
 })
 
@@ -50,7 +232,7 @@ it('renders day content at the given position with extra styles', async () => {
   const dayContent: DayContentRenderer = () => (
     <Text testID="day-content">•</Text>
   )
-  await render(
+  const view = await render(
     <Day
       {...defaultProps}
       dayContent={dayContent}
@@ -58,9 +240,51 @@ it('renders day content at the given position with extra styles', async () => {
       dayContentStyle={{ marginTop: -3 }}
     />
   )
-  expect(screen.getByTestId('day-content').parent).toHaveStyle({
-    justifyContent: 'flex-start',
+  expect(view.getByTestId('day-content').parent).toHaveStyle({
     alignItems: 'flex-end',
+    justifyContent: 'flex-start',
     marginTop: -3,
   })
+})
+
+it('announces today and range roles and keeps one web tab stop', async () => {
+  const previous = Platform.OS
+  Platform.OS = 'web'
+  try {
+    const today = await render(
+      <Day {...defaultProps} isTabStop isToday locale="en-US" />
+    )
+    const todayButton = today.getByTestId(
+      'react-native-paper-dates-day-2025-0-15'
+    )
+    expect(todayButton.props.accessibilityLabel).toContain('Today')
+    expect(todayButton.props['aria-current']).toBe('date')
+    expect(todayButton.props.tabIndex).toBe(0)
+
+    const start = await render(
+      <Day
+        {...defaultProps}
+        inRange
+        leftCrop
+        locale="en-US"
+        rangeRole="start"
+        selected
+      />
+    )
+    expect(
+      start.getByTestId('react-native-paper-dates-day-2025-0-15').props
+        .accessibilityLabel
+    ).toContain('Start date')
+
+    const inside = await render(
+      <Day {...defaultProps} inRange locale="en-US" rangeRole="in-range" />
+    )
+    const insideButton = inside.getByTestId(
+      'react-native-paper-dates-day-2025-0-15'
+    )
+    expect(insideButton.props.accessibilityLabel).toContain('In selected range')
+    expect(insideButton.props.tabIndex).toBe(-1)
+  } finally {
+    Platform.OS = previous
+  }
 })

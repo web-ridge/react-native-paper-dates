@@ -1,124 +1,109 @@
-import { StyleSheet, View } from 'react-native'
-import { Text } from 'react-native-paper'
-import { circleSize } from './timeUtils'
-import { useTextColorOnPrimary } from '../shared/utils'
 import { memo } from 'react'
+import { useTheme } from 'react-native-paper'
+
+import { withAlpha } from '../shared/utils'
+import { getTranslation } from '../translations/utils'
+import ClockNumber from './ClockNumber'
+import { circleSize, clockNumbers, disabledContentOpacity } from './timeUtils'
+
+const hourStart = -Math.PI / 2 + Math.PI / 6
+const innerHourNumbers = clockNumbers(12, 4, circleSize, hourStart)
+const outerHourNumbers = clockNumbers(12, 2.5, circleSize, hourStart)
+
+function isOuterHourSelected(hours: number, is24Hour: boolean, label: number) {
+  if (label === 12 && hours === 0) {
+    return true
+  }
+  if (!is24Hour) {
+    return label === hours
+  }
+  return label === hours && hours !== 12
+}
 
 function AnalogClockHours({
-  is24Hour,
+  disabled,
   hours,
+  hoveredHour = null,
+  is24Hour,
+  locale,
+  onNumberFocus,
+  onPress,
 }: {
-  is24Hour: boolean
+  disabled?: boolean
   hours: number
+  hoveredHour?: number | null
+  is24Hour: boolean
+  locale?: string
+  onNumberFocus?: (focused: boolean, selected: boolean) => void
+  onPress?: (hours: number) => void
 }) {
-  const outerRange = getHourNumbers(false, circleSize, 12, 12)
-  const innerRange = getHourNumbers(true, circleSize, 12, 12)
-  const color = useTextColorOnPrimary()
+  const theme = useTheme()
+
+  const hourAt = getTranslation(locale, 'hourAt', (hour) => `Hour ${hour}`)
+  const hourOf = getTranslation(
+    locale,
+    'hourOf',
+    (hour, count) => `Hour ${hour} of ${count}`
+  )
+  const hourLabel = (hourValue: number) =>
+    is24Hour ? hourAt(hourValue) : hourOf(hourValue, 12)
+
+  const selectedColor = disabled
+    ? withAlpha(theme.colors.onPrimary, disabledContentOpacity)
+    : theme.colors.onPrimary
+
+  const unselectedColor = disabled
+    ? withAlpha(theme.colors.onSurface, disabledContentOpacity)
+    : theme.colors.onSurface
 
   return (
     <>
-      {outerRange.map((a, i) => (
-        <View
-          key={i}
-          pointerEvents="none"
-          style={[
-            styles.hourRoot,
-            {
-              top: a[1] || 0,
-              left: a[0] || 0,
-            },
-          ]}
-        >
-          <View style={styles.hourInner}>
-            {/* Display 00 instead of 12 for AM hours */}
-            <Text
-              maxFontSizeMultiplier={1.5}
-              style={
-                (!is24Hour && i + 1 === hours) ||
-                (hours === i + 1 && hours !== 12) ||
-                (i + 1 === 12 && hours === 0)
-                  ? { color }
-                  : null
-              }
-              variant="bodyLarge"
-              selectable={false}
-            >
-              {is24Hour && i + 1 === 12 ? '00' : i + 1}
-            </Text>
-          </View>
-        </View>
-      ))}
+      {outerHourNumbers.map(([left, top], index) => {
+        const label = index + 1
+        const hourValue = is24Hour && label === 12 ? 0 : label
+        const selected = isOuterHourSelected(hours, is24Hour, label)
+        return (
+          <ClockNumber
+            key={index}
+            accessibilityLabel={hourLabel(hourValue)}
+            color={selected ? selectedColor : unselectedColor}
+            disabled={disabled}
+            hovered={hoveredHour === hourValue}
+            left={left}
+            onFocusChange={onNumberFocus}
+            onPress={onPress}
+            pressValue={disabled ? undefined : hourValue}
+            selected={selected}
+            top={top}
+            value={is24Hour && label === 12 ? '00' : label}
+          />
+        )
+      })}
       {is24Hour
-        ? innerRange.map((a, i) => (
-            <View
-              key={i}
-              pointerEvents="none"
-              style={[
-                styles.hourRoot,
-                {
-                  top: a[1] || 0,
-                  left: a[0] || 0,
-                },
-              ]}
-            >
-              <View style={styles.hourInner}>
-                <Text
-                  maxFontSizeMultiplier={1.5}
-                  selectable={false}
-                  style={[
-                    i + 13 === hours || (i + 13 === 24 && hours === 12)
-                      ? { color }
-                      : null,
-                  ]}
-                  variant="bodyLarge"
-                >
-                  {i + 13 === 24 ? '12' : i + 13}
-                </Text>
-              </View>
-            </View>
-          ))
+        ? innerHourNumbers.map(([left, top], index) => {
+            const hour = index + 13
+            const hourValue = hour === 24 ? 12 : hour
+            const selected = hour === 24 ? hours === 12 : hour === hours
+            return (
+              <ClockNumber
+                key={index}
+                accessibilityLabel={hourLabel(hourValue)}
+                color={selected ? selectedColor : unselectedColor}
+                disabled={disabled}
+                hovered={hoveredHour === hourValue}
+                left={left}
+                onFocusChange={onNumberFocus}
+                onPress={onPress}
+                pressValue={disabled ? undefined : hourValue}
+                selected={selected}
+                top={top}
+                value={hour === 24 ? '12' : hour}
+              />
+            )
+          })
         : null}
     </>
   )
-}
-
-const styles = StyleSheet.create({
-  hourInner: {
-    borderRadius: 24,
-  },
-  hourRoot: {
-    position: 'absolute',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 20,
-    width: 48,
-    height: 48,
-    marginLeft: -24,
-    marginTop: -24,
-    borderRadius: 24,
-  },
-})
-
-function getHourNumbers(
-  is24Hour: boolean,
-  size: number,
-  count: number,
-  arrayLength: number
-) {
-  let angle = 0
-  let step = (2 * Math.PI) / count
-  let radius = size / (is24Hour ? 4 : 2.5)
-
-  angle = (-90 * Math.PI) / 180 + Math.PI / 6
-
-  return Array(arrayLength)
-    .fill(true)
-    .map(() => {
-      let x = Math.round(size / 2 + radius * Math.cos(angle))
-      let y = Math.round(size / 2 + radius * Math.sin(angle))
-      angle += step
-      return [x, y]
-    })
 }
 
 export default memo(AnalogClockHours)

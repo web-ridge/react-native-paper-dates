@@ -6,24 +6,31 @@
   "scripts": {
     "build": "rspress build",
     "dev": "rspress dev",
-    "preview": "rspress preview"
+    "preview": "rspress preview",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@react-native-vector-icons/material-design-icons": "^13.1.2",
-    "@rspress/core": "^2.0.17",
-    "color": "^5.0.3",
-    "react-native": "0.83.2",
-    "react-native-paper": "^5.15.0",
-    "react-native-safe-area-context": "^5.7.0",
-    "react-native-web": "~0.21.2"
+    "@react-native-vector-icons/material-design-icons": "^14.0.0",
+    "@rspress/core": "^2.1.5",
+    "@rspress/plugin-playground": "^2.1.5",
+    "react-native-paper": "^6.0.0-alpha.4",
+    "react-native-reanimated": "^4.8.0",
+    "react-native-safe-area-context": "~5.11.1",
+    "react-native-web": "^0.21.4",
+    "react-native-worklets": "0.14.0"
   },
   "devDependencies": {
-    "@types/node": "^22.8.1",
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
-    "@types/react-native-web": "^0.19.2",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7",
-    "typescript": "^6.0.3"
+    "@babel/core": "^7.25.2",
+    "@babel/preset-typescript": "^7.25.0",
+    "@babel/standalone": "^7.29.0",
+    "@rsbuild/plugin-babel": "^2.1.0",
+    "@types/node": "^26.6.6",
+    "@types/react": "~19.3.0",
+    "@types/react-dom": "~19.3.0",
+    "monaco-editor": "0.52.2",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "react-refresh": "^0.19.0",
+    "typescript": "~7.0.2"
   }
 }

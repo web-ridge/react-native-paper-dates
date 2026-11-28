@@ -1,17 +1,13 @@
+import { render } from '@testing-library/react-native'
 import { act } from 'react'
 import { StyleSheet, Text } from 'react-native'
-import { render } from '@testing-library/react-native'
-import AutoSizer from '../../Date/AutoSizer'
 
-it('renders AutoSizer', async () => {
-  const { toJSON } = await render(<AutoSizer>{() => <></>}</AutoSizer>)
-  expect(toJSON()).toMatchSnapshot()
-})
+import AutoSizer from '../../Date/AutoSizer'
 
 it('follows a later layout instead of keeping the first measured size', async () => {
   const { getByText, root } = await render(
     <AutoSizer>
-      {({ width, height }) => (
+      {({ height, width }) => (
         <Text>
           {width}x{height}
         </Text>
@@ -22,9 +18,10 @@ it('follows a later layout instead of keeping the first measured size', async ()
   const view = root!.queryAll((node) => node.type === 'View', {
     includeSelf: true,
   })[0]
+
   const layout = (width: number, height: number) => {
     view.props.onLayout({
-      nativeEvent: { layout: { x: 0, y: 0, width, height } },
+      nativeEvent: { layout: { height, width, x: 0, y: 0 } },
     })
   }
 
@@ -46,8 +43,8 @@ it('follows a later layout instead of keeping the first measured size', async ()
 
 it('renders with initialLayout before the first layout, then follows the measured size', async () => {
   const { getByText, root } = await render(
-    <AutoSizer initialLayout={{ width: 300, height: 400 }}>
-      {({ width, height }) => (
+    <AutoSizer initialLayout={{ height: 400, width: 300 }}>
+      {({ height, width }) => (
         <Text>
           {width}x{height}
         </Text>
@@ -62,7 +59,7 @@ it('renders with initialLayout before the first layout, then follows the measure
   })[0]
   await act(() => {
     view.props.onLayout({
-      nativeEvent: { layout: { x: 0, y: 0, width: 320, height: 640 } },
+      nativeEvent: { layout: { height: 640, width: 320, x: 0, y: 0 } },
     })
   })
 

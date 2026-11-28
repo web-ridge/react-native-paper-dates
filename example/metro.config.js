@@ -1,51 +1,41 @@
-const path = require('path')
-const fs = require('fs')
 const escape = require('escape-string-regexp')
+const fs = require('fs')
 const { getDefaultConfig } = require('expo/metro-config')
 const pak = require('../package.json')
-
+const path = require('path')
 const projectRoot = __dirname
-const workspaceRoot = path.resolve(projectRoot, '..')
 const nodeModules = path.join(projectRoot, 'node_modules')
+const workspaceRoot = path.resolve(projectRoot, '..')
 const librarySrc = path.join(workspaceRoot, 'src')
-const libraryEntry = fs.realpathSync(path.join(librarySrc, 'index.tsx'))
-
-const modules = Object.keys({
-  ...pak.peerDependencies,
-})
+const libraryEntry = fs.realpathSync(path.join(librarySrc, 'index.ts'))
 
 /** @type {import('expo/metro-config').MetroConfig} */
 const config = getDefaultConfig(projectRoot)
+const modules = Object.keys(pak.peerDependencies)
 
 // Watch only the library source — not the whole repo (avoids nested node_modules issues)
 config.watchFolders = [librarySrc]
 
 config.resolver.nodeModulesPaths = [
-  path.resolve(projectRoot, 'node_modules'),
-  path.resolve(workspaceRoot, 'node_modules'),
+  nodeModules,
+  path.join(workspaceRoot, 'node_modules'),
 ]
 
 config.resolver.blockList = [
-  ...(Array.isArray(config.resolver.blockList)
-    ? config.resolver.blockList
-    : config.resolver.blockList
-      ? [config.resolver.blockList]
-      : []),
+  ...config.resolver.blockList,
   ...modules.map(
-    (m) =>
+    (name) =>
       new RegExp(
-        `^${escape(path.join(workspaceRoot, 'node_modules', m))}\\/.*$`
+        `^${escape(path.join(workspaceRoot, 'node_modules', name))}\\/.*$`
       )
   ),
 ]
 
 config.resolver.extraNodeModules = {
-  ...(config.resolver.extraNodeModules || {}),
-  ...modules.reduce((acc, name) => {
-    acc[name] = path.join(nodeModules, name)
-    return acc
-  }, {}),
-  crypto: path.join(nodeModules, 'expo-crypto'),
+  ...config.resolver.extraNodeModules,
+  ...Object.fromEntries(
+    modules.map((name) => [name, path.join(nodeModules, name)])
+  ),
 }
 
 const originalResolveRequest = config.resolver.resolveRequest
@@ -53,6 +43,18 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
   if (moduleName === pak.name) {
     return {
       filePath: libraryEntry,
+      type: 'sourceFile',
+    }
+  }
+
+  const translationsPrefix = `${pak.name}/translations/`
+  if (moduleName.startsWith(translationsPrefix)) {
+    return {
+      filePath: path.join(
+        librarySrc,
+        'translations',
+        `${moduleName.slice(translationsPrefix.length)}.ts`
+      ),
       type: 'sourceFile',
     }
   }
@@ -65,11 +67,11 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
     )
   }
 
-  if (originalResolveRequest) {
-    return originalResolveRequest(context, moduleName, platform)
-  }
-
-  return context.resolveRequest(context, moduleName, platform)
+  return (originalResolveRequest ?? context.resolveRequest)(
+    context,
+    moduleName,
+    platform
+  )
 }
 
 module.exports = config

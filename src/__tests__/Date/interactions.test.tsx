@@ -1,0 +1,972 @@
+import { act, fireEvent, render } from '@testing-library/react-native'
+import type { ReactNode } from 'react'
+import { Dimensions, Platform, Pressable } from 'react-native'
+import { LightTheme, Text } from 'react-native-paper'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
+
+import AnimatedCrossView from '../../Date/AnimatedCrossView'
+import AutoSizer from '../../Date/AutoSizer'
+import Calendar from '../../Date/Calendar'
+import CalendarHeader from '../../Date/CalendarHeader'
+import DatePickerInput from '../../Date/DatePickerInput'
+import DatePickerInputForm from '../../Date/DatePickerInputForm'
+import DatePickerInputWithoutModal from '../../Date/DatePickerInputWithoutModal'
+import DatePickerModal from '../../Date/DatePickerModal'
+import DatePickerModalContent from '../../Date/DatePickerModalContent'
+import DatePickerModalHeader from '../../Date/DatePickerModalHeader'
+import DatePickerModalHeaderBackground from '../../Date/DatePickerModalHeaderBackground'
+import DatePickerModalStatusBar from '../../Date/DatePickerModalStatusBar'
+import { getBeginOffset, getStartAtIndex } from '../../Date/dateUtils'
+import Day from '../../Date/Day'
+import DayNames from '../../Date/DayNames'
+import DayRange from '../../Date/DayRange'
+import Month from '../../Date/Month'
+import {
+  getIndexFromVerticalOffset,
+  getMonthHeight,
+  getVerticalListMetrics,
+  getVerticalMonthsOffset,
+  horizontalMonthScrolls,
+} from '../../Date/monthLayout'
+import { getMaxIndex, getMinIndex } from '../../Date/SwiperUtils'
+import Swiper from '../../Date/Swiper'
+import YearPicker from '../../Date/YearPicker'
+import {
+  byTestId,
+  type PressableInstance as Instance,
+  pressDays,
+  pressNode,
+  pressTestId,
+} from '../../testUtils'
+import en from '../../translations/en'
+import { registerTranslation } from '../../translations/utils'
+
+registerTranslation('en', en)
+
+const day = new Date(2026, 10, 11)
+
+const layout = { height: 480, width: 320 }
+
+function layouts(root: { queryAll: Function }, width: number, height: number) {
+  root
+    .queryAll((node: { props: { onLayout?: Function } }) => {
+      return typeof node.props.onLayout === 'function'
+    })
+    .forEach((node: { props: { onLayout: Function } }) => {
+      node.props.onLayout({
+        nativeEvent: { layout: { height, width, x: 0, y: 0 } },
+      })
+    })
+}
+
+const metrics = {
+  frame: { height: 800, width: 360, x: 0, y: 0 },
+  insets: { bottom: 0, left: 0, right: 0, top: 0 },
+}
+
+function safe(children: ReactNode) {
+  return (
+    <SafeAreaProvider initialMetrics={metrics}>{children}</SafeAreaProvider>
+  )
+}
+
+describe('month offset helpers', () => {
+  it('measures vertical month positions', () => {
+    const start = getStartAtIndex(2020, 2030)
+    expect(getIndexFromVerticalOffset(0, false, 2020, 2030)).toEqual(
+      expect.any(Number)
+    )
+    expect(getIndexFromVerticalOffset(5000, true, 2020, 2030)).toEqual(
+      expect.any(Number)
+    )
+    expect(getVerticalMonthsOffset(start, false, 2020, 2030)).toEqual(
+      expect.any(Number)
+    )
+    expect(getVerticalMonthsOffset(start + 2, false, 2020, 2030)).toEqual(
+      expect.any(Number)
+    )
+    expect(getVerticalMonthsOffset(start - 2, true, 2020, 2030)).toEqual(
+      expect.any(Number)
+    )
+    const monthHeight = getMonthHeight('horizontal', start, false, 2020, 2030)
+    expect(monthHeight).toBeGreaterThan(0)
+    expect(
+      horizontalMonthScrolls(monthHeight - 1, start, false, 2020, 2030)
+    ).toBe(false)
+    expect(horizontalMonthScrolls(0, start, false, 2020, 2030)).toBe(true)
+    expect(getMonthHeight('vertical', start, true, 2020, 2030)).toBeGreaterThan(
+      0
+    )
+  })
+
+  it('finds the month that occupies a far scroll position', () => {
+    const startYear = 1800
+    const endYear = 2200
+    const min = getMinIndex(startYear, endYear)
+    const max = getMaxIndex(startYear, endYear)
+    const { height, origin } = getVerticalListMetrics(
+      min,
+      max,
+      false,
+      startYear,
+      endYear
+    )
+    const begin = getBeginOffset(startYear, endYear)
+    const maxScroll = Math.max(0, height - 400)
+    for (const top of [0, 1000, 250000, 963048, 1200000, maxScroll]) {
+      const found = getIndexFromVerticalOffset(
+        origin + top - begin,
+        false,
+        startYear,
+        endYear
+      )
+      const monthTop =
+        getVerticalMonthsOffset(found, false, startYear, endYear) - origin
+      const monthHeight = getMonthHeight(
+        'vertical',
+        found,
+        false,
+        startYear,
+        endYear
+      )
+      expect(monthTop).toBeLessThanOrEqual(top + 1)
+      expect(monthTop + monthHeight).toBeGreaterThan(top - 1)
+    }
+  })
+})
+
+describe('calendar interactions', () => {
+  it('selects, extends, and toggles dates', async () => {
+    const onChange = jest.fn()
+    const single = await render(
+      <Calendar
+        date={day}
+        dateMode="end"
+        dayContent={() => <Text>dot</Text>}
+        dayContentPosition="top"
+        disableWeekDays={[0]}
+        initialLayout={layout}
+        locale="en"
+        mode="single"
+        onChange={onChange}
+        startWeekOnMonday
+      />
+    )
+    await pressDays(single, 1)
+    await pressTestId(single, 'react-native-paper-dates-next-month')
+    await pressTestId(single, 'react-native-paper-dates-prev-month')
+    await fireEvent.press(single.getByLabelText('November 2026'))
+    expect(onChange).toHaveBeenCalled()
+
+    const startOnly = await render(
+      <Calendar
+        endDate={undefined}
+        initialLayout={{ height: 800, width: 320 }}
+        locale="en"
+        mode="range"
+        onChange={onChange}
+        startDate={new Date(2026, 10, 10)}
+      />
+    )
+    await pressDays(startOnly, 3)
+    await pressTestId(startOnly, 'react-native-paper-dates-day-2026-10-20')
+
+    const both = await render(
+      <Calendar
+        endDate={new Date(2026, 10, 30)}
+        initialLayout={{ height: 200, width: 320 }}
+        locale="en"
+        mode="range"
+        onChange={onChange}
+        startDate={new Date(2026, 10, 1)}
+        validRange={{
+          disabledDates: [new Date(2026, 10, 12)],
+          endDate: new Date(2026, 10, 25),
+          startDate: new Date(2026, 10, 5),
+        }}
+      />
+    )
+    await pressDays(both, 1)
+
+    const multi = await render(
+      <Calendar
+        dates={[new Date(2026, 10, 10), new Date(2026, 10, 11)]}
+        initialLayout={layout}
+        locale="en"
+        mode="multiple"
+        onChange={onChange}
+      />
+    )
+    await pressDays(multi, 2)
+    await pressTestId(multi, 'react-native-paper-dates-day-2026-10-10')
+
+    const empty = await render(
+      <Calendar
+        dates={undefined}
+        initialLayout={layout}
+        locale="en"
+        mode="multiple"
+        onChange={onChange}
+      />
+    )
+    await pressDays(empty, 1)
+
+    const scroll = single.container.queryAll(
+      (node: { props: { onMomentumScrollEnd?: Function } }) =>
+        typeof node.props.onMomentumScrollEnd === 'function'
+    )[0]
+    await act(() => {
+      scroll.props.onMomentumScrollEnd({
+        nativeEvent: {
+          contentOffset: { x: 0, y: 0 },
+          layoutMeasurement: { height: 480, width: 320 },
+        },
+      })
+      scroll.props.onMomentumScrollEnd({
+        nativeEvent: {
+          contentOffset: { x: 3200, y: 0 },
+          layoutMeasurement: { height: 480, width: 320 },
+        },
+      })
+      scroll.props.onScrollEndDrag({
+        nativeEvent: {
+          contentOffset: { x: 1600, y: 0 },
+          layoutMeasurement: { height: 480, width: 320 },
+        },
+      })
+      scroll.props.onLayout?.()
+    })
+  })
+
+  it('renders a month in every selection shape', async () => {
+    const index = getStartAtIndex()
+    const onPressDate = jest.fn()
+    const onPressYear = jest.fn()
+    const shared = {
+      disableWeekDays: [6],
+      index,
+      locale: 'en',
+      onPressDate,
+      onPressYear,
+      primaryColor: '#6200ee',
+      roundness: 4,
+      selectColor: '#eee',
+      selectingYear: true,
+      startWeekOnMonday: true,
+    }
+    const single = await render(
+      <Month
+        {...shared}
+        date={new Date()}
+        mode="single"
+        scrollMode="horizontal"
+      />
+    )
+    await pressDays(single, 1)
+
+    await render(
+      <Month
+        {...shared}
+        endDate={new Date(2026, 10, 30)}
+        mode="range"
+        scrollMode="vertical"
+        startDate={new Date(2026, 10, 1)}
+      />
+    )
+    await render(
+      <Month
+        {...shared}
+        endDate={undefined}
+        mode="range"
+        scrollMode="vertical"
+        selectingYear={false}
+        startDate={new Date(2026, 10, 10)}
+      />
+    )
+    await render(
+      <Month
+        {...shared}
+        dates={[
+          new Date(2026, 10, 1),
+          new Date(2026, 10, 2),
+          new Date(2026, 10, 3),
+          new Date(2026, 10, 15),
+          new Date(2026, 10, 30),
+        ]}
+        mode="multiple"
+        scrollMode="vertical"
+      />
+    )
+    await render(
+      <Month
+        {...shared}
+        dates={null}
+        dayContent={() => <Text>•</Text>}
+        dayContentPosition="center"
+        mode="multiple"
+        scrollMode="vertical"
+      />
+    )
+    expect(onPressDate).toHaveBeenCalled()
+  })
+})
+
+describe('date picker modal', () => {
+  const originalOS = Platform.OS
+  const savedWindow = Dimensions.get('window')
+
+  beforeEach(async () => {
+    await act(async () => {
+      Dimensions.set({
+        screen: { fontScale: 1, height: 844, scale: 2, width: 390 },
+        window: { fontScale: 1, height: 844, scale: 2, width: 390 },
+      })
+    })
+  })
+
+  afterEach(async () => {
+    Platform.OS = originalOS
+    await act(async () => {
+      Dimensions.set({ screen: savedWindow, window: savedWindow })
+    })
+  })
+
+  it('confirms single, range, and multiple selections', async () => {
+    const onChange = jest.fn()
+    const onConfirm = jest.fn()
+    const onDismiss = jest.fn()
+    const single = await render(
+      safe(
+        <DatePickerModalContent
+          allowEditing
+          date={day}
+          dateMode="start"
+          initialLayout={layout}
+          label="Birth date"
+          locale="en"
+          mode="single"
+          onChange={onChange}
+          onConfirm={onConfirm}
+          onDismiss={onDismiss}
+          uppercase
+        />
+      )
+    )
+    await pressDays(single, 1)
+
+    await pressTestId(single, 'react-native-paper-dates-toggle-edit')
+    expect(
+      byTestId(single, 'react-native-paper-dates-modal-input').length
+    ).toBeGreaterThan(0)
+    expect(
+      byTestId(single, 'react-native-paper-dates-close').length
+    ).toBeGreaterThan(0)
+    await pressTestId(single, 'react-native-paper-dates-save')
+    await pressTestId(single, 'react-native-paper-dates-close')
+    expect(onConfirm).toHaveBeenCalled()
+    expect(onChange).toHaveBeenCalled()
+    expect(onDismiss).toHaveBeenCalled()
+
+    const range = await render(
+      safe(
+        <DatePickerModalContent
+          calendarIcon="calendar"
+          editIcon="pencil"
+          endDate={new Date(2026, 10, 12)}
+          initialLayout={layout}
+          locale="en"
+          mode="range"
+          onConfirm={onConfirm}
+          onDismiss={onDismiss}
+          saveLabel="Apply"
+          startDate={new Date(2026, 10, 10)}
+        />
+      )
+    )
+    await pressTestId(range, 'react-native-paper-dates-save')
+
+    const multi = await render(
+      safe(
+        <DatePickerModalContent
+          allowEditing={false}
+          dates={[
+            new Date(2026, 10, 1),
+            new Date(2026, 10, 2),
+            new Date(2026, 10, 3),
+          ]}
+          initialLayout={layout}
+          locale="en"
+          mode="multiple"
+          moreLabel="more"
+          onConfirm={onConfirm}
+          onDismiss={onDismiss}
+        />
+      )
+    )
+    await pressTestId(multi, 'react-native-paper-dates-save')
+    expect(onConfirm).toHaveBeenCalled()
+
+    await render(
+      safe(
+        <DatePickerModalContent
+          dates={undefined}
+          initialLayout={layout}
+          locale="en"
+          mode="multiple"
+          onConfirm={onConfirm}
+          onDismiss={onDismiss}
+        />
+      )
+    )
+    await render(
+      safe(
+        <DatePickerModalContent
+          locale="en"
+          mode={'other' as 'single'}
+          onConfirm={onConfirm}
+          onDismiss={onDismiss}
+        />
+      )
+    )
+  })
+
+  it('covers sheet presentation, backdrop dismiss, and remembered layout', async () => {
+    const onConfirm = jest.fn()
+    const onDismiss = jest.fn()
+    const screen = await render(
+      safe(
+        <DatePickerModal
+          date={day}
+          disableStatusBar
+          initialLayout={layout}
+          locale="en"
+          mode="single"
+          onConfirm={onConfirm}
+          onDismiss={onDismiss}
+          presentationStyle="formSheet"
+          statusBarOnTopOfBackdrop
+          visible
+          withDateFormatInLabel={false}
+        />
+      )
+    )
+    await act(() => {
+      layouts(screen.container, 360, 420)
+      layouts(screen.container, 360, 420)
+      layouts(screen.container, 300, 400)
+    })
+    const backdrop = screen.container.queryAll(
+      (node: { props: { onPress?: Function; onRequestClose?: Function } }) =>
+        node.props.onPress === onDismiss ||
+        node.props.onRequestClose === onDismiss
+    )
+    await act(() => {
+      backdrop.forEach(
+        (node: {
+          props: { onPress?: Function; onRequestClose?: Function }
+        }) => {
+          if (node.props.onPress === onDismiss) node.props.onPress()
+          else node.props.onRequestClose?.()
+        }
+      )
+    })
+    expect(onDismiss).toHaveBeenCalled()
+
+    Platform.OS = 'android'
+    await render(
+      safe(
+        <DatePickerModal
+          animationType="fade"
+          locale="en"
+          mode="single"
+          onConfirm={onConfirm}
+          onDismiss={onDismiss}
+          presentationStyle="pageSheet"
+          visible
+        />
+      )
+    )
+    Platform.OS = 'ios'
+    await render(
+      safe(
+        <DatePickerModal
+          endDate={day}
+          locale="en"
+          mode="range"
+          onConfirm={onConfirm}
+          onDismiss={onDismiss}
+          presentationStyle="pageSheet"
+          startDate={day}
+          visible
+        />
+      )
+    )
+  })
+})
+
+describe('inputs, headers, and pickers', () => {
+  it('formats a typed date on blur and opens the modal from the icon', async () => {
+    await act(async () => {
+      Dimensions.set({
+        screen: { fontScale: 1, height: 844, scale: 2, width: 390 },
+        window: { fontScale: 1, height: 844, scale: 2, width: 390 },
+      })
+    })
+    const onChange = jest.fn()
+    const input = await render(
+      safe(
+        <DatePickerInput
+          disableStatusBarPadding
+          endYear={2030}
+          iconColor="red"
+          iconSize={20}
+          inputMode="start"
+          locale="en"
+          onChange={onChange}
+          presentation="modal"
+          saveLabelDisabled
+          startYear={2020}
+          testID="date"
+          validRange={{
+            endDate: new Date(2026, 11, 31),
+            startDate: new Date(2026, 0, 1),
+          }}
+          value={day}
+        />
+      )
+    )
+    const onChangeText = jest.fn()
+    await pressTestId(input, 'date-icon-button')
+    await pressTestId(input, 'react-native-paper-dates-close')
+    await pressTestId(input, 'date-icon-button')
+    await pressTestId(input, 'react-native-paper-dates-save')
+    expect(onChange).toHaveBeenCalled()
+
+    await render(
+      <DatePickerInput
+        disableCalendarIcon
+        disabled
+        inputMode="end"
+        locale="en"
+        onChange={onChange}
+        value={undefined}
+        withModal={false}
+      />
+    )
+
+    const plain = await render(
+      <DatePickerInputWithoutModal
+        hasError
+        hideValidationErrors
+        inputEnabled={false}
+        inputMode="start"
+        label="When"
+        locale="en"
+        onChange={onChange}
+        onChangeText={onChangeText}
+        testID="plain"
+        value={undefined}
+        withDateFormatInLabel={false}
+      />
+    )
+    const field = byTestId(plain, 'plain')[0]
+    const changeText = field?.props.onChangeText
+    if (typeof changeText === 'function') {
+      await act(() => {
+        changeText('1/2/2026')
+      })
+    }
+    const updated = byTestId(plain, 'plain')[0]
+    const blur = updated?.props.onBlur
+    if (typeof blur === 'function') {
+      await act(() => {
+        blur({})
+      })
+    }
+    expect(onChange).toHaveBeenCalledWith(new Date(2026, 0, 2))
+
+    await render(
+      <DatePickerInputWithoutModal
+        inputEnabled
+        inputMode="start"
+        keyboardAppearance="dark"
+        keyboardType="default"
+        locale="en"
+        onChange={onChange}
+        testID="bare"
+        value={undefined}
+        withDateFormatInLabel
+      />
+    )
+  })
+
+  it('renders header chrome for both orientations and editing states', async () => {
+    const onChange = jest.fn()
+    const editing = await render(
+      <DatePickerInputForm
+        label="Day"
+        locale="en"
+        mode="single"
+        onChange={onChange}
+        onConfirm={jest.fn()}
+        onDismiss={jest.fn()}
+        onRequestCalendar={jest.fn()}
+      />
+    )
+    const fields = editing.container.queryAll(
+      (node: { props: { onChangeText?: Function } }) =>
+        typeof node.props.onChangeText === 'function'
+    ) as Array<{
+      props: { onChangeText?: Function; onSubmitEditing?: Function }
+    }>
+    await act(() => {
+      fields.forEach((node) => {
+        node.props.onSubmitEditing?.()
+        node.props.onChangeText?.('11/11/2026')
+      })
+    })
+
+    await render(
+      <DatePickerInputForm
+        endDate={day}
+        locale="en"
+        mode="range"
+        onChange={onChange}
+        onConfirm={jest.fn()}
+        onDismiss={jest.fn()}
+        onRequestCalendar={jest.fn()}
+        startDate={day}
+        withDateFormatInLabel
+      />
+    )
+
+    await render(
+      <CalendarHeader
+        locale="en"
+        onNext={() => null}
+        onPrev={() => null}
+        scrollMode="vertical"
+        startWeekOnMonday={false}
+      />
+    )
+    const header = await render(
+      <CalendarHeader
+        disableWeekDays={[0]}
+        endInset={12}
+        locale={undefined}
+        onNext={() => null}
+        onPrev={() => null}
+        scrollMode="horizontal"
+        startWeekOnMonday
+      />
+    )
+    await pressTestId(header, 'react-native-paper-dates-next-month')
+
+    await render(
+      safe(
+        <DatePickerModalHeader
+          closeIcon="close"
+          locale="en"
+          onDismiss={() => null}
+          onSave={() => null}
+          saveLabel="Keep"
+          saveLabelDisabled={false}
+          uppercase={false}
+        />
+      )
+    )
+    await act(async () => {
+      Dimensions.set({
+        screen: { fontScale: 1, height: 400, scale: 1, width: 800 },
+        window: { fontScale: 1, height: 400, scale: 1, width: 800 },
+      })
+    })
+    await render(
+      safe(
+        <>
+          <DatePickerModalHeader
+            locale="en"
+            onDismiss={() => null}
+            onSave={() => null}
+          />
+
+          <DatePickerModalHeaderBackground>
+            <DatePickerModalStatusBar
+              disableSafeTop={false}
+              disableStatusBar={false}
+              statusBarOnTopOfBackdrop={false}
+            />
+          </DatePickerModalHeaderBackground>
+          <DatePickerModalHeaderBackground disableWeekDays={[1]}>
+            <DatePickerModalStatusBar
+              disableSafeTop
+              disableStatusBar
+              statusBarOnTopOfBackdrop
+            />
+          </DatePickerModalHeaderBackground>
+        </>
+      )
+    )
+  })
+
+  it('scrolls the year list and crosses the calendar views', async () => {
+    const onPressYear = jest.fn()
+    const years = await render(
+      <YearPicker
+        endYear={2026}
+        onPressYear={onPressYear}
+        selectedYear={2024}
+        selectingYear
+        startYear={2024}
+      />
+    )
+    const list = years.container.queryAll(
+      (node: { props: { renderItem?: Function } }) =>
+        typeof node.props.renderItem === 'function'
+    )[0]
+    await fireEvent.press(years.getByLabelText('2025'))
+    list.props.renderScrollComponent?.({})
+    list.props.keyExtractor([2024, 2025, 2026])
+
+    await render(
+      <YearPicker
+        endYear={1800}
+        onPressYear={onPressYear}
+        selectedYear={undefined}
+        selectingYear={false}
+        startYear={Number.NaN}
+      />
+    )
+    await render(
+      <YearPicker
+        endYear={Number.NaN}
+        onPressYear={onPressYear}
+        selectedYear={2200}
+        selectingYear
+        startYear={2200}
+      />
+    )
+    expect(onPressYear).toHaveBeenCalled()
+
+    const collapsed = await render(
+      <AnimatedCrossView
+        calendar={<Text>cal</Text>}
+        calendarEdit={<Text>edit</Text>}
+        collapsed
+      />
+    )
+    await collapsed.rerender(
+      <AnimatedCrossView
+        calendar={<Text>cal</Text>}
+        calendarEdit={<Text>edit</Text>}
+        collapsed={false}
+      />
+    )
+
+    const sizer = await render(
+      <AutoSizer initialLayout={layout}>{() => <Text>ready</Text>}</AutoSizer>
+    )
+    await act(() => {
+      layouts(sizer.container, 200, 100)
+      layouts(sizer.container, 200, 100)
+      layouts(sizer.container, 0, 100)
+    })
+    await render(<AutoSizer>{() => <Text>later</Text>}</AutoSizer>)
+
+    await render(
+      <DayNames disableWeekDays={[0]} locale="en" startWeekOnMonday />
+    )
+  })
+
+  it('renders every day-range shape and day text color', async () => {
+    await render(
+      <DayRange
+        inRange={false}
+        leftCrop={false}
+        rightCrop={false}
+        selectColor="blue"
+      />
+    )
+    await render(
+      <DayRange inRange leftCrop={false} rightCrop={false} selectColor="blue" />
+    )
+    await render(
+      <DayRange inRange leftCrop rightCrop={false} selectColor="blue" />
+    )
+    await render(
+      <DayRange inRange leftCrop={false} rightCrop selectColor="blue" />
+    )
+    await render(<DayRange inRange leftCrop rightCrop selectColor="blue" />)
+
+    const theme = {
+      ...LightTheme,
+      colors: { ...LightTheme.colors, onPrimary: '' },
+      dark: true,
+    }
+    const base = {
+      day: 2,
+      disabled: false,
+      leftCrop: false,
+      month: 0,
+      onPressDate: jest.fn(),
+      primaryColor: 'blue',
+      rightCrop: false,
+      selectColor: 'lightblue',
+      textColorOnPrimary: '#fff',
+      theme,
+      year: 2026,
+    }
+    const selected = await render(
+      <Day {...base} inRange isToday={false} selected />
+    )
+    await pressTestId(selected, 'react-native-paper-dates-day-2026-0-2')
+
+    await render(<Day {...base} inRange isToday selected={false} />)
+    await render(
+      <Day {...base} disabled inRange={false} isToday selected={false} />
+    )
+    await render(
+      <Day
+        {...base}
+        dayContent={() => <Text>x</Text>}
+        inRange={false}
+        isToday
+        selected
+      />
+    )
+  })
+})
+
+describe('native month swiper', () => {
+  it('pages horizontally and vertically, including an out-of-range index', async () => {
+    const swiper = await render(
+      <Swiper
+        endYear={2028}
+        initialIndex={getStartAtIndex(2024, 2028)}
+        initialLayout={{ height: 120, width: 300 }}
+        renderFooter={() => <Text>footer</Text>}
+        renderHeader={(props) => <Text>{props.endInset}</Text>}
+        renderItem={({ index, onNext, onPrev }) => (
+          <Pressable onPress={onPrev} testID={`prev-${index}`}>
+            <Pressable onPress={onNext} testID={`next-${index}`} />
+          </Pressable>
+        )}
+        scrollMode="horizontal"
+        selectedYear={2027}
+        startWeekOnMonday={false}
+        startYear={2024}
+      />
+    )
+    const next = swiper.container.queryAll((node: Instance) =>
+      String(node.props.testID).startsWith('next-')
+    )[0]
+    const prev = swiper.container.queryAll((node: Instance) =>
+      String(node.props.testID).startsWith('prev-')
+    )[0]
+    const scroll = swiper.container.queryAll(
+      (node: { props: { onMomentumScrollEnd?: Function } }) =>
+        typeof node.props.onMomentumScrollEnd === 'function'
+    )[0]
+    await pressNode(prev)
+    await pressNode(next)
+    await act(() => {
+      scroll.props.onMomentumScrollEnd({
+        nativeEvent: {
+          contentOffset: { x: 0, y: 400 },
+          layoutMeasurement: { height: 120, width: 300 },
+        },
+      })
+      scroll.props.onMomentumScrollEnd({
+        nativeEvent: {
+          contentOffset: { x: 10500, y: 0 },
+          layoutMeasurement: { height: 120, width: 300 },
+        },
+      })
+      scroll.props.onMomentumScrollEnd({
+        nativeEvent: {
+          contentOffset: { x: 999999, y: 0 },
+          layoutMeasurement: { height: 120, width: 300 },
+        },
+      })
+      scroll.props.onLayout()
+    })
+
+    await render(
+      <Swiper
+        endYear={2026}
+        initialIndex={-5}
+        initialLayout={{ height: 900, width: 300 }}
+        renderItem={() => <Text>month</Text>}
+        scrollMode="vertical"
+        selectedYear={undefined}
+        startWeekOnMonday
+        startYear={2026}
+      />
+    )
+    await render(
+      <Swiper
+        initialIndex={getStartAtIndex()}
+        initialLayout={{ height: 500, width: 300 }}
+        renderItem={({ onNext }) => (
+          <Pressable onPress={onNext} testID="vertical-next" />
+        )}
+        scrollMode="vertical"
+        selectedYear={undefined}
+        startWeekOnMonday={false}
+      />
+    )
+    const vertical = await render(
+      <Swiper
+        endYear={2026}
+        initialIndex={0}
+        initialLayout={{ height: 400, width: 300 }}
+        renderItem={({ onNext, onPrev }) => (
+          <>
+            <Pressable onPress={onPrev} testID="edge-prev" />
+            <Pressable onPress={onNext} testID="edge-next" />
+          </>
+        )}
+        scrollMode="vertical"
+        selectedYear={1800}
+        startWeekOnMonday={false}
+        startYear={2026}
+      />
+    )
+    await pressTestId(vertical, 'edge-prev')
+    await pressTestId(vertical, 'edge-next')
+    const verticalScroll = vertical.container.queryAll(
+      (node: { props: { onMomentumScrollEnd?: Function } }) =>
+        typeof node.props.onMomentumScrollEnd === 'function'
+    )[0]
+    await act(() => {
+      verticalScroll.props.onMomentumScrollEnd({
+        nativeEvent: {
+          contentOffset: { x: 0, y: 4000 },
+          layoutMeasurement: { height: 400, width: 300 },
+        },
+      })
+    })
+  })
+})
+
+describe('platform specific header gutter', () => {
+  const originalOS = Platform.OS
+
+  afterAll(() => {
+    Platform.OS = originalOS
+  })
+
+  it('evaluates the gutter on android and web', () => {
+    Platform.OS = 'android'
+    jest.isolateModules(() => {
+      require('../../Date/CalendarHeader')
+    })
+    Platform.OS = 'web'
+    jest.isolateModules(() => {
+      require('../../Date/CalendarHeader')
+      require('../../Date/YearPicker')
+      require('../../Date/Month')
+    })
+    Platform.OS = originalOS
+  })
+})

@@ -1,0 +1,181 @@
+import { PackageManagerTabs } from '@theme'
+
+# Migration (Paper 5 to Paper 6)
+
+This guide is for apps on a Paper 5-compatible release of `react-native-paper-dates` (through `0.24.2`) that are upgrading to `1.0.0`, which requires **React Native Paper 6**.
+
+Paper 6 is a breaking change for Paper itself. Finish that upgrade first, then update this library. See [Paper's getting started guide](https://oss.callstack.com/react-native-paper/6.x/docs/guides/getting-started) and the [Paper 5.x to 6.x migration](https://oss.callstack.com/react-native-paper/6.x/docs/guides/migration) for theme, icon, and Button changes.
+
+## Upgrade dependencies
+
+This library requires:
+
+- **react** `>=19`
+- **react-native** `>=0.78`
+- **react-native-paper** `>=6.0.0-alpha.0 <7`
+- **[react-native-safe-area-context](https://github.com/AppAndFlow/react-native-safe-area-context)** `>=5`
+
+This library and Paper 6 both need **[react-native-reanimated](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started/)** `>=4.3.0`, **react-native-worklets** `>=0.8.1`, and the Worklets Babel plugin. Follow Paper's install guide for that setup.
+
+Then install a Paper 6-compatible release of this library:
+
+<PackageManagerTabs command="install react-native-paper-dates" />
+
+## What stays the same
+
+These APIs are unchanged:
+
+- Imports of `DatePickerModal`, `DatePickerInput`, `TimePicker`, and `TimePickerModal` from `react-native-paper-dates` (`DatePickerDocked` and `DatePickerModalInput` are new exports)
+- `registerTranslation` for custom locales. English is registered by default.
+- Wrapping the app in `PaperProvider` and `SafeAreaProvider`
+
+`DatePickerModal` `mode` is still `'single' | 'range' | 'multiple'`. Do not rename those props to `variant`. Some defaults and optional props on `DatePickerModal`, `TimePicker`, and `TimePickerModal` did change; see [Prop defaults](#prop-defaults).
+
+## Removed top-level exports
+
+- **Built-in locale objects (`ar` through `zhTW`):** no longer re-exported from `react-native-paper-dates`. Import a locale module for its side effect instead, for example `import 'react-native-paper-dates/translations/fr'` (only `en` is registered automatically).
+- **`Calendar` and `DatePickerModalContent`:** no longer exported from the root entrypoint. Use `DatePickerModal` or `DatePickerDocked` instead.
+
+## Prop defaults
+
+### TimePickerModal
+
+- `confirmLabel` defaults to `'OK'` (was `'Ok'`).
+- `clockIcon` defaults to `'clock'` (was `'clock-outline'`). `keyboardIcon` defaults to `'keyboard'` (was `'keyboard-outline'`).
+- There is no default label. The header is omitted unless you pass `label`. It previously defaulted to `'Select time'`, or `'Enter time'` on the keyboard view.
+- `animationType` no longer defaults to `'none'`. If you omit it, the modal uses `'fade'` on iOS and Android and `'none'` on web. When the user prefers reduced motion, a `'slide'` fallback is changed to `'fade'`.
+- New optional props: `disabled`, `error`, `errorText`, and `scrollIcon` (default `'gesture-swipe-vertical'`). `defaultInputType` also accepts `'scroll'`.
+
+### TimePicker
+
+- **Breaking:** `inputType` no longer accepts `'picker'`. The clock dial is only available in `TimePickerModal`. Use `inputType="scroll"` or `inputType="keyboard"` on the inline `TimePicker`. Passing `'picker'` at runtime falls back to `'scroll'`.
+- New optional props: `autoFocus`, `clockIcon` (default `'clock'`), `disabled`, `error`, `errorText`, `keyboardIcon` (default `'keyboard'`), `onInputInvalidChange`, `onToggleKeyboard`, and `scrollIcon` (default `'gesture-swipe-vertical'`). `inputType` also accepts `'scroll'`.
+
+### DatePickerModal
+
+- If you omit `animationType`, the default is still `'slide'` on iOS and Android and `'none'` on web. When the user prefers reduced motion, that `'slide'` fallback is changed to `'fade'`.
+- New optional props include `displayMode` (`'calendar'` or `'input'`) and `layout` (`'card'`).
+
+## Date range input defaults
+
+In the date range input dialog (`DatePickerModalInput` with `mode="range"`, and the input view of `DatePickerModal`):
+
+- The supporting title defaults to the locale translation for `enterDates` (English: `'Enter dates'`). It previously always used `selectSingle` (`'Select date'`).
+- The start field label defaults to the locale translation for `startDate` (English: `'Start date'`). It previously defaulted to `'Date'`. Pass `startLabel` to override it.
+- The end field label still defaults to `'End date'` in English, now via the locale translation for `endDate`.
+- The selected-range headline uses `Intl.DateTimeFormat#formatRange` (for example `'May 18 – 20'` when both dates are in the same month) and Title Large typography.
+
+## Translations
+
+`TranslationsType` has 29 new required keys (16 on the Paper 5 release, 45 now). Built-in locale modules already include them. If you call `registerTranslation` with a custom object, add every key below. See the [localization guide](./localization#custom-translation) for a complete example.
+
+- `am`
+- `cancel`
+- `chooseMonth`
+- `chooseMonthHint`
+- `chooseYear`
+- `chooseYearHint`
+- `confirm`
+- `endDate`
+- `enterDate`
+- `enterDates`
+- `hourAt`
+- `hourOf`
+- `inRange`
+- `invalidTime`
+- `minuteOf`
+- `nextMonth`
+- `nextMonthHint`
+- `nextYear`
+- `nextYearHint`
+- `pm`
+- `previousMonth`
+- `previousMonthHint`
+- `previousYear`
+- `previousYearHint`
+- `startDate`
+- `today`
+- `toggleClock`
+- `toggleKeyboard`
+- `toggleScroll`
+
+## DatePickerInput
+
+`DatePickerInput` forwards [Paper 6 TextInput](https://oss.callstack.com/react-native-paper/6.x/docs/components/TextInput/TextInput) props. Update call sites as follows.
+
+### Variant
+
+```jsx
+// Before (Paper 5)
+<DatePickerInput locale="en" value={date} onChange={setDate} inputMode="start" mode="flat" />
+<DatePickerInput locale="en" value={date} onChange={setDate} inputMode="start" mode="outlined" />
+
+// After (Paper 6)
+<DatePickerInput locale="en" value={date} onChange={setDate} inputMode="start" variant="filled" />
+<DatePickerInput locale="en" value={date} onChange={setDate} inputMode="start" variant="outlined" />
+```
+
+| Before | After |
+| --- | --- |
+| `mode="flat"` | `variant="filled"` |
+| `mode="outlined"` | `variant="outlined"` |
+
+### Calendar icon and accessories
+
+Do not pass `right` or `endAccessory`. The calendar icon uses `endAccessory`. Change the icon with `calendarIcon`.
+
+```jsx
+// Before — do not keep `right` on DatePickerInput
+<DatePickerInput
+  locale="en"
+  value={date}
+  onChange={setDate}
+  inputMode="start"
+  right={<TextInput.Icon icon="calendar" />}
+/>
+
+// After — calendar icon is built in
+<DatePickerInput
+  locale="en"
+  value={date}
+  onChange={setDate}
+  inputMode="start"
+  calendarIcon="calendar"
+/>
+```
+
+### Supporting text
+
+Paper 6 removed `HelperText`. `DatePickerInput` shows the expected date format as supporting text when `supportingText` is omitted. Pass `supportingText=""` to hide it, or pass your own string to replace the format.
+
+```jsx
+// Before
+<>
+  <DatePickerInput locale="en" value={date} onChange={setDate} inputMode="start" />
+  <HelperText type="info">Use the format shown on the field</HelperText>
+</>
+
+// After
+<DatePickerInput
+  locale="en"
+  value={date}
+  onChange={setDate}
+  inputMode="start"
+  supportingText="Use the format shown on the field"
+/>
+```
+
+Other Paper 5 TextInput props (`left`, `dense`, outline and underline color overrides, and similar) were removed. See the [input date picker](./date-picker/input-date-picker) props and the [Paper 6 TextInput](https://oss.callstack.com/react-native-paper/6.x/docs/components/TextInput/TextInput) docs.
+
+## Find the call sites
+
+Search the app for these strings and update matches that belong to `DatePickerInput` or Paper 5:
+
+- `<DatePickerInput`
+- `mode="flat"`
+- `MD3LightTheme` / `MD3DarkTheme`
+- `HelperText`
+
+:::info
+Do not rewrite every `mode=` in the project. `DatePickerModal` still uses `mode="single"`, `mode="range"`, and `mode="multiple"`.
+:::

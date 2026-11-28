@@ -1,31 +1,32 @@
-import { StyleSheet, View } from 'react-native'
-import { daySize } from './dateUtils'
 import { memo } from 'react'
+import { StyleSheet, View } from 'react-native'
+
 import { sharedStyles } from '../shared/styles'
+import { dayCellSize, daySize } from './dateUtils'
 
 function DayRange({
+  inRange,
   leftCrop,
   rightCrop,
-  inRange,
   selectColor,
 }: {
+  inRange: boolean
   leftCrop: boolean
   rightCrop: boolean
-  inRange: boolean
   selectColor: string
 }) {
-  const bothWays = inRange && leftCrop && rightCrop
-  const isCrop = inRange && (leftCrop || rightCrop) && !(leftCrop && rightCrop)
+  const bothWays = leftCrop && rightCrop
+  const isCrop = leftCrop !== rightCrop
 
-  if (inRange || isCrop) {
+  if (inRange) {
     return (
       <View
         pointerEvents="none"
         style={[
-          StyleSheet.absoluteFill,
+          styles.bar,
           sharedStyles.flexDirectionRow,
           bothWays && styles.rangeRootBoth,
-          inRange && !isCrop
+          !isCrop
             ? {
                 backgroundColor: selectColor,
               }
@@ -48,8 +49,8 @@ function DayRange({
               style={[
                 {
                   backgroundColor: selectColor,
-                  minWidth: daySize,
                   minHeight: daySize,
+                  minWidth: daySize,
                 },
                 leftCrop ? styles.leftRadius : null,
                 rightCrop ? styles.rightRadius : null,
@@ -74,16 +75,23 @@ function DayRange({
 }
 
 const styles = StyleSheet.create({
+  bar: {
+    height: daySize,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: (dayCellSize - daySize) / 2,
+  },
   leftRadius: {
     borderBottomLeftRadius: daySize / 2,
     borderTopLeftRadius: daySize / 2,
   },
+  rangeRootBoth: {
+    borderRadius: daySize / 2,
+  },
   rightRadius: {
     borderBottomRightRadius: daySize / 2,
     borderTopRightRadius: daySize / 2,
-  },
-  rangeRootBoth: {
-    borderRadius: daySize / 2,
   },
 })
 
